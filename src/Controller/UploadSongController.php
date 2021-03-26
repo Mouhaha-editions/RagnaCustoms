@@ -97,12 +97,12 @@ class UploadSongController extends AbstractController
                 $em->flush();
                 copy($theZip, $folder . $song->getId() . ".zip");
                 copy($unzipFolder . "/" . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
+                $this->addFlash('success',"Song added !");
             } catch (Exception $e) {
                 $this->addFlash('danger', "Erreur lors de l'upload : " . $e->getMessage());
                 return $this->redirectToRoute("home");
             } finally {
                 $this->rrmdir($unzipFolder);
-                unlink($theZip);
             }
 
         }
