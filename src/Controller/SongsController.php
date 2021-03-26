@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SongsController extends AbstractController
 {
     /**
-     * @Route("/", name="songs")
+     * @Route("/", name="home")
      */
     public function index(Request $request,SongRepository $songRepository, PaginationService $paginationService): Response
     {

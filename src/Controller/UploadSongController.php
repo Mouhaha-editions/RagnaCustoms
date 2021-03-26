@@ -36,12 +36,13 @@ class UploadSongController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $folder = $kernel->getProjectDir() . "/public/tmp-song/";
             $unzipFolder = $folder . uniqid();
+            $file = $form->get('zipFile')->getData();
+            $file->move($unzipFolder, $file->getClientOriginalName());
+            $zip = new ZipArchive();
+            $theZip = $unzipFolder . "/" . $file->getClientOriginalName();
             try {
                 /** @var UploadedFile $file */
-                $file = $form->get('zipFile')->getData();
-                $file->move($unzipFolder, $file->getClientOriginalName());
-                $zip = new ZipArchive();
-                $theZip = $unzipFolder . "/" . $file->getClientOriginalName();
+
                 if ($zip->open($theZip) === TRUE) {
                     for ($i = 0; $i < $zip->numFiles; $i++) {
                         $filename = $zip->getNameIndex($i);
@@ -97,6 +98,7 @@ class UploadSongController extends AbstractController
                 copy($unzipFolder . "/" . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
             } catch (Exception $e) {
                 $this->addFlash('danger', "Erreur lors de l'upload : " . $e->getMessage());
+                return $this->redirectToRoute("home");
             } finally {
                 $this->rrmdir($unzipFolder);
                 unlink($theZip);
