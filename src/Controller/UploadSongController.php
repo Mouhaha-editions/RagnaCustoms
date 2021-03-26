@@ -28,7 +28,6 @@ class UploadSongController extends AbstractController
 
         $form = $this->createFormBuilder()
             ->add("zipFile", FileType::class, [])
-            ->add("send", SubmitType::class, [])
             ->getForm();
 
         $form->handleRequest($request);
