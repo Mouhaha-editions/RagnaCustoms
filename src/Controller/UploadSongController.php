@@ -68,6 +68,7 @@ class UploadSongController extends AbstractController
                     return $this->redirectToRoute("home");
                 }
                 $song = new Song();
+                $song->setUser($this->getUser());
                 $song->setVersion($json->_version);
                 $song->setName($json->_songName);
                 $song->setSubName($json->_songSubName);
