@@ -25,7 +25,8 @@
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
         "wohali/oauth2-discord-new": "^1.1",
-      "ext-json": "*"
+      "ext-json": "*",
+      "ext-zip": "*"
     },
     "require-dev": {
         "symfony/debug-bundle": "^5.2",

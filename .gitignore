@@ -18,3 +18,4 @@ yarn-error.log
 .idea/*
 public/songs/*
 public/covers/*
+public/tmp-song/*
