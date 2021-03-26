@@ -37,7 +37,6 @@ class UploadSongController extends AbstractController
             $folder = $kernel->getProjectDir() . "/public/tmp-song/";
             $unzipFolder = $folder . uniqid();
             try {
-
                 /** @var UploadedFile $file */
                 $file = $form->get('zipFile')->getData();
                 $file->move($unzipFolder, $file->getClientOriginalName());
@@ -60,12 +59,13 @@ class UploadSongController extends AbstractController
                 $json = json_decode(file_get_contents($unzipFolder . "/info.dat"));
                 $song = $songRepository->findBy([
                     "name" => $json->_songName,
-                    "authorName" => $json->_songAuthorName
+                    "authorName" => $json->_songAuthorName,
+                    "levelAuthorName" => $json->_levelAuthorName,
                 ]);
-//                if ($song != null) {
-//                    $this->addFlash("danger", "Cette musique est déjà dans notre catalogue.");
-//                    return $this->redirectToRoute("home");
-//                }
+                if ($song != null) {
+                    $this->addFlash("danger", "Cette musique est déjà dans notre catalogue.");
+                    return $this->redirectToRoute("home");
+                }
                 $song = new Song();
                 $song->setVersion($json->_version);
                 $song->setName($json->_songName);
@@ -94,9 +94,9 @@ class UploadSongController extends AbstractController
                 }
                 $em->flush();
                 copy($theZip, $folder . $song->getId() . ".zip");
-                copy($unzipFolder ."/". $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
+                copy($unzipFolder . "/" . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
             } catch (Exception $e) {
-$this->addFlash('danger',"Erreur lors de l'upload : ".$e->getMessage());
+                $this->addFlash('danger', "Erreur lors de l'upload : " . $e->getMessage());
             } finally {
                 $this->rrmdir($unzipFolder);
                 unlink($theZip);
