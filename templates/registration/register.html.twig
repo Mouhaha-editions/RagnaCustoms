@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    {% for flashError in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    <h1>Register</h1>
+    <div class="widget-box">
+        {{ form_start(registrationForm) }}
+        <div class="form-row">
+            <!-- FORM ITEM -->
+            <div class="form-item">
+                <!-- FORM INPUT -->
+                <div class="form-input">{{ form_row(registrationForm.username) }}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <!-- FORM ITEM -->
+            <div class="form-item">
+                <!-- FORM INPUT -->
+                <div class="form-input">
+                    {{ form_row(registrationForm.email) }}
+                </div>
+            </div>
+        </div>
+
+            <div class="form-row">
+            <!-- FORM ITEM -->
+            <div class="form-item">
+                <!-- FORM INPUT -->
+                <div class="form-input">
+                    {{ form_row(registrationForm.plainPassword, {
+                        label: 'Password'
+                    }) }}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <small style="color:#3f485f">Registration confirmation will be emailed to you.</small>
+        </div>
+        <div class="form-row">
+            <!-- FORM ITEM -->
+            <div class="form-item">
+                <!-- BUTTON -->
+                <button class="button medium secondary">{{ "Register"|trans }}</button>
+                <!-- /BUTTON -->
+            </div>
+            <!-- /FORM ITEM -->
+        </div>
+        {{ form_end(registrationForm) }}
+
+    </div>
+{% endblock %}

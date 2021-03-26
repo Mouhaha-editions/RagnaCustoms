@@ -1,0 +1,102 @@
+{% for song in songs.entities %}
+<div class="table-row medium">
+    <!-- TABLE COLUMN -->
+    <div class="table-column">
+        <!-- PRODUCT PREVIEW -->
+        <div class="product-preview tiny">
+            <!-- PRODUCT PREVIEW IMAGE -->
+            <a href="marketplace-product.html">
+                <figure class="product-preview-image short liquid">
+                    <img src="/covers/{{ song.id ~ song.coverImageExtension }}" alt="item-11">
+                </figure>
+            </a>
+            <!-- /PRODUCT PREVIEW IMAGE -->
+
+            <!-- PRODUCT PREVIEW INFO -->
+            <div class="product-preview-info">
+                <!-- PRODUCT PREVIEW TITLE -->
+                <p class="product-preview-title">{{ song.name }}</p>
+                <!-- /PRODUCT PREVIEW TITLE -->
+
+                <!-- PRODUCT PREVIEW CATEGORY -->
+                <p class="product-preview-category">{{ song.authorName }}</p>
+                <!-- /PRODUCT PREVIEW CATEGORY -->
+
+                <!-- PRODUCT PREVIEW CREATOR -->
+                <p class="product-preview-creator">Mapped by : {{ song.levelAuthorName }}</p>
+                <p class="product-preview-creator">Difficulties :
+                    {% for diff in song.songDifficulties %}
+                        {% if loop.index != 1 %}, {% endif %}
+                        <span style="color:#{{ diff.difficultyRank.color }}">{{ diff.difficultyRank.level }}</span>
+                    {% endfor %}</p>
+                <!-- /PRODUCT PREVIEW CREATOR -->
+            </div>
+            <!-- /PRODUCT PREVIEW INFO -->
+        </div>
+        <!-- /PRODUCT PREVIEW -->
+    </div>
+    <!-- /TABLE COLUMN -->
+
+    <!-- TABLE COLUMN -->
+    <div class="table-column padded">
+        <!-- TABLE TITLE -->
+        <p class="table-title">{{ song.approximativeDurationMS }}</p>
+        <!-- /TABLE TITLE -->
+    </div>
+    <!-- /TABLE COLUMN -->
+
+    <!-- TABLE COLUMN -->
+    <div class="table-column padded">
+        <!-- TABLE TITLE -->
+        <p class="table-title">{{ song.beatsPerMinute|round }}</p>
+        <!-- /TABLE TITLE -->
+    </div>
+    <!-- /TABLE COLUMN -->
+
+
+    <!-- TABLE COLUMN -->
+    <div class="table-column padded text-center ">
+        <!-- TABLE TITLE -->
+
+        <div>
+                                    <span class="text-success">
+                                    0 &nbsp;<!-- ICON THUMBS UP -->
+                                    <i class="far fa-thumbs-up"></i>
+                                        </span>&nbsp;
+            <span class="text-danger">
+
+                                    0 &nbsp;<!-- ICON THUMBS UP -->
+                                    <i class="far fa-thumbs-down"></i>
+                                    </span>
+            <!-- /ICON THUMBS UP -->
+        </div>
+        <!-- /TABLE TITLE -->
+    </div>
+    <!-- /TABLE COLUMN -->
+
+    <!-- TABLE COLUMN -->
+    <div class="table-column padded-left">
+        <!-- TABLE ACTIONS -->
+        <div class="table-actions">
+            <!-- BUTTON -->
+            <a href="#" data-to-copy="!rq {{ song.id }}" class="copy-clipboard button small button-icon twitch">
+                <svg class="social-link-icon icon-twitch">
+                    <use xlink:href="#svg-twitch"></use>
+                </svg>&nbsp;
+                !rq {{ song.id }}
+            </a>
+
+            <a href="ragnac://install/{{ song.id }}" class="button small tertiary">
+                1 click
+            </a>
+            <a href="{{ url("song_download",{id:song.id}) }}" class="button small primary">
+                {{ "Download"|trans }}
+            </a>
+            <!-- /BUTTON -->
+
+        </div><small class="white pt-2  small">{{ "You need our app tu use 1 click installer button"|trans }}</small>
+        <!-- /TABLE ACTIONS -->
+    </div>
+    <!-- /TABLE COLUMN -->
+</div>
+{% endfor %}
