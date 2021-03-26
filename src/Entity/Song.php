@@ -122,6 +122,11 @@ class Song
      */
     private $moderated = false;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="songs")
+     */
+    private $user;
+
 
     public function __construct()
     {
@@ -405,6 +410,18 @@ class Song
     public function setModerated(bool $moderated): void
     {
         $this->moderated = $moderated;
+    }
+
+    public function getUser(): ?Utilisateur
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Utilisateur $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
 }
