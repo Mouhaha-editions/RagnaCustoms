@@ -102,17 +102,17 @@ class Song
     /**
      * @ORM\Column(type="integer")
      */
-    private $voteUp;
+    private $voteUp = 0;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $voteDown;
+    private $voteDown = 0;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $downloads;
+    private $downloads = 0;
 
 
     public function __construct()

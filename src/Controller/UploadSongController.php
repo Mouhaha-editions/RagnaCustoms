@@ -6,63 +6,105 @@ use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\SongRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\VarDumper\VarDumper;
+use ZipArchive;
 
 class UploadSongController extends AbstractController
 {
     /**
      * @Route("/upload/song", name="upload_song")
      */
-    public function index(KernelInterface $kernel, SongRepository $songRepository, DifficultyRankRepository $difficultyRankRepository): Response
+    public function index(Request $request, KernelInterface $kernel, SongRepository $songRepository, DifficultyRankRepository $difficultyRankRepository): Response
     {
+
+        $form = $this->createFormBuilder()
+            ->add("zipFile", FileType::class, [])
+            ->add("send", SubmitType::class, [])
+            ->getForm();
+
+        $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $folder = $kernel->getProjectDir() . "/public/tmp-song/";
 
-        $folder = $kernel->getProjectDir() . "/public/songs/Swedish Pagans/";
+                /** @var UploadedFile $file */
+                $file = $form->get('zipFile')->getData();
+                $zipFolder = $folder . uniqid();
+                $file->move($zipFolder, $file->getClientOriginalName());
+                $zip = new ZipArchive();
+                $theZip = $zipFolder . "/" . $file->getClientOriginalName();
+                if ($zip->open($theZip) === TRUE) {
+                    for ($i = 0; $i < $zip->numFiles; $i++) {
+                        $filename = $zip->getNameIndex($i);
+                        $elt = $zip->getFromIndex($i);
+                        $exp = explode("/", $filename);
+                        if (end($exp) != "") {
+                            $fileinfo = pathinfo($filename);
+                            $result = file_put_contents($zipFolder . "/" . $fileinfo['basename'], $elt);
+                        }
+                    }
+                    $zip->close();
 
-        $json = json_decode(file_get_contents($folder . "info.dat"));
-        $song = $songRepository->findBy([
-            "name" => $json->_songName,
-            "authorName" => $json->_songAuthorName
-        ]);
-        if ($song != null) {
-            $this->addFlash("danger", "Cette musique est déjà dans notre catalogue.");
-            return $this->redirectToRoute("home");
+                } else {
+                }
+                $json = json_decode(file_get_contents($zipFolder . "/info.dat"));
+                $song = $songRepository->findBy([
+                    "name" => $json->_songName,
+                    "authorName" => $json->_songAuthorName
+                ]);
+                if ($song != null) {
+                    $this->addFlash("danger", "Cette musique est déjà dans notre catalogue.");
+                    return $this->redirectToRoute("home");
+                }
+                $song = new Song();
+                $song->setVersion($json->_version);
+                $song->setName($json->_songName);
+                $song->setSubName($json->_songSubName);
+                $song->setAuthorName($json->_songAuthorName);
+                $song->setLevelAuthorName($json->_levelAuthorName);
+                $song->setBeatsPerMinute($json->_beatsPerMinute);
+                $song->setShuffle($json->_shuffle);
+                $song->setShufflePeriod($json->_shufflePeriod);
+                $song->setPreviewStartTime($json->_previewStartTime);
+                $song->setPreviewDuration($json->_previewDuration);
+                $song->setApproximativeDuration($json->_songApproximativeDuration);
+                $song->setApproximativeDuration($json->_songApproximativeDuration);
+                $song->setFileName($json->_songFilename);
+                $song->setCoverImageFileName($json->_coverImageFilename);
+                $song->setEnvironmentName($json->_environmentName);
+                $em->persist($song);
+                foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
+                    $diff = new SongDifficulty();
+                    $diff->setSong($song);
+                    $diff->setDifficultyRank($difficultyRankRepository->findOneBy(["level" => $difficulty->_difficultyRank]));
+                    $diff->setDifficulty($difficulty->_difficulty);
+                    $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
+                    $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
+                    $em->persist($diff);
+                }
+                $em->flush();
+                copy($folder . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
+                copy($theZip, $folder . $song->getId() . ".zip");
+            } catch (Exception $e) {
+
+            } finally {
+                rmdir($zipFolder);
+            }
+
         }
-        $song = new Song();
-        $song->setVersion($json->_version);
-        $song->setName($json->_songName);
-        $song->setSubName($json->_songSubName);
-        $song->setAuthorName($json->_songAuthorName);
-        $song->setLevelAuthorName($json->_levelAuthorName);
-        $song->setBeatsPerMinute($json->_beatsPerMinute);
-        $song->setShuffle($json->_shuffle);
-        $song->setShufflePeriod($json->_shufflePeriod);
-        $song->setPreviewStartTime($json->_previewStartTime);
-        $song->setPreviewDuration($json->_previewDuration);
-        $song->setApproximativeDuration($json->_songApproximativeDuration);
-        $song->setApproximativeDuration($json->_songApproximativeDuration);
-        $song->setFileName($json->_songFilename);
-        $song->setCoverImageFileName($json->_coverImageFilename);
-        $song->setEnvironmentName($json->_environmentName);
-        $em->persist($song);
-        foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
-            $diff = new SongDifficulty();
-            $diff->setSong($song);
-            $diff->setDifficultyRank($difficultyRankRepository->findOneBy(["level" => $difficulty->_difficultyRank]));
-            $diff->setDifficulty($difficulty->_difficulty);
-            $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
-            $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
-            $em->persist($diff);
-        }
-        $em->flush();
-        copy($folder . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-
         return $this->render('upload_song/index.html.twig', [
             'controller_name' => 'UploadSongController',
+            'form' => $form->createView()
         ]);
     }
 }
