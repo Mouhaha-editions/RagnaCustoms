@@ -34,15 +34,15 @@ class UploadSongController extends AbstractController
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
+            $folder = $kernel->getProjectDir() . "/public/tmp-song/";
+            $unzipFolder = $folder . uniqid();
             try {
-                $folder = $kernel->getProjectDir() . "/public/tmp-song/";
 
                 /** @var UploadedFile $file */
                 $file = $form->get('zipFile')->getData();
-                $zipFolder = $folder . uniqid();
-                $file->move($zipFolder, $file->getClientOriginalName());
+                $file->move($unzipFolder, $file->getClientOriginalName());
                 $zip = new ZipArchive();
-                $theZip = $zipFolder . "/" . $file->getClientOriginalName();
+                $theZip = $unzipFolder . "/" . $file->getClientOriginalName();
                 if ($zip->open($theZip) === TRUE) {
                     for ($i = 0; $i < $zip->numFiles; $i++) {
                         $filename = $zip->getNameIndex($i);
@@ -50,22 +50,22 @@ class UploadSongController extends AbstractController
                         $exp = explode("/", $filename);
                         if (end($exp) != "") {
                             $fileinfo = pathinfo($filename);
-                            $result = file_put_contents($zipFolder . "/" . $fileinfo['basename'], $elt);
+                            $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
                         }
                     }
                     $zip->close();
 
                 } else {
                 }
-                $json = json_decode(file_get_contents($zipFolder . "/info.dat"));
+                $json = json_decode(file_get_contents($unzipFolder . "/info.dat"));
                 $song = $songRepository->findBy([
                     "name" => $json->_songName,
                     "authorName" => $json->_songAuthorName
                 ]);
-                if ($song != null) {
-                    $this->addFlash("danger", "Cette musique est déjà dans notre catalogue.");
-                    return $this->redirectToRoute("home");
-                }
+//                if ($song != null) {
+//                    $this->addFlash("danger", "Cette musique est déjà dans notre catalogue.");
+//                    return $this->redirectToRoute("home");
+//                }
                 $song = new Song();
                 $song->setVersion($json->_version);
                 $song->setName($json->_songName);
@@ -93,12 +93,13 @@ class UploadSongController extends AbstractController
                     $em->persist($diff);
                 }
                 $em->flush();
-                copy($folder . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
                 copy($theZip, $folder . $song->getId() . ".zip");
+                copy($unzipFolder ."/". $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
             } catch (Exception $e) {
-
+$this->addFlash('danger',"Erreur lors de l'upload : ".$e->getMessage());
             } finally {
-                rmdir($zipFolder);
+                $this->rrmdir($unzipFolder);
+                unlink($theZip);
             }
 
         }
@@ -107,4 +108,22 @@ class UploadSongController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    public function rrmdir($dir)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . "/" . $object))
+                        $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
+                    else
+                        unlink($dir . DIRECTORY_SEPARATOR . $object);
+                }
+            }
+            rmdir($dir);
+        }
+    }
+
+
 }
