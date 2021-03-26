@@ -32,9 +32,12 @@
                     <div class="form-item split medium">
                         <!-- FORM SELECT -->
                         <div class="form-select">
-                            <label for="downloads-filter-category">{{ "Filter By"|trans }}</label>
-                            <select id="downloads-filter-category" name="downloads_filter_category">
-                                <option value="">{{ "Soon"|trans }}</option>
+                            <label for="downloads-filter-category">{{ "Filter by difficulties"|trans }}</label>
+                            <select id="downloads-filter-category" name="downloads_filter_difficulties">
+                                <option value="">{{ "All"|trans }}</option>
+                                <option value="1">{{ "1-3"|trans }}</option>
+                                <option value="2">{{ "4-7"|trans }}</option>
+                                <option value="3">{{ "8-10"|trans }}</option>
                             </select>
                             <!-- FORM SELECT ICON -->
                             <svg class="form-select-icon icon-small-arrow">
@@ -59,7 +62,7 @@
                         <!-- /FORM SELECT -->
 
                         <!-- BUTTON -->
-                        <button class="button primary">{{ "Filter songs"|trans }}</button>
+                        <button type="submit" class="button primary">{{ "Filter songs"|trans }}</button>
                         <!-- /BUTTON -->
                     </div>
                     <!-- /FORM ITEM -->

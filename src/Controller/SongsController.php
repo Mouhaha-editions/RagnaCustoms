@@ -21,6 +21,22 @@ class SongsController extends AbstractController
     {
         $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")
             ;
+        if($request->get('downloads_filter_difficulties', null)){
+            $qb->leftJoin('s.songDifficulties','song_difficulties')
+                ->leftJoin('song_difficulties.difficultyRank','rank');
+            switch($request->get('downloads_filter_difficulties')){
+                case 1:
+                    $qb->where('rank.level BETWEEN 1 and 3');
+                    break;
+                case 2 :
+                    $qb->where('rank.level BETWEEN 4 and 7');
+                    break;
+                case 3 :
+                    $qb->where('rank.level BETWEEN 8 and 10');
+
+                    break;
+            }
+        }
         $pagination = $paginationService->setDefaults(40)->process($qb,$request);
 
         return $this->render('songs/index.html.twig', [
