@@ -117,6 +117,11 @@ class Song
      */
     private $downloads = 0;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $moderated = false;
+
 
     public function __construct()
     {
@@ -384,6 +389,22 @@ class Song
         $this->downloads = $downloads;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isModerated(): bool
+    {
+        return $this->moderated;
+    }
+
+    /**
+     * @param bool $moderated
+     */
+    public function setModerated(bool $moderated): void
+    {
+        $this->moderated = $moderated;
     }
 
 }

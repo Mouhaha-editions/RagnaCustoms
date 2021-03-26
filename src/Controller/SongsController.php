@@ -15,18 +15,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class SongsController extends AbstractController
 {
     /**
-     * @Route("/songs", name="songs")
+     * @Route("/", name="songs")
      */
     public function index(Request $request,SongRepository $songRepository, PaginationService $paginationService): Response
     {
         $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")
-            ->where('s.voteDown')
-            ->orderBy('');
-        $paginationService->setDefaults(40)->process($qb,$request);
+            ;
+        $pagination = $paginationService->setDefaults(40)->process($qb,$request);
 
         return $this->render('songs/index.html.twig', [
             'controller_name' => 'SongsController',
-            'songs' => $songRepository->findAll()
+            'songs' => $pagination
         ]);
     }
 

@@ -12,6 +12,7 @@ import './styles/app.scss';
 import './bootstrap';
 
 import "./app.bundle.min";
+import  '../public/bundles/pagination/js/see-more.js';
 
 const copyToClipboard = str => {
     const el = document.createElement('textarea');
