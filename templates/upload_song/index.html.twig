@@ -3,5 +3,29 @@
 {% block title %}Hello UploadSongController!{% endblock %}
 
 {% block body %}
-{{ form(form) }}
+<div class="widget-box">
+
+    {{ form_start(form) }}
+    <div class="form-row">
+        <!-- FORM ITEM -->
+        <div class="form-item">
+            <!-- FORM INPUT -->
+            <div class="form-input">
+                {{ form_row(form.zipFile) }}
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <!-- FORM ITEM -->
+        <div class="form-item">
+            <!-- BUTTON -->
+            {{ form_row(form.send) }}
+
+            <!-- /BUTTON -->
+        </div>
+        <!-- /FORM ITEM -->
+    </div>
+    {{ form_end(form) }}
+</div>
+
 {% endblock %}
