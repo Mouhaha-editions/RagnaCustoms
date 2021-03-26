@@ -1,0 +1,291 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <!-- GRID -->
+    <div class="grid grid-12">
+
+        <!-- GRID COLUMN -->
+        <div class="account-hub-content">
+            <!-- SECTION HEADER -->
+            <div class="section-header">
+                <!-- SECTION HEADER INFO -->
+                <div class="section-header-info">
+                    <!-- SECTION PRETITLE -->
+                    <p class="section-pretitle">Catalogue</p>
+                    <!-- /SECTION PRETITLE -->
+
+                    <!-- SECTION TITLE -->
+                    <h2 class="section-title">Songs <span class="highlighted">{{ songs|length }}</span></h2>
+                    <!-- /SECTION TITLE -->
+                </div>
+                <!-- /SECTION HEADER INFO -->
+            </div>
+            <!-- /SECTION HEADER -->
+
+            <!-- SECTION FILTERS BAR -->
+            <div class="section-filters-bar v2">
+                <!-- FORM -->
+                <form class="form">
+                    <!-- FORM ITEM -->
+                    <div class="form-item split medium">
+                        <!-- FORM SELECT -->
+                        <div class="form-select">
+                            <label for="downloads-filter-category">{{ "Fitler By"|trans }}</label>
+                            <select id="downloads-filter-category" name="downloads_filter_category">
+                                <option value="1">All Categories</option>
+                            </select>
+                            <!-- FORM SELECT ICON -->
+                            <svg class="form-select-icon icon-small-arrow">
+                                <use xlink:href="#svg-small-arrow"></use>
+                            </svg>
+                            <!-- /FORM SELECT ICON -->
+                        </div>
+                        <!-- /FORM SELECT -->
+
+                        <!-- FORM SELECT -->
+                        <div class="form-select">
+                            <label for="downloads-filter-order">Order By</label>
+                            <select id="downloads-filter-order" name="downloads_filter_order">
+                                <option value="1">Purchase Date (Latest to Oldest)</option>
+                                <option value="2">Purchase Date (Oldest to Latest)</option>
+                            </select>
+                            <!-- FORM SELECT ICON -->
+                            <svg class="form-select-icon icon-small-arrow">
+                                <use xlink:href="#svg-small-arrow"></use>
+                            </svg>
+                            <!-- /FORM SELECT ICON -->
+                        </div>
+                        <!-- /FORM SELECT -->
+
+                        <!-- BUTTON -->
+                        <button class="button primary">Filter Downloads!</button>
+                        <!-- /BUTTON -->
+                    </div>
+                    <!-- /FORM ITEM -->
+                </form>
+                <!-- /FORM -->
+            </div>
+            <!-- /SECTION FILTERS BAR -->
+
+            <!-- TABLE WRAP -->
+            <div class="table-wrap" data-simplebar>
+                <!-- TABLE -->
+                <div class="table table-downloads split-rows">
+                    <!-- TABLE HEADER -->
+                    <div class="table-header">
+                        <!-- TABLE HEADER COLUMN -->
+                        <div class="table-header-column">
+                            <!-- TABLE HEADER TITLE -->
+                            <p class="table-header-title">Song</p>
+                            <!-- /TABLE HEADER TITLE -->
+                        </div>
+                        <!-- /TABLE HEADER COLUMN -->
+
+                        <!-- TABLE HEADER COLUMN -->
+                        <div class="table-header-column padded">
+                            <!-- TABLE HEADER TITLE -->
+                            <p class="table-header-title">Duration</p>
+                            <!-- /TABLE HEADER TITLE -->
+                        </div>
+                        <!-- /TABLE HEADER COLUMN -->
+
+                        <!-- TABLE HEADER COLUMN -->
+                        <div class="table-header-column padded">
+                            <!-- TABLE HEADER TITLE -->
+                            <p class="table-header-title">BPM</p>
+                            <!-- /TABLE HEADER TITLE -->
+                        </div>
+                        <div class="table-header-column padded">
+                            <!-- TABLE HEADER TITLE -->
+                            <p class="table-header-title">Votes</p>
+                            <!-- /TABLE HEADER TITLE -->
+                        </div>
+                        <!-- /TABLE HEADER COLUMN -->
+
+                        <!-- TABLE HEADER COLUMN -->
+                        <div class="table-header-column padded-left"></div>
+                        <!-- /TABLE HEADER COLUMN -->
+                    </div>
+                    <!-- /TABLE HEADER -->
+
+                    <!-- TABLE BODY -->
+                    <div class="table-body same-color-rows">
+                        {% for song in songs %}
+                        <!-- TABLE ROW -->
+                        <div class="table-row medium">
+                            <!-- TABLE COLUMN -->
+                            <div class="table-column">
+                                <!-- PRODUCT PREVIEW -->
+                                <div class="product-preview tiny">
+                                    <!-- PRODUCT PREVIEW IMAGE -->
+                                    <a href="marketplace-product.html">
+                                        <figure class="product-preview-image short liquid">
+                                            <img src="/covers/{{ song.id ~ song.coverImageExtension }}" alt="item-11">
+                                        </figure>
+                                    </a>
+                                    <!-- /PRODUCT PREVIEW IMAGE -->
+
+                                    <!-- PRODUCT PREVIEW INFO -->
+                                    <div class="product-preview-info">
+                                        <!-- PRODUCT PREVIEW TITLE -->
+                                        <p class="product-preview-title">{{ song.name }}</p>
+                                        <!-- /PRODUCT PREVIEW TITLE -->
+
+                                        <!-- PRODUCT PREVIEW CATEGORY -->
+                                        <p class="product-preview-category">{{ song.authorName }}</p>
+                                        <!-- /PRODUCT PREVIEW CATEGORY -->
+
+                                        <!-- PRODUCT PREVIEW CREATOR -->
+                                        <p class="product-preview-creator">Mapped by : {{ song.levelAuthorName }}</p>
+                                        <p class="product-preview-creator">Difficulties :
+                                            {% for diff in song.songDifficulties %}
+                                                {% if loop.index != 1 %}, {% endif %}
+                                                <span style="color:#{{ diff.difficultyRank.color }}">{{ diff.difficultyRank.level }}</span>
+                                            {% endfor %}</p>
+                                        <!-- /PRODUCT PREVIEW CREATOR -->
+                                    </div>
+                                    <!-- /PRODUCT PREVIEW INFO -->
+                                </div>
+                                <!-- /PRODUCT PREVIEW -->
+                            </div>
+                            <!-- /TABLE COLUMN -->
+
+                            <!-- TABLE COLUMN -->
+                            <div class="table-column padded">
+                                <!-- TABLE TITLE -->
+                                <p class="table-title">{{ song.approximativeDurationMS }}</p>
+                                <!-- /TABLE TITLE -->
+                            </div>
+                            <!-- /TABLE COLUMN -->
+
+                            <!-- TABLE COLUMN -->
+                            <div class="table-column padded">
+                                <!-- TABLE TITLE -->
+                                <p class="table-title">{{ song.beatsPerMinute|round }}</p>
+                                <!-- /TABLE TITLE -->
+                            </div>
+                            <!-- /TABLE COLUMN -->
+
+
+                            <!-- TABLE COLUMN -->
+                            <div class="table-column padded text-center ">
+                                <!-- TABLE TITLE -->
+
+                                <div>
+                                    <span class="text-success">
+                                    0 &nbsp;<!-- ICON THUMBS UP -->
+                                    <i class="far fa-thumbs-up"></i>
+                                        </span>&nbsp;
+                                    <span class="text-danger">
+
+                                    0 &nbsp;<!-- ICON THUMBS UP -->
+                                    <i class="far fa-thumbs-down"></i>
+                                    </span>
+                                    <!-- /ICON THUMBS UP -->
+                                </div>
+                                <!-- /TABLE TITLE -->
+                            </div>
+                            <!-- /TABLE COLUMN -->
+
+                            <!-- TABLE COLUMN -->
+                            <div class="table-column padded-left">
+                                <!-- TABLE ACTIONS -->
+                                <div class="table-actions">
+                                    <!-- BUTTON -->
+                                    <a href="#" data-to-copy="!rq {{ song.id }}" class="copy-clipboard button small button-icon twitch">
+                                        <svg class="social-link-icon icon-twitch">
+                                            <use xlink:href="#svg-twitch"></use>
+                                        </svg>&nbsp;
+                                        !rq {{ song.id }}
+                                    </a>
+
+                                    <a href="ragnac://install/{{ song.id }}" class="button small tertiary">
+                                        1 click
+                                    </a>
+                                    <a href="{{ url("song_download",{id:song.id}) }}" class="button small primary">
+                                        Download
+                                    </a>
+                                    <!-- /BUTTON -->
+
+                                    <!-- BUTTON -->
+{#                                    <div class="button with-only-icon popup-review-trigger">#}
+{#                                        <!-- RATING LIST -->#}
+{#                                        <div class="rating-list">#}
+{#                                            <!-- RATING -->#}
+{#                                            <div class="rating dark filled">#}
+{#                                                <!-- RATING ICON -->#}
+{#                                                <svg class="rating-icon icon-star">#}
+{#                                                    <use xlink:href="#svg-star"></use>#}
+{#                                                </svg>#}
+{#                                                <!-- /RATING ICON -->#}
+{#                                            </div>#}
+{#                                            <!-- /RATING -->#}
+
+{#                                            <!-- RATING -->#}
+{#                                            <div class="rating dark filled">#}
+{#                                                <!-- RATING ICON -->#}
+{#                                                <svg class="rating-icon icon-star">#}
+{#                                                    <use xlink:href="#svg-star"></use>#}
+{#                                                </svg>#}
+{#                                                <!-- /RATING ICON -->#}
+{#                                            </div>#}
+{#                                            <!-- /RATING -->#}
+
+{#                                            <!-- RATING -->#}
+{#                                            <div class="rating dark filled">#}
+{#                                                <!-- RATING ICON -->#}
+{#                                                <svg class="rating-icon icon-star">#}
+{#                                                    <use xlink:href="#svg-star"></use>#}
+{#                                                </svg>#}
+{#                                                <!-- /RATING ICON -->#}
+{#                                            </div>#}
+{#                                            <!-- /RATING -->#}
+
+{#                                            <!-- RATING -->#}
+{#                                            <div class="rating dark filled">#}
+{#                                                <!-- RATING ICON -->#}
+{#                                                <svg class="rating-icon icon-star">#}
+{#                                                    <use xlink:href="#svg-star"></use>#}
+{#                                                </svg>#}
+{#                                                <!-- /RATING ICON -->#}
+{#                                            </div>#}
+{#                                            <!-- /RATING -->#}
+
+{#                                            <!-- RATING -->#}
+{#                                            <div class="rating dark filled">#}
+{#                                                <!-- RATING ICON -->#}
+{#                                                <svg class="rating-icon icon-star">#}
+{#                                                    <use xlink:href="#svg-star"></use>#}
+{#                                                </svg>#}
+{#                                                <!-- /RATING ICON -->#}
+{#                                            </div>#}
+{#                                            <!-- /RATING -->#}
+{#                                        </div>#}
+{#                                        <!-- /RATING LIST -->#}
+{#                                    </div>#}
+                                    <!-- /BUTTON -->
+
+                                </div><small class="white pt-2  small">You need our app tu use 1 click installer button</small>
+                                <!-- /TABLE ACTIONS -->
+                            </div>
+                            <!-- /TABLE COLUMN -->
+                        </div>
+                        <!-- /TABLE ROW -->
+{% endfor %}
+
+                    </div>
+                    <!-- /TABLE BODY -->
+                </div>
+                <!-- /TABLE -->
+            </div>
+            <!-- TABLE WRAP -->
+        </div>
+        <!-- /GRID COLUMN -->
+    </div>
+    <!-- /GRID -->
+
+{% endblock %}
+
+
