@@ -91,6 +91,11 @@
                 {% else %}
                     <li class="menu-main-item">
                         <!-- MENU MAIN ITEM LINK -->
+                        <a href="{{ url('upload_song') }}" class="menu-main-item-link">Upload a song</a>
+                        <!-- /MENU MAIN ITEM LINK -->
+                    </li>
+                    <li class="menu-main-item">
+                        <!-- MENU MAIN ITEM LINK -->
                         <a href="{{ url('app_logout') }}" class="menu-main-item-link">Logout</a>
                         <!-- /MENU MAIN ITEM LINK -->
                     </li>
@@ -2193,6 +2198,15 @@
 
 <!-- CONTENT GRID -->
 <div class="content-grid">
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-dismissible alert-{{ label }}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                {{ message|trans }}
+            </div>
+        {% endfor %}
+    {% endfor %}
     {% block body %}
         <!-- GRID -->
         <div class="grid grid-3-9 medium-space">
