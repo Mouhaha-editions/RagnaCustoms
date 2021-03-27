@@ -3,28 +3,181 @@
 {% block title %}Hello UploadSongController!{% endblock %}
 
 {% block body %}
-<div class="widget-box">
+    <div class="widget-box">
+        <h2>Upload new song</h2>
+        <p class="pt-2">
+            Upload a .zip  file max 15Mo. that contain all files for the new map.
+        </p>
 
-    {{ form_start(form) }}
-    <div class="form-row">
-        <!-- FORM ITEM -->
-        <div class="form-item">
-            <!-- FORM INPUT -->
-            <div class="form-input">
-                {{ form_row(form.zipFile) }}
+        {{ form_start(form) }}
+        <div class="form-row">
+            <!-- FORM ITEM -->
+            <div class="form-item">
+                <!-- FORM INPUT -->
+                <div class="form-input white">
+                    {{ form_widget(form.zipFile) }}
+                </div>
             </div>
         </div>
-    </div>
-    <div class="form-row">
-        <!-- FORM ITEM -->
-        <div class="form-item">
-            <!-- BUTTON -->
-            <button class="button medium secondary">{{ "Upload"|trans }}</button>
-            <!-- /BUTTON -->
-        </div>
-        <!-- /FORM ITEM -->
-    </div>
-    {{ form_end(form) }}
-</div>
+        <div class="form-row">
+            <!-- FORM ITEM -->
+            <div class="form-item">
+                <div class="checkbox-wrap">
+                    {{ form_widget(form.replaceExisting) }}
+                    <!-- CHECKBOX BOX -->
+                    <div class="checkbox-box">
+                        <!-- ICON CROSS -->
+                        <svg class="icon-cross">
+                            <use xlink:href="#svg-cross"></use>
+                        </svg>
+                        <!-- /ICON CROSS -->
+                    </div>
+                    <!-- /CHECKBOX BOX -->
+                    <label for="form_replaceExisting">{{ "Replace song with same Name, author and mapper uploaded by yourself."|trans }}</label>
+                </div>
 
+            </div>
+        </div>
+        <div class="form-row">
+            <!-- FORM ITEM -->
+            <div class="form-item">
+                <!-- BUTTON -->
+                <button class="button medium secondary">{{ "Upload"|trans }}</button>
+                <!-- /BUTTON -->
+            </div>
+            <!-- /FORM ITEM -->
+        </div>
+        {{ form_end(form) }}
+    </div>
+
+
+
+    <div class="table table-quests split-rows">
+        <!-- TABLE HEADER -->
+        <div class="table-header">
+            <!-- TABLE HEADER COLUMN -->
+            <div class="table-header-column">
+                <!-- TABLE HEADER TITLE -->
+                <p class="table-header-title">Cover</p>
+                <!-- /TABLE HEADER TITLE -->
+            </div>
+            <!-- /TABLE HEADER COLUMN -->
+
+            <!-- TABLE HEADER COLUMN -->
+            <div class="table-header-column">
+                <!-- TABLE HEADER TITLE -->
+                <p class="table-header-title">Title / Author</p>
+                <!-- /TABLE HEADER TITLE -->
+            </div>
+            <!-- /TABLE HEADER COLUMN -->
+
+            <!-- TABLE HEADER COLUMN -->
+            <div class="table-header-column padded">
+                <!-- TABLE HEADER TITLE -->
+                <p class="table-header-title">Mapper</p>
+                <!-- /TABLE HEADER TITLE -->
+            </div>
+            <!-- /TABLE HEADER COLUMN -->
+
+            <!-- TABLE HEADER COLUMN -->
+            <div class="table-header-column centered  padded">
+                <!-- TABLE HEADER TITLE -->
+                <p class="table-header-title">Downloads</p>
+                <!-- /TABLE HEADER TITLE -->
+            </div>
+            <div class="table-header-column centered padded">
+                <!-- TABLE HEADER TITLE -->
+                <p class="table-header-title">Votes</p>
+                <!-- /TABLE HEADER TITLE -->
+            </div>
+            <div class="table-header-column centered padded">
+                <!-- TABLE HEADER TITLE -->
+                <p class="table-header-title">Actions</p>
+                <!-- /TABLE HEADER TITLE -->
+            </div>
+            <!-- /TABLE HEADER COLUMN -->
+        </div>
+        <!-- /TABLE HEADER -->
+
+        <!-- TABLE BODY -->
+        <div class="table-body same-color-rows">
+            {% for song in songs.entities %}
+
+            <!-- TABLE ROW -->
+            <div class="table-row small">
+                <!-- TABLE COLUMN -->
+                <div class="table-column">
+                    <!-- TABLE INFORMATION -->
+                    <div class="table-information">
+                        <!-- TABLE IMAGE -->
+                        <img class="table-image" style="width:70px;" src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="completedq-s">
+                        <!-- /TABLE IMAGE -->
+                    </div>
+                    <!-- /TABLE INFORMATION -->
+                </div>
+                <!-- /TABLE COLUMN -->
+
+                <!-- TABLE COLUMN -->
+                <div class="table-column padded">
+                    <!-- TABLE TITLE -->
+                    <p class="table-text">{{ song.name }}<br/>{{ song.authorName }}</p>
+                    <!-- /TABLE TITLE -->
+                </div>
+                <div class="table-column padded">
+                    <!-- TABLE TITLE -->
+                    <p class="table-text">{{ song.levelAuthorName }}</p>
+                    <!-- /TABLE TITLE -->
+                </div>
+                <!-- /TABLE COLUMN -->
+
+                <!-- TABLE COLUMN -->
+                <div class="table-column centered padded">
+                    <!-- TEXT STICKER -->
+                        <!-- TEXT STICKER ICON -->
+
+                        <!-- TEXT STICKER ICON -->
+                        <h6>{{ song.downloads }}</h6>
+                    <!-- /TEXT STICKER -->
+                </div>
+                <!-- /TABLE COLUMN -->
+
+                <!-- TABLE COLUMN -->
+                <div class="table-column centered padded">
+                    <!-- PROGRESS STAT WRAP -->
+                    <h6><span class="text-success">{{ song.voteUp }}</span> /
+                 <span class="text-danger">{{ song.voteDown }}</span></h6>
+                    <!-- /PROGRESS STAT WRAP -->
+                </div>
+                <div class="table-column centered padded">
+                    <!-- PROGRESS STAT WRAP -->
+                    <a class="text-danger ask-for-confirmation" href="{{ url('delete_song',{id:song.id}) }}"><i class="fas fa-trash"></i></a>
+                    <!-- /PROGRESS STAT WRAP -->
+                </div>
+                <!-- /TABLE COLUMN -->
+            </div>
+            <!-- /TABLE ROW -->
+
+            {% endfor %}
+        </div>
+        <!-- /TABLE BODY -->
+        {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+        {{ macro_pagination.paginate(songs) }}
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
 {% endblock %}

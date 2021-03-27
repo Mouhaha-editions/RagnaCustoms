@@ -57,8 +57,16 @@
         <!-- TABLE COLUMN -->
         <div class="table-column padded text-center ">
             <!-- TABLE TITLE -->
-            <div class="song-vote-{{ song.id }}">
-                {% include 'songs/partial/vote.html.twig' with {song:song} %}
+            <div>
+               <span class="text-success">
+                0 &nbsp;<!-- ICON THUMBS UP -->
+                <i class="far fa-thumbs-up"></i>
+               </span>&nbsp;
+                <span class="text-danger">
+
+                                    0 &nbsp;<!-- ICON THUMBS UP -->
+                                    <i class="far fa-thumbs-down"></i>
+                                    </span>
                 <!-- /ICON THUMBS UP -->
             </div>
             <!-- /TABLE TITLE -->

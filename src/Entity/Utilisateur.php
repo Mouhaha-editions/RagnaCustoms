@@ -53,9 +53,15 @@ class Utilisateur implements UserInterface
      */
     private $songs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $votes;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
+        $this->votes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -186,5 +192,57 @@ class Utilisateur implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Vote[]
+     */
+    public function getVotes(): Collection
+    {
+        return $this->votes;
+    }
+
+    public function addVote(Vote $vote): self
+    {
+        if (!$this->votes->contains($vote)) {
+            $this->votes[] = $vote;
+            $vote->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVote(Vote $vote): self
+    {
+        if ($this->votes->removeElement($vote)) {
+            // set the owning side to null (unless already changed)
+            if ($vote->getUser() === $this) {
+                $vote->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function hasVotedUpFor(Song $song) :bool
+    {
+        foreach($this->getVotes() As $vote){
+            if($song !== $vote->getSong()){continue;}
+            if($vote->getKind() == Vote::KIND_UP){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function hasVotedDownFor(Song $song) :bool
+    {
+        foreach($this->getVotes() As $vote){
+            if($song !== $vote->getSong()){continue;}
+            if($vote->getKind() == Vote::KIND_DOWN){
+                return true;
+            }
+        }
+        return false;
     }
 }

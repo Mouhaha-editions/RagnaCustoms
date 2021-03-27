@@ -127,10 +127,16 @@ class Song
      */
     private $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="song", orphanRemoval=true)
+     */
+    private $votes;
+
 
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
+        $this->votes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -422,6 +428,45 @@ class Song
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Vote[]
+     */
+    public function getVotes(): Collection
+    {
+        return $this->votes;
+    }
+
+    public function addVote(Vote $vote): self
+    {
+        if (!$this->votes->contains($vote)) {
+            $this->votes[] = $vote;
+            $vote->setSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVote(Vote $vote): self
+    {
+        if ($this->votes->removeElement($vote)) {
+            // set the owning side to null (unless already changed)
+            if ($vote->getSong() === $this) {
+                $vote->setSong(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSongDifficultiesStr()
+    {
+        $diff = [];
+        foreach($this->getSongDifficulties() AS $difficulty){
+            $diff[] = $difficulty->getDifficultyRank()->getLevel();
+        }
+        return join(', ',$diff);
     }
 
 }
