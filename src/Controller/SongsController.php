@@ -26,6 +26,13 @@ class SongsController extends AbstractController
      */
     public function voteUp(Request $request,Song $song,VoteRepository $voteRepository): Response
     {
+        if(!$this->isGranted('ROLE_USER')) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => "You need an account to vote !",
+                "result" => null,
+            ]);
+        }
         $em = $this->getDoctrine()->getManager();
         $vote = $voteRepository->findOneBy(['song'=>$song, 'user'=>$this->getUser()]);
         if($vote == null){
@@ -63,6 +70,13 @@ class SongsController extends AbstractController
      */
     public function voteDown(Request $request,Song $song, VoteRepository $voteRepository): Response
     {
+        if(!$this->isGranted('ROLE_USER')) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => "You need an account to vote !",
+                "result" => null,
+            ]);
+        }
         $em = $this->getDoctrine()->getManager();
         $vote = $voteRepository->findOneBy(['song'=>$song, 'user'=>$this->getUser()]);
         if($vote == null){
