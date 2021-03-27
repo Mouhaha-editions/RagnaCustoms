@@ -16,6 +16,6 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 .idea/*
-public/songs/*
+public/songs-files/*
 public/covers/*
 public/tmp-song/*
