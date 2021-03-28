@@ -1,7 +1,7 @@
 /*-----------------
     PAGE LOADER 
 -----------------*/
-// require('./global/page-loader');
+require('./global/page-loader');
 
 /*----------------
     SCROLLBARS 
