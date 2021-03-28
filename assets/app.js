@@ -11,7 +11,7 @@ import './styles/app.scss';
 // start the Stimulus application
 import './bootstrap';
 
-import "./app.bundle.min";
+import "./app.bundle";
 
 import '../public/bundles/pagination/js/see-more.js';
 
@@ -51,7 +51,6 @@ $(function () {
             error: function (data) {
                 alert('Erreur lors de la requete');
             }
-
         });
 
         return false;
@@ -60,5 +59,4 @@ $(function () {
     $(document).on('click', '.ask-for-confirmation', function () {
         return confirm("Your are going to delete an element definitely, do you confirm ?");
     });
-    $(window).trigger('resize');
 })
