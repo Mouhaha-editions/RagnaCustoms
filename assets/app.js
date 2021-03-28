@@ -12,7 +12,7 @@ import './styles/app.scss';
 import './bootstrap';
 
 import "./app.bundle.min";
-import  '../public/bundles/pagination/js/see-more.js';
+import '../public/bundles/pagination/js/see-more.js';
 
 const copyToClipboard = str => {
     const el = document.createElement('textarea');
@@ -25,37 +25,38 @@ const copyToClipboard = str => {
     document.execCommand('copy');
     document.body.removeChild(el);
 };
-$(".copy-clipboard").on('click',function(){
+$(".copy-clipboard").on('click', function () {
     copyToClipboard($(this).data('to-copy'));
 })
 
-
-$(document).on("click",".ajax-link",function(){
-   let t = $(this);
-   let action = t.data('success-action');
-    $.ajax({
-       url : t.data('url'),
-        dataType: 'json',
-        success: function(data){
-            if(data.error){
-                alert(data.errorMessage);
-                return;
+$(function () {
+    $(document).on("click", ".ajax-link", function () {
+        let t = $(this);
+        let action = t.data('success-action');
+        $.ajax({
+            url: t.data('url'),
+            dataType: 'json',
+            success: function (data) {
+                if (data.error) {
+                    alert(data.errorMessage);
+                    return;
+                }
+                switch (action) {
+                    case "replace":
+                        $(t.data('replace-selector')).html(data.result);
+                        break;
+                }
+            },
+            error: function (data) {
+                alert('Erreur lors de la requete');
             }
-            switch(action){
-                case "replace":
-                    $(t.data('replace-selector')).html(data.result);
-                    break;
-            }
-        },
-        error: function(data){
-           alert('Erreur lors de la requete');
-        }
 
+        });
+
+        return false;
     });
 
-    return false;
-});
-
-$(document).on('click','.ask-for-confirmation', function(){
- return confirm("Your are going to delete an element definitely, do you confirm ?")
-});
+    $(document).on('click', '.ask-for-confirmation', function () {
+        return confirm("Your are going to delete an element definitely, do you confirm ?");
+    });
+})
