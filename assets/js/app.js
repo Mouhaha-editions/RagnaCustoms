@@ -58,7 +58,7 @@ require('./sidebar/sidebar');
 /*-----------------
     USER AVATAR 
 -----------------*/
-// require('./global/user-avatar.hexagons');
+require('./global/user-avatar.hexagons');
 
 /*----------
     MAPS 
@@ -76,9 +76,9 @@ require('./content/content.tab');
 /*-------------
     CHARTS
 -------------*/
-// require('./global/charts');
+require('./global/charts');
 
 /*---------------
     WIDGETS 
 ---------------*/
-// require('./widget/twitter');
+require('./widget/twitter');
