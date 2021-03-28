@@ -31,7 +31,6 @@ class UploadSongController extends AbstractController
     {
         if($song->getUser() == $this->getUser()){
             $em = $this->getDoctrine()->getManager();
-            $this->addFlash('danger', "The file seems to not be valid, at least info.dat is missing.");
             unlink($kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
             unlink($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() .".zip");
             $this->addFlash('success', "Song removed from catalog.");
