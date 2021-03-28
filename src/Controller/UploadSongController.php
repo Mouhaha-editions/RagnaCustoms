@@ -110,7 +110,16 @@ class UploadSongController extends AbstractController
 
                 }
                 try {
-                    $json = json_decode(file_get_contents($unzipFolder . "/info.dat"));
+                    $file = $unzipFolder . "/info.dat";
+                    if(!file_exists($file)){
+                        $file = $unzipFolder . "/Info.dat";
+                        if(!file_exists($file)){
+                            $this->addFlash('danger', "The file seems to not be valid, at least info.dat is missing.");
+                            $this->rrmdir($unzipFolder);
+                            return $this->redirectToRoute("upload_song");
+                        }
+                    }
+                    $json = json_decode(file_get_contents($file));
                 }catch(Exception $e){
                     $this->addFlash('danger', "The file seems to not be valid, at least info.dat is missing.");
                     $this->rrmdir($unzipFolder);
