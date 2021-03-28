@@ -61,4 +61,5 @@ $(function () {
         return confirm("Your are going to delete an element definitely, do you confirm ?");
     });
     $(window).trigger('resize');
+
 })
