@@ -184,7 +184,7 @@ class UploadSongController extends AbstractController
                 $this->addFlash('danger', "Erreur lors de l'upload : " . $e->getMessage());
                 return $this->redirectToRoute("upload_song");
             } finally {
-                $this->rrmdir($unzipFolder);
+//                $this->rrmdir($unzipFolder);
             }
 
         }
