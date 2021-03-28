@@ -500,29 +500,25 @@ input[type="password"] {
   padding: 0 18px;
 }
 
-input[type="text"]::-webkit-input-placeholder,
-input[type="password"]::-webkit-input-placeholder {
+input[type="text"]::-webkit-input-placeholder, input[type="password"]::-webkit-input-placeholder {
   color: #9aa4bf;
   font-size: 0.875rem;
   font-weight: 500;
 }
 
-input[type="text"]::-moz-placeholder,
-input[type="password"]::-moz-placeholder {
+input[type="text"]::-moz-placeholder, input[type="password"]::-moz-placeholder {
   color: #9aa4bf;
   font-size: 0.875rem;
   font-weight: 500;
 }
 
-input[type="text"]:-ms-input-placeholder,
-input[type="password"]:-ms-input-placeholder {
+input[type="text"]:-ms-input-placeholder, input[type="password"]:-ms-input-placeholder {
   color: #9aa4bf;
   font-size: 0.875rem;
   font-weight: 500;
 }
 
-input[type="text"]::-ms-input-placeholder,
-input[type="password"]::-ms-input-placeholder {
+input[type="text"]::-ms-input-placeholder, input[type="password"]::-ms-input-placeholder {
   color: #9aa4bf;
   font-size: 0.875rem;
   font-weight: 500;
@@ -698,30 +694,22 @@ textarea::placeholder {
   color: #fff;
 }
 
-.form-input.dark input[type="text"]::-webkit-input-placeholder,
-.form-input.dark input[type="password"]::-webkit-input-placeholder,
-.form-input.dark textarea::-webkit-input-placeholder {
+.form-input.dark input[type="text"]::-webkit-input-placeholder, .form-input.dark input[type="password"]::-webkit-input-placeholder, .form-input.dark textarea::-webkit-input-placeholder {
   color: #8b88ff;
   opacity: .6;
 }
 
-.form-input.dark input[type="text"]::-moz-placeholder,
-.form-input.dark input[type="password"]::-moz-placeholder,
-.form-input.dark textarea::-moz-placeholder {
+.form-input.dark input[type="text"]::-moz-placeholder, .form-input.dark input[type="password"]::-moz-placeholder, .form-input.dark textarea::-moz-placeholder {
   color: #8b88ff;
   opacity: .6;
 }
 
-.form-input.dark input[type="text"]:-ms-input-placeholder,
-.form-input.dark input[type="password"]:-ms-input-placeholder,
-.form-input.dark textarea:-ms-input-placeholder {
+.form-input.dark input[type="text"]:-ms-input-placeholder, .form-input.dark input[type="password"]:-ms-input-placeholder, .form-input.dark textarea:-ms-input-placeholder {
   color: #8b88ff;
   opacity: .6;
 }
 
-.form-input.dark input[type="text"]::-ms-input-placeholder,
-.form-input.dark input[type="password"]::-ms-input-placeholder,
-.form-input.dark textarea::-ms-input-placeholder {
+.form-input.dark input[type="text"]::-ms-input-placeholder, .form-input.dark input[type="password"]::-ms-input-placeholder, .form-input.dark textarea::-ms-input-placeholder {
   color: #8b88ff;
   opacity: .6;
 }
