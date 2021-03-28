@@ -28,7 +28,7 @@ require('./global/accordions');
 ------------*/
 require('./utils/svg-loader');
 require('./utils/liquidify');
-require('./utils/demo-icons');
+// require('./utils/demo-icons');
 
 /*------------
     FORM 
@@ -58,12 +58,12 @@ require('./sidebar/sidebar');
 /*-----------------
     USER AVATAR 
 -----------------*/
-require('./global/user-avatar.hexagons');
+// require('./global/user-avatar.hexagons');
 
 /*----------
     MAPS 
 ----------*/
-require('./global/maps');
+// require('./global/maps');
 
 /*---------------
     CONTENT 
@@ -76,9 +76,9 @@ require('./content/content.tab');
 /*-------------
     CHARTS
 -------------*/
-require('./global/charts');
+// require('./global/charts');
 
 /*---------------
     WIDGETS 
 ---------------*/
-require('./widget/twitter');
+// require('./widget/twitter');
