@@ -139,6 +139,8 @@ class SongsController extends AbstractController
                     break;
             }
         }
+
+        $qb->orderBy('s.createdAt', 'DESC');
         $pagination = $paginationService->setDefaults(40)->process($qb,$request);
 
         return $this->render('songs/index.html.twig', [
