@@ -18,6 +18,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class SongsController extends AbstractController
 {
     /**
+     * @Route("/song/test", name="song_test")
+
+     */
+    public function test()
+    {
+        return $this->render('songs/test.html.twig');
+    }
+    /**
      * @Route("/song/vote/up/{id}", name="song_vote_up")
      * @param Request $request
      * @param Song $song
