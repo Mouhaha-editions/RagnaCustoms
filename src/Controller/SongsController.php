@@ -139,7 +139,7 @@ class SongsController extends AbstractController
                     break;
             }
         }
-       $qb->andWhere('song.moderated = true');
+       $qb->andWhere('s.moderated = true');
 
         $qb->orderBy('s.createdAt', 'DESC');
         $pagination = $paginationService->setDefaults(40)->process($qb,$request);
