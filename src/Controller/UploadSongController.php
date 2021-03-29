@@ -160,6 +160,7 @@ class UploadSongController extends AbstractController
                 $song->setFileName($json->_songFilename);
                 $song->setCoverImageFileName($json->_coverImageFilename);
                 $song->setEnvironmentName($json->_environmentName);
+                $song->setModerated($this->getUser()->isCertified());
                 $em->persist($song);
                 foreach($song->getSongDifficulties() AS $difficulty){
                     $em->remove($difficulty);
