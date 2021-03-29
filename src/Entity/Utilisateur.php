@@ -58,6 +58,11 @@ class Utilisateur implements UserInterface
      */
     private $votes;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $certified;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -244,5 +249,17 @@ class Utilisateur implements UserInterface
             }
         }
         return false;
+    }
+
+    public function getCertified(): ?bool
+    {
+        return $this->certified;
+    }
+
+    public function setCertified(?bool $certified): self
+    {
+        $this->certified = $certified;
+
+        return $this;
     }
 }
