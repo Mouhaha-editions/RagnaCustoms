@@ -56,6 +56,7 @@ class UploadSongController extends AbstractController
         $qb = $songRepository->createQueryBuilder('song')
             ->where('song.user = :user')
             ->setParameter('user', $this->getUser());
+
         $qb->orderBy('s.createdAt', 'DESC');
 
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
