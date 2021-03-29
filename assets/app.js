@@ -28,6 +28,7 @@ const copyToClipboard = str => {
 };
 $(".copy-clipboard").on('click', function () {
     copyToClipboard($(this).data('to-copy'));
+    return false;
 })
 
 $(function () {
