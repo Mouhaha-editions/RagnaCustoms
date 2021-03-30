@@ -181,7 +181,6 @@ class UploadSongController extends AbstractController
                         }
                     }
                     $zip->close();
-
                 }
                 try {
                     $file = $unzipFolder . "/info.dat";
@@ -266,17 +265,13 @@ class UploadSongController extends AbstractController
                 $this->addFlash('success', "Song \"" . $song->getName() . "\" by \"" . $song->getAuthorName() . "\" added !");
                 $email = (new Email())
                     ->from('contact@ragnacustoms.com')
-                    ->to('pierrickpobelle@gmail.com')
-                    //->cc('cc@example.com')
-                    //->bcc('bcc@example.com')
-                    //->replyTo('fabien@example.com')
-                    //->priority(Email::PRIORITY_HIGH)
+                    ->to('test-35lro8ply@srv1.mail-tester.com')
                     ->subject('Nouvelle Map by '.$this->getUser()->getUsername().'!')
                     ;
                 if($song->isModerated()){
-                    $email->html("Nouvelle map auto-modérée <a href='".$this->generateUrl('moderate_song',['search'=>$song->getName()])."'>verifier</a>");
+                    $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com/".$this->generateUrl('moderate_song',['search'=>$song->getName()])."'>verifier</a>");
                 }else{
-                    $email->html("Nouvelle map à modérée <a href='".$this->generateUrl('moderate_song',['search'=>$song->getName()])."'>verifier</a>");
+                    $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com/".$this->generateUrl('moderate_song',['search'=>$song->getName()])."'>verifier</a>");
                 }
                 $mailer->send($email);
 
