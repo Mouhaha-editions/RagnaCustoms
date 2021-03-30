@@ -140,6 +140,10 @@ class SongsController extends AbstractController
             }
         }
        $qb->andWhere('s.moderated = true');
+        if($request->get('search', null)) {
+            $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
+                ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+        }
 
         $qb->orderBy('s.createdAt', 'DESC');
         $pagination = $paginationService->setDefaults(40)->process($qb,$request);
