@@ -159,6 +159,9 @@ class SongsController extends AbstractController
      */
     public function download(Song $song, SongRepository $songRepository, KernelInterface $kernel): Response
     {
+        if(!$song->isModerated()){
+            return new Response("Not available now",403);
+        }
         $em = $this->getDoctrine()->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
