@@ -5,11 +5,11 @@
             <!-- PRODUCT PREVIEW -->
             <div class="product-preview tiny">
                 <!-- PRODUCT PREVIEW IMAGE -->
-                <a href="marketplace-product.html">
-                    <figure class="product-preview-image short liquid">
-                        <img src="/covers/{{ song.id ~ song.coverImageExtension }}" alt="item-11">
-                    </figure>
-                </a>
+
+                <figure class="product-preview-image short liquid">
+                    <img src="/covers/{{ song.id ~ song.coverImageExtension }}" alt="item-11">
+                </figure>
+
                 <!-- /PRODUCT PREVIEW IMAGE -->
 
                 <!-- PRODUCT PREVIEW INFO -->
@@ -57,17 +57,24 @@
         <!-- TABLE COLUMN -->
         <div class="table-column padded text-center ">
             <!-- TABLE TITLE -->
-            <div>
-               <span class="text-success">
-                0 &nbsp;<!-- ICON THUMBS UP -->
-                <i class="far fa-thumbs-up"></i>
-               </span>&nbsp;
-                <span class="text-danger">
-
-                                    0 &nbsp;<!-- ICON THUMBS UP -->
-                                    <i class="far fa-thumbs-down"></i>
-                                    </span>
+            <div class="">
                 <!-- /ICON THUMBS UP -->
+                <h6><span class="text-success">{{ song.voteUp }}</span> /
+                    <span class="text-danger">{{ song.voteDown }}</span></h6>
+            </div>
+            <!-- /TABLE TITLE -->
+        </div>
+        <div class="table-column padded text-center ">
+            <!-- TABLE TITLE -->
+            <div class="">
+                <!-- /ICON THUMBS UP -->
+                <h6>
+                    {% if song.voteup > song.voteDown %}
+                        <span class="text-success">{{ song.downloads }}</span>
+                    {% else %}
+                        <span class="text-danger">{{ song.downloads }}</span>
+                    {% endif %}
+                </h6>
             </div>
             <!-- /TABLE TITLE -->
         </div>
@@ -76,27 +83,18 @@
         <!-- TABLE COLUMN -->
         <div class="table-column padded-left">
             <!-- TABLE ACTIONS -->
-            <div class="table-actions">
+            <div class="table-actions button-ajax-{{ song.id }}">
                 <!-- BUTTON -->
-                <a href="#" data-to-copy="!rq {{ song.id }}" class="copy-clipboard button small button-icon twitch">
-                    <svg class="social-link-icon icon-twitch">
-                        <use xlink:href="#svg-twitch"></use>
-                    </svg>&nbsp;
-                    !rq {{ song.id }}
-                </a>
-
-                <a href="ragnac://install/{{ song.id }}" class="button small tertiary">
-                    1 click
-                </a>
-                <a href="{{ url("song_download",{id:song.id}) }}" class="button small primary">
-                    {{ "Download"|trans }}
-                </a>
+                {% include 'upload_song/partial/button_moderation.html.twig' with  {song : song} %}
                 <!-- /BUTTON -->
 
             </div>
-            <small class="white pt-2  small">{{ "You need our app tu use 1 click installer button"|trans }}</small>
             <!-- /TABLE ACTIONS -->
         </div>
         <!-- /TABLE COLUMN -->
     </div>
+    {% else %}
+    <p>No song for now</p>
 {% endfor %}
+{% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+{{ macro_pagination.seeMore(songs,"see more"|trans) }}

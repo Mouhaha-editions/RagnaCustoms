@@ -6,6 +6,9 @@ use App\Entity\Song;
 use App\Entity\Vote;
 use App\Repository\SongRepository;
 use App\Repository\VoteRepository;
+use App\Service\DiscordService;
+use Discord\Discord;
+use Discord\WebSockets\Intents;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -20,8 +23,11 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/test", name="song_test")
      */
-    public function test()
+    public function test(DiscordService $discordService, SongRepository $songRepository)
     {
+//        $discordService->sendNewSongMessage($songRepository->find(5));
+
+
         return $this->render('songs/test.html.twig');
     }
 
@@ -153,7 +159,11 @@ class SongsController extends AbstractController
 
         $qb->orderBy('s.createdAt', 'DESC');
         $pagination = $paginationService->setDefaults(40)->process($qb, $request);
-
+        if ($pagination->isPartial()) {
+            return $this->render('songs/partial/song_row.html.twig', [
+                'songs' => $pagination
+            ]);
+        }
         return $this->render('songs/index.html.twig', [
             'controller_name' => 'SongsController',
             'songs' => $pagination

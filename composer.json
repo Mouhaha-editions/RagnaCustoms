@@ -28,9 +28,11 @@
         "symfony/yaml": "5.2.*",
         "symfonycasts/reset-password-bundle": "^1.5",
         "symfonycasts/verify-email-bundle": "^1.2",
+        "team-reflex/discord-php": "^5.1",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
-        "wohali/oauth2-discord-new": "^1.1"
+        "wohali/oauth2-discord-new": "^1.1",
+      "ext-curl": "*"
     },
     "require-dev": {
         "symfony/debug-bundle": "^5.2",

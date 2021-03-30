@@ -91,4 +91,8 @@
         </div>
         <!-- /TABLE COLUMN -->
     </div>
+    {% else %}
+    <p>No song for now</p>
 {% endfor %}
+{% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+{{ macro_pagination.seeMore(songs,"see more"|trans) }}

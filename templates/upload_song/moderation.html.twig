@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% endblock %}
-
 {% block body %}
     <!-- GRID -->
     <div class="grid grid-12">
@@ -40,6 +38,19 @@
                             <!-- /FORM INPUT -->
                         </div>
 
+                        <div class="form-select">
+                            <label for="downloads-filter-category">{{ "Moderated"|trans }}</label>
+                            <select id="downloads-filter-category" name="moderated">
+                                <option value="">{{ "Tous"|trans }}</option>
+                                <option {%  if app.request.get('moderated') == 2 %}selected="selected"{% endif %}  value="2">{{ "No"|trans }}</option>
+                                <option {%  if app.request.get('moderated') == 1 %}selected="selected"{% endif %}  value="1">{{ "Yes"|trans }}</option>
+                            </select>
+                            <!-- FORM SELECT ICON -->
+                            <svg class="form-select-icon icon-small-arrow">
+                                <use xlink:href="#svg-small-arrow"></use>
+                            </svg>
+                            <!-- /FORM SELECT ICON -->
+                        </div>
 
                         <div class="form-select">
                             <label for="downloads-filter-category">{{ "Filter by difficulties"|trans }}</label>
@@ -115,6 +126,11 @@
                             <p class="table-header-title">{{ "Votes"|trans }}</p>
                             <!-- /TABLE HEADER TITLE -->
                         </div>
+                        <div class="table-header-column padded">
+                            <!-- TABLE HEADER TITLE -->
+                            <p class="table-header-title">{{ "Downloads"|trans }}</p>
+                            <!-- /TABLE HEADER TITLE -->
+                        </div>
                         <!-- /TABLE HEADER COLUMN -->
 
                         <!-- TABLE HEADER COLUMN -->
@@ -127,7 +143,8 @@
                     <div class="table-body same-color-rows">
 
                         <!-- TABLE ROW -->
-                        {% include 'songs/partial/song_row.html.twig' with {songs:songs} %}
+                        {% include 'upload_song/partial/song_row.html.twig' with {songs:songs} %}
+                        <!-- /TABLE ROW -->
 
 
                     </div>
@@ -143,4 +160,7 @@
 
 {% endblock %}
 
+{% block title %}
+
+{% endblock %}
 

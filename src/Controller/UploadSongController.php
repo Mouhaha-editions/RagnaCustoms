@@ -6,6 +6,7 @@ use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\SongRepository;
+use App\Service\DiscordService;
 use Exception;
 use Pkshetlie\PaginationBundle\Models\Pagination;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -14,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -29,25 +31,26 @@ class UploadSongController extends AbstractController
      */
     public function delete(Song $song, KernelInterface $kernel)
     {
-        if($song->getUser() == $this->getUser()){
+        if ($song->getUser() == $this->getUser()) {
             $em = $this->getDoctrine()->getManager();
             unlink($kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-            unlink($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() .".zip");
+            unlink($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
             $this->addFlash('success', "Song removed from catalog.");
-            foreach($song->getSongDifficulties() AS $difficulty){
+            foreach ($song->getSongDifficulties() as $difficulty) {
                 $em->remove($difficulty);
             }
-            foreach($song->getVotes() AS $vote){
+            foreach ($song->getVotes() as $vote) {
                 $em->remove($vote);
             }
             $em->remove($song);
             $em->flush();
             return $this->redirectToRoute("upload_song");
-        }else{
+        } else {
             $this->addFlash('success', "You are not the file uploader..");
             return $this->redirectToRoute("upload_song");
         }
-}
+    }
+
     /**
      * @Route("/upload/song/list", name="my_songs")
      */
@@ -67,6 +70,69 @@ class UploadSongController extends AbstractController
     }
 
     /**
+     * @Route("/admin/moderation", name="moderate_song")
+     */
+    public function moderateSongList(request $request, SongRepository $songRepository, PaginationService $paginationService)
+    {
+        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s");
+        if ($request->get('downloads_filter_difficulties', null)) {
+            $qb->leftJoin('s.songDifficulties', 'song_difficulties')
+                ->leftJoin('song_difficulties.difficultyRank', 'rank');
+            switch ($request->get('downloads_filter_difficulties')) {
+                case 1:
+                    $qb->where('rank.level BETWEEN 1 and 3');
+                    break;
+                case 2 :
+                    $qb->where('rank.level BETWEEN 4 and 7');
+                    break;
+                case 3 :
+                    $qb->where('rank.level BETWEEN 8 and 10');
+                    break;
+            }
+        }
+        if ($request->get('search', null)) {
+            $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
+                ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+        }
+        if ($request->get('moderated', null)) {
+            switch ($request->get('moderated')) {
+                case 1:
+                    $qb->andWhere('(s.moderated = true)');
+                    break;
+                case 2 :
+                    $qb->andWhere('(s.moderated = false)');
+                    break;
+            }
+        }
+        $qb->orderBy('s.createdAt', 'DESC');
+        $pagination = $paginationService->setDefaults(5)->process($qb, $request);
+        if ($pagination->isPartial()) {
+            return $this->render("upload_song/partial/song_row.html.twig", ['songs' => $pagination]);
+        }
+        return $this->render("upload_song/moderation.html.twig", ['songs' => $pagination]);
+    }
+
+    /**
+     * @Route("/admin/moderation/{id}", name="moderate_song_ajax")
+     */
+    public function moderateSongAjaxList(request $request, Song $song, DiscordService $discordService)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $song->setModerated(!$song->isModerated());
+        $em->flush();
+
+        if ($song->isModerated()) {
+            $discordService->sendNewSongMessage($song);
+        }
+        return new JsonResponse([
+            'error' => false,
+            'errorMessage' => false,
+            'result' => $this->renderView("upload_song/partial/button_moderation.html.twig", ["song" => $song]),
+
+        ]);
+    }
+
+    /**
      * @Route("/upload/song", name="upload_song")
      * @param Request $request
      * @param KernelInterface $kernel
@@ -75,13 +141,16 @@ class UploadSongController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function index(Request $request, KernelInterface $kernel, SongRepository $songRepository,
+    public function index(Request $request, KernelInterface $kernel, DiscordService $discordService, SongRepository $songRepository,
                           DifficultyRankRepository $difficultyRankRepository, PaginationService $paginationService): Response
     {
 
         $form = $this->createFormBuilder()
             ->add("zipFile", FileType::class, [])
-            ->add("replaceExisting", CheckboxType::class, ["required"=>false,'label'=>"Replace existing song."])
+            ->add("replaceExisting", CheckboxType::class, [
+                "required" => false,
+                'label' => "Replace existing song."
+            ])
             ->getForm();
 
         $form->handleRequest($request);
@@ -112,16 +181,16 @@ class UploadSongController extends AbstractController
                 }
                 try {
                     $file = $unzipFolder . "/info.dat";
-                    if(!file_exists($file)){
+                    if (!file_exists($file)) {
                         $file = $unzipFolder . "/Info.dat";
-                        if(!file_exists($file)){
+                        if (!file_exists($file)) {
                             $this->addFlash('danger', "The file seems to not be valid, at least info.dat is missing.");
                             $this->rrmdir($unzipFolder);
                             return $this->redirectToRoute("upload_song");
                         }
                     }
                     $json = json_decode(file_get_contents($file));
-                }catch(Exception $e){
+                } catch (Exception $e) {
                     $this->addFlash('danger', "The file seems to not be valid, at least info.dat is missing.");
                     $this->rrmdir($unzipFolder);
                     return $this->redirectToRoute("upload_song");
@@ -132,15 +201,17 @@ class UploadSongController extends AbstractController
                     "authorName" => $json->_songAuthorName,
                     "levelAuthorName" => $json->_levelAuthorName,
                 ]);
+                $new = true;
                 if ($song != null) {
-                    if($song->getUser() == $this->getUser() && $form->get('replaceExisting')->getData()){
+                    $new = false;
+                    if ($song->getUser() == $this->getUser() && $form->get('replaceExisting')->getData()) {
 
-                    }else {
+                    } else {
                         $this->rrmdir($unzipFolder);
-                        $this->addFlash("danger", "The song \"".$song->getName()."\" by \"".$song->getAuthorName()."\" is already in our catalog.");
+                        $this->addFlash("danger", "The song \"" . $song->getName() . "\" by \"" . $song->getAuthorName() . "\" is already in our catalog.");
                         return $this->redirectToRoute("upload_song");
                     }
-                }else{
+                } else {
                     $song = new Song();
                     $song->setUser($this->getUser());
                 }
@@ -161,11 +232,12 @@ class UploadSongController extends AbstractController
                 $song->setCoverImageFileName($json->_coverImageFilename);
                 $song->setEnvironmentName($json->_environmentName);
                 $song->setModerated($this->getUser()->isCertified());
+
                 $em->persist($song);
-                foreach($song->getSongDifficulties() AS $difficulty){
+                foreach ($song->getSongDifficulties() as $difficulty) {
                     $em->remove($difficulty);
                 }
-                foreach($song->getVotes() AS $vote){
+                foreach ($song->getVotes() as $vote) {
                     $em->remove($vote);
                 }
                 $song->setVoteDown(0);
@@ -180,9 +252,14 @@ class UploadSongController extends AbstractController
                     $em->persist($diff);
                 }
                 $em->flush();
+
+                if ($song->isModerated()) {
+                    $discordService->sendNewSongMessage($song);
+                }
+
                 copy($theZip, $finalFolder . $song->getId() . ".zip");
                 copy($unzipFolder . "/" . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-                $this->addFlash('success', "Song \"".$song->getName()."\" by \"".$song->getAuthorName()."\" added !");
+                $this->addFlash('success', "Song \"" . $song->getName() . "\" by \"" . $song->getAuthorName() . "\" added !");
             } catch (Exception $e) {
                 $this->addFlash('danger', "Erreur lors de l'upload : " . $e->getMessage());
                 return $this->redirectToRoute("upload_song");
@@ -201,7 +278,7 @@ class UploadSongController extends AbstractController
         return $this->render('upload_song/index.html.twig', [
             'controller_name' => 'UploadSongController',
             'form' => $form->createView(),
-            'songs'=>$pagination
+            'songs' => $pagination
         ]);
     }
 
