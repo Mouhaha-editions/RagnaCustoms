@@ -32,3 +32,7 @@ services:
     Pkshetlie\PaginationBundle\Service\:
         resource: '../vendor/pkshetlie/pagination-bundle/Service'
         tags: ['pkshetlie.pagination']
+
+    App\Service\DiscordService:
+        arguments:
+            $webhookUrl: '%env(resolve:DISCORD_WEBHOOK)%'

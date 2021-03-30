@@ -1,0 +1,9 @@
+{% if not song.moderated %}
+    <a href="" class="ajax-link button small primary" data-url="{{ url('moderate_song_ajax',{id:song.id}) }}" data-success-action="replace" data-replace-selector=".button-ajax-{{ song.id }}">
+        Validate
+    </a>
+{% else %}
+    <a href="#" data-url="{{ url('moderate_song_ajax',{id:song.id}) }}" data-success-action="replace" data-replace-selector=".button-ajax-{{ song.id }}" class="ajax-link button small secondary">
+        Unvalidate
+    </a>
+{% endif %}
