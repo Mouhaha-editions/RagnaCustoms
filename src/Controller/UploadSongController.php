@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\VarDumper\VarDumper;
 use ZipArchive;
@@ -64,6 +66,7 @@ class UploadSongController extends AbstractController
 
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
 
+
         return $this->render('upload_song/manage.html.twig', [
             "songs" => $pagination
         ]);
@@ -105,7 +108,7 @@ class UploadSongController extends AbstractController
             }
         }
         $qb->orderBy('s.createdAt', 'DESC');
-        $pagination = $paginationService->setDefaults(5)->process($qb, $request);
+        $pagination = $paginationService->setDefaults(50)->process($qb, $request);
         if ($pagination->isPartial()) {
             return $this->render("upload_song/partial/song_row.html.twig", ['songs' => $pagination]);
         }
@@ -141,7 +144,8 @@ class UploadSongController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function index(Request $request, KernelInterface $kernel, DiscordService $discordService, SongRepository $songRepository,
+    public function index(Request $request, KernelInterface $kernel, DiscordService $discordService,
+                          MailerInterface $mailer, SongRepository $songRepository,
                           DifficultyRankRepository $difficultyRankRepository, PaginationService $paginationService): Response
     {
 
@@ -231,7 +235,7 @@ class UploadSongController extends AbstractController
                 $song->setFileName($json->_songFilename);
                 $song->setCoverImageFileName($json->_coverImageFilename);
                 $song->setEnvironmentName($json->_environmentName);
-                $song->setModerated($this->getUser()->isCertified());
+                $song->setModerated($this->getUser()->isCertified()?:false);
 
                 $em->persist($song);
                 foreach ($song->getSongDifficulties() as $difficulty) {
@@ -260,11 +264,27 @@ class UploadSongController extends AbstractController
                 copy($theZip, $finalFolder . $song->getId() . ".zip");
                 copy($unzipFolder . "/" . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
                 $this->addFlash('success', "Song \"" . $song->getName() . "\" by \"" . $song->getAuthorName() . "\" added !");
+                $email = (new Email())
+                    ->from('contact@ragnacustoms.com')
+                    ->to('pierrickpobelle@gmail.com')
+                    //->cc('cc@example.com')
+                    //->bcc('bcc@example.com')
+                    //->replyTo('fabien@example.com')
+                    //->priority(Email::PRIORITY_HIGH)
+                    ->subject('Nouvelle Map by '.$this->getUser()->getUsername().'!')
+                    ;
+                if($song->isModerated()){
+                    $email->html("Nouvelle map auto-modérée <a href='".$this->generateUrl('moderate_song',['search'=>$song->getName()])."'>verifier</a>");
+                }else{
+                    $email->html("Nouvelle map à modérée <a href='".$this->generateUrl('moderate_song',['search'=>$song->getName()])."'>verifier</a>");
+                }
+                $mailer->send($email);
+
             } catch (Exception $e) {
                 $this->addFlash('danger', "Erreur lors de l'upload : " . $e->getMessage());
                 return $this->redirectToRoute("upload_song");
             } finally {
-//                $this->rrmdir($unzipFolder);
+                $this->rrmdir($unzipFolder);
             }
 
         }

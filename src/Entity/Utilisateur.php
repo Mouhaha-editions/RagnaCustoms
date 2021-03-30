@@ -251,7 +251,7 @@ class Utilisateur implements UserInterface
         return false;
     }
 
-    public function getCertified(): ?bool
+    public function isCertified(): ?bool
     {
         return $this->certified;
     }
