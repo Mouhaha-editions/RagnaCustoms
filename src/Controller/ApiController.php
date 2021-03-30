@@ -19,7 +19,7 @@ class ApiController extends AbstractController
     {
         $songsEntities = $songRepository->createQueryBuilder('s')
             ->where('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-            ->andWhere('song.moderated = true')
+            ->andWhere('s.moderated = true')
             ->setParameter('search_string', '%' . $term . '%')
             ->getQuery()->getResult();
 
