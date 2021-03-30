@@ -1,54 +1,54 @@
 /*-----------------
     PAGE LOADER 
 -----------------*/
-require('./global/page-loader');
+import('./global/page-loader');
 
 /*----------------
     SCROLLBARS 
 ----------------*/
-require('simplebar');
+import('simplebar');
 
 /*---------------
     TOOLTIPS 
 ---------------*/
-require('./global/tooltips');
+import('./global/tooltips');
 
 /*---------------
     POPUPS 
 ---------------*/
-require('./global/popups');
+import('./global/popups');
 
 /*-----------------
     ACCORDIONS
 -----------------*/
-require('./global/accordions');
+import('./global/accordions');
 
 /*------------
     UTILS 
 ------------*/
-require('./utils/svg-loader');
-require('./utils/liquidify');
+import('./utils/svg-loader');
+import('./utils/liquidify');
 // require('./utils/demo-icons');
 
 /*------------
     FORM 
 ------------*/
-require('./form/form-rating');
-require('./form/form-counter');
-require('./form/form-switch');
-require('./form/form-input');
-require('./form/interactive-input');
+import('./form/form-rating');
+import('./form/form-counter');
+import('./form/form-switch');
+import('./form/form-input');
+import('./form/interactive-input');
 
 /*--------------
     LANDING 
 --------------*/
-require('./landing/landing.tabs');
+import('./landing/landing.tabs');
 
 /*-------------
     HEADER 
 -------------*/
-require('./header/header.progressBar');
-require('./header/header.dropdown');
+import('./header/header.progressBar');
+import('./header/header.dropdown');
 
 /*-------------
     SIDEBAR 
@@ -58,7 +58,7 @@ require('./sidebar/sidebar');
 /*-----------------
     USER AVATAR 
 -----------------*/
-require('./global/user-avatar.hexagons');
+import('./global/user-avatar.hexagons');
 
 /*----------
     MAPS 
@@ -68,17 +68,17 @@ require('./global/user-avatar.hexagons');
 /*---------------
     CONTENT 
 ---------------*/
-require('./content/content.progressBar');
-require('./content/content.slider');
-require('./content/content.dropdown');
-require('./content/content.tab');
+import('./content/content.progressBar');
+import('./content/content.slider');
+import('./content/content.dropdown');
+import('./content/content.tab');
 
 /*-------------
     CHARTS
 -------------*/
-require('./global/charts');
+// import('./global/charts');
 
 /*---------------
     WIDGETS 
 ---------------*/
-require('./widget/twitter');
+// import('./widget/twitter');

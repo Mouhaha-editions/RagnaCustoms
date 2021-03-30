@@ -11,7 +11,7 @@ import './styles/app.scss';
 // start the Stimulus application
 import './bootstrap';
 
-import "./app.bundle.min";
+import "./js/app";
 
 import '../public/bundles/pagination/js/see-more.js';
 
@@ -26,6 +26,7 @@ const copyToClipboard = str => {
     document.execCommand('copy');
     document.body.removeChild(el);
 };
+
 $(".copy-clipboard").on('click', function () {
     copyToClipboard($(this).data('to-copy'));
     return false;
