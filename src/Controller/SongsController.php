@@ -150,13 +150,28 @@ class SongsController extends AbstractController
                     break;
             }
         }
+        if ($request->get('downloads_filter_order', null)) {
+
+            switch ($request->get('downloads_filter_order')) {
+                case 1:
+                    $qb->orderBy('s.voteUp','DESC');
+                    break;
+                case 2 :
+                    $qb->orderBy('s.approximativeDuration','DESC');
+                    break;
+                default:
+                    $qb->orderBy('s.createdAt', 'DESC');
+                    break;
+            }
+        }else{
+            $qb->orderBy('s.createdAt', 'DESC');
+        }
         $qb->andWhere('s.moderated = true');
         if ($request->get('search', null)) {
             $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
                 ->setParameter('search_string', '%' . $request->get('search', null) . '%');
         }
 
-        $qb->orderBy('s.createdAt', 'DESC');
         $pagination = $paginationService->setDefaults(40)->process($qb, $request);
         if ($pagination->isPartial()) {
             return $this->render('songs/partial/song_row.html.twig', [

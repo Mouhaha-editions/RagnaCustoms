@@ -62,7 +62,8 @@
                             <label for="downloads-filter-order">{{ "Order by"|trans }}</label>
                             <select id="downloads-filter-order" name="downloads_filter_order">
                                 <option value="">{{ "Last added"|trans }}</option>
-                                <option value="">{{ "Soon"|trans }}</option>
+                                <option {%  if app.request.get('downloads_filter_order') == 1 %}selected="selected"{% endif %} value="1">{{ "Vote"|trans }}</option>
+                                <option {%  if app.request.get('downloads_filter_order') == 2 %}selected="selected"{% endif %} value="2">{{ "Duration"|trans }}</option>
                             </select>
                             <!-- FORM SELECT ICON -->
                             <svg class="form-select-icon icon-small-arrow">
