@@ -19,12 +19,12 @@ class SongsController extends AbstractController
 {
     /**
      * @Route("/song/test", name="song_test")
-
      */
     public function test()
     {
         return $this->render('songs/test.html.twig');
     }
+
     /**
      * @Route("/song/vote/up/{id}", name="song_vote_up")
      * @param Request $request
@@ -32,9 +32,9 @@ class SongsController extends AbstractController
      * @param VoteRepository $voteRepository
      * @return Response
      */
-    public function voteUp(Request $request,Song $song,VoteRepository $voteRepository): Response
+    public function voteUp(Request $request, Song $song, VoteRepository $voteRepository): Response
     {
-        if(!$this->isGranted('ROLE_USER')) {
+        if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 "error" => true,
                 "errorMessage" => "You need an account to vote !",
@@ -42,30 +42,33 @@ class SongsController extends AbstractController
             ]);
         }
         $em = $this->getDoctrine()->getManager();
-        $vote = $voteRepository->findOneBy(['song'=>$song, 'user'=>$this->getUser()]);
-        if($vote == null){
+        $vote = $voteRepository->findOneBy([
+            'song' => $song,
+            'user' => $this->getUser()
+        ]);
+        if ($vote == null) {
             $vote = new Vote();
             $vote->setSong($song);
             $vote->setUser($this->getUser());
             $vote->setKind(Vote::KIND_UP);
             $em->persist($vote);
-            $song->setVoteUp($song->getVoteUp()+1);
+            $song->setVoteUp($song->getVoteUp() + 1);
 
-        }elseif ($vote->getKind() == Vote::KIND_UP){
+        } elseif ($vote->getKind() == Vote::KIND_UP) {
             $vote->setKind(Vote::KIND_NEUTRAL);
-            $song->setVoteUp($song->getVoteUp()-1);
-        }else{
-            if($vote->getKind() == Vote::KIND_DOWN){
+            $song->setVoteUp($song->getVoteUp() - 1);
+        } else {
+            if ($vote->getKind() == Vote::KIND_DOWN) {
                 $song->setVoteDown($song->getVoteDown() - 1);
             }
-            $song->setVoteUp($song->getVoteUp()+1);
+            $song->setVoteUp($song->getVoteUp() + 1);
             $vote->setKind(Vote::KIND_UP);
         }
         $em->flush();
         return new JsonResponse([
-            "error"=>false,
-            "errorMessage"=>false,
-            "result"=>$this->renderView("songs/partial/vote.html.twig",['song'=>$song]),
+            "error" => false,
+            "errorMessage" => false,
+            "result" => $this->renderView("songs/partial/vote.html.twig", ['song' => $song]),
         ]);
     }
 
@@ -76,9 +79,9 @@ class SongsController extends AbstractController
      * @param VoteRepository $voteRepository
      * @return Response
      */
-    public function voteDown(Request $request,Song $song, VoteRepository $voteRepository): Response
+    public function voteDown(Request $request, Song $song, VoteRepository $voteRepository): Response
     {
-        if(!$this->isGranted('ROLE_USER')) {
+        if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 "error" => true,
                 "errorMessage" => "You need an account to vote !",
@@ -86,29 +89,32 @@ class SongsController extends AbstractController
             ]);
         }
         $em = $this->getDoctrine()->getManager();
-        $vote = $voteRepository->findOneBy(['song'=>$song, 'user'=>$this->getUser()]);
-        if($vote == null){
+        $vote = $voteRepository->findOneBy([
+            'song' => $song,
+            'user' => $this->getUser()
+        ]);
+        if ($vote == null) {
             $vote = new Vote();
             $vote->setSong($song);
             $vote->setUser($this->getUser());
             $vote->setKind(Vote::KIND_DOWN);
             $em->persist($vote);
-            $song->setVoteDown($song->getVoteDown()+1);
-        }elseif ($vote->getKind() == Vote::KIND_DOWN){
+            $song->setVoteDown($song->getVoteDown() + 1);
+        } elseif ($vote->getKind() == Vote::KIND_DOWN) {
             $vote->setKind(Vote::KIND_NEUTRAL);
-            $song->setVoteDown($song->getVoteDown()-1);
-        }else{
+            $song->setVoteDown($song->getVoteDown() - 1);
+        } else {
             $vote->setKind(Vote::KIND_DOWN);
-            $song->setVoteDown($song->getVoteDown()+1);
-            if($vote->getKind() == Vote::KIND_UP){
-                $song->setVoteUp($song->getVoteUp()-1);
+            $song->setVoteDown($song->getVoteDown() + 1);
+            if ($vote->getKind() == Vote::KIND_UP) {
+                $song->setVoteUp($song->getVoteUp() - 1);
             }
         }
         $em->flush();
         return new JsonResponse([
-            "error"=>false,
-            "errorMessage"=>false,
-            "result"=>$this->renderView("songs/partial/vote.html.twig",['song'=>$song]),
+            "error" => false,
+            "errorMessage" => false,
+            "result" => $this->renderView("songs/partial/vote.html.twig", ['song' => $song]),
         ]);
     }
 
@@ -119,14 +125,13 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function index(Request $request,SongRepository $songRepository, PaginationService $paginationService): Response
+    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
-        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")
-            ;
-        if($request->get('downloads_filter_difficulties', null)){
-            $qb->leftJoin('s.songDifficulties','song_difficulties')
-                ->leftJoin('song_difficulties.difficultyRank','rank');
-            switch($request->get('downloads_filter_difficulties')){
+        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s");
+        if ($request->get('downloads_filter_difficulties', null)) {
+            $qb->leftJoin('s.songDifficulties', 'song_difficulties')
+                ->leftJoin('song_difficulties.difficultyRank', 'rank');
+            switch ($request->get('downloads_filter_difficulties')) {
                 case 1:
                     $qb->where('rank.level BETWEEN 1 and 3');
                     break;
@@ -139,14 +144,15 @@ class SongsController extends AbstractController
                     break;
             }
         }
-       $qb->andWhere('s.moderated = true');
-        if($request->get('search', null)) {
+
+        $qb->andWhere('s.moderated = true');
+        if ($request->get('search', null)) {
             $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
                 ->setParameter('search_string', '%' . $request->get('search', null) . '%');
         }
 
         $qb->orderBy('s.createdAt', 'DESC');
-        $pagination = $paginationService->setDefaults(40)->process($qb,$request);
+        $pagination = $paginationService->setDefaults(40)->process($qb, $request);
 
         return $this->render('songs/index.html.twig', [
             'controller_name' => 'SongsController',
@@ -159,8 +165,8 @@ class SongsController extends AbstractController
      */
     public function download(Song $song, SongRepository $songRepository, KernelInterface $kernel): Response
     {
-        if(!$song->isModerated()){
-            return new Response("Not available now",403);
+        if (!$song->isModerated()) {
+            return new Response("Not available now", 403);
         }
         $em = $this->getDoctrine()->getManager();
         $song->setDownloads($song->getDownloads() + 1);
