@@ -74,26 +74,23 @@ $(function () {
                 id: t.data('song-id')
             },
             success: function (data) {
-
                 $("#form-review").html(data.response);
-                require('./js/form/form-rating');
-                $(".rating-list.form-rating").on('change',function(){
+                $(".rating-list.form-rating").on('change', function () {
                     let t = $(this);
-                    console.log(t.data('input-selector'));
-                    console.log($('input[name='+t.data('input-selector')+']'));
-                    $('input[name='+t.data('input-selector')+']').val(t.data('rating'));
+                    $('input[name=' + t.data('input-selector') + ']').val(t.data('rating'));
                 });
-                $("#form-review form").on('submit',function(){
+                $("#form-review form").on('submit', function () {
                     let tt = $(this);
                     $.ajax({
                         url: tt.data('url'),
-                        data : tt.serialize(),
-                        success:function(data){
+                        data: tt.serialize(),
+                        success: function (data) {
                             t.closest(t.data('replace-selector')).html(data.response);
+                           $(".popup-box .popup-close-button").click();
                         }
                     });
 
-                    $("#form-review").html("<p>Sending your review</p>");
+                    $("#form-review").html("<div class=\"popup-box-actions white full void\">Sending your review</div>");
 
 
                     return false;
@@ -103,5 +100,56 @@ $(function () {
         return false;
 
     })
+
+    $(document).on('click', '.form-rating .rating', function () {
+        let item = $(this);
+        let t = item.closest('.form-rating');
+        let ratingItems = t.find('.rating');
+
+        let getStarsRating = function () {
+            let rating = 0;
+            for (let ratingItem of ratingItems) {
+                if ($(ratingItem).hasClass("filled")) {
+                    rating++;
+                }
+            }
+            return rating;
+        };
+
+        let setStarsRating = function () {
+            t.data('rating', getStarsRating());
+            t.trigger('change');
+        };
+
+        const fillStar = function (item) {
+            $(item).addClass("filled");
+        };
+
+        const emptyStar = function (item) {
+            $(item).removeClass("filled");
+        };
+
+        const toggleStars = function () {
+
+            const itemIndex = item.data('id');
+            for (let i = 0; i <= itemIndex; i++) {
+                fillStar(ratingItems[i]);
+            }
+
+            for (let i = itemIndex + 1; i < ratingItems.length; i++) {
+                emptyStar(ratingItems[i]);
+            }
+
+            setStarsRating();
+        };
+
+        // for (const ratingItem of ratingItems) {
+        //     $(ratingItem).on('click', toggleStars);
+        // }
+        toggleStars();
+        setStarsRating();
+
+
+    });
 
 })

@@ -33,7 +33,7 @@ require('./utils/demo-icons');
 /*------------
     FORM 
 ------------*/
-require('./form/form-rating');
+// require('./form/form-rating');
 require('./form/form-counter');
 require('./form/form-switch');
 require('./form/form-input');

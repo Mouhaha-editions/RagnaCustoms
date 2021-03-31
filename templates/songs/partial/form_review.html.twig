@@ -1,3 +1,4 @@
+<div class="popup-box-actions white void">{{ song.name }}</div>
 <form data-url="{{ url("form_review_save",{id:song.id}) }}" class="form ajax-form">
     <!-- FORM ROW -->
     <div class="form-row">
@@ -10,7 +11,7 @@
                 <input type="hidden" value="{{ rating }}" name="funFactor"/>
                 <div class="rating-list form-rating" data-input-selector="funFactor">
                     {% for i in 0..4 %}
-                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                        <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
                             <svg class="rating-icon medium icon-star">
                                 <use xlink:href="#svg-star"></use>
                             </svg>
@@ -35,7 +36,7 @@
                 <input type="hidden" value="{{ rating }}" name="rhythm"/>
                 <div class="rating-list form-rating" data-input-selector="rhythm">
                     {% for i in 0..4 %}
-                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                        <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
                             <svg class="rating-icon medium icon-star">
                                 <use xlink:href="#svg-star"></use>
                             </svg>
@@ -59,7 +60,7 @@
                     <input type="hidden" value="{{ rating }}" name="flow"/>
                 <div class="rating-list form-rating" data-input-selector="flow">
                     {% for i in 0..4 %}
-                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                        <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
                             <svg class="rating-icon medium icon-star">
                                 <use xlink:href="#svg-star"></use>
                             </svg>
@@ -83,7 +84,7 @@
                 <input type="hidden" value="{{ rating }}" name="patternQuality"/>
                 <div class="rating-list form-rating" data-input-selector="patternQuality">
                     {% for i in 0..4 %}
-                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                        <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
                             <svg class="rating-icon medium icon-star">
                                 <use xlink:href="#svg-star"></use>
                             </svg>
@@ -107,7 +108,7 @@
                 <input type="hidden" value="{{ rating }}" name="readability"/>
                 <div class="rating-list form-rating" data-input-selector="readability">
                     {% for i in 0..4 %}
-                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                        <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
                             <svg class="rating-icon medium icon-star">
                                 <use xlink:href="#svg-star"></use>
                             </svg>
@@ -130,7 +131,7 @@
                 <input type="hidden" value="{{ rating }}" name="levelQuality"/>
                 <div class="rating-list form-rating" data-input-selector="levelQuality">
                     {% for i in 0..4 %}
-                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                        <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
                             <svg class="rating-icon medium icon-star">
                                 <use xlink:href="#svg-star"></use>
                             </svg>
