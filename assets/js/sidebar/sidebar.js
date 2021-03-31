@@ -49,6 +49,7 @@ app.querySelector('.content-grid', function (el) {
 
   updateGridPositions();
   window.addEventListener('resize', updateGridPositions);
+  window.addEventListener('load', updateGridPositions);
   // delay transition setup to avoid loading animation
   window.setTimeout(setGridTransitions, 300);
 
