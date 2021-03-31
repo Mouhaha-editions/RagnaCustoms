@@ -93,7 +93,7 @@ class DiscordService
 //                        // Field 2
                         [
                             "name" => "Duration",
-                            "value" => $song->getApproximativeDuration(),
+                            "value" => $song->getApproximativeDurationMS(),
                             "inline" => true
                         ]
 //                        // Etc..

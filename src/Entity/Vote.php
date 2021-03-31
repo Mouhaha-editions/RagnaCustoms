@@ -12,9 +12,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Vote
 {
     use TimestampableEntity;
-    const KIND_UP = 100;
-    const KIND_NEUTRAL = 0;
-    const KIND_DOWN = 200;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -33,11 +31,6 @@ class Vote
      * @ORM\JoinColumn(nullable=false)
      */
     private $song;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $kind;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -94,18 +87,6 @@ class Vote
     public function setSong(?Song $song): self
     {
         $this->song = $song;
-
-        return $this;
-    }
-
-    public function getKind(): ?int
-    {
-        return $this->kind;
-    }
-
-    public function setKind(int $kind): self
-    {
-        $this->kind = $kind;
 
         return $this;
     }

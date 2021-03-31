@@ -7,6 +7,7 @@ use App\Entity\Vote;
 use App\Repository\SongRepository;
 use App\Repository\VoteRepository;
 use App\Service\DiscordService;
+use App\Service\VoteService;
 use Discord\Discord;
 use Discord\WebSockets\Intents;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -21,30 +22,29 @@ use Symfony\Component\Routing\Annotation\Route;
 class SongsController extends AbstractController
 {
     /**
-     * @Route("/song/test", name="song_test")
+     * @Route("/song/form/review/{id}", name="form_review_save")
      */
-    public function test(DiscordService $discordService, SongRepository $songRepository)
-    {
-//        $discordService->sendNewSongMessage($songRepository->find(5));
-
-
-        return $this->render('songs/test.html.twig');
-    }
-
-    /**
-     * @Route("/song/vote/up/{id}", name="song_vote_up")
-     * @param Request $request
-     * @param Song $song
-     * @param VoteRepository $voteRepository
-     * @return Response
-     */
-    public function voteUp(Request $request, Song $song, VoteRepository $voteRepository): Response
+    public function formReviewSave(Request $request, Song $song, VoteRepository $voteRepository, VoteService $voteService)
     {
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 "error" => true,
                 "errorMessage" => "You need an account to vote !",
-                "result" => null,
+                "response" => "You need an account to vote !",
+            ]);
+        }
+        if ($song == null) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => "You need an account to vote !",
+                "response" => "Song not found !",
+            ]);
+        }
+        if ($song->getUser() == $this->getUser()) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => "You need an account to vote !",
+                "response" => "You can't review a song you submit",
             ]);
         }
         $em = $this->getDoctrine()->getManager();
@@ -56,25 +56,73 @@ class SongsController extends AbstractController
             $vote = new Vote();
             $vote->setSong($song);
             $vote->setUser($this->getUser());
-            $vote->setKind(Vote::KIND_UP);
             $em->persist($vote);
-            $song->setVoteUp($song->getVoteUp() + 1);
-
-        } elseif ($vote->getKind() == Vote::KIND_UP) {
-            $vote->setKind(Vote::KIND_NEUTRAL);
-            $song->setVoteUp($song->getVoteUp() - 1);
-        } else {
-            if ($vote->getKind() == Vote::KIND_DOWN) {
-                $song->setVoteDown($song->getVoteDown() - 1);
-            }
-            $song->setVoteUp($song->getVoteUp() + 1);
-            $vote->setKind(Vote::KIND_UP);
+        }else{
+            $voteService->subScore($song, $vote);
         }
+        $vote->setFunFactor($request->get('funFactor'));
+        $vote->setRhythm($request->get('rhythm'));
+        $vote->setFlow($request->get('flow'));
+        $vote->setPatternQuality($request->get('patternQuality'));
+        $vote->setReadability($request->get('readability'));
+        $vote->setLevelQuality($request->get('levelQuality'));
+
+        $voteService->addScore($song, $vote);
         $em->flush();
         return new JsonResponse([
             "error" => false,
             "errorMessage" => false,
-            "result" => $this->renderView("songs/partial/vote.html.twig", ['song' => $song]),
+            "response" => $this->renderView("songs/partial/vote.html.twig", [
+                'song' => $song,
+                "vote" => $vote
+            ]),
+        ]);
+    }
+
+    /**
+     * @Route("/song/review/{id}", name="song_review")
+     * @param Request $request
+     * @param Song $song
+     * @param VoteRepository $voteRepository
+     * @return Response
+     */
+    public function voteUp(Request $request, Song $song, VoteRepository $voteRepository): Response
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => "You need an account to vote !",
+                "response" => "You need an account to vote !",
+            ]);
+        }
+        if ($song == null) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => "You need an account to vote !",
+                "response" => "Song not found !",
+            ]);
+        }
+        if ($song->getUser() == $this->getUser()) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => "You need an account to vote !",
+                "response" => "You can't review a song you submit",
+            ]);
+        }
+        $vote = $voteRepository->findOneBy([
+            'song' => $song,
+            'user' => $this->getUser()
+        ]);
+        if ($vote == null) {
+            $vote = new Vote();
+        }
+        return new JsonResponse([
+            "error" => false,
+            "errorMessage" => false,
+            "response" => $this->renderView("songs/partial/form_review.html.twig", [
+                'song' => $song,
+                "vote" => $vote
+            ]),
         ]);
     }
 
@@ -154,16 +202,16 @@ class SongsController extends AbstractController
 
             switch ($request->get('downloads_filter_order')) {
                 case 1:
-                    $qb->orderBy('s.voteUp','DESC');
+                    $qb->orderBy('s.voteUp', 'DESC');
                     break;
                 case 2 :
-                    $qb->orderBy('s.approximativeDuration','DESC');
+                    $qb->orderBy('s.approximativeDuration', 'DESC');
                     break;
                 default:
                     $qb->orderBy('s.createdAt', 'DESC');
                     break;
             }
-        }else{
+        } else {
             $qb->orderBy('s.createdAt', 'DESC');
         }
         $qb->andWhere('s.moderated = true');
@@ -201,6 +249,28 @@ class SongsController extends AbstractController
         $disposition = HeaderUtils::makeDisposition(
             HeaderUtils::DISPOSITION_ATTACHMENT,
             $song->getId() . '.zip'
+        );
+        $response->headers->set('Content-Disposition', $disposition);
+        return $response;
+    }
+
+    /**
+     * @Route("/songs/ddl/{id}", name="song_direct_download")
+     */
+    public function directDownload(Song $song, SongRepository $songRepository, KernelInterface $kernel): Response
+    {
+        if (!$song->isModerated()) {
+            return new Response("Not available now", 403);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $song->setDownloads($song->getDownloads() + 1);
+        $em->flush();
+        $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
+        $response = new Response($fileContent);
+
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $song->getName() . '.zip'
         );
         $response->headers->set('Content-Disposition', $disposition);
         return $response;

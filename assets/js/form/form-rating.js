@@ -19,6 +19,8 @@ app.querySelector('.form-rating', function (ratingInputs) {
 
     const setStarsRating = function () {
       ratingInput.setAttribute('data-rating', getStarsRating());
+      var event = new Event('change');
+      ratingInput.dispatchEvent(event);
     };
 
     const fillStar = function (item) {

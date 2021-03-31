@@ -1,0 +1,159 @@
+<form data-url="{{ url("form_review_save",{id:song.id}) }}" class="form ajax-form">
+    <!-- FORM ROW -->
+    <div class="form-row">
+        <!-- FORM ITEM -->
+        <div class="form-item">
+            <!-- FORM RATING WRAP -->
+            <div class="form-rating-wrap">
+                <label>Fun Factor:</label>
+                {% set rating = vote.funFactor %}
+                <input type="hidden" value="{{ rating }}" name="funFactor"/>
+                <div class="rating-list form-rating" data-input-selector="funFactor">
+                    {% for i in 0..4 %}
+                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                            <svg class="rating-icon medium icon-star">
+                                <use xlink:href="#svg-star"></use>
+                            </svg>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- /RATING LIST -->
+            </div>
+            <!-- /FORM RATING WRAP -->
+        </div>
+        <!-- /FORM ITEM -->
+    </div>
+    <!-- /FORM ROW -->
+    <div class="form-row">
+        <!-- FORM ITEM -->
+        <div class="form-item">
+            <!-- FORM RATING WRAP -->
+            <div class="form-rating-wrap">
+                <label>Rhythm:</label>
+                <!-- RATING LIST -->
+                {% set rating = vote.rhythm %}
+                <input type="hidden" value="{{ rating }}" name="rhythm"/>
+                <div class="rating-list form-rating" data-input-selector="rhythm">
+                    {% for i in 0..4 %}
+                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                            <svg class="rating-icon medium icon-star">
+                                <use xlink:href="#svg-star"></use>
+                            </svg>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- /RATING LIST -->
+            </div>
+            <!-- /FORM RATING WRAP -->
+        </div>
+        <!-- /FORM ITEM -->
+    </div>
+    <div class="form-row">
+        <!-- FORM ITEM -->
+        <div class="form-item">
+            <!-- FORM RATING WRAP -->
+            <div class="form-rating-wrap">
+                <label>Flow:</label>
+                <!-- RATING LIST -->
+                    {% set rating = vote.flow %}
+                    <input type="hidden" value="{{ rating }}" name="flow"/>
+                <div class="rating-list form-rating" data-input-selector="flow">
+                    {% for i in 0..4 %}
+                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                            <svg class="rating-icon medium icon-star">
+                                <use xlink:href="#svg-star"></use>
+                            </svg>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- /RATING LIST -->
+            </div>
+            <!-- /FORM RATING WRAP -->
+        </div>
+        <!-- /FORM ITEM -->
+    </div>
+    <div class="form-row">
+        <!-- FORM ITEM -->
+        <div class="form-item">
+            <!-- FORM RATING WRAP -->
+            <div class="form-rating-wrap">
+                <label>Pattern quality:</label>
+                <!-- RATING LIST -->
+                {% set rating = vote.patternQuality %}
+                <input type="hidden" value="{{ rating }}" name="patternQuality"/>
+                <div class="rating-list form-rating" data-input-selector="patternQuality">
+                    {% for i in 0..4 %}
+                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                            <svg class="rating-icon medium icon-star">
+                                <use xlink:href="#svg-star"></use>
+                            </svg>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- /RATING LIST -->
+            </div>
+            <!-- /FORM RATING WRAP -->
+        </div>
+        <!-- /FORM ITEM -->
+    </div>
+    <div class="form-row">
+        <!-- FORM ITEM -->
+        <div class="form-item">
+            <!-- FORM RATING WRAP -->
+            <div class="form-rating-wrap">
+                <label>Readability:</label>
+                <!-- RATING LIST -->
+                {% set rating = vote.readability %}
+                <input type="hidden" value="{{ rating }}" name="readability"/>
+                <div class="rating-list form-rating" data-input-selector="readability">
+                    {% for i in 0..4 %}
+                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                            <svg class="rating-icon medium icon-star">
+                                <use xlink:href="#svg-star"></use>
+                            </svg>
+                        </div>
+                    {% endfor %}
+                </div>                <!-- /RATING LIST -->
+            </div>
+            <!-- /FORM RATING WRAP -->
+        </div>
+        <!-- /FORM ITEM -->
+    </div>
+    <div class="form-row">
+        <!-- FORM ITEM -->
+        <div class="form-item">
+            <!-- FORM RATING WRAP -->
+            <div class="form-rating-wrap">
+                <label>Level quality:</label>
+                <!-- RATING LIST -->
+                {% set rating = vote.levelQuality %}
+                <input type="hidden" value="{{ rating }}" name="levelQuality"/>
+                <div class="rating-list form-rating" data-input-selector="levelQuality">
+                    {% for i in 0..4 %}
+                        <div class="rating medium {% if rating > i %}filled{% endif %}">
+                            <svg class="rating-icon medium icon-star">
+                                <use xlink:href="#svg-star"></use>
+                            </svg>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- /RATING LIST -->
+            </div>
+            <!-- /FORM RATING WRAP -->
+        </div>
+        <!-- /FORM ITEM -->
+    </div>
+
+    <!-- POPUP BOX ACTIONS -->
+    <div class="popup-box-actions full void">
+        <!-- POPUP BOX ACTION -->
+        <button type="submit" class="popup-box-action full button secondary popup-review-trigger">Save Review!</button>
+        <!-- /POPUP BOX ACTION -->
+
+        <!-- POPUP BOX ACTION TEXT -->
+        {# <p class="popup-box-action-text">Your review and reason will be publicly visible to help other people when #}
+        {# choosing their items!</p> #}
+        <!-- /POPUP BOX ACTION TEXT -->
+    </div>
+    <!-- /POPUP BOX ACTIONS -->
+</form>
