@@ -140,8 +140,35 @@
         </div>
         <!-- /GRID COLUMN -->
     </div>
+
     <!-- /GRID -->
+
 
 {% endblock %}
 
 
+{%  block endBody %}
+
+    <!-- POPUP BOX -->
+    <div class="popup-box small popup-review">
+        <!-- POPUP CLOSE BUTTON -->
+        <div class="popup-close-button popup-review-trigger">
+            <!-- POPUP CLOSE BUTTON ICON -->
+            <svg class="popup-close-button-icon icon-cross">
+                <use xlink:href="#svg-cross"></use>
+            </svg>
+            <!-- /POPUP CLOSE BUTTON ICON -->
+        </div>
+        <!-- /POPUP CLOSE BUTTON -->
+
+        <!-- POPUP BOX TITLE -->
+        <p class="popup-box-title">Review Song</p>
+        <!-- /POPUP BOX TITLE -->
+        <div id="form-review">Loading please wait ...</div>
+        <!-- FORM -->
+
+        <!-- /FORM -->
+    </div>
+    <!-- /POPUP BOX -->
+
+{% endblock %}

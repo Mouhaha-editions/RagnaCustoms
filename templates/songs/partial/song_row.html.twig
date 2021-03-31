@@ -58,29 +58,8 @@
         <div class="table-column padded text-center ">
             <!-- TABLE TITLE -->
             <div class="song-vote-{{ song.id }}">
-                <div class="button with-only-icon popup-review-trigger">
-                    <!-- RATING LIST -->
-                    <div class="rating-list">
 
-                        {% set rate = song.countVotes is not null ? (song.totalVotes/song.countVotes) :0 %}
-                        {% for i in 0..4 %}
-                            <!-- RATING -->
-                            <div class="rating dark {% if rate > i %}filled{% endif %}">
-                                <!-- RATING ICON -->
-                                <svg class="rating-icon icon-star">
-                                    <use xlink:href="#svg-star"></use>
-                                </svg>
-                                <!-- /RATING ICON -->
-                            </div>
-                            <!-- /RATING -->
-                        {% endfor %}
-
-                        <!-- /RATING -->
-                    </div>
-                    <!-- /RATING LIST -->
-                </div>
-
-                {# {% include 'songs/partial/vote.html.twig' with {song:song} %} #}
+                 {% include 'songs/partial/vote.html.twig' with {song:song} %}
                 <!-- /ICON THUMBS UP -->
             </div>
             <!-- /TABLE TITLE -->
@@ -102,7 +81,7 @@
                 <a href="ragnac://install/{{ song.id }}" class="button small tertiary">
                     1 click
                 </a>
-                <a href="{{ url("song_download",{id:song.id}) }}" class="button small primary">
+                <a href="{{ url("song_direct_download",{id:song.id}) }}" class="button small primary">
                     {{ "Download"|trans }}
                 </a>
                 <!-- /BUTTON -->
