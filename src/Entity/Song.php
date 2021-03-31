@@ -132,6 +132,16 @@ class Song
      */
     private $votes;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $totalVotes;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $countVotes;
+
 
     public function __construct()
     {
@@ -467,6 +477,30 @@ class Song
             $diff[] = $difficulty->getDifficultyRank()->getLevel();
         }
         return join(', ',$diff);
+    }
+
+    public function getTotalVotes(): ?float
+    {
+        return $this->totalVotes;
+    }
+
+    public function setTotalVotes(?float $totalVotes): self
+    {
+        $this->totalVotes = $totalVotes;
+
+        return $this;
+    }
+
+    public function getCountVotes(): ?int
+    {
+        return $this->countVotes;
+    }
+
+    public function setCountVotes(?int $countVotes): self
+    {
+        $this->countVotes = $countVotes;
+
+        return $this;
     }
 
 }
