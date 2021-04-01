@@ -222,10 +222,20 @@ class UploadSongController extends AbstractController
                     $song = new Song();
                     $song->setUser($this->getUser());
                 }
+                if ($form->get('description')->getData() != null) {
+                    preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('description')->getData(), $match);
+                    if (count($match) > 0) {
+                        $song->setYoutubeLink($match[0]);
+                    }
+                    $song->setDescription($form->get('description')->getData());
+                }
 
+                /**
+                 * du blabla avec un lien https://www.youtube.com/watch?v=O14PuHXNXII youtube dedans
+                 * pour voir si ca ressort...
+                 */
                 $song->setVersion($json->_version);
                 $song->setName($json->_songName);
-                $song->setDescription($form->get('description')->getData());
                 $song->setConverted((bool)$form->get('converted')->getData());
                 $song->setLastDateUpload(new DateTime());
                 $song->setSubName($json->_songSubName);
