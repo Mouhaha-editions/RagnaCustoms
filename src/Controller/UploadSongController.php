@@ -7,6 +7,7 @@ use App\Entity\SongDifficulty;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\SongRepository;
 use App\Service\DiscordService;
+use DateTime;
 use Exception;
 use Pkshetlie\PaginationBundle\Models\Pagination;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -152,7 +153,7 @@ class UploadSongController extends AbstractController
 
         $form = $this->createFormBuilder()
             ->add("zipFile", FileType::class, [])
-            ->add("description", TextareaType::class, ["required"=>false])
+            ->add("description", TextareaType::class, ["required" => false])
             ->add("replaceExisting", CheckboxType::class, [
                 "required" => false,
                 'label' => "Replace existing song."
@@ -224,7 +225,7 @@ class UploadSongController extends AbstractController
                 $song->setVersion($json->_version);
                 $song->setName($json->_songName);
                 $song->setDescription($form->get('description')->getData(null));
-                $song->setLastDateUpload(new \DateTime());
+                $song->setLastDateUpload(new DateTime());
                 $song->setSubName($json->_songSubName);
                 $song->setAuthorName($json->_songAuthorName);
                 $song->setLevelAuthorName($json->_levelAuthorName);
@@ -238,14 +239,11 @@ class UploadSongController extends AbstractController
                 $song->setFileName($json->_songFilename);
                 $song->setCoverImageFileName($json->_coverImageFilename);
                 $song->setEnvironmentName($json->_environmentName);
-                $song->setModerated($this->getUser()->isCertified()?:false);
+                $song->setModerated($this->getUser()->isCertified() ?: false);
 
                 $em->persist($song);
                 foreach ($song->getSongDifficulties() as $difficulty) {
                     $em->remove($difficulty);
-                }
-                foreach ($song->getVotes() as $vote) {
-                    $em->remove($vote);
                 }
                 $song->setTotalVotes(null);
                 $song->setCountVotes(null);
@@ -261,7 +259,7 @@ class UploadSongController extends AbstractController
                     $em->persist($diff);
                 }
                 $em->flush();
-$moderated = $song->isModerated();
+                $moderated = $song->isModerated();
                 if ($moderated) {
                     $discordService->sendNewSongMessage($song);
                 }
@@ -271,13 +269,12 @@ $moderated = $song->isModerated();
                 $this->addFlash('success', "Song \"" . $song->getName() . "\" by \"" . $song->getAuthorName() . "\" added !");
                 $email = (new Email())
                     ->from('contact@ragnacustoms.com')
-                    ->to('test-35lro8ply@srv1.mail-tester.com')
-                    ->subject('Nouvelle Map by '.$this->getUser()->getUsername().'!')
-                    ;
-                if($song->isModerated()){
-                    $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com/".$this->generateUrl('moderate_song',['search'=>$song->getName()])."'>verifier</a>");
-                }else{
-                    $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com/".$this->generateUrl('moderate_song',['search'=>$song->getName()])."'>verifier</a>");
+                    ->to('pierrick.pobelle@gmail.com')
+                    ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . '!');
+                if ($song->isModerated()) {
+                    $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com/" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
+                } else {
+                    $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com/" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 }
                 $mailer->send($email);
 
@@ -293,7 +290,7 @@ $moderated = $song->isModerated();
         $qb = $songRepository->createQueryBuilder('song')
             ->where('song.user = :user')
             ->setParameter('user', $this->getUser())
-            ->orderBy('song.updatedAt', 'DESC');
+            ->orderBy('song.lastDateUpload', 'DESC');
 
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
 

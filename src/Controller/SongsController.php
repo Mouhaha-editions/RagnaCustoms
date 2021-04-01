@@ -208,7 +208,7 @@ class SongsController extends AbstractController
                     $qb->orderBy('s.approximativeDuration', 'DESC');
                     break;
                 default:
-                    $qb->orderBy('s.createdAt', 'DESC');
+                    $qb->orderBy('s.lastDateUpload', 'DESC');
                     break;
             }
         } else {
