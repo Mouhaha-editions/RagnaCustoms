@@ -202,7 +202,7 @@ class SongsController extends AbstractController
 
             switch ($request->get('downloads_filter_order')) {
                 case 1:
-                    $qb->orderBy('s.voteUp', 'DESC');
+                    $qb->orderBy('s.totalVotes/s.countVotes', 'DESC');
                     break;
                 case 2 :
                     $qb->orderBy('s.approximativeDuration', 'DESC');
