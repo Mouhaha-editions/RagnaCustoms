@@ -1,0 +1,421 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<!-- SECTION HEADER -->
+<div class="section-header">
+    <!-- SECTION HEADER INFO -->
+    <div class="section-header-info">
+        <!-- SECTION PRETITLE -->
+        <p class="section-pretitle">{{ "Song details"|trans }}</p>
+        <!-- /SECTION PRETITLE -->
+
+        <!-- SECTION TITLE -->
+        <h2 class="section-title">{{ song.name }} <small>{{ song.subName }}</small> - {{ song.authorName }}</h2>
+        <!-- /SECTION TITLE -->
+    </div>
+    <!-- /SECTION HEADER INFO -->
+
+    <!-- SECTION HEADER ACTIONS -->
+    {# <div class="section-header-actions"> #}
+    {# <!-- SECTION HEADER SUBSECTION --> #}
+    {# <a class="section-header-subsection" href="marketplace.html">Marketplace</a> #}
+    {# <!-- /SECTION HEADER SUBSECTION --> #}
+
+    {# <!-- SECTION HEADER SUBSECTION --> #}
+    {# <a class="section-header-subsection" href="marketplace-category.html">Digital Items</a> #}
+    {# <!-- /SECTION HEADER SUBSECTION --> #}
+
+    {# <!-- SECTION HEADER SUBSECTION --> #}
+    {# <p class="section-header-subsection">Pixel Diamond Gaming Magazine</p> #}
+    {# <!-- /SECTION HEADER SUBSECTION --> #}
+    {# </div> #}
+    <!-- /SECTION HEADER ACTIONS -->
+</div>
+<!-- /SECTION HEADER -->
+
+<!-- GRID -->
+<div class="grid grid-9-3">
+    <!-- MARKETPLACE CONTENT -->
+    <div class="marketplace-content grid-column">
+        <div class="tab-box">
+            <!-- TAB BOX OPTIONS -->
+            <div class="tab-box-options">
+                <!-- TAB BOX OPTION -->
+                <div class="tab-box-option">
+                    <!-- TAB BOX OPTION TITLE -->
+                    <p class="tab-box-option-title">{{ "Description"|trans }}</p>
+                    <!-- /TAB BOX OPTION TITLE -->
+                </div>
+                <!-- /TAB BOX OPTION -->
+            </div>
+
+            <div class="tab-box-items">
+                <div class="tab-box-item">
+                    <div class="tab-box-item-content">
+                        <p class="tab-box-item-paragraph">
+                            {{ song.description is not null ? song.description() : "no description for now"|trans }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- /TAB BOX ITEMS -->
+        </div>
+        <!-- /TAB BOX -->
+    </div>
+    <!-- /MARKETPLACE CONTENT -->
+
+    <!-- MARKETPLACE SIDEBAR -->
+    <div class="marketplace-sidebar">
+        <!-- SIDEBAR BOX -->
+        <div class="sidebar-box">
+            <!-- SIDEBAR BOX ITEMS -->
+            <div class="sidebar-box-items">
+
+
+
+                <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" class="img-fluid pt-2"/>
+
+                <a href="#" data-to-copy="!rc {{ song.id }}" class="copy-clipboard button small button-icon twitch">
+                    <svg class="social-link-icon icon-twitch">
+                        <use xlink:href="#svg-twitch"></use>
+                    </svg>&nbsp;
+                    !rc {{ song.id }}
+                </a>
+
+                <a href="ragnac://install/{{ song.id }}" class="button small tertiary">
+                    1 click
+                </a>
+                <!-- BUTTON -->
+                <a href="{{ url('song_direct_download',{id: song.id}) }}" class="button small primary">Download</a>
+                <!-- /BUTTON -->
+
+                <!-- USER STATS -->
+                <div class="user-stats">
+                    <!-- USER STAT -->
+                    <div class="user-stat big">
+                        <!-- USER STAT TITLE -->
+                        <p class="user-stat-title">{{ song.downloads }}</p>
+                        <!-- /USER STAT TITLE -->
+
+                        <!-- USER STAT TEXT -->
+                        <p class="user-stat-text">downloads</p>
+                        <!-- /USER STAT TEXT -->
+                    </div>
+                    <!-- /USER STAT -->
+
+                    <!-- USER STAT -->
+                    <div class="user-stat big">
+                        <!-- USER STAT TITLE -->
+                        <p class="user-stat-title">{{ song.voteAverage|round(1, "floor") }}/5</p>
+                        <!-- /USER STAT TITLE -->
+
+                        <!-- RATING LIST -->
+                        <div class="rating-list">
+                            {% set rate = song.voteAverage|round(0, "floor") %}
+                            {% for i in 0..4 %}
+                                <!-- RATING -->
+                                <div class="rating dark {% if rate > i %}filled{% endif %}">
+                                    <!-- RATING ICON -->
+                                    <svg class="rating-icon icon-star">
+                                        <use xlink:href="#svg-star"></use>
+                                    </svg>
+                                    <!-- /RATING ICON -->
+                                </div>
+                                <!-- /RATING -->
+                            {% endfor %}
+                        </div>
+                        <!-- /RATING LIST -->
+                    </div>
+                    <!-- /USER STAT -->
+                </div>
+                <!-- /USER STATS -->
+            </div>
+            <!-- /SIDEBAR BOX ITEMS -->
+
+            <!-- SIDEBAR BOX TITLE -->
+            <p class="sidebar-box-title medium-space">Detail reviews</p>
+            <!-- /SIDEBAR BOX TITLE -->
+
+            <!-- SIDEBAR BOX ITEMS -->
+            <div class="sidebar-box-items">
+                <div class="sidebar-box-items">
+                    <!-- INFORMATION LINE LIST -->
+                    <div class="information-line-list">
+                        <!-- INFORMATION LINE -->
+                        <div class="information-line">
+                            <div class="information-line-title">{{ "Fun factor"|trans }}</div>
+                            <div class="information-line-text pt-1 pl-4">
+                                <div class="rating-list">
+                                    {% set rate = song.funFactorAverage %}
+                                    {% for i in 0..4 %}
+                                        <div class="rating dark {% if rate > i %}filled{% endif %}">
+                                            <svg class="rating-icon icon-star">
+                                                <use xlink:href="#svg-star"></use>
+                                            </svg>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="information-line">
+                            <div class="information-line-title">{{ "Rhythm"|trans }}</div>
+                            <div class="information-line-text pt-1 pl-4">
+                                <div class="rating-list">
+                                    {% set rate = song.rhythmAverage %}
+                                    {% for i in 0..4 %}
+                                        <div class="rating dark {% if rate > i %}filled{% endif %}">
+                                            <svg class="rating-icon icon-star">
+                                                <use xlink:href="#svg-star"></use>
+                                            </svg>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="information-line">
+                            <div class="information-line-title">{{ "Flow"|trans }}</div>
+                            <div class="information-line-text pt-1 pl-4">
+                                <div class="rating-list">
+                                    {% set rate = song.flowAverage %}
+                                    {% for i in 0..4 %}
+                                        <div class="rating dark {% if rate > i %}filled{% endif %}">
+                                            <svg class="rating-icon icon-star">
+                                                <use xlink:href="#svg-star"></use>
+                                            </svg>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="information-line">
+                            <div class="information-line-title">{{ "Pattern quality"|trans }}</div>
+                            <div class="information-line-text pt-1 pl-4">
+                                <div class="rating-list">
+                                    {% set rate = song.patternQualityAverage %}
+                                    {% for i in 0..4 %}
+                                        <div class="rating dark {% if rate > i %}filled{% endif %}">
+                                            <svg class="rating-icon icon-star">
+                                                <use xlink:href="#svg-star"></use>
+                                            </svg>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="information-line">
+                            <div class="information-line-title">{{ "Readability"|trans }}</div>
+                            <div class="information-line-text pt-1 pl-4">
+                                <div class="rating-list">
+                                    {% set rate = song.readabilityAverage %}
+                                    {% for i in 0..4 %}
+                                        <div class="rating dark {% if rate > i %}filled{% endif %}">
+                                            <svg class="rating-icon icon-star">
+                                                <use xlink:href="#svg-star"></use>
+                                            </svg>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="information-line">
+                            <div class="information-line-title">{{ "Level quality"|trans }}</div>
+                            <div class="information-line-text pt-1 pl-4">
+                                <div class="rating-list">
+                                    {% set rate = song.levelQualityAverage %}
+                                    {% for i in 0..4 %}
+                                        <div class="rating dark {% if rate > i %}filled{% endif %}">
+                                            <svg class="rating-icon icon-star">
+                                                <use xlink:href="#svg-star"></use>
+                                            </svg>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <p class="sidebar-box-title medium-space">Song infos</p>
+
+            <div class="sidebar-box-items">
+                <div class="sidebar-box-items">
+
+                    <div class="information-line-list">
+                        <div class="information-line">
+                            <p class="information-line-title">{{ "Last update"|trans }}</p>
+                            <p class="information-line-text pt-1 pl-4">
+                                <span class="bold">{{ song.lastDateUpload.format('Y-m-d') }}</span>
+                            </p>
+                        </div>
+                        <div class="information-line">
+                            <p class="information-line-title">{{ "Duration"|trans }}</p>
+                            <p class="information-line-text pt-1 pl-4">
+                                <span class="bold">{{ song.approximativeDurationMS }}</span>
+                            </p>
+                        </div>
+                        <div class="information-line">
+                            <p class="information-line-title">{{ "BPM"|trans }}</p>
+                            <p class="information-line-text pt-1 pl-4">
+                                <span class="bold">{{ song.beatsPerMinute }}</span>
+                            </p>
+                        </div>
+                        <div class="information-line">
+                            <p class="information-line-title">{{ "Mapped by"|trans }}</p>
+                            <p class="information-line-text pt-1 pl-4">
+                                <a href="{{ url('home') }}?search={{ song.levelAuthorName }}">
+                                    {{ song.levelAuthorName }}</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- BUTTON -->
+                    <a class="button small white" href="{{ url('home') }}?search={{ song.levelAuthorName }}">View
+                        Mapper's Songs</a>
+                    <!-- /BUTTON -->
+                </div>
+                <!-- /SIDEBAR BOX ITEMS -->
+
+{#                <!-- SIDEBAR BOX ITEMS -->#}
+{#                <div class="sidebar-box-items">#}
+{#                    <!-- INFORMATION LINE LIST -->#}
+{#                    <div class="information-line-list">#}
+{#                        <!-- INFORMATION LINE -->#}
+{#                        <div class="information-line">#}
+{#                            <!-- INFORMATION LINE TITLE -->#}
+{#                            <p class="information-line-title">Updated</p>#}
+{#                            <!-- /INFORMATION LINE TITLE -->#}
+
+{#                            <!-- INFORMATION LINE TEXT -->#}
+{#                            <p class="information-line-text"><span class="bold">October 13rd, 2019</span></p>#}
+{#                            <!-- /INFORMATION LINE TEXT -->#}
+{#                        </div>#}
+{#                        <!-- /INFORMATION LINE -->#}
+
+{#                        <!-- INFORMATION LINE -->#}
+{#                        <div class="information-line">#}
+{#                            <!-- INFORMATION LINE TITLE -->#}
+{#                            <p class="information-line-title">Created</p>#}
+{#                            <!-- /INFORMATION LINE TITLE -->#}
+
+{#                            <!-- INFORMATION LINE TEXT -->#}
+{#                            <p class="information-line-text"><span class="bold">August 17th, 2019</span></p>#}
+{#                            <!-- /INFORMATION LINE TEXT -->#}
+{#                        </div>#}
+{#                        <!-- /INFORMATION LINE -->#}
+
+{#                        <!-- INFORMATION LINE -->#}
+{#                        <div class="information-line">#}
+{#                            <!-- INFORMATION LINE TITLE -->#}
+{#                            <p class="information-line-title">Category</p>#}
+{#                            <!-- /INFORMATION LINE TITLE -->#}
+
+{#                            <!-- INFORMATION LINE TEXT -->#}
+{#                            <p class="information-line-text"><a href="marketplace-category.html">HTML Templates</a></p>#}
+{#                            <!-- /INFORMATION LINE TEXT -->#}
+{#                        </div>#}
+{#                        <!-- /INFORMATION LINE -->#}
+
+{#                        <!-- INFORMATION LINE -->#}
+{#                        <div class="information-line">#}
+{#                            <!-- INFORMATION LINE TITLE -->#}
+{#                            <p class="information-line-title">Files<br>Included</p>#}
+{#                            <!-- /INFORMATION LINE TITLE -->#}
+
+{#                            <!-- INFORMATION LINE TEXT -->#}
+{#                            <p class="information-line-text"><span class="bold">HTML Files, CSS Files, JS Files, Layered PSD</span>#}
+{#                            </p>#}
+{#                            <!-- /INFORMATION LINE TEXT -->#}
+{#                        </div>#}
+{#                        <!-- /INFORMATION LINE -->#}
+
+{#                        <!-- INFORMATION LINE -->#}
+{#                        <div class="information-line">#}
+{#                            <!-- INFORMATION LINE TITLE -->#}
+{#                            <p class="information-line-title">Layout</p>#}
+{#                            <!-- /INFORMATION LINE TITLE -->#}
+
+{#                            <!-- INFORMATION LINE TEXT -->#}
+{#                            <p class="information-line-text"><span class="bold">Responsive</span></p>#}
+{#                            <!-- /INFORMATION LINE TEXT -->#}
+{#                        </div>#}
+{#                        <!-- /INFORMATION LINE -->#}
+
+{#                        <!-- INFORMATION LINE -->#}
+{#                        <div class="information-line">#}
+{#                            <!-- INFORMATION LINE TITLE -->#}
+{#                            <p class="information-line-title">Tags</p>#}
+{#                            <!-- /INFORMATION LINE TITLE -->#}
+
+{#                            <!-- INFORMATION LINE TEXT -->#}
+{#                            <p class="information-line-text"><span class="bold"><a href="marketplace-category.html">Gaming</a>, <a#}
+{#                                            href="marketplace-category.html">Magazine</a>, <a#}
+{#                                            href="marketplace-category.html">Web</a>, <a#}
+{#                                            href="marketplace-category.html">eSports</a>, <a#}
+{#                                            href="marketplace-category.html">Template</a></span></p>#}
+{#                            <!-- /INFORMATION LINE TEXT -->#}
+{#                        </div>#}
+{#                        <!-- /INFORMATION LINE -->#}
+{#                    </div>#}
+{#                    <!-- /INFORMATION LINE LIST -->#}
+{#                </div>#}
+{#                <!-- /SIDEBAR BOX ITEMS -->#}
+
+{#                <!-- SIDEBAR BOX TITLE -->#}
+{#                <p class="sidebar-box-title medium-space">Item Share</p>#}
+{#                <!-- /SIDEBAR BOX TITLE -->#}
+
+{#                <!-- SIDEBAR BOX ITEMS -->#}
+{#                <div class="sidebar-box-items">#}
+{#                    <!-- SOCIAL LINKS -->#}
+{#                    <div class="social-links small align-left">#}
+{#                        <!-- SOCIAL LINK -->#}
+{#                        <a class="social-link small facebook" href="#">#}
+{#                            <!-- SOCIAL LINK ICON -->#}
+{#                            <svg class="social-link-icon icon-facebook">#}
+{#                                <use xlink:href="#svg-facebook"></use>#}
+{#                            </svg>#}
+{#                            <!-- /SOCIAL LINK ICON -->#}
+{#                        </a>#}
+{#                        <!-- /SOCIAL LINK -->#}
+
+{#                        <!-- SOCIAL LINK -->#}
+{#                        <a class="social-link small twitter" href="#">#}
+{#                            <!-- SOCIAL LINK ICON -->#}
+{#                            <svg class="social-link-icon icon-twitter">#}
+{#                                <use xlink:href="#svg-twitter"></use>#}
+{#                            </svg>#}
+{#                            <!-- /SOCIAL LINK ICON -->#}
+{#                        </a>#}
+{#                        <!-- /SOCIAL LINK -->#}
+{#                    </div>#}
+{#                    <!-- /SOCIAL LINKS -->#}
+{#                </div>#}
+{#                <!-- /SIDEBAR BOX ITEMS -->#}
+            </div>
+            <!-- /SIDEBAR BOX -->
+        </div>
+        <!-- /MARKETPLACE SIDEBAR -->
+    </div>
+    {% endblock %}
+
+    {% block title %}
+
+    {% endblock %}
+
