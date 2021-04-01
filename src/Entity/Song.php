@@ -164,6 +164,10 @@ class Song
      */
     private $converted;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $youtubeLink;
 
     public function __construct()
     {
@@ -648,6 +652,18 @@ class Song
             $sum += $vote->getLevelQuality();
         }
         return $sum / count($votes);
+    }
+
+    public function getYoutubeLink(): ?string
+    {
+        return $this->youtubeLink;
+    }
+
+    public function setYoutubeLink(?string $youtubeLink): self
+    {
+        $this->youtubeLink = $youtubeLink;
+
+        return $this;
     }
 
 
