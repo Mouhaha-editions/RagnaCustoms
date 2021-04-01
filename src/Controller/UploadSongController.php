@@ -247,8 +247,10 @@ class UploadSongController extends AbstractController
                 foreach ($song->getVotes() as $vote) {
                     $em->remove($vote);
                 }
-                $song->setVoteDown(0);
-                $song->setVoteUp(0);
+                $song->setTotalVotes(null);
+                $song->setCountVotes(null);
+
+
                 foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
                     $diff = new SongDifficulty();
                     $diff->setSong($song);
@@ -259,8 +261,8 @@ class UploadSongController extends AbstractController
                     $em->persist($diff);
                 }
                 $em->flush();
-
-                if ($song->isModerated()) {
+$moderated = $song->isModerated();
+                if ($moderated) {
                     $discordService->sendNewSongMessage($song);
                 }
 
