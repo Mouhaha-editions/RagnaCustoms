@@ -144,8 +144,7 @@
                 <!-- TABLE COLUMN -->
                 <div class="table-column centered padded">
                     <!-- PROGRESS STAT WRAP -->
-                    <h6><span class="text-success">{{ song.voteUp }}</span> /
-                 <span class="text-danger">{{ song.voteDown }}</span></h6>
+                  {% include 'songs/partial/vote.html.twig' with {song:song} %}
                     <!-- /PROGRESS STAT WRAP -->
                 </div>
                 <div class="table-column centered padded">
