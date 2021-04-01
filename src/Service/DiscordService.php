@@ -22,7 +22,7 @@ class DiscordService
 
         $json_data = json_encode([
             // Message
-            "content" => "Hi vikings, there is a new map",
+//            "content" => "Hi vikings, there is a new map",
 
             // Username
             "username" => "RagnaCustoms",

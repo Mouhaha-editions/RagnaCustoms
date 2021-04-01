@@ -153,7 +153,10 @@ class UploadSongController extends AbstractController
 
         $form = $this->createFormBuilder()
             ->add("zipFile", FileType::class, [])
-            ->add("description", TextareaType::class, ["required" => false])
+            ->add("description", TextareaType::class, [
+                "required" => false,
+                "attr" => ["placeholder" => "This one is not required, but if you put a youtube link in the description we can catch the first one as song video ! ;)"]
+            ])
             ->add("converted", CheckboxType::class, ["required" => false])
             ->add("replaceExisting", CheckboxType::class, [
                 "required" => false,
@@ -226,6 +229,8 @@ class UploadSongController extends AbstractController
                     preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('description')->getData(), $match);
                     if (count($match) > 0) {
                         $song->setYoutubeLink($match[0]);
+                    }else{
+                        $song->setYoutubeLink(null);
                     }
                     $song->setDescription($form->get('description')->getData());
                 }

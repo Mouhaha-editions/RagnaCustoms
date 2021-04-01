@@ -73,8 +73,17 @@
             <div class="sidebar-box-items">
 
 
-
                 <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" class="img-fluid pt-2"/>
+
+                {% if song.youtubeLink != null %}
+                    <a target="_blank" href="{{ song.youtubeLink }}"
+                       class="button small button-icon bg-red youtube" style="background:#F00;">
+                        <svg class="social-link-icon icon-youtube">
+                            <use xlink:href="#svg-youtube"></use>
+                        </svg>&nbsp;
+                        {{ "Youtube"|trans }}
+                    </a>
+                {% endif %}
 
                 <a href="#" data-to-copy="!rc {{ song.id }}" class="copy-clipboard button small button-icon twitch">
                     <svg class="social-link-icon icon-twitch">
@@ -292,122 +301,122 @@
                 </div>
                 <!-- /SIDEBAR BOX ITEMS -->
 
-{#                <!-- SIDEBAR BOX ITEMS -->#}
-{#                <div class="sidebar-box-items">#}
-{#                    <!-- INFORMATION LINE LIST -->#}
-{#                    <div class="information-line-list">#}
-{#                        <!-- INFORMATION LINE -->#}
-{#                        <div class="information-line">#}
-{#                            <!-- INFORMATION LINE TITLE -->#}
-{#                            <p class="information-line-title">Updated</p>#}
-{#                            <!-- /INFORMATION LINE TITLE -->#}
+                {# <!-- SIDEBAR BOX ITEMS --> #}
+                {# <div class="sidebar-box-items"> #}
+                {# <!-- INFORMATION LINE LIST --> #}
+                {# <div class="information-line-list"> #}
+                {# <!-- INFORMATION LINE --> #}
+                {# <div class="information-line"> #}
+                {# <!-- INFORMATION LINE TITLE --> #}
+                {# <p class="information-line-title">Updated</p> #}
+                {# <!-- /INFORMATION LINE TITLE --> #}
 
-{#                            <!-- INFORMATION LINE TEXT -->#}
-{#                            <p class="information-line-text"><span class="bold">October 13rd, 2019</span></p>#}
-{#                            <!-- /INFORMATION LINE TEXT -->#}
-{#                        </div>#}
-{#                        <!-- /INFORMATION LINE -->#}
+                {# <!-- INFORMATION LINE TEXT --> #}
+                {# <p class="information-line-text"><span class="bold">October 13rd, 2019</span></p> #}
+                {# <!-- /INFORMATION LINE TEXT --> #}
+                {# </div> #}
+                {# <!-- /INFORMATION LINE --> #}
 
-{#                        <!-- INFORMATION LINE -->#}
-{#                        <div class="information-line">#}
-{#                            <!-- INFORMATION LINE TITLE -->#}
-{#                            <p class="information-line-title">Created</p>#}
-{#                            <!-- /INFORMATION LINE TITLE -->#}
+                {# <!-- INFORMATION LINE --> #}
+                {# <div class="information-line"> #}
+                {# <!-- INFORMATION LINE TITLE --> #}
+                {# <p class="information-line-title">Created</p> #}
+                {# <!-- /INFORMATION LINE TITLE --> #}
 
-{#                            <!-- INFORMATION LINE TEXT -->#}
-{#                            <p class="information-line-text"><span class="bold">August 17th, 2019</span></p>#}
-{#                            <!-- /INFORMATION LINE TEXT -->#}
-{#                        </div>#}
-{#                        <!-- /INFORMATION LINE -->#}
+                {# <!-- INFORMATION LINE TEXT --> #}
+                {# <p class="information-line-text"><span class="bold">August 17th, 2019</span></p> #}
+                {# <!-- /INFORMATION LINE TEXT --> #}
+                {# </div> #}
+                {# <!-- /INFORMATION LINE --> #}
 
-{#                        <!-- INFORMATION LINE -->#}
-{#                        <div class="information-line">#}
-{#                            <!-- INFORMATION LINE TITLE -->#}
-{#                            <p class="information-line-title">Category</p>#}
-{#                            <!-- /INFORMATION LINE TITLE -->#}
+                {# <!-- INFORMATION LINE --> #}
+                {# <div class="information-line"> #}
+                {# <!-- INFORMATION LINE TITLE --> #}
+                {# <p class="information-line-title">Category</p> #}
+                {# <!-- /INFORMATION LINE TITLE --> #}
 
-{#                            <!-- INFORMATION LINE TEXT -->#}
-{#                            <p class="information-line-text"><a href="marketplace-category.html">HTML Templates</a></p>#}
-{#                            <!-- /INFORMATION LINE TEXT -->#}
-{#                        </div>#}
-{#                        <!-- /INFORMATION LINE -->#}
+                {# <!-- INFORMATION LINE TEXT --> #}
+                {# <p class="information-line-text"><a href="marketplace-category.html">HTML Templates</a></p> #}
+                {# <!-- /INFORMATION LINE TEXT --> #}
+                {# </div> #}
+                {# <!-- /INFORMATION LINE --> #}
 
-{#                        <!-- INFORMATION LINE -->#}
-{#                        <div class="information-line">#}
-{#                            <!-- INFORMATION LINE TITLE -->#}
-{#                            <p class="information-line-title">Files<br>Included</p>#}
-{#                            <!-- /INFORMATION LINE TITLE -->#}
+                {# <!-- INFORMATION LINE --> #}
+                {# <div class="information-line"> #}
+                {# <!-- INFORMATION LINE TITLE --> #}
+                {# <p class="information-line-title">Files<br>Included</p> #}
+                {# <!-- /INFORMATION LINE TITLE --> #}
 
-{#                            <!-- INFORMATION LINE TEXT -->#}
-{#                            <p class="information-line-text"><span class="bold">HTML Files, CSS Files, JS Files, Layered PSD</span>#}
-{#                            </p>#}
-{#                            <!-- /INFORMATION LINE TEXT -->#}
-{#                        </div>#}
-{#                        <!-- /INFORMATION LINE -->#}
+                {# <!-- INFORMATION LINE TEXT --> #}
+                {# <p class="information-line-text"><span class="bold">HTML Files, CSS Files, JS Files, Layered PSD</span> #}
+                {# </p> #}
+                {# <!-- /INFORMATION LINE TEXT --> #}
+                {# </div> #}
+                {# <!-- /INFORMATION LINE --> #}
 
-{#                        <!-- INFORMATION LINE -->#}
-{#                        <div class="information-line">#}
-{#                            <!-- INFORMATION LINE TITLE -->#}
-{#                            <p class="information-line-title">Layout</p>#}
-{#                            <!-- /INFORMATION LINE TITLE -->#}
+                {# <!-- INFORMATION LINE --> #}
+                {# <div class="information-line"> #}
+                {# <!-- INFORMATION LINE TITLE --> #}
+                {# <p class="information-line-title">Layout</p> #}
+                {# <!-- /INFORMATION LINE TITLE --> #}
 
-{#                            <!-- INFORMATION LINE TEXT -->#}
-{#                            <p class="information-line-text"><span class="bold">Responsive</span></p>#}
-{#                            <!-- /INFORMATION LINE TEXT -->#}
-{#                        </div>#}
-{#                        <!-- /INFORMATION LINE -->#}
+                {# <!-- INFORMATION LINE TEXT --> #}
+                {# <p class="information-line-text"><span class="bold">Responsive</span></p> #}
+                {# <!-- /INFORMATION LINE TEXT --> #}
+                {# </div> #}
+                {# <!-- /INFORMATION LINE --> #}
 
-{#                        <!-- INFORMATION LINE -->#}
-{#                        <div class="information-line">#}
-{#                            <!-- INFORMATION LINE TITLE -->#}
-{#                            <p class="information-line-title">Tags</p>#}
-{#                            <!-- /INFORMATION LINE TITLE -->#}
+                {# <!-- INFORMATION LINE --> #}
+                {# <div class="information-line"> #}
+                {# <!-- INFORMATION LINE TITLE --> #}
+                {# <p class="information-line-title">Tags</p> #}
+                {# <!-- /INFORMATION LINE TITLE --> #}
 
-{#                            <!-- INFORMATION LINE TEXT -->#}
-{#                            <p class="information-line-text"><span class="bold"><a href="marketplace-category.html">Gaming</a>, <a#}
-{#                                            href="marketplace-category.html">Magazine</a>, <a#}
-{#                                            href="marketplace-category.html">Web</a>, <a#}
-{#                                            href="marketplace-category.html">eSports</a>, <a#}
-{#                                            href="marketplace-category.html">Template</a></span></p>#}
-{#                            <!-- /INFORMATION LINE TEXT -->#}
-{#                        </div>#}
-{#                        <!-- /INFORMATION LINE -->#}
-{#                    </div>#}
-{#                    <!-- /INFORMATION LINE LIST -->#}
-{#                </div>#}
-{#                <!-- /SIDEBAR BOX ITEMS -->#}
+                {# <!-- INFORMATION LINE TEXT --> #}
+                {# <p class="information-line-text"><span class="bold"><a href="marketplace-category.html">Gaming</a>, <a #}
+                {# href="marketplace-category.html">Magazine</a>, <a #}
+                {# href="marketplace-category.html">Web</a>, <a #}
+                {# href="marketplace-category.html">eSports</a>, <a #}
+                {# href="marketplace-category.html">Template</a></span></p> #}
+                {# <!-- /INFORMATION LINE TEXT --> #}
+                {# </div> #}
+                {# <!-- /INFORMATION LINE --> #}
+                {# </div> #}
+                {# <!-- /INFORMATION LINE LIST --> #}
+                {# </div> #}
+                {# <!-- /SIDEBAR BOX ITEMS --> #}
 
-{#                <!-- SIDEBAR BOX TITLE -->#}
-{#                <p class="sidebar-box-title medium-space">Item Share</p>#}
-{#                <!-- /SIDEBAR BOX TITLE -->#}
+                {# <!-- SIDEBAR BOX TITLE --> #}
+                {# <p class="sidebar-box-title medium-space">Item Share</p> #}
+                {# <!-- /SIDEBAR BOX TITLE --> #}
 
-{#                <!-- SIDEBAR BOX ITEMS -->#}
-{#                <div class="sidebar-box-items">#}
-{#                    <!-- SOCIAL LINKS -->#}
-{#                    <div class="social-links small align-left">#}
-{#                        <!-- SOCIAL LINK -->#}
-{#                        <a class="social-link small facebook" href="#">#}
-{#                            <!-- SOCIAL LINK ICON -->#}
-{#                            <svg class="social-link-icon icon-facebook">#}
-{#                                <use xlink:href="#svg-facebook"></use>#}
-{#                            </svg>#}
-{#                            <!-- /SOCIAL LINK ICON -->#}
-{#                        </a>#}
-{#                        <!-- /SOCIAL LINK -->#}
+                {# <!-- SIDEBAR BOX ITEMS --> #}
+                {# <div class="sidebar-box-items"> #}
+                {# <!-- SOCIAL LINKS --> #}
+                {# <div class="social-links small align-left"> #}
+                {# <!-- SOCIAL LINK --> #}
+                {# <a class="social-link small facebook" href="#"> #}
+                {# <!-- SOCIAL LINK ICON --> #}
+                {# <svg class="social-link-icon icon-facebook"> #}
+                {# <use xlink:href="#svg-facebook"></use> #}
+                {# </svg> #}
+                {# <!-- /SOCIAL LINK ICON --> #}
+                {# </a> #}
+                {# <!-- /SOCIAL LINK --> #}
 
-{#                        <!-- SOCIAL LINK -->#}
-{#                        <a class="social-link small twitter" href="#">#}
-{#                            <!-- SOCIAL LINK ICON -->#}
-{#                            <svg class="social-link-icon icon-twitter">#}
-{#                                <use xlink:href="#svg-twitter"></use>#}
-{#                            </svg>#}
-{#                            <!-- /SOCIAL LINK ICON -->#}
-{#                        </a>#}
-{#                        <!-- /SOCIAL LINK -->#}
-{#                    </div>#}
-{#                    <!-- /SOCIAL LINKS -->#}
-{#                </div>#}
-{#                <!-- /SIDEBAR BOX ITEMS -->#}
+                {# <!-- SOCIAL LINK --> #}
+                {# <a class="social-link small twitter" href="#"> #}
+                {# <!-- SOCIAL LINK ICON --> #}
+                {# <svg class="social-link-icon icon-twitter"> #}
+                {# <use xlink:href="#svg-twitter"></use> #}
+                {# </svg> #}
+                {# <!-- /SOCIAL LINK ICON --> #}
+                {# </a> #}
+                {# <!-- /SOCIAL LINK --> #}
+                {# </div> #}
+                {# <!-- /SOCIAL LINKS --> #}
+                {# </div> #}
+                {# <!-- /SIDEBAR BOX ITEMS --> #}
             </div>
             <!-- /SIDEBAR BOX -->
         </div>
