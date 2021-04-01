@@ -1,0 +1,142 @@
+<p class="popup-box-subtitle">{{ song.name }} <span class="light">by {{ song.authorName }}</span></p>
+
+<p class="popup-box-subtitle">{{ message }}</p>
+
+<div class="form pb-4">
+<div class="form-row">
+    <!-- FORM ITEM -->
+    <div class="form-item">
+        <!-- FORM RATING WRAP -->
+        <div class="form-rating-wrap">
+            <label>Fun Factor:</label>
+            {% set rating = song.funFactorAverage %}
+            <div class="rating-list " data-input-selector="funFactor">
+                {% for i in 0..4 %}
+                    <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
+                        <svg class="rating-icon medium icon-star">
+                            <use xlink:href="#svg-star"></use>
+                        </svg>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- /RATING LIST -->
+        </div>
+        <!-- /FORM RATING WRAP -->
+    </div>
+    <!-- /FORM ITEM -->
+</div>
+<div class="form-row">
+    <!-- FORM ITEM -->
+    <div class="form-item">
+        <!-- FORM RATING WRAP -->
+        <div class="form-rating-wrap">
+            <label>Rhythm:</label>
+            <!-- RATING LIST -->
+            {% set rating = song.rhythmAverage %}
+            <div class="rating-list " data-input-selector="rhythm">
+                {% for i in 0..4 %}
+                    <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
+                        <svg class="rating-icon medium icon-star">
+                            <use xlink:href="#svg-star"></use>
+                        </svg>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- /RATING LIST -->
+        </div>
+        <!-- /FORM RATING WRAP -->
+    </div>
+    <!-- /FORM ITEM -->
+</div>
+<div class="form-row">
+    <!-- FORM ITEM -->
+    <div class="form-item">
+        <!-- FORM RATING WRAP -->
+        <div class="form-rating-wrap">
+            <label>Flow:</label>
+            <!-- RATING LIST -->
+            {% set rating = song.flowAverage %}
+            <div class="rating-list " data-input-selector="flow">
+                {% for i in 0..4 %}
+                    <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
+                        <svg class="rating-icon medium icon-star">
+                            <use xlink:href="#svg-star"></use>
+                        </svg>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- /RATING LIST -->
+        </div>
+        <!-- /FORM RATING WRAP -->
+    </div>
+    <!-- /FORM ITEM -->
+</div>
+<div class="form-row">
+    <!-- FORM ITEM -->
+    <div class="form-item">
+        <!-- FORM RATING WRAP -->
+        <div class="form-rating-wrap">
+            <label>Pattern quality:</label>
+            <!-- RATING LIST -->
+            {% set rating = song.patternQualityAverage %}
+            <div class="rating-list " data-input-selector="patternQuality">
+                {% for i in 0..4 %}
+                    <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
+                        <svg class="rating-icon medium icon-star">
+                            <use xlink:href="#svg-star"></use>
+                        </svg>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- /RATING LIST -->
+        </div>
+        <!-- /FORM RATING WRAP -->
+    </div>
+    <!-- /FORM ITEM -->
+</div>
+<div class="form-row">
+    <!-- FORM ITEM -->
+    <div class="form-item">
+        <!-- FORM RATING WRAP -->
+        <div class="form-rating-wrap">
+            <label>Readability:</label>
+            <!-- RATING LIST -->
+            {% set rating = song.readabilityAverage %}
+            <div class="rating-list " data-input-selector="readability">
+                {% for i in 0..4 %}
+                    <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
+                        <svg class="rating-icon medium icon-star">
+                            <use xlink:href="#svg-star"></use>
+                        </svg>
+                    </div>
+                {% endfor %}
+            </div>                <!-- /RATING LIST -->
+        </div>
+        <!-- /FORM RATING WRAP -->
+    </div>
+    <!-- /FORM ITEM -->
+</div>
+<div class="form-row">
+    <!-- FORM ITEM -->
+    <div class="form-item">
+        <!-- FORM RATING WRAP -->
+        <div class="form-rating-wrap">
+            <label>Level quality:</label>
+            <!-- RATING LIST -->
+            {% set rating = song.levelQualityAverage %}
+            <div class="rating-list " data-input-selector="levelQuality">
+                {% for i in 0..4 %}
+                    <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
+                        <svg class="rating-icon medium icon-star">
+                            <use xlink:href="#svg-star"></use>
+                        </svg>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- /RATING LIST -->
+        </div>
+        <!-- /FORM RATING WRAP -->
+    </div>
+    <!-- /FORM ITEM -->
+</div>
+</div>

@@ -26,10 +26,11 @@ class SongsController extends AbstractController
      */
     public function songDetail(Request $request, Song $song)
     {
-        return $this->render('songs/detail.html.twig',['song'=>$song]);
+        return $this->render('songs/detail.html.twig', ['song' => $song]);
     }
+
     /**
-        }
+     * }
      * @Route("/song/form/review/{id}", name="form_review_save")
      */
     public function formReviewSave(Request $request, Song $song, VoteRepository $voteRepository, VoteService $voteService)
@@ -65,7 +66,7 @@ class SongsController extends AbstractController
             $vote->setSong($song);
             $vote->setUser($this->getUser());
             $em->persist($vote);
-        }else{
+        } else {
             $voteService->subScore($song, $vote);
         }
         $vote->setFunFactor($request->get('funFactor'));
@@ -96,13 +97,6 @@ class SongsController extends AbstractController
      */
     public function voteUp(Request $request, Song $song, VoteRepository $voteRepository): Response
     {
-        if (!$this->isGranted('ROLE_USER')) {
-            return new JsonResponse([
-                "error" => true,
-                "errorMessage" => "You need an account to vote !",
-                "response" => "You need an account to vote !",
-            ]);
-        }
         if ($song == null) {
             return new JsonResponse([
                 "error" => true,
@@ -110,11 +104,26 @@ class SongsController extends AbstractController
                 "response" => "Song not found !",
             ]);
         }
+
+        if (!$this->isGranted('ROLE_USER')) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => "You need an account to vote !",
+                "response" => $this->renderView('songs/partial/detail_vote.html.twig', [
+                    "song" => $song,
+                    'message' => "You need an account to vote !"
+                ])
+            ]);
+        }
+
         if ($song->getUser() == $this->getUser()) {
             return new JsonResponse([
                 "error" => true,
                 "errorMessage" => "You need an account to vote !",
-                "response" => "You can't review a song you submit",
+                "response" => $this->renderView('songs/partial/detail_vote.html.twig', [
+                    "song" => $song,
+                    'message' => "You can't review a song you submit"
+                ])
             ]);
         }
         $vote = $voteRepository->findOneBy([
@@ -179,7 +188,6 @@ class SongsController extends AbstractController
             "result" => $this->renderView("songs/partial/vote.html.twig", ['song' => $song]),
         ]);
     }
-
 
 
     /**

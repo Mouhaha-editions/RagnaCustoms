@@ -1,6 +1,6 @@
-<div class="popup-box-actions white void">{{ song.name }}</div>
+<p class="popup-box-subtitle">{{ song.name }} <span class="light">by {{ song.authorName }}</span></p>
+
 <form data-url="{{ url("form_review_save",{id:song.id}) }}" class="form ajax-form">
-    <!-- FORM ROW -->
     <div class="form-row">
         <!-- FORM ITEM -->
         <div class="form-item">
@@ -24,7 +24,6 @@
         </div>
         <!-- /FORM ITEM -->
     </div>
-    <!-- /FORM ROW -->
     <div class="form-row">
         <!-- FORM ITEM -->
         <div class="form-item">

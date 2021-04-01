@@ -24,25 +24,3 @@
 </div>
 
 
-
-{#<span class="text-success">#}
-{#    {{ song.voteUp }} &nbsp;#}
-{#   <a href="#" class="ajax-link text-success" data-url="{{ url('song_vote_up',{id:song.id}) }}" data-success-action="replace" data-replace-selector=".song-vote-{{ song.id }}">#}
-{#       {% if app.user is not  null and app.user.votedUpFor(song) %}#}
-{#           <i class="fas fa-thumbs-up"></i>#}
-{#       {% else %}#}
-{#           <i class="far fa-thumbs-up"></i>#}
-{#       {% endif %}#}
-{#   </a>#}
-{#</span>#}
-{#&nbsp;#}
-{#<span class="text-danger">#}
-{#    {{ song.voteDown }} &nbsp;#}
-{#   <a href="#" class="ajax-link text-danger" data-url="{{ url('song_vote_down',{id:song.id}) }}" data-success-action="replace" data-replace-selector=".song-vote-{{ song.id }}">#}
-{#       {% if  app.user is not  null and app.user.votedDownFor(song) %}#}
-{#           <i class="fas fa-thumbs-down"></i>#}
-{#       {% else %}#}
-{#           <i class="far fa-thumbs-down"></i>#}
-{#       {% endif %}#}
-{#   </a>#}
-{#</span>#}
