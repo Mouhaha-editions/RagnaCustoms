@@ -6,7 +6,7 @@
     <div class="widget-box">
         <h2>Upload new song</h2>
         <p class="pt-2">
-            Upload a .zip  file max 15Mo. that contain all files for the new map.
+            Upload a .zip file max 15Mo. that contain all files for the new map.
         </p>
 
         {{ form_start(form) }}
@@ -44,9 +44,26 @@
                     <!-- /CHECKBOX BOX -->
                     <label for="form_replaceExisting">{{ "Replace song if exists."|trans }}</label>
                 </div>
-
             </div>
         </div>
+        <div class="form-row">
+            <div class="form-item">
+                <div class="checkbox-wrap">
+                    {{ form_widget(form.converted) }}
+                    <!-- CHECKBOX BOX -->
+                    <div class="checkbox-box">
+                        <!-- ICON CROSS -->
+                        <svg class="icon-cross">
+                            <use xlink:href="#svg-cross"></use>
+                        </svg>
+                        <!-- /ICON CROSS -->
+                    </div>
+                    <!-- /CHECKBOX BOX -->
+                    <label for="form_converted">{{ "Is converted"|trans }}</label>
+                </div>
+            </div>
+        </div>
+
         <div class="form-row">
             <!-- FORM ITEM -->
             <div class="form-item">
@@ -112,59 +129,61 @@
         <div class="table-body same-color-rows">
             {% for song in songs.entities %}
 
-            <!-- TABLE ROW -->
-            <div class="table-row small">
-                <!-- TABLE COLUMN -->
-                <div class="table-column">
-                    <!-- TABLE INFORMATION -->
-                    <div class="table-information">
-                        <!-- TABLE IMAGE -->
-                        <img class="table-image" style="width:70px;" src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="completedq-s">
-                        <!-- /TABLE IMAGE -->
-                        <br/><small class="white">{{ song.lastDateUpload.format('Y-m-d') }}</small>
+                <!-- TABLE ROW -->
+                <div class="table-row small">
+                    <!-- TABLE COLUMN -->
+                    <div class="table-column">
+                        <!-- TABLE INFORMATION -->
+                        <div class="table-information">
+                            <!-- TABLE IMAGE -->
+                            <img class="table-image" style="width:70px;"
+                                 src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="completedq-s">
+                            <!-- /TABLE IMAGE -->
+                            <br/><small class="white">{{ song.lastDateUpload.format('Y-m-d') }}</small>
+                        </div>
+                        <!-- /TABLE INFORMATION -->
                     </div>
-                    <!-- /TABLE INFORMATION -->
-                </div>
-                <!-- /TABLE COLUMN -->
+                    <!-- /TABLE COLUMN -->
 
-                <!-- TABLE COLUMN -->
-                <div class="table-column padded">
-                    <!-- TABLE TITLE -->
-                    <p class="table-text">{{ song.name }}<br/>{{ song.authorName }}</p>
-                    <!-- /TABLE TITLE -->
-                </div>
-                <div class="table-column padded">
-                    <!-- TABLE TITLE -->
-                    <p class="table-text">{{ song.levelAuthorName }}</p>
-                    <!-- /TABLE TITLE -->
-                </div>
-                <!-- /TABLE COLUMN -->
+                    <!-- TABLE COLUMN -->
+                    <div class="table-column padded">
+                        <!-- TABLE TITLE -->
+                        <p class="table-text">{{ song.name }}<br/>{{ song.authorName }}</p>
+                        <!-- /TABLE TITLE -->
+                    </div>
+                    <div class="table-column padded">
+                        <!-- TABLE TITLE -->
+                        <p class="table-text">{{ song.levelAuthorName }}</p>
+                        <!-- /TABLE TITLE -->
+                    </div>
+                    <!-- /TABLE COLUMN -->
 
-                <!-- TABLE COLUMN -->
-                <div class="table-column centered padded">
-                    <!-- TEXT STICKER -->
+                    <!-- TABLE COLUMN -->
+                    <div class="table-column centered padded">
+                        <!-- TEXT STICKER -->
                         <!-- TEXT STICKER ICON -->
 
                         <!-- TEXT STICKER ICON -->
                         <h6>{{ song.downloads }} / {{ song.views }}</h6>
-                    <!-- /TEXT STICKER -->
-                </div>
-                <!-- /TABLE COLUMN -->
+                        <!-- /TEXT STICKER -->
+                    </div>
+                    <!-- /TABLE COLUMN -->
 
-                <!-- TABLE COLUMN -->
-                <div class="table-column centered padded">
-                    <!-- PROGRESS STAT WRAP -->
-                  {% include 'songs/partial/vote.html.twig' with {song:song} %}
-                    <!-- /PROGRESS STAT WRAP -->
+                    <!-- TABLE COLUMN -->
+                    <div class="table-column centered padded">
+                        <!-- PROGRESS STAT WRAP -->
+                        {% include 'songs/partial/vote.html.twig' with {song:song} %}
+                        <!-- /PROGRESS STAT WRAP -->
+                    </div>
+                    <div class="table-column centered padded">
+                        <!-- PROGRESS STAT WRAP -->
+                        <a class="text-danger ask-for-confirmation" href="{{ url('delete_song',{id:song.id}) }}"><i
+                                    class="fas fa-trash"></i></a>
+                        <!-- /PROGRESS STAT WRAP -->
+                    </div>
+                    <!-- /TABLE COLUMN -->
                 </div>
-                <div class="table-column centered padded">
-                    <!-- PROGRESS STAT WRAP -->
-                    <a class="text-danger ask-for-confirmation" href="{{ url('delete_song',{id:song.id}) }}"><i class="fas fa-trash"></i></a>
-                    <!-- /PROGRESS STAT WRAP -->
-                </div>
-                <!-- /TABLE COLUMN -->
-            </div>
-            <!-- /TABLE ROW -->
+                <!-- /TABLE ROW -->
 
             {% endfor %}
         </div>

@@ -157,6 +157,11 @@ class Song
      */
     private $views;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $converted;
+
 
     public function __construct()
     {
@@ -550,6 +555,18 @@ class Song
     public function setViews(?int $views): self
     {
         $this->views = $views;
+
+        return $this;
+    }
+
+    public function getConverted(): ?bool
+    {
+        return $this->converted;
+    }
+
+    public function setConverted(?bool $converted): self
+    {
+        $this->converted = $converted;
 
         return $this;
     }

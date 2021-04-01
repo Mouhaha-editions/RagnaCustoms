@@ -154,6 +154,7 @@ class UploadSongController extends AbstractController
         $form = $this->createFormBuilder()
             ->add("zipFile", FileType::class, [])
             ->add("description", TextareaType::class, ["required" => false])
+            ->add("converted", CheckboxType::class, ["required" => false])
             ->add("replaceExisting", CheckboxType::class, [
                 "required" => false,
                 'label' => "Replace existing song."
@@ -224,7 +225,8 @@ class UploadSongController extends AbstractController
 
                 $song->setVersion($json->_version);
                 $song->setName($json->_songName);
-                $song->setDescription($form->get('description')->getData(null));
+                $song->setDescription($form->get('description')->getData());
+                $song->setConverted((bool)$form->get('converted')->getData());
                 $song->setLastDateUpload(new DateTime());
                 $song->setSubName($json->_songSubName);
                 $song->setAuthorName($json->_songAuthorName);

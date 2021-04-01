@@ -214,6 +214,18 @@ class SongsController extends AbstractController
         } else {
             $qb->orderBy('s.createdAt', 'DESC');
         }
+        if ($request->get('converted_maps', null)) {
+
+            switch ($request->get('converted_maps')) {
+                case 1:
+                    $qb->andWhere('(s.converted = false OR s.converted IS NULL)');
+                    break;
+                case 2 :
+                    $qb->andWhere('s.converted = true');
+                    break;
+
+            }
+        }
         $qb->andWhere('s.moderated = true');
         if ($request->get('search', null)) {
             $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
