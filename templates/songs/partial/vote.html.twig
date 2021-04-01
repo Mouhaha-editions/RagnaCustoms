@@ -6,7 +6,6 @@
     <div class="rating-list">
 
         {% set rate = song.countVotes is not null ? (song.totalVotes/song.countVotes)|round(0,"floor") :0 %}
-        {% set rate = song.countVotes is not null ? (song.totalVotes/song.countVotes)|round(0,"floor") :0 %}
         {% for i in 0..4 %}
             <!-- RATING -->
             <div class="rating dark {% if rate > i %}filled{% endif %}">

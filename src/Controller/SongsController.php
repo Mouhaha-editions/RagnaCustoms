@@ -22,6 +22,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class SongsController extends AbstractController
 {
     /**
+     * @Route("/song/detail/{id}", name="song_detail")
+     */
+    public function songDetail(Request $request, Song $song)
+    {
+        return $this->render('songs/detail.html.twig',['song'=>$song]);
+    }
+    /**
+        }
      * @Route("/song/form/review/{id}", name="form_review_save")
      */
     public function formReviewSave(Request $request, Song $song, VoteRepository $voteRepository, VoteService $voteService)
@@ -171,6 +179,8 @@ class SongsController extends AbstractController
             "result" => $this->renderView("songs/partial/vote.html.twig", ['song' => $song]),
         ]);
     }
+
+
 
     /**
      * @Route("/", name="home")

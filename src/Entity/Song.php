@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SongRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +16,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Song
 {
     use TimestampableEntity;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -284,10 +286,11 @@ class Song
 
     public function getApproximativeDurationMS(): ?string
     {
-        $min = floor($this->approximativeDuration/60);
-        $sec = $this->approximativeDuration - $min*60;
-        return $min."m ".$sec."s";
+        $min = floor($this->approximativeDuration / 60);
+        $sec = $this->approximativeDuration - $min * 60;
+        return $min . "m " . $sec . "s";
     }
+
     public function getApproximativeDuration(): ?int
     {
         return $this->approximativeDuration;
@@ -311,10 +314,11 @@ class Song
 
         return $this;
     }
+
     public function getCoverImageExtension(): ?string
     {
-        $file = explode(".",$this->coverImageFileName);
-        return ".".end($file);
+        $file = explode(".", $this->coverImageFileName);
+        return "." . end($file);
     }
 
 
@@ -493,10 +497,15 @@ class Song
     public function getSongDifficultiesStr()
     {
         $diff = [];
-        foreach($this->getSongDifficulties() AS $difficulty){
+        foreach ($this->getSongDifficulties() as $difficulty) {
             $diff[] = $difficulty->getDifficultyRank()->getLevel();
         }
-        return join(', ',$diff);
+        return join(', ', $diff);
+    }
+
+    public function getVoteAverage()
+    {
+        return $this->countVotes == 0 ? 0 : $this->getTotalVotes()/$this->getCountVotes();
     }
 
     public function getTotalVotes(): ?float
@@ -535,12 +544,12 @@ class Song
         return $this;
     }
 
-    public function getLastDateUpload(): ?\DateTimeInterface
+    public function getLastDateUpload(): ?DateTimeInterface
     {
         return $this->lastDateUpload;
     }
 
-    public function setLastDateUpload(\DateTimeInterface $lastDateUpload): self
+    public function setLastDateUpload(DateTimeInterface $lastDateUpload): self
     {
         $this->lastDateUpload = $lastDateUpload;
 
@@ -570,5 +579,76 @@ class Song
 
         return $this;
     }
+
+
+    public function getFunFactorAverage(): ?float
+    {
+        $sum = 0;
+        $votes = $this->getVotes();
+        if(count($votes) == 0){return 0;}
+        foreach ($votes as $vote) {
+            $sum += $vote->getFunFactor();
+        }
+        return $sum / count($votes);
+    }
+
+
+    public function getRhythmAverage(): ?float
+    {
+        $sum = 0;
+        $votes = $this->getVotes();
+        if(count($votes) == 0){return 0;}
+        foreach ($votes as $vote) {
+            $sum += $vote->getRhythm();
+        }
+        return $sum / count($votes);
+    }
+
+
+    public function getFlowAverage(): ?float
+    {
+        $sum = 0;
+        $votes = $this->getVotes();
+        if(count($votes) == 0){return 0;}
+        foreach ($votes as $vote) {
+            $sum += $vote->getFlow();
+        }
+        return $sum / count($votes);
+    }
+
+
+    public function getPatternQualityAverage(): ?float
+    {
+        $sum = 0;
+        $votes = $this->getVotes();
+        if(count($votes) == 0){return 0;}
+        foreach ($votes as $vote) {
+            $sum += $vote->getPatternQuality();
+        }
+        return $sum / count($votes);
+    }
+
+    public function getReadabilityAverage(): ?float
+    {
+        $sum = 0;
+        $votes = $this->getVotes();
+        if(count($votes) == 0){return 0;}
+        foreach ($votes as $vote) {
+            $sum += $vote->getReadability();
+        }
+        return $sum / count($votes);
+    }
+
+    public function getLevelQualityAverage(): ?float
+    {
+        $sum = 0;
+        $votes = $this->getVotes();
+        if(count($votes) == 0){return 0;}
+        foreach ($votes as $vote) {
+            $sum += $vote->getLevelQuality();
+        }
+        return $sum / count($votes);
+    }
+
 
 }
