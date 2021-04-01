@@ -142,6 +142,16 @@ class Song
      */
     private $countVotes;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $lastDateUpload;
+
 
     public function __construct()
     {
@@ -499,6 +509,30 @@ class Song
     public function setCountVotes(?int $countVotes): self
     {
         $this->countVotes = $countVotes;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLastDateUpload(): ?\DateTimeInterface
+    {
+        return $this->lastDateUpload;
+    }
+
+    public function setLastDateUpload(\DateTimeInterface $lastDateUpload): self
+    {
+        $this->lastDateUpload = $lastDateUpload;
 
         return $this;
     }
