@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -151,6 +152,7 @@ class UploadSongController extends AbstractController
 
         $form = $this->createFormBuilder()
             ->add("zipFile", FileType::class, [])
+            ->add("description", TextareaType::class, ["required"=>false])
             ->add("replaceExisting", CheckboxType::class, [
                 "required" => false,
                 'label' => "Replace existing song."
@@ -221,6 +223,8 @@ class UploadSongController extends AbstractController
 
                 $song->setVersion($json->_version);
                 $song->setName($json->_songName);
+                $song->setDescription($form->get('description')->getData(null));
+                $song->setLastDateUpload(new \DateTime());
                 $song->setSubName($json->_songSubName);
                 $song->setAuthorName($json->_songAuthorName);
                 $song->setLevelAuthorName($json->_levelAuthorName);
