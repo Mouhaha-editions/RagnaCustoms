@@ -152,6 +152,11 @@ class Song
      */
     private $lastDateUpload;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $views;
+
 
     public function __construct()
     {
@@ -533,6 +538,18 @@ class Song
     public function setLastDateUpload(\DateTimeInterface $lastDateUpload): self
     {
         $this->lastDateUpload = $lastDateUpload;
+
+        return $this;
+    }
+
+    public function getViews(): ?int
+    {
+        return $this->views;
+    }
+
+    public function setViews(?int $views): self
+    {
+        $this->views = $views;
 
         return $this;
     }

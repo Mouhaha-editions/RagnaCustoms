@@ -91,7 +91,7 @@
             <!-- TABLE HEADER COLUMN -->
             <div class="table-header-column centered  padded">
                 <!-- TABLE HEADER TITLE -->
-                <p class="table-header-title">Downloads</p>
+                <p class="table-header-title">Downloads / views</p>
                 <!-- /TABLE HEADER TITLE -->
             </div>
             <div class="table-header-column centered padded">
@@ -121,6 +121,7 @@
                         <!-- TABLE IMAGE -->
                         <img class="table-image" style="width:70px;" src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="completedq-s">
                         <!-- /TABLE IMAGE -->
+                        <small class="white">{{ song.lastDateUpload.format('Y-m-d') }}</small>
                     </div>
                     <!-- /TABLE INFORMATION -->
                 </div>
@@ -145,7 +146,7 @@
                         <!-- TEXT STICKER ICON -->
 
                         <!-- TEXT STICKER ICON -->
-                        <h6>{{ song.downloads }}</h6>
+                        <h6>{{ song.downloads }} / {{ song.views }}</h6>
                     <!-- /TEXT STICKER -->
                 </div>
                 <!-- /TABLE COLUMN -->
