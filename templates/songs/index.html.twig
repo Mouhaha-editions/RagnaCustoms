@@ -56,7 +56,19 @@
                             <!-- /FORM SELECT ICON -->
                         </div>
                         <!-- /FORM SELECT -->
-
+                        <div class="form-select">
+                            <label for="downloads-filter-order">{{ "Converted map"|trans }}</label>
+                            <select id="downloads-filter-order" name="converted_maps">
+                                <option value="">{{ "With"|trans }}</option>
+                                <option {%  if app.request.get('downloads_filter_order') == 1 %}selected="selected"{% endif %} value="1">{{ "Without"|trans }}</option>
+                                <option {%  if app.request.get('downloads_filter_order') == 2 %}selected="selected"{% endif %} value="2">{{ "Only converted"|trans }}</option>
+                            </select>
+                            <!-- FORM SELECT ICON -->
+                            <svg class="form-select-icon icon-small-arrow">
+                                <use xlink:href="#svg-small-arrow"></use>
+                            </svg>
+                            <!-- /FORM SELECT ICON -->
+                        </div>
                         <!-- FORM SELECT -->
                         <div class="form-select">
                             <label for="downloads-filter-order">{{ "Order by"|trans }}</label>

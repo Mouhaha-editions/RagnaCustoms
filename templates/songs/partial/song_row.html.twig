@@ -6,7 +6,13 @@
             <div class="product-preview tiny">
                 <!-- PRODUCT PREVIEW IMAGE -->
 
-                <figure class="product-preview-image short liquid">
+                <figure class="product-preview-image short liquid" style="position: relative">
+                    {% if song.converted %}
+                        <div class="white bold text-center bg-danger"
+                             style="font-size: 12px;bottom: 0;position: absolute;width: 100%;border-radius: 0 0 5px 5px;">
+                            converted
+                        </div>
+                    {% endif %}
                     <img src="/covers/{{ song.id ~ song.coverImageExtension }}" alt="item-11">
                 </figure>
 
@@ -63,7 +69,7 @@
             <!-- TABLE TITLE -->
             <div class="song-vote-{{ song.id }}">
 
-                 {% include 'songs/partial/vote.html.twig' with {song:song} %}
+                {% include 'songs/partial/vote.html.twig' with {song:song} %}
                 <!-- /ICON THUMBS UP -->
             </div>
             <!-- /TABLE TITLE -->
