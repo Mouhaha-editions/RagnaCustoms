@@ -293,7 +293,7 @@ $moderated = $song->isModerated();
         $qb = $songRepository->createQueryBuilder('song')
             ->where('song.user = :user')
             ->setParameter('user', $this->getUser())
-            ->orderBy('song.updateAt', 'DESC');
+            ->orderBy('song.updatedAt', 'DESC');
 
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
 
