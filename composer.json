@@ -6,6 +6,7 @@
     "require": {
         "php": ">=7.2.5",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-zip": "*",
@@ -31,8 +32,7 @@
         "team-reflex/discord-php": "^5.1",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
-        "wohali/oauth2-discord-new": "^1.1",
-      "ext-curl": "*"
+        "wohali/oauth2-discord-new": "^1.1"
     },
     "require-dev": {
         "symfony/debug-bundle": "^5.2",
