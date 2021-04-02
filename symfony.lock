@@ -2,6 +2,9 @@
     "behat/transliterator": {
         "version": "v1.3.0"
     },
+    "clue/stream-filter": {
+        "version": "v1.5.0"
+    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.1"
     },
@@ -112,6 +115,12 @@
     "guzzlehttp/psr7": {
         "version": "1.8.1"
     },
+    "http-interop/http-factory-guzzle": {
+        "version": "1.0.0"
+    },
+    "jean85/pretty-package-versions": {
+        "version": "2.0.3"
+    },
     "knpuniversity/oauth2-client-bundle": {
         "version": "1.20",
         "recipe": {
@@ -151,6 +160,24 @@
     "paragonie/random_compat": {
         "version": "v9.99.100"
     },
+    "php-http/client-common": {
+        "version": "2.3.0"
+    },
+    "php-http/discovery": {
+        "version": "1.13.0"
+    },
+    "php-http/httplug": {
+        "version": "2.2.0"
+    },
+    "php-http/message": {
+        "version": "1.11.0"
+    },
+    "php-http/message-factory": {
+        "version": "v1.0.2"
+    },
+    "php-http/promise": {
+        "version": "1.1.0"
+    },
     "pkshetlie/pagination-bundle": {
         "version": "v2.0.2"
     },
@@ -164,6 +191,9 @@
         "version": "1.0.0"
     },
     "psr/http-client": {
+        "version": "1.0.1"
+    },
+    "psr/http-factory": {
         "version": "1.0.1"
     },
     "psr/http-message": {
@@ -227,6 +257,24 @@
         },
         "files": [
             "./config/packages/sensio_framework_extra.yaml"
+        ]
+    },
+    "sentry/sdk": {
+        "version": "3.1.0"
+    },
+    "sentry/sentry": {
+        "version": "3.2.0"
+    },
+    "sentry/sentry-symfony": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "9746f0823302d7980e5273ef7a69ef3f5ac80914"
+        },
+        "files": [
+            "./config/packages/sentry.yaml"
         ]
     },
     "stof/doctrine-extensions-bundle": {
@@ -342,6 +390,9 @@
             "./src/Kernel.php"
         ]
     },
+    "symfony/http-client": {
+        "version": "v5.2.6"
+    },
     "symfony/http-client-contracts": {
         "version": "v2.3.1"
     },
@@ -431,6 +482,9 @@
     },
     "symfony/property-info": {
         "version": "v5.2.4"
+    },
+    "symfony/psr-http-message-bridge": {
+        "version": "v2.1.0"
     },
     "symfony/routing": {
         "version": "5.1",
