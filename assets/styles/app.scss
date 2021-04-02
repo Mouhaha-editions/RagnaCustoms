@@ -5,6 +5,7 @@ $font-family-base: 'Rajdhani', sans-serif;
 $font-weight-base: 500;
 
 @import "~bootstrap";
+@import "~bootstrap/scss/tooltip";
 
 .navbar-brand {
   img {
