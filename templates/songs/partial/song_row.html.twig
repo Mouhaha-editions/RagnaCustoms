@@ -34,7 +34,7 @@
 {#                    <li> {{ "Notes"|trans }} : <b>{{ difficulty.notesCount }}</b></li>#}
 {#                    <li> #}
 {#                        {{ "Speed"|trans }} : <b>#}
-                <span data-toggle="tooltips" title="{{ "level "|trans }} {{ difficulty.difficultyRank.level }}">{{ difficulty.notePerSecond|round(2,'floor') }}</span>
+                <span data-toggle="tooltips" title="{{ "level "|trans }} {{ difficulty.difficultyRank.level }}, {{ difficulty.notesCount }} {{ "notes"|trans }}">{{ difficulty.notePerSecond|round(2,'floor') }}</span>
 {#            </b> <span data-toggle="tooltips" title="{{ "Note per second"|trans }}">N/s</span>#}
 {#                    </li>#}
 {#                </ul>#}
