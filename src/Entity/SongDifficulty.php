@@ -44,6 +44,16 @@ class SongDifficulty
      */
     private $song;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $notesCount;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $NotePerSecond;
+
 
     public function getId(): ?int
     {
@@ -106,6 +116,30 @@ class SongDifficulty
     public function setSong(?Song $song): self
     {
         $this->song = $song;
+
+        return $this;
+    }
+
+    public function getNotesCount(): ?int
+    {
+        return $this->notesCount;
+    }
+
+    public function setNotesCount(?int $notesCount): self
+    {
+        $this->notesCount = $notesCount;
+
+        return $this;
+    }
+
+    public function getNotePerSecond(): ?float
+    {
+        return $this->NotePerSecond;
+    }
+
+    public function setNotePerSecond(?float $NotePerSecond): self
+    {
+        $this->NotePerSecond = $NotePerSecond;
 
         return $this;
     }
