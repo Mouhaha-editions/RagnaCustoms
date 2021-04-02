@@ -60,24 +60,21 @@
 {% endblock %}
 {% block endBody %}
 
+    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Song Review</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="form-review">
+                    ...
+                </div>
 
-    <div class="popup-box small popup-review">
-
-        <div class="popup-close-button popup-review-trigger">
-
-            <svg class="popup-close-button-icon icon-cross">
-                <use xlink:href="#svg-cross"></use>
-            </svg>
-
+            </div>
         </div>
-
-
-        <p class="popup-box-title">Review Song</p>
-
-        <div id="form-review">Loading please wait ...</div>
-
-
     </div>
-
 
 {% endblock %}
