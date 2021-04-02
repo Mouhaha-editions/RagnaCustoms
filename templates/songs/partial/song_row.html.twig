@@ -27,7 +27,22 @@
         </td>
 
         <td class="table-column padded">
-            <p class="table-title">{{ song.lastDateUpload.format('Y-m-d') }}</p>
+            {% for difficulty in song.songDifficulties %}
+                {% if loop.index != 1 %}, {% endif %}
+{#                {{ "Difficulty "|trans }} {{ difficulty.difficultyRank.level }} :#}
+{#                <ul>#}
+{#                    <li> {{ "Notes"|trans }} : <b>{{ difficulty.notesCount }}</b></li>#}
+{#                    <li> #}
+{#                        {{ "Speed"|trans }} : <b>#}
+                <span data-toggle="tooltips" title="{{ "level "|trans }} {{ difficulty.difficultyRank.level }}">{{ difficulty.notePerSecond|round(2,'floor') }}</span>
+{#            </b> <span data-toggle="tooltips" title="{{ "Note per second"|trans }}">N/s</span>#}
+{#                    </li>#}
+{#                </ul>#}
+            {% endfor %}
+        </td>
+
+        <td class="table-column padded">
+           {{ song.lastDateUpload.format('Y-m-d') }}
         </td>
 
         <td class="table-column padded">
