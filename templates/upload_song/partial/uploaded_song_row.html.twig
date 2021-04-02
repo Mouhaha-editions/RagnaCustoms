@@ -43,21 +43,15 @@
                 {% include 'songs/partial/vote.html.twig' with {song:song} %}
             </div>
         </td>
+        <td class="table-column padded">
+            {{ song.downloads }} / {{ song.views }}
+        </td>
 
         <td class="table-column padded-left">
 
             <div class="d-flex flex-fill">
-                <a href="#" data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn btn-sm bg-twitch">
-                    <i class="fab fa-twitch"></i>
-                    !rc {{ song.id }}
-                </a>
-
-                <a href="ragnac://install/{{ song.id }}" class="btn btn-sm  btn-danger ml-1">
-                    1 click
-                </a>
-                <a href="{{ url("song_direct_download",{id:song.id}) }}" class="btn btn-sm ml-1 btn-success">
-                    {{ "Download"|trans }}
-                </a>
+                <a class="text-danger ask-for-confirmation" href="{{ url('delete_song',{id:song.id}) }}"><i
+                            class="fas fa-trash"></i></a>
             </div>
 
             <small class="white pt-2  small">{{ ("You need <a href='"~url("application")~"' target='_blank'>our app</a> tu use 1 click installer button")|trans|raw }}</small>
@@ -68,5 +62,6 @@
         <td>No song for now</td>
     </tr>
 {% endfor %}
+
 {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
 {{ macro_pagination.seeMore(songs,"see more"|trans) }}

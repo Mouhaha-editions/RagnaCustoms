@@ -1,219 +1,83 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UploadSongController!{% endblock %}
+{% block title %}Song upload{% endblock %}
 
 {% block body %}
-    <div class="widget-box">
-        <h2>Upload new song</h2>
-        <p class="pt-2">
-            Upload a .zip file max 15Mo. that contain all files for the new map.
-        </p>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Upload new song</h2>
+            <p class="pt-2">
+                {{ "Upload a .zip file max 20Mo. that contain all files for the map."|trans }}
+            </p>
 
-        {{ form_start(form) }}
-        <div class="form-row">
-            <div class="form-item">
-                <div class="form-input white">
-                    {{ form_widget(form.zipFile) }}
-                </div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-item">
-                <div class="form-input active white">
-                    {{ form_row(form.description) }}
-                </div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-item">
-                <div class="checkbox-wrap">
-                    {{ form_widget(form.replaceExisting) }}
-                    <div class="checkbox-box">
-                        <svg class="icon-cross">
-                            <use xlink:href="#svg-cross"></use>
-                        </svg>
-                    </div>
-                    <label for="form_replaceExisting">{{ "Replace song if exists."|trans }}</label>
-                </div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-item">
-                <div class="checkbox-wrap">
-                    {{ form_widget(form.converted) }}
-                    <div class="checkbox-box">
-                        <svg class="icon-cross">
-                            <use xlink:href="#svg-cross"></use>
-                        </svg>
-                    </div>
-                    <label for="form_converted">{{ "Is converted"|trans }}</label>
-                </div>
-            </div>
-        </div>
+            {{ form_start(form) }}
+            {{ form_widget(form.zipFile) }}
 
-        <div class="form-row">
-            <div class="form-item">
-                <button class="button medium secondary">{{ "Upload"|trans }}</button>
-            </div>
+            {{ form_row(form.description,{"attr":{"class":'form-control'}}) }}
+
+            {{ form_widget(form.replaceExisting) }}
+            <label for="form_replaceExisting">{{ "Replace song if exists."|trans }}</label><br/>
+
+            {{ form_widget(form.converted) }}
+            <label for="form_converted">{{ "Is converted"|trans }}</label><br/>
+
+
+            <button class="btn btn-sm btn-primary">{{ "Upload"|trans }}</button>
+
+            {{ form_end(form) }}
         </div>
-        {{ form_end(form) }}
+<hr/>
+        <div class="col-12">
+            <table class="table songs">
+                <tr class="table-header">
+                    <th class="table-header-column">
+                        <p class="table-header-title">{{ "Song"|trans }}</p>
+                    </th>
+                    <th class="table-header-column padded">
+                        <p class="table-header-title">{{ "LastUpdate"|trans }}</p>
+                    </th>
+                    <th class="table-header-column padded">
+                        <p class="table-header-title">{{ "Duration"|trans }}</p>
+                    </th>
+                    <th class="table-header-column padded">
+                        <p class="table-header-title">{{ "BPM"|trans }}</p>
+                    </th>
+                    <th class="table-header-column padded">
+                        <p class="table-header-title">{{ "Votes"|trans }}</p>
+                    </th>
+                    <th class="table-header-column padded">
+                        <p class="table-header-title">{{ "Downloads"|trans }}/{{ "Views"|trans }}</p>
+                    </th>
+                    <th class="table-header-column padded-left"></th>
+                </tr>
+
+                {% include 'upload_song/partial/uploaded_song_row.html.twig' with {songs:songs} %}
+            </table>
+        </div>
     </div>
 
 
-
-    <div class="table table-quests split-rows">
-        <!-- TABLE HEADER -->
-        <div class="table-header">
-            <!-- TABLE HEADER COLUMN -->
-            <div class="table-header-column">
-                <!-- TABLE HEADER TITLE -->
-                <p class="table-header-title">Cover</p>
-                <!-- /TABLE HEADER TITLE -->
-            </div>
-            <!-- /TABLE HEADER COLUMN -->
-
-            <!-- TABLE HEADER COLUMN -->
-            <div class="table-header-column">
-                <!-- TABLE HEADER TITLE -->
-                <p class="table-header-title">Title / Author</p>
-                <!-- /TABLE HEADER TITLE -->
-            </div>
-            <!-- /TABLE HEADER COLUMN -->
-
-            <!-- TABLE HEADER COLUMN -->
-            <div class="table-header-column padded">
-                <!-- TABLE HEADER TITLE -->
-                <p class="table-header-title">Mapper</p>
-                <!-- /TABLE HEADER TITLE -->
-            </div>
-            <!-- /TABLE HEADER COLUMN -->
-
-            <!-- TABLE HEADER COLUMN -->
-            <div class="table-header-column centered  padded">
-                <!-- TABLE HEADER TITLE -->
-                <p class="table-header-title">Downloads / views</p>
-                <!-- /TABLE HEADER TITLE -->
-            </div>
-            <div class="table-header-column centered padded">
-                <!-- TABLE HEADER TITLE -->
-                <p class="table-header-title">Votes</p>
-                <!-- /TABLE HEADER TITLE -->
-            </div>
-            <div class="table-header-column centered padded">
-                <!-- TABLE HEADER TITLE -->
-                <p class="table-header-title">Actions</p>
-                <!-- /TABLE HEADER TITLE -->
-            </div>
-            <!-- /TABLE HEADER COLUMN -->
-        </div>
-        <!-- /TABLE HEADER -->
-
-        <!-- TABLE BODY -->
-        <div class="table-body same-color-rows">
-            {% for song in songs.entities %}
-
-                <!-- TABLE ROW -->
-                <div class="table-row small">
-                    <!-- TABLE COLUMN -->
-                    <div class="table-column">
-                        <!-- TABLE INFORMATION -->
-                        <div class="table-information">
-                            <!-- TABLE IMAGE -->
-                            <img class="table-image" style="width:70px;"
-                                 src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="completedq-s">
-                            <!-- /TABLE IMAGE -->
-                            <br/><small class="white">{{ song.lastDateUpload.format('Y-m-d') }}</small>
-                        </div>
-                        <!-- /TABLE INFORMATION -->
-                    </div>
-                    <!-- /TABLE COLUMN -->
-
-                    <!-- TABLE COLUMN -->
-                    <div class="table-column padded">
-                        <!-- TABLE TITLE -->
-                        <p class="table-text">{{ song.name }}<br/>{{ song.authorName }}</p>
-                        <!-- /TABLE TITLE -->
-                    </div>
-                    <div class="table-column padded">
-                        <!-- TABLE TITLE -->
-                        <p class="table-text">{{ song.levelAuthorName }}</p>
-                        <!-- /TABLE TITLE -->
-                    </div>
-                    <!-- /TABLE COLUMN -->
-
-                    <!-- TABLE COLUMN -->
-                    <div class="table-column centered padded">
-                        <!-- TEXT STICKER -->
-                        <!-- TEXT STICKER ICON -->
-
-                        <!-- TEXT STICKER ICON -->
-                        <h6>{{ song.downloads }} / {{ song.views }}</h6>
-                        <!-- /TEXT STICKER -->
-                    </div>
-                    <!-- /TABLE COLUMN -->
-
-                    <!-- TABLE COLUMN -->
-                    <div class="table-column centered padded">
-                        <!-- PROGRESS STAT WRAP -->
-                        {% include 'songs/partial/vote.html.twig' with {song:song} %}
-                        <!-- /PROGRESS STAT WRAP -->
-                    </div>
-                    <div class="table-column centered padded">
-                        <!-- PROGRESS STAT WRAP -->
-                        <a class="text-danger ask-for-confirmation" href="{{ url('delete_song',{id:song.id}) }}"><i
-                                    class="fas fa-trash"></i></a>
-                        <!-- /PROGRESS STAT WRAP -->
-                    </div>
-                    <!-- /TABLE COLUMN -->
-                </div>
-                <!-- /TABLE ROW -->
-
-            {% endfor %}
-        </div>
-        <!-- /TABLE BODY -->
-        {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-        {{ macro_pagination.paginate(songs) }}
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </div>
 {% endblock %}
 {% block endBody %}
 
-    <!-- POPUP BOX -->
+
     <div class="popup-box small popup-review">
-        <!-- POPUP CLOSE BUTTON -->
+
         <div class="popup-close-button popup-review-trigger">
-            <!-- POPUP CLOSE BUTTON ICON -->
+
             <svg class="popup-close-button-icon icon-cross">
                 <use xlink:href="#svg-cross"></use>
             </svg>
-            <!-- /POPUP CLOSE BUTTON ICON -->
+
         </div>
-        <!-- /POPUP CLOSE BUTTON -->
 
-        <!-- POPUP BOX TITLE -->
+
         <p class="popup-box-title">Review Song</p>
-        <!-- /POPUP BOX TITLE -->
-        <div id="form-review">Loading please wait ...</div>
-        <!-- FORM -->
 
-        <!-- /FORM -->
+        <div id="form-review">Loading please wait ...</div>
+
+
     </div>
-    <!-- /POPUP BOX -->
+
 
 {% endblock %}

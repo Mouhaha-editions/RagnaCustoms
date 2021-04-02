@@ -54,25 +54,25 @@ class UploadSongController extends AbstractController
             return $this->redirectToRoute("upload_song");
         }
     }
-
-    /**
-     * @Route("/upload/song/list", name="my_songs")
-     */
-    public function list(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
-    {
-        $qb = $songRepository->createQueryBuilder('song')
-            ->where('song.user = :user')
-            ->setParameter('user', $this->getUser());
-
-        $qb->orderBy('s.createdAt', 'DESC');
-
-        $pagination = $paginationService->setDefaults(30)->process($qb, $request);
-
-
-        return $this->render('upload_song/manage.html.twig', [
-            "songs" => $pagination
-        ]);
-    }
+//
+//    /**
+//     * @Route("/upload/song/list", name="my_songs")
+//     */
+//    public function list(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
+//    {
+//        $qb = $songRepository->createQueryBuilder('song')
+//            ->where('song.user = :user')
+//            ->setParameter('user', $this->getUser());
+//
+//        $qb->orderBy('s.createdAt', 'DESC');
+//
+//        $pagination = $paginationService->setDefaults(30)->process($qb, $request);
+//
+//
+//        return $this->render('upload_song/manage.html.twig', [
+//            "songs" => $pagination
+//        ]);
+//    }
 
     /**
      * @Route("/admin/moderation", name="moderate_song")
@@ -280,6 +280,7 @@ class UploadSongController extends AbstractController
                     $em->persist($diff);
                     $allowedFiles[] = $difficulty->_beatmapFilename;
                 }
+
                 $em->flush();
                 $moderated = $song->isModerated();
                 if ($moderated) {
@@ -306,14 +307,13 @@ class UploadSongController extends AbstractController
                 $email = (new Email())
                     ->from('contact@ragnacustoms.com')
                     ->to('pierrick.pobelle@gmail.com')
-                    ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . '!');
+                    ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', '.$song->getName().'!');
                 if ($song->isModerated()) {
-                    $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com/" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
+                    $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 } else {
-                    $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com/" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
+                    $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 }
                 $mailer->send($email);
-
             } catch (Exception $e) {
                 $this->addFlash('danger', "Erreur lors de l'upload : " . $e->getMessage());
                 return $this->redirectToRoute("upload_song");
@@ -329,9 +329,12 @@ class UploadSongController extends AbstractController
             ->orderBy('song.lastDateUpload', 'DESC');
 
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
-
+if($pagination->isPartial()){
+    return $this->render('upload_song/partial/uploaded_song_row.html.twig', [
+        'songs' => $pagination
+    ]);
+}
         return $this->render('upload_song/index.html.twig', [
-            'controller_name' => 'UploadSongController',
             'form' => $form->createView(),
             'songs' => $pagination
         ]);
