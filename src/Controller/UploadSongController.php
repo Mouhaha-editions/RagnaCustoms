@@ -288,10 +288,11 @@ class UploadSongController extends AbstractController
 
                 /** @var UploadedFile $file */
                 $patterns_flattened = strtolower(implode('|', $allowedFiles));
+                $zip = new ZipArchive();
                 if ($zip->open($theZip) === TRUE) {
                     for ($i = 0; $i < $zip->numFiles; $i++) {
-                        $filename = strtolower($zip->getNameIndex($i));
-                        if(!preg_match('/'. $patterns_flattened .'/', $filename, $matches) || preg_match('/autosaves/', $filename, $matches) ) {
+                        $filename = ($zip->getNameIndex($i));
+                        if(!preg_match('/'. $patterns_flattened .'/', strtolower($filename), $matches) || preg_match('/autosaves/', strtolower($filename), $matches) ) {
                             $zip->deleteName($filename);
                         }
                     }
