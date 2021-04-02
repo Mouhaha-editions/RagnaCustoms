@@ -163,7 +163,7 @@ class UploadSongController extends AbstractController
                 'label' => "Replace existing song."
             ])
             ->getForm();
-
+        $allowedFiles = ['preview.ogg','info.dat'];
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
@@ -200,6 +200,9 @@ class UploadSongController extends AbstractController
                         }
                     }
                     $json = json_decode(file_get_contents($file));
+                    $allowedFiles[] = $json->_coverImageFilename;
+                    $allowedFiles[] = $json->_songFilename;
+
                 } catch (Exception $e) {
                     $this->addFlash('danger', "The file seems to not be valid, at least info.dat is missing.");
                     $this->rrmdir($unzipFolder);
@@ -234,6 +237,7 @@ class UploadSongController extends AbstractController
                     }
                     $song->setDescription($form->get('description')->getData());
                 }
+
 
                 /**
                  * du blabla avec un lien https://www.youtube.com/watch?v=O14PuHXNXII youtube dedans
@@ -274,12 +278,26 @@ class UploadSongController extends AbstractController
                     $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
                     $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
                     $em->persist($diff);
+                    $allowedFiles[] = $difficulty->_beatmapFilename;
                 }
                 $em->flush();
                 $moderated = $song->isModerated();
                 if ($moderated) {
                     $discordService->sendNewSongMessage($song);
                 }
+
+                /** @var UploadedFile $file */
+                $patterns_flattened = strtolower(implode('|', $allowedFiles));
+                if ($zip->open($theZip) === TRUE) {
+                    for ($i = 0; $i < $zip->numFiles; $i++) {
+                        $filename = strtolower($zip->getNameIndex($i));
+                        if(!preg_match('/'. $patterns_flattened .'/', $filename, $matches)) {
+                            $zip->deleteName($filename);
+                        }
+                    }
+                    $zip->close();
+                }
+
 
                 copy($theZip, $finalFolder . $song->getId() . ".zip");
                 copy($unzipFolder . "/" . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
