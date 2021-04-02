@@ -279,6 +279,13 @@ class UploadSongController extends AbstractController
                     $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
                     $em->persist($diff);
                     $allowedFiles[] = $difficulty->_beatmapFilename;
+                    $file =$difficulty->_beatmapFilename;
+
+                    $file = $unzipFolder . "/".$file;
+                    $json2 = json_decode(file_get_contents($file));
+                    $diff->setNotesCount(count($json2->_notes));
+                    $diff->setNotePerSecond($diff->getNotesCount()/$song->getApproximativeDuration());
+
                 }
 
                 $em->flush();
