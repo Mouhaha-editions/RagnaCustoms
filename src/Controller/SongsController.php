@@ -26,6 +26,9 @@ class SongsController extends AbstractController
      */
     public function songDetail(Request $request, Song $song)
     {
+        $em = $this->getDoctrine()->getManager();
+        $song->setViews($song->getViews() + 1);
+        $em->flush();
         return $this->render('songs/detail.html.twig', ['song' => $song]);
     }
 

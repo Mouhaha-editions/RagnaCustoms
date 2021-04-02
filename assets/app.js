@@ -9,10 +9,13 @@
 import './styles/app.scss';
 // import './src/sass/main.scss';
 
-// start the Stimulus application
-import './bootstrap';
+// import { Tooltip, Toast, Popover } from 'bootstrap';
 
-import "./app.bundle.min";
+// start the Stimulus application
+import 'bootstrap';
+import './js/form-rating';
+
+
 import '../public/bundles/pagination/js/see-more.js';
 // const app = require('./js/utils/core');
 
@@ -75,18 +78,29 @@ $(function () {
             },
             success: function (data) {
                 $("#form-review").html(data.response);
-                $(".rating-list.form-rating").on('change', function () {
+                $(".rating-list").on('change', function () {
                     let t = $(this);
                     $('input[name=' + t.data('input-selector') + ']').val(t.data('rating'));
                 });
                 $("#form-review form").on('submit', function () {
+                    let test = true;
+                    $(this).find('input').each(function () {
+                        if($(this).val() === undefined || $(this).val() === ""){
+                            test = false;
+                        }
+                    });
+                    if(!test){
+                        alert("you need to rate each property");
+                        return false;
+                    }
+
                     let tt = $(this);
                     $.ajax({
                         url: tt.data('url'),
                         data: tt.serialize(),
                         success: function (data) {
                             t.closest(t.data('replace-selector')).html(data.response);
-                           $(".popup-box .popup-close-button").click();
+                            $("#reviewSong").modal('hide');
                         }
                     });
 
@@ -101,55 +115,5 @@ $(function () {
 
     })
 
-    $(document).on('click', '.form-rating .rating', function () {
-        let item = $(this);
-        let t = item.closest('.form-rating');
-        let ratingItems = t.find('.rating');
-
-        let getStarsRating = function () {
-            let rating = 0;
-            for (let ratingItem of ratingItems) {
-                if ($(ratingItem).hasClass("filled")) {
-                    rating++;
-                }
-            }
-            return rating;
-        };
-
-        let setStarsRating = function () {
-            t.data('rating', getStarsRating());
-            t.trigger('change');
-        };
-
-        const fillStar = function (item) {
-            $(item).addClass("filled");
-        };
-
-        const emptyStar = function (item) {
-            $(item).removeClass("filled");
-        };
-
-        const toggleStars = function () {
-
-            const itemIndex = item.data('id');
-            for (let i = 0; i <= itemIndex; i++) {
-                fillStar(ratingItems[i]);
-            }
-
-            for (let i = itemIndex + 1; i < ratingItems.length; i++) {
-                emptyStar(ratingItems[i]);
-            }
-
-            setStarsRating();
-        };
-
-        // for (const ratingItem of ratingItems) {
-        //     $(ratingItem).on('click', toggleStars);
-        // }
-        toggleStars();
-        setStarsRating();
-
-
-    });
 
 })

@@ -1,0 +1,17 @@
+{%  macro ratingDisplay(name, rating) %}
+    <div class="rating-wrap d-flex">
+        <label>{{ name }} :</label>
+        {{ _self.starsDisplay(rating) }}
+    </div>
+
+{% endmacro %}
+
+{% macro starsDisplay(rating) %}
+    <div class="rating-list text-warning justify-content-center d-flex " data-input-selector="patternQuality">
+        {% for i in 0..4 %}
+            <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
+                <i class="{% if rating > i %}fas{% else %}far{% endif %} fa-star"></i>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}

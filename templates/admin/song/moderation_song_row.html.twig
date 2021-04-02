@@ -1,0 +1,99 @@
+{% for song in songs.entities %}
+    <div class="table-row medium">
+
+        <div class="table-column">
+
+            <div class="product-preview tiny">
+
+
+                <figure class="product-preview-image short liquid">
+                    <img src="/covers/{{ song.id ~ song.coverImageExtension }}" alt="item-11">
+
+                </figure>
+
+
+
+
+                <div class="product-preview-info">
+
+                    <p class="product-preview-title">{{ song.name }}</p>
+
+
+
+                    <p class="product-preview-category">{{ song.authorName }}</p>
+
+
+
+                    <p class="product-preview-creator">Mapped by : {{ song.levelAuthorName }}</p>
+                    <p class="product-preview-creator">Difficulties :
+                        {% for diff in song.songDifficulties %}
+                            {% if loop.index != 1 %}, {% endif %}
+                            <span style="color:#{{ diff.difficultyRank.color }}">{{ diff.difficultyRank.level }}</span>
+                        {% endfor %}</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="table-column padded">
+
+            <p class="table-title">{{ song.approximativeDurationMS }}</p>
+
+        </div>
+
+
+
+        <div class="table-column padded">
+
+            <p class="table-title">{{ song.beatsPerMinute|round }}</p>
+
+        </div>
+
+
+
+
+        <div class="table-column padded text-center ">
+
+
+            {% include 'songs/partial/vote.html.twig' with {song:song} %}
+
+
+        </div>
+        <div class="table-column padded text-center ">
+
+            <div class="">
+
+                <h6>
+                    {% if song.voteup > song.voteDown %}
+                        <span class="text-success">{{ song.downloads }}</span>
+                    {% else %}
+                        <span class="text-danger">{{ song.downloads }}</span>
+                    {% endif %}
+                </h6>
+            </div>
+
+        </div>
+
+
+
+        <div class="table-column padded-left">
+
+            <div class="table-actions button-ajax-{{ song.id }}">
+
+                {% include 'upload_song/partial/button_moderation.html.twig' with  {song : song} %}
+
+
+            </div>
+
+        </div>
+
+    </div>
+    {% else %}
+    <p>No song for now</p>
+{% endfor %}
+{% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+{{ macro_pagination.seeMore(songs,"see more"|trans) }}

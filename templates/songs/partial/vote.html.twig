@@ -1,26 +1,15 @@
-<div class="button disabled with-only-icon popup-review-trigger song-review"
+<a href="#" class="button disabled with-only-icon popup-review-trigger song-review"  data-toggle="modal" data-target="#reviewSong"
      data-replace-selector=".song-vote-{{ song.id }}"
      data-url="{{ url('song_review',{id:song.id}) }}"
      data-song-id="{{ song.id }}">
-    <!-- RATING LIST -->
-    <div class="rating-list">
-
+    <div class="rating-list d-flex flex-row">
         {% set rate = song.countVotes is not null ? (song.totalVotes/song.countVotes)|round(0,"floor") :0 %}
         {% for i in 0..4 %}
-            <!-- RATING -->
-            <div class="rating dark {% if rate > i %}filled{% endif %}">
-                <!-- RATING ICON -->
-                <svg class="rating-icon icon-star">
-                    <use xlink:href="#svg-star"></use>
-                </svg>
-                <!-- /RATING ICON -->
+            <div class="rating {% if rate > i %}filled text-warning{% endif %}">
+                <i class="{% if rate > i %}fas{% else%}far{% endif%} fa-star"></i>
             </div>
-            <!-- /RATING -->
         {% endfor %}
-
-        <!-- /RATING -->
     </div>
-    <!-- /RATING LIST -->
-</div>
+</a>
 
 
