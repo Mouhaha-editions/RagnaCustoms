@@ -538,7 +538,7 @@ class Song
 
     public function getDescription(): ?string
     {
-        return nl2br($this->description);
+        return ($this->description);
     }
 
     public function setDescription(?string $description): self
