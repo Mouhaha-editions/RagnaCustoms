@@ -13,7 +13,7 @@
             </div>
             <h3>{{ "Description"|trans }}</h3>
             <p>
-                {{ song.description is not null ? song.description() : "no description for now"|trans }}
+                {{ song.description is not null ? song.description|nl2br : "no description for now"|trans }}
             </p>
         </div>
         <div class="col-md-4 song-detail border-left">
