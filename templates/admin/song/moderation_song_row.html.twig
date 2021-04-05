@@ -1,99 +1,76 @@
 {% for song in songs.entities %}
-    <div class="table-row medium">
-
-        <div class="table-column">
-
-            <div class="product-preview tiny">
-
-
-                <figure class="product-preview-image short liquid">
-                    <img src="/covers/{{ song.id ~ song.coverImageExtension }}" alt="item-11">
-
-                </figure>
-
-
-
-
-                <div class="product-preview-info">
-
-                    <p class="product-preview-title">{{ song.name }}</p>
-
-
-
-                    <p class="product-preview-category">{{ song.authorName }}</p>
-
-
-
-                    <p class="product-preview-creator">Mapped by : {{ song.levelAuthorName }}</p>
-                    <p class="product-preview-creator">Difficulties :
-                        {% for diff in song.songDifficulties %}
-                            {% if loop.index != 1 %}, {% endif %}
-                            <span style="color:#{{ diff.difficultyRank.color }}">{{ diff.difficultyRank.level }}</span>
-                        {% endfor %}</p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="table-column padded">
-
-            <p class="table-title">{{ song.approximativeDurationMS }}</p>
-
-        </div>
-
-
-
-        <div class="table-column padded">
-
-            <p class="table-title">{{ song.beatsPerMinute|round }}</p>
-
-        </div>
-
-
-
-
-        <div class="table-column padded text-center ">
-
-
-            {% include 'songs/partial/vote.html.twig' with {song:song} %}
-
-
-        </div>
-        <div class="table-column padded text-center ">
-
-            <div class="">
-
-                <h6>
-                    {% if song.voteup > song.voteDown %}
-                        <span class="text-success">{{ song.downloads }}</span>
-                    {% else %}
-                        <span class="text-danger">{{ song.downloads }}</span>
+    <tr>
+        <td class="product-preview tiny d-flex flex-row">
+            <a href="{{ url('song_detail',{id:song.id}) }}">
+                <figure class="product-preview-image short liquid" style="position: relative">
+                    {% if song.converted %}
+                        <div class="white bold text-center bg-danger"
+                             style="font-size: 12px;bottom: 0;position: absolute;width: 100%;border-radius: 0 0 5px 5px;">
+                            converted
+                        </div>
                     {% endif %}
-                </h6>
+                    <img src="/covers/{{ song.id ~ song.coverImageExtension }}" class="img-fluid rounded thumbnail"
+                         alt="item-11">
+                </figure>
+            </a>
+
+            <div class="song-preview pl-2">
+                <p class="title">{{ song.name }}</p>
+                <p class="category">{{ song.authorName }}</p>
+                <p class="creator">Mapped by : {{ song.levelAuthorName }}</p>
+                <p class="difficulties">Difficulties :
+                    {% for diff in song.songDifficulties %}
+                        {% if loop.index != 1 %}, {% endif %}
+                        <span style="color:#{{ diff.difficultyRank.color }}">{{ diff.difficultyRank.level }}</span>
+                    {% endfor %}</p>
             </div>
+        </td>
 
-        </div>
+        <td class="table-column padded">
+            {% for difficulty in song.songDifficulties %}
+                {% if loop.index != 1 %}, {% endif %}
+                {#                {{ "Difficulty "|trans }} {{ difficulty.difficultyRank.level }} :#}
+                {#                <ul>#}
+                {#                    <li> {{ "Notes"|trans }} : <b>{{ difficulty.notesCount }}</b></li>#}
+                {#                    <li> #}
+                {#                        {{ "Speed"|trans }} : <b>#}
+                <span data-toggle="tooltips" title="{{ "level "|trans }} {{ difficulty.difficultyRank.level }}, {{ difficulty.notesCount }} {{ "notes"|trans }}">{{ difficulty.notePerSecond|round(2,'floor') }}</span>
+                {#            </b> <span data-toggle="tooltips" title="{{ "Note per second"|trans }}">N/s</span>#}
+                {#                    </li>#}
+                {#                </ul>#}
+            {% endfor %}
+        </td>
 
+        <td class="table-column padded">
+            {{ song.lastDateUpload.format('Y-m-d') }}
+        </td>
 
+        <td class="table-column padded">
+            <p class="table-title">{{ song.approximativeDurationMS }}</p>
+        </td>
 
-        <div class="table-column padded-left">
+        <td class="table-column padded">
+            <p class="table-title">{{ song.beatsPerMinute|round }}</p>
+        </td>
 
-            <div class="table-actions button-ajax-{{ song.id }}">
-
-                {% include 'upload_song/partial/button_moderation.html.twig' with  {song : song} %}
-
-
+        <td class="table-column padded text-center ">
+            <div class="song-vote-{{ song.id }}">
+                {% include 'songs/partial/vote.html.twig' with {song:song} %}
             </div>
+        </td>
 
-        </div>
+        <td class="table-column padded-left">
 
-    </div>
-    {% else %}
-    <p>No song for now</p>
+            {% include 'upload_song/partial/button_moderation.html.twig' with  {song : song} %}
+
+
+        </td>
+    </tr>
+{% else %}
+    <tr>
+        <td>No song for now</td>
+    </tr>
 {% endfor %}
 {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
 {{ macro_pagination.seeMore(songs,"see more"|trans) }}
+
