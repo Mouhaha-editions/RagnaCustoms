@@ -305,6 +305,11 @@
         <source>Song \"%song%\" by \"%artist%\" added !</source>
         <target>Chanson \"%song%\" par \"%artist%\" ajoutée !</target>
       </trans-unit>
+        <trans-unit id="6">
+            <source><![CDATA[you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description]]></source>
+            <target><![CDATA[vous pouvez utiliser le <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> dans la description]]></target>
+        </trans-unit>
+
     </body>
   </file>
 </xliff>
