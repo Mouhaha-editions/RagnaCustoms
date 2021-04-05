@@ -49,10 +49,10 @@ class DiscordService
                     "url" => "https://ragnacustoms.com/song/detail/".$song->getId(),
 
                     // Timestamp of embed must be formatted as ISO8601
-                    "timestamp" => $timestamp,
+//                    "timestamp" => $timestamp,
 
                     // Embed left border color in HEX
-                    "color" => "'".hexdec("3366ff")."'",
+//                    "color" => "'".hexdec("3366ff")."'",
 
                     // Footer
 //                    "footer" => [
@@ -77,27 +77,27 @@ class DiscordService
 //                    ],
 
                     // Additional Fields array
-                    "fields" => [
-//                        // Field 1
-                        [
-                            "name" => "Mapper",
-                            "value" => $song->getLevelAuthorName(),
-                            "inline" => true
-                        ],
-//                        // Field 2
-                        [
-                            "name" => "Difficulties",
-                            "value" => $song->getSongDifficultiesStr(),
-                            "inline" => true
-                        ],
-//                        // Field 2
-                        [
-                            "name" => "Duration",
-                            "value" => $song->getApproximativeDurationMS(),
-                            "inline" => true
-                        ]
-//                        // Etc..
-                    ]
+//                    "fields" => [
+////                        // Field 1
+//                        [
+//                            "name" => "Mapper",
+//                            "value" => $song->getLevelAuthorName(),
+//                            "inline" => true
+//                        ],
+////                        // Field 2
+//                        [
+//                            "name" => "Difficulties",
+//                            "value" => $song->getSongDifficultiesStr(),
+//                            "inline" => true
+//                        ],
+////                        // Field 2
+//                        [
+//                            "name" => "Duration",
+//                            "value" => $song->getApproximativeDurationMS(),
+//                            "inline" => true
+//                        ]
+////                        // Etc..
+//                    ]
                 ]
             ]
 

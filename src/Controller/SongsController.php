@@ -287,6 +287,7 @@ class SongsController extends AbstractController
             $song->getId() . '.zip'
         );
         $response->headers->set('Content-Disposition', $disposition);
+        $response->headers->set('Content-type', "application/octet-stream");
         return $response;
     }
 
