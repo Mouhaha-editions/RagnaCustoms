@@ -26,6 +26,9 @@ $font-weight-base: 500;
 }
 
 table.songs {
+  figure{
+    margin:0;
+  }
   td {
     vertical-align: middle;
   }
@@ -33,7 +36,7 @@ table.songs {
   font-size: 12px;
 
   .thumbnail {
-    max-width: 60px;
+    max-width: 70px;
   }
 
   .song-preview {
