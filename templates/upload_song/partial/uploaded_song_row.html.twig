@@ -27,15 +27,15 @@
         </td>
 
         <td class="table-column padded">
-            <p class="table-title">{{ song.lastDateUpload.format('Y-m-d') }}</p>
+            {{ song.lastDateUpload.format('Y-m-d') }}
         </td>
 
         <td class="table-column padded">
-            <p class="table-title">{{ song.approximativeDurationMS }}</p>
+            {{ song.approximativeDurationMS }}
         </td>
 
         <td class="table-column padded">
-            <p class="table-title">{{ song.beatsPerMinute|round }}</p>
+            {{ song.beatsPerMinute|round }}
         </td>
 
         <td class="table-column padded text-center ">
@@ -48,10 +48,12 @@
         <td>
             {{ song.uniqDownloads }}
         </td>
-<td>
+        <td>
             {{ song.views }}
         </td>
-
+        <td>
+            {{ song.uniqViews }}
+        </td>
         <td class="table-column padded-left">
 
             <div class="d-flex flex-fill">
