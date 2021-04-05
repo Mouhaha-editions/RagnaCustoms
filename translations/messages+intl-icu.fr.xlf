@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="fr" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="tk.mIpp" resname="Your submitted songs">
+        <source>Your submitted songs</source>
+        <target>Vos customs songs</target>
+      </trans-unit>
+      <trans-unit id="vGdhNXl" resname="Songs">
+        <source>Songs</source>
+        <target>Customs Songs</target>
+      </trans-unit>
+      <trans-unit id="x9Ej5Nc" resname="Filter by difficulties">
+        <source>Filter by difficulties</source>
+        <target>Filtrer par difficultés</target>
+      </trans-unit>
+      <trans-unit id="pSrOQg8" resname="All">
+        <source>All</source>
+        <target>Tous</target>
+      </trans-unit>
+      <trans-unit id="8mHT1EL" resname="1-3">
+        <source>1-3</source>
+        <target>1-3</target>
+      </trans-unit>
+      <trans-unit id="exHF9yC" resname="4-7">
+        <source>4-7</source>
+        <target>4-7</target>
+      </trans-unit>
+      <trans-unit id="VUipwrR" resname="8-10">
+        <source>8-10</source>
+        <target>8-10</target>
+      </trans-unit>
+      <trans-unit id="ijel8Hr" resname="Order by">
+        <source>Order by</source>
+        <target>Ordonner par</target>
+      </trans-unit>
+      <trans-unit id="zw7jVHp" resname="Soon">
+        <source>Soon</source>
+        <target>Bientôt</target>
+      </trans-unit>
+      <trans-unit id="JAsu23F" resname="Filter songs">
+        <source>Filter songs</source>
+        <target>Filtrerles Songs</target>
+      </trans-unit>
+      <trans-unit id=".qS1zv_" resname="Song">
+        <source>Song</source>
+        <target>Song</target>
+      </trans-unit>
+      <trans-unit id="T8UqPEx" resname="Duration">
+        <source>Duration</source>
+        <target>Durée</target>
+      </trans-unit>
+      <trans-unit id="M_pvuDq" resname="BPM">
+        <source>BPM</source>
+        <target>BPM</target>
+      </trans-unit>
+      <trans-unit id="zY6XS_I" resname="Votes">
+        <source>Votes</source>
+        <target>Votes</target>
+      </trans-unit>
+      <trans-unit id="sZpvY_r" resname="see more">
+        <source>see more</source>
+        <target>voir plus</target>
+      </trans-unit>
+      <trans-unit id="OHfRSIm" resname="Catalog">
+        <source>Catalog</source>
+        <target>Catalogue</target>
+      </trans-unit>
+      <trans-unit id="taNr29H" resname="Moderated">
+        <source>Moderated</source>
+        <target>Modérée</target>
+      </trans-unit>
+      <trans-unit id="L.WZgUO" resname="Tous">
+        <source>Tous</source>
+        <target>Tous</target>
+      </trans-unit>
+      <trans-unit id="HqRCoTS" resname="No">
+        <source>No</source>
+        <target>Non</target>
+      </trans-unit>
+      <trans-unit id="haOas0X" resname="Yes">
+        <source>Yes</source>
+        <target>Oui</target>
+      </trans-unit>
+      <trans-unit id="6MMexlo" resname="Last added">
+        <source>Last added</source>
+        <target>Dernier ajout</target>
+      </trans-unit>
+      <trans-unit id="1f3BrwI" resname="Downloads">
+        <source>Downloads</source>
+        <target>Téléchargements</target>
+      </trans-unit>
+      <trans-unit id="jW33dhj" resname="Difficulties">
+        <source>Difficulties</source>
+        <target>Difficultés</target>
+      </trans-unit>
+      <trans-unit id="dMV.Tsf" resname="Converted map">
+        <source>Converted map</source>
+        <target>Map Convertie</target>
+      </trans-unit>
+      <trans-unit id="twhySiO" resname="With">
+        <source>With</source>
+        <target>Avec</target>
+      </trans-unit>
+      <trans-unit id="e8Jfqtu" resname="Without">
+        <source>Without</source>
+        <target>Sans</target>
+      </trans-unit>
+      <trans-unit id="x1wPTSk" resname="Only converted">
+        <source>Only converted</source>
+        <target>Seulement les converties</target>
+      </trans-unit>
+      <trans-unit id="OCrF8wj" resname="Last updated">
+        <source>Last updated</source>
+        <target>Dernières mise à jour</target>
+      </trans-unit>
+      <trans-unit id="zVWI22." resname="Vote">
+        <source>Vote</source>
+        <target>Vote</target>
+      </trans-unit>
+      <trans-unit id="4chvCh2" resname="Our Application">
+        <source>Our Application</source>
+        <target>Notre application</target>
+      </trans-unit>
+      <trans-unit id="OzYQof2" resname="Our application is Magic! It creates all the folders need and unzip files at the right place, it also rename the folder with the song title for a better experience in game.">
+        <source>Our application is Magic! It creates all the folders need and unzip files at the right place, it also rename the folder with the song title for a better experience in game.</source>
+        <target>Notre application est Magique ! Elle créer les dossiers nécessaires et décompresse les fichiers au bon endroit, Elle renomme aussi le dossier avec le titre de la chanson pour une meilleure experience en jeu.</target>
+      </trans-unit>
+      <trans-unit id="BL9zmuV" resname="Our application allows you to search in the catalog any song and download it.">
+        <source>Our application allows you to search in the catalog any song and download it.</source>
+        <target>Notre application vous permet de chercher dans le catalogue et de télécharger sans venir sur le site web.</target>
+      </trans-unit>
+      <trans-unit id="EWzvp3Y" resname="Our application allows you to download song with only 1 click on the website.">
+        <source>Our application allows you to download song with only 1 click on the website.</source>
+        <target>Notre application vous permet de télécharger une musique avec un seul click depuis le site web.</target>
+      </trans-unit>
+      <trans-unit id="gMOO3sH" resname="Our application does not need installation, you only have to download unzip and run it.">
+        <source>Our application does not need installation, you only have to download unzip and run it.</source>
+        <target>Notre application n'a pas besoin d'etre installée, Vous n'avez qu'à la télécharger et à la décompresser.</target>
+      </trans-unit>
+      <trans-unit id="PNjunTC" resname="Here are some screenshots:">
+        <source>Here are some screenshots:</source>
+        <target>Voici quelques screenshots :</target>
+      </trans-unit>
+      <trans-unit id="ADl38LV" resname="Download now">
+        <source>Download now</source>
+        <target>Télécharger maintenant</target>
+      </trans-unit>
+      <trans-unit id="nWMiwfT" resname="Login">
+        <source>Login</source>
+        <target>Connexion</target>
+      </trans-unit>
+      <trans-unit id="tTGBpNh" resname="My account">
+        <source>My account</source>
+        <target>Mon compte</target>
+      </trans-unit>
+      <trans-unit id="0GkEJ7H" resname="Upload Song">
+        <source>Upload Song</source>
+        <target>Envoyer une chanson</target>
+      </trans-unit>
+      <trans-unit id="0FJ_Sz1" resname="Logout">
+        <source>Logout</source>
+        <target>Déconnexion</target>
+      </trans-unit>
+      <trans-unit id="EUcEJ9R" resname="An error occurs">
+        <source>An error occurs</source>
+        <target>Une erreur est survenue.</target>
+      </trans-unit>
+      <trans-unit id="u3I07BJ" resname="Register">
+        <source>Register</source>
+        <target>Inscription</target>
+      </trans-unit>
+      <trans-unit id="588_9PF" resname="Password">
+        <source>Password</source>
+        <target>Mot de passe</target>
+      </trans-unit>
+      <trans-unit id="KpL2_.m" resname="Remember Me">
+        <source>Remember Me</source>
+        <target>Se souvenir de moi</target>
+      </trans-unit>
+      <trans-unit id="tPdniYe" resname="Login to your Account">
+        <source>Login to your Account</source>
+        <target>Se connecter</target>
+      </trans-unit>
+      <trans-unit id="7spPgKG" resname="Forgot Password?">
+        <source>Forgot Password?</source>
+        <target>Mot de passe oublié ?</target>
+      </trans-unit>
+      <trans-unit id="M0pAn1b" resname="Song details">
+        <source>Song details</source>
+        <target>Détails de la chanson</target>
+      </trans-unit>
+      <trans-unit id="Um4Ah8w" resname="Description">
+        <source>Description</source>
+        <target>Description</target>
+      </trans-unit>
+      <trans-unit id="vLvhD3E" resname="no description for now">
+        <source>no description for now</source>
+        <target>Pas de description actuellement.</target>
+      </trans-unit>
+      <trans-unit id="HJGa8e4" resname="Youtube">
+        <source>Youtube</source>
+        <target>Youtube</target>
+      </trans-unit>
+      <trans-unit id="QSvguc1" resname="Informations">
+        <source>Informations</source>
+        <target>Informations</target>
+      </trans-unit>
+      <trans-unit id="Hz1Gs6n" resname="Fun factor">
+        <source>Fun factor</source>
+        <target>Fun factor</target>
+      </trans-unit>
+      <trans-unit id="WhZTROX" resname="Rhythm">
+        <source>Rhythm</source>
+        <target>Rythme</target>
+      </trans-unit>
+      <trans-unit id="8Sc9xyy" resname="Flow">
+        <source>Flow</source>
+        <target>Flux</target>
+      </trans-unit>
+      <trans-unit id="iBY5Ldc" resname="Pattern quality">
+        <source>Pattern quality</source>
+        <target>Pattern quality</target>
+      </trans-unit>
+      <trans-unit id="rCwYgpx" resname="Readability">
+        <source>Readability</source>
+        <target>Readability</target>
+      </trans-unit>
+      <trans-unit id="gc4D7SG" resname="Level quality">
+        <source>Level quality</source>
+        <target>Level quality</target>
+      </trans-unit>
+      <trans-unit id="CFAkWlH" resname="Mapped by">
+        <source>Mapped by</source>
+        <target>Mappée par</target>
+      </trans-unit>
+      <trans-unit id="s25GbG6" resname="Last update">
+        <source>Last update</source>
+        <target>Dernière mise à jour</target>
+      </trans-unit>
+      <trans-unit id="D7tWh6R" resname="Note/sec">
+        <source>Note/sec</source>
+        <target>Note/sec</target>
+      </trans-unit>
+      <trans-unit id="4lQnFyu" resname="LastUpdate">
+        <source>LastUpdate</source>
+        <target>Dernière mise à jour</target>
+      </trans-unit>
+      <trans-unit id="AIF3nCh" resname="level">
+        <source>level</source>
+        <target>niveau</target>
+      </trans-unit>
+      <trans-unit id="q1qpcHT" resname="notes">
+        <source>notes</source>
+        <target>notes</target>
+      </trans-unit>
+      <trans-unit id="1ur_gjW" resname="Download">
+        <source>Download</source>
+        <target>Téléchargement</target>
+      </trans-unit>
+      <trans-unit id="yqrlW9a" resname="Upload a .zip file max 20Mo. that contain all files for the map.">
+        <source>Upload a .zip file max 20Mo. that contain all files for the map.</source>
+        <target>Envoyez un fichier .zip max 20Mo. qui contient tous les fichiers nécessaires.</target>
+      </trans-unit>
+      <trans-unit id="HVtouPH" resname="Replace song if exists.">
+        <source>Replace song if exists.</source>
+        <target>Remplacer la chanson si elle existe.</target>
+      </trans-unit>
+      <trans-unit id="OrvNErV" resname="Is converted">
+        <source>Is converted</source>
+        <target>Est convertie</target>
+      </trans-unit>
+      <trans-unit id="hl6J3nj" resname="Upload">
+        <source>Upload</source>
+        <target>Envoyer</target>
+      </trans-unit>
+      <trans-unit id="acQEWR6" resname="Views">
+        <source>Views</source>
+        <target>Vues</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -12,7 +12,7 @@
               rel="stylesheet">
     {% endblock %}
     <link rel="icon" href="/apps/favicon.ico">
-    <title>RagnaCustoms | Songs</title>
+    <title>{% block title %}| RagnaCustoms{% endblock %}</title>
 </head>
 <body >
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -27,10 +27,17 @@
             </li>
 
             <li class="nav-item">
-
                 <a class="nav-link" href="{{ url("application") }}">RagnApp</a>
-
             </li>
+            {% if app.request.locale == 'en' %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url("change_locale",{locale:"fr"}) }}"><img style="max-height:12px;" src="/flags/france.png" alt="fr"/></a>
+            </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url("change_locale",{locale:"en"}) }}"><img style="max-height:12px;" src="/flags/united-kingdom.png" alt="en"/></a>
+                </li>
+            {% endif %}
         </ul>
         <ul  class="navbar-nav">
             {% if not is_granted("ROLE_USER") %}
@@ -68,6 +75,8 @@
             </div>
         {% endfor %}
     {% endfor %}
+
+
     {% block body %}
 
     {% endblock %}

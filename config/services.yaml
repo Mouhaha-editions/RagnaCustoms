@@ -36,3 +36,6 @@ services:
     App\Service\DiscordService:
         arguments:
             $webhookUrl: '%env(resolve:DISCORD_WEBHOOK)%'
+
+    App\EventSubscriber\LocaleSubscriber:
+        arguments: [ '%kernel.default_locale%' ]
