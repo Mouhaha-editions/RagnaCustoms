@@ -12,6 +12,7 @@
         "ext-zip": "*",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "easycorp/easyadmin-bundle": "^3",
+        "erusev/parsedown": "^1.7",
         "knpuniversity/oauth2-client-bundle": "^2.8",
         "pkshetlie/pagination-bundle": "^2.0",
         "sensio/framework-extra-bundle": "^6.1",
@@ -33,6 +34,7 @@
         "symfonycasts/verify-email-bundle": "^1.2",
         "team-reflex/discord-php": "^5.1",
         "twig/extra-bundle": "^2.12|^3.0",
+        "twig/markdown-extra": "^3.3",
         "twig/twig": "^2.12|^3.0",
         "wohali/oauth2-discord-new": "^1.1"
     },

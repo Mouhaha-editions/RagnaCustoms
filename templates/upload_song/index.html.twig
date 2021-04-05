@@ -14,7 +14,7 @@
             {{ form_widget(form.zipFile) }}
 
             {{ form_row(form.description,{"attr":{"class":'form-control'}}) }}
-
+            <div class="text-right"><small>{{ "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description"|trans }}</small></div>
             {{ form_widget(form.replaceExisting) }}
             <label for="form_replaceExisting">{{ "Replace song if exists."|trans }}</label><br/>
 
@@ -26,7 +26,7 @@
 
             {{ form_end(form) }}
         </div>
-<hr/>
+        <hr/>
         <div class="col-12">
             <table class="table songs">
                 <tr class="table-header">
@@ -60,7 +60,8 @@
 {% endblock %}
 {% block endBody %}
 
-    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
