@@ -54,7 +54,7 @@ class DownloadCounter
         return $this->user;
     }
 
-    public function setUser(?Utilisateur $user): self
+    public function setUser(?Utilisateur $user = null): self
     {
         $this->user = $user;
 
