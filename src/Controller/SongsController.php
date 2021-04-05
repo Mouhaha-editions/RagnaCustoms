@@ -282,11 +282,11 @@ class SongsController extends AbstractController
         $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
         $response = new Response($fileContent);
 
-//        $disposition = HeaderUtils::makeDisposition(
-//            HeaderUtils::DISPOSITION_ATTACHMENT,
-//            $song->getId() . '.zip'
-//        );
-//        $response->headers->set('Content-Disposition', $disposition);
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $song->getId() . '.zip'
+        );
+        $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-type', "application/octet-stream");
         $response->headers->set('Content-Transfer-Encoding', "binary");
         $response->headers->set('Content-Length', filesize($fileContent));
@@ -313,6 +313,9 @@ class SongsController extends AbstractController
             $song->getName() . '.zip'
         );
         $response->headers->set('Content-Disposition', $disposition);
+        $response->headers->set('Content-type', "application/octet-stream");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->headers->set('Content-Length', filesize($fileContent));
         return $response;
     }
 }
