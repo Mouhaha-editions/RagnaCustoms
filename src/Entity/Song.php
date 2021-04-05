@@ -173,12 +173,17 @@ class Song
      * @ORM\OneToMany(targetEntity=DownloadCounter::class, mappedBy="song")
      */
     private $downloadCounters;
+    /**
+     * @ORM\OneToMany(targetEntity=ViewCounter::class, mappedBy="song")
+     */
+    private $viewCounters;
 
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
         $this->votes = new ArrayCollection();
         $this->downloadCounters = new ArrayCollection();
+        $this->viewCounters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -718,6 +723,39 @@ class Song
 
         return $this;
     }
+    /**
+     * @return Collection|ViewCounter[]
+     */
+    public function getViewCounters(): Collection
+    {
+        return $this->viewCounters;
+    }
 
+    public function getUniqViews()
+    {
+        return count($this->getViewCounters());
+    }
+
+    public function addViewCounter(ViewCounter $viewCounter): self
+    {
+        if (!$this->viewCounters->contains($viewCounter)) {
+            $this->viewCounters[] = $viewCounter;
+            $viewCounter->setSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removeViewCounter(ViewCounter $viewCounter): self
+    {
+        if ($this->viewCounters->removeElement($viewCounter)) {
+            // set the owning side to null (unless already changed)
+            if ($viewCounter->getSong() === $this) {
+                $viewCounter->setSong(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

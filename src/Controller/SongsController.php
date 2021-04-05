@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\DownloadCounter;
 use App\Entity\Song;
+use App\Entity\ViewCounter;
 use App\Entity\Vote;
 use App\Repository\DownloadCounterRepository;
 use App\Repository\SongRepository;
+use App\Repository\ViewCounterRepository;
 use App\Repository\VoteRepository;
 use App\Service\DiscordService;
 use App\Service\VoteService;
@@ -26,10 +28,24 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/detail/{id}", name="song_detail")
      */
-    public function songDetail(Request $request, Song $song)
+    public function songDetail(Request $request, Song $song, ViewCounterRepository $viewCounterRepository)
     {
         $em = $this->getDoctrine()->getManager();
         $song->setViews($song->getViews() + 1);
+        $ip = $request->getClientIp();
+        $dlu = $viewCounterRepository->findOneBy([
+            'song' => $song,
+            "ip" => $ip
+        ]);
+        if ($dlu == null) {
+            $dlu = new ViewCounter();
+            $dlu->setSong($song);
+            $dlu->setUser($this->getUser());
+            $dlu->setIp($ip);
+            $em->persist($dlu);
+            $em->flush();
+        }
+
         $em->flush();
         return $this->render('songs/detail.html.twig', ['song' => $song]);
     }
@@ -100,7 +116,7 @@ class SongsController extends AbstractController
      * @param VoteRepository $voteRepository
      * @return Response
      */
-    public function voteUp(Request $request, Song $song, VoteRepository $voteRepository): Response
+    public function songReview(Request $request, Song $song, VoteRepository $voteRepository): Response
     {
         if ($song == null) {
             return new JsonResponse([
@@ -147,53 +163,6 @@ class SongsController extends AbstractController
             ]),
         ]);
     }
-
-    /**
-     * @Route("/song/vote/down/{id}", name="song_vote_down")
-     * @param Request $request
-     * @param Song $song
-     * @param VoteRepository $voteRepository
-     * @return Response
-     */
-    public function voteDown(Request $request, Song $song, VoteRepository $voteRepository): Response
-    {
-        if (!$this->isGranted('ROLE_USER')) {
-            return new JsonResponse([
-                "error" => true,
-                "errorMessage" => "You need an account to vote !",
-                "result" => null,
-            ]);
-        }
-        $em = $this->getDoctrine()->getManager();
-        $vote = $voteRepository->findOneBy([
-            'song' => $song,
-            'user' => $this->getUser()
-        ]);
-        if ($vote == null) {
-            $vote = new Vote();
-            $vote->setSong($song);
-            $vote->setUser($this->getUser());
-            $vote->setKind(Vote::KIND_DOWN);
-            $em->persist($vote);
-            $song->setVoteDown($song->getVoteDown() + 1);
-        } elseif ($vote->getKind() == Vote::KIND_DOWN) {
-            $vote->setKind(Vote::KIND_NEUTRAL);
-            $song->setVoteDown($song->getVoteDown() - 1);
-        } else {
-            $vote->setKind(Vote::KIND_DOWN);
-            $song->setVoteDown($song->getVoteDown() + 1);
-            if ($vote->getKind() == Vote::KIND_UP) {
-                $song->setVoteUp($song->getVoteUp() - 1);
-            }
-        }
-        $em->flush();
-        return new JsonResponse([
-            "error" => false,
-            "errorMessage" => false,
-            "result" => $this->renderView("songs/partial/vote.html.twig", ['song' => $song]),
-        ]);
-    }
-
 
     /**
      * @Route("/", name="home")
@@ -273,7 +242,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/download/{id}", name="song_download")
      */
-    public function download(Song $song, SongRepository $songRepository, KernelInterface $kernel): Response
+    public function download(Request $request,Song $song, SongRepository $songRepository, KernelInterface $kernel, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -282,6 +251,19 @@ class SongsController extends AbstractController
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
         $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
+        $ip = $request->getClientIp();
+        $dlu = $downloadCounterRepository->findOneBy([
+            'song' => $song,
+            "ip" => $ip
+        ]);
+        if ($dlu == null) {
+            $dlu = new DownloadCounter();
+            $dlu->setSong($song);
+            $dlu->setUser($this->getUser());
+            $dlu->setIp($ip);
+            $em->persist($dlu);
+            $em->flush();
+        }
         $response = new Response($fileContent);
 
         $disposition = HeaderUtils::makeDisposition(
