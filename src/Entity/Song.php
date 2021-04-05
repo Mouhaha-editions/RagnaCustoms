@@ -169,10 +169,16 @@ class Song
      */
     private $youtubeLink;
 
+    /**
+     * @ORM\OneToMany(targetEntity=DownloadCounter::class, mappedBy="song")
+     */
+    private $downloadCounters;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
         $this->votes = new ArrayCollection();
+        $this->downloadCounters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -662,6 +668,36 @@ class Song
     public function setYoutubeLink(?string $youtubeLink): self
     {
         $this->youtubeLink = $youtubeLink;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DownloadCounter[]
+     */
+    public function getDownloadCounters(): Collection
+    {
+        return $this->downloadCounters;
+    }
+
+    public function addDownloadCounter(DownloadCounter $downloadCounter): self
+    {
+        if (!$this->downloadCounters->contains($downloadCounter)) {
+            $this->downloadCounters[] = $downloadCounter;
+            $downloadCounter->setSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDownloadCounter(DownloadCounter $downloadCounter): self
+    {
+        if ($this->downloadCounters->removeElement($downloadCounter)) {
+            // set the owning side to null (unless already changed)
+            if ($downloadCounter->getSong() === $this) {
+                $downloadCounter->setSong(null);
+            }
+        }
 
         return $this;
     }

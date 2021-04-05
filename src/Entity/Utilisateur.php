@@ -63,10 +63,16 @@ class Utilisateur implements UserInterface
      */
     private $certified;
 
+    /**
+     * @ORM\OneToMany(targetEntity=DownloadCounter::class, mappedBy="user")
+     */
+    private $downloadCounters;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
         $this->votes = new ArrayCollection();
+        $this->downloadCounters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -259,6 +265,36 @@ class Utilisateur implements UserInterface
     public function setCertified(?bool $certified): self
     {
         $this->certified = $certified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DownloadCounter[]
+     */
+    public function getDownloadCounters(): Collection
+    {
+        return $this->downloadCounters;
+    }
+
+    public function addDownloadCounter(DownloadCounter $downloadCounter): self
+    {
+        if (!$this->downloadCounters->contains($downloadCounter)) {
+            $this->downloadCounters[] = $downloadCounter;
+            $downloadCounter->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDownloadCounter(DownloadCounter $downloadCounter): self
+    {
+        if ($this->downloadCounters->removeElement($downloadCounter)) {
+            // set the owning side to null (unless already changed)
+            if ($downloadCounter->getUser() === $this) {
+                $downloadCounter->setUser(null);
+            }
+        }
 
         return $this;
     }

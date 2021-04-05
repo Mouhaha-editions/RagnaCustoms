@@ -289,6 +289,22 @@
         <source>Search</source>
         <target>Chercher</target>
       </trans-unit>
+      <trans-unit id="2">
+        <source>The file seems to not be valid, at least info.dat is missing.</source>
+        <target>Le fichier ne semble pas valide, il manque au moins le fichier info.dat</target>
+      </trans-unit>
+      <trans-unit id="3">
+        <source>The song \"%song%\" by \"%artist%\" is already in our catalog.</source>
+        <target>La musique \"%song%\" par \"%artist%\" est déjà dans notre catalogue.</target>
+      </trans-unit>
+      <trans-unit id="4">
+        <source>You don't add the _songApproximativeDuration in info.dat</source>
+        <target>Vous n'avez pas ajouté le _songApproximativeDuration dans info.dat</target>
+      </trans-unit>
+      <trans-unit id="5">
+        <source>Song \"%song%\" by \"%artist%\" added !</source>
+        <target>Chanson \"%song%\" par \"%artist%\" ajoutée !</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
