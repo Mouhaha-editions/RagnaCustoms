@@ -61,8 +61,15 @@
 
         <td class="table-column padded-left">
 
-            {% include 'upload_song/partial/button_moderation.html.twig' with  {song : song} %}
-
+            {% if not song.moderated %}
+                <a href="{{ url('moderate_song_ajax',{id:song.id}) }}" class="ajax-link button small primary" data-url="{{ url('moderate_song_ajax',{id:song.id}) }}" data-success-action="replace" data-replace-selector=".button-ajax-{{ song.id }}">
+                    Validate
+                </a>
+            {% else %}
+                <a href="{{ url('moderate_song_ajax',{id:song.id}) }}" data-url="{{ url('moderate_song_ajax',{id:song.id}) }}" data-success-action="replace" data-replace-selector=".button-ajax-{{ song.id }}" class="ajax-link button small secondary">
+                    Unvalidate
+                </a>
+            {% endif %}
 
         </td>
     </tr>
