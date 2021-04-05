@@ -7,12 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
- * @ORM\Entity(repositoryClass=DownloadCounterRepository::class)
+ * @ORM\Entity(repositoryClass=ViewCounterRepository::class)
  */
-class DownloadCounter
+class ViewCounter
 {
     use TimestampableEntity;
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -21,12 +20,12 @@ class DownloadCounter
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="downloadCounters")
+     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="viewCounters")
      */
     private $song;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="downloadCounters")
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="viewCounters")
      */
     private $user;
 

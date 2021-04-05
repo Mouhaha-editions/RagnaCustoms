@@ -6,6 +6,7 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -15,6 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Utilisateur implements UserInterface
 {
+    use TimestampableEntity;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -67,12 +69,17 @@ class Utilisateur implements UserInterface
      * @ORM\OneToMany(targetEntity=DownloadCounter::class, mappedBy="user")
      */
     private $downloadCounters;
+    /**
+     * @ORM\OneToMany(targetEntity=ViewCounter::class, mappedBy="user")
+     */
+    private $viewCounters;
 
     public function __construct()
     {
         $this->songs = new ArrayCollection();
         $this->votes = new ArrayCollection();
         $this->downloadCounters = new ArrayCollection();
+        $this->viewCounters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -293,6 +300,36 @@ class Utilisateur implements UserInterface
             // set the owning side to null (unless already changed)
             if ($downloadCounter->getUser() === $this) {
                 $downloadCounter->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ViewCounter[]
+     */
+    public function getViewCounters(): Collection
+    {
+        return $this->viewCounters;
+    }
+
+    public function addViewCounter(ViewCounter $viewCounters): self
+    {
+        if (!$this->viewCounters->contains($viewCounters)) {
+            $this->viewCounters[] = $viewCounters;
+            $viewCounters->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeViewCounter(ViewCounter $viewCounters): self
+    {
+        if ($this->viewCounters->removeElement($viewCounters)) {
+            // set the owning side to null (unless already changed)
+            if ($viewCounters->getUser() === $this) {
+                $viewCounters->setUser(null);
             }
         }
 
