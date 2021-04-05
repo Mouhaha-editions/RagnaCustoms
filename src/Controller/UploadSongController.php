@@ -163,7 +163,10 @@ class UploadSongController extends AbstractController
                 'label' => "Replace existing song."
             ])
             ->getForm();
-        $allowedFiles = ['preview.ogg','info.dat'];
+        $allowedFiles = [
+            'preview.ogg',
+            'info.dat'
+        ];
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
@@ -232,7 +235,7 @@ class UploadSongController extends AbstractController
                     preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('description')->getData(), $match);
                     if (count($match) > 0) {
                         $song->setYoutubeLink($match[0]);
-                    }else{
+                    } else {
                         $song->setYoutubeLink(null);
                     }
                     $song->setDescription($form->get('description')->getData());
@@ -279,12 +282,12 @@ class UploadSongController extends AbstractController
                     $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
                     $em->persist($diff);
                     $allowedFiles[] = $difficulty->_beatmapFilename;
-                    $file =$difficulty->_beatmapFilename;
+                    $file = $difficulty->_beatmapFilename;
 
-                    $file = $unzipFolder . "/".$file;
+                    $file = $unzipFolder . "/" . $file;
                     $json2 = json_decode(file_get_contents($file));
                     $diff->setNotesCount(count($json2->_notes));
-                    $diff->setNotePerSecond($diff->getNotesCount()/$song->getApproximativeDuration());
+                    $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
 
                 }
 
@@ -300,7 +303,7 @@ class UploadSongController extends AbstractController
                 if ($zip->open($theZip) === TRUE) {
                     for ($i = 0; $i < $zip->numFiles; $i++) {
                         $filename = ($zip->getNameIndex($i));
-                        if(!preg_match('/'. $patterns_flattened .'/', strtolower($filename), $matches) || preg_match('/autosaves/', strtolower($filename), $matches) ) {
+                        if (!preg_match('/' . $patterns_flattened . '/', strtolower($filename), $matches) || preg_match('/autosaves/', strtolower($filename), $matches)) {
                             $zip->deleteName($filename);
                         }
                     }
@@ -314,7 +317,7 @@ class UploadSongController extends AbstractController
                 $email = (new Email())
                     ->from('contact@ragnacustoms.com')
                     ->to('pierrick.pobelle@gmail.com')
-                    ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', '.$song->getName().'!');
+                    ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
                 if ($song->isModerated()) {
                     $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 } else {
@@ -336,11 +339,11 @@ class UploadSongController extends AbstractController
             ->orderBy('song.lastDateUpload', 'DESC');
 
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
-if($pagination->isPartial()){
-    return $this->render('upload_song/partial/uploaded_song_row.html.twig', [
-        'songs' => $pagination
-    ]);
-}
+        if ($pagination->isPartial()) {
+            return $this->render('upload_song/partial/uploaded_song_row.html.twig', [
+                'songs' => $pagination
+            ]);
+        }
         return $this->render('upload_song/index.html.twig', [
             'form' => $form->createView(),
             'songs' => $pagination
