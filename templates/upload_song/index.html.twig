@@ -14,7 +14,7 @@
             {{ form_widget(form.zipFile) }}
 
             {{ form_row(form.description,{"attr":{"class":'form-control'}}) }}
-            <div class="text-right"><small>{{ "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description"|trans }}</small></div>
+            <div class="text-right"><small>{{ "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description"|trans|raw }}</small></div>
             {{ form_widget(form.replaceExisting) }}
             <label for="form_replaceExisting">{{ "Replace song if exists."|trans }}</label><br/>
 
