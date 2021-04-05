@@ -25,6 +25,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\VarDumper\VarDumper;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use ZipArchive;
 
 class UploadSongController extends AbstractController
@@ -147,7 +148,7 @@ class UploadSongController extends AbstractController
      * @return Response
      */
     public function index(Request $request, KernelInterface $kernel, DiscordService $discordService,
-                          MailerInterface $mailer, SongRepository $songRepository,
+                          MailerInterface $mailer, SongRepository $songRepository, TranslatorInterface $translator,
                           DifficultyRankRepository $difficultyRankRepository, PaginationService $paginationService): Response
     {
 
@@ -197,7 +198,7 @@ class UploadSongController extends AbstractController
                     if (!file_exists($file)) {
                         $file = $unzipFolder . "/Info.dat";
                         if (!file_exists($file)) {
-                            $this->addFlash('danger', "The file seems to not be valid, at least info.dat is missing.");
+                            $this->addFlash('danger', $translator->trans("The file seems to not be valid, at least info.dat is missing."));
                             $this->rrmdir($unzipFolder);
                             return $this->redirectToRoute("upload_song");
                         }
@@ -207,7 +208,7 @@ class UploadSongController extends AbstractController
                     $allowedFiles[] = $json->_songFilename;
 
                 } catch (Exception $e) {
-                    $this->addFlash('danger', "The file seems to not be valid, at least info.dat is missing.");
+                    $this->addFlash('danger', $translator->trans("The file seems to not be valid, at least info.dat is missing."));
                     $this->rrmdir($unzipFolder);
                     return $this->redirectToRoute("upload_song");
                 }
@@ -224,7 +225,11 @@ class UploadSongController extends AbstractController
 
                     } else {
                         $this->rrmdir($unzipFolder);
-                        $this->addFlash("danger", "The song \"" . $song->getName() . "\" by \"" . $song->getAuthorName() . "\" is already in our catalog.");
+                        $this->addFlash("danger", $translator->trans("The song \"%song%\" by \"%artist%\" is already in our catalog.", [
+                            "%song%" => $song->getName(),
+                            "%artist%" => $song->getAuthorName(),
+
+                        ]));
                         return $this->redirectToRoute("upload_song");
                     }
                 } else {
@@ -241,11 +246,6 @@ class UploadSongController extends AbstractController
                     $song->setDescription($form->get('description')->getData());
                 }
 
-
-                /**
-                 * du blabla avec un lien https://www.youtube.com/watch?v=O14PuHXNXII youtube dedans
-                 * pour voir si ca ressort...
-                 */
                 $song->setVersion($json->_version);
                 $song->setName($json->_songName);
                 $song->setConverted((bool)$form->get('converted')->getData());
@@ -258,8 +258,12 @@ class UploadSongController extends AbstractController
                 $song->setShufflePeriod($json->_shufflePeriod);
                 $song->setPreviewStartTime($json->_previewStartTime);
                 $song->setPreviewDuration($json->_previewDuration);
-                $song->setApproximativeDuration($json->_songApproximativeDuration);
-                $song->setApproximativeDuration($json->_songApproximativeDuration);
+                try {
+                    $song->setApproximativeDuration($json->_songApproximativeDuration);
+                } catch (Exception $e) {
+                    $this->addFlash("danger", $translator->trans("You don't add the _songApproximativeDuration in info.dat"));
+                    return $this->redirectToRoute("upload_song");
+                }
                 $song->setFileName($json->_songFilename);
                 $song->setCoverImageFileName($json->_coverImageFilename);
                 $song->setEnvironmentName($json->_environmentName);
@@ -292,10 +296,7 @@ class UploadSongController extends AbstractController
                 }
 
                 $em->flush();
-                $moderated = $song->isModerated();
-                if ($moderated) {
-                    $discordService->sendNewSongMessage($song);
-                }
+
 
                 /** @var UploadedFile $file */
                 $patterns_flattened = strtolower(implode('|', $allowedFiles));
@@ -313,12 +314,16 @@ class UploadSongController extends AbstractController
 
                 copy($theZip, $finalFolder . $song->getId() . ".zip");
                 copy($unzipFolder . "/" . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-                $this->addFlash('success', "Song \"" . $song->getName() . "\" by \"" . $song->getAuthorName() . "\" added !");
+                $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" added !",[
+                    "%song%"=> $song->getName(),
+                    "%artist%"=>$song->getAuthorName()
+                ]));
                 $email = (new Email())
                     ->from('contact@ragnacustoms.com')
                     ->to('pierrick.pobelle@gmail.com')
                     ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
                 if ($song->isModerated()) {
+                    $discordService->sendNewSongMessage($song);
                     $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 } else {
                     $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");

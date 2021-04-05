@@ -31,7 +31,7 @@ class DiscordService
             "tts" => false,
 
             // File upload
-            // "file" => "",
+//            "file" => "",
 
             // Embeds Array
             "embeds" => [
@@ -46,13 +46,13 @@ class DiscordService
 //                    "description" => "",
 
                     // URL of title link
-                    "url" => "https://ragnasong.com/",
+                    "url" => "https://ragnacustoms.com/song/detail/".$song->getId(),
 
                     // Timestamp of embed must be formatted as ISO8601
                     "timestamp" => $timestamp,
 
                     // Embed left border color in HEX
-                    "color" => hexdec("3366ff"),
+                    "color" => "'".hexdec("3366ff")."'",
 
                     // Footer
 //                    "footer" => [
@@ -111,9 +111,7 @@ class DiscordService
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        $response = curl_exec($ch);
-
+       $resp =  curl_exec($ch);
         curl_close($ch);
     }
 }
