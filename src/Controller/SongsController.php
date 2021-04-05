@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\DownloadCounter;
 use App\Entity\Song;
 use App\Entity\Vote;
+use App\Repository\DownloadCounterRepository;
 use App\Repository\SongRepository;
 use App\Repository\VoteRepository;
 use App\Service\DiscordService;
@@ -289,7 +291,7 @@ class SongsController extends AbstractController
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-type', "application/octet-stream");
         $response->headers->set('Content-Transfer-Encoding', "binary");
-        $response->headers->set('Content-Length', filesize($fileContent));
+        $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
 
         return $response;
     }
@@ -297,7 +299,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/ddl/{id}", name="song_direct_download")
      */
-    public function directDownload(Song $song, SongRepository $songRepository, KernelInterface $kernel): Response
+    public function directDownload(Request $request, Song $song, SongRepository $songRepository, KernelInterface $kernel, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -305,6 +307,20 @@ class SongsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
+        $ip = $request->getClientIp();
+        $dlu = $downloadCounterRepository->findOneBy([
+            'song' => $song,
+            "ip" => $ip
+        ]);
+        if ($dlu == null) {
+            $dlu = new DownloadCounter();
+            $dlu->setSong($song);
+            $dlu->setUser($this->getUser());
+            $dlu->setIp($ip);
+            $em->persist($dlu);
+            $em->flush();
+        }
+
         $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
         $response = new Response($fileContent);
 
@@ -315,7 +331,7 @@ class SongsController extends AbstractController
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-type', "application/octet-stream");
         $response->headers->set('Content-Transfer-Encoding', "binary");
-        $response->headers->set('Content-Length', filesize($fileContent));
+        $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
         return $response;
     }
 }
