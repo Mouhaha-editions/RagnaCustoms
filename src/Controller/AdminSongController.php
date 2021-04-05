@@ -103,7 +103,10 @@ class AdminSongController extends AbstractController
         $zip = new ZipArchive();
         $theZip = $finalFolder . $song->getId() . ".zip";
 
-
+        $allowedFiles = [
+            'preview.ogg',
+            'info.dat'
+        ];
         if ($zip->open($theZip) === TRUE) {
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
@@ -198,6 +201,7 @@ class AdminSongController extends AbstractController
 
         return $this->redirectToRoute('admin_song');
     }
+
     public function rrmdir($dir)
     {
         if (is_dir($dir)) {
