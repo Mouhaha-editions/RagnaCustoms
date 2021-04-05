@@ -11,6 +11,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApplicationController extends AbstractController
 {
     /**
+     * @Route("/ini", name="ini")
+     */
+    public function ini(): Response
+    {
+        return new Response(phpinfo());
+    }
+    /**
+     * @Route("/server", name="server")
+     */
+    public function server(): Response
+    {
+        return new Response($_SERVER);
+    }
+
+    /**
      * @Route("/application", name="application")
      */
     public function index(): Response
