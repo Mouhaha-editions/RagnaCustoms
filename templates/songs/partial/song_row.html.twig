@@ -10,7 +10,7 @@
                         </div>
                     {% endif %}
                     <img src="/covers/{{ song.id ~ song.coverImageExtension }}" class="img-fluid rounded thumbnail"
-                         alt="item-11">
+                         alt="cover">
                 </figure>
             </a>
 
@@ -83,5 +83,9 @@
         <td>No song for now</td>
     </tr>
 {% endfor %}
-{% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-{{ macro_pagination.seeMore(songs,"see more"|trans) }}
+<tr class="see-more-delete">
+    <td colspan="7" class="text-center">
+        {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+        {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }}
+    </td>
+</tr>
