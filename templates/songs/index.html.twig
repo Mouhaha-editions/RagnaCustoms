@@ -14,9 +14,9 @@
             <form class=" search-and-filter">
                 <div class="row">
                     <div class="col-md-4 form-group active">
-                        <label for="search">Search</label>
+                        <label for="search">{{ "Search"|trans }}</label>
                         <input type="text" value="{{ app.request.get('search') }}" class="form-control form-control-sm"
-                               placeholder="Search by title, artist or mapper" name="search" id="search">
+                               placeholder="{{ "Search by title, artist or mapper"|trans }}" name="search" id="search">
                     </div>
                     <div class="col-md-2 form-group">
                         <label for="downloads-filter-category">{{ "Difficulties"|trans }}</label>

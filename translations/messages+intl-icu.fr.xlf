@@ -281,6 +281,14 @@
         <source>Views</source>
         <target>Vues</target>
       </trans-unit>
+      <trans-unit id="0">
+        <source>Search by title, artist or mapper</source>
+        <target>Chercher par titre, artiste ou mapper</target>
+      </trans-unit>
+      <trans-unit id="1">
+        <source>Search</source>
+        <target>Chercher</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
