@@ -515,7 +515,7 @@ class Song
 
     public function getVoteAverage()
     {
-        return $this->countVotes == 0 ? 0 : $this->getTotalVotes()/$this->getCountVotes();
+        return $this->countVotes == 0 ? 0 : $this->getTotalVotes() / $this->getCountVotes();
     }
 
     public function getTotalVotes(): ?float
@@ -595,7 +595,9 @@ class Song
     {
         $sum = 0;
         $votes = $this->getVotes();
-        if(count($votes) == 0){return 0;}
+        if (count($votes) == 0) {
+            return 0;
+        }
         foreach ($votes as $vote) {
             $sum += $vote->getFunFactor();
         }
@@ -607,7 +609,9 @@ class Song
     {
         $sum = 0;
         $votes = $this->getVotes();
-        if(count($votes) == 0){return 0;}
+        if (count($votes) == 0) {
+            return 0;
+        }
         foreach ($votes as $vote) {
             $sum += $vote->getRhythm();
         }
@@ -619,7 +623,9 @@ class Song
     {
         $sum = 0;
         $votes = $this->getVotes();
-        if(count($votes) == 0){return 0;}
+        if (count($votes) == 0) {
+            return 0;
+        }
         foreach ($votes as $vote) {
             $sum += $vote->getFlow();
         }
@@ -631,7 +637,9 @@ class Song
     {
         $sum = 0;
         $votes = $this->getVotes();
-        if(count($votes) == 0){return 0;}
+        if (count($votes) == 0) {
+            return 0;
+        }
         foreach ($votes as $vote) {
             $sum += $vote->getPatternQuality();
         }
@@ -642,7 +650,9 @@ class Song
     {
         $sum = 0;
         $votes = $this->getVotes();
-        if(count($votes) == 0){return 0;}
+        if (count($votes) == 0) {
+            return 0;
+        }
         foreach ($votes as $vote) {
             $sum += $vote->getReadability();
         }
@@ -653,7 +663,9 @@ class Song
     {
         $sum = 0;
         $votes = $this->getVotes();
-        if(count($votes) == 0){return 0;}
+        if (count($votes) == 0) {
+            return 0;
+        }
         foreach ($votes as $vote) {
             $sum += $vote->getLevelQuality();
         }
@@ -678,6 +690,11 @@ class Song
     public function getDownloadCounters(): Collection
     {
         return $this->downloadCounters;
+    }
+
+    public function getUniqDownloads()
+    {
+        return count($this->getDownloadCounters());
     }
 
     public function addDownloadCounter(DownloadCounter $downloadCounter): self
