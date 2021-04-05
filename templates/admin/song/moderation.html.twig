@@ -32,8 +32,8 @@
                         <div class="form-item">
 
                             <div class="form-input active">
-                                <label for="search">Search</label>
-                                <input type="text" value="{{ app.request.get('search') }}" placeholder="Search by title, artist or mapper" name="search" id="search" >
+                                <label for="search">{{ "Search"|trans }}</label>
+                                <input type="text" value="{{ app.request.get('search') }}" placeholder="{{ "Search by title, artist or mapper"|trans }}" name="search" id="search" >
                             </div>
 
                         </div>
@@ -60,11 +60,6 @@
                                 <option {%  if app.request.get('downloads_filter_difficulties') == 2 %}selected="selected"{% endif %}  value="2">{{ "4-7"|trans }}</option>
                                 <option {%  if app.request.get('downloads_filter_difficulties') == 3 %}selected="selected"{% endif %}  value="3">{{ "8-10"|trans }}</option>
                             </select>
-
-                            <svg class="form-select-icon icon-small-arrow">
-                                <use xlink:href="#svg-small-arrow"></use>
-                            </svg>
-
                         </div>
 
 
@@ -73,13 +68,10 @@
                             <label for="downloads-filter-order">{{ "Order by"|trans }}</label>
                             <select id="downloads-filter-order" name="downloads_filter_order">
                                 <option value="">{{ "Last added"|trans }}</option>
-                                <option value="">{{ "Soon"|trans }}</option>
+                                <option value="1">{{ "Votes"|trans }}</option>
+                                <option value="2">{{ "Duration"|trans }}</option>
+                                <option value="3">{{ "Last update"|trans }}</option>
                             </select>
-
-                            <svg class="form-select-icon icon-small-arrow">
-                                <use xlink:href="#svg-small-arrow"></use>
-                            </svg>
-
                         </div>
 
 
