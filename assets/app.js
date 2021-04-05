@@ -16,6 +16,9 @@ import 'bootstrap';
 import './js/form-rating';
 
 
+
+
+
 import '../public/bundles/pagination/js/see-more.js';
 // const app = require('./js/utils/core');
 
