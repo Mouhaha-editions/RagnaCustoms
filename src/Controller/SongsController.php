@@ -288,6 +288,10 @@ class SongsController extends AbstractController
         );
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-type', "application/octet-stream");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->headers->set('Content-Length', filesize($fileContent));
+
+        header("Content-Transfer-Encoding: binary");
         return $response;
     }
 
