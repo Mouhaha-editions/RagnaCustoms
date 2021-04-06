@@ -26,27 +26,35 @@ function draw() {
         let song = infoDat._songFilename;
         let fileSong = $("#info-dat").data('file').replace('Info.dat', song).replace('info.dat', song);
         ragnaSelector.before("<button data-level='stop' class='btn-danger btn btn-sm test-map mr-2 mb-2'><i class='fas fa-stop'></i></button>");
+        // ragnaSelector.before("<input type='number'  min='0' max='100' value='50'/>");
         audio = new Audio(fileSong)
-        audio.load();
-        for (let i = 0; i < infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps.length; i++) {
-            let niveau = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[i];
-            let level = niveau._beatmapFilename;
-            let fileLevel = $("#info-dat").data('file').replace('Info.dat', level).replace('info.dat', level);
-            ragnaSelector.before("<button data-level='" + niveau._difficulty + "' class='btn-info btn btn-sm test-map mr-2 mb-2'>level " + niveau._difficultyRank + "</button>");
-            ragnaSelector.append("<div class=\"rune-pack\" data-duration='" + infoDat._songApproximativeDuration + "' id='" + niveau._difficulty + "'></div>");
-            $(".rune-pack#" + niveau._difficulty + "").css({
-                height: (infoDat._songApproximativeDuration * (ratio)) + "px",
-            });
-            $('.rune-pack#' + niveau._difficulty).hide();
+        audio.level = 0.5;
+        audio.addEventListener('canplaythrough', function(){
 
-            readTextFile(fileLevel, function (text) {
-                let levelDetail = JSON.parse(text);
-                for (let i = 0; i < levelDetail._notes.length; i++) {
-                    let note = levelDetail._notes[i];
-                    ragnaSelector.find(".rune-pack#" + niveau._difficulty).append("<div class=\"rune\" style='bottom:" + ((ratio * ratio2 * note._time)) + "px' id='drum-" + (note._lineIndex + 1) + "'>X</div>");
-                }
-            });
-        }
+            for (let i = 0; i < infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps.length; i++) {
+                let niveau = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[i];
+                let level = niveau._beatmapFilename;
+                let fileLevel = $("#info-dat").data('file').replace('Info.dat', level).replace('info.dat', level);
+                ragnaSelector.before("<button data-level='" + niveau._difficulty + "' class='btn-info btn btn-sm test-map mr-2 mb-2'>level " + niveau._difficultyRank + "</button>");
+                ragnaSelector.append("<div class=\"rune-pack\" data-duration='" + infoDat._songApproximativeDuration + "' id='" + niveau._difficulty + "'></div>");
+                $(".rune-pack#" + niveau._difficulty + "").css({
+                    height: (infoDat._songApproximativeDuration * (ratio)) + "px",
+                });
+                $('.rune-pack#' + niveau._difficulty).hide();
+
+                readTextFile(fileLevel, function (text) {
+                    let levelDetail = JSON.parse(text);
+                    for (let i = 0; i < levelDetail._notes.length; i++) {
+                        let note = levelDetail._notes[i];
+                        ragnaSelector.find(".rune-pack#" + niveau._difficulty).append("<div class=\"rune\" style='bottom:" + ((ratio * ratio2 * note._time)) + "px' id='drum-" + (note._lineIndex + 1) + "'>X</div>");
+                    }
+                });
+            }
+
+        }, false);
+
+
+
     });
 
 }
