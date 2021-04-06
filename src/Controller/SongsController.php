@@ -52,7 +52,6 @@ class SongsController extends AbstractController
     }
 
     /**
-     * }
      * @Route("/song/form/review/{id}", name="form_review_save")
      */
     public function formReviewSave(Request $request, Song $song, VoteRepository $voteRepository, VoteService $voteService)
@@ -224,8 +223,24 @@ class SongsController extends AbstractController
         }
         $qb->andWhere('s.moderated = true');
         if ($request->get('search', null)) {
-            $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-                ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+            $exp = explode(':', $request->get('search'));
+                switch($exp[0]){
+                    case 'mapper':
+                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        break;
+                    case 'artist':
+                        $qb->andWhere('(s.authorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1]. '%');
+                        break;
+                    case 'title':
+                        $qb->andWhere('(s.name LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        break;
+                    default:
+                        $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+                }
         }
 
         $pagination = $paginationService->setDefaults(40)->process($qb, $request);

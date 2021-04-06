@@ -55,25 +55,6 @@ class UploadSongController extends AbstractController
             return $this->redirectToRoute("upload_song");
         }
     }
-//
-//    /**
-//     * @Route("/upload/song/list", name="my_songs")
-//     */
-//    public function list(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
-//    {
-//        $qb = $songRepository->createQueryBuilder('song')
-//            ->where('song.user = :user')
-//            ->setParameter('user', $this->getUser());
-//
-//        $qb->orderBy('s.createdAt', 'DESC');
-//
-//        $pagination = $paginationService->setDefaults(30)->process($qb, $request);
-//
-//
-//        return $this->render('upload_song/manage.html.twig', [
-//            "songs" => $pagination
-//        ]);
-//    }
 
 
     /**

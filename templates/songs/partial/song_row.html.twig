@@ -15,9 +15,9 @@
             </a>
 
             <div class="song-preview pl-2">
-                <p class="title">{{ song.name }}</p>
-                <p class="category">{{ song.authorName }}</p>
-                <p class="creator">Mapped by : {{ song.levelAuthorName }}</p>
+                <p class="title"><a href="{{ url('song_detail',{id:song.id}) }}">{{ song.name }}</a></p>
+                <p class="category"><a href="{{ url('home') }}?search=artist:{{ song.authorName }}">{{ song.authorName }}</a></p>
+                <p class="creator">Mapped by : <a href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">{{ song.levelAuthorName }}</a></p>
                 <p class="difficulties">Difficulties :
                     {% for diff in song.songDifficulties %}
                         {% if loop.index != 1 %}, {% endif %}
@@ -29,15 +29,7 @@
         <td class="table-column padded">
             {% for difficulty in song.songDifficulties %}
                 {% if loop.index != 1 %}, {% endif %}
-{#                {{ "Difficulty "|trans }} {{ difficulty.difficultyRank.level }} :#}
-{#                <ul>#}
-{#                    <li> {{ "Notes"|trans }} : <b>{{ difficulty.notesCount }}</b></li>#}
-{#                    <li> #}
-{#                        {{ "Speed"|trans }} : <b>#}
                 <span data-toggle="tooltips" title="{{ "level "|trans }} {{ difficulty.difficultyRank.level }}, {{ difficulty.notesCount }} {{ "notes"|trans }}">{{ difficulty.notePerSecond|round(2,'floor') }}</span>
-{#            </b> <span data-toggle="tooltips" title="{{ "Note per second"|trans }}">N/s</span>#}
-{#                    </li>#}
-{#                </ul>#}
             {% endfor %}
         </td>
 
