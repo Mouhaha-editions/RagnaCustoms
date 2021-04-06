@@ -13,10 +13,14 @@
             </div>
             <h3>{{ "Description"|trans }}</h3>
             <p>
-                {% apply markdown_to_html  %}
-                {{ song.description is not null ? song.description|nl2br : "no description for now"|trans }}
+                {% apply markdown_to_html %}
+                    {{ song.description is not null ? song.description|nl2br : "no description for now"|trans }}
                 {% endapply %}
             </p>
+
+            <h2>{{ "See custom song in action"|trans }}</h2>
+            <div class="text-center"><div id="ragna-beat"></div></div>
+
         </div>
         <div class="col-md-4 song-detail border-left">
             <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" class="img-fluid pt-2"
@@ -103,9 +107,20 @@
             </div>
         </div>
     </div>
+    <div id="info-dat" data-file="{{ song.infoDatFile }}"></div>
 
 {% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('ragnabeat') }}
+{% endblock %}
 
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('ragnabeat') }}
+
+{% endblock %}
     {% block title %}
 
     {% endblock %}

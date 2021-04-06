@@ -10,6 +10,7 @@ use App\Repository\DownloadCounterRepository;
 use App\Repository\SongRepository;
 use App\Repository\ViewCounterRepository;
 use App\Repository\VoteRepository;
+use App\Service\SongService;
 use App\Service\VoteService;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +27,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/detail/{id}", name="song_detail")
      */
-    public function songDetail(Request $request, Song $song, ViewCounterRepository $viewCounterRepository)
+    public function songDetail(Request $request, Song $song, ViewCounterRepository $viewCounterRepository, SongService $songService)
     {
         $em = $this->getDoctrine()->getManager();
         $song->setViews($song->getViews() + 1);
@@ -44,6 +45,7 @@ class SongsController extends AbstractController
             $em->flush();
         }
 
+        $songService->emulatorFileDispatcher($song);
         $em->flush();
         return $this->render('songs/detail.html.twig', ['song' => $song]);
     }

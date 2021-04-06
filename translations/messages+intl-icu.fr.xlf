@@ -333,6 +333,10 @@
         <source>This one is not required, but if you put a youtube link in the description we can catch the first one as song video ! ;)</source>
         <target>Ce dernier n'est pas requis, mais si vous mettez un lien youtube dans la description nous saurons retrouver le premier en tant que preview de la custom song</target>
       </trans-unit>
+      <trans-unit id="13">
+        <source>See custom song in action</source>
+        <target>Voir la custom song en action</target>
+      </trans-unit>
 
     </body>
   </file>
