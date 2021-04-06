@@ -325,6 +325,10 @@
             <source>Artist</source>
             <target>Artiste</target>
         </trans-unit>
+      <trans-unit id="11">
+        <source>This Custom song is not your's</source>
+        <target>Cette custom song ne vous appartient pas.</target>
+      </trans-unit>
 
     </body>
   </file>

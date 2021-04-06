@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
+use App\Form\SongType;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\SongRepository;
 use App\Service\DiscordService;
@@ -30,6 +31,35 @@ use ZipArchive;
 
 class UploadSongController extends AbstractController
 {
+    /**
+     * @Route("/upload/song/edit/{id}", name="edit_song")
+     */
+    public function edit(Request $request, Song $song, TranslatorInterface $translator)
+    {
+        if($song->getUser() == $this->getUser() && !$this->isGranted('ROLE_ADMIN')){
+            return new JsonResponse([
+                'error' => true,
+                'errorMessage' => $translator->trans("This Custom song is not your's"),
+                'response' => ""
+                ]);
+        }
+        $form = $this->createForm(SongType::class, $song, [
+            'method' => "post",
+            'action' => $this->generateUrl('edit_song', ['id' => $song->getId()])
+        ]);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+        }
+        return new JsonResponse([
+            'error' => false,
+            'errorMessage' => "",
+            'response' => $this->renderView('upload_song/partial/edit.html.twig', [
+                'form' => $form->createView()
+            ])
+        ]);
+    }
 
     /**
      * @Route("/upload/song/delete/{id}", name="delete_song")
@@ -233,9 +263,9 @@ class UploadSongController extends AbstractController
 
                 copy($theZip, $finalFolder . $song->getId() . ".zip");
                 copy($unzipFolder . "/" . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-                $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" added !",[
-                    "%song%"=> $song->getName(),
-                    "%artist%"=>$song->getAuthorName()
+                $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" added !", [
+                    "%song%" => $song->getName(),
+                    "%artist%" => $song->getAuthorName()
                 ]));
                 $email = (new Email())
                     ->from('contact@ragnacustoms.com')

@@ -117,6 +117,37 @@ $(function () {
         return false;
 
     })
+    $(document).on('click', ".ajax-modal-form", function () {
+        let t = $(this);
+        $(t.data('modal')).modal('show');
+        $.ajax({
+            url: t.attr('href'),
+            success: function (data) {
+                $("#form-edit").html(data.response);
+
+                $("#form-edit form").on('submit', function () {
+
+                    let tt = $(this);
+                    $.ajax({
+                        url: tt.attr('action'),
+                        data: tt.serialize(),
+                        type: tt.attr('method'),
+                        success: function (data) {
+                            t.closest(t.data('replace-selector')).html(data.response);
+                            $(tt).closest(".modal").modal('hide');
+                        }
+                    });
+
+                    $("#form-review").html("<div class=\"popup-box-actions white full void\">Sending your form</div>");
+
+
+                    return false;
+                });
+            }
+        });
+        return false;
+
+    })
 
 
 })

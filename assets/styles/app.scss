@@ -82,6 +82,15 @@ table.songs {
 }
 
 .song-preview {
+  a {
+    color: #ffffff;
+  }
+
+  .category {
+    a {
+      color: #007bff;
+    }
+  }
 
   .title {
     a {
@@ -96,6 +105,7 @@ table.songs {
       font-weight: 700;
     }
   }
+
 }
 
 .song-detail {
