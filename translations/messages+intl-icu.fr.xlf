@@ -323,7 +323,7 @@
       </trans-unit>
         <trans-unit id="10">
             <source>Artist</source>
-            <target>messages</target>
+            <target>Artiste</target>
         </trans-unit>
 
     </body>
