@@ -62,7 +62,7 @@ function draw() {
 
 let isPlaying = null;
 
-
+console.log('v1.0.2');
 $(function () {
     draw();
     $(document).on('mousedown', ".test-map", function () {
@@ -77,10 +77,13 @@ $(function () {
             isPlaying = niveau;
             audio.volume = 1;
             audio.load();
-            audio.play();
-            let pack = $('.rune-pack#' + niveau);
-            pack.show();
-            pack.animate({'top': "600px"}, pack.data('duration') * 1000, "linear");
+            audio.addEventListener('canplaythrough',function(){
+                audio.play();
+                let pack = $('.rune-pack#' + niveau);
+                pack.show();
+                pack.animate({'top': "600px"}, pack.data('duration') * 1000, "linear");
+            })
+
         }
     });
 })
