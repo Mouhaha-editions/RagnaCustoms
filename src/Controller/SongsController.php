@@ -148,6 +148,7 @@ class SongsController extends AbstractController
             'song' => $song,
             'user' => $this->getUser()
         ]);
+
         if ($vote == null) {
             $vote = new Vote();
         }
