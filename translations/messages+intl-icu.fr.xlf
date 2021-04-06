@@ -309,6 +309,18 @@
             <source><![CDATA[you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description]]></source>
             <target><![CDATA[vous pouvez utiliser le <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> dans la description]]></target>
         </trans-unit>
+      <trans-unit id="7">
+        <source>You need an account to vote !</source>
+        <target>Vous devez avoir un compte pour voter !</target>
+      </trans-unit>
+      <trans-unit id="8">
+        <source>Custom song not found !</source>
+        <target>Nous n'avons pas trouvé la custom song !</target>
+      </trans-unit>
+      <trans-unit id="9">
+        <source>You can't review a custom song you've submitted</source>
+        <target>Vous ne pouvez pas donner votre avis sur un custom song que vous avez envoyé.</target>
+      </trans-unit>
 
     </body>
   </file>
