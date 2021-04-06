@@ -321,6 +321,10 @@
         <source>You can't review a custom song you've submitted</source>
         <target>Vous ne pouvez pas donner votre avis sur un custom song que vous avez envoyé.</target>
       </trans-unit>
+        <trans-unit id="10">
+            <source>Artist</source>
+            <target>messages</target>
+        </trans-unit>
 
     </body>
   </file>
