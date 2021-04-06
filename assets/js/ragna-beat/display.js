@@ -29,7 +29,7 @@ function draw() {
         // ragnaSelector.before("<input type='number'  min='0' max='100' value='50'/>");
         audio = new Audio(fileSong)
         audio.level = 0.5;
-        audio.addEventListener('canplaythrough', function(){
+        audio.load();
 
             for (let i = 0; i < infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps.length; i++) {
                 let niveau = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[i];
@@ -51,7 +51,7 @@ function draw() {
                 });
             }
 
-        }, false);
+
 
 
 
