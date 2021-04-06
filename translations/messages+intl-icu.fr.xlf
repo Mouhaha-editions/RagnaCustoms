@@ -329,6 +329,10 @@
         <source>This Custom song is not your's</source>
         <target>Cette custom song ne vous appartient pas.</target>
       </trans-unit>
+      <trans-unit id="12">
+        <source>This one is not required, but if you put a youtube link in the description we can catch the first one as song video ! ;)</source>
+        <target>Ce dernier n'est pas requis, mais si vous mettez un lien youtube dans la description nous saurons retrouver le premier en tant que preview de la custom song</target>
+      </trans-unit>
 
     </body>
   </file>

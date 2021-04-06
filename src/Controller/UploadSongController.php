@@ -105,7 +105,7 @@ class UploadSongController extends AbstractController
             ->add("zipFile", FileType::class, [])
             ->add("description", TextareaType::class, [
                 "required" => false,
-                "attr" => ["placeholder" => "This one is not required, but if you put a youtube link in the description we can catch the first one as song video ! ;)"]
+                "attr" => ["placeholder" => $translator->trans("This one is not required, but if you put a youtube link in the description we can catch the first one as song video ! ;)")]
             ])
             ->add("converted", CheckboxType::class, ["required" => false])
             ->add("replaceExisting", CheckboxType::class, [
