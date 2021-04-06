@@ -27,6 +27,7 @@ function draw() {
         let fileSong = $("#info-dat").data('file').replace('Info.dat', song).replace('info.dat', song);
         ragnaSelector.before("<button data-level='stop' class='btn-danger btn btn-sm test-map mr-2 mb-2'><i class='fas fa-stop'></i></button>");
         audio = new Audio(fileSong)
+        audio.load();
         for (let i = 0; i < infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps.length; i++) {
             let niveau = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[i];
             let level = niveau._beatmapFilename;
@@ -57,7 +58,6 @@ let isPlaying = null;
 $(function () {
     draw();
     $(document).on('mousedown', ".test-map", function () {
-        console.log("bonjour")
         let niveau = $(this).data("level");
         if (niveau === isPlaying) {
             return;
