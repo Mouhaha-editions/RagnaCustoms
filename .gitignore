@@ -14,8 +14,9 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
-
+*.gitkeep
 .idea/*
 public/songs-files/*
 public/covers/*
+public/ragna-beat/*
 public/tmp-song/*

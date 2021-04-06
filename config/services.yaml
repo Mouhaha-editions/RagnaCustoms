@@ -39,3 +39,7 @@ services:
 
     App\EventSubscriber\LocaleSubscriber:
         arguments: [ '%kernel.default_locale%' ]
+
+
+    App\Service\SongService:
+        arguments: [ "@kernel","@doctrine.orm.entity_manager" ]

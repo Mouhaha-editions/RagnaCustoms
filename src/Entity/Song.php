@@ -178,6 +178,11 @@ class Song
      */
     private $viewCounters;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $infoDatFile;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -754,6 +759,18 @@ class Song
                 $viewCounter->setSong(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getInfoDatFile(): ?string
+    {
+        return $this->infoDatFile;
+    }
+
+    public function setInfoDatFile(?string $infoDatFile): self
+    {
+        $this->infoDatFile = $infoDatFile;
 
         return $this;
     }

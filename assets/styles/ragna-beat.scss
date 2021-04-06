@@ -1,0 +1,72 @@
+#ragna-beat {
+  background-color: #3c3c3c;
+  width: 400px;
+  height: 600px;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  .rune-pack{
+    position :absolute;
+    bottom:5px;
+    width:100%;
+  }
+  .drum {
+    background: #de983e;
+    border: 2px solid #8d6326;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    position: absolute;
+    bottom: 15px;
+
+    &#drum- {
+      &1 {
+        left: 20px;
+      }
+
+      &2 {
+        left: 120px;
+      }
+
+      &3 {
+        left: 220px;
+      }
+
+      &4 {
+        left: 320px;
+      }
+    }
+  }
+
+  .rune {
+    background: #3e9ede;
+    border: 2px solid #95ccf6;
+    width: 40px;
+    height: 40px;
+    color:#ffffff;
+    border-radius: 20px;
+    position: absolute;
+    line-height: 40px;
+    font-size:30px;
+    font-weight:bold;
+    text-align: center;
+    &#drum- {
+      &1 {
+        left: 30px;
+      }
+
+      &2 {
+        left: 130px;
+      }
+
+      &3 {
+        left: 230px;
+      }
+
+      &4 {
+        left: 330px;
+      }
+    }
+  }
+}
+
