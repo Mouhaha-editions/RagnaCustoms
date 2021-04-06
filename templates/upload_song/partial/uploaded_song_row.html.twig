@@ -1,6 +1,6 @@
 {% for song in songs.entities %}
     <tr>
-        <td class="product-preview tiny d-flex flex-row">
+        <td class="song-preview tiny d-flex flex-row">
             <a href="{{ url('song_detail',{id:song.id}) }}">
                 <figure class="product-preview-image short liquid" style="position: relative">
                     {% if song.converted %}
@@ -57,11 +57,12 @@
         <td class="table-column padded-left">
 
             <div class="d-flex flex-fill">
-                <a class="text-danger ask-for-confirmation" href="{{ url('delete_song',{id:song.id}) }}"><i
-                            class="fas fa-trash"></i></a>
+                <a class="btn btn-sm btn-danger ask-for-confirmation" href="{{ url('delete_song',{id:song.id}) }}"><i
+                            class="fas fa-trash"></i></a>&nbsp;
+                <a class="btn btn-sm btn-info ajax-modal-form" data-modal="#editSong" href="{{ url('edit_song',{id:song.id}) }}"><i
+                            class="fas fa-edit"></i></a>
             </div>
 
-            <small class="white pt-2  small">{{ ("You need <a href='"~url("application")~"' target='_blank'>our app</a> tu use 1 click installer button")|trans|raw }}</small>
         </td>
     </tr>
 {% else %}

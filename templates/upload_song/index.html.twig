@@ -4,25 +4,31 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-md-6">
-            <h2>Upload new song</h2>
-            <p class="pt-2">
-                {{ "Upload a .zip file max 20Mo. that contain all files for the map."|trans }}
-            </p>
+        <div class="col-md-6 offset-md-3  mb-5">
+            <div class="card">
+                <div class="card-title text-center"><h2>Upload new song</h2></div>
+                <div class="card-body">
+                    <p class="pt-2">
+                        {{ "Upload a .zip file max 20Mo. that contain all files for the map."|trans }}
+                    </p>
 
-            {{ form_start(form) }}
-            {{ form_widget(form.zipFile) }}
+                    {{ form_start(form) }}
+                    {{ form_widget(form.zipFile) }}
 
-            {{ form_row(form.description,{"attr":{"class":'form-control'}}) }}
-            <div class="text-right"><small>{{ "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description"|trans|raw }}</small></div>
-            {{ form_widget(form.replaceExisting) }}
-            <label for="form_replaceExisting">{{ "Replace song if exists."|trans }}</label><br/>
+                    {{ form_row(form.description,{"attr":{"class":'form-control'}}) }}
+                    <div class="text-right">
+                        <small>{{ "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description"|trans|raw }}</small>
+                    </div>
+                    {{ form_widget(form.replaceExisting) }}
+                    <label for="form_replaceExisting">{{ "Replace song if exists."|trans }}</label><br/>
 
-            {{ form_widget(form.converted) }}
-            <label for="form_converted">{{ "Is converted"|trans }}</label><br/>
-            <button class="btn btn-sm btn-primary">{{ "Upload"|trans }}</button>
+                    {{ form_widget(form.converted) }}
+                    <label for="form_converted">{{ "Is converted"|trans }}</label><br/>
+                    <button class="btn btn-sm btn-primary">{{ "Upload"|trans }}</button>
 
-            {{ form_end(form) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
         </div>
         <hr/>
         <div class="col-12">
@@ -85,5 +91,21 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Edit Song</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="form-edit">
+                    ...
+                </div>
 
+            </div>
+        </div>
+    </div>
 {% endblock %}

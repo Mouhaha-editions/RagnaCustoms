@@ -1,6 +1,6 @@
 {% for song in songs.entities %}
     <tr>
-        <td class="product-preview tiny d-flex flex-row">
+        <td class="song-preview tiny d-flex flex-row">
             <a href="{{ url('song_detail',{id:song.id}) }}">
                 <figure class="product-preview-image short liquid" style="position: relative">
                     {% if song.converted %}

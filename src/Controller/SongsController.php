@@ -237,8 +237,12 @@ class SongsController extends AbstractController
                         $qb->andWhere('(s.name LIKE :search_string)')
                             ->setParameter('search_string', '%' . $exp[1] . '%');
                         break;
+                        case 'desc':
+                        $qb->andWhere('(s.description LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        break;
                     default:
-                        $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
+                        $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
                             ->setParameter('search_string', '%' . $request->get('search', null) . '%');
                 }
         }
