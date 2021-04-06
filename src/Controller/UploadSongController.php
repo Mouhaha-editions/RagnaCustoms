@@ -8,6 +8,7 @@ use App\Form\SongType;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\SongRepository;
 use App\Service\DiscordService;
+use App\Service\SongService;
 use DateTime;
 use Exception;
 use Pkshetlie\PaginationBundle\Models\Pagination;
@@ -98,7 +99,7 @@ class UploadSongController extends AbstractController
      */
     public function index(Request $request, KernelInterface $kernel, DiscordService $discordService,
                           MailerInterface $mailer, SongRepository $songRepository, TranslatorInterface $translator,
-                          DifficultyRankRepository $difficultyRankRepository, PaginationService $paginationService): Response
+                          DifficultyRankRepository $difficultyRankRepository, PaginationService $paginationService, SongService $songService): Response
     {
 
         $form = $this->createFormBuilder()
@@ -278,6 +279,7 @@ class UploadSongController extends AbstractController
                     $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 }
                 $mailer->send($email);
+                $songService->emulatorFileDispatcher($song, true);
             } catch (Exception $e) {
                 $this->addFlash('danger', "Erreur lors de l'upload : " . $e->getMessage());
                 return $this->redirectToRoute("upload_song");
