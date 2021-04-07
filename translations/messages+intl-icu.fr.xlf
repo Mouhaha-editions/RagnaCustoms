@@ -349,6 +349,10 @@
         <source>This application is not associated with Ragnaröck VR or WanadevStudio</source>
         <target>Cette appication n'est pas associée avec Ragnaröck VR ni WanadevStudio</target>
       </trans-unit>
+      <trans-unit id="17">
+        <source><![CDATA[This application is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>]]></source>
+        <target><![CDATA[Cette appication n'est pas associée avec <b>Ragnaröck VR</b> VR ni <b>WanadevStudio</b>]]></target>
+      </trans-unit>
 
     </body>
   </file>
