@@ -37,7 +37,7 @@ function draw() {
             let level = niveau._beatmapFilename;
             let fileLevel = $("#info-dat").data('file').replace('Info.dat', level).replace('info.dat', level);
             ragnaSelector.before("<button data-level='" + niveau._difficulty + "' class='btn-info btn btn-sm test-map mr-2 mb-2'>level " + niveau._difficultyRank + "</button>");
-            ragnaSelector.append("<div class=\"rune-pack\" data-duration='" + infoDat._songApproximativeDuration + "' id='" + niveau._difficulty + "'></div>");
+            ragnaSelector.append("<div class=\"rune-pack\"  data-duration='" + infoDat._songApproximativeDuration + "' id='" + niveau._difficulty + "'></div>");
             $(".rune-pack#" + niveau._difficulty + "").css({
                 height: (infoDat._songApproximativeDuration * (ratio)) + "px",
             });
@@ -47,7 +47,7 @@ function draw() {
                 let levelDetail = JSON.parse(text);
                 for (let i = 0; i < levelDetail._notes.length; i++) {
                     let note = levelDetail._notes[i];
-                    ragnaSelector.find(".rune-pack#" + niveau._difficulty).append("<div class=\"rune\" style='bottom:" + ((ratio * ratio2 * note._time)) + "px' id='drum-" + (note._lineIndex + 1) + "'>X</div>");
+                    ragnaSelector.find(".rune-pack#" + niveau._difficulty).append("<div class=\"rune data-level-"+niveau._difficultyRank+"\" style='bottom:" + ((ratio * ratio2 * note._time)) + "px' id='drum-" + (note._lineIndex + 1) + "'>X</div>");
                 }
             });
         }
