@@ -37,7 +37,7 @@ class UploadSongController extends AbstractController
      */
     public function edit(Request $request, Song $song, TranslatorInterface $translator)
     {
-        if($song->getUser() == $this->getUser() && !$this->isGranted('ROLE_ADMIN')){
+        if($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')){
             return new JsonResponse([
                 'error' => true,
                 'errorMessage' => $translator->trans("This Custom song is not your's"),

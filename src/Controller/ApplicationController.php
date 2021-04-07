@@ -40,6 +40,9 @@ class ApplicationController extends AbstractController
     public function changeLocale(Request $request, string $locale,SessionInterface $session)
     {
         $session->set('_locale', $locale);
+        if($request->headers->get('referer') == null){
+            return $this->redirectToRoute('home');
+        }
         return $this->redirect($request->headers->get('referer') );
     }
 }
