@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="OCrF8wj" resname="Last updated">
         <source>Last updated</source>
-        <target>Dernières mise à jour</target>
+        <target>Dernières mises à jour</target>
       </trans-unit>
       <trans-unit id="zVWI22." resname="Vote">
         <source>Vote</source>
@@ -337,6 +337,10 @@
         <source>See custom song in action</source>
         <target>Voir la custom song en action</target>
       </trans-unit>
+        <trans-unit id="14">
+            <source>Alphabetical</source>
+            <target>Alphabétique</target>
+        </trans-unit>
 
     </body>
   </file>
