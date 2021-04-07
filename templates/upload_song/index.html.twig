@@ -5,7 +5,7 @@
 {% block body %}
     <div class="row">
         <div class="col-md-6 offset-md-3  mb-5">
-            <div class="card">
+            <div class="card mt-4">
                 <div class="card-title text-center"><h2>Upload new song</h2></div>
                 <div class="card-body">
                     <p class="pt-2">
@@ -36,19 +36,19 @@
             <table class="table songs">
                 <tr class="table-header">
                     <th class="table-header-column">
-                        <p class="table-header-title">{{ "Song"|trans }}</p>
+                        {{ "Song"|trans }}
                     </th>
                     <th class="table-header-column padded">
-                        <p class="table-header-title">{{ "LastUpdate"|trans }}</p>
+                        {{ "LastUpdate"|trans }}
                     </th>
                     <th class="table-header-column padded">
-                        <p class="table-header-title">{{ "Duration"|trans }}</p>
+                        {{ "Duration"|trans }}
                     </th>
                     <th class="table-header-column padded">
-                        <p class="table-header-title">{{ "BPM"|trans }}</p>
+                        {{ "BPM"|trans }}
                     </th>
                     <th class="table-header-column padded">
-                        <p class="table-header-title">{{ "Votes"|trans }}</p>
+                       {{ "Votes"|trans }}
                     </th>
                     <th class="table-header-column padded" title="all download">
                         {{ "DL"|trans }}

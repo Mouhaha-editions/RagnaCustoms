@@ -102,6 +102,9 @@ $(function () {
                         url: tt.data('url'),
                         data: tt.serialize(),
                         success: function (data) {
+                            if(t.data('refresh')){
+                                window.location.reload();
+                            }
                             t.closest(t.data('replace-selector')).html(data.response);
                             $("#reviewSong").modal('hide');
                         }

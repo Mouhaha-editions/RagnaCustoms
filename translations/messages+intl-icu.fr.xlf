@@ -341,6 +341,14 @@
             <source>Alphabetical</source>
             <target>Alphabétique</target>
         </trans-unit>
+        <trans-unit id="15">
+            <source>I want to vote</source>
+            <target>Je veux voter</target>
+        </trans-unit>
+      <trans-unit id="16">
+        <source>This application is not associated with Ragnaröck VR or WanadevStudio</source>
+        <target>Cette appication n'est pas associée avec Ragnaröck VR ni WanadevStudio</target>
+      </trans-unit>
 
     </body>
   </file>
