@@ -202,6 +202,9 @@ class SongsController extends AbstractController
                 case 3 :
                     $qb->orderBy('s.lastDateUpload', 'DESC');
                     break;
+                case 4 :
+                    $qb->orderBy('s.name', 'ASC');
+                    break;
                 default:
                     $qb->orderBy('s.createdAt', 'DESC');
                     break;
@@ -224,27 +227,27 @@ class SongsController extends AbstractController
         $qb->andWhere('s.moderated = true');
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
-                switch($exp[0]){
-                    case 'mapper':
-                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
-                        break;
-                    case 'artist':
-                        $qb->andWhere('(s.authorName LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1]. '%');
-                        break;
-                    case 'title':
-                        $qb->andWhere('(s.name LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
-                        break;
-                        case 'desc':
-                        $qb->andWhere('(s.description LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
-                        break;
-                    default:
-                        $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $request->get('search', null) . '%');
-                }
+            switch ($exp[0]) {
+                case 'mapper':
+                    $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
+                        ->setParameter('search_string', '%' . $exp[1] . '%');
+                    break;
+                case 'artist':
+                    $qb->andWhere('(s.authorName LIKE :search_string)')
+                        ->setParameter('search_string', '%' . $exp[1] . '%');
+                    break;
+                case 'title':
+                    $qb->andWhere('(s.name LIKE :search_string)')
+                        ->setParameter('search_string', '%' . $exp[1] . '%');
+                    break;
+                case 'desc':
+                    $qb->andWhere('(s.description LIKE :search_string)')
+                        ->setParameter('search_string', '%' . $exp[1] . '%');
+                    break;
+                default:
+                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
+                        ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+            }
         }
 
         $pagination = $paginationService->setDefaults(40)->process($qb, $request);
@@ -262,7 +265,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/download/{id}", name="song_download")
      */
-    public function download(Request $request,Song $song, SongRepository $songRepository, KernelInterface $kernel, DownloadCounterRepository $downloadCounterRepository): Response
+    public function download(Request $request, Song $song, SongRepository $songRepository, KernelInterface $kernel, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);

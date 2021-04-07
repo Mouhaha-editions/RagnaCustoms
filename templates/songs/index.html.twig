@@ -35,9 +35,9 @@
                         <label for="downloads-filter-order">{{ "Converted map"|trans }}</label>
                         <select id="downloads-filter-order" name="converted_maps" class="form-control form-control-sm">
                             <option value="">{{ "With"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_order') == 1 %}selected="selected"{% endif %}
+                            <option {% if app.request.get('converted_maps') == 1 %}selected="selected"{% endif %}
                                     value="1">{{ "Without"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_order') == 2 %}selected="selected"{% endif %}
+                            <option {% if app.request.get('converted_maps') == 2 %}selected="selected"{% endif %}
                                     value="2">{{ "Only converted"|trans }}</option>
                         </select>
 
@@ -46,11 +46,12 @@
                         <label for="downloads-filter-order">{{ "Order by"|trans }}</label>
                         <select id="downloads-filter-order" name="downloads_filter_order" class="form-control form-control-sm">
                             <option value="">{{ "Last added"|trans }}</option>
-                            <option value="3">{{ "Last updated"|trans }}</option>
+                            <option {% if app.request.get('downloads_filter_order') == 3 %}selected="selected"{% endif %} value="3">{{ "Last updated"|trans }}</option>
                             <option {% if app.request.get('downloads_filter_order') == 1 %}selected="selected"{% endif %}
                                     value="1">{{ "Vote"|trans }}</option>
                             <option {% if app.request.get('downloads_filter_order') == 2 %}selected="selected"{% endif %}
                                     value="2">{{ "Duration"|trans }}</option>
+                            <option {% if app.request.get('downloads_filter_order') == 4 %}selected="selected"{% endif %} value="4">{{ "Alphabetical"|trans }}</option>
                         </select>
                     </div>
                     <div class="col-md-2">
