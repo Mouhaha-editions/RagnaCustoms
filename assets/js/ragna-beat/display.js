@@ -25,11 +25,11 @@ function draw() {
         let ratio2 = 60 / infoDat._beatsPerMinute;
         let song = infoDat._songFilename;
         let fileSong = $("#info-dat").data('file').replace('Info.dat', song).replace('info.dat', song);
-        ragnaSelector.before("<input id=\"vol-control\" value='50' type=\"range\" min=\"0\" max=\"100\" step=\"1\"></input>");
+        ragnaSelector.before("<input id=\"vol-control\" value='25' type=\"range\" min=\"0\" max=\"100\" step=\"1\"></input>");
         ragnaSelector.before("<button data-level='stop' class='btn-danger btn btn-sm test-map mr-2 mb-2'><i class='fas fa-stop'></i></button>");
         // ragnaSelector.before("<input type='number'  min='0' max='100' value='50'/>");
         audio = new Audio(fileSong)
-        audio.level = 0.5;
+        audio.level = $("#vol-control").val()/100;
         audio.load();
 
         for (let i = 0; i < infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps.length; i++) {
@@ -71,15 +71,20 @@ $(function () {
             audio.pause();
             $('.rune-pack#' + isPlaying).stop(true).css({top: 'inherit'}).hide();
         }
+        console.log(niveau);
+
         if (niveau !== "stop") {
             isPlaying = niveau;
-            audio.volume = 1;
+            audio.volume =  $("#vol-control").val()/100;
             audio.load();
             audio.addEventListener('canplaythrough', function () {
                 audio.play();
-                let pack = $('.rune-pack#' + niveau);
-                pack.show();
-                pack.animate({'top': "600px"}, pack.data('duration') * 1000, "linear");
+                console.log(niveau,isPlaying);
+                if(isPlaying === niveau) {
+                    let pack = $('.rune-pack#' + niveau);
+                    pack.show();
+                    pack.animate({'top': "600px"}, pack.data('duration') * 1000, "linear");
+                }
             })
 
         }
