@@ -489,7 +489,10 @@ class Song
      */
     public function getVotes(): Collection
     {
-        return $this->votes;
+        $song = $this;
+        return $this->votes->filter(function (Vote $vote) use ($song) {
+            return $song->getLastDateUpload() <= $vote->getUpdatedAt();
+        });
     }
 
     public function addVote(Vote $vote): self
@@ -728,6 +731,7 @@ class Song
 
         return $this;
     }
+
     /**
      * @return Collection|ViewCounter[]
      */
