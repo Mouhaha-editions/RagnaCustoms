@@ -30,6 +30,7 @@
         "jquery": "^3.6.0",
         "popper.js": "^1.16.1",
         "simplebar": "^5.0.7",
+        "tarteaucitronjs": "^1.9.0",
         "tiny-slider": "^2.9.2"
     },
     "license": "UNLICENSED",

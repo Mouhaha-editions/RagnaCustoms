@@ -13,6 +13,8 @@
     {% endblock %}
     <link rel="icon" href="/apps/favicon.ico">
     <title>{% block title %}| RagnaCustoms{% endblock %}</title>
+    <script type="text/javascript" src="https://tarteaucitron.io/load.js"></script>
+
 </head>
 <body >
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -95,28 +97,23 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
-
-<script type="text/javascript" src="/tarteaucitron/tarteaucitron.js"></script>
-
-<script type="text/javascript">
+<script>
     tarteaucitron.init({
-        //"privacyUrl": "", /* Privacy policy url */
+        // "privacyUrl": "", /* Privacy policy url */
 
         "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
         "cookieName": "tarteaucitron", /* Cookie name */
 
-        "orientation": "bottom", /* Banner position (top - bottom) */
+        "orientation": "bottom", /* Banner position (top - bottom - middle - popup) */
 
-        "groupServices": false, /* Group services by category */
+        "groupServices": true, /* Group services by category */
 
-        "showAlertSmall": false, /* Show the small banner on bottom right */
+        "showAlertSmall": true, /* Show the small banner on bottom right */
         "cookieslist": true, /* Show the cookie list */
 
-        "closePopup": true, /* Show a close X on the banner */
-
         "showIcon": true, /* Show cookie icon to manage cookies */
-        //"iconSrc": "", /* Optionnal: URL or base64 encoded image */
-        "iconPosition": "BottomRight", /* BottomRight, BottomLeft, TopRight and TopLeft */
+        // "iconSrc": "", /* Optionnal: URL or base64 encoded image */
+        "iconPosition": "BottomRight", /* Position of the icon between BottomRight, BottomLeft, TopRight and TopLeft */
 
         "adblocker": false, /* Show a Warning if an adblocker is detected */
 
@@ -128,18 +125,15 @@
 
         "removeCredit": true, /* Remove credit link */
         "moreInfoLink": true, /* Show more info link */
-
         "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */
-        "useExternalJs": false, /* If false, the tarteaucitron.js file will be loaded */
 
-        //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for multisite */
+        //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for subdomain website */
 
-        //"readmoreLink": "", /* Change the default readmore link */
+        // "readmoreLink": "", /* Change the default readmore link pointing to tarteaucitron.io */
 
-        "mandatory": true, /* Show a message about mandatory cookies */
+        "mandatory": true /* Show a message about mandatory cookies */
     });
-</script>
-<script type="text/javascript">
+
     tarteaucitron.user.gtagUa = 'G-0JR780RBXK';
     tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */ };
     (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
