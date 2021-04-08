@@ -272,7 +272,7 @@ class UploadSongController extends AbstractController
                     ->from('contact@ragnacustoms.com')
                     ->to('pierrick.pobelle@gmail.com')
                     ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
-                if ($song->isModerated()) {
+                if ($song->isModerated() && !$this->isGranted("ROLE_ADMIN")) {
                     $discordService->sendNewSongMessage($song);
                     $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 } else {
