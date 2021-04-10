@@ -20,9 +20,9 @@ final class Version20210405225518 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE download_counter ADD created_at DATETIME NOT NULL, ADD updated_at DATETIME NOT NULL DEFAULT NOW()');
-        $this->addSql('ALTER TABLE utilisateur ADD created_at DATETIME NOT NULL, ADD updated_at DATETIME NOT NULL DEFAULT NOW()');
-        $this->addSql('ALTER TABLE view_counter ADD created_at DATETIME NOT NULL, ADD updated_at DATETIME NOT NULL DEFAULT NOW()');
+        $this->addSql('ALTER TABLE download_counter ADD created_at DATETIME NULL DEFAULT NOW(), ADD updated_at DATETIME NOT NULL DEFAULT NOW()');
+        $this->addSql('ALTER TABLE utilisateur ADD created_at DATETIME NULL DEFAULT NOW(), ADD updated_at DATETIME NOT NULL DEFAULT NOW()');
+        $this->addSql('ALTER TABLE view_counter ADD created_at DATETIME NULL DEFAULT NOW(), ADD updated_at DATETIME NOT NULL DEFAULT NOW()');
     }
 
     public function down(Schema $schema) : void

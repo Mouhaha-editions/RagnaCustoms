@@ -74,6 +74,11 @@ class Utilisateur implements UserInterface
      */
     private $viewCounters;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $steamCommunityId;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -332,6 +337,18 @@ class Utilisateur implements UserInterface
                 $viewCounters->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSteamCommunityId(): ?string
+    {
+        return $this->steamCommunityId;
+    }
+
+    public function setSteamCommunityId(?string $steamCommunityId): self
+    {
+        $this->steamCommunityId = $steamCommunityId;
 
         return $this;
     }
