@@ -21,11 +21,13 @@ class ViewCounter
 
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="viewCounters")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $song;
 
     /**
      * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="viewCounters")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $user;
 

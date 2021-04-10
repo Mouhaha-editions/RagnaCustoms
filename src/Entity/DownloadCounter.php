@@ -22,11 +22,15 @@ class DownloadCounter
 
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="downloadCounters")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+
      */
     private $song;
 
     /**
      * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="downloadCounters")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+
      */
     private $user;
 
