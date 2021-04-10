@@ -1741,6 +1741,11 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
+bootstrap-switch-button@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-switch-button/-/bootstrap-switch-button-1.1.0.tgz#f59136172fa8b7c8eef781193803b9fb467038a0"
+  integrity sha512-RvEkM8Ig5tetj/mPzmehEUlPdEXnmo/KkvkXwBbr1R8X8YtNBAAH+/sdcO3oaRLxSSwDw70aC201D8Ee8N82Iw==
+
 bootstrap@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.6.0.tgz#97b9f29ac98f98dfa43bf7468262d84392552fd7"

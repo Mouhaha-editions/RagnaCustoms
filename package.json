@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "bootstrap": "^4.6.0",
+        "bootstrap-switch-button": "^1.1.0",
         "chart.js": "^2.9.3",
         "jquery": "^3.6.0",
         "popper.js": "^1.16.1",

@@ -16,10 +16,11 @@
     <script type="text/javascript" src="https://tarteaucitron.io/load.js"></script>
 
 </head>
-<body >
+<body class="{{ app.request.cookies.get('light-mode','light') }}">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/"><img src="/apps/logo.png" class="img-fluid" alt="logo" /> RagnaCustoms</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="/"><img src="/apps/logo.png" class="img-fluid" alt="logo"/> RagnaCustoms</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse d-flex" id="navbarNav">
@@ -32,16 +33,31 @@
                 <a class="nav-link" href="{{ url("application") }}">RagnApp</a>
             </li>
             {% if app.request.locale == 'en' %}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url("change_locale",{locale:"fr"}) }}"><img style="max-height:12px;" src="/flags/france.png" alt="fr"/></a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url("change_locale",{locale:"fr"}) }}"><img style="max-height:12px;"
+                                                                                             src="/flags/france.png"
+                                                                                             alt="fr"/></a>
+                </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url("change_locale",{locale:"en"}) }}"><img style="max-height:12px;" src="/flags/united-kingdom.png" alt="en"/></a>
+                    <a class="nav-link" href="{{ url("change_locale",{locale:"en"}) }}"><img style="max-height:12px;"
+                                                                                             src="/flags/united-kingdom.png"
+                                                                                             alt="en"/></a>
                 </li>
             {% endif %}
         </ul>
-        <ul  class="navbar-nav">
+        <ul class="navbar-nav">
+            <li class="nav-item pt-1">
+                <input id="chkSwitch" type="checkbox"
+                       data-toggle="switchbutton"
+                       data-size="sm"
+                       data-onlabel="Dark mode"
+                       data-offlabel="Light "
+                       data-onstyle="dark"
+                       data-offstyle="light"
+                        {{  app.request.cookies.get('light-mode') == "dark" ?"checked='checked'":'' }}
+                />
+            </li>
             {% if not is_granted("ROLE_USER") %}
                 <li class="nav-item">
 
@@ -50,7 +66,8 @@
                 </li>
             {% else %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ "My account"|trans }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -70,6 +87,7 @@
 </nav>
 
 <div class="container">
+
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="alert alert-dismissible alert-{{ label }}">
@@ -88,7 +106,7 @@
 {% endblock %}
 <hr/>
 <div class="p-3 text-center">
-    {{"This application is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>"|trans|raw}}
+    {{ "This application is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>"|trans|raw }}
 
 
 </div>
@@ -117,8 +135,8 @@
 
         "adblocker": false, /* Show a Warning if an adblocker is detected */
 
-        "DenyAllCta" : true, /* Show the deny all button */
-        "AcceptAllCta" : true, /* Show the accept all button when highPrivacy on */
+        "DenyAllCta": true, /* Show the deny all button */
+        "AcceptAllCta": true, /* Show the accept all button when highPrivacy on */
         "highPrivacy": true, /* HIGHLY RECOMMANDED Disable auto consent */
 
         "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */
@@ -135,7 +153,8 @@
     });
 
     tarteaucitron.user.gtagUa = 'G-0JR780RBXK';
-    tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */ };
+    tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */
+    };
     (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
 </script>
 </body>

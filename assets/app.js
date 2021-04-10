@@ -14,11 +14,6 @@ import './styles/app.scss';
 // start the Stimulus application
 import 'bootstrap';
 import './js/form-rating';
-
-
-
-
-
 import '../public/bundles/pagination/js/see-more.js';
 // const app = require('./js/utils/core');
 
@@ -38,8 +33,20 @@ $(".copy-clipboard").on('click', function () {
     copyToClipboard($(this).data('to-copy'));
     return false;
 })
+import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 $(function () {
+    // $('#example').switchButton({
+    //     onlabel: 'On',
+    //     onstyle: 'primary',
+    //     offlabel: 'Off',
+    //     offstyle: 'light',
+    //     size: '',
+    //     style: '',
+    //     width: null,
+    //     height: null
+    // });
+
     $(document).on("click", ".ajax-link", function () {
         let t = $(this);
         let action = t.data('success-action');
@@ -88,11 +95,11 @@ $(function () {
                 $("#form-review form").on('submit', function () {
                     let test = true;
                     $(this).find('input').each(function () {
-                        if($(this).val() === undefined || $(this).val() === ""){
+                        if ($(this).val() === undefined || $(this).val() === "") {
                             test = false;
                         }
                     });
-                    if(!test){
+                    if (!test) {
                         alert("you need to rate each property");
                         return false;
                     }
@@ -102,7 +109,7 @@ $(function () {
                         url: tt.data('url'),
                         data: tt.serialize(),
                         success: function (data) {
-                            if(t.data('refresh')){
+                            if (t.data('refresh')) {
                                 window.location.reload();
                             }
                             t.closest(t.data('replace-selector')).html(data.response);
@@ -150,7 +157,48 @@ $(function () {
         });
         return false;
 
-    })
+    });
+    $(document).on('change', "#chkSwitch", function () {
+        let body = $('body');
+        if ($(this).is(':checked')) {
+            body.removeClass('light');
+            body.addClass('dark');
+            setCookie("light-mode", "dark")
+        } else {
+            body.addClass('light');
+            body.removeClass('dark');
+            setCookie("light-mode", "light")
+        }
+    });
 
-
+    if (getCookie("light-mode") === null) {
+        let chkSwitch = $('#chkSwitch');
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            chkSwitch.attr('checked', 'checked');
+            chkSwitch.trigger('change');
+        }
+    }
 })
+
+function setCookie(cname, cvalue) {
+    var d = new Date();
+    d.setTime(d.getTime() + (5000 * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return null;
+}
