@@ -10,6 +10,7 @@ use App\Repository\DownloadCounterRepository;
 use App\Repository\SongRepository;
 use App\Repository\ViewCounterRepository;
 use App\Repository\VoteRepository;
+use App\Service\DownloadService;
 use App\Service\SongService;
 use App\Service\VoteService;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -265,7 +266,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/download/{id}", name="song_download")
      */
-    public function download(Request $request, Song $song, SongRepository $songRepository, KernelInterface $kernel, DownloadCounterRepository $downloadCounterRepository): Response
+    public function download(Request $request, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -273,20 +274,10 @@ class SongsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
+
         $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
-        $ip = $request->getClientIp();
-        $dlu = $downloadCounterRepository->findOneBy([
-            'song' => $song,
-            "ip" => $ip
-        ]);
-        if ($dlu == null) {
-            $dlu = new DownloadCounter();
-            $dlu->setSong($song);
-            $dlu->setUser($this->getUser());
-            $dlu->setIp($ip);
-            $em->persist($dlu);
-            $em->flush();
-        }
+        $downloadService->addOne($song);
+
         $response = new Response($fileContent);
 
         $disposition = HeaderUtils::makeDisposition(
@@ -304,7 +295,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/ddl/{id}", name="song_direct_download")
      */
-    public function directDownload(Request $request, Song $song, SongRepository $songRepository, KernelInterface $kernel, DownloadCounterRepository $downloadCounterRepository): Response
+    public function directDownload(Song $song, KernelInterface $kernel, DownloadService $downloadService): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -312,19 +303,7 @@ class SongsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
-        $ip = $request->getClientIp();
-        $dlu = $downloadCounterRepository->findOneBy([
-            'song' => $song,
-            "ip" => $ip
-        ]);
-        if ($dlu == null) {
-            $dlu = new DownloadCounter();
-            $dlu->setSong($song);
-            $dlu->setUser($this->getUser());
-            $dlu->setIp($ip);
-            $em->persist($dlu);
-            $em->flush();
-        }
+        $downloadService->addOne($song);
 
         $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
         $response = new Response($fileContent);
