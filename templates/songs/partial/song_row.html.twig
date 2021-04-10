@@ -65,10 +65,10 @@
                     !rc {{ song.id }}
                 </a>
                 {% set downloaded = downloadsService.alreadyDownloaded(song) %}
-                <a href="ragnac://install/{{ song.id }}" {% if downloaded %}data-toggle="tooltips" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}disabled{% endif%} btn-danger ml-1">
+                <a href="ragnac://install/{{ song.id }}" {% if downloaded %}data-toggle="tooltips" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}downloaded{% endif%} btn-danger ml-1">
                     1 click
                 </a>
-                <a href="{{ url("song_direct_download",{id:song.id}) }}" {% if downloaded %}data-toggle="tooltips" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}disabled{% endif%} ml-1 btn-success">
+                <a href="{{ url("song_direct_download",{id:song.id}) }}" {% if downloaded %}data-toggle="tooltips" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}downloaded{% endif%} ml-1 btn-success">
                     {{ "Download"|trans }}
                 </a>
             </div>
