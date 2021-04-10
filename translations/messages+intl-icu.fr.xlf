@@ -7,11 +7,11 @@
     <body>
       <trans-unit id="tk.mIpp" resname="Your submitted songs">
         <source>Your submitted songs</source>
-        <target>Vos customs songs</target>
+        <target>Vos custom songs</target>
       </trans-unit>
       <trans-unit id="vGdhNXl" resname="Songs">
-        <source>Songs</source>
-        <target>Customs Songs</target>
+        <source>Custom Songs</source>
+        <target>Custom Songs</target>
       </trans-unit>
       <trans-unit id="x9Ej5Nc" resname="Filter by difficulties">
         <source>Filter by difficulties</source>

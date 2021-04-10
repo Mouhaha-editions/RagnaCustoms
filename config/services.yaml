@@ -40,6 +40,8 @@ services:
     App\EventSubscriber\LocaleSubscriber:
         arguments: [ '%kernel.default_locale%' ]
 
+    App\Service\DownloadService:
+        arguments: [ "@security.helper","@request_stack" ]
 
     App\Service\SongService:
         arguments: [ "@kernel","@doctrine.orm.entity_manager" ]
