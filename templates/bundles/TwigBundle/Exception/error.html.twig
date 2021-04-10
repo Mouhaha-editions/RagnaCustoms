@@ -1,8 +1,9 @@
-{% include 'base.html.twig' %}
+{% extends 'base.html.twig' %}
+
 {% block body %}
     <div class="text-center">
         <h1>{{ "An error occurs"|trans }}</h1>
         <p class="white">Please report it on <a target="_blank" href="https://discord.gg/nRnsgCCBvq">our discord</a></p>
-    <iframe src="https://giphy.com/embed/hOXIg98eLoYSc" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/fox-yeah-scream-hOXIg98eLoYSc">via GIPHY</a></p>
+    <img src="/errors/{{ random(['1','2','3','4']) }}.gif" alt="crash sorry"/>
     </div>
 {% endblock %}
