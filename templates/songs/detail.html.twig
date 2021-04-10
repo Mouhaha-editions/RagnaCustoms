@@ -9,19 +9,19 @@
         <div class="col-md-8">
             <div class="section-header">
                 <div class="section-header-info">
-                    <p class="section-pretitle">{{ "Song details"|trans }}</p>
-                    <h2 class="section-title">{{ song.name }} <small>{{ song.subName }}</small> - {{ song.authorName }}
-                    </h2>
+                    <h1 class="section-pretitle">{{ "Song details"|trans }}</h1>
+                    <h3 class="section-title">{{ song.name }} <small>{{ song.subName }}</small> - {{ song.authorName }}
+                    </h3>
                 </div>
             </div>
-            <h3>{{ "Description"|trans }}</h3>
+            <h4>{{ "Description"|trans }}</h4>
             <p>
                 {% apply markdown_to_html %}
                     {{ song.description is not null ? song.description|nl2br : "no description for now"|trans }}
                 {% endapply %}
             </p>
 
-            <h2>{{ "See custom song in action"|trans }}</h2>
+            <h4>{{ "See custom song in action"|trans }}</h4>
             <div class="text-center">
                 <div id="ragna-beat"></div>
             </div>
