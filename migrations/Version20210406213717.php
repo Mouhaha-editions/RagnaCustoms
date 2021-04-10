@@ -20,9 +20,9 @@ final class Version20210406213717 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE download_counter CHANGE updated_at updated_at DATETIME NOT NULL');
+        $this->addSql('ALTER TABLE download_counter CHANGE updated_at updated_at DATETIME NOT NULL DEFAULT NOW()');
         $this->addSql('ALTER TABLE song ADD info_dat_file LONGTEXT DEFAULT NULL');
-        $this->addSql('ALTER TABLE utilisateur CHANGE roles roles JSON NOT NULL, CHANGE updated_at updated_at DATETIME NOT NULL');
+        $this->addSql('ALTER TABLE utilisateur CHANGE roles roles JSON NOT NULL, CHANGE updated_at updated_at DATETIME NOT NULL DEFAULT NOW()');
         $this->addSql('ALTER TABLE view_counter CHANGE updated_at updated_at DATETIME NOT NULL');
     }
 
