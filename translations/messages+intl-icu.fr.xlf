@@ -357,6 +357,10 @@
             <source>copied</source>
             <target>copié</target>
         </trans-unit>
+      <trans-unit id="19">
+        <source>Already downloaded</source>
+        <target>Déjà Téléchargé</target>
+      </trans-unit>
 
     </body>
   </file>
