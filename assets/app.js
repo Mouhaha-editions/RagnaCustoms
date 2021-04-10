@@ -29,23 +29,25 @@ const copyToClipboard = str => {
     document.body.removeChild(el);
 };
 
-$(".copy-clipboard").on('click', function () {
-    copyToClipboard($(this).data('to-copy'));
-    return false;
-})
+
 import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 $(function () {
-    // $('#example').switchButton({
-    //     onlabel: 'On',
-    //     onstyle: 'primary',
-    //     offlabel: 'Off',
-    //     offstyle: 'light',
-    //     size: '',
-    //     style: '',
-    //     width: null,
-    //     height: null
+    // $('.copy-clipboard').tooltip({
+    //     disabled: true,
+    //     close: function( event, ui ) { $(this).tooltip('disable'); }
     // });
+
+    $(".copy-clipboard").on('click', function () {
+        let t = $(this);
+        copyToClipboard($(this).data('to-copy'));
+        t.tooltip('enable');
+        t.tooltip('show');
+        setTimeout(function(){
+            t.tooltip('toggleEnabled');
+        },500);
+        return false;
+    });
 
     $(document).on("click", ".ajax-link", function () {
         let t = $(this);
@@ -76,7 +78,6 @@ $(function () {
     $(document).on('click', '.ask-for-confirmation', function () {
         return confirm("Your are going to delete an element definitely, do you confirm ?");
     });
-    $(window).trigger('resize');
 
     $(document).on('click', ".song-review", function () {
         let t = $(this);

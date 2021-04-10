@@ -54,12 +54,12 @@
         <td class="table-column padded-left">
 
             <div class="d-flex flex-fill">
-                <a href="#" data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn btn-sm bg-twitch">
+                <a href="#" data-to-copy="!rc {{ song.id }}" data-original-title="!rc {{ song.id  }} {{ "copied"|trans }}" class="copy-clipboard btn btn-sm bg-twitch">
                     <i class="fab fa-twitch"></i>
                     !rc {{ song.id }}
                 </a>
 
-                <a href="ragnac://install/{{ song.id }}" class="btn btn-sm  btn-danger ml-1">
+                <a href="ragnac://install/{{ song.id }}" class="btn btn-sm disabled btn-danger ml-1">
                     1 click
                 </a>
                 <a href="{{ url("song_direct_download",{id:song.id}) }}" class="btn btn-sm ml-1 btn-success">

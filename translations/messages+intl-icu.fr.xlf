@@ -353,6 +353,10 @@
         <source><![CDATA[This application is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>]]></source>
         <target><![CDATA[Cette appication n'est pas associée avec <b>Ragnaröck VR</b> VR ni <b>WanadevStudio</b>]]></target>
       </trans-unit>
+        <trans-unit id="18">
+            <source>copied</source>
+            <target>copié</target>
+        </trans-unit>
 
     </body>
   </file>
