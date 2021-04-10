@@ -16,8 +16,11 @@
 
             <div class="song-preview pl-2">
                 <p class="title"><a href="{{ url('song_detail',{id:song.id}) }}">{{ song.name }}</a></p>
-                <p class="category"><a href="{{ url('home') }}?search=artist:{{ song.authorName }}">{{ song.authorName }}</a></p>
-                <p class="creator">Mapped by : <a href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">{{ song.levelAuthorName }}</a></p>
+                <p class="category"><a
+                            href="{{ url('home') }}?search=artist:{{ song.authorName }}">{{ song.authorName }}</a></p>
+                <p class="creator">Mapped by : <a
+                            href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">{{ song.levelAuthorName }}</a>
+                </p>
                 <p class="difficulties">Difficulties :
                     {% for diff in song.songDifficulties %}
                         {% if loop.index != 1 %}, {% endif %}
@@ -29,12 +32,13 @@
         <td class="table-column padded">
             {% for difficulty in song.songDifficulties %}
                 {% if loop.index != 1 %}, {% endif %}
-                <span data-toggle="tooltips" title="{{ "level "|trans }} {{ difficulty.difficultyRank.level }}, {{ difficulty.notesCount }} {{ "notes"|trans }}">{{ difficulty.notePerSecond|round(2,'floor') }}</span>
+                <span data-toggle="tooltips"
+                      title="{{ "level "|trans }} {{ difficulty.difficultyRank.level }}, {{ difficulty.notesCount }} {{ "notes"|trans }}">{{ difficulty.notePerSecond|round(2,'floor') }}</span>
             {% endfor %}
         </td>
 
         <td class="table-column padded">
-           {{ song.lastDateUpload.format('Y-m-d') }}
+            {{ song.lastDateUpload.format('Y-m-d') }}
         </td>
 
         <td class="table-column padded">
@@ -42,7 +46,7 @@
         </td>
 
         <td class="table-column padded">
-           {{ song.beatsPerMinute|round }}
+            {{ song.beatsPerMinute|round }}
         </td>
 
         <td class="table-column padded text-center ">
@@ -54,15 +58,17 @@
         <td class="table-column padded-left">
 
             <div class="d-flex flex-fill">
-                <a href="#" data-to-copy="!rc {{ song.id }}" data-original-title="!rc {{ song.id  }} {{ "copied"|trans }}" class="copy-clipboard btn btn-sm bg-twitch">
+                <a href="#" data-to-copy="!rc {{ song.id }}"
+                   data-original-title="{{ "copied"|trans }}"
+                   class="copy-clipboard btn btn-sm bg-twitch">
                     <i class="fab fa-twitch"></i>
                     !rc {{ song.id }}
                 </a>
-
-                <a href="ragnac://install/{{ song.id }}" class="btn btn-sm disabled btn-danger ml-1">
+                {% set downloaded = downloadsService.alreadyDownloaded(song) %}
+                <a href="ragnac://install/{{ song.id }}" {% if downloaded %}data-toggle="tooltips" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}disabled{% endif%} btn-danger ml-1">
                     1 click
                 </a>
-                <a href="{{ url("song_direct_download",{id:song.id}) }}" class="btn btn-sm ml-1 btn-success">
+                <a href="{{ url("song_direct_download",{id:song.id}) }}" {% if downloaded %}data-toggle="tooltips" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}disabled{% endif%} ml-1 btn-success">
                     {{ "Download"|trans }}
                 </a>
             </div>
