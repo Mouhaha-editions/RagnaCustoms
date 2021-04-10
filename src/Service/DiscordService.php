@@ -77,27 +77,27 @@ class DiscordService
 //                    ],
 
                     // Additional Fields array
-//                    "fields" => [
+                    "fields" => [
 ////                        // Field 1
-//                        [
-//                            "name" => "Mapper",
-//                            "value" => $song->getLevelAuthorName(),
-//                            "inline" => true
-//                        ],
+                        [
+                            "name" => "Mapper",
+                            "value" => $song->getLevelAuthorName(),
+                            "inline" => true
+                        ],
 ////                        // Field 2
-//                        [
-//                            "name" => "Difficulties",
-//                            "value" => $song->getSongDifficultiesStr(),
-//                            "inline" => true
-//                        ],
+                        [
+                            "name" => "Difficulties",
+                            "value" => $song->getSongDifficultiesStr(),
+                            "inline" => true
+                        ],
 ////                        // Field 2
-//                        [
-//                            "name" => "Duration",
-//                            "value" => $song->getApproximativeDurationMS(),
-//                            "inline" => true
-//                        ]
+                        [
+                            "name" => "Duration",
+                            "value" => $song->getApproximativeDurationMS(),
+                            "inline" => true
+                        ]
 ////                        // Etc..
-//                    ]
+                    ]
                 ]
             ]
 
