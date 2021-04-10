@@ -48,7 +48,7 @@ $(function () {
         },500);
         return false;
     });
-
+$("[data-toggle=\"tooltip\"]").tooltip('enable');
     $(document).on("click", ".ajax-link", function () {
         let t = $(this);
         let action = t.data('success-action');
