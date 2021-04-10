@@ -37,19 +37,19 @@ class UploadSongController extends AbstractController
      */
     public function edit(Request $request, Song $song, TranslatorInterface $translator)
     {
-        if($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')){
+        if ($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse([
                 'error' => true,
                 'errorMessage' => $translator->trans("This Custom song is not your's"),
                 'response' => ""
-                ]);
+            ]);
         }
         $form = $this->createForm(SongType::class, $song, [
             'method' => "post",
             'action' => $this->generateUrl('edit_song', ['id' => $song->getId()])
         ]);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
         }
@@ -195,6 +195,10 @@ class UploadSongController extends AbstractController
                     }
                     $song->setDescription($form->get('description')->getData());
                 }
+                if (!isset($json->_songApproximativeDuration) || empty($json->_songApproximativeDuration)) {
+                    $this->addFlash("danger", $translator->trans("You don't add the _songApproximativeDuration in info.dat"));
+                    return $this->redirectToRoute("upload_song");
+                }
 
                 $song->setVersion($json->_version);
                 $song->setName($json->_songName);
@@ -272,7 +276,7 @@ class UploadSongController extends AbstractController
                     ->from('contact@ragnacustoms.com')
                     ->to('pierrick.pobelle@gmail.com')
                     ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
-                if ($song->isModerated() && !$this->isGranted("ROLE_ADMIN")) {
+                if ($song->isModerated() ) {
                     $discordService->sendNewSongMessage($song);
                     $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 } else {
