@@ -361,6 +361,14 @@
         <source>Already downloaded</source>
         <target>Déjà Téléchargé</target>
       </trans-unit>
+      <trans-unit id="20">
+        <source>For lazy people</source>
+        <target>Pour les gens faignants</target>
+      </trans-unit>
+      <trans-unit id="21">
+        <source>Global review</source>
+        <target>Avis global</target>
+      </trans-unit>
 
     </body>
   </file>
