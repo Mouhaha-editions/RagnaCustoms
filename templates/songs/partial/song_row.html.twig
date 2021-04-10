@@ -55,9 +55,9 @@
             </div>
         </td>
 
-        <td class="table-column padded-left">
+        <td class="table-column padded-left text-right">
 
-            <div class="d-flex flex-fill">
+            <div class="d-flex flex-fill justify-content-end text-right">
                 <a href="#" data-to-copy="!rc {{ song.id }}"
                    data-original-title="{{ "copied"|trans }}"
                    class="copy-clipboard btn btn-sm bg-twitch">
@@ -73,7 +73,7 @@
                 </a>
             </div>
 
-            <small class="white pt-2  small">{{ ("You need <a href='%url%' target='_blank'>our app</a> tu use 1 click installer button")|trans({"%url%":url('application')})|raw }}</small>
+            <small class="white pt-2 ">{{ ("You need <a href='%url%' target='_blank'>our app</a> tu use 1 click installer button")|trans({"%url%":url('application')})|raw }}</small>
         </td>
     </tr>
 {% else %}
