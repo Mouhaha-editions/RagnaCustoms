@@ -41,7 +41,7 @@ services:
         arguments: [ '%kernel.default_locale%' ]
 
     App\Service\DownloadService:
-        arguments: [ "@security.helper","@request_stack" ]
+        arguments: [ "@security.helper","@request_stack",'@doctrine.orm.entity_manager' ]
 
     App\Service\SongService:
         arguments: [ "@kernel","@doctrine.orm.entity_manager" ]
