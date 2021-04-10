@@ -4,6 +4,7 @@ $(document).on('click', 'form .rating', function () {
     let t = $(this);
     let ratingItems = $(this).parent().find('.rating');
 
+
     let getStarsRating = function () {
         let rating = 0;
         for (let ratingItem of ratingItems) {
@@ -30,7 +31,6 @@ $(document).on('click', 'form .rating', function () {
     };
 
     const toggleStars = function () {
-
         const itemIndex = t.data('id');
         for (let i = 0; i <= itemIndex; i++) {
             fillStar(ratingItems[i]);
@@ -39,9 +39,10 @@ $(document).on('click', 'form .rating', function () {
         for (let i = itemIndex + 1; i < ratingItems.length; i++) {
             emptyStar(ratingItems[i]);
         }
-
         setStarsRating();
     };
+
+
 
    toggleStars();
 });

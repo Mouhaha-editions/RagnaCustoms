@@ -33,11 +33,13 @@ const copyToClipboard = str => {
 import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 $(function () {
-    // $('.copy-clipboard').tooltip({
-    //     disabled: true,
-    //     close: function( event, ui ) { $(this).tooltip('disable'); }
-    // });
+    $(document).on('change','#review-global',function(){
+       let rating = parseInt($(this).data('rating'));
+        $('.rating-list.text-warning').each(function(){
+            let t = $(this).find(".rating:eq("+(rating-1)+")").click();
+        })
 
+    });
     $(".copy-clipboard").on('click', function () {
         let t = $(this);
         copyToClipboard($(this).data('to-copy'));
@@ -128,6 +130,7 @@ $("[data-toggle=\"tooltip\"]").tooltip('enable');
         return false;
 
     })
+
     $(document).on('click', ".ajax-modal-form", function () {
         let t = $(this);
         $(t.data('modal')).modal('show');
@@ -159,6 +162,7 @@ $("[data-toggle=\"tooltip\"]").tooltip('enable');
         return false;
 
     });
+
     $(document).on('change', "#chkSwitch", function () {
         let body = $('body');
         if ($(this).is(':checked')) {
