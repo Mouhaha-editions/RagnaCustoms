@@ -86,7 +86,7 @@ $font-weight-base: 500;
 @import "~bootstrap";
 @import "~bootstrap/scss/tooltip";
 @import "~bootstrap-switch-button/css/bootstrap-switch-button.min.css";
-
+body{position:relative;}
 .navbar-brand {
   img {
     max-width: 35px;
@@ -222,5 +222,14 @@ table.songs {
 
   &:hover {
     color: #ffffff;
+  }
+}
+.runes{
+  position:absolute;
+  text-align: right;
+  z-index: -10;
+  bottom: 0;right:0;
+  img{
+    width:50%;
   }
 }
