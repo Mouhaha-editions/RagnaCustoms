@@ -9,7 +9,7 @@
                 <div class="card-title text-center"><h2>Upload new song</h2></div>
                 <div class="card-body">
                     <p class="pt-2">
-                        {{ "Upload a .zip file max 20Mo. that contain all files for the map."|trans }}
+                        {{ "Upload a .zip file (max 20mb) containing all the files for the map."|trans }}
                     </p>
 
                     {{ form_start(form) }}
@@ -17,13 +17,13 @@
 
                     {{ form_row(form.description,{"attr":{"class":'form-control'}}) }}
                     <div class="text-right">
-                        <small>{{ "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description"|trans|raw }}</small>
+                        <small>{{ "You can use <a target='_blank' href='https://guides.github.com/features/mastering-markdown/'>Markdown</a> in description"|trans|raw }}</small>
                     </div>
                     {{ form_widget(form.replaceExisting) }}
-                    <label for="form_replaceExisting">{{ "Replace song if exists."|trans }}</label><br/>
+                    <label for="form_replaceExisting">{{ "Update an existing map"|trans }}</label><br/>
 
                     {{ form_widget(form.converted) }}
-                    <label for="form_converted">{{ "Is converted"|trans }}</label><br/>
+                    <label for="form_converted">{{ "Converted map"|trans }}</label><br/>
 
                     <button class="btn btn-sm btn-primary">{{ "Upload"|trans }}</button>
 

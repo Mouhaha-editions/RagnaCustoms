@@ -196,7 +196,7 @@ class UploadSongController extends AbstractController
                     $song->setDescription($form->get('description')->getData());
                 }
                 if (!isset($json->_songApproximativeDuration) || empty($json->_songApproximativeDuration)) {
-                    $this->addFlash("danger", $translator->trans("You don't add the _songApproximativeDuration in info.dat"));
+                    $this->addFlash("danger", $translator->trans("\"_songApproximativeDuration\" is missing in the info.dat file!"));
                     return $this->redirectToRoute("upload_song");
                 }
 
@@ -212,12 +212,7 @@ class UploadSongController extends AbstractController
                 $song->setShufflePeriod($json->_shufflePeriod);
                 $song->setPreviewStartTime($json->_previewStartTime);
                 $song->setPreviewDuration($json->_previewDuration);
-                try {
-                    $song->setApproximativeDuration($json->_songApproximativeDuration);
-                } catch (Exception $e) {
-                    $this->addFlash("danger", $translator->trans("You don't add the _songApproximativeDuration in info.dat"));
-                    return $this->redirectToRoute("upload_song");
-                }
+                $song->setApproximativeDuration($json->_songApproximativeDuration);
                 $song->setFileName($json->_songFilename);
                 $song->setCoverImageFileName($json->_coverImageFilename);
                 $song->setEnvironmentName($json->_environmentName);
@@ -268,7 +263,7 @@ class UploadSongController extends AbstractController
 
                 copy($theZip, $finalFolder . $song->getId() . ".zip");
                 copy($unzipFolder . "/" . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-                $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" added !", [
+                $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!", [
                     "%song%" => $song->getName(),
                     "%artist%" => $song->getAuthorName()
                 ]));

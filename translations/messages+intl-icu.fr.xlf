@@ -261,16 +261,13 @@
         <source>Download</source>
         <target>Téléchargement</target>
       </trans-unit>
-      <trans-unit id="yqrlW9a" resname="Upload a .zip file max 20Mo. that contain all files for the map.">
-        <source>Upload a .zip file max 20Mo. that contain all files for the map.</source>
-        <target>Envoyez un fichier .zip max 20Mo. qui contient tous les fichiers nécessaires.</target>
-      </trans-unit>
-      <trans-unit id="HVtouPH" resname="Replace song if exists.">
-        <source>Replace song if exists.</source>
+
+      <trans-unit id="HVtouPH" resname="Update an existing map">
+        <source>Update an existing map</source>
         <target>Remplacer la chanson si elle existe.</target>
       </trans-unit>
-      <trans-unit id="OrvNErV" resname="Is converted">
-        <source>Is converted</source>
+      <trans-unit id="OrvNErV" resname="Converted map">
+        <source>Converted map</source>
         <target>Est convertie</target>
       </trans-unit>
       <trans-unit id="hl6J3nj" resname="Upload">
@@ -305,10 +302,7 @@
         <source>Song \"%song%\" by \"%artist%\" added !</source>
         <target>Chanson \"%song%\" par \"%artist%\" ajoutée !</target>
       </trans-unit>
-        <trans-unit id="6">
-            <source><![CDATA[you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description]]></source>
-            <target><![CDATA[vous pouvez utiliser le <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> dans la description]]></target>
-        </trans-unit>
+
       <trans-unit id="7">
         <source>You need an account to vote !</source>
         <target>Vous devez avoir un compte pour voter !</target>
@@ -368,6 +362,26 @@
       <trans-unit id="21">
         <source>Global review</source>
         <target>Avis global</target>
+      </trans-unit>
+      <trans-unit id="22">
+        <source>You need &lt;a href='%url%' target='_blank'&gt;our app&lt;/a&gt; tu use 1 click installer button</source>
+        <target>&lt;a href='%url%' target='_blank'&gt;l'application&lt;/a&gt; est requise pour le bouton 1 click</target>
+      </trans-unit>
+      <trans-unit id="24">
+        <source><![CDATA[You can use <a target='_blank' href='https://guides.github.com/features/mastering-markdown/'>Markdown</a> in description]]></source>
+        <target><![CDATA[Vous pouvez utiliser le <a target='_blank' href='https://guides.github.com/features/mastering-markdown/'>Markdown</a> dans la description]]></target>
+      </trans-unit>
+      <trans-unit id="25">
+        <source>Upload a .zip file (max 20mb) containing all the files for the map.</source>
+        <target>Envoyez un fichier .zip (max 20mb) contenant les fichiers nécéssaires à la map.</target>
+      </trans-unit>
+      <trans-unit id="26">
+        <source>Song \"%song%\" by \"%artist%\" successfully uploaded!</source>
+        <target>\"%song%\" by \"%artist%\" bien ajoutée !</target>
+      </trans-unit>
+      <trans-unit id="27">
+        <source>\"_songApproximativeDuration\" is missing in the info.dat file!</source>
+        <target>\"_songApproximativeDuration\" est manquant dans le fichier info.dat !</target>
       </trans-unit>
 
     </body>

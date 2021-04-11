@@ -37,7 +37,7 @@ class DiscordService
             "embeds" => [
                 [
                     // Embed Title
-                    "title" => "New Song - ".$song->getName()." by ".$song->getAuthorName(),
+                    "title" => $song->getName()." by ".$song->getAuthorName(),
 
                     // Embed Type
                     "type" => "rich",
@@ -81,19 +81,19 @@ class DiscordService
 ////                        // Field 1
                         [
                             "name" => "Mapper",
-                            "value" => $song->getLevelAuthorName(),
+                            "value" => "'".$song->getLevelAuthorName()."'",
                             "inline" => true
                         ],
 ////                        // Field 2
                         [
                             "name" => "Difficulties",
-                            "value" => $song->getSongDifficultiesStr(),
+                            "value" => "'".$song->getSongDifficultiesStr()."'",
                             "inline" => true
                         ],
 ////                        // Field 2
                         [
                             "name" => "Duration",
-                            "value" => $song->getApproximativeDurationMS(),
+                            "value" => "'".$song->getApproximativeDurationMS()."'",
                             "inline" => true
                         ]
 ////                        // Etc..
