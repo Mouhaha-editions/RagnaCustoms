@@ -14,9 +14,7 @@ $themes: (
                         "shade-5": #535353,
                         "shade-6": #323232,
                         "shade-7": #ffffff
-
                 )
-
         ),
         "dark": (
                 "colors": (
@@ -72,7 +70,6 @@ $themes: (
 }
 
 
-
 $body-bg: var(--bg-color);
 $body-color: var(--text-color);
 $card-bg: var(--card-bg-color);
@@ -86,7 +83,10 @@ $font-weight-base: 500;
 @import "~bootstrap";
 @import "~bootstrap/scss/tooltip";
 @import "~bootstrap-switch-button/css/bootstrap-switch-button.min.css";
-body{position:relative;}
+body {
+  position: relative;
+}
+
 .navbar-brand {
   img {
     max-width: 35px;
@@ -148,9 +148,11 @@ table.songs {
     width: 33%;
   }
 }
-.downloaded{
+
+.downloaded {
   opacity: 0.5;
 }
+
 .rating-list {
   i {
     &.far {
@@ -188,6 +190,12 @@ table.songs {
     }
   }
 
+  .difficulties {
+    font-size: 14px;
+    span {
+      font-weight: bold;
+    }
+  }
 }
 
 .song-detail {
@@ -224,12 +232,15 @@ table.songs {
     color: #ffffff;
   }
 }
-.runes{
-  position:absolute;
+
+.runes {
+  position: absolute;
   text-align: right;
   z-index: -10;
-  bottom: 0;right:0;
-  img{
-    width:50%;
+  bottom: 0;
+  right: 0;
+
+  img {
+    width: 50%;
   }
 }
