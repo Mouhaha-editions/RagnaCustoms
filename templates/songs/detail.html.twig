@@ -1,6 +1,17 @@
 {% extends 'base.html.twig' %}
 {% import "songs/macros/vote.html.twig" as macro_vote %}
 {% block title %}{{ song.name }} - Custom Song detail {{ parent() }}{% endblock %}
+
+ {% block metas %}
+     <meta property="description" value="{{ song.name }} - Custom Song detail | RagnaCustoms.com">
+     <meta property="og:url" content="https://ragnacustoms.com/{{ url('song_detail',{id:song.id}) }}"/>
+     <meta property="og:type" content="website"/>
+     <meta property="og:title" content="{{ song.name }} - Custom Song detail | RagnaCustoms.com"/>
+     <meta property="og:description" content="{{ song.name }} - Custom Song for Ragnaröck VR"/>
+     <meta property="og:image" content="https://ragnacustoms.com/covers/{{ song.id }}{{ song.coverImageExtension }}"/>
+ {% endblock %}
+
+
 {% block body %}
 {#    <div class="row pt-2">#}
 {#        <a href="{{ url('application') }}"><img src="/apps/banner.png" class="img-fluid" alt="application"></a>#}
