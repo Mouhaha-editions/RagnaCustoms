@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {% for song in songs %}
+    <url>
+        <loc>{{ url('song_detail',{id:song.id}) }}</loc>
+        <lastmod>{{ song.lastDateUpload.format('Y-m-d') }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+{% endfor %}
+</urlset>
