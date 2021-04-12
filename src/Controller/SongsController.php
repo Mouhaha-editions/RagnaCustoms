@@ -26,6 +26,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SongsController extends AbstractController
 {
     /**
+     * @Route("/songs.xml", name="song_detail")
+     */
+    public function sitemap(SongRepository $songRepository)
+    {
+        return $this->render('sitemap/index.html.twig',[
+            'songs'=>$songRepository->findBy(['moderated'=>true])
+        ]);
+    }
+    /**
      * @Route("/song/detail/{id}", name="song_detail")
      */
     public function songDetail(Request $request, Song $song, ViewCounterRepository $viewCounterRepository, SongService $songService)

@@ -46,3 +46,4 @@ $(document).on('click', 'form .rating', function () {
 
    toggleStars();
 });
+
