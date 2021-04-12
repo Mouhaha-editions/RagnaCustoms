@@ -14,7 +14,14 @@
     <link rel="icon" href="/apps/favicon.ico">
     <title>{% block title %}| RagnaCustoms{% endblock %}</title>
     <script type="text/javascript" src="https://tarteaucitron.io/load.js"></script>
-
+    {% block metas %}
+        <meta property="description" value="RagnaCustoms.com found your favorites custom songs for Ragnarock VR;">
+        <meta property="og:url" content="https://ragnacustoms.com"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="RagnaCustoms.com found your favorites custom songs for Ragnarock VR"/>
+        <meta property="og:description" content="RagnaCustoms.com found your favorites custom songs for Ragnarock VR"/>
+        <meta property="og:image" content="https://ragnacustoms.com/apps/logo.png"/>
+    {% endblock %}
 </head>
 <body class="{{ app.request.cookies.get('light-mode','light') }}">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -55,7 +62,7 @@
                        data-offlabel="Light "
                        data-onstyle="dark"
                        data-offstyle="light"
-                        {{  app.request.cookies.get('light-mode') == "dark" ?"checked='checked'":'' }}
+                        {{ app.request.cookies.get('light-mode') == "dark" ?"checked='checked'":'' }}
                 />
             </li>
             {% if not is_granted("ROLE_USER") %}
@@ -79,13 +86,16 @@
             {% endif %}
 
             <li class="nav-item">
-                <a class="nav-link" href="https://discord.gg/nRnsgCCBvq" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+                <a class="nav-link" href="https://discord.gg/nRnsgCCBvq" target="_blank"><i class="fab fa-discord"></i>
+                    Discord</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="https://www.facebook.com/RagnaCustoms" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a class="nav-link" href="https://www.facebook.com/RagnaCustoms" target="_blank"><i
+                            class="fab fa-facebook"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="https://twitter.com/ragnacustoms" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a class="nav-link" href="https://twitter.com/ragnacustoms" target="_blank"><i
+                            class="fab fa-twitter"></i></a>
             </li>
         </ul>
     </div>
@@ -93,7 +103,7 @@
 </nav>
 
 <div class="container">
-<div class="runes"><img src="apps/runes.png" style="max-width:100%" alt="runes"/></div>
+    <div class="runes"><img src="apps/runes.png" style="max-width:100%" alt="runes"/></div>
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="alert alert-dismissible alert-{{ label }}">
