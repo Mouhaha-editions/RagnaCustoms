@@ -26,7 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SongsController extends AbstractController
 {
     /**
-     * @Route("/songs.xml", name="song_detail")
+     * @Route("/songs.xml", name="sitemap_song")
      */
     public function sitemap(SongRepository $songRepository)
     {
