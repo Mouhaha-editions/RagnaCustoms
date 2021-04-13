@@ -50,6 +50,12 @@ class UploadSongController extends AbstractController
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if($song->getYoutubeLink() != null) {
+                if (!preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $song->getYoutubeLink())) {
+                    $song->setYoutubeLink(null);
+                    $this->addFlash("warning", $translator->trans("The Youtube link is not valid, please edit your song to insert the link."));
+                }
+            }
             $em = $this->getDoctrine()->getManager();
             $em->flush();
         }
@@ -107,6 +113,11 @@ class UploadSongController extends AbstractController
             ->add("description", TextareaType::class, [
                 "required" => false,
                 "attr" => ["placeholder" => $translator->trans("This one is not required, but if you put a youtube link in the description we can catch the first one as song video ! ;)")]
+            ])
+            ->add("youtubeLink", TextareaType::class, [
+                "required" => false,
+                "label" => $translator->trans("Youtube link"),
+                "attr" => ["placeholder" => $translator->trans("https://youtu...")]
             ])
             ->add("converted", CheckboxType::class, ["required" => false])
             ->add("replaceExisting", CheckboxType::class, [
@@ -186,6 +197,7 @@ class UploadSongController extends AbstractController
                     $song = new Song();
                     $song->setUser($this->getUser());
                 }
+
                 if ($form->get('description')->getData() != null) {
                     preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('description')->getData(), $match);
                     if (count($match) > 0) {
@@ -194,6 +206,13 @@ class UploadSongController extends AbstractController
                         $song->setYoutubeLink(null);
                     }
                     $song->setDescription($form->get('description')->getData());
+                }
+                if ($form->get('youtubeLink')->getData() != null) {
+                    if (preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('youtubeLink')->getData())) {
+                        $song->setYoutubeLink($form->get('youtubeLink')->getData());
+                    } else {
+                        $this->addFlash("warning", $translator->trans("The Youtube link is not valid, please edit your song to insert the link."));
+                    }
                 }
                 if (!isset($json->_songApproximativeDuration) || empty($json->_songApproximativeDuration)) {
                     $this->addFlash("danger", $translator->trans("\"_songApproximativeDuration\" is missing in the info.dat file!"));
@@ -271,7 +290,7 @@ class UploadSongController extends AbstractController
                     ->from('contact@ragnacustoms.com')
                     ->to('pierrick.pobelle@gmail.com')
                     ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
-                if ($song->isModerated() ) {
+                if ($song->isModerated()) {
                     $discordService->sendNewSongMessage($song);
                     $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 } else {

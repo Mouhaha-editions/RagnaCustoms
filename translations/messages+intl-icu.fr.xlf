@@ -383,6 +383,14 @@
         <source>\"_songApproximativeDuration\" is missing in the info.dat file!</source>
         <target>\"_songApproximativeDuration\" est manquant dans le fichier info.dat !</target>
       </trans-unit>
+      <trans-unit id="28">
+        <source>Youtube link</source>
+        <target>Lien Youtube</target>
+      </trans-unit>
+      <trans-unit id="29">
+        <source>The Youtube link is not valid, please edit your song to insert the link.</source>
+        <target>Le lien Youtube n'ets pas valide, merci de modifier la custom song pour y ajouter le lien.</target>
+      </trans-unit>
 
     </body>
   </file>
