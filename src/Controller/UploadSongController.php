@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -114,7 +115,7 @@ class UploadSongController extends AbstractController
                 "required" => false,
                 "attr" => ["placeholder" => $translator->trans("This one is not required, but if you put a youtube link in the description we can catch the first one as song video ! ;)")]
             ])
-            ->add("youtubeLink", TextareaType::class, [
+            ->add("youtubeLink", TextType::class, [
                 "required" => false,
                 "label" => $translator->trans("Youtube link"),
                 "attr" => ["placeholder" => $translator->trans("https://youtu...")]
