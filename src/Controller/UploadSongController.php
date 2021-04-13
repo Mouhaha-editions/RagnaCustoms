@@ -253,6 +253,7 @@ class UploadSongController extends AbstractController
                     $diff->setDifficulty($difficulty->_difficulty);
                     $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
                     $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
+                    $song->addSongDifficulty($diff);
                     $em->persist($diff);
                     $allowedFiles[] = $difficulty->_beatmapFilename;
                     $file = $difficulty->_beatmapFilename;
