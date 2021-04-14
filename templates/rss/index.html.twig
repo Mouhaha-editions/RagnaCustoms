@@ -1,18 +1,15 @@
 <?xml version="1.0"?>
 <rss version="2.0">
-    <channel>
-        <title>Custom songs for ragnarock vr | RagnaCustoms.com</title>
-        <link>
-        https://ragnacustoms.com</link>
-        <description>Custom songs for ragnarock vr</description>
-        {% for song in songs %}
-            <item>
-                <title>{{ song.name }} - {{ song.authorName }}</title>
-                <guid>{{ song.id }}</guid>
-                <description>{{ url('song_detail',{id:song.id}) }}</description>
-                <url>{{ url('song_detail',{id:song.id}) }}</url>
-                <pubDate>{{ song.createdAt.foramt('Y-m-d H:i') }}</pubDate>
-            </item>
-        {% endfor %}
-    </channel>
+    {% for song in songs %}
+        <entry>
+            <id>{{ url('song_detail',{id:song.id}) }}</id>
+            <title>{{ song.name }} - {{ song.authorName }}</title>
+            <GUID>{{ song.id }}</GUID>
+            <content type="html"><![CDATA[New Song : {{ song.name}}<br/>{{ url('song_detail',{id:song.id}) }} ]]></content>
+            <description>{{ url('song_detail',{id:song.id}) }}</description>
+            <url>{{ url('song_detail',{id:song.id}) }}</url>
+            <link rel="alternate" type="text/html" href="{{ url('song_detail',{id:song.id}) }}"/>
+            <pubDate>{{ song.createdAt.format('Y-m-d H:i') }}</pubDate>
+        </entry>
+    {% endfor %}
 </rss>
