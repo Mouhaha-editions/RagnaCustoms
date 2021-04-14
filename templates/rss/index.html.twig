@@ -7,8 +7,10 @@
         <description>Custom songs for ragnarock vr</description>
         {% for song in songs %}
             <item>
-                <title>{{ song.name }}</title>
+                <title>{{ song.name }} - {{ song.authorName }}</title>
+                <guid>{{ song.id }}</guid>
                 <description>{{ url('song_detail',{id:song.id}) }}</description>
+                <pubDate>{{ song.createdAt.foramt('Y-m-d H:i') }}</pubDate>
             </item>
         {% endfor %}
     </channel>
