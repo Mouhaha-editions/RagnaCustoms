@@ -10,6 +10,7 @@
                 <title>{{ song.name }} - {{ song.authorName }}</title>
                 <guid>{{ song.id }}</guid>
                 <description>{{ url('song_detail',{id:song.id}) }}</description>
+                <url>{{ url('song_detail',{id:song.id}) }}</url>
                 <pubDate>{{ song.createdAt.foramt('Y-m-d H:i') }}</pubDate>
             </item>
         {% endfor %}
