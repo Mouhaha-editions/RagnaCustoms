@@ -13,6 +13,7 @@ use App\Repository\VoteRepository;
 use App\Service\DownloadService;
 use App\Service\SongService;
 use App\Service\VoteService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -32,6 +33,17 @@ class SongsController extends AbstractController
     {
         return $this->render('sitemap/index.html.twig',[
             'songs'=>$songRepository->findBy(['moderated'=>true])
+        ]);
+    }
+    /**
+     * @Route("/rss.xml", name="rss_song")
+     */
+    public function rss(SongRepository $songRepository)
+    {
+        $songs = $songRepository->findBy(['moderated'=>true],['createdAt'=>"Desc"]);
+        /** @var ArrayCollection|Song[] $songs */
+        return $this->render('rss/index.html.twig',[
+            'songs'=>$songs
         ]);
     }
     /**

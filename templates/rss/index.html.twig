@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>Custom songs for ragnarock vr | RagnaCustoms.com</title>
+        <link>
+        https://ragnacustoms.com</link>
+        <description>Custom songs for ragnarock vr</description>
+        {% for song in songs %}
+            <item>
+                <title>{{ song.name }}</title>
+                <description>{{ url('song_detail',{id:song.id}) }}</description>
+            </item>
+        {% endfor %}
+    </channel>
+</rss>
