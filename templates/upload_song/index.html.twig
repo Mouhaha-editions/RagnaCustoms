@@ -23,7 +23,10 @@
 
                     {{ form_widget(form.replaceExisting) }}
                     <label for="form_replaceExisting">{{ "Update an existing map"|trans }}</label><br/>
-
+                    <div class="d-none">
+                        {{ form_widget(form.resetVote) }}
+                        <label for="form_resetVote">{{ "Reset Vote"|trans }}</label><br/>
+                    </div>
                     {{ form_widget(form.converted) }}
                     <label for="form_converted">{{ "Converted map"|trans }}</label><br/>
 
@@ -50,7 +53,7 @@
                         {{ "BPM"|trans }}
                     </th>
                     <th class="table-header-column padded">
-                       {{ "Votes"|trans }}
+                        {{ "Votes"|trans }}
                     </th>
                     <th class="table-header-column padded" title="all download">
                         {{ "DL"|trans }}

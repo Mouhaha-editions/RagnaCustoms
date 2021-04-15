@@ -183,6 +183,14 @@ $("[data-toggle=\"tooltip\"]").tooltip('enable');
             chkSwitch.trigger('change');
         }
     }
+    $("#form_replaceExisting").on('change', function(){
+        let t = $(this);
+        if(t.is(':checked')){
+            $("#form_resetVote").closest("div").removeClass('d-none');
+        }else{
+            $("#form_resetVote").closest("div").addClass('d-none');
+        }
+    });
 })
 
 function setCookie(cname, cvalue) {
