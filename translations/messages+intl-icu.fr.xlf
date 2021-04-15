@@ -395,6 +395,14 @@
         <source>Reset Vote</source>
         <target>Remettre les votes à zéro</target>
       </trans-unit>
+        <trans-unit id="31">
+            <source>This song is not available for now</source>
+            <target>messages</target>
+        </trans-unit>
+      <trans-unit id="32">
+        <source>This custom song is not available for now</source>
+        <target>Cette custom song n'est pas encore disponible.</target>
+      </trans-unit>
 
     </body>
   </file>
