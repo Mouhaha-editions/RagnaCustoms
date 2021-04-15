@@ -65,7 +65,7 @@ class Vote
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $disabled;
+    private $disabled = false;
 
     public function getId(): ?int
     {
