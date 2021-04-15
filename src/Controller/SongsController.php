@@ -54,8 +54,12 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/detail/{id}", name="song_detail")
      */
-    public function songDetail(Request $request, Song $song, ViewCounterRepository $viewCounterRepository, SongService $songService)
+    public function songDetail(Request $request, Song $song,TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository, SongService $songService)
     {
+        if(!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()){
+            $this->addFlash('warning',$translator->trans("This custom song is not available for now"));
+            return $this->redirectToRoute('home');
+        }
         $em = $this->getDoctrine()->getManager();
         $song->setViews($song->getViews() + 1);
         $ip = $request->getClientIp();
