@@ -120,6 +120,7 @@ class UploadSongController extends AbstractController
                 "label" => $translator->trans("Youtube link"),
                 "attr" => ["placeholder" => $translator->trans("https://youtu...")]
             ])
+            ->add("resetVote", CheckboxType::class, ["required" => false])
             ->add("converted", CheckboxType::class, ["required" => false])
             ->add("replaceExisting", CheckboxType::class, [
                 "required" => false,
@@ -242,8 +243,10 @@ class UploadSongController extends AbstractController
                 foreach ($song->getSongDifficulties() as $difficulty) {
                     $em->remove($difficulty);
                 }
-                $song->setTotalVotes(null);
-                $song->setCountVotes(null);
+                if($form->get('resetVote')->getData() != null) {
+                    $song->setTotalVotes(null);
+                    $song->setCountVotes(null);
+                }
 
 
                 foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
