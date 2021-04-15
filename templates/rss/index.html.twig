@@ -15,7 +15,7 @@
 
 {#            <url>{{ url('song_detail',{id:song.id}) }}</url>#}
 {#            <link rel="alternate" type="text/html" href="{{ url('song_detail',{id:song.id}) }}"/>#}
-            <pubDate>{{ song.createdAt.format('Y-m-d H:i') }}</pubDate>
+            <pubDate>{{ song.createdAt.format('D, d M y H:i:s O') }}</pubDate>
         </item>
     {% endfor %}
 
