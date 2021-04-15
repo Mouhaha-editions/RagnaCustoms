@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <rss version="2.0">
+    <atom:link href="https://ragnacustoms.com/rss.xml" rel="self" type="application/rss+xml" />
     <channel>
         <title>RagnaCustoms.com</title>
         <link>https://ragnacustoms.com</link>
@@ -8,13 +9,10 @@
         <item>
 {#            <id>{{ url('song_detail',{id:song.id}) }}</id>#}
             <title>{{ song.name }} - {{ song.authorName }}</title>
-{#            <GUID>{{ song.id }}</GUID>#}
-            <description type="html"><![CDATA[New Song : {{ song.name}}<br/>{{ url('song_detail',{id:song.id}) }} ]]></description>
+            <guid>{{ song.id }}</guid>
+            <description><![CDATA[New Song : {{ song.name}}<br/>{{ url('song_detail',{id:song.id}) }} ]]></description>
             <link>{{ url('song_detail',{id:song.id}) }}</link>
-            <image>
-                <url>https://ragnacustoms.com/covers/{{ song.id }}{{ song.coverImageExtension }}</url>
-                <link>{{ url('song_detail',{id:song.id}) }}</link>
-            </image>
+
 {#            <url>{{ url('song_detail',{id:song.id}) }}</url>#}
 {#            <link rel="alternate" type="text/html" href="{{ url('song_detail',{id:song.id}) }}"/>#}
 {#            <pubDate>{{ song.createdAt.format('Y-m-d H:i') }}</pubDate>#}
