@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <rss version="2.0">
+    <channel>
+        <title>RagnaCustoms.com</title>
+        <link>https://ragnacustoms.com</link>
+        <description>All our catalog</description>
     {% for song in songs %}
         <item>
             <id>{{ url('song_detail',{id:song.id}) }}</id>
@@ -12,4 +16,5 @@
             <pubDate>{{ song.createdAt.format('Y-m-d H:i') }}</pubDate>
         </item>
     {% endfor %}
+    </channel>
 </rss>
