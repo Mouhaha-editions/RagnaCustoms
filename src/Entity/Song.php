@@ -591,6 +591,10 @@ class Song
         return $this;
     }
 
+    public function isNew()
+    {
+        return $this->getLastDateUpload() >= (new \DateTime())->modify('-3 days');
+}
     public function getConverted(): ?bool
     {
         return $this->converted;

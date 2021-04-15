@@ -168,6 +168,9 @@ table.songs {
 .song-preview {
   a {
     color: #ffffff;
+    .new {
+      position: absolute;
+    }
   }
 
   .category {
@@ -192,6 +195,7 @@ table.songs {
 
   .difficulties {
     font-size: 14px;
+
     span {
       font-weight: bold;
     }
