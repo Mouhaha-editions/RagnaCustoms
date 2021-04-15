@@ -62,6 +62,11 @@ class Vote
      */
     private $LevelQuality;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $disabled;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -159,6 +164,18 @@ class Vote
     public function setLevelQuality(float $LevelQuality): self
     {
         $this->LevelQuality = $LevelQuality;
+
+        return $this;
+    }
+
+    public function getDisabled(): ?bool
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled(?bool $disabled): self
+    {
+        $this->disabled = $disabled;
 
         return $this;
     }

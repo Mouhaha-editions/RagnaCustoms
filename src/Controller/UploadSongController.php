@@ -244,6 +244,9 @@ class UploadSongController extends AbstractController
                     $em->remove($difficulty);
                 }
                 if($form->get('resetVote')->getData() != null) {
+                    foreach($song->getVotes() AS $vote){
+                        $vote->setDisabled(true);
+                    }
                     $song->setTotalVotes(null);
                     $song->setCountVotes(null);
                 }

@@ -31,21 +31,26 @@ class SongsController extends AbstractController
      */
     public function sitemap(SongRepository $songRepository)
     {
-        return $this->render('sitemap/index.html.twig',[
-            'songs'=>$songRepository->findBy(['moderated'=>true])
+        return $this->render('sitemap/index.html.twig', [
+            'songs' => $songRepository->findBy(['moderated' => true])
         ]);
     }
+
     /**
      * @Route("/rss.xml", name="rss_song")
      */
     public function rss(SongRepository $songRepository)
     {
-        $songs = $songRepository->findBy(['moderated'=>true],['createdAt'=>"Desc"]);
+        $songs = $songRepository->findBy(['moderated' => true], ['createdAt' => "Desc"]);
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+
         /** @var ArrayCollection|Song[] $songs */
-        return $this->render('rss/index.html.twig',[
-            'songs'=>$songs
-        ]);
+        return $this->render('rss/index.html.twig', [
+            'songs' => $songs
+        ], $response);
     }
+
     /**
      * @Route("/song/detail/{id}", name="song_detail")
      */
@@ -109,7 +114,9 @@ class SongsController extends AbstractController
             $vote->setUser($this->getUser());
             $em->persist($vote);
         } else {
-            $voteService->subScore($song, $vote);
+            if (!$vote->getDisabled()) {
+                $voteService->subScore($song, $vote);
+            }
         }
         $vote->setFunFactor($request->get('funFactor'));
         $vote->setRhythm($request->get('rhythm'));
@@ -117,7 +124,7 @@ class SongsController extends AbstractController
         $vote->setPatternQuality($request->get('patternQuality'));
         $vote->setReadability($request->get('readability'));
         $vote->setLevelQuality($request->get('levelQuality'));
-
+        $vote->setDisabled(false);
         $voteService->addScore($song, $vote);
         $em->flush();
         return new JsonResponse([
