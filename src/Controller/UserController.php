@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use Abraham\TwitterOAuth\TwitterOAuth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
