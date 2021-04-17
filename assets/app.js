@@ -40,7 +40,7 @@ $(function () {
         })
 
     });
-    $(".copy-clipboard").on('click', function () {
+    $(document).on('click',".copy-clipboard", function () {
         let t = $(this);
         copyToClipboard($(this).data('to-copy'));
         t.tooltip('enable');
