@@ -9,12 +9,15 @@
 import './styles/app.scss';
 // import './src/sass/main.scss';
 
-// import { Tooltip, Toast, Popover } from 'bootstrap';
+//import { Tooltip, Toast, Popover } from 'bootstrap';
 
 // start the Stimulus application
 import 'bootstrap';
 import './js/form-rating';
 import '../public/bundles/pagination/js/see-more.js';
+
+require('bootstrap/js/dist/popover');
+require('bootstrap/js/dist/tooltip');
 // const app = require('./js/utils/core');
 
 const copyToClipboard = str => {
@@ -29,28 +32,40 @@ const copyToClipboard = str => {
     document.body.removeChild(el);
 };
 
+import { createPopper } from 'bootstrap/js/dist/popover';
 
 import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 $(function () {
-    $(document).on('change','#review-global',function(){
-       let rating = parseInt($(this).data('rating'));
-        $('.rating-list.text-warning').each(function(){
-            let t = $(this).find(".rating:eq("+(rating-1)+")").click();
+    console.log('coucouc');
+
+    // $(".popover-trigger").popover({trigger:'mouseover'});
+    // $(".popover-trigger").popover("show");
+    $(document).on('mouseover', ".popover-trigger", function () {
+       $(this).popover("show");
+    });
+    $(document).on('mouseout', ".popover-trigger", function () {
+        $(this).popover("hide");
+    });
+    $(document).on('change', '#review-global', function () {
+        let rating = parseInt($(this).data('rating'));
+        $('.rating-list.text-warning').each(function () {
+            let t = $(this).find(".rating:eq(" + (rating - 1) + ")").click();
         })
 
     });
-    $(document).on('click',".copy-clipboard", function () {
+    $(document).on('click', ".copy-clipboard", function () {
         let t = $(this);
         copyToClipboard($(this).data('to-copy'));
         t.tooltip('enable');
         t.tooltip('show');
-        setTimeout(function(){
+        setTimeout(function () {
             t.tooltip('toggleEnabled');
-        },500);
+        }, 500);
         return false;
     });
-$("[data-toggle=\"tooltip\"]").tooltip('enable');
+    $("[data-toggle=\"tooltip\"]").tooltip('enable');
+
     $(document).on("click", ".ajax-link", function () {
         let t = $(this);
         let action = t.data('success-action');
@@ -183,14 +198,17 @@ $("[data-toggle=\"tooltip\"]").tooltip('enable');
             chkSwitch.trigger('change');
         }
     }
-    $("#form_replaceExisting").on('change', function(){
+
+    // $(".popover-trigger").popover({ trigger: "hover" });
+    $("#form_replaceExisting").on('change', function () {
         let t = $(this);
-        if(t.is(':checked')){
+        if (t.is(':checked')) {
             $("#form_resetVote").closest("div").removeClass('d-none');
-        }else{
+        } else {
             $("#form_resetVote").closest("div").addClass('d-none');
         }
     });
+
 })
 
 function setCookie(cname, cvalue) {

@@ -92,7 +92,11 @@ body {
     max-width: 35px;
   }
 }
-
+.rating-wrap {
+  .label{
+    min-width:100px;
+  }
+}
 .search-and-filter {
   .form-group {
     label {
@@ -164,7 +168,12 @@ table.songs {
     }
   }
 }
-
+.popover {
+  width:200px!important;
+  label{
+    display:block;
+  }
+}
 .song-preview {
   a {
     color: #ffffff;
