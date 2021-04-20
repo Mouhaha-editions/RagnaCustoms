@@ -407,6 +407,10 @@
             <source>Rating</source>
             <target>Votes</target>
         </trans-unit>
+      <trans-unit id="34">
+        <source>click to vote</source>
+        <target>Clique pour voter</target>
+      </trans-unit>
 
     </body>
   </file>

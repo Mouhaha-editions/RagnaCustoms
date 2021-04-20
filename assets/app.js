@@ -44,9 +44,9 @@ $(function () {
     $(document).on('mouseover', ".popover-trigger", function () {
        $(this).popover("show");
     });
-    $(document).on('mouseout', ".popover-trigger", function () {
-        $(this).popover("hide");
-    });
+    // $(document).on('mouseout', ".popover-trigger", function () {
+    //     $(this).popover("hide");
+    // });
     $(document).on('change', '#review-global', function () {
         let rating = parseInt($(this).data('rating'));
         $('.rating-list.text-warning').each(function () {
