@@ -353,6 +353,6 @@ class SongsController extends AbstractController
 
     private function cleanName(?string $getName)
     {
-        return preg_replace( '/[^a-Z]/i', '', $getName);
+        return preg_replace( '/[^a-zA-Z]/i', '', $getName);
     }
 }
