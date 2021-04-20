@@ -342,12 +342,17 @@ class SongsController extends AbstractController
 
         $disposition = HeaderUtils::makeDisposition(
             HeaderUtils::DISPOSITION_ATTACHMENT,
-            $song->getName() . '.zip'
+            $this->cleanName($song->getName()) . '.zip'
         );
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-type', "application/octet-stream");
         $response->headers->set('Content-Transfer-Encoding', "binary");
         $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
         return $response;
+    }
+
+    private function cleanName(?string $getName)
+    {
+        return preg_replace( '/[^a-Z]/i', '', $getName);
     }
 }
