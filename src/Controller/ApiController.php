@@ -22,8 +22,8 @@ class ApiController extends AbstractController
             ->andWhere('s.moderated = true')
             ->setParameter('search_string', '%' . $term . '%')
             ->getQuery()->getResult();
-
         $songs = [];
+
         /** @var Song $song */
         foreach ($songsEntities as $song) {
             $songs[] = [
@@ -58,7 +58,4 @@ class ApiController extends AbstractController
             ]
         );
     }
-
-
-
 }

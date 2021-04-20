@@ -403,6 +403,10 @@
         <source>This custom song is not available for now</source>
         <target>Cette custom song n'est pas encore disponible.</target>
       </trans-unit>
+        <trans-unit id="33">
+            <source>Rating</source>
+            <target>Votes</target>
+        </trans-unit>
 
     </body>
   </file>

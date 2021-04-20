@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
-{% import "songs/macros/vote.html.twig" as macro_vote %}
 {% block title %}{{ song.name }} - Custom Song detail {{ parent() }}{% endblock %}
+{% import "songs/macros/vote.html.twig" as macro_vote %}
 
  {% block metas %}
      <meta property="description" value="{{ song.name }} - Custom Song detail | RagnaCustoms.com">
@@ -86,12 +86,12 @@
             <h3 class="text-center">{{ "Informations"|trans }}</h3>
 
             <div class="informations">
-                {{ macro_vote.ratingDisplay("Fun factor"|trans,song.funFactorAverage) }}
-                {{ macro_vote.ratingDisplay("Rhythm"|trans,song.rhythmAverage) }}
-                {{ macro_vote.ratingDisplay("Flow"|trans,song.flowAverage) }}
-                {{ macro_vote.ratingDisplay("Pattern quality"|trans,song.patternQualityAverage) }}
-                {{ macro_vote.ratingDisplay("Readability"|trans,song.readabilityAverage) }}
-                {{ macro_vote.ratingDisplay("Level quality"|trans,song.levelQualityAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Fun factor"|trans,song.funFactorAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Rhythm"|trans,song.rhythmAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Flow"|trans,song.flowAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Pattern quality"|trans,song.patternQualityAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Readability"|trans,song.readabilityAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Level quality"|trans,song.levelQualityAverage) }}
                 <div class="d-flex rating-wrap">
                     <label>{{ "Mapped by"|trans }} : </label>
                     <span>
