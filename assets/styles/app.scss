@@ -1,3 +1,4 @@
+
 $themes: (
         "light": (
                 "colors": (
@@ -69,7 +70,8 @@ $themes: (
   }
 }
 
-
+$zindex-popover: 80000;
+$popover-max-width:800px;
 $body-bg: var(--bg-color);
 $body-color: var(--text-color);
 $card-bg: var(--card-bg-color);
@@ -82,6 +84,9 @@ $font-weight-base: 500;
 
 @import "~bootstrap";
 @import "~bootstrap/scss/tooltip";
+@import "~bootstrap/scss/popover";
+
+
 @import "~bootstrap-switch-button/css/bootstrap-switch-button.min.css";
 body {
   position: relative;
@@ -169,7 +174,14 @@ table.songs {
   }
 }
 .popover {
+  background: var(--card-bg-color);
   width:200px!important;
+  .arrow:after{
+    border-top-color: var(--card-bg-color);
+  }
+  .popover-header{
+    background: var(--card-bg-color);
+  }
   label{
     display:block;
   }
