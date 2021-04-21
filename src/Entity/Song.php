@@ -183,12 +183,23 @@ class Song
      */
     private $infoDatFile;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $guid;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="song", orphanRemoval=true)
+     */
+    private $scores;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
         $this->votes = new ArrayCollection();
         $this->downloadCounters = new ArrayCollection();
         $this->viewCounters = new ArrayCollection();
+        $this->scores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -779,6 +790,48 @@ class Song
     public function setInfoDatFile(?string $infoDatFile): self
     {
         $this->infoDatFile = $infoDatFile;
+
+        return $this;
+    }
+
+    public function getGuid(): ?string
+    {
+        return $this->guid;
+    }
+
+    public function setGuid(?string $guid): self
+    {
+        $this->guid = $guid;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Score[]
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): self
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores[] = $score;
+            $score->setSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): self
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getSong() === $this) {
+                $score->setSong(null);
+            }
+        }
 
         return $this;
     }

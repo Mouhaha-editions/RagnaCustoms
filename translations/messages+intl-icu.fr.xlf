@@ -419,6 +419,14 @@
         <source>Online</source>
         <target>En ligne</target>
       </trans-unit>
+        <trans-unit id="37">
+            <source>You need an account to access this page.</source>
+            <target>Vous avez besoin d'un compte pour acceder à cette page.</target>
+        </trans-unit>
+      <trans-unit id="38">
+        <source>My profile</source>
+        <target>messages</target>
+      </trans-unit>
 
     </body>
   </file>

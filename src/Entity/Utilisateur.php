@@ -79,12 +79,48 @@ class Utilisateur implements UserInterface
      */
     private $steamCommunityId;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="user")
+     */
+    private $scores;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isMapper;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $mapper_name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mapper_description;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mapper_img;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $mailingNewSong;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $mapper_discord;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
         $this->votes = new ArrayCollection();
         $this->downloadCounters = new ArrayCollection();
         $this->viewCounters = new ArrayCollection();
+        $this->scores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -349,6 +385,108 @@ class Utilisateur implements UserInterface
     public function setSteamCommunityId(?string $steamCommunityId): self
     {
         $this->steamCommunityId = $steamCommunityId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Score[]
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): self
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores[] = $score;
+            $score->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): self
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getUser() === $this) {
+                $score->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getIsMapper(): ?bool
+    {
+        return $this->isMapper;
+    }
+
+    public function setIsMapper(?bool $isMapper): self
+    {
+        $this->isMapper = $isMapper;
+
+        return $this;
+    }
+
+    public function getMapperName(): ?string
+    {
+        return $this->mapper_name;
+    }
+
+    public function setMapperName(string $mapper_name): self
+    {
+        $this->mapper_name = $mapper_name;
+
+        return $this;
+    }
+
+    public function getMapperDescription(): ?string
+    {
+        return $this->mapper_description;
+    }
+
+    public function setMapperDescription(?string $mapper_description): self
+    {
+        $this->mapper_description = $mapper_description;
+
+        return $this;
+    }
+
+    public function getMapperImg(): ?string
+    {
+        return $this->mapper_img;
+    }
+
+    public function setMapperImg(?string $mapper_img): self
+    {
+        $this->mapper_img = $mapper_img;
+
+        return $this;
+    }
+
+    public function getMailingNewSong(): ?bool
+    {
+        return $this->mailingNewSong;
+    }
+
+    public function setMailingNewSong(bool $mailingNewSong): self
+    {
+        $this->mailingNewSong = $mailingNewSong;
+
+        return $this;
+    }
+
+    public function getMapperDiscord(): ?string
+    {
+        return $this->mapper_discord;
+    }
+
+    public function setMapperDiscord(string $mapper_discord): self
+    {
+        $this->mapper_discord = $mapper_discord;
 
         return $this;
     }

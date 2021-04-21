@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% include '@KnojectorSteamAuthentication/button.html.twig' %}
+<div class="row">
+    <div class="col-12">
+        <h1>{{ "My profile"|trans }}</h1>
+        {{ form(form) }}
+    </div>
+</div>
 {% endblock %}

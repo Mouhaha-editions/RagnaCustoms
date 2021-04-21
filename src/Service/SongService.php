@@ -41,10 +41,18 @@ class SongService
                         $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
                         if(preg_match("#info\.dat#isU", $fileinfo['basename'])){
                             $song->setInfoDatFile( $uniqBeat."/" . $fileinfo['basename']);
-                            $this->em->flush();
                         }
                     }
                 }
+//                $filename = $song->getInfoDatFile();
+//                $handle = fopen($filename, "rb");
+//                $fsize = filesize($filename);
+//                $contents = fread($handle, $fsize);
+//                $byteArray = unpack("N*",$contents);
+
+
+                $this->em->flush();
+
                 $zip->close();
             }
         }catch (\Exception $e){
