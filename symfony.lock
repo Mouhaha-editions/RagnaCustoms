@@ -160,6 +160,9 @@
     "nesbot/carbon": {
         "version": "2.46.0"
     },
+    "nicklaw5/twitch-api-php": {
+        "version": "v4.2.0"
+    },
     "nikic/php-parser": {
         "version": "v4.10.4"
     },

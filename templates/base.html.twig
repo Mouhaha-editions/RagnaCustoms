@@ -40,17 +40,21 @@
             <li class="nav-item">
                 <a class="nav-link text-danger" href="{{ url("application") }}">RagnaCustoms Application</a>
             </li>
+            <li class="nav-item">
+                {% set count = twitchService.countStreamers() %}
+                <a class="nav-link text-twitch" target="_blank" rel="nofollow" href="https://www.twitch.tv/directory/game/Ragnaröck">Live ({{ count }}{% if count == 100 %}+{% endif %})</a>
+            </li>
             {% if app.request.locale == 'en' %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url("change_locale",{locale:"fr"}) }}"><img style="max-height:12px;"
-                                                                                             src="/flags/france.png"
-                                                                                             alt="fr"/></a>
+                    <a class="nav-link" href="{{ url("change_locale",{locale:"fr"}) }}">
+                        <img style="max-height:12px;" src="/flags/france.png" alt="fr"/>
+                    </a>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url("change_locale",{locale:"en"}) }}"><img style="max-height:12px;"
-                                                                                             src="/flags/united-kingdom.png"
-                                                                                             alt="en"/></a>
+                    <a class="nav-link" href="{{ url("change_locale",{locale:"en"}) }}">
+                        <img style="max-height:12px;" src="/flags/united-kingdom.png" alt="en"/>
+                    </a>
                 </li>
             {% endif %}
         </ul>
@@ -85,7 +89,6 @@
                     </div>
                 </li>
             {% endif %}
-<li class="nav-item pt-2"> We are social : </li>
             <li class="nav-item">
                 <a class="nav-link" href="https://discord.gg/nRnsgCCBvq" target="_blank"><i class="fab fa-discord"></i>
                     </a>
