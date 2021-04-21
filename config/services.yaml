@@ -45,3 +45,5 @@ services:
 
     App\Service\SongService:
         arguments: [ "@kernel","@doctrine.orm.entity_manager" ]
+    App\Service\TwitchService:
+        arguments: [ "%env(resolve:TWITCH_APPLICATION_ID)%","%env(resolve:TWITCH_SECRET_CLIENT)%" ]

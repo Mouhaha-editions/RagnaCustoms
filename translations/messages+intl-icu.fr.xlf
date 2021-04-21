@@ -411,6 +411,14 @@
         <source>click to vote</source>
         <target>Clique pour voter</target>
       </trans-unit>
+        <trans-unit id="35">
+            <source>No online streamer for now</source>
+            <target>Pas de streamer en ligne en ce moment</target>
+        </trans-unit>
+      <trans-unit id="36">
+        <source>Online</source>
+        <target>En ligne</target>
+      </trans-unit>
 
     </body>
   </file>

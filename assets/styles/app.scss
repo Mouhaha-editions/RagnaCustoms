@@ -269,3 +269,10 @@ table.songs {
     width: 50%;
   }
 }
+
+  .nav-link{
+    &.text-twitch{
+      color: #6f42c1!important;
+      font-weight:bold;
+    }
+  }
