@@ -8,7 +8,7 @@
     {% for song in songs %}
         <item>
 {#            <id>{{ url('song_detail',{id:song.id}) }}</id>#}
-            <title>{{ song.name }} - {{ song.authorName }}</title>
+            <title>{{ song.name }} - {{ song.authorName }} new custom song for #Ragnaröck #VR</title>
             <guid>{{ url('song_detail',{id:song.id}) }}</guid>
             <description><![CDATA[New Song : {{ song.name}}<br/>{{ url('song_detail',{id:song.id}) }} ]]></description>
             <link>{{ url('song_detail',{id:song.id}) }}</link>
