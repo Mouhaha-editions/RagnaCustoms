@@ -90,7 +90,7 @@ class Utilisateur implements UserInterface
     private $isMapper;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $mapper_name;
 
@@ -105,12 +105,12 @@ class Utilisateur implements UserInterface
     private $mapper_img;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    private $mailingNewSong;
+    private $mailingNewSong = false;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $mapper_discord;
 
