@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Score;
 use App\Entity\Song;
+use App\Repository\DifficultyRankRepository;
+use App\Repository\ScoreRepository;
+use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
+use App\Repository\UtilisateurRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +17,63 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApiController extends AbstractController
 {
+    /**
+     * @Route("/api/score", name="api_score")
+     */
+    public function score(Request $request, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $data = json_decode($request->getContent(), true);
+        $user = $utilisateurRepository->findOneBy(['apiKey' => $data['ApiKey']]);
+        if ($user == null) {
+            return new Response('NOK');
+        }
+        foreach ($data['Scores'] as $subScore) {
+            try {
+                $song = $songRepository->findOneBy(['guid' => $subScore["HashInfo"]]);
+                if ($song == null) {
+                    continue;
+                }
+
+                if ($song == null) {
+                    continue;
+                }
+                $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['Level']]);
+                $songDiff = $songDifficultyRepository->findOneBy([
+                    'song' => $song,
+                    "difficultyRank" => $rank
+                ]);
+
+                $score = $scoreRepository->findOneBy([
+                    'user' => $user,
+                    'song' => $song,
+                    'songDifficulty' => $songDiff
+                ]);
+
+                if ($score == null) {
+                    $score = new Score();
+                    $score->setUser($user);
+                    $score->setSong($song);
+                    $score->setScore(str_replace(',','.',$subScore['Score']));
+                    $score->setSongDifficulty($songDiff);
+                    $em->persist($score);
+                } else {
+                    if ($score->getScore() < $subScore['Score']) {
+                        $score->setScore($subScore['Score']);
+                    }
+                }
+            } catch (\Exception $e) {
+                $x = $e;
+            }
+            $em->flush();
+        }
+
+
+        return new Response("OK");
+    }
+
+
     /**
      * @Route("/api/search/{term}", name="api_search")
      */

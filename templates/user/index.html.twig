@@ -4,7 +4,10 @@
 <div class="row">
     <div class="col-12">
         <h1>{{ "My profile"|trans }}</h1>
-        {{ form(form) }}
+{#        {{ form(form) }}#}
+
+        <h2> Your api key for scoring</h2>
+        {{ app.user.apiKey }}
     </div>
 </div>
 {% endblock %}

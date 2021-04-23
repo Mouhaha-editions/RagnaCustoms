@@ -36,6 +36,12 @@ class Score
      */
     private $score;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scores")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $songDifficulty;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -73,6 +79,18 @@ class Score
     public function setScore(float $score): self
     {
         $this->score = $score;
+
+        return $this;
+    }
+
+    public function getSongDifficulty(): ?SongDifficulty
+    {
+        return $this->songDifficulty;
+    }
+
+    public function setSongDifficulty(?SongDifficulty $songDifficulty): self
+    {
+        $this->songDifficulty = $songDifficulty;
 
         return $this;
     }

@@ -19,11 +19,16 @@ class UserController extends AbstractController
             $this->addFlash('danger',$translator->trans("You need an account to access this page."));
             return $this->redirectToRoute('home');
         }
-        $form = $this->createForm(UtilisateurType::class, $this->getUser());
+        $em = $this->getDoctrine()->getManager();
+        if($this->getUser()->getApiKey() == null){
+            $this->getUser()->setApiKey(md5(date('d/m/Y H:i:s').$this->getUser()->getUsername()));
+        }
+        $em->flush();
+//        $form = $this->createForm(UtilisateurType::class, $this->getUser());
 
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
-            'form'=>$form->createView()
+//            'form'=>$form->createView()
         ]);
     }
 
