@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Song;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
 use ZipArchive;
@@ -25,9 +26,9 @@ class SongService
             return null;
         }
         $file = $this->kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip";
-        $uniqBeat="/ragna-beat/".uniqid();
-        $unzipFolder = $this->kernel->getProjectDir() . "/public".$uniqBeat;
-        mkdir($this->kernel->getProjectDir() . "/public".$uniqBeat);
+        $uniqBeat = "/ragna-beat/" . uniqid();
+        $unzipFolder = $this->kernel->getProjectDir() . "/public" . $uniqBeat;
+        mkdir($this->kernel->getProjectDir() . "/public" . $uniqBeat);
         $zip = new ZipArchive();
         try {
 
@@ -39,24 +40,20 @@ class SongService
                     if (end($exp) != "") {
                         $fileinfo = pathinfo($filename);
                         $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
-                        if(preg_match("#info\.dat#isU", $fileinfo['basename'])){
-                            $song->setInfoDatFile( $uniqBeat."/" . $fileinfo['basename']);
+                        if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
+                            $song->setInfoDatFile($uniqBeat . "/" . $fileinfo['basename']);
                         }
                     }
                 }
-//                $filename = $song->getInfoDatFile();
-//                $handle = fopen($filename, "rb");
-//                $fsize = filesize($filename);
-//                $contents = fread($handle, $fsize);
-//                $byteArray = unpack("N*",$contents);
-
+                $filename = $song->getInfoDatFile();
+                $song->setGuid(md5_file($this->kernel->getProjectDir() . "/public".$filename));
 
                 $this->em->flush();
 
                 $zip->close();
             }
-        }catch (\Exception $e){
-
+        } catch (Exception $e) {
+    $x = 1;
         }
     }
 }

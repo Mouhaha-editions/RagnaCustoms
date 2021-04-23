@@ -114,6 +114,11 @@ class Utilisateur implements UserInterface
      */
     private $mapper_discord;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $apiKey;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -487,6 +492,18 @@ class Utilisateur implements UserInterface
     public function setMapperDiscord(string $mapper_discord): self
     {
         $this->mapper_discord = $mapper_discord;
+
+        return $this;
+    }
+
+    public function getApiKey(): ?string
+    {
+        return $this->apiKey;
+    }
+
+    public function setApiKey(?string $apiKey): self
+    {
+        $this->apiKey = $apiKey;
 
         return $this;
     }
