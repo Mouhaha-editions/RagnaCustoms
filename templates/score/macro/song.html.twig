@@ -1,0 +1,49 @@
+{% macro scoringSong(song) %}
+    <div class="col-md-3">
+        <div class="score">
+            <div class="score-title text-center">
+                <h6>{{ song.name }}</h6>
+                <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}" class="img-fluid"/>
+            </div>
+            <div class="score-body">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    {% for diff in song.songDifficulties %}
+                        <li class="nav-item">
+                            <a class="nav-link{% if loop.index == 1 %} active{% endif %}" id="home-tab"
+                               data-toggle="tab" data-target="#level-{{ diff.id }}" type="button" role="tab"
+                               aria-controls="home" aria-selected="true">Level {{ diff.difficultyRank.level }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    {% for diff in song.songDifficulties %}
+                        <div style="min-height:100px;"
+                             class="tab-pane fade show{% if loop.index == 1 %} active{% endif %}"
+                             id="level-{{ diff.id }}" role="tabpanel" aria-labelledby="level-{{ diff.id }}-tab">
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>User</th>
+                                    <th>Score</th>
+                                </tr>
+                                {% for score in diff.scoresTop %}
+                                    <tr>
+                                        <td>{{ score.user.username }}</td>
+                                        <td class="text-right">{{ score.score }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2">no score for now</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+
+                        </div>
+                    {% endfor %}
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+{% endmacro %}

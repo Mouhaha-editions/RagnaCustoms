@@ -56,6 +56,7 @@ class SongDifficulty
 
     /**
      * @ORM\OneToMany(targetEntity=Score::class, mappedBy="songDifficulty", orphanRemoval=true)
+     * @ORM\OrderBy({"score"="ASC"})
      */
     private $scores;
 
@@ -161,6 +162,15 @@ class SongDifficulty
     {
         return $this->scores;
     }
+
+    /**
+     * @return Score[]
+     */
+    public function getScoresTop()
+    {
+        return $this->scores->slice(0, 3);
+    }
+
 
     public function addScore(Score $score): self
     {
