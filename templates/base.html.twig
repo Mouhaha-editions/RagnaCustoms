@@ -57,6 +57,9 @@
                     </a>
                 </li>
             {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('score') }}">Leaderboard</a>
+            </li>
         </ul>
         <ul class="navbar-nav">
             <li class="nav-item pt-1">
@@ -72,9 +75,7 @@
             </li>
             {% if not is_granted("ROLE_USER") %}
                 <li class="nav-item">
-
                     <a href="{{ url('app_login') }}" class="nav-link">{{ "Login"|trans }}</a>
-
                 </li>
             {% else %}
                 <li class="nav-item dropdown">
@@ -84,6 +85,8 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "Upload Song"|trans }}</a>
+                        <hr class="m-1"/>
+                        <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
                         <hr class="m-1"/>
                         <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
                     </div>

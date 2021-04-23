@@ -5,7 +5,7 @@
                 <h6>{{ song.name }}</h6>
                 <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}" class="img-fluid"/>
             </div>
-            <div class="score-body">
+            <div class="score-body mt-2">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     {% for diff in song.songDifficulties %}
                         <li class="nav-item">
