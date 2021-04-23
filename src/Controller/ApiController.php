@@ -44,7 +44,9 @@ class ApiController extends AbstractController
                     'song' => $song,
                     "difficultyRank" => $rank
                 ]);
-
+                if ($songDiff == null) {
+                    continue;
+                }
                 $score = $scoreRepository->findOneBy([
                     'user' => $user,
                     'song' => $song,
