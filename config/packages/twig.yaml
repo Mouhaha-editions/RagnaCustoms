@@ -4,3 +4,4 @@ twig:
     globals:
         downloadsService: '@App\Service\DownloadService'
         twitchService: '@App\Service\TwitchService'
+        scoreService: '@App\Service\ScoreService'
