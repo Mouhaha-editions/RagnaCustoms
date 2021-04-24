@@ -42,7 +42,7 @@ class ScoreService
         $otherScore = $this->em->getRepository(Score::class)->createQueryBuilder("s")
             ->where('s.songDifficulty = :songDifficulty')
             ->andWhere("s.score >= :score")
-            ->andWhere("s.user >= :user")
+            ->andWhere("s.user != :user")
             ->setParameter('score', $score->getScore())
             ->setParameter('user', $user)
             ->setParameter('songDifficulty', $songDifficulty)
