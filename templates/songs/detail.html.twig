@@ -59,56 +59,40 @@
                         <div id="ragna-beat"></div>
                     </div>
                 </div>
+                {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+
                 <div
                         class="tab-pane fade show"
                         id="leaderboard" role="tabpanel">
-{#                    <table class="table table-sm">#}
-{#                        <tr>#}
-{#                            <th>#</th>#}
-{#                            <th>User</th>#}
-{#                            <th>Score</th>#}
-{#                        </tr>#}
-{#                        {% set imin = false %}#}
-{#                        {% for score in diff.scoresTop %}#}
-{#                            <tr>#}
-{#                                <td>{{ loop.index }}</td>#}
-{#                                <td>{{ score.user.username }}</td>#}
-{#                                <td class="text-right">{{ score.score }}</td>#}
-{#                            </tr>#}
-{#                            {% if is_granted('ROLE_USER') %}#}
-{#                                {% if score.user.id == app.user.id %}#}
-{#                                    {% set imin = true %}#}
-{#                                {% endif %}#}
-{#                            {% endif %}#}
-{#                        {% else %}#}
-{#                            <tr>#}
-{#                                <td colspan="3">no score for now</td>#}
-{#                            </tr>#}
-{#                        {% endfor %}#}
-{#                        {% if is_granted('ROLE_USER') and not imin %}#}
-{#                            {% set myrank = scoreService.getMine(app.user, diff) %}#}
-{#                            {% if myrank != null %}#}
-{#                                <tr>#}
-{#                                    <td class="text-center" colspan="3">...</td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <td>{{ myrank['place'] }}</td>#}
-{#                                    <td>{{ myrank["score"].user.username }}</td>#}
-{#                                    <td class="text-right">{{ myrank["score"].score }}</td>#}
-{#                                </tr>#}
-{#                            {% else %}#}
-{#                                <tr>#}
-{#                                    <td colspan="3">You haven't play this song for now</td>#}
-{#                                </tr>#}
-{#                            {% endif %}#}
-{#                        {% endif %}#}
-
-{#                    </table>#}
-
+                    <div class="row">
+                        {% for level in levels %}
+                            <div class="col-md-4 mt-4 border-left border-right">
+                                <h3 class="text-center">Level {{ level['level'] }}</h3>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>User</th>
+                                        <th>Score</th>
+                                    </tr>
+                                    {% set imin = false %}
+                                    {% for score in level['scores'].entities %}
+                                        <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="bg-warning"{% endif %}>
+                                            <td>{{ loop.index+(50*(level['scores'].current-1)) }}</td>
+                                            <td>{{ score.user.username }}</td>
+                                            <td class="text-right">{{ score.score }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3">no score for now</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                                {{ macro_pagination.paginate(level['scores']) }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-
-
         </div>
         <div class="col-md-4 song-detail border-left">
             <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" class="img-fluid pt-2"

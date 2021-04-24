@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\DownloadCounter;
+use App\Entity\Score;
 use App\Entity\Song;
 use App\Entity\ViewCounter;
 use App\Entity\Vote;
 use App\Repository\DownloadCounterRepository;
+use App\Repository\ScoreRepository;
 use App\Repository\SongRepository;
 use App\Repository\ViewCounterRepository;
 use App\Repository\VoteRepository;
@@ -54,10 +56,10 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/detail/{id}", name="song_detail")
      */
-    public function songDetail(Request $request, Song $song,TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository, SongService $songService)
+    public function songDetail(Request $request, ScoreRepository $scoreRepository, Song $song, TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository, SongService $songService, PaginationService $paginationService)
     {
-        if(!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()){
-            $this->addFlash('warning',$translator->trans("This custom song is not available for now"));
+        if (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) {
+            $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }
         $em = $this->getDoctrine()->getManager();
@@ -78,7 +80,25 @@ class SongsController extends AbstractController
 
         $songService->emulatorFileDispatcher($song);
         $em->flush();
-        return $this->render('songs/detail.html.twig', ['song' => $song]);
+
+        $levels = [];
+        foreach ($song->getSongDifficulties() as $difficulty) {
+            $scores = $this->getDoctrine()->getRepository(Score::class)->createQueryBuilder('s')
+                ->where('s.songDifficulty = :diff')
+                ->setParameter('diff', $difficulty)
+                ->orderBy('s.score', 'DESC');
+
+            $pagination = $paginationService->setDefaults(50)->process($scores, $request);
+            $levels [] = [
+                "level" => $difficulty->getDifficultyRank()->getLevel(),
+                'scores' => $pagination
+            ];
+        }
+
+        return $this->render('songs/detail.html.twig', [
+            'song' => $song,
+            'levels' => $levels,
+        ]);
     }
 
     /**
@@ -93,6 +113,7 @@ class SongsController extends AbstractController
                 "response" => "You need an account to vote !",
             ]);
         }
+
         if ($song == null) {
             return new JsonResponse([
                 "error" => true,
@@ -100,6 +121,7 @@ class SongsController extends AbstractController
                 "response" => "Song not found !",
             ]);
         }
+
         if ($song->getUser() == $this->getUser()) {
             return new JsonResponse([
                 "error" => true,
@@ -353,6 +375,6 @@ class SongsController extends AbstractController
 
     private function cleanName(?string $getName)
     {
-        return preg_replace( '/[^a-zA-Z]/i', '', $getName);
+        return preg_replace('/[^a-zA-Z]/i', '', $getName);
     }
 }
