@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ "How to ?"|trans }} {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <h1>{{ "How to ?"|trans }}</h1>
+        </div>
+        <div class="col-12">
+
+            <h3>{{ "How to be in leaderboard"|trans }}</h3>
+            <p>To be in leaderboard you need 2 things : <a href="{{ url("application") }}">the application</a> and an
+                account on ragnacustoms to get the api
+                key.<br/>Start the application and paste the Api key, you can find it in your account on
+                ragnacustoms.com .</p>
+        </div>
+        <div class="col-12">
+
+            <h3>{{ "How to download with one click ?"|trans }}</h3>
+            <p>You need to download and unzip <a href="{{ url("application") }}">the application</a>, start this one and
+                check <b>Enable OneClick download?</b>,
+                once it's done you can close the app and go back to the website ragnacustom.com to click on the 1 click
+                button ... Yes ... The red one. Else you can also search from <a href="{{ url("application") }}">the application</a></p>
+        </div>
+   </div>
+{% endblock %}

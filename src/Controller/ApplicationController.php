@@ -10,21 +10,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApplicationController extends AbstractController
 {
-    /**
-     * @Route("/ini", name="ini")
-     */
-    public function ini(): Response
-    {
-        return new Response(phpinfo());
-    }
-    /**
-     * @Route("/server", name="server")
-     */
-    public function server(): Response
-    {
-        return new Response($_SERVER);
-    }
 
+
+
+    /**
+     * @Route("/howto", name="howto")
+     */
+    public function howTo(): Response
+    {
+        return $this->render('howto/index.html.twig', [
+            'controller_name' => 'ApplicationController',
+        ]);
+    }
     /**
      * @Route("/application", name="application")
      */
