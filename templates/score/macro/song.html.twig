@@ -22,17 +22,19 @@
                              id="level-{{ diff.id }}" role="tabpanel" aria-labelledby="level-{{ diff.id }}-tab">
                             <table class="table table-sm">
                                 <tr>
+                                    <th>#</th>
                                     <th>User</th>
                                     <th>Score</th>
                                 </tr>
                                 {% for score in diff.scoresTop %}
                                     <tr>
+                                        <td>{{ loop.index+1 }}</td>
                                         <td>{{ score.user.username }}</td>
                                         <td class="text-right">{{ score.score }}</td>
                                     </tr>
                                 {% else %}
                                     <tr>
-                                        <td colspan="2">no score for now</td>
+                                        <td colspan="3">no score for now</td>
                                     </tr>
                                 {% endfor %}
                             </table>

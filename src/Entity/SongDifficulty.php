@@ -56,7 +56,7 @@ class SongDifficulty
 
     /**
      * @ORM\OneToMany(targetEntity=Score::class, mappedBy="songDifficulty", orphanRemoval=true)
-     * @ORM\OrderBy({"score"="ASC"})
+     * @ORM\OrderBy({"score"="DESC"})
      */
     private $scores;
 
