@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Song;
 use App\Repository\SongRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,4 +24,5 @@ class ScoreController extends AbstractController
             'songs'=>$songs
         ]);
     }
+
 }

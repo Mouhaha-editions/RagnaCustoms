@@ -13,9 +13,9 @@
 
 
 {% block body %}
-{#    <div class="row pt-2">#}
-{#        <a href="{{ url('application') }}"><img src="/apps/banner.png" class="img-fluid" alt="application"></a>#}
-{#    </div>#}
+    {# <div class="row pt-2"> #}
+    {# <a href="{{ url('application') }}"><img src="/apps/banner.png" class="img-fluid" alt="application"></a> #}
+    {# </div> #}
     <div class="row pt-2">
         <div class="col-md-8">
             <div class="section-header">
@@ -25,17 +25,89 @@
                     </h3>
                 </div>
             </div>
-            <h4>{{ "Description"|trans }}</h4>
-            <p>
-                {% apply markdown_to_html %}
-                    {{ song.description is not null ? song.description|nl2br : "no description for now"|trans }}
-                {% endapply %}
-            </p>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="description-tab"
+                       data-toggle="tab" data-target="#description" type="button" role="tab"
+                       aria-controls="home" aria-selected="true">Description</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " id="test-tab"
+                       data-toggle="tab" data-target="#test" type="button" role="tab"
+                       aria-controls="home" aria-selected="true">{{ "Test custom song"|trans }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " id="test-tab"
+                       data-toggle="tab" data-target="#leaderboard" type="button" role="tab"
+                       aria-controls="home" aria-selected="true">{{ "Leaderboard"|trans }}</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div
+                        class="tab-pane fade show active"
+                        id="description" role="tabpanel">
+                    <p>
+                        {% apply markdown_to_html %}
+                            {{ song.description is not null ? song.description|nl2br : "no description for now"|trans }}
+                        {% endapply %}
+                    </p>
+                </div>
+                <div
+                        class="tab-pane fade show"
+                        id="test" role="tabpanel">
+                    <div class="text-center">
+                        <div id="ragna-beat"></div>
+                    </div>
+                </div>
+                <div
+                        class="tab-pane fade show"
+                        id="leaderboard" role="tabpanel">
+{#                    <table class="table table-sm">#}
+{#                        <tr>#}
+{#                            <th>#</th>#}
+{#                            <th>User</th>#}
+{#                            <th>Score</th>#}
+{#                        </tr>#}
+{#                        {% set imin = false %}#}
+{#                        {% for score in diff.scoresTop %}#}
+{#                            <tr>#}
+{#                                <td>{{ loop.index }}</td>#}
+{#                                <td>{{ score.user.username }}</td>#}
+{#                                <td class="text-right">{{ score.score }}</td>#}
+{#                            </tr>#}
+{#                            {% if is_granted('ROLE_USER') %}#}
+{#                                {% if score.user.id == app.user.id %}#}
+{#                                    {% set imin = true %}#}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
+{#                        {% else %}#}
+{#                            <tr>#}
+{#                                <td colspan="3">no score for now</td>#}
+{#                            </tr>#}
+{#                        {% endfor %}#}
+{#                        {% if is_granted('ROLE_USER') and not imin %}#}
+{#                            {% set myrank = scoreService.getMine(app.user, diff) %}#}
+{#                            {% if myrank != null %}#}
+{#                                <tr>#}
+{#                                    <td class="text-center" colspan="3">...</td>#}
+{#                                </tr>#}
+{#                                <tr>#}
+{#                                    <td>{{ myrank['place'] }}</td>#}
+{#                                    <td>{{ myrank["score"].user.username }}</td>#}
+{#                                    <td class="text-right">{{ myrank["score"].score }}</td>#}
+{#                                </tr>#}
+{#                            {% else %}#}
+{#                                <tr>#}
+{#                                    <td colspan="3">You haven't play this song for now</td>#}
+{#                                </tr>#}
+{#                            {% endif %}#}
+{#                        {% endif %}#}
 
-            <h4>{{ "See custom song in action"|trans }}</h4>
-            <div class="text-center">
-                <div id="ragna-beat"></div>
+{#                    </table>#}
+Leaderboard placholder
+                </div>
             </div>
+
 
         </div>
         <div class="col-md-4 song-detail border-left">
@@ -78,7 +150,8 @@
 
             </div>
             <div class="text-center">
-                <button class="btn btn-block btn-sm btn-info mt-1 mb-2 song-review" data-toggle="modal" data-target="#reviewSong"
+                <button class="btn btn-block btn-sm btn-info mt-1 mb-2 song-review" data-toggle="modal"
+                        data-target="#reviewSong"
                         data-refresh="true"
                         data-url="{{ url('song_review',{id:song.id}) }}"
                         data-song-id="{{ song.id }}">{{ "I want to vote"|trans }}</button>
@@ -131,9 +204,10 @@
     <div id="info-dat" data-file="{{ song.infoDatFile }}"></div>
 
 {% endblock %}
-{% block endBody%}
+{% block endBody %}
 
-    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
