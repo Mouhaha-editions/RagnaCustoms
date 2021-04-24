@@ -427,6 +427,10 @@
         <source>My profile</source>
         <target>messages</target>
       </trans-unit>
+        <trans-unit id="39">
+            <source>How to ?</source>
+            <target>Comment faire ?</target>
+        </trans-unit>
 
     </body>
   </file>
