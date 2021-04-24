@@ -26,17 +26,41 @@
                                     <th>User</th>
                                     <th>Score</th>
                                 </tr>
+                                {% set imin = false %}
                                 {% for score in diff.scoresTop %}
                                     <tr>
                                         <td>{{ loop.index }}</td>
                                         <td>{{ score.user.username }}</td>
                                         <td class="text-right">{{ score.score }}</td>
                                     </tr>
+                                    {% if is_granted('ROLE_USER') %}
+                                        {% if score.user.id == app.user.id %}
+                                            {% set imin = true %}
+                                        {% endif %}
+                                    {% endif %}
                                 {% else %}
                                     <tr>
                                         <td colspan="3">no score for now</td>
                                     </tr>
                                 {% endfor %}
+                                {% if is_granted('ROLE_USER') and not imin %}
+                                    {% set myrank = scoreService.getMine(app.user, diff) %}
+                                    {% if myrank != null %}
+                                        <tr>
+                                            <td class="text-center" colspan="3">...</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ myrank['place'] }}</td>
+                                            <td>{{ myrank["score"].user.username }}</td>
+                                            <td class="text-right">{{ myrank["score"].score }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3">You haven't play this song for now</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+
                             </table>
 
                         </div>
