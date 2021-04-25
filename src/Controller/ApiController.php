@@ -9,6 +9,7 @@ use App\Repository\ScoreRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,15 +58,19 @@ class ApiController extends AbstractController
                     $score = new Score();
                     $score->setUser($user);
                     $score->setSong($song);
-                    $score->setScore(str_replace(',','.',$subScore['Score']));
+
                     $score->setSongDifficulty($songDiff);
                     $em->persist($score);
-                } else {
-                    if ($score->getScore() < $subScore['Score']) {
-                        $score->setScore($subScore['Score']);
-                    }
                 }
-            } catch (\Exception $e) {
+
+                if ($score->getScore() < str_replace(',', '.',$subScore['Score'])) {
+                    $score->setScore(str_replace(',', '.', $subScore['Score']));
+                }
+                if($score->getScore() >= 99000){
+                    $score->setScore($score->getScore()/100000);
+                }
+
+            } catch (Exception $e) {
                 $x = $e;
             }
             $em->flush();
