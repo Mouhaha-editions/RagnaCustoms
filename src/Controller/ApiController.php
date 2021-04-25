@@ -69,11 +69,11 @@ class ApiController extends AbstractController
                 if($score->getScore() >= 99000){
                     $score->setScore($score->getScore()/100000);
                 }
+                $em->flush();
 
             } catch (Exception $e) {
                 $x = $e;
             }
-            $em->flush();
         }
 
 
