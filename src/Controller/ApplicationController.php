@@ -23,6 +23,24 @@ class ApplicationController extends AbstractController
         ]);
     }
     /**
+     * @Route("/application/version", name="application_version")
+     */
+    public function version(): Response
+    {
+        return new Response('2.0.4');
+    }
+    /**
+     * @Route("/application/changelog", name="application_changelog")
+     */
+    public function changelog(): Response
+    {
+        return $this->render('application/changelog.html.twig', [
+            'controller_name' => 'ApplicationController',
+        ]);
+    }
+
+
+    /**
      * @Route("/application", name="application")
      */
     public function index(): Response
