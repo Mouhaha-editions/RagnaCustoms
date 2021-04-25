@@ -11,7 +11,7 @@
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     {% for diff in song.songDifficulties %}
                         <li class="nav-item">
-                            <a class="nav-link{% if loop.index == 1 %} active{% endif %}" id="home-tab"
+                            <a class="nav-link{% if loop.index == 1 %} active{% endif %} text-level-{{ diff.difficultyRank.level }}" id="home-tab"
                                data-toggle="tab" data-target="#level-{{ diff.id }}" type="button" role="tab"
                                aria-controls="home" aria-selected="true">Level {{ diff.difficultyRank.level }}</a>
                         </li>

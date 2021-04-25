@@ -1,4 +1,3 @@
-
 $themes: (
         "light": (
                 "colors": (
@@ -35,6 +34,16 @@ $themes: (
                 )
         )
 );
+$color-level-1:#99ffff;
+$color-level-2:#77dbdd;
+$color-level-3:#4e5aa9;
+$color-level-4:#7a3fb7;
+$color-level-5:#9966cc;
+$color-level-6:#9a426d;
+$color-level-7:#991e3a;
+$color-level-8:#983937;
+$color-level-9:#d58d56;
+$color-level-10:#e2cd6c;
 
 @each $theme-name, $theme-vars in $themes {
   $shades: map-get($theme-vars, "shades");
@@ -71,7 +80,7 @@ $themes: (
 }
 
 $zindex-popover: 80000;
-$popover-max-width:800px;
+$popover-max-width: 800px;
 $body-bg: var(--bg-color);
 $body-color: var(--text-color);
 $card-bg: var(--card-bg-color);
@@ -92,16 +101,52 @@ body {
   position: relative;
 }
 
+.text-level-{
+  &1{
+    color:$color-level-1;
+  }
+  &2{
+    color:$color-level-2;
+  }
+  &3{
+    color:$color-level-3;
+  }
+  &4{
+    color:$color-level-4;
+  }
+  &5{
+    color:$color-level-5;
+  }
+  &6{
+    color:$color-level-6;
+  }
+  &7{
+    color:$color-level-7;
+  }
+  &8{
+    color:$color-level-8;
+  }
+  &9{
+    color:$color-level-9;
+  }
+  &10{
+    color:$color-level-10;
+  }
+
+}
+
 .navbar-brand {
   img {
     max-width: 35px;
   }
 }
+
 .rating-wrap {
-  .label{
-    min-width:100px;
+  .label {
+    min-width: 100px;
   }
 }
+
 .search-and-filter {
   .form-group {
     label {
@@ -173,22 +218,28 @@ table.songs {
     }
   }
 }
+
 .popover {
   background: var(--card-bg-color);
-  width:200px!important;
-  .arrow:after{
+  width: 200px !important;
+
+  .arrow:after {
     border-top-color: var(--card-bg-color);
   }
-  .popover-header{
+
+  .popover-header {
     background: var(--card-bg-color);
   }
-  label{
-    display:block;
+
+  label {
+    display: block;
   }
 }
+
 .song-preview {
   a {
     color: #ffffff;
+
     .new {
       position: absolute;
     }
@@ -270,9 +321,11 @@ table.songs {
   }
 }
 
-  .nav-link{
-    &.text-twitch{
-      color: #6f42c1!important;
-      font-weight:bold;
-    }
+.nav-link {
+  &.text-twitch {
+    color: #6f42c1 !important;
+    font-weight: bold;
   }
+}
+
+
