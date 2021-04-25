@@ -1,11 +1,12 @@
 {% macro scoringSong(song) %}
-    <div class="col-md-3">
+    <div class="col-md-3 score-frame">
         <div class="score">
             <div class="score-title text-center">
-                <h6>{{ song.name }}</h6>
+
                 <a href="{{ url("song_detail",{id:song.id}) }}">
                     <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}" class="img-fluid"/>
                 </a>
+                <h6>{{ song.name }}</h6>
             </div>
             <div class="score-body mt-2">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">

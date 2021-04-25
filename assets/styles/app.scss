@@ -103,36 +103,35 @@ body {
 
 .text-level-{
   &1{
-    color:$color-level-1;
+    color:$color-level-1!important;
   }
   &2{
-    color:$color-level-2;
+    color:$color-level-2!important;
   }
   &3{
-    color:$color-level-3;
+    color:$color-level-3!important;
   }
   &4{
-    color:$color-level-4;
+    color:$color-level-4!important;
   }
   &5{
-    color:$color-level-5;
+    color:$color-level-5!important;
   }
   &6{
-    color:$color-level-6;
+    color:$color-level-6!important;
   }
   &7{
-    color:$color-level-7;
+    color:$color-level-7!important;
   }
   &8{
-    color:$color-level-8;
+    color:$color-level-8!important;
   }
   &9{
-    color:$color-level-9;
+    color:$color-level-9!important;
   }
   &10{
-    color:$color-level-10;
+    color:$color-level-10!important;
   }
-
 }
 
 .navbar-brand {
@@ -320,8 +319,14 @@ table.songs {
     width: 50%;
   }
 }
-
+.score-frame{
+  //border:1px solid #ffffff;
+  margin-bottom:12px;
+}
 .nav-link {
+  &.active{
+    font-weight: bold;
+  }
   &.text-twitch {
     color: #6f42c1 !important;
     font-weight: bold;
