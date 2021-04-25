@@ -67,7 +67,7 @@ class ApiController extends AbstractController
                     $score->setScore(str_replace(',', '.', $subScore['Score']));
                 }
                 if($score->getScore() >= 99000){
-                    $score->setScore($score->getScore()/100000);
+                    $score->setScore($score->getScore()/1000000);
                 }
                 $em->flush();
 
