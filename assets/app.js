@@ -37,7 +37,6 @@ import { createPopper } from 'bootstrap/js/dist/popover';
 import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 $(function () {
-    console.log('coucouc');
 
     // $(".popover-trigger").popover({trigger:'mouseover'});
     // $(".popover-trigger").popover("show");
