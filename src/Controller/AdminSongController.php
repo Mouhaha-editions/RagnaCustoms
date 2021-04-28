@@ -283,4 +283,24 @@ class AdminSongController extends AbstractController
             rmdir($dir);
         }
     }
+    /**
+     * @Route("/admin/organize/{id}", name="admin_organize")
+     */
+    public function reorganize(Song $song, KernelInterface $kernel)
+    {
+        $zip = new ZipArchive();
+        $finalFolder = $kernel->getProjectDir() . "/public/songs-files/";
+        $theZip = $finalFolder.$song->getId().".zip";
+        $infolder =  strtolower(preg_replace('/[^a-zA-Z]/','', $song->getName()));
+        if ($zip->open($theZip) === TRUE) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = ($zip->getNameIndex($i));
+                $x = explode('/', $filename);
+                $zip->renameName($filename, $infolder . "/" . strtolower($x[count($x) - 1]));
+
+            }
+            $zip->close();
+        }
+        return new Response("OK");
+    }
 }
