@@ -37,12 +37,11 @@
                                         {% endif %}
                                     {% endif %}
 
-                                    <tr {% if imin %}class="text-level-{{ diff.difficultyRank.level }}"{% endif %}>
+                                    <tr {% if  score.user.id == app.user.id %}class="text-level-{{ diff.difficultyRank.level }}"{% endif %}>
                                         <td>{{ loop.index }}</td>
                                         <td>{{ score.user.username }}</td>
                                         <td class="text-right">{{ score.score }}</td>
                                     </tr>
-
                                 {% else %}
                                     <tr>
                                         <td colspan="3">no score for now</td>
