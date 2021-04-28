@@ -7,6 +7,21 @@
                     <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}" class="img-fluid"/>
                 </a>
                 <h6>{{ song.name }}</h6>
+                <div class="d-flex flex-fill justify-content-end text-right">
+                    <a href="#" data-to-copy="!rc {{ song.id }}"
+                       data-original-title="{{ "copied"|trans }}"
+                       class="copy-clipboard btn btn-sm bg-twitch">
+                        <i class="fab fa-twitch"></i>
+                        !rc {{ song.id }}
+                    </a>
+                    {% set downloaded = downloadsService.alreadyDownloaded(song) %}
+                    <a href="ragnac://install/{{ song.id }}" {% if downloaded %}data-toggle="tooltip" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}downloaded{% endif%} btn-danger ml-1">
+                        1 click
+                    </a>
+                    <a href="{{ url("song_direct_download",{id:song.id}) }}" {% if downloaded %}data-toggle="tooltip" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}downloaded{% endif%} ml-1 btn-success">
+                        {{ "Download"|trans }}
+                    </a>
+                </div>
             </div>
             <div class="score-body mt-2">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
