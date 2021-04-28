@@ -51,7 +51,7 @@ class UploadSongController extends AbstractController
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($song->getYoutubeLink() != null) {
+            if ($song->getYoutubeLink() != null) {
                 if (!preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $song->getYoutubeLink())) {
                     $song->setYoutubeLink(null);
                     $this->addFlash("warning", $translator->trans("The Youtube link is not valid, please edit your song to insert the link."));
@@ -134,6 +134,7 @@ class UploadSongController extends AbstractController
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
+
             $finalFolder = $kernel->getProjectDir() . "/public/songs-files/";
             $folder = $kernel->getProjectDir() . "/public/tmp-song/";
             $unzipFolder = $folder . uniqid();
@@ -141,9 +142,10 @@ class UploadSongController extends AbstractController
             $file->move($unzipFolder, $file->getClientOriginalName());
             $zip = new ZipArchive();
             $theZip = $unzipFolder . "/" . $file->getClientOriginalName();
+
+
             try {
                 /** @var UploadedFile $file */
-
                 if ($zip->open($theZip) === TRUE) {
                     for ($i = 0; $i < $zip->numFiles; $i++) {
                         $filename = $zip->getNameIndex($i);
@@ -243,15 +245,13 @@ class UploadSongController extends AbstractController
                 foreach ($song->getSongDifficulties() as $difficulty) {
                     $em->remove($difficulty);
                 }
-                if($form->get('resetVote')->getData() != null) {
-                    foreach($song->getVotes() AS $vote){
+                if ($form->get('resetVote')->getData() != null) {
+                    foreach ($song->getVotes() as $vote) {
                         $vote->setDisabled(true);
                     }
                     $song->setTotalVotes(null);
                     $song->setCountVotes(null);
                 }
-
-
                 foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
                     $diff = new SongDifficulty();
                     $diff->setSong($song);
@@ -276,15 +276,16 @@ class UploadSongController extends AbstractController
 
                 /** @var UploadedFile $file */
                 $patterns_flattened = strtolower(implode('|', $allowedFiles));
+                $infolder =  strtolower(preg_replace('/[^a-zA-Z]/','', $song->getName()));
                 $zip = new ZipArchive();
                 if ($zip->open($theZip) === TRUE) {
                     for ($i = 0; $i < $zip->numFiles; $i++) {
                         $filename = ($zip->getNameIndex($i));
                         if (!preg_match('/' . $patterns_flattened . '/', strtolower($filename), $matches) || preg_match('/autosaves/', strtolower($filename), $matches)) {
                             $zip->deleteName($filename);
-                        }else{
-                            $x = explode('/',$filename);
-                            $zip->renameName($filename,$x[count($x)-1]);
+                        } else {
+                            $x = explode('/', $filename);
+                            $zip->renameName($filename, $infolder."/".strtolower($x[count($x) - 1]));
                         }
                     }
                     $zip->close();
