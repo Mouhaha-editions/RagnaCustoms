@@ -74,7 +74,6 @@ class SongService
             $this->em->flush();
 
             if (!$getpreview) {
-
                 $ffprobe = FFProbe::create([
                     'ffmpeg.binaries' => '/usr/bin/ffmpeg',
                     'ffprobe.binaries' => '/usr/bin/ffprobe'
