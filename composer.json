@@ -15,6 +15,7 @@
         "erusev/parsedown": "^1.7",
         "knpuniversity/oauth2-client-bundle": "^2.8",
         "nicklaw5/twitch-api-php": "^4.2",
+        "php-ffmpeg/php-ffmpeg": "^0.18.0",
         "pkshetlie/pagination-bundle": "^2.0",
         "sensio/framework-extra-bundle": "^6.1",
         "sentry/sentry-symfony": "^4.0",

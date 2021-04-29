@@ -193,6 +193,11 @@ class Song
      */
     private $scores;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $newGuid;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -832,6 +837,18 @@ class Song
                 $score->setSong(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNewGuid(): ?string
+    {
+        return $this->newGuid;
+    }
+
+    public function setNewGuid(?string $newGuid): self
+    {
+        $this->newGuid = $newGuid;
 
         return $this;
     }

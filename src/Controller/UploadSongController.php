@@ -143,7 +143,6 @@ class UploadSongController extends AbstractController
             $zip = new ZipArchive();
             $theZip = $unzipFolder . "/" . $file->getClientOriginalName();
 
-
             try {
                 /** @var UploadedFile $file */
                 if ($zip->open($theZip) === TRUE) {

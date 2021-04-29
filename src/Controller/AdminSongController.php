@@ -7,6 +7,7 @@ use App\Entity\SongDifficulty;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\SongRepository;
 use App\Service\DiscordService;
+use App\Service\SongService;
 use Exception;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -156,114 +157,23 @@ class AdminSongController extends AbstractController
     }
 
     /**
-     * @Route("/admin/song/reload/{id}", name="admin_song_reload")
+     * @Route("/admin/song/emulate/all", name="admin_song_emulate_all")
      */
-    public function reload(Song $song, KernelInterface $kernel, DifficultyRankRepository $difficultyRankRepository)
+    public function reloadAll( KernelInterface $kernel, SongRepository $songRepository, SongService $songService)
     {
-        $em = $this->getDoctrine()->getManager();
-        $finalFolder = $kernel->getProjectDir() . "/public/songs-files/";
-
-        $folder = $kernel->getProjectDir() . "/public/tmp-song/";
-        $unzipFolder = $folder . uniqid();
-        mkdir($unzipFolder);
-        $zip = new ZipArchive();
-        $theZip = $finalFolder . $song->getId() . ".zip";
-
-        $allowedFiles = [
-            'preview.ogg',
-            'info.dat'
-        ];
-        if ($zip->open($theZip) === TRUE) {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $filename = $zip->getNameIndex($i);
-                $elt = $zip->getFromIndex($i);
-                $exp = explode("/", $filename);
-                if (end($exp) != "") {
-                    $fileinfo = pathinfo($filename);
-                    file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
-                }
-            }
-            $zip->close();
-        }
-        try {
-            $file = $unzipFolder . "/info.dat";
-            if (!file_exists($file)) {
-                $file = $unzipFolder . "/Info.dat";
-                if (!file_exists($file)) {
-                    $this->addFlash('danger', "The file seems to not be valid, at least info.dat is missing.");
-                    $this->rrmdir($unzipFolder);
-                    return $this->redirectToRoute("admin_song");
-                }
-            }
-            $json = json_decode(file_get_contents($file));
-            $allowedFiles[] = $json->_coverImageFilename;
-            $allowedFiles[] = $json->_songFilename;
-
-        } catch (Exception $e) {
-            $this->addFlash('danger', "The file seems to not be valid, at least info.dat is missing.");
-            $this->rrmdir($unzipFolder);
-            return $this->redirectToRoute("upload_song");
+        foreach($songRepository->findAll() AS $song) {
+            $songService->emulatorFileDispatcher($song, true);
         }
 
-        $song->setVersion($json->_version);
-        $song->setName($json->_songName);
-        $song->setSubName($json->_songSubName);
-        $song->setAuthorName($json->_songAuthorName);
-        $song->setLevelAuthorName($json->_levelAuthorName);
-        $song->setBeatsPerMinute($json->_beatsPerMinute);
-        $song->setShuffle($json->_shuffle);
-        $song->setShufflePeriod($json->_shufflePeriod);
-        $song->setPreviewStartTime($json->_previewStartTime);
-        $song->setPreviewDuration($json->_previewDuration);
-        $song->setApproximativeDuration($json->_songApproximativeDuration);
-        $song->setApproximativeDuration($json->_songApproximativeDuration);
-        $song->setFileName($json->_songFilename);
-        $song->setCoverImageFileName($json->_coverImageFilename);
-        $song->setEnvironmentName($json->_environmentName);
-        $song->setModerated($this->getUser()->isCertified() ?: false);
+        return $this->redirectToRoute('admin_song');
+    }
 
-        $em->persist($song);
-        foreach ($song->getSongDifficulties() as $difficulty) {
-            $em->remove($difficulty);
-        }
-        $song->setTotalVotes(null);
-        $song->setCountVotes(null);
-
-
-        foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
-            $diff = new SongDifficulty();
-            $diff->setSong($song);
-            $diff->setDifficultyRank($difficultyRankRepository->findOneBy(["level" => $difficulty->_difficultyRank]));
-            $diff->setDifficulty($difficulty->_difficulty);
-            $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
-            $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
-            $em->persist($diff);
-            $allowedFiles[] = $difficulty->_beatmapFilename;
-            $file = $difficulty->_beatmapFilename;
-
-            $file = $unzipFolder . "/" . $file;
-            $json2 = json_decode(file_get_contents($file));
-            $diff->setNotesCount(count($json2->_notes));
-            $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
-
-        }
-
-        $em->flush();
-
-
-        /** @var UploadedFile $file */
-        $patterns_flattened = strtolower(implode('|', $allowedFiles));
-        $zip = new ZipArchive();
-        if ($zip->open($theZip) === TRUE) {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $filename = ($zip->getNameIndex($i));
-                if (!preg_match('/' . $patterns_flattened . '/', strtolower($filename), $matches) || preg_match('/autosaves/', strtolower($filename), $matches)) {
-                    $zip->deleteName($filename);
-                }
-            }
-            $zip->close();
-        }
-        $this->rrmdir($unzipFolder);
+    /**
+     * @Route("/admin/song/emulate/{id}", name="admin_song_reload")
+     */
+    public function reload(Song $song, KernelInterface $kernel, DifficultyRankRepository $difficultyRankRepository, SongService $songService)
+    {
+        $songService->emulatorFileDispatcher($song, true);
 
         return $this->redirectToRoute('admin_song');
     }
@@ -283,6 +193,7 @@ class AdminSongController extends AbstractController
             rmdir($dir);
         }
     }
+
     /**
      * @Route("/admin/organize/{id}", name="admin_organize")
      */
@@ -290,8 +201,8 @@ class AdminSongController extends AbstractController
     {
         $zip = new ZipArchive();
         $finalFolder = $kernel->getProjectDir() . "/public/songs-files/";
-        $theZip = $finalFolder.$song->getId().".zip";
-        $infolder =  strtolower(preg_replace('/[^a-zA-Z]/','', $song->getName()));
+        $theZip = $finalFolder . $song->getId() . ".zip";
+        $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
         if ($zip->open($theZip) === TRUE) {
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = ($zip->getNameIndex($i));
