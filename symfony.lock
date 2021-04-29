@@ -1,4 +1,7 @@
 {
+    "alchemy/binary-driver": {
+        "version": "v5.2.0"
+    },
     "behat/transliterator": {
         "version": "v1.3.0"
     },
@@ -160,6 +163,9 @@
     "nesbot/carbon": {
         "version": "2.46.0"
     },
+    "neutron/temporary-filesystem": {
+        "version": "3.0"
+    },
     "nicklaw5/twitch-api-php": {
         "version": "v4.2.0"
     },
@@ -168,6 +174,9 @@
     },
     "paragonie/random_compat": {
         "version": "v9.99.100"
+    },
+    "php-ffmpeg/php-ffmpeg": {
+        "version": "v0.18.0"
     },
     "php-http/client-common": {
         "version": "2.3.0"
@@ -482,6 +491,9 @@
     },
     "symfony/polyfill-uuid": {
         "version": "v1.22.1"
+    },
+    "symfony/process": {
+        "version": "v5.2.4"
     },
     "symfony/profiler-pack": {
         "version": "v1.0.5"
