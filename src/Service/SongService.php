@@ -36,7 +36,7 @@ class SongService
         $unzipFolder = $this->kernel->getProjectDir() . "/public" . $uniqBeat;
         mkdir($this->kernel->getProjectDir() . "/public" . $uniqBeat);
         $zip = new ZipArchive();
-        try {
+//        try {
 
             $files = [];
             $getpreview = false;
@@ -71,7 +71,7 @@ class SongService
                 $filename = $song->getInfoDatFile();
                 $song->setGuid(md5_file($this->kernel->getProjectDir() . "/public/" . $filename));
                 $song->setNewGuid($this->HashSong($files));
-//                $this->em->flush();
+                $this->em->flush();
 
                 if (!$getpreview) {
                     $ffprobe    = FFProbe::create();
@@ -90,9 +90,9 @@ class SongService
                 }
                 $zip->close();
             }
-        } catch (Exception $e) {
-            $x = 1;
-        }
+//        } catch (Exception $e) {
+//          Throw $e;
+//        }
     }
 
     public function HashSong(array $files)
