@@ -205,7 +205,7 @@ class AdminSongController extends AbstractController
             if ($zip->open($theZip) === TRUE) {
                 for ($i = 0; $i < $zip->numFiles; $i++) {
                     $filename = ($zip->getNameIndex($i));
-                    if (preg_match("/Info\.dat/", $filename, $matches)) {
+                    if (preg_match("/Info\.dat/", $filename)) {
                         $filename = strtolower($filename);
                     }
                     $x = explode('/', $filename);
