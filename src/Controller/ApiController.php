@@ -79,6 +79,7 @@ class ApiController extends AbstractController
 
         return new Response("OK");
     }
+
     /**
      * @Route("/api/score/v2", name="api_score_v2")
      */
