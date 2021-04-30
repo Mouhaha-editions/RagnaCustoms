@@ -80,7 +80,7 @@ class ApiController extends AbstractController
         return new Response("OK");
     }
     /**
-     * @Route("/api/score/v2", name="api_score")
+     * @Route("/api/score/v2", name="api_score_v2")
      */
     public function scoreV2(Request $request, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository): Response
     {
