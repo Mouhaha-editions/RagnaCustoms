@@ -26,10 +26,8 @@
             </div>
         </td>
 
-
-
-        <td class="table-column padded-left">
-            <a href="{{ url("admin_song_reload",{id:song.id}) }}">reload</a>
+        <td class="table-column padded-left"><a href="{{ url("admin_song_emulate",{id:song.id}) }}">emulate</a>
+        <td class="table-column padded-left"><a href="{{ url("admin_organize",{id:song.id}) }}">organize</a>
     </td>
     </tr>
 {% else %}
