@@ -274,17 +274,20 @@ class UploadSongController extends AbstractController
 
 
                 /** @var UploadedFile $file */
-                $patterns_flattened = strtolower(implode('|', $allowedFiles));
-                $infolder =  strtolower(preg_replace('/[^a-zA-Z]/','', $song->getName()));
+                $patterns_flattened = implode('|', $allowedFiles);
+                $infolder =  preg_replace('/[^a-zA-Z]/','', $song->getName());
                 $zip = new ZipArchive();
                 if ($zip->open($theZip) === TRUE) {
                     for ($i = 0; $i < $zip->numFiles; $i++) {
                         $filename = ($zip->getNameIndex($i));
-                        if (!preg_match('/' . $patterns_flattened . '/', strtolower($filename), $matches) || preg_match('/autosaves/', strtolower($filename), $matches)) {
+                        if (!preg_match('/' . $patterns_flattened . '/', $filename, $matches) || preg_match('/autosaves/', $filename, $matches)) {
                             $zip->deleteName($filename);
                         } else {
+                            if(preg_match('/Info\.dat/', $filename, $matches)){
+                                $filename = strtolower($filename);
+                            }
                             $x = explode('/', $filename);
-                            $zip->renameName($filename, $infolder."/".strtolower($x[count($x) - 1]));
+                            $zip->renameName($filename, $infolder."/".$x[count($x) - 1]);
                         }
                     }
                     $zip->close();
