@@ -55,6 +55,7 @@ class SongService
                         $fileinfo = pathinfo($filename);
                         $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
                         if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
+                            $zip->renameName($filename, strtolower($filename));
                             $song->setInfoDatFile($uniqBeat . "/" . $fileinfo['basename']);
                         }
                         if (preg_match("#\.ogg#isU", $fileinfo['basename'])) {
