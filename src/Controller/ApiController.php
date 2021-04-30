@@ -79,6 +79,93 @@ class ApiController extends AbstractController
 
         return new Response("OK");
     }
+    /**
+     * @Route("/api/score/v2", name="api_score")
+     */
+    public function scoreV2(Request $request, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $results = [];
+
+        $data = json_decode($request->getContent(), true);
+        $user = $utilisateurRepository->findOneBy(['apiKey' => $data['ApiKey']]);
+        if ($user == null) {
+            $results[] = [
+                "user"=>$data['ApiKey'],
+                "hash"=>"all",
+                "level"=>"",
+                "success"=>false,
+                "error"=>"0_USER_NOT_FOUND"
+            ];
+            return new JsonResponse($results);
+        }
+        foreach ($data['Scores'] as $subScore) {
+            try {
+                $song = $songRepository->findOneBy(['newGuid' => $subScore["HashInfo"]]);
+                if ($song == null) {
+                    $results[] = [
+                        "hash"=>$subScore["HashInfo"],
+                        "level"=>$subScore["Level"],
+                        "success"=>false,
+                        "error"=>"1_SONG_NOT_FOUND"
+                    ];
+                    continue;
+                }
+                $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['Level']]);
+                $songDiff = $songDifficultyRepository->findOneBy([
+                    'song' => $song,
+                    "difficultyRank" => $rank
+                ]);
+                if ($songDiff == null) {
+                    $results[] = [
+                        "hash"=>$subScore["HashInfo"],
+                        "level"=>$subScore["Level"],
+                        "success"=>false,
+                        "error"=>"2_LEVEL_NOT_FOUND"
+                    ];
+                    continue;
+                }
+                $score = $scoreRepository->findOneBy([
+                    'user' => $user,
+                    'song' => $song,
+                    'songDifficulty' => $songDiff
+                ]);
+
+                if ($score == null) {
+                    $score = new Score();
+                    $score->setUser($user);
+                    $score->setSong($song);
+
+                    $score->setSongDifficulty($songDiff);
+                    $em->persist($score);
+                }
+
+                if ($score->getScore() < str_replace(',', '.',$subScore['Score'])) {
+                    $score->setScore(str_replace(',', '.', $subScore['Score']));
+                }
+                if($score->getScore() >= 99000){
+                    $score->setScore($score->getScore()/1000000);
+                }
+                $em->flush();
+                $results[] = [
+                    "hash"=>$subScore["HashInfo"],
+                    "level"=>$subScore["Level"],
+                    "success"=>true,
+                    "error"=>"SUCCESS"
+                ];
+            } catch (Exception $e) {
+                $results[] = [
+                    "hash"=>$subScore["HashInfo"],
+                    "level"=>$subScore["Level"],
+                    "success"=>false,
+                    "error"=>"3_SCORE_NOT_SAVED"
+                ];
+            }
+        }
+
+        return new JsonResponse($results);
+    }
+
 
 
     /**
