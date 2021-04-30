@@ -204,11 +204,11 @@ class AdminSongController extends AbstractController
             $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
             if ($zip->open($theZip) === TRUE) {
                 for ($i = 0; $i < $zip->numFiles; $i++) {
-                    $filename = ($zip->getNameIndex($i));
-                    if (preg_match("/Info\.dat/", $filename)) {
-                        $filename = strtolower($filename);
+                    $newfilename = $filename = ($zip->getNameIndex($i));
+                    if (preg_match("/Info\.dat/", $filename, $matches)) {
+                        $newfilename = strtolower($filename);
                     }
-                    $x = explode('/', $filename);
+                    $x = explode('/', $newfilename);
 
                     $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
 
@@ -231,11 +231,11 @@ class AdminSongController extends AbstractController
         $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
         if ($zip->open($theZip) === TRUE) {
             for ($i = 0; $i < $zip->numFiles; $i++) {
-                $filename = ($zip->getNameIndex($i));
+                $newfilename = $filename = ($zip->getNameIndex($i));
                 if (preg_match("/Info\.dat/", $filename, $matches)) {
-                    $filename = strtolower($filename);
+                    $newfilename = strtolower($filename);
                 }
-                $x = explode('/', $filename);
+                $x = explode('/', $newfilename);
 
                 $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
 
