@@ -129,7 +129,8 @@ class UploadSongController extends AbstractController
             ->getForm();
         $allowedFiles = [
             'preview.ogg',
-            'info.dat'
+            'info.dat',
+            'Info.dat',
         ];
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
@@ -275,7 +276,7 @@ class UploadSongController extends AbstractController
 
                 /** @var UploadedFile $file */
                 $patterns_flattened = implode('|', $allowedFiles);
-                $infolder =  preg_replace('/[^a-zA-Z]/','', $song->getName());
+                $infolder =  strtolower(preg_replace('/[^a-zA-Z]/','', $song->getName()));
                 $zip = new ZipArchive();
                 if ($zip->open($theZip) === TRUE) {
                     for ($i = 0; $i < $zip->numFiles; $i++) {
