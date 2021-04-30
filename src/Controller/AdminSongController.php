@@ -159,9 +159,9 @@ class AdminSongController extends AbstractController
     /**
      * @Route("/admin/song/emulate/all", name="admin_song_emulate_all")
      */
-    public function reloadAll( KernelInterface $kernel, SongRepository $songRepository, SongService $songService)
+    public function reloadAll(KernelInterface $kernel, SongRepository $songRepository, SongService $songService)
     {
-        foreach($songRepository->findAll() AS $song) {
+        foreach ($songRepository->findAll() as $song) {
             $songService->emulatorFileDispatcher($song, true);
         }
 
@@ -174,7 +174,6 @@ class AdminSongController extends AbstractController
     public function reload(Song $song, KernelInterface $kernel, DifficultyRankRepository $difficultyRankRepository, SongService $songService)
     {
         $songService->emulatorFileDispatcher($song, true);
-
         return $this->redirectToRoute('admin_song');
     }
 
