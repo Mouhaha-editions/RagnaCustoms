@@ -159,7 +159,7 @@ class AdminSongController extends AbstractController
     /**
      * @Route("/admin/song/emulate/all", name="admin_song_emulate_all")
      */
-    public function reloadAll(KernelInterface $kernel, SongRepository $songRepository, SongService $songService)
+    public function emulateAll(KernelInterface $kernel, SongRepository $songRepository, SongService $songService)
     {
         foreach ($songRepository->findAll() as $song) {
             $songService->emulatorFileDispatcher($song, true);
@@ -169,9 +169,9 @@ class AdminSongController extends AbstractController
     }
 
     /**
-     * @Route("/admin/song/emulate/{id}", name="admin_song_reload")
+     * @Route("/admin/song/emulate/{id}", name="admin_song_emulate")
      */
-    public function reload(Song $song, KernelInterface $kernel, DifficultyRankRepository $difficultyRankRepository, SongService $songService)
+    public function emulate(Song $song, KernelInterface $kernel, DifficultyRankRepository $difficultyRankRepository, SongService $songService)
     {
         $songService->emulatorFileDispatcher($song, true);
         return $this->redirectToRoute('admin_song');
@@ -192,6 +192,33 @@ class AdminSongController extends AbstractController
             rmdir($dir);
         }
     }
+    /**
+     * @Route("/admin/organize/all", name="admin_organize_all")
+     */
+    public function reorganizeAll(SongRepository $songRepository, KernelInterface $kernel)
+    {
+        $zip = new ZipArchive();
+        foreach ($songRepository->findAll() as $song) {
+            $finalFolder = $kernel->getProjectDir() . "/public/songs-files/";
+            $theZip = $finalFolder . $song->getId() . ".zip";
+            $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
+            if ($zip->open($theZip) === TRUE) {
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $filename = ($zip->getNameIndex($i));
+                    if (preg_match("/Info\.dat/", $filename, $matches)) {
+                        $filename = strtolower($filename);
+                    }
+                    $x = explode('/', $filename);
+
+                    $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
+
+                }
+                $zip->close();
+            }
+        }
+
+        return new Response("OK");
+    }
 
     /**
      * @Route("/admin/organize/{id}", name="admin_organize")
@@ -205,12 +232,18 @@ class AdminSongController extends AbstractController
         if ($zip->open($theZip) === TRUE) {
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = ($zip->getNameIndex($i));
+                if (preg_match("/Info\.dat/", $filename, $matches)) {
+                    $filename = strtolower($filename);
+                }
                 $x = explode('/', $filename);
-                $zip->renameName($filename, $infolder . "/" . strtolower($x[count($x) - 1]));
+
+                $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
 
             }
             $zip->close();
         }
         return new Response("OK");
     }
+
+
 }
