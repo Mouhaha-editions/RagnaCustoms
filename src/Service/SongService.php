@@ -109,10 +109,12 @@ class SongService
 
     public function HashSong(array $files)
     {
-        $str = "";
+        $md5s = [];
         foreach ($files as $file) {
-            $str .= md5_file($file);
+            $md5s[] = md5_file($file);
         }
+        sort($md5s);
+        $str = implode('',$md5s);
         return md5($str);
     }
 }
