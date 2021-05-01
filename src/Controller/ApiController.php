@@ -111,7 +111,7 @@ class ApiController extends AbstractController
                         "success"=>false,
                         "error"=>"1_SONG_NOT_FOUND"
                     ];
-                    return new JsonResponse($results,400);
+//                    return new JsonResponse($results,400);
                 }
                 $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['level']]);
                 $songDiff = $songDifficultyRepository->findOneBy([
@@ -125,8 +125,7 @@ class ApiController extends AbstractController
                         "success"=>false,
                         "error"=>"2_LEVEL_NOT_FOUND"
                     ];
-                    return new JsonResponse($results,400);
-
+//                    return new JsonResponse($results,400);
                 }
                 $score = $scoreRepository->findOneBy([
                     'user' => $user,
@@ -162,7 +161,7 @@ class ApiController extends AbstractController
                     "success"=>false,
                     "error"=>"3_SCORE_NOT_SAVED"
                 ];
-                return new JsonResponse($results,400);
+//                return new JsonResponse($results,400);
 
             }
         }
