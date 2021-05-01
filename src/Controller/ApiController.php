@@ -101,7 +101,7 @@ class ApiController extends AbstractController
             ];
             return new JsonResponse($results);
         }
-        foreach ($data['Scores'] as $subScore) {
+        foreach ($data as $subScore) {
             try {
                 $song = $songRepository->findOneBy(['newGuid' => $subScore["HashInfo"]]);
                 if ($song == null) {
