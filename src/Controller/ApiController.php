@@ -87,9 +87,10 @@ class ApiController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $results = [];
+        $apiKey = $request->headers->get('x-api-key');
 
         $data = json_decode($request->getContent(), true);
-        $user = $utilisateurRepository->findOneBy(['apiKey' => $data['ApiKey']]);
+        $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
         if ($user == null) {
             $results[] = [
                 "user"=>$data['ApiKey'],
