@@ -93,7 +93,7 @@ class ApiController extends AbstractController
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
         if ($user == null) {
             $results[] = [
-                "user"=>$data['ApiKey'],
+                "user"=>$apiKey,
                 "hash"=>"all",
                 "level"=>"",
                 "success"=>false,
