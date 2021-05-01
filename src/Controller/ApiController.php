@@ -99,7 +99,7 @@ class ApiController extends AbstractController
                 "success"=>false,
                 "error"=>"0_USER_NOT_FOUND"
             ];
-            return new JsonResponse($results);
+            return new JsonResponse($results,400);
         }
         foreach ($data as $subScore) {
             try {
@@ -111,7 +111,7 @@ class ApiController extends AbstractController
                         "success"=>false,
                         "error"=>"1_SONG_NOT_FOUND"
                     ];
-                    continue;
+                    return new JsonResponse($results,400);
                 }
                 $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['level']]);
                 $songDiff = $songDifficultyRepository->findOneBy([
@@ -125,7 +125,8 @@ class ApiController extends AbstractController
                         "success"=>false,
                         "error"=>"2_LEVEL_NOT_FOUND"
                     ];
-                    continue;
+                    return new JsonResponse($results,400);
+
                 }
                 $score = $scoreRepository->findOneBy([
                     'user' => $user,
@@ -142,9 +143,8 @@ class ApiController extends AbstractController
                     $em->persist($score);
                 }
 
-                if ($score->getScore() < str_replace(',', '.',$subScore['score'])) {
-                    $score->setScore(str_replace(',', '.', $subScore['score']));
-                }
+                $score->setScore(floatval($subScore['score'])/100);
+
                 if($score->getScore() >= 99000){
                     $score->setScore($score->getScore()/1000000);
                 }
@@ -162,10 +162,12 @@ class ApiController extends AbstractController
                     "success"=>false,
                     "error"=>"3_SCORE_NOT_SAVED"
                 ];
+                return new JsonResponse($results,400);
+
             }
         }
 
-        return new JsonResponse($results);
+        return new JsonResponse($results,200);
     }
 
 
