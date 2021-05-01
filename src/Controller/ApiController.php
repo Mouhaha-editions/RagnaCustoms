@@ -103,25 +103,25 @@ class ApiController extends AbstractController
         }
         foreach ($data as $subScore) {
             try {
-                $song = $songRepository->findOneBy(['newGuid' => $subScore["HashInfo"]]);
+                $song = $songRepository->findOneBy(['newGuid' => $subScore["hashInfo"]]);
                 if ($song == null) {
                     $results[] = [
-                        "hash"=>$subScore["HashInfo"],
-                        "level"=>$subScore["Level"],
+                        "hash"=>$subScore["hashInfo"],
+                        "level"=>$subScore["level"],
                         "success"=>false,
                         "error"=>"1_SONG_NOT_FOUND"
                     ];
                     continue;
                 }
-                $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['Level']]);
+                $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['level']]);
                 $songDiff = $songDifficultyRepository->findOneBy([
                     'song' => $song,
                     "difficultyRank" => $rank
                 ]);
                 if ($songDiff == null) {
                     $results[] = [
-                        "hash"=>$subScore["HashInfo"],
-                        "level"=>$subScore["Level"],
+                        "hash"=>$subScore["hashInfo"],
+                        "level"=>$subScore["level"],
                         "success"=>false,
                         "error"=>"2_LEVEL_NOT_FOUND"
                     ];
@@ -142,23 +142,23 @@ class ApiController extends AbstractController
                     $em->persist($score);
                 }
 
-                if ($score->getScore() < str_replace(',', '.',$subScore['Score'])) {
-                    $score->setScore(str_replace(',', '.', $subScore['Score']));
+                if ($score->getScore() < str_replace(',', '.',$subScore['score'])) {
+                    $score->setScore(str_replace(',', '.', $subScore['score']));
                 }
                 if($score->getScore() >= 99000){
                     $score->setScore($score->getScore()/1000000);
                 }
                 $em->flush();
                 $results[] = [
-                    "hash"=>$subScore["HashInfo"],
-                    "level"=>$subScore["Level"],
+                    "hash"=>$subScore["hashInfo"],
+                    "level"=>$subScore["level"],
                     "success"=>true,
                     "error"=>"SUCCESS"
                 ];
             } catch (Exception $e) {
                 $results[] = [
-                    "hash"=>$subScore["HashInfo"],
-                    "level"=>$subScore["Level"],
+                    "hash"=>$subScore["hashInfo"],
+                    "level"=>$subScore["level"],
                     "success"=>false,
                     "error"=>"3_SCORE_NOT_SAVED"
                 ];
