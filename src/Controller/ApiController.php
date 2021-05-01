@@ -142,7 +142,7 @@ class ApiController extends AbstractController
                     $em->persist($score);
                 }
 
-                $score->setScore(floatval($subScore['score'])/100);
+                $score->setScore(round(floatval($subScore['score'])/100,2));
 
                 if($score->getScore() >= 99000){
                     $score->setScore($score->getScore()/1000000);
