@@ -77,28 +77,27 @@ class SongService
                 $song->setNewGuid($this->HashSong($files));
                 $this->em->flush();
 
-                if (!$getpreview) {
-                    VarDumper::dump($song->getId());
-                    $ffprobe = FFProbe::create([
-                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',
-                    'ffprobe.binaries' => '/usr/bin/ffprobe'
-                    ]);
-                    $durationMp3 = $ffprobe->format($songfile)->get('duration');
-                    $ffmpeg = FFMpeg::create([
-                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',
-                    'ffprobe.binaries' => '/usr/bin/ffprobe'
-                    ]);
-                    $audio = $ffmpeg->open($songfile);
-                    if ($durationMp3 > 8) {
-                        $start = $durationMp3 / 2;
-                        $audio->filters()->clip(TimeCode::fromSeconds($start), TimeCode::fromSeconds(8));
-                    } else {
-                        $audio->filters()->clip(TimeCode::fromSeconds(0), TimeCode::fromSeconds($durationMp3));
-                    }
-                    $format = new Vorbis();
-                    $audio->save($format, $previewFile);
-                    $zip->addFile($previewFile, $previewLocalnameFile);
-                }
+//                if (!$getpreview) {
+//                    $ffprobe = FFProbe::create([
+//                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+//                    'ffprobe.binaries' => '/usr/bin/ffprobe'
+//                    ]);
+//                    $durationMp3 = $ffprobe->format($songfile)->get('duration');
+//                    $ffmpeg = FFMpeg::create([
+//                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+//                    'ffprobe.binaries' => '/usr/bin/ffprobe'
+//                    ]);
+//                    $audio = $ffmpeg->open($songfile);
+//                    if ($durationMp3 > 8) {
+//                        $start = $durationMp3 / 2;
+//                        $audio->filters()->clip(TimeCode::fromSeconds($start), TimeCode::fromSeconds(8));
+//                    } else {
+//                        $audio->filters()->clip(TimeCode::fromSeconds(0), TimeCode::fromSeconds($durationMp3));
+//                    }
+//                    $format = new Vorbis();
+//                    $audio->save($format, $previewFile);
+//                    $zip->addFile($previewFile, $previewLocalnameFile);
+//                }
                 $zip->close();
             }
         } catch(Exception $e) {
