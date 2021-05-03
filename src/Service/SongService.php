@@ -77,30 +77,39 @@ class SongService
                 $song->setNewGuid($this->HashSong($files));
                 $this->em->flush();
 
-//                if (!$getpreview) {
-//                    $ffprobe = FFProbe::create([
-//                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',
-//                    'ffprobe.binaries' => '/usr/bin/ffprobe'
-//                    ]);
-//                    $durationMp3 = $ffprobe->format($songfile)->get('duration');
+                if (!$getpreview) {
+                    $ffprobe = FFProbe::create([
+                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+                    'ffprobe.binaries' => '/usr/bin/ffprobe'
+                    ]);
+                    $probe = $ffprobe->format($songfile);
+                    $durationMp3 = (int)($probe->get('duration')/2);
+
+//                    ffmpeg -y -i <input.ogg> -ss 130 -t 5 -c:a copy -b:a 96k <output.ogg>
+
+
+                    exec('ffmpeg -y -i "'.$songfile.'"  -ss '.$durationMp3.' -t 5 -c:a copy -b:a 96k "'.$previewFile.'"');
+//                    $bitrate = $probe->get('bit_rate');
 //                    $ffmpeg = FFMpeg::create([
-//                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',
-//                    'ffprobe.binaries' => '/usr/bin/ffprobe'
+////                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+////                    'ffprobe.binaries' => '/usr/bin/ffprobe'
 //                    ]);
 //                    $audio = $ffmpeg->open($songfile);
 //                    if ($durationMp3 > 8) {
 //                        $start = $durationMp3 / 2;
-//                        $audio->filters()->clip(TimeCode::fromSeconds($start), TimeCode::fromSeconds(8));
+//                        $audio->filters()->clip($start, 8);
 //                    } else {
 //                        $audio->filters()->clip(TimeCode::fromSeconds(0), TimeCode::fromSeconds($durationMp3));
 //                    }
 //                    $format = new Vorbis();
+//                    $format->setAudioKiloBitrate($bitrate);
 //                    $audio->save($format, $previewFile);
-//                    $zip->addFile($previewFile, $previewLocalnameFile);
-//                }
+
+                    $zip->addFile($previewFile, $previewLocalnameFile);
+                }
                 $zip->close();
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             VarDumper::dump($song->getId());
         }
 
@@ -113,7 +122,7 @@ class SongService
             $md5s[] = md5_file($file);
         }
         sort($md5s);
-        $str = implode('',$md5s);
+        $str = implode('', $md5s);
         return md5($str);
     }
 }
