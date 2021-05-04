@@ -12,13 +12,6 @@ class ApplicationController extends AbstractController
 {
 
 
-    /**
-     * @Route("/application/version", name="application_version")
-     */
-    public function version(): Response
-    {
-        return new Response('2.0.3');
-    }
 
     /**
      * @Route("/howto", name="howto")
