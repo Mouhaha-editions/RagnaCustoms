@@ -61,8 +61,11 @@
                  data-content="{% include 'songs/partial/rate.html.twig' with {song:song} %}">
                 {% include 'songs/partial/vote.html.twig' with {song:song} %}
             </div>
-        </td>
 
+        </td>
+<td style="font-size:20px;">
+    <a href="{{ url('song_feedback',{id:song.id}) }}" data class="text-level-3"><i class="far fa-comment-dots"></i></a>
+</td>
         <td class="table-column padded-left text-right">
 
             <div class="d-flex flex-fill justify-content-end text-right">

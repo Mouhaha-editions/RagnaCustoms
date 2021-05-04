@@ -1,0 +1,7 @@
+<b>{{ song.name }}</b> <span class="light">by {{ song.authorName }}</span>
+<form data-url="{{ url("form_feedback_save",{id:song.id}) }}" class="form ajax-form pt-4">
+
+
+    <div class="alert alert-info">All public review are moderated before to be display</div>
+    <button type="submit" class="btn btn-sm btn-primary">Save Feedback!</button>
+</form>

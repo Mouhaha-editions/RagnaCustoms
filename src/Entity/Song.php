@@ -198,6 +198,11 @@ class Song
      */
     private $newGuid;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="song", orphanRemoval=true)
+     */
+    private $songFeedback;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -205,6 +210,7 @@ class Song
         $this->downloadCounters = new ArrayCollection();
         $this->viewCounters = new ArrayCollection();
         $this->scores = new ArrayCollection();
+        $this->songFeedback = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -849,6 +855,36 @@ class Song
     public function setNewGuid(?string $newGuid): self
     {
         $this->newGuid = $newGuid;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SongFeedback[]
+     */
+    public function getSongFeedback(): Collection
+    {
+        return $this->songFeedback;
+    }
+
+    public function addSongFeedback(SongFeedback $songFeedback): self
+    {
+        if (!$this->songFeedback->contains($songFeedback)) {
+            $this->songFeedback[] = $songFeedback;
+            $songFeedback->setSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSongFeedback(SongFeedback $songFeedback): self
+    {
+        if ($this->songFeedback->removeElement($songFeedback)) {
+            // set the owning side to null (unless already changed)
+            if ($songFeedback->getSong() === $this) {
+                $songFeedback->setSong(null);
+            }
+        }
 
         return $this;
     }
