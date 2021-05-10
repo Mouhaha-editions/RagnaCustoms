@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Song;
+use App\Helper\AIMapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use FFMpeg\Coordinate\TimeCode;
@@ -25,6 +26,26 @@ class SongService
     {
         $this->kernel = $kernel;
         $this->em = $em;
+    }
+
+    public function AiMap()
+    {
+        $file = $this->kernel->getProjectDir() . "/public/song.ogg";
+        $ffprobe = FFProbe::create();
+        $ffmpeg = FFMpeg::create();
+        $audio = $ffmpeg->open($file);
+        $probe = $ffprobe->format($file);
+        $durationMp3 = (int)($probe->get('duration'));
+        $bpm = 140;
+        $ratio = 20;
+        $level= 7;
+        $durationbpm = round($bpm / 60 * $durationMp3  ,0)*$ratio;
+        $waveform = $audio->waveform($durationbpm, round(($durationbpm*9)/25), array('#00FF00'));
+        $waveform->save($this->kernel->getProjectDir() . "/public/waveform.png");
+        $ai = new AIMapper($this->kernel->getProjectDir() . "/public/waveform.png", $durationMp3, $bpm, $ratio, $level);
+        $result = $ai->read();
+
+        return $ai->map($result,"C:\Users\pierr\Documents\Ragnarock\CustomSongs\otherworld\Level".$level.".dat");
     }
 
     public function emulatorFileDispatcher(Song $song, bool $force = false)
@@ -79,16 +100,16 @@ class SongService
 
                 if (!$getpreview) {
                     $ffprobe = FFProbe::create([
-                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',
-                    'ffprobe.binaries' => '/usr/bin/ffprobe'
+                        'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+                        'ffprobe.binaries' => '/usr/bin/ffprobe'
                     ]);
                     $probe = $ffprobe->format($songfile);
-                    $durationMp3 = (int)($probe->get('duration')/2);
+                    $durationMp3 = (int)($probe->get('duration') / 2);
 
 //                    ffmpeg -y -i <input.ogg> -ss 130 -t 5 -c:a copy -b:a 96k <output.ogg>
 
 
-                    exec('ffmpeg -y -i "'.$songfile.'"  -ss '.$durationMp3.' -t 5 -c:a copy -b:a 96k "'.$previewFile.'"');
+                    exec('ffmpeg -y -i "' . $songfile . '"  -ss ' . $durationMp3 . ' -t 5 -c:a copy -b:a 96k "' . $previewFile . '"');
 //                    $bitrate = $probe->get('bit_rate');
 //                    $ffmpeg = FFMpeg::create([
 ////                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',

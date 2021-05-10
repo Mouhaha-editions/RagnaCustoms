@@ -9,6 +9,7 @@ use App\Repository\ScoreRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
+use App\Service\SongService;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,6 +19,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApiController extends AbstractController
 {
+    /**
+     * @Route("/ai", name="ai")
+     */
+    public function ai(Request $request,SongService $songService): Response
+    {
+        $songService->AiMap();
+        return new Response("OK");
+    }
+
+
     /**
      * @Route("/api/score", name="api_score")
      */
