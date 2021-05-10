@@ -153,7 +153,11 @@ class UploadSongController extends AbstractController
                         $exp = explode("/", $filename);
                         if (end($exp) != "") {
                             $fileinfo = pathinfo($filename);
-                            $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
+                            if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
+                                $result = file_put_contents($unzipFolder . "/" . strtolower($fileinfo['basename']), $elt);
+                            }else{
+                                $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
+                            }
                         }
                     }
                     $zip->close();
@@ -276,7 +280,7 @@ class UploadSongController extends AbstractController
 
                 /** @var UploadedFile $file */
                 $patterns_flattened = implode('|', $allowedFiles);
-                $infolder =  strtolower(preg_replace('/[^a-zA-Z]/','', $song->getName()));
+                $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
                 $zip = new ZipArchive();
                 if ($zip->open($theZip) === TRUE) {
                     for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -284,13 +288,13 @@ class UploadSongController extends AbstractController
                         if (!preg_match('/' . $patterns_flattened . '/', $filename, $matches) || preg_match('/autosaves/', $filename, $matches)) {
                             $zip->deleteName($filename);
                         } else {
-                            $newfilename =($zip->getNameIndex($i));
+                            $newfilename = ($zip->getNameIndex($i));
                             $filename = ($zip->getNameIndex($i));
                             if (preg_match("/Info\.dat/", $newfilename)) {
                                 $newfilename = strtolower($filename);
                             }
                             $x = explode('/', $newfilename);
-                            $zip->renameName($filename, $infolder."/".$x[count($x) - 1]);
+                            $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
                         }
                     }
                     $zip->close();
@@ -308,7 +312,10 @@ class UploadSongController extends AbstractController
                     ->to('pierrick.pobelle@gmail.com')
                     ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
                 if ($song->isModerated()) {
-                    $discordService->sendNewSongMessage($song);
+                    if($this->container->getParameter('kernel.environment')!="dev") {
+
+                        $discordService->sendNewSongMessage($song);
+                    }
                     $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 } else {
                     $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
