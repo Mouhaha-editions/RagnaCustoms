@@ -317,10 +317,10 @@ class UploadSongController extends AbstractController
                     ->to('pierrick.pobelle@gmail.com')
                     ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
                 if ($song->isModerated()) {
-                    if ($this->container->getParameter('kernel.environment') != "dev") {
+//                    if ($this->container->getParameter('kernel.environment') != "dev") {
 
                         $discordService->sendNewSongMessage($song);
-                    }
+//                    }
                     $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 } else {
                     $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
