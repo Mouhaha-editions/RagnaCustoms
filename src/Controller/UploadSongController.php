@@ -149,13 +149,13 @@ class UploadSongController extends AbstractController
                 if ($zip->open($theZip) === TRUE) {
                     for ($i = 0; $i < $zip->numFiles; $i++) {
                         $filename = $zip->getNameIndex($i);
-                        $elt = $zip->getFromIndex($i);
+                        $elt = $this->remove_utf8_bom($zip->getFromIndex($i));
                         $exp = explode("/", $filename);
                         if (end($exp) != "") {
                             $fileinfo = pathinfo($filename);
                             if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
                                 $result = file_put_contents($unzipFolder . "/" . strtolower($fileinfo['basename']), $elt);
-                            }else{
+                            } else {
                                 $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
                             }
                         }
@@ -172,7 +172,12 @@ class UploadSongController extends AbstractController
                             return $this->redirectToRoute("upload_song");
                         }
                     }
-                    $json = json_decode(file_get_contents($file));
+                    $content = file_get_contents($file);
+                    $json = json_decode($content);
+                    if ($json == null) {
+                        $this->addFlash('danger', $translator->trans("WTF? I can't read your info.dat please check the file encoding."));
+                        return $this->redirectToRoute("upload_song");
+                    }
                     $allowedFiles[] = $json->_coverImageFilename;
                     $allowedFiles[] = $json->_songFilename;
 
@@ -312,7 +317,7 @@ class UploadSongController extends AbstractController
                     ->to('pierrick.pobelle@gmail.com')
                     ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
                 if ($song->isModerated()) {
-                    if($this->container->getParameter('kernel.environment')!="dev") {
+                    if ($this->container->getParameter('kernel.environment') != "dev") {
 
                         $discordService->sendNewSongMessage($song);
                     }
@@ -348,6 +353,11 @@ class UploadSongController extends AbstractController
         ]);
     }
 
+    function remove_utf8_bom($text)
+    {
+        return $this->stripUtf16Le($this->stripUtf16Be($this->stripUtf8Bom($text)));//mb_convert_encoding($text, 'UTF-8', 'UCS-2LE');
+    }
+
     public function rrmdir($dir)
     {
         if (is_dir($dir)) {
@@ -364,5 +374,15 @@ class UploadSongController extends AbstractController
         }
     }
 
+    function stripUtf8Bom($string) {
+        return preg_replace('/^\xef\xbb\xbf/', '', $string);
+    }
 
+    function stripUtf16Le($string) {
+        return preg_replace('/^\xff\xfe/', '', $string);
+    }
+
+    function stripUtf16Be($string) {
+        return preg_replace('/^\xfe\xff/', '', $string);
+    }
 }
