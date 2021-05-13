@@ -186,7 +186,8 @@ class ApiController extends AbstractController
                     "hash" => $subScore["hashInfo"],
                     "level" => $subScore["level"],
                     "success" => false,
-                    "error" => "3_SCORE_NOT_SAVED"
+                    "error" => "3_SCORE_NOT_SAVED",
+                    'deatil'=>$e->getMessage()
                 ];
                 $logger->error("API : " . $apiKey . " " . $subScore["hashInfo"] . " " . $subScore["level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage());
 
