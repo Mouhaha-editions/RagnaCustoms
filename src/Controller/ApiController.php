@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Score;
 use App\Entity\Song;
+use App\Entity\Utilisateur;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongDifficultyRepository;
@@ -11,6 +12,7 @@ use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\SongService;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +44,7 @@ class ApiController extends AbstractController
             return new Response('NOK');
         }
         foreach ($data['Scores'] as $subScore) {
+            $score = null;
             try {
                 $song = $songRepository->findOneBy(['guid' => $subScore["HashInfo"]]);
                 if ($song == null) {
@@ -61,21 +64,18 @@ class ApiController extends AbstractController
                 }
                 $score = $scoreRepository->findOneBy([
                     'user' => $user,
-                    'song' => $song,
                     'songDifficulty' => $songDiff
                 ]);
 
                 if ($score == null) {
                     $score = new Score();
                     $score->setUser($user);
-                    $score->setSong($song);
-
                     $score->setSongDifficulty($songDiff);
                     $em->persist($score);
                 }
 
-                if ($score->getScore() < str_replace(',', '.',$subScore['Score'])) {
-                    $score->setScore(str_replace(',', '.', $subScore['Score']));
+                if ($score->getScore() < floatval(str_replace(',', '.',$subScore['Score']))) {
+                    $score->setScore(floatval(str_replace(',', '.', $subScore['Score'])));
                 }
                 if($score->getScore() >= 99000){
                     $score->setScore($score->getScore()/1000000);
@@ -94,13 +94,14 @@ class ApiController extends AbstractController
     /**
      * @Route("/api/score/v2", name="api_score_v2")
      */
-    public function scoreV2(Request $request, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository): Response
+    public function scoreV2(Request $request, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository,LoggerInterface $logger): Response
     {
         $em = $this->getDoctrine()->getManager();
         $results = [];
         $apiKey = $request->headers->get('x-api-key');
 
         $data = json_decode($request->getContent(), true);
+        /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
         if ($user == null) {
             $results[] = [
@@ -110,8 +111,12 @@ class ApiController extends AbstractController
                 "success"=>false,
                 "error"=>"0_USER_NOT_FOUND"
             ];
+            $logger->error("API : ".$apiKey." USER NOT FOUND");
             return new JsonResponse($results,400);
         }
+        \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($user): void{
+            $scope->setUser(['username' => $user->getUsername()]);
+        });
         foreach ($data as $subScore) {
             try {
                 $song = $songRepository->findOneBy(['newGuid' => $subScore["hashInfo"]]);
@@ -122,6 +127,8 @@ class ApiController extends AbstractController
                         "success"=>false,
                         "error"=>"1_SONG_NOT_FOUND"
                     ];
+                    $logger->error("API : ".$apiKey." ".$subScore["hashInfo"]." 1_SONG_NOT_FOUND");
+                    continue;
 //                    return new JsonResponse($results,400);
                 }
                 $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['level']]);
@@ -136,6 +143,8 @@ class ApiController extends AbstractController
                         "success"=>false,
                         "error"=>"2_LEVEL_NOT_FOUND"
                     ];
+                    $logger->error("API : ".$apiKey." ".$subScore["hashInfo"]." ".$subScore["level"]." 2_LEVEL_NOT_FOUND");
+                    continue;
 //                    return new JsonResponse($results,400);
                 }
                 $score = $scoreRepository->findOneBy([
@@ -143,18 +152,13 @@ class ApiController extends AbstractController
                     'song' => $song,
                     'songDifficulty' => $songDiff
                 ]);
-
                 if ($score == null) {
                     $score = new Score();
                     $score->setUser($user);
-                    $score->setSong($song);
-
                     $score->setSongDifficulty($songDiff);
                     $em->persist($score);
                 }
-
                 $score->setScore(round(floatval($subScore['score'])/100,2));
-
                 if($score->getScore() >= 99000){
                     $score->setScore($score->getScore()/1000000);
                 }
@@ -172,6 +176,8 @@ class ApiController extends AbstractController
                     "success"=>false,
                     "error"=>"3_SCORE_NOT_SAVED"
                 ];
+                $logger->error("API : ".$apiKey." ".$subScore["hashInfo"]." ".$subScore["level"]." 3_SCORE_NOT_SAVED : ".$e->getMessage());
+
 //                return new JsonResponse($results,400);
 
             }
