@@ -34,7 +34,7 @@ class ScoreController extends AbstractController
     public function globalRanking(Request $request, ScoreRepository $scoreRepository, PaginationService $paginationService): Response
     {
         $qb = $scoreRepository->createQueryBuilder('s')
-            ->select('u.username AS username, SUM(s.score)/1000 AS score, COUNT(s.song) AS count_song')
+            ->select('u.username AS username, SUM(s.score)/1000 AS score, COUNT(s.songDifficulty) AS count_song')
             ->leftJoin('s.user', 'u')
             ->groupBy('s.user')
             ->orderBy('SUM(s.score)', 'DESC');
