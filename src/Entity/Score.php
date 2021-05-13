@@ -8,6 +8,10 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ScoreRepository::class)
+ * @ORM\Table(name="score", uniqueConstraints={
+ *  @ORM\UniqueConstraint(name="user_difficulty",
+ *            columns={"user_id", "song_difficulty_id"})
+ *     })
  */
 class Score
 {
@@ -18,12 +22,6 @@ class Score
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="scores")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $song;
 
     /**
      * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="scores")
@@ -45,18 +43,6 @@ class Score
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getSong(): ?Song
-    {
-        return $this->song;
-    }
-
-    public function setSong(?Song $song): self
-    {
-        $this->song = $song;
-
-        return $this;
     }
 
     public function getUser(): ?Utilisateur
