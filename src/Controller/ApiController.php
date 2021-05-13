@@ -33,64 +33,64 @@ class ApiController extends AbstractController
     }
 
 
-    /**
-     * @Route("/api/score", name="api_score")
-     */
-    public function score(Request $request, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository): Response
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $data = json_decode($request->getContent(), true);
-        $user = $utilisateurRepository->findOneBy(['apiKey' => $data['ApiKey']]);
-        if ($user == null) {
-            return new Response('NOK');
-        }
-        foreach ($data['Scores'] as $subScore) {
-            $score = null;
-            try {
-                $song = $songRepository->findOneBy(['guid' => $subScore["HashInfo"]]);
-                if ($song == null) {
-                    continue;
-                }
-
-                if ($song == null) {
-                    continue;
-                }
-                $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['Level']]);
-                $songDiff = $songDifficultyRepository->findOneBy([
-                    'song' => $song,
-                    "difficultyRank" => $rank
-                ]);
-                if ($songDiff == null) {
-                    continue;
-                }
-                $score = $scoreRepository->findOneBy([
-                    'user' => $user,
-                    'songDifficulty' => $songDiff
-                ]);
-
-                if ($score == null) {
-                    $score = new Score();
-                    $score->setUser($user);
-                    $score->setSongDifficulty($songDiff);
-                    $em->persist($score);
-                }
-
-                if ($score->getScore() < floatval(str_replace(',', '.', $subScore['Score']))) {
-                    $score->setScore(floatval(str_replace(',', '.', $subScore['Score'])));
-                }
-                if ($score->getScore() >= 99000) {
-                    $score->setScore($score->getScore() / 1000000);
-                }
-                $em->flush();
-
-            } catch (Exception $e) {
-                $x = $e;
-            }
-        }
-
-        return new Response("OK");
-    }
+//    /**
+//     * @Route("/api/score", name="api_score")
+//     */
+//    public function score(Request $request, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository): Response
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $data = json_decode($request->getContent(), true);
+//        $user = $utilisateurRepository->findOneBy(['apiKey' => $data['ApiKey']]);
+//        if ($user == null) {
+//            return new Response('NOK');
+//        }
+//        foreach ($data['Scores'] as $subScore) {
+//            $score = null;
+//            try {
+//                $song = $songRepository->findOneBy(['guid' => $subScore["HashInfo"]]);
+//                if ($song == null) {
+//                    continue;
+//                }
+//
+//                if ($song == null) {
+//                    continue;
+//                }
+//                $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['Level']]);
+//                $songDiff = $songDifficultyRepository->findOneBy([
+//                    'song' => $song,
+//                    "difficultyRank" => $rank
+//                ]);
+//                if ($songDiff == null) {
+//                    continue;
+//                }
+//                $score = $scoreRepository->findOneBy([
+//                    'user' => $user,
+//                    'songDifficulty' => $songDiff
+//                ]);
+//
+//                if ($score == null) {
+//                    $score = new Score();
+//                    $score->setUser($user);
+//                    $score->setSongDifficulty($songDiff);
+//                    $em->persist($score);
+//                }
+//
+//                if ($score->getScore() < floatval(str_replace(',', '.', $subScore['Score']))) {
+//                    $score->setScore(floatval(str_replace(',', '.', $subScore['Score'])));
+//                }
+//                if ($score->getScore() >= 99000) {
+//                    $score->setScore($score->getScore() / 1000000);
+//                }
+//                $em->flush();
+//
+//            } catch (Exception $e) {
+//                $x = $e;
+//            }
+//        }
+//
+//        return new Response("OK");
+//    }
 
     /**
      * @Route("/api/score/v2", name="api_score_v2")
