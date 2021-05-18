@@ -22,7 +22,6 @@ class ScoreController extends AbstractController
             ->where('s.moderated = true')
             ->orderBy('s.name', 'ASC')->getQuery()->getResult();
 
-
         return $this->render('score/index.html.twig', [
             'songs' => $songs
         ]);

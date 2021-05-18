@@ -60,6 +60,11 @@ class SongDifficulty
      */
     private $scores;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $ranked;
+
     public function __construct()
     {
         $this->scores = new ArrayCollection();
@@ -190,6 +195,18 @@ class SongDifficulty
                 $score->setSongDifficulty(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRanked(): ?bool
+    {
+        return $this->ranked;
+    }
+
+    public function setRanked(bool $ranked): self
+    {
+        $this->ranked = $ranked;
 
         return $this;
     }
