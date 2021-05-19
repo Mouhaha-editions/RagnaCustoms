@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Entity\DownloadCounter;
 use App\Entity\Score;
 use App\Entity\Song;
+use App\Entity\SongFeedback;
 use App\Entity\ViewCounter;
 use App\Entity\Vote;
+use App\Form\SongFeedbackType;
 use App\Repository\DownloadCounterRepository;
 use App\Repository\ScoreRepository;
+use App\Repository\SongFeedbackRepository;
 use App\Repository\SongRepository;
 use App\Repository\ViewCounterRepository;
 use App\Repository\VoteRepository;
@@ -52,6 +55,7 @@ class SongsController extends AbstractController
             'songs' => $songs
         ], $response);
     }
+
 
     /**
      * @Route("/song/detail/{id}", name="song_detail")
@@ -163,6 +167,7 @@ class SongsController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/song/review/{id}", name="song_review")
      * @param Request $request
@@ -215,6 +220,65 @@ class SongsController extends AbstractController
             "response" => $this->renderView("songs/partial/form_review.html.twig", [
                 'song' => $song,
                 "vote" => $vote
+            ]),
+        ]);
+    }
+
+    /**
+     * @Route("/song/feedback/{id}", name="song_feedback")
+     */
+    public function formFeedback(Request $request, Song $song, TranslatorInterface $translator,
+                                     SongFeedbackRepository $feedbackRepository, VoteService $voteService)
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => $translator->trans("You need an account to send a feedback!"),
+                "response" => $translator->trans("You need an account to send a feedback!"),
+            ]);
+        }
+
+        if ($song == null) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => "You need an account to vote !",
+                "response" => $translator->trans("Song not found!"),
+
+            ]);
+        }
+        $feedback = new SongFeedback();
+        $feedback->setUser($this->getUser());
+        $feedback->setSong($song);
+        $form = $this->createForm(SongFeedbackType::class, $feedback, [
+            'attr' => [
+                'class' => "form ajax-form",
+                'method' => "post",
+                "action" => $this->generateUrl("song_feedback", ["id" => $song->getId()]),
+                "data-url" => $this->generateUrl("song_feedback", ["id" => $song->getId()])
+            ]
+        ]);
+
+        $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($feedback);
+            $em->flush();
+            return new JsonResponse([
+                "error" => false,
+                "errorMessage" => "You need an account to vote !",
+                "response" => "<div class='alert alert-success'>" . $translator->trans("Your review has been sent!") . "</div>",
+
+            ]);
+        }
+
+        return new JsonResponse([
+            "error" => false,
+            "errorMessage" => false,
+            "response" => $this->renderView("songs/partial/form_feedback.html.twig", [
+                'form' => $form->createView(),
+                'song' => $song,
+                "vote" => $feedback
             ]),
         ]);
     }

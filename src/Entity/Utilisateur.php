@@ -119,6 +119,11 @@ class Utilisateur implements UserInterface
      */
     private $apiKey;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="user")
+     */
+    private $songFeedback;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -126,6 +131,7 @@ class Utilisateur implements UserInterface
         $this->downloadCounters = new ArrayCollection();
         $this->viewCounters = new ArrayCollection();
         $this->scores = new ArrayCollection();
+        $this->songFeedback = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -504,6 +510,36 @@ class Utilisateur implements UserInterface
     public function setApiKey(?string $apiKey): self
     {
         $this->apiKey = $apiKey;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SongFeedback[]
+     */
+    public function getSongFeedback(): Collection
+    {
+        return $this->songFeedback;
+    }
+
+    public function addSongFeedback(SongFeedback $songFeedback): self
+    {
+        if (!$this->songFeedback->contains($songFeedback)) {
+            $this->songFeedback[] = $songFeedback;
+            $songFeedback->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSongFeedback(SongFeedback $songFeedback): self
+    {
+        if ($this->songFeedback->removeElement($songFeedback)) {
+            // set the owning side to null (unless already changed)
+            if ($songFeedback->getUser() === $this) {
+                $songFeedback->setUser(null);
+            }
+        }
 
         return $this;
     }

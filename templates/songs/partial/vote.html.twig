@@ -1,5 +1,5 @@
-<a href='#' class='button disabled with-only-icon popup-review-trigger song-review'  data-toggle='modal' data-target='#reviewSong'
-     data-replace-selector='.song-vote-{{ song.id }}'
+<a href='#' class='button ajax-load ajax-modal-form disabled with-only-icon popup-review-trigger song-review'  data-toggle='modal' data-target='#reviewSong'
+     data-replace-closest-selector='.song-vote-{{ song.id }}'
      data-url='{{ url('song_review',{id:song.id}) }}'
      data-song-id='{{ song.id }}'>
     <div class='rating-list d-flex flex-row'>
