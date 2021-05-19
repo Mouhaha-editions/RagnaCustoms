@@ -242,43 +242,43 @@ function getCookie(cname) {
     }
     return null;
 }
-
-window.onload = function () {
-    let value = 8;
-    var favicon = document.getElementById('favicon');
-    var faviconSize = 16;
-
-    var canvas = document.createElement('canvas');
-    canvas.width = faviconSize;
-    canvas.height = faviconSize;
-
-    var context = canvas.getContext('2d');
-    var img = document.createElement('img');
-    img.src = favicon.href;
-
-    $("title").prepend("(" + value + ") ")
-    img.onload = () => {
-        // Draw Original Favicon as Background
-        context.drawImage(img, 0, 0, faviconSize, faviconSize);
-
-        // Draw Notification Circle
-        // context.beginPath();
-        // context.arc( canvas.width - faviconSize / 3 , faviconSize / 3, faviconSize / 3, 0, 2*Math.PI);
-        // context.fillStyle = '#FF0000';
-        // context.fill();
-
-        // Draw Notification Number
-        context.font = '10px "helvetica", sans-serif';
-        context.textAlign = "center";
-        context.textBaseline = "middle";
-        context.fillStyle = '#000000';
-        context.strokeStyle = '#FFFFFF';
-        context.strokeText(value, canvas.width - faviconSize / 3, faviconSize - 4);
-        context.fillText(value, canvas.width - faviconSize / 3, faviconSize - 4);
-        context.stroke();
-        context.fill();
-
-        // Replace favicon
-        favicon.href = canvas.toDataURL('image/png');
-    };
-};
+//
+// window.onload = function () {
+//     let value = 8;
+//     var favicon = document.getElementById('favicon');
+//     var faviconSize = 16;
+//
+//     var canvas = document.createElement('canvas');
+//     canvas.width = faviconSize;
+//     canvas.height = faviconSize;
+//
+//     var context = canvas.getContext('2d');
+//     var img = document.createElement('img');
+//     img.src = favicon.href;
+//
+//     $("title").prepend("(" + value + ") ")
+//     img.onload = () => {
+//         // Draw Original Favicon as Background
+//         context.drawImage(img, 0, 0, faviconSize, faviconSize);
+//
+//         // Draw Notification Circle
+//         // context.beginPath();
+//         // context.arc( canvas.width - faviconSize / 3 , faviconSize / 3, faviconSize / 3, 0, 2*Math.PI);
+//         // context.fillStyle = '#FF0000';
+//         // context.fill();
+//
+//         // Draw Notification Number
+//         context.font = '10px "helvetica", sans-serif';
+//         context.textAlign = "center";
+//         context.textBaseline = "middle";
+//         context.fillStyle = '#000000';
+//         context.strokeStyle = '#FFFFFF';
+//         context.strokeText(value, canvas.width - faviconSize / 3, faviconSize - 4);
+//         context.fillText(value, canvas.width - faviconSize / 3, faviconSize - 4);
+//         context.stroke();
+//         context.fill();
+//
+//         // Replace favicon
+//         favicon.href = canvas.toDataURL('image/png');
+//     };
+// };
