@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SongFeedbackRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -50,6 +52,26 @@ class SongFeedback
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isModerated = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SongFeedback::class, inversedBy="songFeedback")
+     */
+    private $feedbackParent;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="feedbackParent")
+     */
+    private $songFeedback;
+
+    public function __construct()
+    {
+        $this->songFeedback = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -124,6 +146,60 @@ class SongFeedback
     public function setUser(?Utilisateur $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIsModerated(): ?bool
+    {
+        return $this->isModerated;
+    }
+
+    public function setIsModerated(bool $isModerated): self
+    {
+        $this->isModerated = $isModerated;
+
+        return $this;
+    }
+
+    public function getFeedbackParent(): ?self
+    {
+        return $this->feedbackParent;
+    }
+
+    public function setFeedbackParent(?self $feedbackParent): self
+    {
+        $this->feedbackParent = $feedbackParent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getSongFeedback(): Collection
+    {
+        return $this->songFeedback;
+    }
+
+    public function addSongFeedback(self $songFeedback): self
+    {
+        if (!$this->songFeedback->contains($songFeedback)) {
+            $this->songFeedback[] = $songFeedback;
+            $songFeedback->setFeedbackParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSongFeedback(self $songFeedback): self
+    {
+        if ($this->songFeedback->removeElement($songFeedback)) {
+            // set the owning side to null (unless already changed)
+            if ($songFeedback->getFeedbackParent() === $this) {
+                $songFeedback->setFeedbackParent(null);
+            }
+        }
 
         return $this;
     }

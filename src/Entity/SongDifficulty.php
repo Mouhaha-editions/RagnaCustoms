@@ -70,6 +70,10 @@ class SongDifficulty
      */
     private $ranked;
 
+    public function __toString()
+    {
+        return "level ".$this->getDifficultyRank()->getLevel();
+    }
     public function __construct()
     {
         $this->scores = new ArrayCollection();

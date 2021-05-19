@@ -50,9 +50,9 @@ $(function () {
         let rating = parseInt($(this).data('rating'));
         $('.rating-list.text-warning').each(function () {
             let t = $(this).find(".rating:eq(" + (rating - 1) + ")").click();
-        })
-
+        });
     });
+
     $(document).on('click', ".copy-clipboard", function () {
         let t = $(this);
         copyToClipboard($(this).data('to-copy'));
@@ -61,6 +61,7 @@ $(function () {
         setTimeout(function () {
             t.tooltip('toggleEnabled');
         }, 500);
+
         return false;
     });
     $("[data-toggle=\"tooltip\"]").tooltip('enable');
@@ -95,21 +96,26 @@ $(function () {
         return confirm("Your are going to delete an element definitely, do you confirm ?");
     });
 
-    $(document).on('click', ".song-review", function () {
-        let t = $(this);
 
+    $(document).on('click', ".ajax-load", function () {
+        let t = $(this);
+        let body = $(t.data('target') + " .modal-body");
+        body.html("loading ...");
+        let target = t.data('target');
         $.ajax({
             url: t.data('url'),
             data: {
                 id: t.data('song-id')
             },
             success: function (data) {
-                $("#form-review").html(data.response);
+                body.html(data.response);
+
+
                 $(".rating-list").on('change', function () {
                     let t = $(this);
                     $('input[name=' + t.data('input-selector') + ']').val(t.data('rating'));
                 });
-                $("#form-review form").on('submit', function () {
+                body.find("form").on('submit', function () {
                     let test = true;
                     $(this).find('input').each(function () {
                         if ($(this).val() === undefined || $(this).val() === "") {
@@ -124,17 +130,19 @@ $(function () {
                     let tt = $(this);
                     $.ajax({
                         url: tt.data('url'),
+                        type: tt.attr('method'),
                         data: tt.serialize(),
                         success: function (data) {
                             if (t.data('refresh')) {
                                 window.location.reload();
                             }
-                            t.closest(t.data('replace-selector')).html(data.response);
-                            $("#reviewSong").modal('hide');
+                            t.closest(t.data('replace-closest-selector')).html(data.response);
+                            $(t.data('replace-selector')).html(data.response);
+                            $(".modal:visible").modal('hide');
                         }
                     });
 
-                    $("#form-review").html("<div class=\"popup-box-actions white full void\">Sending your review</div>");
+                    body.html("<div class=\"popup-box-actions white full void\">Sending your form</div>");
 
 
                     return false;
@@ -143,16 +151,17 @@ $(function () {
         });
         return false;
 
-    })
+    });
+
 
     $(document).on('click', ".ajax-modal-form", function () {
         let t = $(this);
+
         $(t.data('modal')).modal('show');
         $.ajax({
             url: t.attr('href'),
             success: function (data) {
                 $("#form-edit").html(data.response);
-
                 $("#form-edit form").on('submit', function () {
 
                     let tt = $(this);
@@ -176,6 +185,7 @@ $(function () {
         return false;
 
     });
+
 
     $(document).on('change', "#chkSwitch", function () {
         let body = $('body');
