@@ -1,0 +1,12 @@
+<b>{{ song.name }}</b> <span class="light">by {{ song.authorName }}</span>
+{{ form_start(form) }}
+{{ form_row(form.songDifficulty) }}
+{{ form_row(form.feedback) }}
+<div class="row">
+    <div class="col-6">{{ form_widget(form.isPublic) }} {{ form_label(form.isPublic) }}</div>
+    <div class="col-6">{{ form_widget(form.isAnonymous) }} {{ form_label(form.isAnonymous) }}</div>
+</div>
+<small class="text-info">All feedbacks are moderated before being published</small>
+<br/>
+<button type="submit" class="btn btn-sm btn-primary">Save Feedback!</button>
+{{ form_end(form) }}
