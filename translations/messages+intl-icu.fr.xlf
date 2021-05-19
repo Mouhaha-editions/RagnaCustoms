@@ -451,6 +451,23 @@
         <source>Song not found!</source>
         <target>Musique non trouvé</target>
       </trans-unit>
+        <trans-unit id="44">
+            <source>Our application is magic! It creates the necessary folders and unzips the files in the right place, it also renames the folder with the song title for optimal in-game song ordering.</source>
+            <target>Notre application est magique ! elle créer les dossier nécessaires au bon endroit, elle renomme aussi les dossier avec le titre de la chanson pour un jeu optimal et une recherche efficace.</target>
+        </trans-unit>
+      <trans-unit id="46">
+        <source>You can get the executable by clicking on the button below:</source>
+        <target>Vous pouvez récuperr le fichier executable en cliquant sur le bouton ci-dessous :</target>
+      </trans-unit>
+      <trans-unit id="47">
+        <source>You only need to install the application once, future updates are automatic.</source>
+        <target>Vous avez seulement besoin d'installer  l'application une fois, les mises a jour futures seront automatiques.</target>
+      </trans-unit>
+      <trans-unit id="48">
+        <source>It also allows you to search through the catalogue and download without even visiting the website. A one-click option is also enabled for even simpler downloads!</source>
+        <target>Elle vous permet également de rechercher dans notre catalogue sans aller sur le site web. Une option One-click est également activée lors de l'installation  pour des téléchargements plus faciles !</target>
+      </trans-unit>
+
 
     </body>
   </file>
