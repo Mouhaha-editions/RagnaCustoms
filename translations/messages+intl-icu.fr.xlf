@@ -435,10 +435,6 @@
             <source>You need an account to send a feedback!</source>
             <target>Vous devez avoir un compte pour envoyer des suggestions !</target>
         </trans-unit>
-      <trans-unit id="40">
-        <source>You need to install our application once, Then the autoupdater do the job ;)</source>
-        <target>Vous n'avez besoin d'installer l'application qu'une seule fois, apres l'autoUpdater fera le reste.</target>
-      </trans-unit>
       <trans-unit id="41">
         <source>Please get and launch the .msi file</source>
         <target>SVP récuperez le .msi et installez le.</target>
