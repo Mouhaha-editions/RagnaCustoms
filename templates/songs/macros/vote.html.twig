@@ -11,10 +11,10 @@
     </div>
 {% endmacro %}
 {% macro starsDisplay(rating) %}
-    <div class="rating-list text-warning justify-content-center d-flex " data-input-selector="patternQuality">
+    <div class="rating-list text-warning justify-content-center d-flex " data-input-selector="patternQuality" data-toggle="tooltip" title="{{ rating|round(2) }}">
         {% for i in 0..4 %}
-            <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
-                <i class="{% if rating > i %}fas{% else %}far{% endif %} fa-star"></i>
+            <div data-id="{{ i }}" class="rating medium {% if rating|round(0) > i %}filled{% endif %}">
+                <i class="{% if rating|round(0) > i %}fas{% else %}far{% endif %} fa-star"></i>
             </div>
         {% endfor %}
     </div>

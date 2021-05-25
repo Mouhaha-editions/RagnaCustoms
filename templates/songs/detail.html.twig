@@ -125,9 +125,9 @@
                 </div>
 
                 <div class="col-md-6 text-center">
-                    <p class="numeric"><span>{{ song.voteAverage|round(1, "floor") }}</span>/5</p>
+                    <p class="numeric"><span>{{ song.voteAverage|round(2, "floor") }}</span>/5</p>
                     <div class="description">
-                        {{ macro_vote.starsDisplay(song.voteAverage|round(0, "floor")) }}
+                        {{ macro_vote.starsDisplay(song.voteAverage|round(2, "floor")) }}
                     </div>
                     <small>{{ song.countVotes }} vote(s)</small>
                 </div>

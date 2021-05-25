@@ -188,10 +188,6 @@ class Song
      */
     private $guid;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="song", orphanRemoval=true)
-     */
-    private $scores;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -209,7 +205,6 @@ class Song
         $this->votes = new ArrayCollection();
         $this->downloadCounters = new ArrayCollection();
         $this->viewCounters = new ArrayCollection();
-        $this->scores = new ArrayCollection();
         $this->songFeedback = new ArrayCollection();
     }
 
@@ -813,36 +808,6 @@ class Song
     public function setGuid(?string $guid): self
     {
         $this->guid = $guid;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Score[]
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
-    }
-
-    public function addScore(Score $score): self
-    {
-        if (!$this->scores->contains($score)) {
-            $this->scores[] = $score;
-            $score->setSong($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScore(Score $score): self
-    {
-        if ($this->scores->removeElement($score)) {
-            // set the owning side to null (unless already changed)
-            if ($score->getSong() === $this) {
-                $score->setSong(null);
-            }
-        }
 
         return $this;
     }
