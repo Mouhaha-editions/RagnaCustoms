@@ -36,12 +36,20 @@
                 </div>
             </div>
         </div>
+    </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
         <hr/>
         <div class="col-12">
-            <table class="table songs">
+            <h1> {{ "Your statistics"|trans }}</h1>
+            <table id="table-song" class="table songs">
                 <tr class="table-header">
                     <th class="table-header-column">
                         {{ "Song"|trans }}
+                    </th>
+                    <th class="table-header-column padded">
+                        {{ "Feedbacks"|trans }}
                     </th>
                     <th class="table-header-column padded">
                         {{ "LastUpdate"|trans }}

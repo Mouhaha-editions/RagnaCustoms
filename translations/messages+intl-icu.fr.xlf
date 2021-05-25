@@ -463,6 +463,22 @@
         <source>It also allows you to search through the catalogue and download without even visiting the website. A one-click option is also enabled for even simpler downloads!</source>
         <target>Elle vous permet également de rechercher dans notre catalogue sans aller sur le site web. Une option One-click est également activée lors de l'installation  pour des téléchargements plus faciles !</target>
       </trans-unit>
+        <trans-unit id="49">
+            <source>Your statistics</source>
+            <target>Vos statistiques</target>
+        </trans-unit>
+      <trans-unit id="50">
+        <source>Feedbacks</source>
+        <target>Retours</target>
+      </trans-unit>
+      <trans-unit id="51">
+        <source>My feedbacks</source>
+        <target>Mes retours</target>
+      </trans-unit>
+      <trans-unit id="52">
+        <source>Feedbacks on my custom songs</source>
+        <target>Retours sur mes custom songs</target>
+      </trans-unit>
 
 
     </body>

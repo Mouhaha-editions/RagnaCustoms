@@ -3,7 +3,7 @@
      data-url='{{ url('song_review',{id:song.id}) }}'
      data-song-id='{{ song.id }}'>
     <div class='rating-list d-flex flex-row'>
-        {% set rate = song.voteAverage %}
+        {% set rate = song.voteAverage|round(0) %}
         {% for i in 0..4 %}
             <div class='rating {% if rate > i %}filled text-warning{% endif %}'>
                 <i class='{% if rate > i %}fas{% else%}far{% endif%} fa-star'></i>

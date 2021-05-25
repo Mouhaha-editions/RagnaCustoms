@@ -25,7 +25,9 @@
                     {% endfor %}</p>
             </div>
         </td>
-
+        <td class="table-column padded">
+            {{ song.songFeedback|length }}
+        </td>
         <td class="table-column padded">
             {{ song.lastDateUpload.format('Y-m-d') }}
         </td>
@@ -38,7 +40,9 @@
             {{ song.beatsPerMinute|round }}
         </td>
 
-        <td class="table-column padded text-center ">
+        <td class="table-column padded text-center " style="width:90px;">
+            {{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}
+
             <div class="song-vote-{{ song.id }}">
                 {% include 'songs/partial/vote.html.twig' with {song:song} %}
             </div>
@@ -70,6 +74,9 @@
         <td>No song for now</td>
     </tr>
 {% endfor %}
-
-{% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-{{ macro_pagination.seeMore(songs,"see more"|trans) }}
+<tr class="see-more-delete">
+    <td colspan="11" class="text-center">
+        {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+        {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }}
+    </td>
+</tr>
