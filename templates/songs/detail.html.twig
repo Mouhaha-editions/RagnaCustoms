@@ -41,6 +41,11 @@
                        data-toggle="tab" data-target="#leaderboard" type="button" role="tab"
                        aria-controls="home" aria-selected="true">{{ "Leaderboard"|trans }}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link " id="test-tab"
+                       data-toggle="tab" data-target="#feedback" type="button" role="tab"
+                       aria-controls="home" aria-selected="true">{{ "Feedbacks"|trans }} <div class="badge badge-info">{{ song.songFeedbackPublic|length }}</div></a>
+                </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div
@@ -62,6 +67,27 @@
                 {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
 
                 <div
+                        class="tab-pane fade show"
+                        id="feedback" role="tabpanel">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1>{{ "Feedbacks"|trans }}</h1>
+                            {% for feedback in song.songFeedbackPublic %}
+                                <div>
+                                    {% if feedback.isAnonymous %}
+                                        <b>Anonymous : </b>
+                                    {% else %}
+                                        <b>{{ feedback.user.username }} : </b>
+                                    {% endif %}
+                                    {{ feedback.feedback }}
+                                </div>
+                                <hr/>
+                                {% else %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                    <div
                         class="tab-pane fade show"
                         id="leaderboard" role="tabpanel">
                     <div class="row">
