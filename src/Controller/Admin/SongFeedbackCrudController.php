@@ -22,7 +22,7 @@ class SongFeedbackCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id'),
-            ChoiceField::new('user'),
+            TextField::new('user'),
             TextEditorField::new('feedback'),
             BooleanField::new('isModerated'),
             BooleanField::new('isPublic'),
