@@ -134,6 +134,11 @@ class Utilisateur implements UserInterface
         $this->songFeedback = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+      return $this->username;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

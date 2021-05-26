@@ -832,6 +832,16 @@ class Song
         return $this->songFeedback;
     }
 
+    /**
+     * @return Collection|SongFeedback[]
+     */
+    public function getSongFeedbackPublic(): Collection
+    {
+        return $this->songFeedback->filter(function(SongFeedback $e){
+            return $e->getIsPublic() && $e->getIsModerated();
+        });
+    }
+
     public function addSongFeedback(SongFeedback $songFeedback): self
     {
         if (!$this->songFeedback->contains($songFeedback)) {

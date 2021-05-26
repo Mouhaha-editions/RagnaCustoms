@@ -37,6 +37,11 @@ import {createPopper} from 'bootstrap/js/dist/popover';
 import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 $(function () {
+    let hashtag = window.location.hash;
+    $("[data-target='" + hashtag + "']").click();
+    $("a[data-toggle='tab']").on('click', function () {
+        window.location.hash = $(this).data('target');
+    });
 
     // $(".popover-trigger").popover({trigger:'mouseover'});
     // $(".popover-trigger").popover("show");

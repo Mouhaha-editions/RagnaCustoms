@@ -319,8 +319,11 @@ class UploadSongController extends AbstractController
                     ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
                 if ($song->isModerated()) {
 //                    if ($this->container->getParameter('kernel.environment') != "dev") {
-
-                        $discordService->sendNewSongMessage($song);
+                       if($new){
+                           $discordService->sendNewSongMessage($song);
+                       }else{
+                           $discordService->sendUpdatedSongMessage($song);
+                       }
 //                    }
                     $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
                 } else {
