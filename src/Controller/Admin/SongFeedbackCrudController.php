@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\SongFeedback;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -16,7 +17,11 @@ class SongFeedbackCrudController extends AbstractCrudController
     {
         return SongFeedback::class;
     }
-
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud->setDefaultSort(['id'=>"DESC"]);
+        return $crud;
+    }
 
     public function configureFields(string $pageName): iterable
     {
