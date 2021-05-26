@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Utilisateur;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class UtilisateurCrudController extends AbstractCrudController
@@ -11,7 +12,11 @@ class UtilisateurCrudController extends AbstractCrudController
     {
         return Utilisateur::class;
     }
-
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud->setDefaultSort(['id'=>"DESC"]);
+        return $crud;
+    }
     /*
     public function configureFields(string $pageName): iterable
     {
