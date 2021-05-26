@@ -11,10 +11,11 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans+Condensed:wght@300&display=swap"
               rel="stylesheet">
     {% endblock %}
-    <link  id="favicon"  rel="icon" href="/apps/favicon.ico">
+    <link id="favicon" rel="icon" href="/apps/favicon.ico">
     <title>{% block title %}| RagnaCustoms{% endblock %}</title>
     <script type="text/javascript" src="https://tarteaucitron.io/load.js"></script>
-    <link rel="alternate" type="application/rss+xml" title="RagnaCustoms.com our catalog" href="https://ragnacustoms.com/rss.xml">
+    <link rel="alternate" type="application/rss+xml" title="RagnaCustoms.com our catalog"
+          href="https://ragnacustoms.com/rss.xml">
     {% block metas %}
         <meta property="description" value="RagnaCustoms.com find your favorite custom songs for Ragnaröck VR">
         <meta property="og:url" content="https://ragnacustoms.com"/>
@@ -42,7 +43,9 @@
             </li>
             <li class="nav-item">
                 {% set count = twitchService.countStreamers() %}
-                <a class="nav-link text-twitch" target="_blank" rel="nofollow" href="https://www.twitch.tv/directory/game/Ragnaröck">Live ({{ count }}{% if count == 100 %}+{% endif %})</a>
+                <a class="nav-link text-twitch" target="_blank" rel="nofollow"
+                   href="https://www.twitch.tv/directory/game/Ragnaröck">Live
+                    ({{ count }}{% if count == 100 %}+{% endif %})</a>
             </li>
             {% if app.request.locale == 'en' %}
                 <li class="nav-item">
@@ -63,6 +66,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('score_global_ranking') }}">Global ranking</a>
             </li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin dashboard</a>
+                </li>
+            {% endif %}
         </ul>
         <ul class="navbar-nav">
             <li class="nav-item pt-1">
@@ -91,8 +99,9 @@
                         <hr class="m-1"/>
                         <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
                         {% if app.user.songs|length > 0 %}
-                        <hr class="m-1"/>
-                        <a class="dropdown-item" href="{{ url('user_song_feedback') }}">{{ "My feedbacks"|trans }}</a>
+                            <hr class="m-1"/>
+                            <a class="dropdown-item"
+                               href="{{ url('user_song_feedback') }}">{{ "My feedbacks"|trans }}</a>
                         {% endif %}
                         <hr class="m-1"/>
                         <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
@@ -101,7 +110,7 @@
             {% endif %}
             <li class="nav-item">
                 <a class="nav-link" href="https://discord.gg/nRnsgCCBvq" target="_blank"><i class="fab fa-discord"></i>
-                    </a>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="https://www.facebook.com/RagnaCustoms" target="_blank"><i
@@ -116,7 +125,7 @@
                             class="fab fa-reddit"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" title="How to ?" href="{{ url('howto') }}" ><i
+                <a class="nav-link" title="How to ?" href="{{ url('howto') }}"><i
                             class="fas fa-question-circle"></i></a>
             </li>
         </ul>
@@ -145,14 +154,14 @@
 <hr/>
 <div class="p-3 text-center">
     discuss with us :&nbsp;
-        <a class="text" href="https://discord.gg/nRnsgCCBvq" target="_blank"><i class="fab fa-discord"></i>
-        </a>&nbsp;
-        <a class="text" href="https://www.facebook.com/RagnaCustoms" target="_blank"><i
-                    class="fab fa-facebook"></i></a>&nbsp;
-        <a class="text" href="https://twitter.com/ragnacustoms" target="_blank"><i
-                    class="fab fa-twitter"></i></a>&nbsp;
-        <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" target="_blank"><i
-                    class="fab fa-reddit"></i></a>
+    <a class="text" href="https://discord.gg/nRnsgCCBvq" target="_blank"><i class="fab fa-discord"></i>
+    </a>&nbsp;
+    <a class="text" href="https://www.facebook.com/RagnaCustoms" target="_blank"><i
+                class="fab fa-facebook"></i></a>&nbsp;
+    <a class="text" href="https://twitter.com/ragnacustoms" target="_blank"><i
+                class="fab fa-twitter"></i></a>&nbsp;
+    <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" target="_blank"><i
+                class="fab fa-reddit"></i></a>
     <br/>
     {{ "This application is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>"|trans|raw }}
 
