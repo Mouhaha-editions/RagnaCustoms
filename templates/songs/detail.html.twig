@@ -160,11 +160,12 @@
 
             </div>
             <div class="text-center">
-                <button class="btn btn-block btn-sm btn-info mt-1 mb-2 song-review" data-toggle="modal"
+                <button class="btn btn-block ajax-load ajax-modal-form  btn-sm btn-info mt-1 mb-2 song-review" data-toggle="modal"
                         data-target="#reviewSong"
                         data-refresh="true"
                         data-url="{{ url('song_review',{id:song.id}) }}"
-                        data-song-id="{{ song.id }}">{{ "I want to vote"|trans }}</button>
+                        data-song-id="{{ song.id }}"
+                >{{ "I want to vote"|trans }}</button>
             </div>
             <h3 class="text-center">{{ "Informations"|trans }}</h3>
 
