@@ -131,31 +131,31 @@ class ApiController extends AbstractController
         });
         foreach ($data as $subScore) {
             try {
-                $song = $songRepository->findOneBy(['newGuid' => $subScore["hashInfo"]]);
+                $song = $songRepository->findOneBy(['newGuid' => $subScore["HashInfo"]]);
                 if ($song == null) {
                     $results[] = [
-                        "hash" => $subScore["hashInfo"],
-                        "level" => $subScore["level"],
+                        "hash" => $subScore["HashInfo"],
+                        "level" => $subScore["Level"],
                         "success" => false,
                         "error" => "1_SONG_NOT_FOUND"
                     ];
-                    $logger->error("API : " . $apiKey . " " . $subScore["hashInfo"] . " 1_SONG_NOT_FOUND");
+                    $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " 1_SONG_NOT_FOUND");
                     continue;
 //                    return new JsonResponse($results,400);
                 }
-                $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['level']]);
+                $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['Level']]);
                 $songDiff = $songDifficultyRepository->findOneBy([
                     'song' => $song,
                     "difficultyRank" => $rank
                 ]);
                 if ($songDiff == null) {
                     $results[] = [
-                        "hash" => $subScore["hashInfo"],
-                        "level" => $subScore["level"],
+                        "hash" => $subScore["HashInfo"],
+                        "level" => $subScore["Level"],
                         "success" => false,
                         "error" => "2_LEVEL_NOT_FOUND"
                     ];
-                    $logger->error("API : " . $apiKey . " " . $subScore["hashInfo"] . " " . $subScore["level"] . " 2_LEVEL_NOT_FOUND");
+                    $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " " . $subScore["level"] . " 2_LEVEL_NOT_FOUND");
                     continue;
 //                    return new JsonResponse($results,400);
                 }
@@ -169,26 +169,26 @@ class ApiController extends AbstractController
                     $score->setSongDifficulty($songDiff);
                     $em->persist($score);
                 }
-                $score->setScore(round(floatval($subScore['score']) / 100, 2));
+                $score->setScore(round(floatval($subScore['Score']) / 100, 2));
                 if ($score->getScore() >= 99000) {
                     $score->setScore($score->getScore() / 1000000);
                 }
                 $em->flush();
                 $results[] = [
-                    "hash" => $subScore["hashInfo"],
-                    "level" => $subScore["level"],
+                    "hash" => $subScore["HashInfo"],
+                    "level" => $subScore["Level"],
                     "success" => true,
                     "error" => "SUCCESS"
                 ];
             } catch (Exception $e) {
                 $results[] = [
-                    "hash" => $subScore["hashInfo"],
-                    "level" => $subScore["level"],
+                    "hash" => $subScore["HashInfo"],
+                    "level" => $subScore["Level"],
                     "success" => false,
                     "error" => "3_SCORE_NOT_SAVED",
                     'deatil'=>$e->getMessage()
                 ];
-                $logger->error("API : " . $apiKey . " " . $subScore["hashInfo"] . " " . $subScore["level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage());
+                $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " " . $subScore["level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage());
 
 //                return new JsonResponse($results,400);
 
