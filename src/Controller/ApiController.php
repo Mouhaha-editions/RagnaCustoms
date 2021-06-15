@@ -155,7 +155,7 @@ class ApiController extends AbstractController
                         "success" => false,
                         "error" => "2_LEVEL_NOT_FOUND"
                     ];
-                    $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " " . $subScore["level"] . " 2_LEVEL_NOT_FOUND");
+                    $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " " . $subScore["Level"] . " 2_LEVEL_NOT_FOUND");
                     continue;
 //                    return new JsonResponse($results,400);
                 }
