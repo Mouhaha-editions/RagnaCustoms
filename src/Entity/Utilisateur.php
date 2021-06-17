@@ -87,7 +87,7 @@ class Utilisateur implements UserInterface
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $isMapper;
+    private $isMapper = false;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -95,9 +95,10 @@ class Utilisateur implements UserInterface
     private $mapper_name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
+     *
      */
-    private $mapper_description;
+    private $mapper_description = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -112,7 +113,7 @@ class Utilisateur implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $mapper_discord;
+    private $mapper_discord = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -122,7 +123,17 @@ class Utilisateur implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="user")
      */
-    private $songFeedback;
+    private $songFeedback ;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPublic = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $enableEmailNotification = false;
 
     public function __construct()
     {
@@ -219,7 +230,10 @@ class Utilisateur implements UserInterface
     {
         return $this->email;
     }
-
+    public function getGravatar(): ?string
+    {
+        return $grav_url = "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $this->email ) ) ) . "?d=" . urlencode( "https://ragnacustoms.com/apps/runes.png" ) . "&s=300";;
+    }
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -440,7 +454,7 @@ class Utilisateur implements UserInterface
         return $this->isMapper;
     }
 
-    public function setIsMapper(?bool $isMapper): self
+    public function setIsMapper(?bool $isMapper = false): self
     {
         $this->isMapper = $isMapper;
 
@@ -500,7 +514,7 @@ class Utilisateur implements UserInterface
         return $this->mapper_discord;
     }
 
-    public function setMapperDiscord(string $mapper_discord): self
+    public function setMapperDiscord(string $mapper_discord = null): self
     {
         $this->mapper_discord = $mapper_discord;
 
@@ -545,6 +559,30 @@ class Utilisateur implements UserInterface
                 $songFeedback->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic = false): self
+    {
+        $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    public function getEnableEmailNotification(): ?bool
+    {
+        return $this->enableEmailNotification;
+    }
+
+    public function setEnableEmailNotification(bool $enableEmailNotification = false): self
+    {
+        $this->enableEmailNotification = $enableEmailNotification;
 
         return $this;
     }
