@@ -19,6 +19,8 @@
             <div class="d-flex">
                 <div class="p-5">
                     <img src="{{ app.user.gravatar }}" alt="Your profile picture"/><br/>
+                    <small>For the picture we use <a href="https://gravatar.com/" target="_blank">Gravatar</a> please use it too</small>
+
                     <h2>{{ app.user.username }}</h2>
                 </div>
                 <div class="flex-fill p-5">
@@ -45,8 +47,6 @@
                 </div>
             </div>
 
-
-            <h2> Your api key for scoring</h2>
         </div>
     </div>
 {% endblock %}
