@@ -191,7 +191,16 @@ $(function () {
 
     });
 
+    $(document).on('change', "#utilisateur_isPublic", function () {
+        let t = $(this);
+        if (t.is(":checked")) {
+            $("#public_informations").show();
+        } else {
+            $("#public_informations").hide();
+        }
+    });
 
+    $("#utilisateur_isPublic").trigger('change');
     $(document).on('change', "#chkSwitch", function () {
         let body = $('body');
         if ($(this).is(':checked')) {
@@ -222,8 +231,8 @@ $(function () {
             $("#form_resetVote").closest("div").addClass('d-none');
         }
     });
+});
 
-})
 
 function setCookie(cname, cvalue) {
     var d = new Date();
@@ -247,6 +256,7 @@ function getCookie(cname) {
     }
     return null;
 }
+
 //
 // window.onload = function () {
 //     let value = 8;

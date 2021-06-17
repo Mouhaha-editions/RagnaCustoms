@@ -1,13 +1,52 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}My Profile{% endblock %}
 {% block body %}
-<div class="row">
-    <div class="col-12">
-        <h1>{{ "My profile"|trans }}</h1>
-{#        {{ form(form) }}#}
+    <div class="row">
+        <div class="col-12">
+            <h1>{{ "My profile"|trans }}</h1>
+            <div class="form-group row pl-5 pt-5">
+                <label for="ApiKey" class="col-sm-2 col-form-label">{{ "Your API key"|trans }} : </label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input id="ApiKey" class="form-control" value="{{ app.user.apiKey }}" readonly/>
+                        <div class="input-group-append">
+                            <div class="input-group-text copy-clipboard" title="{{ "copied !"|trans }}"
+                                 data-to-copy="{{ app.user.apiKey }}"><i class="fa fa-copy"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="p-5">
+                    <img src="{{ app.user.gravatar }}" alt="Your profile picture"/><br/>
+                    <h2>{{ app.user.username }}</h2>
+                </div>
+                <div class="flex-fill p-5">
+                    {{ form_start(form) }}
+                    {{ form_errors(form) }}
+                    {{ form_row(form.email) }}
+                    <div class="form-check form-check-inline">
+                        {{ form_widget(form.isMapper,{"attr":{"class":"form-check-input"}}) }}
+                        {{ form_label(form.isMapper,null,{"label_attr":{"class":"form-check-label"}}) }}
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {{ form_widget(form.isPublic,{"attr":{"class":"form-check-input"}}) }}
+                        {{ form_label(form.isPublic,null,{"label_attr":{"class":"form-check-label"}}) }}
+                    </div><div class="form-check form-check-inline">
+                        {{ form_widget(form.enableEmailNotification,{"attr":{"class":"form-check-input"}}) }}
+                        {{ form_label(form.enableEmailNotification,null,{"label_attr":{"class":"form-check-label"}}) }}
+                    </div>
+                    <div  id="public_informations" style="display: none">
+                        {{ form_row(form.mapperName) }}
+                        {{ form_row(form.mapperDiscord) }}
+                        {{ form_row(form.mapperDescription) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
 
-        <h2> Your api key for scoring</h2>
-        {{ app.user.apiKey }}
+
+            <h2> Your api key for scoring</h2>
+        </div>
     </div>
-</div>
 {% endblock %}
