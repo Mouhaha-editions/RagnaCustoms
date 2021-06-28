@@ -172,11 +172,12 @@ class ApiController extends AbstractController
                 $scoreData = round(floatval($subScore['Score']) / 100, 2);
                if($score->getScore() < $scoreData) {
                    $score->setScore($scoreData);
+                   if ($score->getScore() >= 99000) {
+                       $score->setScore($score->getScore() / 1000000);
+                   }
                }
 
-                if ($score->getScore() >= 99000) {
-                    $score->setScore($score->getScore() / 1000000);
-                }
+
                 $em->flush();
                 $results[] = [
                     "hash" => $subScore["HashInfo"],
