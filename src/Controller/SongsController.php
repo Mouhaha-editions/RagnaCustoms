@@ -90,6 +90,7 @@ class SongsController extends AbstractController
             $scores = $this->getDoctrine()->getRepository(Score::class)->createQueryBuilder('s')
                 ->where('s.songDifficulty = :diff')
                 ->setParameter('diff', $difficulty)
+                ->groupBy('s.user')
                 ->orderBy('s.score', 'DESC');
 
             $pagination = $paginationService->setDefaults(50)->process($scores, $request);
