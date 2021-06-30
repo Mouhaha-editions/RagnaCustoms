@@ -2,7 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Season;
 use App\Entity\Song;
+use App\Entity\SongDifficulty;
 use App\Entity\SongFeedback;
 use App\Entity\Utilisateur;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -46,6 +48,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Song', 'fa fa-music', Song::class);
         yield MenuItem::linkToCrud('Feedback', 'fa fa-list', SongFeedback::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', Utilisateur::class);
+        yield MenuItem::linkToCrud('Seasons', 'fa fa-tree', Season::class);
+        yield MenuItem::linkToCrud('Difficulties', 'fa fa-star', SongDifficulty::class);
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 }

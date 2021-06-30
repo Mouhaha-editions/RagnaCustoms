@@ -40,7 +40,7 @@ class SongDifficulty
     private $difficultyRank;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songDifficulties")
+     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songDifficulties",cascade={"persist", "remove"})
      */
     private $song;
 
@@ -70,6 +70,11 @@ class SongDifficulty
      */
     private $ranked;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Season::class, mappedBy="difficulties",cascade="all")
+     */
+    private $seasons;
+
     public function __toString()
     {
         return "level ".$this->getDifficultyRank()->getLevel();
@@ -78,6 +83,7 @@ class SongDifficulty
     {
         $this->scores = new ArrayCollection();
         $this->songFeedback = new ArrayCollection();
+        $this->seasons = new ArrayCollection();
     }
 
 
@@ -246,6 +252,33 @@ class SongDifficulty
             if ($songFeedback->getSongDifficulty() === $this) {
                 $songFeedback->setSongDifficulty(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Season[]
+     */
+    public function getSeasons(): Collection
+    {
+        return $this->seasons;
+    }
+
+    public function addSeason(Season $season): self
+    {
+        if (!$this->seasons->contains($season)) {
+            $this->seasons[] = $season;
+            $season->addDifficulty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeason(Season $season): self
+    {
+        if ($this->seasons->removeElement($season)) {
+            $season->removeDifficulty($this);
         }
 
         return $this;

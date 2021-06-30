@@ -39,9 +39,15 @@ class Season
      */
     private $scores;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=SongDifficulty::class, inversedBy="seasons",cascade={"persist", "remove"})
+     */
+    private $difficulties;
+
     public function __construct()
     {
         $this->scores = new ArrayCollection();
+        $this->difficulties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,6 +117,35 @@ class Season
                 $score->setSeason(null);
             }
         }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getLabel();
+}
+    /**
+     * @return Collection|SongDifficulty[]
+     */
+    public function getDifficulties(): Collection
+    {
+        return $this->difficulties;
+    }
+
+    public function addDifficulty(SongDifficulty $difficulty): self
+    {
+        if (!$this->difficulties->contains($difficulty)) {
+            $this->difficulties[] = $difficulty;
+            $difficulty->addSeason($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDifficulty(SongDifficulty $difficulty): self
+    {
+        $this->difficulties->removeElement($difficulty);
 
         return $this;
     }
