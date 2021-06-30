@@ -19,7 +19,7 @@
             </a>
 
             <div class="song-preview pl-2">
-                <p class="title"><a href="{{ url('song_detail',{id:song.id}) }}">{{ song.name }}</a></p>
+                <p class="title"> <a href="{{ url('song_detail',{id:song.id}) }}">{{ song.name }}</a></p>
                 <p class="category"><a
                             href="{{ url('home') }}?search=artist:{{ song.authorName }}">{{ song.authorName }}</a></p>
                 <p class="creator">Mapped by : <a
@@ -28,7 +28,7 @@
                 <p class="difficulties">Difficulties :
                     {% for diff in song.songDifficulties %}
                         {% if loop.index != 1 %}, {% endif %}
-                        <span style="color:#{{ diff.difficultyRank.color }}">{{ diff.difficultyRank.level }}</span>
+                        <span style="color:#{{ diff.difficultyRank.color }}">{% if diff.isRanked%}<i class="fas fa-trophy"></i>{% endif %} {{ diff.difficultyRank.level }}</span>
                     {% endfor %}</p>
             </div>
         </td>

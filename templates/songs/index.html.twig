@@ -29,6 +29,8 @@
                                     value="2">{{ "4-7"|trans }}</option>
                             <option {% if app.request.get('downloads_filter_difficulties') == 3 %}selected="selected"{% endif %}
                                     value="3">{{ "8-10"|trans }}</option>
+                            <option {% if app.request.get('downloads_filter_order') == 4 %}selected="selected"{% endif %} value="4">{{ "Ranked only"|trans }}</option>
+
                         </select>
                     </div>
                     <div class="col-md-2 form-group ">

@@ -208,6 +208,17 @@ class Song
         $this->songFeedback = new ArrayCollection();
     }
 
+    public function isRanked()
+    {
+        foreach($this->getSongDifficulties() as $difficulty){
+            foreach ($difficulty->getSeasons() AS $season) {
+                if ($season->isActive()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public function __toString()
     {
        return $this->getName();
