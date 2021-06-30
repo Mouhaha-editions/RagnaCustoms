@@ -192,8 +192,24 @@ class UploadSongController extends AbstractController
                     "authorName" => $json->_songAuthorName,
                     "levelAuthorName" => $json->_levelAuthorName,
                 ]);
+
                 $new = true;
                 if ($song != null) {
+
+                    foreach($song->getSongDifficulties() AS $difficulty){
+                        foreach($difficulty->getSeasons() AS $season){
+                            if($season->isActive()){
+                                $this->addFlash("danger", $translator->trans("The song \"%song%\" by \"%artist%\" is used for this season ranking, you can't update it for now, come back a the end of the season..", [
+                                    "%song%" => $song->getName(),
+                                    "%artist%" => $song->getAuthorName(),
+
+                                ]));
+                                return $this->redirectToRoute("upload_song");
+                            }
+                        }
+                    }
+
+
                     $new = false;
                     if ($song->getUser() == $this->getUser() && $form->get('replaceExisting')->getData()) {
 
