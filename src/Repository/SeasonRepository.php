@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Season;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +48,24 @@ class SeasonRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getCurrent()
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.startDate <= :now')
+            ->andWhere('s.endDate >= :now')
+            ->setParameter('now', new DateTime())
+            ->getQuery()
+            ->getOneOrNullResult();
+
+    }
+
+    public function getOld()
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.endDate <= :now')
+            ->setParameter('now', new DateTime())
+            ->orderBy("s.endDate", "ASC")
+            ->getQuery()
+            ->getResult();
+    }
 }

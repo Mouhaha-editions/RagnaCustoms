@@ -71,7 +71,7 @@ class SongDifficulty
     private $ranked;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Season::class, mappedBy="difficulties",cascade="all")
+     * @ORM\ManyToMany(targetEntity=Season::class, mappedBy="difficulties")
      */
     private $seasons;
 

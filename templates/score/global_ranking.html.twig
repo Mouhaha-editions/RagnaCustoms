@@ -3,7 +3,7 @@
 {% block body %}
     <div class="row mt-5">
         <div class="col-12">
-            <h1>Global Ranking</h1>
+            <h1>Ranking "{{ season.label }}"</h1>
             <table class="table">
                 <tr>
                     <th>Rank</th>
@@ -12,15 +12,28 @@
                     <th class="text-right">Songs played</th>
                 </tr>
                 {% for score in scores.entities %}
-                <tr {% if is_granted('ROLE_USER') and score["username"] == app.user.username  %}class="text-success"{% endif %}>
-                    <td>#{{ loop.index*(scores.current) }}</td>
-                    <td>{{ score["username"] }}</td>
-                    <td class="text-right">{{ score["score"]|round(2) }} pts</td>
-                    <td class="text-right">{{ score["count_song"] }}</td>
-                </tr>
+                    <tr {% if is_granted('ROLE_USER') and score["username"] == app.user.username %}class="text-success"{% endif %}>
+                        <td>#{{ loop.index*(scores.current) }}</td>
+                        <td>{{ score["username"] }}</td>
+                        <td class="text-right">{{ score["score"]|round(2) }} pts</td>
+                        <td class="text-right">{{ score["count_song"] }}</td>
+                    </tr>
                 {% endfor %}
             </table>
         </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2>Archive</h2>
+        </div>
+
+        {% for season in oldSeasons %}
+            <div class="col-md-3">
+                <a href="{{ url("score_global_ranking",{id:season.id}) }}" class="btn btn-block text-center btn-default">{{ season.label }}</a>
+            </div>
+        {% else %}
+            <p>{{ "No archive for now"|trans }}</p>
+        {% endfor %}
     </div>
 {% endblock %}
 
