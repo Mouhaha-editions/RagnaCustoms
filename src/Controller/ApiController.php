@@ -7,6 +7,7 @@ use App\Entity\Song;
 use App\Entity\Utilisateur;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\ScoreRepository;
+use App\Repository\SeasonRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
@@ -95,7 +96,7 @@ class ApiController extends AbstractController
     /**
      * @Route("/api/score/v2", name="api_score_v2")
      */
-    public function scoreV2(Request $request, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository, LoggerInterface $logger): Response
+    public function scoreV2(Request $request,SeasonRepository $seasonRepository, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository, LoggerInterface $logger): Response
     {
         $em = $this->getDoctrine()->getManager();
         $results = [];
@@ -129,6 +130,16 @@ class ApiController extends AbstractController
         configureScope(function (Scope $scope) use ($user): void {
             $scope->setUser(['username' => $user->getUsername()]);
         });
+
+        $season = $seasonRepository->createQueryBuilder('s')
+            ->where('s.startDate <= :now')
+            ->andWhere('s.endDate >= :now')
+            ->setParameter('now', new \DateTime())
+            ->setFirstResult(0)->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+
+
         foreach ($data as $subScore) {
             try {
                 $song = $songRepository->findOneBy(['newGuid' => $subScore["HashInfo"]]);
@@ -148,6 +159,7 @@ class ApiController extends AbstractController
                     'song' => $song,
                     "difficultyRank" => $rank
                 ]);
+
                 if ($songDiff == null) {
                     $results[] = [
                         "hash" => $subScore["HashInfo"],
@@ -161,12 +173,14 @@ class ApiController extends AbstractController
                 }
                 $score = $scoreRepository->findOneBy([
                     'user' => $user,
-                    'songDifficulty' => $songDiff
+                    'songDifficulty' => $songDiff,
+                    'season'=>$season
                 ]);
                 if ($score == null) {
                     $score = new Score();
                     $score->setUser($user);
                     $score->setSongDifficulty($songDiff);
+                    $score->setSeason($season);
                     $em->persist($score);
                 }
                 $scoreData = round(floatval($subScore['Score']) / 100, 2);
@@ -176,7 +190,6 @@ class ApiController extends AbstractController
                        $score->setScore($score->getScore() / 1000000);
                    }
                }
-
 
                 $em->flush();
                 $results[] = [

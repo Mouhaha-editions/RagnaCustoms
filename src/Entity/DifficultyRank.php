@@ -39,6 +39,11 @@ class DifficultyRank
         $this->songDifficulties = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return "level " . $this->getLevel();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
