@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Season;
 use App\Entity\Song;
 use App\Repository\ScoreRepository;
+use App\Repository\SeasonRepository;
 use App\Repository\SongRepository;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,19 +30,29 @@ class ScoreController extends AbstractController
     }
 
     /**
-     * @Route("/ranking/global", name="score_global_ranking")
+     * @Route("/ranking/global/{id}", name="score_global_ranking", defaults={"id"=null})
      */
-    public function globalRanking(Request $request, ScoreRepository $scoreRepository, PaginationService $paginationService): Response
+    public function globalRanking(Request $request, ScoreRepository $scoreRepository, SeasonRepository $seasonRepository, PaginationService $paginationService,Season $season = null): Response
     {
+        $oldSeason =             $season = $seasonRepository->getOld();
+
+        if($season === null) {
+            $season = $seasonRepository->getCurrent();
+        }
         $qb = $scoreRepository->createQueryBuilder('s')
             ->select('u.username AS username, SUM(s.score)/1000 AS score, COUNT(s.songDifficulty) AS count_song')
             ->leftJoin('s.user', 'u')
+            ->andWhere('s.season = :season')
+            ->setParameter('season', $season)
             ->groupBy('s.user')
             ->orderBy('SUM(s.score)', 'DESC');
+//        $scores = $qb->getQuery()->getResult();
         $scores = $paginationService->setDefaults(200)->process($qb, $request);
 
         return $this->render('score/global_ranking.html.twig', [
-            'scores' => $scores
+            'scores' => $scores,
+            'season' => $season,
+            'oldSeasons' => $oldSeason,
         ]);
     }
 }

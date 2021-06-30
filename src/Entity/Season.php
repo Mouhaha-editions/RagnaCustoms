@@ -40,7 +40,7 @@ class Season
     private $scores;
 
     /**
-     * @ORM\ManyToMany(targetEntity=SongDifficulty::class, inversedBy="seasons",cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity=SongDifficulty::class, inversedBy="seasons")
      */
     private $difficulties;
 
