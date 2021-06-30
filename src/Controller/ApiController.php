@@ -171,16 +171,26 @@ class ApiController extends AbstractController
                     continue;
 //                    return new JsonResponse($results,400);
                 }
-                $score = $scoreRepository->findOneBy([
-                    'user' => $user,
-                    'songDifficulty' => $songDiff,
-                    'season'=>$season
-                ]);
+                if($songDiff->isRanked()) {
+                    $score = $scoreRepository->findOneBy([
+                        'user' => $user,
+                        'songDifficulty' => $songDiff,
+                        'season' => $season
+                    ]);
+                }else{
+                    $score = $scoreRepository->findOneBy([
+                        'user' => $user,
+                        'songDifficulty' => $songDiff,
+                        'season' => $season
+                    ]);
+                }
                 if ($score == null) {
                     $score = new Score();
                     $score->setUser($user);
                     $score->setSongDifficulty($songDiff);
-                    $score->setSeason($season);
+                    if($songDiff->isRanked()) {
+                        $score->setSeason($season);
+                    }
                     $em->persist($score);
                 }
                 $scoreData = round(floatval($subScore['Score']) / 100, 2);
