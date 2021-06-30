@@ -75,10 +75,10 @@ class SongDifficulty
      */
     private $seasons;
 
-    public function __toString()
-    {
-        return "level ".$this->getDifficultyRank()->getLevel();
-    }
+//    public function __toString()
+//    {
+//        return "level ".$this->getDifficultyRank()->getLevel();
+//    }
     public function __construct()
     {
         $this->scores = new ArrayCollection();
@@ -86,6 +86,10 @@ class SongDifficulty
         $this->seasons = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->getSong()->getName()." Level ".$this->getDifficultyRank()->getLevel();
+}
 
     public function getId(): ?int
     {
