@@ -34,7 +34,7 @@ class SongDifficultyCrudController extends AbstractCrudController
         }
         $em->flush();
     }
-
+    
     public function configureFields(string $pageName): iterable
     {
         $qb =
