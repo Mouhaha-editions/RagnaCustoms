@@ -66,11 +66,6 @@ class SongDifficulty
     private $songFeedback;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $ranked;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Season::class, mappedBy="difficulties")
      */
     private $seasons;
@@ -88,8 +83,8 @@ class SongDifficulty
 
     public function __toString()
     {
-        return $this->getSong()->getName()." Level ".$this->getDifficultyRank()->getLevel();
-}
+        return $this->getSong()->getName() . " Level " . $this->getDifficultyRank()->getLevel();
+    }
 
     public function getId(): ?int
     {
@@ -219,17 +214,6 @@ class SongDifficulty
         return $this;
     }
 
-    public function getRanked(): ?bool
-    {
-        return $this->ranked;
-    }
-
-    public function setRanked(bool $ranked): self
-    {
-        $this->ranked = $ranked;
-
-        return $this;
-    }
 
     /**
      * @return Collection|SongFeedback[]
@@ -286,5 +270,15 @@ class SongDifficulty
         }
 
         return $this;
+    }
+
+    public function isRanked()
+    {
+        foreach ($this->getSeasons() as $season) {
+            if ($season->isActive()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -483,6 +483,10 @@
             <source>No archive for now</source>
             <target>Pas d'archive pour le moment</target>
         </trans-unit>
+      <trans-unit id="54">
+        <source>Ranked first</source>
+        <target>Ranked en premier</target>
+      </trans-unit>
 
 
     </body>

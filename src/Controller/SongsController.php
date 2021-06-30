@@ -305,6 +305,12 @@ class SongsController extends AbstractController
                     break;
                 case 3 :
                     $qb->where('rank.level BETWEEN 8 and 10');
+                    break;
+                case 4 :
+                    $qb->leftJoin('song_difficulties.seasons','season');
+                    $qb->where('season.startDate <= :now ')
+                    ->andWhere('season.endDate >= :now')
+                    ->setParameter('now',new \DateTime());
 
                     break;
             }
