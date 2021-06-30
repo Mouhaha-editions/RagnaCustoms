@@ -34,7 +34,7 @@ class ScoreController extends AbstractController
      */
     public function globalRanking(Request $request, ScoreRepository $scoreRepository, SeasonRepository $seasonRepository, PaginationService $paginationService,Season $season = null): Response
     {
-        $oldSeason =             $season = $seasonRepository->getOld();
+        $oldSeason = $seasonRepository->getOld();
 
         if($season === null) {
             $season = $seasonRepository->getCurrent();
