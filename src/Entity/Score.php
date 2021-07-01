@@ -10,7 +10,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Entity(repositoryClass=ScoreRepository::class)
  * @ORM\Table(name="score", uniqueConstraints={
  *  @ORM\UniqueConstraint(name="user_difficulty",
- *            columns={"user_id", "song_difficulty_id"})
+ *            columns={"user_id", "song_difficulty_id","season_id"})
  *     })
  */
 class Score
