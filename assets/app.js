@@ -96,6 +96,7 @@ $(function () {
 
         return false;
     });
+$(".nav-tabs > .nav-item:first-child>a").click();
 
     $(document).on('click', '.ask-for-confirmation', function () {
         return confirm("Your are going to delete an element definitely, do you confirm ?");
