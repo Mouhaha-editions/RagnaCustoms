@@ -22,31 +22,45 @@ class ScoreController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
+    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService, SeasonRepository $seasonRepository): Response
     {
         $qb = $songRepository->createQueryBuilder('s')
             ->where('s.moderated = true')
             ->orderBy('s.name', 'ASC');
-        $songs = $paginationService->setDefaults(20)->process($qb,$request);
+        $selectedSeason = null;
+        if ($request->get('season')) {
+            $qb->leftJoin('s.songDifficulties', 'difficulties')
+                ->leftJoin('difficulties.seasons', 'season')
+                ->andWhere('season.id = :season')
+                ->setParameter('season', $request->get('season'));
+            $selectedSeason = $seasonRepository->find($request->get('season'));
+        }
+        $songs = $paginationService->setDefaults(20)->process($qb, $request);
 
-        if($songs->isPartial()){
+        if ($songs->isPartial()) {
             return $this->render('score/partial/songs_page.html.twig', [
-                'songs' => $songs
+                'songs' => $songs,
+                'seasons' => $seasonRepository->createQueryBuilder('s')->orderBy('s.id', "desc")->getQuery()->getResult(),
+                'selected_season' => $selectedSeason,
+
             ]);
         }
         return $this->render('score/index.html.twig', [
-            'songs' => $songs
+            'songs' => $songs,
+            'seasons' => $seasonRepository->createQueryBuilder('s')->orderBy('s.id', "desc")->getQuery()->getResult(),
+            'selected_season' => $selectedSeason,
+
         ]);
     }
 
     /**
      * @Route("/ranking/global/{id}", name="score_global_ranking", defaults={"id"=null})
      */
-    public function globalRanking(Request $request, ScoreRepository $scoreRepository, SeasonRepository $seasonRepository, PaginationService $paginationService,Season $season = null): Response
+    public function globalRanking(Request $request, ScoreRepository $scoreRepository, SeasonRepository $seasonRepository, PaginationService $paginationService, Season $season = null): Response
     {
         $oldSeason = $seasonRepository->getOld();
 
-        if($season === null) {
+        if ($season === null) {
             $season = $seasonRepository->getCurrent();
         }
         $qb = $scoreRepository->createQueryBuilder('s')

@@ -1,6 +1,6 @@
 {% import "score/macro/song.html.twig" as macro_song %}
 {% for song in songs.entities %}
-    {{ macro_song.scoringSong(song) }}
+    {{ macro_song.scoringSong(song,selected_season) }}
 {% endfor %}
 
         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}

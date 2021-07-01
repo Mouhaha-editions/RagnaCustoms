@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Score;
+use App\Entity\Season;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
@@ -22,18 +23,23 @@ class ScoreService
         $this->em = $em;
     }
 
-    public function getMine(Utilisateur $user, SongDifficulty $songDifficulty)
+    public function getMine(Utilisateur $user, SongDifficulty $songDifficulty, ?Season $season)
     {
         $return = [];
         /** @var Score $score */
-        $score = $this->em->getRepository(Score::class)->createQueryBuilder("s")
+        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")
             ->where('s.user = :user')
             ->andWhere('s.songDifficulty = :songDifficulty')
             ->setParameter('user', $user)
             ->setParameter('songDifficulty', $songDifficulty)
-            ->setFirstResult(0)
-            ->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
+           ;
+        if ($season) {
+            $qb->andWhere('s.season = :season')
+                ->setParameter('season', $season);
+        }
+
+        $score = $qb ->setFirstResult(0)
+            ->setMaxResults(1)->getQuery()->getOneOrNullResult();
         if ($score == null) {
             return null;
         }
@@ -47,7 +53,7 @@ class ScoreService
             ->setParameter('user', $user)
             ->setParameter('songDifficulty', $songDifficulty)
             ->getQuery()->getResult();
-        $return['place'] = count($otherScore)+1;
+        $return['place'] = count($otherScore) + 1;
         return $return;
     }
 }
