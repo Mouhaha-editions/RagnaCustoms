@@ -6,17 +6,70 @@
 {% block body %}
     <div class="row">
         <div class="col-12 text-center mt-5 mb-5">
-            <h1>Leaderboard</h1>
-            <form action="">
+            <h1 id="">Leaderboard</h1>
+            <div id="search-bar" class="col-12">
+                <form class=" search-and-filter">
+                    <div class="row">
+                        <div class="col-md-4 form-group active">
+                            <label for="search">{{ "Leaderboard"|trans }}</label>
+                            <select id="downloads-filter-category" name="season"
+                                    class="form-control form-control-sm">
+                                <option value="">{{ "Global"|trans }}</option>
+                                {% for season in seasons %}
+                                <option {% if app.request.get('season') == season.id %}selected="selected"{% endif %}
+                                        value="{{ season.id }}">{{ season.label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+{#                        <div class="col-md-2 form-group">#}
+{#                            <label for="downloads-filter-category">{{ "Difficulties"|trans }}</label>#}
+{#                            <select id="downloads-filter-category" name="downloads_filter_difficulties"#}
+{#                                    class="form-control form-control-sm">#}
+{#                                <option value="">{{ "All"|trans }}</option>#}
+{#                                <option {% if app.request.get('downloads_filter_difficulties') == 1 %}selected="selected"{% endif %}#}
+{#                                        value="1">{{ "1-3"|trans }}</option>#}
+{#                                <option {% if app.request.get('downloads_filter_difficulties') == 2 %}selected="selected"{% endif %}#}
+{#                                        value="2">{{ "4-7"|trans }}</option>#}
+{#                                <option {% if app.request.get('downloads_filter_difficulties') == 3 %}selected="selected"{% endif %}#}
+{#                                        value="3">{{ "8-10"|trans }}</option>#}
+{#                                <option {% if app.request.get('downloads_filter_difficulties') == 4 %}selected="selected"{% endif %} value="4">{{ "Ranked only"|trans }}</option>#}
 
+{#                            </select>#}
+{#                        </div>#}
+{#                        <div class="col-md-2 form-group ">#}
+{#                            <label for="downloads-filter-order">{{ "Converted map"|trans }}</label>#}
+{#                            <select id="downloads-filter-order" name="converted_maps" class="form-control form-control-sm">#}
+{#                                <option value="">{{ "With"|trans }}</option>#}
+{#                                <option {% if app.request.get('converted_maps') == 1 %}selected="selected"{% endif %}#}
+{#                                        value="1">{{ "Without"|trans }}</option>#}
+{#                                <option {% if app.request.get('converted_maps') == 2 %}selected="selected"{% endif %}#}
+{#                                        value="2">{{ "Only converted"|trans }}</option>#}
+{#                            </select>#}
 
-
-            </form>
+{#                        </div>#}
+{#                        <div class="col-md-2 form-group ">#}
+{#                            <label for="downloads-filter-order">{{ "Order by"|trans }}</label>#}
+{#                            <select id="downloads-filter-order" name="downloads_filter_order" class="form-control form-control-sm">#}
+{#                                <option value="">{{ "Last added"|trans }}</option>#}
+{#                                <option {% if app.request.get('downloads_filter_order') == 3 %}selected="selected"{% endif %} value="3">{{ "Last updated"|trans }}</option>#}
+{#                                <option {% if app.request.get('downloads_filter_order') == 1 %}selected="selected"{% endif %}#}
+{#                                        value="1">{{ "Vote"|trans }}</option>#}
+{#                                <option {% if app.request.get('downloads_filter_order') == 2 %}selected="selected"{% endif %}#}
+{#                                        value="2">{{ "Duration"|trans }}</option>#}
+{#                                <option {% if app.request.get('downloads_filter_order') == 4 %}selected="selected"{% endif %} value="4">{{ "Alphabetical"|trans }}</option>#}
+{#                            </select>#}
+{#                        </div>#}
+                        <div class="col-md-2 pt-4">
+                            <button type="submit" class="btn btn-sm btn-primary">{{ "Filter"|trans }}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
         </div>
     </div>
     <div id="leaderboard" class="row">
-{% include 'score/partial/songs_page.html.twig' with {songs:songs} %}
+{% include 'score/partial/songs_page.html.twig' with {songs:songs,selected_season:selected_season} %}
     </div>
 
 {% endblock %}

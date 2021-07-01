@@ -1,3 +1,6 @@
+@import "~select2/dist/css/select2.min.css";
+
+
 $themes: (
         "light": (
                 "colors": (
@@ -34,16 +37,16 @@ $themes: (
                 )
         )
 );
-$color-level-1:#99ffff;
-$color-level-2:#77dbdd;
-$color-level-3:#4e5aa9;
-$color-level-4:#7a3fb7;
-$color-level-5:#9966cc;
-$color-level-6:#9a426d;
-$color-level-7:#991e3a;
-$color-level-8:#983937;
-$color-level-9:#d58d56;
-$color-level-10:#e2cd6c;
+$color-level-1: #99ffff;
+$color-level-2: #77dbdd;
+$color-level-3: #4e5aa9;
+$color-level-4: #7a3fb7;
+$color-level-5: #9966cc;
+$color-level-6: #9a426d;
+$color-level-7: #991e3a;
+$color-level-8: #983937;
+$color-level-9: #d58d56;
+$color-level-10: #e2cd6c;
 
 @each $theme-name, $theme-vars in $themes {
   $shades: map-get($theme-vars, "shades");
@@ -101,36 +104,45 @@ body {
   position: relative;
 }
 
-.text-level-{
-  &1{
-    color:$color-level-1!important;
+.text-level- {
+  &1 {
+    color: $color-level-1 !important;
   }
-  &2{
-    color:$color-level-2!important;
+
+  &2 {
+    color: $color-level-2 !important;
   }
-  &3{
-    color:$color-level-3!important;
+
+  &3 {
+    color: $color-level-3 !important;
   }
-  &4{
-    color:$color-level-4!important;
+
+  &4 {
+    color: $color-level-4 !important;
   }
-  &5{
-    color:$color-level-5!important;
+
+  &5 {
+    color: $color-level-5 !important;
   }
-  &6{
-    color:$color-level-6!important;
+
+  &6 {
+    color: $color-level-6 !important;
   }
-  &7{
-    color:$color-level-7!important;
+
+  &7 {
+    color: $color-level-7 !important;
   }
-  &8{
-    color:$color-level-8!important;
+
+  &8 {
+    color: $color-level-8 !important;
   }
-  &9{
-    color:$color-level-9!important;
+
+  &9 {
+    color: $color-level-9 !important;
   }
-  &10{
-    color:$color-level-10!important;
+
+  &10 {
+    color: $color-level-10 !important;
   }
 }
 
@@ -319,20 +331,35 @@ table.songs {
     width: 50%;
   }
 }
-.score-frame{
+
+.score-frame {
   //border:1px solid #ffffff;
-  margin-bottom:12px;
+  margin-bottom: 12px;
 }
+
 .nav-link {
-  &.active{
+  &.active {
     font-weight: bold;
   }
+
   &.text-twitch {
     color: #6f42c1 !important;
     font-weight: bold;
   }
 }
 
-.copy-clipboard{
+.copy-clipboard {
   cursor: pointer;
 }
+
+#leaderboard-title {
+  .select2-container--default {
+    .select2-selection--single {
+
+      background-color: transparent!important;
+      color: #e46565!important;
+      border: none!important;
+    }
+  }
+}
+

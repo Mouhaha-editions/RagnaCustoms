@@ -17,8 +17,8 @@ import './js/form-rating';
 import '../public/bundles/pagination/js/see-more.js';
 
 require('bootstrap/js/dist/popover');
-require('bootstrap/js/dist/tooltip');
-// const app = require('./js/utils/core');
+require('bootstrap/js/dist/popover');
+import "select2/dist/js/select2.full.min";// const app = require('./js/utils/core');
 
 const copyToClipboard = str => {
     const el = document.createElement('textarea');
@@ -100,7 +100,7 @@ $(function () {
     $(document).on('click', '.ask-for-confirmation', function () {
         return confirm("Your are going to delete an element definitely, do you confirm ?");
     });
-
+$("#leaderboard-title select").select2();
 
     $(document).on('click', ".ajax-load", function () {
         let t = $(this);

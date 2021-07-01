@@ -30,6 +30,7 @@
         "chart.js": "^2.9.3",
         "jquery": "^3.6.0",
         "popper.js": "^1.16.1",
+        "select2": "^4.1.0-rc.0",
         "simplebar": "^5.0.7",
         "tarteaucitronjs": "^1.9.0",
         "tiny-slider": "^2.9.2"

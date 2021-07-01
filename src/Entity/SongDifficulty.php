@@ -178,15 +178,21 @@ class SongDifficulty
     /**
      * @return Collection|Score[]
      */
-    public function getScores(): Collection
+    public function getScores(?Season $season): Collection
     {
+        if($season != null){
+            return $this->scores->filter(function(Score $score)use($season){
+              return $score->getSeason() === $season;
+            });
+        }
         return $this->scores;
+
     }
 
-    public function getScoresFiltered()
+    public function getScoresFiltered(?Season $season)
     {
         $set = [];
-        return $this->getScores()->filter(function(Score $score) use (&$set){
+        return $this->getScores($season)->filter(function(Score $score) use (&$set){
             if(in_array($score->getUser()->getId(), $set)){
                return false;
             }
@@ -197,9 +203,9 @@ class SongDifficulty
     /**
      * @return Score[]
      */
-    public function getScoresTop()
+    public function getScoresTop(?Season $season)
     {
-        return $this->getScoresFiltered()->slice(0, 3);
+        return $this->getScoresFiltered($season)->slice(0, 3);
     }
 
 

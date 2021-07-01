@@ -1,4 +1,4 @@
-{% macro scoringSong(song) %}
+{% macro scoringSong(song, selected_season = null) %}
     <div class="col-md-3 score-frame">
         <div class="score">
             <div class="score-title text-center">
@@ -26,15 +26,18 @@
             <div class="score-body mt-2">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     {% for diff in song.songDifficulties %}
+                        {% if selected_season is null or selected_season in diff.seasons %}
                         <li class="nav-item">
                             <a class="nav-link{% if loop.index == 1 %} active{% endif %} text-level-{{ diff.difficultyRank.level }}" id="home-tab"
                                data-toggle="tab" data-target="#level-{{ diff.id }}" type="button" role="tab"
                                aria-controls="home" aria-selected="true">Level {{ diff.difficultyRank.level }}</a>
                         </li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     {% for diff in song.songDifficulties %}
+                        {% if selected_season is null or selected_season in diff.seasons %}
                         <div style="min-height:100px;"
                              class="tab-pane fade show{% if loop.index == 1 %} active{% endif %}"
                              id="level-{{ diff.id }}" role="tabpanel" aria-labelledby="level-{{ diff.id }}-tab">
@@ -45,7 +48,7 @@
                                     <th>Score</th>
                                 </tr>
                                 {% set imin = false %}
-                                {% for score in diff.scoresTop %}
+                                {% for score in diff.scoresTop(selected_season) %}
                                     {% if is_granted('ROLE_USER') %}
                                         {% if score.user.id == app.user.id %}
                                             {% set imin = true %}
@@ -63,7 +66,7 @@
                                     </tr>
                                 {% endfor %}
                                 {% if is_granted('ROLE_USER') and not imin %}
-                                    {% set myrank = scoreService.getMine(app.user, diff) %}
+                                    {% set myrank = scoreService.getMine(app.user, diff, selected_season) %}
                                     {% if myrank != null %}
                                         <tr>
                                             <td class="text-center" colspan="3">...</td>
@@ -79,11 +82,12 @@
                                         </tr>
                                     {% endif %}
                                     {% set imin = false %}
-                                {% endif %}
+                                {% endif  %}
 
                             </table>
 
                         </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
 
