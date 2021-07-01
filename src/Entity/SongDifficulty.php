@@ -186,7 +186,7 @@ class SongDifficulty
     public function getScoresFiltered()
     {
         $set = [];
-        return $this->getScores()->filter(function(Score $score) use ($set){
+        return $this->getScores()->filter(function(Score $score) use (&$set){
             if(in_array($score->getUser()->getId(), $set)){
                return false;
             }
