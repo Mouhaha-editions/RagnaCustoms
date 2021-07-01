@@ -183,12 +183,23 @@ class SongDifficulty
         return $this->scores;
     }
 
+    public function getScoresFiltered()
+    {
+        $set = [];
+        return $this->getScores()->filter(function(Score $score) use ($set){
+            if(in_array($score->getUser()->getId(), $set)){
+               return false;
+            }
+            $set[] = $score->getUser()->getId();
+            return true;
+        });
+    }
     /**
      * @return Score[]
      */
     public function getScoresTop()
     {
-        return $this->scores->slice(0, 3);
+        return $this->getScoresFiltered()->slice(0, 3);
     }
 
 
