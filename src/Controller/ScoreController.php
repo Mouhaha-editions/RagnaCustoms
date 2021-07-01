@@ -18,12 +18,18 @@ class ScoreController extends AbstractController
     /**
      * @Route("/leaderboard", name="score")
      */
-    public function index(SongRepository $songRepository): Response
+    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
-        $songs = $songRepository->createQueryBuilder('s')
+        $qb = $songRepository->createQueryBuilder('s')
             ->where('s.moderated = true')
-            ->orderBy('s.name', 'ASC')->getQuery()->getResult();
+            ->orderBy('s.name', 'ASC');
+        $songs = $paginationService->setDefaults(20)->process($qb,$request);
 
+        if($songs->isPartial()){
+            return $this->render('score/partial/songs_page.html.twig', [
+                'songs' => $songs
+            ]);
+        }
         return $this->render('score/index.html.twig', [
             'songs' => $songs
         ]);

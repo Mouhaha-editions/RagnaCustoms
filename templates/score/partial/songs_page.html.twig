@@ -1,0 +1,9 @@
+{% import "score/macro/song.html.twig" as macro_song %}
+{% for song in songs.entities %}
+    {{ macro_song.scoringSong(song) }}
+{% endfor %}
+
+        {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+<div id="see-more-place" class="col-12 text-center">
+    {{ macro_pagination.seeMore(songs,"see more"|trans,'btn ',{"parent":"#leaderboard","remove":"#see-more-place"}) }}
+</div>
