@@ -17,6 +17,10 @@ class ScoreController extends AbstractController
 {
     /**
      * @Route("/leaderboard", name="score")
+     * @param Request $request
+     * @param SongRepository $songRepository
+     * @param PaginationService $paginationService
+     * @return Response
      */
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
