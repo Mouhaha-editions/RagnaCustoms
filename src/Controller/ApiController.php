@@ -171,7 +171,7 @@ class ApiController extends AbstractController
                     continue;
 //                    return new JsonResponse($results,400);
                 }
-                if($songDiff->isRanked()) {
+                if($season != null && $songDiff->isRanked()) {
                     $score = $scoreRepository->findOneBy([
                         'user' => $user,
                         'songDifficulty' => $songDiff,
@@ -181,14 +181,14 @@ class ApiController extends AbstractController
                     $score = $scoreRepository->findOneBy([
                         'user' => $user,
                         'songDifficulty' => $songDiff,
-                        'season' => $season
+                        'season' => null
                     ]);
                 }
                 if ($score == null) {
                     $score = new Score();
                     $score->setUser($user);
                     $score->setSongDifficulty($songDiff);
-                    if($songDiff->isRanked()) {
+                    if($season != null && $songDiff->isRanked()) {
                         $score->setSeason($season);
                     }
                     $em->persist($score);
@@ -216,7 +216,7 @@ class ApiController extends AbstractController
                     "error" => "3_SCORE_NOT_SAVED",
                     'deatil'=>$e->getMessage()
                 ];
-                $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " " . $subScore["level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage());
+                $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " " . $subScore["Level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage());
 
 //                return new JsonResponse($results,400);
 
