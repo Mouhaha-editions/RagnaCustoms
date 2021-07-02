@@ -281,7 +281,7 @@ class UploadSongController extends AbstractController
                     $diff = new SongDifficulty();
                     $diff->setSong($song);
                     $diff->setDifficultyRank($difficultyRankRepository->findOneBy(["level" => $difficulty->_difficultyRank]));
-                    $diff->setRanked(false);
+
                     $diff->setDifficulty($difficulty->_difficulty);
                     $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
                     $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
