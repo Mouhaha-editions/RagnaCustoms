@@ -109,6 +109,7 @@ class ApiController extends AbstractController
                 "user" => $apiKey,
                 "hash" => "all",
                 "level" => "",
+                "message" => "Score not saved (no data) ",
                 "success" => false,
                 "error" => "0_NO_CONTENT"
             ];
@@ -121,6 +122,7 @@ class ApiController extends AbstractController
                 "user" => $apiKey,
                 "hash" => "all",
                 "level" => "",
+                "message" => "Score not saved (user not found) ",
                 "success" => false,
                 "error" => "0_USER_NOT_FOUND"
             ];
@@ -147,6 +149,7 @@ class ApiController extends AbstractController
                     $results[] = [
                         "hash" => $subScore["HashInfo"],
                         "level" => $subScore["Level"],
+                        "message" => "Score not saved (song not found) ",
                         "success" => false,
                         "error" => "1_SONG_NOT_FOUND"
                     ];
@@ -164,6 +167,7 @@ class ApiController extends AbstractController
                     $results[] = [
                         "hash" => $subScore["HashInfo"],
                         "level" => $subScore["Level"],
+                        "message" => "Score not saved (level not found) ",
                         "success" => false,
                         "error" => "2_LEVEL_NOT_FOUND"
                     ];
@@ -194,18 +198,38 @@ class ApiController extends AbstractController
                     $em->persist($score);
                 }
                 $scoreData = round(floatval($subScore['Score']) / 100, 2);
+                $oldscore = $score->getScore();
                if($score->getScore() < $scoreData) {
                    $score->setScore($scoreData);
                    if ($score->getScore() >= 99000) {
                        $score->setScore($score->getScore() / 1000000);
                    }
+                   $em->flush();
+                   $results[] = [
+                       "hash" => $subScore["HashInfo"],
+                       "level" => $subScore["Level"],
+                       "success" => true,
+                       "message" => "Score saved (old score : ".$oldscore." < new score : ".$scoreData.") ",
+                       "error" => "SUCCESS"
+                   ];
+               }else{
+                   $em->flush();
+                   $results[] = [
+                       "hash" => $subScore["HashInfo"],
+                       "level" => $subScore["Level"],
+                       "success" => true,
+                       "message" => "Score not saved (old score : ".$oldscore." >= new score : ".$scoreData.")",
+                       "error" => "SUCCESS"
+                   ];
+
                }
 
-                $em->flush();
+
                 $results[] = [
                     "hash" => $subScore["HashInfo"],
                     "level" => $subScore["Level"],
                     "success" => true,
+                    "message" => "Score saved",
                     "error" => "SUCCESS"
                 ];
             } catch (Exception $e) {
@@ -214,6 +238,7 @@ class ApiController extends AbstractController
                     "level" => $subScore["Level"],
                     "success" => false,
                     "error" => "3_SCORE_NOT_SAVED",
+                    "message" => "Score not saved because of an unexpected error",
                     'deatil'=>$e->getMessage()
                 ];
                 $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " " . $subScore["Level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage());
