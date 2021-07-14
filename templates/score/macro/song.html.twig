@@ -54,7 +54,7 @@
                                         {% endif %}
                                     {% endif %}
 
-                                    <tr {% if  score.user.id == app.user.id %}class="text-level-{{ diff.difficultyRank.level }}"{% endif %}>
+                                    <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-level-{{ diff.difficultyRank.level }}"{% endif %}>
                                         <td>{{ loop.index }}</td>
                                         <td>{{ score.user.username }}</td>
                                         <td class="text-right">{{ score.score }}</td>
