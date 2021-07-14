@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Utilisateur implements UserInterface
 {
     use TimestampableEntity;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -123,7 +124,7 @@ class Utilisateur implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="user")
      */
-    private $songFeedback ;
+    private $songFeedback;
 
     /**
      * @ORM\Column(type="boolean")
@@ -147,7 +148,7 @@ class Utilisateur implements UserInterface
 
     public function __toString()
     {
-      return $this->username;
+        return $this->username;
     }
 
     public function getId(): ?int
@@ -162,7 +163,7 @@ class Utilisateur implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     public function setUsername(string $username): self
@@ -196,7 +197,7 @@ class Utilisateur implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return (string)$this->password;
     }
 
     public function setPassword(string $password): self
@@ -230,10 +231,12 @@ class Utilisateur implements UserInterface
     {
         return $this->email;
     }
+
     public function getGravatar(): ?string
     {
-        return $grav_url = "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $this->email ) ) ) . "?d=" . urlencode( "https://ragnacustoms.com/apps/runes.png" ) . "&s=300";;
+        return $grav_url = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=300";
     }
+
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -313,22 +316,26 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-    public function hasVotedUpFor(Song $song) :bool
+    public function hasVotedUpFor(Song $song): bool
     {
-        foreach($this->getVotes() As $vote){
-            if($song !== $vote->getSong()){continue;}
-            if($vote->getKind() == Vote::KIND_UP){
+        foreach ($this->getVotes() as $vote) {
+            if ($song !== $vote->getSong()) {
+                continue;
+            }
+            if ($vote->getKind() == Vote::KIND_UP) {
                 return true;
             }
         }
         return false;
     }
 
-    public function hasVotedDownFor(Song $song) :bool
+    public function hasVotedDownFor(Song $song): bool
     {
-        foreach($this->getVotes() As $vote){
-            if($song !== $vote->getSong()){continue;}
-            if($vote->getKind() == Vote::KIND_DOWN){
+        foreach ($this->getVotes() as $vote) {
+            if ($song !== $vote->getSong()) {
+                continue;
+            }
+            if ($vote->getKind() == Vote::KIND_DOWN) {
                 return true;
             }
         }
@@ -585,5 +592,23 @@ class Utilisateur implements UserInterface
         $this->enableEmailNotification = $enableEmailNotification;
 
         return $this;
+    }
+
+    public function getBestScore(SongDifficulty $songDifficulty, Season $season = null)
+    {
+        $scores = $this->getScores()->filter(function (Score $score) use ($songDifficulty, $season) {
+            if ($season == null) {
+                return $score->getSongDifficulty() === $songDifficulty;
+            }
+            return $score->getSongDifficulty() === $songDifficulty && $score->getSeason() === $season;
+        });
+        $max = 0;
+        /** @var Score $score */
+        foreach ($scores as $score) {
+            if ($score->getScore() >= $max) {
+                $max = $score->getScore();
+            }
+        }
+        return $max;
     }
 }
