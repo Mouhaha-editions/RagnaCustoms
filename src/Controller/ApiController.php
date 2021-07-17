@@ -65,7 +65,7 @@ class ApiController extends AbstractController
                 "hash" => "all",
                 "ranked"=> $ranked,
                 "level" => "",
-                "message" => "Score not saved (wrong app version, need : v".(self::CurrentVersion).") ",
+                "message" => "Score not saved (wrong app version, need : v".(self::CurrentVersion).") get ".$data["AppVersion"],
                 "success" => false,
                 "error" => "0_WRONG_APP"
             ];
