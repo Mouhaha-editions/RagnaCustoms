@@ -59,7 +59,7 @@ class ApiController extends AbstractController
             ];
             return new JsonResponse($results);
         }
-        if($data["AppVersion"] != self::CurrentVersion){
+        if($data["AppVersion"] < self::CurrentVersion){
             $results[] = [
                 "user" => $apiKey,
                 "hash" => "all",
