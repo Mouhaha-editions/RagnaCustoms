@@ -3,7 +3,7 @@
 {% block body %}
     <div class="row mt-5">
         <div class="col-12">
-            <h1>Ranking "{{ season.label }}"</h1>
+            <h1>Ranking "{{ season.label }}" <small>From {{ season.startDate.format('Y-m-d') }} to {{ season.endDate.format('Y-m-d') }}</small></h1>
             <table class="table">
                 <tr>
                     <th>Rank</th>

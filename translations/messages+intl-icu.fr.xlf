@@ -487,6 +487,18 @@
         <source>Ranked first</source>
         <target>Ranked en premier</target>
       </trans-unit>
+      <trans-unit id="56">
+        <source>Leaderboards</source>
+        <target>Tableaux de score</target>
+      </trans-unit>
+      <trans-unit id="57">
+        <source>Leaderboards by song</source>
+        <target>Tableaux par musique</target>
+      </trans-unit>
+      <trans-unit id="58">
+        <source>Season ranking</source>
+        <target>Classement par saisons</target>
+      </trans-unit>
 
 
     </body>
