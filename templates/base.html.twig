@@ -41,12 +41,30 @@
             <li class="nav-item">
                 <a class="nav-link text-danger" href="{{ url("application") }}">RagnaCustoms Application</a>
             </li>
-            <li class="nav-item">
-                {% set count = twitchService.countStreamers() %}
-                <a class="nav-link text-twitch" target="_blank" rel="nofollow"
-                   href="https://www.twitch.tv/directory/game/Ragnaröck">Live
-                    ({{ count }}{% if count == 100 %}+{% endif %})</a>
+{#            <li class="nav-item">#}
+{#                {% set count = twitchService.countStreamers() %}#}
+{#                <a class="nav-link text-twitch" target="_blank" rel="nofollow"#}
+{#                   href="https://www.twitch.tv/directory/game/Ragnaröck">Live#}
+{#                    ({{ count }}{% if count == 100 %}+{% endif %})</a>#}
+{#            </li>#}
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ "Leaderboards"|trans }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{{ url('score') }}">{{ "Leaderboards by song"|trans }}</a>
+                    <hr class="m-1"/>
+                    <a class="dropdown-item" href="{{ url('score_global_ranking') }}">{{ "Season ranking"|trans }}</a>
+
+                </div>
             </li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin dashboard</a>
+                </li>
+            {% endif %}
             {% if app.request.locale == 'en' %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url("change_locale",{locale:"fr"}) }}">
@@ -58,17 +76,6 @@
                     <a class="nav-link" href="{{ url("change_locale",{locale:"en"}) }}">
                         <img style="max-height:12px;" src="/flags/united-kingdom.png" alt="en"/>
                     </a>
-                </li>
-            {% endif %}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('score') }}">Leaderboards</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('score_global_ranking') }}">Season ranking</a>
-            </li>
-            {% if is_granted('ROLE_ADMIN') %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin dashboard</a>
                 </li>
             {% endif %}
         </ul>
@@ -134,7 +141,9 @@
 </nav>
 
 <div class="container">
-    <div class="runes"><img src="/apps/runes.png" style="max-width:100%" alt="runes"/></div>
+
+    <div class="runes">
+        <img src="/apps/runes.png" style="max-width:100%" alt="runes"/></div>
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="alert alert-dismissible alert-{{ label }}">
