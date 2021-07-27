@@ -45,14 +45,18 @@ class ScoreService
         }
         $return['score'] = $score;
 
-        $otherScore = $this->em->getRepository(Score::class)->createQueryBuilder("s")
+        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")
             ->where('s.songDifficulty = :songDifficulty')
             ->andWhere("s.score >= :score")
             ->andWhere("s.user != :user")
             ->setParameter('score', $score->getScore())
             ->setParameter('user', $user)
-            ->setParameter('songDifficulty', $songDifficulty)
-            ->getQuery()->getResult();
+            ->setParameter('songDifficulty', $songDifficulty);
+             if ($season) {
+                 $qb->andWhere('s.season = :season')
+                     ->setParameter('season', $season);
+             }
+           $otherScore= $qb->getQuery()->getResult();
         $return['place'] = count($otherScore) + 1;
         return $return;
     }
