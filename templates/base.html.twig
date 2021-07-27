@@ -38,9 +38,6 @@
                 <a class="nav-link" href="/">{{ "Custom Songs"|trans }}</a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link text-danger" href="{{ url("application") }}">RagnaCustoms Application</a>
-            </li>
 {#            <li class="nav-item">#}
 {#                {% set count = twitchService.countStreamers() %}#}
 {#                <a class="nav-link text-twitch" target="_blank" rel="nofollow"#}
@@ -59,6 +56,9 @@
                     <a class="dropdown-item" href="{{ url('score_global_ranking') }}">{{ "Season ranking"|trans }}</a>
 
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="{{ url("application") }}">RagnaCustoms Application</a>
             </li>
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item">
