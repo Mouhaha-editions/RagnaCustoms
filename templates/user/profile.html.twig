@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
-    {% block title %}{{ utilisateur.username }}'s profile{% endblock %}
+    {% block title %}{{ user.username }}'s profile{% endblock %}
     {% block body %}
         <div class="row">
             <div class="col-12">
-                <h1>{{ utilisateur.username }}'s profile</h1>
+                <h1>{{ user.username }}'s profile</h1>
                 <div class="d-flex">
                     <div class="p-5">
-                        <img src="{{ app.user.gravatar }}" alt="{{ utilisateur.username }}"/><br/>
+                        <img src="{{ user.gravatar }}" alt="{{ user.username }}"/><br/>
                     </div>
 
                 </div>
