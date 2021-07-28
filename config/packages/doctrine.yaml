@@ -19,4 +19,4 @@ doctrine:
                 alias: App
         dql:
             string_functions:
-                MD5: DoctrineExtensions\Query\Mysql\MD5
+                MD5: 'DoctrineExtensions\Query\Mysql\Md5'
