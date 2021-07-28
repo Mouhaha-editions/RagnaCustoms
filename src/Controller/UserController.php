@@ -15,6 +15,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UserController extends AbstractController
 {
     /**
+     * @Route("/user/{id}", name="user_profile")
+     */
+    public function profile(Request $request, Utilisateur $utilisateur,TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response
+    {
+
+        return $this->render('user/profile.html.twig', [
+            'controller_name' => 'UserController',
+            'user'=>$utilisateur
+        ]);
+    }
+    /**
      * @Route("/user", name="user")
      */
     public function index(Request $request, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response

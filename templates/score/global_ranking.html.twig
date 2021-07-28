@@ -14,7 +14,9 @@
                 {% for score in scores.entities %}
                     <tr {% if is_granted('ROLE_USER') and score["username"] == app.user.username %}class="text-success"{% endif %}>
                         <td>#{{ loop.index*(scores.current) }}</td>
-                        <td>{{ score["username"] }}</td>
+                        <td>
+                            <img style="border-radius:15px;width:30px;margin-right:10px;" src="https://www.gravatar.com/avatar/{{ score["gravatar"] }}?d={{ "https://ragnacustoms.com/apps/runes.png"|url_encode }}"
+                                 class="" alt="{{ score["username"] }}"/>{{ score["username"] }}</td>
                         <td class="text-right">{{ score["score"]|round(2) }} pts</td>
                         <td class="text-right">{{ score["count_song"] }}</td>
                     </tr>
