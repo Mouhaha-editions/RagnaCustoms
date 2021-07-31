@@ -267,4 +267,30 @@ class ApiController extends AbstractController
             ]
         );
     }
+
+    /**
+     * @Route("/api/hash/{hash}", name="api_song")
+     */
+    public function hash(Request $request, string $hash, SongRepository $songRepository): Response
+    {
+        $song = $songRepository->createQueryBuilder('s')
+            ->where('s.newGuid LIKE :search_string)')
+            ->andWhere('s.moderated = true')
+            ->setParameter('search_string', $hash)
+            ->getQuery()->setFirstResult(0)->setMaxResults(1)->getOneOrNullResult();
+        if (!$song) {
+            return new Response("NOK", 400);
+        }
+        return new JsonResponse([
+                "Id" => $song->getId(),
+                "Name" => $song->getName(),
+                "Author" => $song->getAuthorName(),
+                "IsRanked" => $song->isRanked(),
+                "Hash" => $song->getNewGuid(),
+                "Mapper" => $song->getLevelAuthorName(),
+                "Difficulties" => $song->getSongDifficultiesStr(),
+                "CoverImageExtension" => $song->getCoverImageExtension(),
+            ]
+        );
+    }
 }
