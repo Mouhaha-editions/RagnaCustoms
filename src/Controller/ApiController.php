@@ -269,7 +269,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/api/hash/{hash}", name="api_song")
+     * @Route("/api/hash/{hash}", name="api_hash")
      */
     public function hash(Request $request, string $hash, SongRepository $songRepository): Response
     {
