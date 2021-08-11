@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\ApiModels\SessionModel;
 use App\ApiModels\ResultModel;
+use App\Entity\Overlay;
 use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
@@ -120,7 +121,7 @@ class ApiController extends AbstractController
                     "error" => "0_WRONG_APP"
                 ];
             }
-           try {
+            try {
                 $song = $songRepository->findOneBy(['newGuid' => $subScore["HashInfo"]]);
                 if ($song == null) {
                     $results[] = [
@@ -337,11 +338,51 @@ class ApiController extends AbstractController
      * @param UtilisateurRepository $utilisateurRepository
      * @return Response
      */
-    public function overlay(Request $request,  UtilisateurRepository $utilisateurRepository, OverlayRepository $overlayRepository): Response
+    public function overlay(Request $request, UtilisateurRepository $utilisateurRepository, DifficultyRankRepository $difficultyRankRepository, OverlayRepository $overlayRepository, SongRepository $songRepository, SongDifficultyRepository $songDifficultyRepository): Response
     {
+        $data = json_decode($request->getContent(), true);
         $apiKey = $request->headers->get('x-api-key');
+
+        if ($data == null) {
+            return new Response("NOK", 500);
+        }
+
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
+        $em = $this->getDoctrine()->getManager();
+        if ($user == null) {
+            return new Response("NO USER", 500);
+        }
 
+        $overlay = $overlayRepository->findOneBy(["user" => $user]);
+        if ($overlay == null) {
+            $overlay = new Overlay();
+            $overlay->setUser($user);
+            $em->persist($overlay);
+            $em->flush();
+        }
+        foreach ($data as $subScore) {
+
+            $song = $songRepository->findOneBy(['newGuid' => $subScore["HashInfo"]]);
+            if ($song == null) {
+                $overlay->setDifficulty(null);
+                $em->flush();
+                continue;
+            }
+            $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['Level']]);
+            $songDiff = $songDifficultyRepository->findOneBy([
+                'song' => $song,
+                "difficultyRank" => $rank
+            ]);
+
+            if ($songDiff == null) {
+                $overlay->setDifficulty(null);
+                $em->flush();
+                continue;
+            }
+
+            $overlay->setDifficulty($songDiff);
+            $em->flush();
+        }
+        return new Response("OK");
     }
-
 }
