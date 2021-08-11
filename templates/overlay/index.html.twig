@@ -15,12 +15,11 @@
 <body>
     <div class="content">
         <div class='d-flex'>
-
-            <div><img class='pr-3' style='width:160px;' src='/apps/logo.png'></div>
+            <div><img class='pr-3' style='width:160px;' src=''></div>
             <div>
-                <h1>I said soon !!!</h1>
-                <h3>Ragnacustoms</h3>
-                <h4>by rhokapa</h4>
+                <h1></h1>
+                <h3></h3>
+                <h4></h4>
             </div>
         </div>
     </div>
@@ -28,14 +27,18 @@
 <script>
     var loadData = function () {
         $.ajax({
-            url: "{{ url('overlay_details',{api:apiKey}) }}",
+            url: "{{ url('overlay_details',{apikey:apiKey}) }}",
             dataType: 'json',
             success: function (data) {
-                $('.content').show();
-                $('img').attr('src', data._songAuthorName);
-                $('h1').html(data._songName + " level " + data._level);
-                $('h3').html(data._songAuthorName);
-                $('h4').html(data._levelAuthorName);
+                if(data.enabled === true) {
+                    $('.content').show();
+                }else{
+                    $('.content').hide();
+                }
+                $('img').attr('src', data.cover);
+                $('h1').html(data.title);
+                $('h3').html(data.author);
+                $('h4').html(data.mapper);
             },
             error: function () {
                 $('.content').hide();
@@ -45,9 +48,10 @@
 
 
     $(function () {
-        // setInterval(function () {
-        //     loadData();
-        // }, 500);
+        loadData();
+        setInterval(function () {
+             loadData();
+        }, 1000);
     });
 </script>
 </html>
