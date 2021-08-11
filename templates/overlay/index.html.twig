@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello OverlayController!{% endblock %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css' integrity='sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l' crossorigin='anonymous'>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        h1, h3, h4 {
+            color: #ffffff;
+            text-shadow: 0 0 10px #000000;
+        }
+    </style>
+</head>
+<body>
+    <div class="content d-none">
+        <div class='d-flex'>
+
+            <div><img class='pr-3' style='width:160px;' src=''></div>
+            <div>
+                <h1></h1>
+                <h3></h3>
+                <h4></h4>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var loadData = function () {
+        $.ajax({
+            url: "{{ url('overlay_details',{api:apiKey}) }}",
+            dataType: 'json',
+            success: function (data) {
+                $('.content').show();
+                $('img').attr('src', data._songAuthorName);
+                $('h1').html(data._songName + " level " + data._level);
+                $('h3').html(data._songAuthorName);
+                $('h4').html(data._levelAuthorName);
+            },
+            error: function () {
+                $('.content').hide();
+            }
+        })
+    }
+
+
+    $(function () {
+        setInterval(function () {
+            loadData();
+        }, 500);
+    });
+</script>
+</html>
+{% endblock %}

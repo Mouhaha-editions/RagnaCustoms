@@ -136,6 +136,16 @@ class Utilisateur implements UserInterface
      */
     private $enableEmailNotification = false;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Overlay::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $overlay;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $scoreHistories;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -144,6 +154,7 @@ class Utilisateur implements UserInterface
         $this->viewCounters = new ArrayCollection();
         $this->scores = new ArrayCollection();
         $this->songFeedback = new ArrayCollection();
+        $this->scoreHistories = new ArrayCollection();
     }
 
     public function __toString()
@@ -610,5 +621,52 @@ class Utilisateur implements UserInterface
             }
         }
         return $max;
+    }
+
+    public function getOverlay(): ?Overlay
+    {
+        return $this->overlay;
+    }
+
+    public function setOverlay(Overlay $overlay): self
+    {
+        // set the owning side of the relation if necessary
+        if ($overlay->getUser() !== $this) {
+            $overlay->setUser($this);
+        }
+
+        $this->overlay = $overlay;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ScoreHistory[]
+     */
+    public function getScoreHistories(): Collection
+    {
+        return $this->scoreHistories;
+    }
+
+    public function addScoreHistory(ScoreHistory $scoreHistory): self
+    {
+        if (!$this->scoreHistories->contains($scoreHistory)) {
+            $this->scoreHistories[] = $scoreHistory;
+            $scoreHistory->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScoreHistory(ScoreHistory $scoreHistory): self
+    {
+        if ($this->scoreHistories->removeElement($scoreHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($scoreHistory->getUser() === $this) {
+                $scoreHistory->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

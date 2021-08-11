@@ -70,6 +70,11 @@ class SongDifficulty
      */
     private $seasons;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="songDifficulty")
+     */
+    private $scoreHistories;
+
 //    public function __toString()
 //    {
 //        return "level ".$this->getDifficultyRank()->getLevel();
@@ -79,6 +84,7 @@ class SongDifficulty
         $this->scores = new ArrayCollection();
         $this->songFeedback = new ArrayCollection();
         $this->seasons = new ArrayCollection();
+        $this->scoreHistories = new ArrayCollection();
     }
 
     public function __toString()
@@ -297,5 +303,35 @@ class SongDifficulty
             }
         }
         return false;
+    }
+
+    /**
+     * @return Collection|ScoreHistory[]
+     */
+    public function getScoreHistories(): Collection
+    {
+        return $this->scoreHistories;
+    }
+
+    public function addScoreHistory(ScoreHistory $scoreHistory): self
+    {
+        if (!$this->scoreHistories->contains($scoreHistory)) {
+            $this->scoreHistories[] = $scoreHistory;
+            $scoreHistory->setSongDifficulty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScoreHistory(ScoreHistory $scoreHistory): self
+    {
+        if ($this->scoreHistories->removeElement($scoreHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($scoreHistory->getSongDifficulty() === $this) {
+                $scoreHistory->setSongDifficulty(null);
+            }
+        }
+
+        return $this;
     }
 }
