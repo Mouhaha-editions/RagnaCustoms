@@ -15,7 +15,10 @@
 <body>
     <div class="content">
         <div class='d-flex'>
-            <div><img class='pr-3' style='width:160px;' src=''></div>
+            <div class='pr-3 text-center' >
+                <img style='width:160px;' src=''>
+                <h5></h5>
+            </div>
             <div>
                 <h1></h1>
                 <h3></h3>
@@ -38,7 +41,8 @@
                 $('img').attr('src', data.cover);
                 $('h1').html(data.title);
                 $('h3').html(data.author);
-                $('h4').html(data.mapper);
+                $('h4').html("mapped by "+data.mapper);
+                $('h5').html(data.duration);
             },
             error: function () {
                 $('.content').hide();
@@ -51,7 +55,7 @@
         loadData();
         setInterval(function () {
              loadData();
-        }, 1000);
+        }, 4000);
     });
 </script>
 </html>

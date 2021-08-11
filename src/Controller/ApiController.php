@@ -365,6 +365,7 @@ class ApiController extends AbstractController
             $song = $songRepository->findOneBy(['newGuid' => $subScore["HashInfo"]]);
             if ($song == null) {
                 $overlay->setDifficulty(null);
+                $overlay->setStartAt(null);
                 $em->flush();
                 continue;
             }
@@ -376,13 +377,16 @@ class ApiController extends AbstractController
 
             if ($songDiff == null) {
                 $overlay->setDifficulty(null);
+                $overlay->setStartAt(null);
                 $em->flush();
                 continue;
             }
 
             $overlay->setDifficulty($songDiff);
+            $overlay->setStartAt(new DateTime());
             $em->flush();
         }
         return new Response("OK");
     }
+
 }

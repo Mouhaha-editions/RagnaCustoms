@@ -342,7 +342,12 @@ class Song
         $sec = $this->approximativeDuration - $min * 60;
         return $min . "m " . $sec . "s";
     }
-
+    public function getApproximativeDurationMin(): ?string
+    {
+        $min = floor($this->approximativeDuration / 60);
+        $sec = $this->approximativeDuration - $min * 60;
+        return $min . ":" . $sec . "";
+    }
     public function getApproximativeDuration(): ?int
     {
         return $this->approximativeDuration;
