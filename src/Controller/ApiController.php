@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
+use App\ApiModels\SessionModel;
+use App\ApiModels\ResultModel;
 use App\Entity\Score;
+use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
 use App\Repository\DifficultyRankRepository;
+use App\Repository\OverlayRepository;
+use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SeasonRepository;
 use App\Repository\SongDifficultyRepository;
@@ -21,6 +26,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+
+
 use function Sentry\configureScope;
 
 class ApiController extends AbstractController
@@ -38,8 +48,17 @@ class ApiController extends AbstractController
 
     /**
      * @Route("/api/score/v2", name="api_score_v2")
+     *
      */
-    public function scoreV2(Request $request, SeasonRepository $seasonRepository, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository, LoggerInterface $logger): Response
+    public function scoreV2(Request $request,
+                            SeasonRepository $seasonRepository,
+                            DifficultyRankRepository $difficultyRankRepository,
+                            SongDifficultyRepository $songDifficultyRepository,
+                            ScoreRepository $scoreRepository,
+                            ScoreHistoryRepository $scoreHistoryRepository,
+                            UtilisateurRepository $utilisateurRepository,
+                            SongRepository $songRepository,
+                            LoggerInterface $logger): Response
     {
         $em = $this->getDoctrine()->getManager();
         $results = [];
@@ -47,6 +66,7 @@ class ApiController extends AbstractController
         $ranked = false;
 
         $data = json_decode($request->getContent(), true);
+
         if ($data == null) {
             $logger->error("no data");
             $results[] = [
@@ -60,17 +80,7 @@ class ApiController extends AbstractController
             ];
             return new JsonResponse($results);
         }
-        if ($data["AppVersion"] < self::CurrentVersion) {
-            $results[] = [
-                "user" => $apiKey,
-                "hash" => "all",
-                "ranked" => $ranked,
-                "level" => "",
-                "message" => "Score not saved (wrong app version, need : " . (self::CurrentVersion) . " get at least " . $data["AppVersion"] . " )",
-                "success" => false,
-                "error" => "0_WRONG_APP"
-            ];
-        }
+
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
         if ($user == null) {
@@ -99,7 +109,18 @@ class ApiController extends AbstractController
 
 
         foreach ($data as $subScore) {
-            try {
+            if ($subScore["AppVersion"] < self::CurrentVersion) {
+                $results[] = [
+                    "user" => $apiKey,
+                    "hash" => "all",
+                    "ranked" => $ranked,
+                    "level" => "",
+                    "message" => "Score not saved (wrong app version, need : " . (self::CurrentVersion) . " get at least " . $data["AppVersion"] . " )",
+                    "success" => false,
+                    "error" => "0_WRONG_APP"
+                ];
+            }
+           try {
                 $song = $songRepository->findOneBy(['newGuid' => $subScore["HashInfo"]]);
                 if ($song == null) {
                     $results[] = [
@@ -131,7 +152,6 @@ class ApiController extends AbstractController
                     ];
                     $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " " . $subScore["Level"] . " 2_LEVEL_NOT_FOUND");
                     continue;
-//                    return new JsonResponse($results,400);
                 }
 
                 if ($season != null && $songDiff->isRanked()) {
@@ -150,6 +170,7 @@ class ApiController extends AbstractController
                         'season' => null
                     ]);
                 }
+
                 if ($score == null) {
                     $score = new Score();
                     $score->setUser($user);
@@ -161,7 +182,23 @@ class ApiController extends AbstractController
                     $em->persist($score);
                 }
                 $scoreData = round(floatval($subScore['Score']) / 100, 2);
+
+                $scoreHistory = $scoreHistoryRepository->findOneBy([
+                    'user' => $user,
+                    'songDifficulty' => $songDiff,
+                    "score" => $scoreData
+                ]);
+
+
                 $oldscore = $score->getScore();
+                if ($scoreHistory == null) {
+                    $scoreHistory = new ScoreHistory();
+                    $scoreHistory->setUser($user);
+                    $scoreHistory->setSongDifficulty($songDiff);
+                    $scoreHistory->setScore($scoreData);
+
+                    $em->persist($scoreHistory);
+                }
                 if ($score->getScore() < $scoreData) {
                     $score->setScore($scoreData);
                     if ($score->getScore() >= 99000) {
@@ -293,4 +330,18 @@ class ApiController extends AbstractController
             ]
         );
     }
+
+    /**
+     * @Route("/api/overlay/", name="api_hash")
+     * @param Request $request
+     * @param UtilisateurRepository $utilisateurRepository
+     * @return Response
+     */
+    public function overlay(Request $request,  UtilisateurRepository $utilisateurRepository, OverlayRepository $overlayRepository): Response
+    {
+        $apiKey = $request->headers->get('x-api-key');
+        $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
+
+    }
+
 }
