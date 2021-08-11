@@ -33,6 +33,11 @@ class Overlay
      */
     private $disposition;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $startAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +75,18 @@ class Overlay
     public function setDisposition(?string $disposition): self
     {
         $this->disposition = $disposition;
+
+        return $this;
+    }
+
+    public function getStartAt(): ?\DateTimeInterface
+    {
+        return $this->startAt;
+    }
+
+    public function setStartAt(?\DateTimeInterface $startAt): self
+    {
+        $this->startAt = $startAt;
 
         return $this;
     }
