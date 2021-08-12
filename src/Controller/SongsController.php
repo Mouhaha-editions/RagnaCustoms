@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SongsController extends AbstractController
@@ -375,6 +376,14 @@ class SongsController extends AbstractController
                     $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
                         ->setParameter('search_string', '%' . $request->get('search', null) . '%');
             }
+        }
+
+        if($request->get('onclick_dl')){
+            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
+            VarDumper::dump($ids);
+            return $this->redirect("ragnac://install/".implode('-',array_map(function ($id){
+                return array_pop($id);
+                },$ids)));
         }
 
         $pagination = $paginationService->setDefaults(40)->process($qb, $request);
