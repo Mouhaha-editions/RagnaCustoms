@@ -380,7 +380,6 @@ class SongsController extends AbstractController
 
         if($request->get('onclick_dl')){
             $ids = $qb->select('s.id')->getQuery()->getArrayResult();
-            VarDumper::dump($ids);
             return $this->redirect("ragnac://install/".implode('-',array_map(function ($id){
                 return array_pop($id);
                 },$ids)));
