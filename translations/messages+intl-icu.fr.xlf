@@ -499,6 +499,10 @@
         <source>Season ranking</source>
         <target>Classement par saisons</target>
       </trans-unit>
+        <trans-unit id="59">
+            <source>Download filtered selection</source>
+            <target>Télécharger la sélection filtrée</target>
+        </trans-unit>
 
 
     </body>
