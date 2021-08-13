@@ -1,6 +1,7 @@
 {% for song in songs.entities %}
     <tr>
-        <td class="song-preview tiny d-flex flex-row">
+        <td class="song-preview tiny ">
+            <div class="d-flex flex-row">
             <a href="{{ url('song_detail',{id:song.id}) }}">
                 <figure class="product-preview-image short liquid" style="position: relative">
 
@@ -30,6 +31,7 @@
                         {% if loop.index != 1 %}, {% endif %}
                         <span style="color:#{{ diff.difficultyRank.color }}">{% if diff.isRanked%}<i class="fas fa-trophy"></i>{% endif %} {{ diff.difficultyRank.level }}</span>
                     {% endfor %}</p>
+            </div>
             </div>
         </td>
 
@@ -100,8 +102,11 @@
     </tr>
 {% endfor %}
 <tr class="see-more-delete">
-    <td colspan="7" class="text-center">
+    <td colspan="8">
         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-        {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }}
+        <div class="text-left pagination">
+            Pages : {{ macro_pagination.paginate(songs) }}
+        </div>
+{#        {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }}#}
     </td>
 </tr>

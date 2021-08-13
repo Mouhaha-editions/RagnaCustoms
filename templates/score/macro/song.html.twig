@@ -1,5 +1,5 @@
 {% macro scoringSong(song, selected_season = null) %}
-    <div class="col-md-3 score-frame">
+    <div class="col-md-2 score-frame">
         <div class="score">
             <div class="score-title text-center">
                 <a href="{{ url("song_detail",{id:song.id}) }}">
@@ -11,11 +11,10 @@
                        data-original-title="{{ "copied"|trans }}"
                        class="copy-clipboard btn btn-sm bg-twitch">
                         <i class="fab fa-twitch"></i>
-                        !rc {{ song.id }}
                     </a>
                     {% set downloaded = downloadsService.alreadyDownloaded(song) %}
-                    <a href="ragnac://install/{{ song.id }}" {% if downloaded %}data-toggle="tooltip" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}downloaded{% endif%} btn-danger ml-1">
-                        1 click
+                    <a href="ragnac://install/{{ song.id }}" data-toggle="tooltip"  {% if downloaded %}title="{{ "Already downloaded"|trans }}"{% else%}title="{{ "1 click downloader"|trans }}"{% endif %} class="btn btn-sm {% if downloaded %}downloaded{% endif%} btn-danger ml-1">
+                        <i class="fas fa-download"></i>
                     </a>
                     <a href="{{ url("song_direct_download",{id:song.id}) }}" {% if downloaded %}data-toggle="tooltip" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}downloaded{% endif%} ml-1 btn-success">
                         {{ "Download"|trans }}
@@ -29,7 +28,7 @@
                         <li class="nav-item">
                             <a class="nav-link{% if loop.index == 1 %} active{% endif %} text-level-{{ diff.difficultyRank.level }}" id="home-tab"
                                data-toggle="tab" data-target="#level-{{ diff.id }}" type="button" role="tab"
-                               aria-controls="home" aria-selected="true">Level {{ diff.difficultyRank.level }}</a>
+                               aria-controls="home" aria-selected="true">{{ diff.difficultyRank.level }}</a>
                         </li>
                         {% endif %}
                     {% endfor %}
@@ -67,9 +66,11 @@
                                 {% if is_granted('ROLE_USER') and not imin %}
                                     {% set myrank = scoreService.getMine(app.user, diff, selected_season) %}
                                     {% if myrank != null %}
-                                        <tr>
+                                       {% if myrank['place'] != 4 %}
+                                           <tr>
                                             <td class="text-center" colspan="3">...</td>
                                         </tr>
+                                           {% endif %}
                                         <tr>
                                             <td>{{ myrank['place'] }}</td>
                                             <td>{{ myrank["score"].user.username }}</td>
