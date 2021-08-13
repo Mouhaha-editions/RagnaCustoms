@@ -93,6 +93,11 @@ class SongsController extends AbstractController
         if ($feedbackForm->isSubmitted() && $feedbackForm->isValid() && $this->getUser() != null) {
             $em->persist($feedback);
             $em->flush();
+            try {
+                $songService->newFeedback($feedback);
+            }catch(\Exception $e){
+
+            }
             $feedback = new SongFeedback();
             $feedback->setSong($song);
             $feedback->setUser($this->getUser());
