@@ -503,6 +503,10 @@
             <source>Download filtered selection</source>
             <target>Télécharger la sélection filtrée</target>
         </trans-unit>
+      <trans-unit id="60">
+        <source>You are going to download a lot of custom songs and it can take a while, do you want to continue?</source>
+        <target>Vous allez télécharger un paquet de "custom songs" et cela va prendre du temps, voulez vous continuer ?</target>
+      </trans-unit>
 
 
     </body>
