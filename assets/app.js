@@ -35,16 +35,15 @@ const copyToClipboard = str => {
 import {createPopper} from 'bootstrap/js/dist/popover';
 
 import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
-
+let hashtag = window.location.hash;
+console.log(window.location)
 $(function () {
+
+
     $(document).on('click', '[data-confirm]', function () {
         return confirm($(this).data('confirm'));
     });
-    let hashtag = window.location.hash;
-    $("[data-target='" + hashtag + "']").click();
-    $("a[data-toggle='tab']").on('click', function () {
-        window.location.hash = $(this).data('target');
-    });
+
 
     // $(".popover-trigger").popover({trigger:'mouseover'});
     // $(".popover-trigger").popover("show");
@@ -99,7 +98,6 @@ $(function () {
 
         return false;
     });
-$(".nav-tabs > .nav-item:first-child>a").click();
 
     $(document).on('click', '.ask-for-confirmation', function () {
         return confirm("Your are going to delete an element definitely, do you confirm ?");
@@ -235,6 +233,14 @@ $("#leaderboard-title select").select2();
             $("#form_resetVote").closest("div").addClass('d-none');
         }
     });
+
+    $(".nav-tabs > .nav-item:first-child>a").click();
+
+    $("[data-target='" + hashtag + "']").click();
+    $(".nav a").on('click', function(){
+        window.location.hash = $(this).data("target");
+    });
+
 });
 
 

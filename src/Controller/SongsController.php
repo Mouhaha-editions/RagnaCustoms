@@ -385,7 +385,7 @@ class SongsController extends AbstractController
                 },$ids)));
         }
 
-        $pagination = $paginationService->setDefaults(40)->process($qb, $request);
+        $pagination = $paginationService->setDefaults(70)->process($qb, $request);
         if ($pagination->isPartial()) {
             return $this->render('songs/partial/song_row.html.twig', [
                 'songs' => $pagination

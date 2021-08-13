@@ -363,3 +363,31 @@ table.songs {
   }
 }
 
+.pagination {
+  font-size:12pt;
+  a{
+
+    margin-left:6px;
+    &.active{
+      color:$color-level-5;
+      &:hover{
+
+      }
+    }
+  }
+}
+.score-title{
+  h6{
+    min-height: 38px;
+  }
+}
+.score-body{
+  table{
+    tr {
+      th{
+      border:none;
+      }
+
+    }
+  }
+}

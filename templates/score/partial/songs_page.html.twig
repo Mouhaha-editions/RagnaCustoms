@@ -4,6 +4,9 @@
 {% endfor %}
 
         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-<div id="see-more-place" class="col-12 text-center">
-    {{ macro_pagination.seeMore(songs,"see more"|trans,'btn ',{"parent":"#leaderboard","remove":"#see-more-place"}) }}
+<div class="col-12 pagination text-center">
+    {{ macro_pagination.paginate(songs) }}
 </div>
+{# <div id="see-more-place" class="col-12 text-center"> #}
+{# {{ macro_pagination.seeMore(songs,"see more"|trans,'btn ',{"parent":"#leaderboard","remove":"#see-more-place"}) }} #}
+{# </div> #}
