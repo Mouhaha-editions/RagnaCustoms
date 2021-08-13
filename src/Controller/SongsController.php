@@ -18,6 +18,7 @@ use App\Repository\VoteRepository;
 use App\Service\DownloadService;
 use App\Service\SongService;
 use App\Service\VoteService;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,6 +70,10 @@ class SongsController extends AbstractController
         }
         $em = $this->getDoctrine()->getManager();
         $song->setViews($song->getViews() + 1);
+        $feedback = new SongFeedback();
+        $feedback->setSong($song);
+        $feedback->setUser($this->getUser());
+        $feedbackForm = $this->createForm(SongFeedbackType::class, $feedback);
         $ip = $request->getClientIp();
         $dlu = $viewCounterRepository->findOneBy([
             'song' => $song,
@@ -82,7 +87,18 @@ class SongsController extends AbstractController
             $em->persist($dlu);
             $em->flush();
         }
+        $feedbackForm->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
 
+        if ($feedbackForm->isSubmitted() && $feedbackForm->isValid() && $this->getUser() != null) {
+            $em->persist($feedback);
+            $em->flush();
+            $feedback = new SongFeedback();
+            $feedback->setSong($song);
+            $feedback->setUser($this->getUser());
+            $feedbackForm = $this->createForm(SongFeedbackType::class, $feedback);
+            $this->addFlash("success", $translator->trans("Feedback sent!"));
+        }
         $songService->emulatorFileDispatcher($song);
         $em->flush();
 
@@ -105,6 +121,7 @@ class SongsController extends AbstractController
         return $this->render('songs/detail.html.twig', [
             'song' => $song,
             'levels' => $levels,
+            "feedbackForm" => $feedbackForm->createView()
         ]);
     }
 
@@ -231,7 +248,7 @@ class SongsController extends AbstractController
      * @Route("/song/feedback/{id}", name="song_feedback")
      */
     public function formFeedback(Request $request, Song $song, TranslatorInterface $translator,
-                                     SongFeedbackRepository $feedbackRepository, VoteService $voteService)
+                                 SongFeedbackRepository $feedbackRepository, VoteService $voteService)
     {
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
@@ -310,10 +327,10 @@ class SongsController extends AbstractController
                     $qb->where('rank.level BETWEEN 8 and 10');
                     break;
                 case 4 :
-                    $qb->leftJoin('song_difficulties.seasons','season');
+                    $qb->leftJoin('song_difficulties.seasons', 'season');
                     $qb->where('season.startDate <= :now ')
-                    ->andWhere('season.endDate >= :now')
-                    ->setParameter('now',new \DateTime());
+                        ->andWhere('season.endDate >= :now')
+                        ->setParameter('now', new DateTime());
 
                     break;
             }
@@ -378,11 +395,11 @@ class SongsController extends AbstractController
             }
         }
 
-        if($request->get('onclick_dl')){
+        if ($request->get('onclick_dl')) {
             $ids = $qb->select('s.id')->getQuery()->getArrayResult();
-            return $this->redirect("ragnac://install/".implode('-',array_map(function ($id){
-                return array_pop($id);
-                },$ids)));
+            return $this->redirect("ragnac://install/" . implode('-', array_map(function ($id) {
+                    return array_pop($id);
+                }, $ids)));
         }
 
         $pagination = $paginationService->setDefaults(70)->process($qb, $request);

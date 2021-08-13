@@ -861,6 +861,18 @@ class Song
             return $e->getIsPublic() && $e->getIsModerated();
         });
     }
+    /**
+     * @return Collection|SongFeedback[]
+     */
+    public function getSongFeedbackPublicOrMine(?Utilisateur $user): Collection
+    {
+        if($user == null){
+            return $this->getSongFeedbackPublic();
+        }
+        return $this->songFeedback->filter(function(SongFeedback $e)use($user){
+            return ($e->getIsPublic() && $e->getIsModerated()) || $e->getUser()->getId() == $user->getId();
+        });
+    }
 
     public function addSongFeedback(SongFeedback $songFeedback): self
     {

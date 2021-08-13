@@ -44,7 +44,9 @@
                 <li class="nav-item">
                     <a class="nav-link " id="test-tab"
                        data-toggle="tab" data-target="#feedback" type="button" role="tab"
-                       aria-controls="home" aria-selected="true">{{ "Feedbacks"|trans }} <div class="badge badge-info">{{ song.songFeedbackPublic|length }}</div></a>
+                       aria-controls="home" aria-selected="true">{{ "Feedbacks"|trans }}
+                        <div class="badge badge-info">{{ song.songFeedbackPublic|length }}</div>
+                    </a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -71,23 +73,37 @@
                         id="feedback" role="tabpanel">
                     <div class="row">
                         <div class="col-12">
-                            <h1>{{ "Feedbacks"|trans }}</h1>
-                            {% for feedback in song.songFeedbackPublic %}
+                            {% if app.user is not null %}
+                                {{ form_start(feedbackForm) }}
+                                {{ form_row(feedbackForm.songDifficulty) }}
+                                {{ form_row(feedbackForm.feedback) }}
+                                <div class="row">
+                                    <div class="col-6">{{ form_widget(feedbackForm.isPublic) }} {{ form_label(feedbackForm.isPublic) }}</div>
+                                    <div class="col-6">{{ form_widget(feedbackForm.isAnonymous) }} {{ form_label(feedbackForm.isAnonymous) }}</div>
+                                </div>
+                                <small class="text-info">All feedbacks are moderated before being published</small>
+                                <br/>
+                                <button type="submit" class="btn btn-sm btn-primary">Save Feedback!</button>
+                                {{ form_end(feedbackForm) }}
+                            {% endif %}
+                            <h1 class="mt-3">{{ "Feedbacks"|trans }}</h1>
+
+                            {% for feedback in song.songFeedbackPublicOrMine(app.user) %}
                                 <div>
                                     {% if feedback.isAnonymous %}
                                         <b>Anonymous : </b>
                                     {% else %}
-                                        <b>{{ feedback.user.username }} : </b>
-                                    {% endif %}
+                                    <b>{{ feedback.user.username }} : {% if not feedback.isModerated %}<div class="badge badge-danger">not moderated</div>{% endif %}</b>
+                                    {% endif %}<br/>
                                     {{ feedback.feedback }}
                                 </div>
                                 <hr/>
-                                {% else %}
+                            {% else %}
                             {% endfor %}
                         </div>
                     </div>
                 </div>
-                    <div
+                <div
                         class="tab-pane fade show"
                         id="leaderboard" role="tabpanel">
                     <div class="row">
@@ -161,7 +177,8 @@
 
             </div>
             <div class="text-center">
-                <button class="btn btn-block ajax-load ajax-modal-form  btn-sm btn-info mt-1 mb-2 song-review" data-toggle="modal"
+                <button class="btn btn-block ajax-load ajax-modal-form  btn-sm btn-info mt-1 mb-2 song-review"
+                        data-toggle="modal"
                         data-target="#reviewSong"
                         data-refresh="true"
                         data-url="{{ url('song_review',{id:song.id}) }}"
