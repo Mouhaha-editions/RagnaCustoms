@@ -35,6 +35,7 @@ const copyToClipboard = str => {
 import {createPopper} from 'bootstrap/js/dist/popover';
 
 import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
+
 let hashtag = window.location.hash;
 console.log(window.location)
 $(function () {
@@ -102,7 +103,7 @@ $(function () {
     $(document).on('click', '.ask-for-confirmation', function () {
         return confirm("Your are going to delete an element definitely, do you confirm ?");
     });
-$("#leaderboard-title select").select2();
+    $("#leaderboard-title select").select2();
 
     $(document).on('click', ".ajax-load", function () {
         let t = $(this);
@@ -234,13 +235,13 @@ $("#leaderboard-title select").select2();
         }
     });
 
-    $(".nav-tabs > .nav-item:first-child>a").click();
-
-    $("[data-target='" + hashtag + "']").click();
-    $(".nav a").on('click', function(){
-        window.location.hash = $(this).data("target");
-    });
-
+    if (window.location.pathname !== "/leaderboard") {
+        $(".nav-tabs > .nav-item:first-child>a").click();
+        $("[data-target='" + hashtag + "']").click();
+        $(".nav a").on('click', function () {
+            window.location.hash = $(this).data("target");
+        });
+    }
 });
 
 
