@@ -37,6 +37,9 @@ import {createPopper} from 'bootstrap/js/dist/popover';
 import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 $(function () {
+    $(document).on('click', '[data-confirm]', function () {
+        return confirm($(this).data('confirm'));
+    });
     let hashtag = window.location.hash;
     $("[data-target='" + hashtag + "']").click();
     $("a[data-toggle='tab']").on('click', function () {
