@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Song;
+use App\Entity\SongFeedback;
 use App\Helper\AIMapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -14,18 +15,31 @@ use FFMpeg\Format\Audio\Vorbis;
 use FFMpeg\Format\Video\Ogg;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\VarDumper\VarDumper;
 use ZipArchive;
 
 class SongService
 {
+    /**
+     * @var KernelInterface
+     */
     private $kernel;
+    /**
+     * @var EntityManagerInterface
+     */
     private $em;
+    /**
+     * @var MailerInterface
+     */
+    private $mailer;
 
-    public function __construct(KernelInterface $kernel, EntityManagerInterface $em)
+    public function __construct(KernelInterface $kernel, EntityManagerInterface $em, MailerInterface $mailer)
     {
         $this->kernel = $kernel;
         $this->em = $em;
+        $this->mailer = $mailer;
     }
 
     public function AiMap()
@@ -38,14 +52,14 @@ class SongService
         $durationMp3 = (int)($probe->get('duration'));
         $bpm = 140;
         $ratio = 20;
-        $level= 7;
-        $durationbpm = round($bpm / 60 * $durationMp3  ,0)*$ratio;
-        $waveform = $audio->waveform($durationbpm, round(($durationbpm*9)/25), array('#00FF00'));
+        $level = 7;
+        $durationbpm = round($bpm / 60 * $durationMp3, 0) * $ratio;
+        $waveform = $audio->waveform($durationbpm, round(($durationbpm * 9) / 25), array('#00FF00'));
         $waveform->save($this->kernel->getProjectDir() . "/public/waveform.png");
         $ai = new AIMapper($this->kernel->getProjectDir() . "/public/waveform.png", $durationMp3, $bpm, $ratio, $level);
         $result = $ai->read();
 
-        return $ai->map($result,"C:\Users\pierr\Documents\Ragnarock\CustomSongs\otherworld\Level".$level.".dat");
+        return $ai->map($result, "C:\Users\pierr\Documents\Ragnarock\CustomSongs\otherworld\Level" . $level . ".dat");
     }
 
     public function emulatorFileDispatcher(Song $song, bool $force = false)
@@ -134,6 +148,18 @@ class SongService
             VarDumper::dump($song->getId());
         }
 
+    }
+
+    public function newFeedback(SongFeedback $feedback)
+    {
+        $song = $feedback->getSong();
+        $email = (new Email())
+            ->from('contact@ragnacustoms.com')
+            ->to('pierrick.pobelle@gmail.com')
+            ->addBcc()
+            ->subject('New feedback for ' . $song->getName() . '!');
+        $email->html("New feedback");
+        $this->mailer->send($email);
     }
 
     public function HashSong(array $files)
