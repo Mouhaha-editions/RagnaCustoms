@@ -234,9 +234,8 @@ $(function () {
             $("#form_resetVote").closest("div").addClass('d-none');
         }
     });
-
+    $(".nav-tabs > .nav-item:first-child>a").click();
     if (window.location.pathname !== "/leaderboard") {
-        $(".nav-tabs > .nav-item:first-child>a").click();
         $("[data-target='" + hashtag + "']").click();
         $(".nav a").on('click', function () {
             window.location.hash = $(this).data("target");
