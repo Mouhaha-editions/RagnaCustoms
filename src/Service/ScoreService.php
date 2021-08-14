@@ -57,7 +57,7 @@ class ScoreService
             ->setParameter('score', $score->getScore())
             ->setParameter('user', $user)
             ->setParameter('hash', $hash)
-            ->setParameter('difficulty', $songDifficulty);
+            ->setParameter('difficulty', $level);
         if ($season) {
             $qb->andWhere('s.season = :season')
                 ->setParameter('season', $season);
