@@ -49,7 +49,17 @@ class ApiController extends AbstractController
 
     /**
      * @Route("/api/score/v2", name="api_score_v2")
-     *
+     * @param Request $request
+     * @param SeasonRepository $seasonRepository
+     * @param DifficultyRankRepository $difficultyRankRepository
+     * @param SongDifficultyRepository $songDifficultyRepository
+     * @param ScoreRepository $scoreRepository
+     * @param ScoreHistoryRepository $scoreHistoryRepository
+     * @param UtilisateurRepository $utilisateurRepository
+     * @param SongRepository $songRepository
+     * @param LoggerInterface $logger
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function scoreV2(Request $request,
                             SeasonRepository $seasonRepository,
@@ -121,22 +131,24 @@ class ApiController extends AbstractController
                     "error" => "0_WRONG_APP"
                 ];
             }
+            $hash = $subScore["HashInfo"];
+            $level = $subScore["Level"];
             try {
-                $song = $songRepository->findOneBy(['newGuid' => $subScore["HashInfo"]]);
+                $song = $songRepository->findOneByHash($hash);
                 if ($song == null) {
                     $results[] = [
-                        "hash" => $subScore["HashInfo"],
-                        "level" => $subScore["Level"],
+                        "hash" => $hash,
+                        "level" => $level,
                         "message" => "Score not saved (song not found) ",
                         "ranked" => $ranked,
                         "success" => false,
                         "error" => "1_SONG_NOT_FOUND"
                     ];
-                    $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " 1_SONG_NOT_FOUND");
+                    $logger->error("API : " . $apiKey . " " . $hash . " 1_SONG_NOT_FOUND");
                     continue;
 //                    return new JsonResponse($results,400);
                 }
-                $rank = $difficultyRankRepository->findOneBy(['level' => $subScore['Level']]);
+                $rank = $difficultyRankRepository->findOneBy(['level' => $level]);
                 $songDiff = $songDifficultyRepository->findOneBy([
                     'song' => $song,
                     "difficultyRank" => $rank
@@ -144,21 +156,22 @@ class ApiController extends AbstractController
 
                 if ($songDiff == null) {
                     $results[] = [
-                        "hash" => $subScore["HashInfo"],
-                        "level" => $subScore["Level"],
+                        "hash" => $hash,
+                        "level" => $level,
                         "ranked" => $ranked,
                         "message" => "Score not saved (level not found) ",
                         "success" => false,
                         "error" => "2_LEVEL_NOT_FOUND"
                     ];
-                    $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " " . $subScore["Level"] . " 2_LEVEL_NOT_FOUND");
+                    $logger->error("API : " . $apiKey . " " . $hash . " " . $level . " 2_LEVEL_NOT_FOUND");
                     continue;
                 }
 
                 if ($season != null && $songDiff->isRanked()) {
                     $score = $scoreRepository->findOneBy([
                         'user' => $user,
-                        'songDifficulty' => $songDiff,
+                        'difficulty' => $level,
+                        'hash'=>$hash,
                         'season' => $season
                     ]);
                     if ($score != null) {
@@ -167,7 +180,8 @@ class ApiController extends AbstractController
                 } else {
                     $score = $scoreRepository->findOneBy([
                         'user' => $user,
-                        'songDifficulty' => $songDiff,
+                        'difficulty' => $level,
+                        'hash'=>$hash,
                         'season' => null
                     ]);
                 }
@@ -175,7 +189,8 @@ class ApiController extends AbstractController
                 if ($score == null) {
                     $score = new Score();
                     $score->setUser($user);
-                    $score->setSongDifficulty($songDiff);
+                    $score->setDifficulty($level);
+                    $score->setHash($hash);
                     if ($season != null && $songDiff->isRanked()) {
                         $score->setSeason($season);
                         $ranked = true;
@@ -186,16 +201,16 @@ class ApiController extends AbstractController
 
                 $scoreHistory = $scoreHistoryRepository->findOneBy([
                     'user' => $user,
-                    'songDifficulty' => $songDiff,
+                    'difficulty' => $level,
+                    'hash' => $hash,
                     "score" => $scoreData
                 ]);
-
-
                 $oldscore = $score->getScore();
                 if ($scoreHistory == null) {
                     $scoreHistory = new ScoreHistory();
                     $scoreHistory->setUser($user);
-                    $scoreHistory->setSongDifficulty($songDiff);
+                    $scoreHistory->setDifficulty($level);
+                    $scoreHistory->setHash($hash);
                     $scoreHistory->setScore($scoreData);
 
                     $em->persist($scoreHistory);
@@ -207,8 +222,8 @@ class ApiController extends AbstractController
                     }
                     $em->flush();
                     $results[] = [
-                        "hash" => $subScore["HashInfo"],
-                        "level" => $subScore["Level"],
+                        "hash" => $hash,
+                        "level" => $level,
                         "success" => true,
                         "ranked" => $ranked,
                         "message" => "Score saved (old score : " . $oldscore . " < new score : " . $scoreData . ") ",
@@ -217,34 +232,32 @@ class ApiController extends AbstractController
                 } else {
                     $em->flush();
                     $results[] = [
-                        "hash" => $subScore["HashInfo"],
-                        "level" => $subScore["Level"],
+                        "hash" => $hash,
+                        "level" => $level,
                         "success" => true,
                         "ranked" => $ranked,
                         "message" => "Score not saved (old score : " . $oldscore . " >= new score : " . $scoreData . ")",
                         "error" => "SUCCESS"
                     ];
-
                 }
 
-
                 $results[] = [
-                    "hash" => $subScore["HashInfo"],
-                    "level" => $subScore["Level"],
+                    "hash" => $hash,
+                    "level" => $level,
                     "success" => true,
                     "message" => "Score saved",
                     "error" => "SUCCESS"
                 ];
             } catch (Exception $e) {
                 $results[] = [
-                    "hash" => $subScore["HashInfo"],
-                    "level" => $subScore["Level"],
+                    "hash" => $hash,
+                    "level" => $level,
                     "success" => false,
                     "error" => "3_SCORE_NOT_SAVED",
                     "message" => "Score not saved because of an unexpected error",
-                    'deatil' => $e->getMessage()
+                    'detail' => $e->getMessage()
                 ];
-                $logger->error("API : " . $apiKey . " " . $subScore["HashInfo"] . " " . $subScore["Level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage());
+                $logger->error("API : " . $apiKey . " " . $hash . " " . $subScore["Level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage());
 
 //                return new JsonResponse($results,400);
 

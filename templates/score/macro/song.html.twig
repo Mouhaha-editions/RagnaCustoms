@@ -46,7 +46,7 @@
                                     <th>Score</th>
                                 </tr>
                                 {% set imin = false %}
-                                {% for score in diff.scoresTop(selected_season) %}
+                                {% for score in scoreService.scoresTop(selected_season, diff) %}
                                     {% if is_granted('ROLE_USER') %}
                                         {% if score.user.id == app.user.id %}
                                             {% set imin = true %}

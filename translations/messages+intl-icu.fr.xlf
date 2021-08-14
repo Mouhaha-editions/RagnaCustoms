@@ -507,6 +507,10 @@
         <source>You are going to download a lot of custom songs and it can take a while, do you want to continue?</source>
         <target>Vous allez télécharger un paquet de "custom songs" et cela va prendre du temps, voulez vous continuer ?</target>
       </trans-unit>
+        <trans-unit id="61">
+            <source>no score for now</source>
+            <target>pas de score pour le moment</target>
+        </trans-unit>
 
 
     </body>

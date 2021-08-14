@@ -55,12 +55,6 @@ class SongDifficulty
     private $NotePerSecond;
 
     /**
-     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="songDifficulty", orphanRemoval=true)
-     * @ORM\OrderBy({"score"="DESC"})
-     */
-    private $scores;
-
-    /**
      * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="songDifficulty")
      */
     private $songFeedback;
@@ -70,21 +64,14 @@ class SongDifficulty
      */
     private $seasons;
 
-    /**
-     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="songDifficulty")
-     */
-    private $scoreHistories;
-
 //    public function __toString()
 //    {
 //        return "level ".$this->getDifficultyRank()->getLevel();
 //    }
     public function __construct()
     {
-        $this->scores = new ArrayCollection();
         $this->songFeedback = new ArrayCollection();
         $this->seasons = new ArrayCollection();
-        $this->scoreHistories = new ArrayCollection();
     }
 
     public function __toString()
@@ -182,63 +169,6 @@ class SongDifficulty
     }
 
     /**
-     * @return Collection|Score[]
-     */
-    public function getScores(?Season $season): Collection
-    {
-        if($season != null){
-            return $this->scores->filter(function(Score $score)use($season){
-              return $score->getSeason() === $season;
-            });
-        }
-        return $this->scores;
-
-    }
-
-    public function getScoresFiltered(?Season $season)
-    {
-        $set = [];
-        return $this->getScores($season)->filter(function(Score $score) use (&$set){
-            if(in_array($score->getUser()->getId(), $set)){
-               return false;
-            }
-            $set[] = $score->getUser()->getId();
-            return true;
-        });
-    }
-    /**
-     * @return Score[]
-     */
-    public function getScoresTop(?Season $season)
-    {
-        return $this->getScoresFiltered($season)->slice(0, 3);
-    }
-
-
-    public function addScore(Score $score): self
-    {
-        if (!$this->scores->contains($score)) {
-            $this->scores[] = $score;
-            $score->setSongDifficulty($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScore(Score $score): self
-    {
-        if ($this->scores->removeElement($score)) {
-            // set the owning side to null (unless already changed)
-            if ($score->getSongDifficulty() === $this) {
-                $score->setSongDifficulty(null);
-            }
-        }
-
-        return $this;
-    }
-
-
-    /**
      * @return Collection|SongFeedback[]
      */
     public function getSongFeedback(): Collection
@@ -305,33 +235,4 @@ class SongDifficulty
         return false;
     }
 
-    /**
-     * @return Collection|ScoreHistory[]
-     */
-    public function getScoreHistories(): Collection
-    {
-        return $this->scoreHistories;
-    }
-
-    public function addScoreHistory(ScoreHistory $scoreHistory): self
-    {
-        if (!$this->scoreHistories->contains($scoreHistory)) {
-            $this->scoreHistories[] = $scoreHistory;
-            $scoreHistory->setSongDifficulty($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScoreHistory(ScoreHistory $scoreHistory): self
-    {
-        if ($this->scoreHistories->removeElement($scoreHistory)) {
-            // set the owning side to null (unless already changed)
-            if ($scoreHistory->getSongDifficulty() === $this) {
-                $scoreHistory->setSongDifficulty(null);
-            }
-        }
-
-        return $this;
-    }
 }

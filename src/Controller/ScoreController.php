@@ -65,7 +65,11 @@ class ScoreController extends AbstractController
             $season = $seasonRepository->getCurrent();
         }
         $qb = $scoreRepository->createQueryBuilder('s')
-            ->select('u.username AS username,u.id AS user_id, MD5(LOWER(u.email)) as gravatar, SUM(s.score)/1000 AS score, COUNT(s.songDifficulty) AS count_song')
+            ->select('u.username AS username,
+            u.id AS user_id, 
+            MD5(LOWER(u.email)) as gravatar, 
+            SUM(s.score)/1000 AS score, 
+            COUNT(s.hash) AS count_song')
             ->leftJoin('s.user', 'u')
             ->andWhere('s.season = :season')
             ->setParameter('season', $season)

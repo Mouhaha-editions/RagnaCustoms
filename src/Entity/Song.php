@@ -199,6 +199,16 @@ class Song
      */
     private $songFeedback;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $active;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SongHash::class, mappedBy="Song")
+     */
+    private $songHashes;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -206,6 +216,7 @@ class Song
         $this->downloadCounters = new ArrayCollection();
         $this->viewCounters = new ArrayCollection();
         $this->songFeedback = new ArrayCollection();
+        $this->songHashes = new ArrayCollection();
     }
 
     public function isRanked()
@@ -890,6 +901,48 @@ class Song
             // set the owning side to null (unless already changed)
             if ($songFeedback->getSong() === $this) {
                 $songFeedback->setSong(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(?bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SongHash[]
+     */
+    public function getSongHashes(): Collection
+    {
+        return $this->songHashes;
+    }
+
+    public function addSongHash(SongHash $songHash): self
+    {
+        if (!$this->songHashes->contains($songHash)) {
+            $this->songHashes[] = $songHash;
+            $songHash->setSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSongHash(SongHash $songHash): self
+    {
+        if ($this->songHashes->removeElement($songHash)) {
+            // set the owning side to null (unless already changed)
+            if ($songHash->getSong() === $this) {
+                $songHash->setSong(null);
             }
         }
 
