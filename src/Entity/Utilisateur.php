@@ -605,13 +605,13 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-    public function getBestScore(SongDifficulty $songDifficulty, Season $season = null)
+    public function getBestScore(Score $scoreSample, Season $season = null)
     {
-        $scores = $this->getScores()->filter(function (Score $score) use ($songDifficulty, $season) {
+        $scores = $this->getScores()->filter(function (Score $score) use ($scoreSample,$season) {
             if ($season == null) {
-                return $score->getSongDifficulty() === $songDifficulty;
+                return $score->getDifficulty() === $scoreSample->getDifficulty() && $scoreSample->getHash() == $score->getHash();
             }
-            return $score->getSongDifficulty() === $songDifficulty && $score->getSeason() === $season;
+            return $score->getDifficulty() === $scoreSample->getDifficulty() && $scoreSample->getHash() == $score->getHash() && $score->getSeason() === $season;
         });
         $max = 0;
         /** @var Score $score */

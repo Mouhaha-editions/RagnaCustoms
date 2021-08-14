@@ -31,8 +31,7 @@ class SongRepository extends ServiceEntityRepository
             ->orderBy('s.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
 
@@ -47,4 +46,16 @@ class SongRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findOneByHash(string $hash)
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.songHashes', 'song_hashes')
+            ->where('s.newGuid = :hash')
+            ->orWhere('song_hashes.hash = :hash')
+            ->setParameter('hash', $hash)
+            ->getQuery()
+            ->setFirstResult(0)
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
 }

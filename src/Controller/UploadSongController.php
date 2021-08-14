@@ -267,9 +267,17 @@ class UploadSongController extends AbstractController
                 $song->setModerated($this->getUser()->isCertified() ?: false);
 
                 $em->persist($song);
-                foreach ($song->getSongDifficulties() as $difficulty) {
-                    $em->remove($difficulty);
-                }
+
+//                foreach ($song->getSongDifficulties() as $difficulty) {
+//                    foreach ($difficulty->getScores(null) AS $score){
+//                        $em->remove($score);
+//                    }
+//                    foreach ($difficulty->getScoreHistories() AS $score){
+//                        $em->remove($score);
+//                    }
+//                    $em->remove($difficulty);
+//                }
+//
                 if ($form->get('resetVote')->getData() != null) {
                     foreach ($song->getVotes() as $vote) {
                         $vote->setDisabled(true);
@@ -277,11 +285,15 @@ class UploadSongController extends AbstractController
                     $song->setTotalVotes(null);
                     $song->setCountVotes(null);
                 }
+
+                foreach ($song->getSongDifficulties() as $difficulty) {
+                    $em->remove($difficulty);
+                }
+
                 foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
                     $diff = new SongDifficulty();
                     $diff->setSong($song);
                     $diff->setDifficultyRank($difficultyRankRepository->findOneBy(["level" => $difficulty->_difficultyRank]));
-
                     $diff->setDifficulty($difficulty->_difficulty);
                     $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
                     $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);

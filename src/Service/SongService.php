@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Song;
 use App\Entity\SongFeedback;
+use App\Entity\SongHash;
 use App\Helper\AIMapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -107,9 +108,22 @@ class SongService
                         }
                     }
                 }
-                $filename = $song->getInfoDatFile();
-                $song->setGuid(md5_file($this->kernel->getProjectDir() . "/public/" . $filename));
-                $song->setNewGuid($this->HashSong($files));
+//                $filename = $song->getInfoDatFile();
+//                $song->setGuid(md5_file($this->kernel->getProjectDir() . "/public/" . $filename));
+//                $song->
+                $hash = $this->HashSong($files);
+
+                if ($song->getNewGuid() !== $hash) {
+                    $version = $this->em->getRepository(SongHash::class)->getLastVersion($song) + 1;
+                    $newHash = new SongHash();
+                    $newHash->setSong($song);
+                    $newHash->setHash($hash);
+                    $newHash->setVersion($version);
+                    $song->addSongHash($newHash);
+                    $this->em->persist($newHash);
+                }
+
+                $song->setNewGuid($hash);
                 $this->em->flush();
 
                 if (!$getpreview) {
@@ -119,26 +133,7 @@ class SongService
                     ]);
                     $probe = $ffprobe->format($songfile);
                     $durationMp3 = (int)($probe->get('duration') / 2);
-
-//                    ffmpeg -y -i <input.ogg> -ss 130 -t 5 -c:a copy -b:a 96k <output.ogg>
-
-
                     exec('ffmpeg -y -i "' . $songfile . '"  -ss ' . $durationMp3 . ' -t 5 -c:a copy -b:a 96k "' . $previewFile . '"');
-//                    $bitrate = $probe->get('bit_rate');
-//                    $ffmpeg = FFMpeg::create([
-////                    'ffmpeg.binaries' => '/usr/bin/ffmpeg',
-////                    'ffprobe.binaries' => '/usr/bin/ffprobe'
-//                    ]);
-//                    $audio = $ffmpeg->open($songfile);
-//                    if ($durationMp3 > 8) {
-//                        $start = $durationMp3 / 2;
-//                        $audio->filters()->clip($start, 8);
-//                    } else {
-//                        $audio->filters()->clip(TimeCode::fromSeconds(0), TimeCode::fromSeconds($durationMp3));
-//                    }
-//                    $format = new Vorbis();
-//                    $format->setAudioKiloBitrate($bitrate);
-//                    $audio->save($format, $previewFile);
 
                     $zip->addFile($previewFile, $previewLocalnameFile);
                 }
@@ -160,6 +155,7 @@ class SongService
         $email->html("New feedback");
         $this->mailer->send($email);
     }
+
     public function newFeedbackForMapper(SongFeedback $feedback)
     {
         $song = $feedback->getSong();
@@ -170,7 +166,7 @@ class SongService
             ->to($mapper->getEmail())
             ->addBcc("pierrick.pobelle@gmail.com")
             ->subject('[Ragnacustoms.com] New feedback for ' . $song->getName() . '!');
-        $email->html("Hi ".$mapper->getUsername().",<br/>You get a new feedback for " . $song->getName() . "!<br/><br/>You can read it at https://ragnacustoms.com/song/detail/".$song->getId()."#feedback<br/><br/>See you soon,<br/> The Staff");
+        $email->html("Hi " . $mapper->getUsername() . ",<br/>You get a new feedback for " . $song->getName() . "!<br/><br/>You can read it at https://ragnacustoms.com/song/detail/" . $song->getId() . "#feedback<br/><br/>See you soon,<br/> The Staff");
         $this->mailer->send($email);
     }
 

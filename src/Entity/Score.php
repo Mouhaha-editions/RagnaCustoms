@@ -10,7 +10,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Entity(repositoryClass=ScoreRepository::class)
  * @ORM\Table(name="score", uniqueConstraints={
  *  @ORM\UniqueConstraint(name="user_difficulty",
- *            columns={"user_id", "song_difficulty_id","season_id"})
+ *            columns={"user_id", "season_id","hash","difficulty"})
  *     })
  */
 class Score
@@ -35,15 +35,20 @@ class Score
     private $score;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scores")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $songDifficulty;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Season::class, inversedBy="scores")
      */
     private $season;
+
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $difficulty;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $hash;
 
     public function getId(): ?int
     {
@@ -74,17 +79,6 @@ class Score
         return $this;
     }
 
-    public function getSongDifficulty(): ?SongDifficulty
-    {
-        return $this->songDifficulty;
-    }
-
-    public function setSongDifficulty(?SongDifficulty $songDifficulty): self
-    {
-        $this->songDifficulty = $songDifficulty;
-
-        return $this;
-    }
 
     public function getSeason(): ?Season
     {
@@ -94,6 +88,30 @@ class Score
     public function setSeason(?Season $season): self
     {
         $this->season = $season;
+
+        return $this;
+    }
+
+    public function getDifficulty(): ?string
+    {
+        return $this->difficulty;
+    }
+
+    public function setDifficulty(?string $difficulty): self
+    {
+        $this->difficulty = $difficulty;
+
+        return $this;
+    }
+
+    public function getHash(): ?string
+    {
+        return $this->hash;
+    }
+
+    public function setHash(string $hash): self
+    {
+        $this->hash = $hash;
 
         return $this;
     }

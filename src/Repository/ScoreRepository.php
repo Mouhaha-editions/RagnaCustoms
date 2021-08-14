@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Score;
+use App\Entity\Season;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +48,20 @@ class ScoreRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findBySeasonDiffHash(?Season $season, $difficulty, $hash)
+    {
+        $qb = $this->createQueryBuilder("s")
+            ->where("s.difficulty = :difficulty")
+            ->andWhere("s.hash = :hash")
+            ->setParameter("difficulty", $difficulty)
+            ->setParameter("hash", $hash);
+        if ($season !== null) {
+            $qb->andWhere("s.season = :season")
+                ->setParameter("season", $season);
+        }
+        $qb->orderBy('s.score','desc');
+        return $qb->getQuery()->getResult();
+    }
+
 }

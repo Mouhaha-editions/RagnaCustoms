@@ -32,9 +32,14 @@ class ScoreHistory
     private $score;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scoreHistories")
+     * @ORM\Column(type="string", length=255)
      */
-    private $songDifficulty;
+    private $difficulty;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $hash;
 
     public function getId(): ?int
     {
@@ -65,14 +70,26 @@ class ScoreHistory
         return $this;
     }
 
-    public function getSongDifficulty(): ?SongDifficulty
+    public function getDifficulty(): ?string
     {
-        return $this->songDifficulty;
+        return $this->difficulty;
     }
 
-    public function setSongDifficulty(?SongDifficulty $songDifficulty): self
+    public function setDifficulty(string $difficulty): self
     {
-        $this->songDifficulty = $songDifficulty;
+        $this->difficulty = $difficulty;
+
+        return $this;
+    }
+
+    public function getHash(): ?string
+    {
+        return $this->hash;
+    }
+
+    public function setHash(string $hash): self
+    {
+        $this->hash = $hash;
 
         return $this;
     }
