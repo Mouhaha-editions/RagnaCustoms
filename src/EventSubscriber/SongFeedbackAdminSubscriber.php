@@ -37,11 +37,15 @@ class SongFeedbackAdminSubscriber implements EventSubscriberInterface
 
     public function sendMail(AfterEntityUpdatedEvent $event)
     {
+
         /** @var SongFeedback $entity */
         $entity = $event->getEntityInstance();
-        $song = $entity->getSong();
-        if($song->getUser()->getEnableEmailNotification() && $entity->getIsModerated()) {
-            $this->songService->newFeedbackForMapper($entity);
+        if(get_class($entity) == SongFeedback::class){
+            $song = $entity->getSong();
+            if($song->getUser()->getEnableEmailNotification() && $entity->getIsModerated()) {
+                $this->songService->newFeedbackForMapper($entity);
+            }
         }
+
     }
 }
