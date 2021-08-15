@@ -1,3 +1,5 @@
+{%  import "songs/macros/song.html.twig" as macro_song %}
+
 {% extends 'base.html.twig' %}
     {% block title %}{{ user.username }}'s profile{% endblock %}
     {% block body %}
@@ -10,9 +12,29 @@
                     </div>
 
                 </div>
-
             </div>
-        </div>
+
+            <div class="col-12">
+                <h2>20 last songs played</h2>
+                <table class="table songs">
+                    <tr>
+                        <th>Song</th>
+                        <th class="text-right">level played</th>
+                        <th class="text-right">Score</th>
+                    </tr>
+                    {% for score in scoreService.Last20FromUser(user) %}
+                        <tr>
+                            <td class="song-preview tiny">
+                                {% set song = songService.getByhash(score.hash) %}
+                                {{ macro_song.description(song) }}
+                            </td>
+                            <td class="text-right">{{ score.difficulty }}</td>
+                            <td class="text-right">{{ score.score }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            </div>
     {% endblock %}
 
 
