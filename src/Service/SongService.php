@@ -6,6 +6,7 @@ use App\Entity\Song;
 use App\Entity\SongFeedback;
 use App\Entity\SongHash;
 use App\Helper\AIMapper;
+use App\Repository\SongRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use FFMpeg\Coordinate\TimeCode;
@@ -179,6 +180,11 @@ class SongService
         sort($md5s);
         $str = implode('', $md5s);
         return md5($str);
+    }
+
+    public function getByHash($hash)
+    {
+        return $this->em->getRepository(Song::class)->findOneByHash($hash);
     }
 }
 

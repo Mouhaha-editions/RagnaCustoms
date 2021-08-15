@@ -3,11 +3,13 @@
 namespace App\Service;
 
 use App\Entity\Score;
+use App\Entity\ScoreHistory;
 use App\Entity\Season;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
 use App\Repository\ScoreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -95,5 +97,19 @@ class ScoreService
         return array_slice($this->getScoresFiltered($season, $difficulty),0, 3);
     }
 
+    /**
+     * @param Utilisateur $user
+     * @return ScoreHistory[]|ArrayCollection
+     */
+    public function Last20FromUser(Utilisateur $user)
+    {
+        return $this->em->getRepository(ScoreHistory::class)->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('s.updatedAt',"desc")
+            ->setFirstResult(0)
+            ->setMaxResults(20)
+            ->getQuery()->getResult();
+    }
 }
 

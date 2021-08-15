@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\ScoreHhistoryRepository;
+use App\Repository\ScoreHistoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
