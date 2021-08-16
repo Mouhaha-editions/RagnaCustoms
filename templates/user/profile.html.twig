@@ -1,4 +1,4 @@
-{%  import "songs/macros/song.html.twig" as macro_song %}
+{% import "songs/macros/song.html.twig" as macro_song %}
 
 {% extends 'base.html.twig' %}
     {% block title %}{{ user.username }}'s profile{% endblock %}
@@ -7,10 +7,13 @@
             <div class="col-12">
                 <h1>{{ user.username }}'s profile</h1>
                 <div class="d-flex">
-                    <div class="p-5">
-                        <img src="{{ user.gravatar }}" alt="{{ user.username }}"/><br/>
+                    <div class="">
+                        <img src="{{ user.gravatar }}" style="max-height:100px;" alt="{{ user.username }}"/><br/>
                     </div>
-
+                    <div class="p-3">
+                        Global ranking : #{{ scoreService.getRanking(user, "global") }}<br/>
+                        Season Ranking : #{{ scoreService.getRanking(user, "season") }}<br/>
+                    </div>
                 </div>
             </div>
 
@@ -34,7 +37,7 @@
                     {% endfor %}
                 </table>
             </div>
-            </div>
+        </div>
     {% endblock %}
 
 

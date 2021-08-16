@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h1>Ranking "{{ season.label }}" <small>From {{ season.startDate.format('Y-m-d') }} to {{ season.endDate.format('Y-m-d') }}</small></h1>
+            <table class="table">
+                <tr>
+                    <th>Rank</th>
+                    <th>User</th>
+                    <th class="text-right">Score</th>
+                    <th class="text-right">Songs played</th>
+                </tr>
+                {% for score in scores.entities %}
+                    <tr {% if is_granted('ROLE_USER') and score["username"] == app.user.username %}class="text-success"{% endif %}>
+                        <td>#{{ loop.index*(scores.current) }}</td>
+                        <td>
+                            <a href="{{ url("user_profile",{id:score["user_id"]}) }}">
+                                <img style="border-radius:15px;width:30px;margin-right:10px;" src="https://www.gravatar.com/avatar/{{ score["gravatar"] }}?d={{ "https://ragnacustoms.com/apps/runes.png"|url_encode }}"
+                                     class="" alt="{{ score["username"] }}"/></a>{{ score["username"] }}</a></td>
+                        <td class="text-right">{{ score["score"]|round(2) }} pts</td>
+                        <td class="text-right">{{ score["count_song"] }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2>Archive</h2>
+        </div>
+
+        {% for season in oldSeasons %}
+            <div class="col-md-3">
+                <a href="{{ url("score_season_ranking",{id:season.id}) }}" class="btn btn-block text-center btn-default">{{ season.label }}</a>
+            </div>
+        {% else %}
+            <p>{{ "No archive for now"|trans }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block title %}
+    Global ranking {{ parent() }}
+{% endblock %}
+
