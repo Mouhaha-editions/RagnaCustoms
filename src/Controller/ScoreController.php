@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 
 class ScoreController extends AbstractController
 {
@@ -55,9 +56,9 @@ class ScoreController extends AbstractController
     }
 
     /**
-     * @Route("/ranking/global/{id}", name="score_global_ranking", defaults={"id"=null})
+     * @Route("/ranking/season/{id}", name="score_season_ranking", defaults={"id"=null})
      */
-    public function globalRanking(Request $request, ScoreRepository $scoreRepository, SeasonRepository $seasonRepository, PaginationService $paginationService, Season $season = null): Response
+    public function seasonRanking(Request $request, ScoreRepository $scoreRepository, SeasonRepository $seasonRepository, PaginationService $paginationService, Season $season = null): Response
     {
         $oldSeason = $seasonRepository->getOld();
 
@@ -78,10 +79,45 @@ class ScoreController extends AbstractController
 //        $scores = $qb->getQuery()->getResult();
         $scores = $paginationService->setDefaults(200)->process($qb, $request);
 
-        return $this->render('score/global_ranking.html.twig', [
+        return $this->render('score/season_ranking.html.twig', [
             'scores' => $scores,
             'season' => $season,
             'oldSeasons' => $oldSeason,
         ]);
     }
+
+    /**
+     * @Route("/ranking/global", name="score_global_ranking")
+     */
+    public function globalRanking(Request $request, ScoreRepository $scoreRepository,PaginationService $paginationService, Season $season = null): Response
+    {
+
+        $conn = $this->getDoctrine()->getConnection();
+
+        $sql = '
+           SELECT SUM(max_score)/1000 AS score, 
+                  username,
+                  user_id,
+                  MD5(LOWER(email)) as gravatar, 
+                  COUNT(*) AS count_song 
+           FROM (
+                SELECT u.username,
+                       u.email,
+                       s.user_id, 
+                       MAX(s.score) AS max_score 
+                FROM score s 
+                    LEFT JOIN song sg ON sg.new_guid = s.hash 
+                    LEFT JOIN utilisateur u on s.user_id = u.id        
+                WHERE sg.id IS NOT null 
+                GROUP BY s.hash,s.difficulty,s.user_id
+            ) AS ms GROUP BY user_id ORDER BY score DESC';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $scores = $stmt->fetchAllAssociative();
+
+        return $this->render('score/global_ranking.html.twig', [
+            'scores' => $scores,
+        ]);
+    }
+
 }

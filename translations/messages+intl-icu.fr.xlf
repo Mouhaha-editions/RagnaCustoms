@@ -511,6 +511,10 @@
             <source>no score for now</source>
             <target>pas de score pour le moment</target>
         </trans-unit>
+        <trans-unit id="62">
+            <source>Global ranking</source>
+            <target>Classement général</target>
+        </trans-unit>
 
 
     </body>

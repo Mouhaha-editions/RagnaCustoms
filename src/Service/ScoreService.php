@@ -78,7 +78,7 @@ class ScoreService
     {
         $set = [];
         $scores = $this->em->getRepository(Score::class)->findBySeasonDiffHash($season, $songDifficulty->getDifficultyRank()->getLevel(), $songDifficulty->getSong()->getNewGuid());
-        return array_filter($scores,function (Score $score) use (&$set) {
+        return array_filter($scores, function (Score $score) use (&$set) {
             if (in_array($score->getUser()->getId(), $set)) {
                 return false;
             }
@@ -94,7 +94,7 @@ class ScoreService
      */
     public function getScoresTop(?Season $season, SongDifficulty $difficulty)
     {
-        return array_slice($this->getScoresFiltered($season, $difficulty),0, 3);
+        return array_slice($this->getScoresFiltered($season, $difficulty), 0, 3);
     }
 
     /**
@@ -106,10 +106,83 @@ class ScoreService
         return $this->em->getRepository(ScoreHistory::class)->createQueryBuilder('s')
             ->where('s.user = :user')
             ->setParameter('user', $user)
-            ->orderBy('s.updatedAt',"desc")
+            ->orderBy('s.updatedAt', "desc")
             ->setFirstResult(0)
             ->setMaxResults(20)
             ->getQuery()->getResult();
+    }
+
+    public function getRanking(Utilisateur $user, $type)
+    {
+        switch ($type) {
+            case 'global':
+                $conn = $this->em->getConnection();
+
+                $sql = '
+           SELECT SUM(max_score)/1000 AS score, 
+                  username,
+                  user_id,
+                  MD5(LOWER(email)) as gravatar, 
+                  COUNT(*) AS count_song 
+           FROM (
+                SELECT u.username,
+                       u.email,
+                       s.user_id, 
+                       MAX(s.score) AS max_score 
+                FROM score s 
+                    LEFT JOIN song sg ON sg.new_guid = s.hash 
+                    LEFT JOIN utilisateur u on s.user_id = u.id        
+                WHERE sg.id IS NOT null 
+                GROUP BY s.hash,s.difficulty,s.user_id
+            ) AS ms GROUP BY user_id ORDER BY score DESC';
+                $stmt = $conn->prepare($sql);
+                $result = $stmt->executeQuery();
+                $scores = $result->fetchAllAssociative();
+                $i = 1;
+                foreach ($scores as $score) {
+                    if ($score['user_id'] == $user->getId()) {
+                        return $i;
+                    }
+                    $i++;
+                }
+                return 'unknow';
+                break;
+            case 'season':
+                $season = $this->em->getRepository(Season::class)->getCurrent();
+                $conn = $this->em->getConnection();
+                $sql = '
+           SELECT SUM(max_score)/1000 AS score, 
+                  username,
+                  user_id,
+                  MD5(LOWER(email)) as gravatar, 
+                  COUNT(*) AS count_song 
+           FROM (
+                SELECT u.username,
+                       u.email,
+                       s.user_id, 
+                       MAX(s.score) AS max_score 
+                FROM score s 
+                    LEFT JOIN song sg ON sg.new_guid = s.hash 
+                    LEFT JOIN utilisateur u on s.user_id = u.id        
+                WHERE sg.id IS NOT null AND s.season_id = :season
+                GROUP BY s.hash,s.difficulty,s.user_id
+            ) AS ms GROUP BY user_id ORDER BY score DESC';
+                $stmt = $conn->prepare($sql);
+                $result = $stmt->executeQuery(['season' => $season->getId()]);
+                $scores = $result->fetchAllAssociative();
+
+                $i = 1;
+                foreach ($scores as $score) {
+                    if ($score['user_id'] == $user->getId()) {
+                        return $i;
+                    }
+                    $i++;
+                }
+              return 'unknow';
+
+                break;
+        }
+
     }
 }
 
