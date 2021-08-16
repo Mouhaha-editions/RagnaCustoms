@@ -53,6 +53,7 @@ class Utilisateur implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Song::class, mappedBy="user")
+     * @ORM\OrderBy({"updatedAt"="desc"})
      */
     private $songs;
 

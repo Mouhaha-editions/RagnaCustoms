@@ -1,4 +1,6 @@
 {% extends 'base.html.twig' %}
+{% import "songs/macros/song.html.twig" as macro_song %}
+
 {% block title %}My Profile{% endblock %}
 {% block body %}
     <div class="row">
@@ -8,7 +10,8 @@
             <div class="d-flex">
                 <div class="p-5">
                     <img src="{{ app.user.gravatar }}" alt="Your profile picture"/><br/>
-                    <small>For the picture we use <a href="https://gravatar.com/" target="_blank">Gravatar</a> please use it too</small>
+                    <small>For the picture we use <a href="https://gravatar.com/" target="_blank">Gravatar</a> please
+                        use it too</small>
 
                     <h2>{{ app.user.username }}</h2>
                 </div>
@@ -27,7 +30,8 @@
                     </div>
 
                     <div class="pt-2 pb-5">
-                        If you already get the application <a href="ragnac://api/{{ app.user.apiKey }}">click here</a> to auto-set your API key
+                        If you already get the application <a href="ragnac://api/{{ app.user.apiKey }}">click here</a>
+                        to auto-set your API key
                     </div>
 
                     {{ form_start(form) }}
@@ -40,11 +44,12 @@
                     <div class="form-check form-check-inline">
                         {{ form_widget(form.isPublic,{"attr":{"class":"form-check-input"}}) }}
                         {{ form_label(form.isPublic,null,{"label_attr":{"class":"form-check-label"}}) }}
-                    </div><div class="form-check form-check-inline">
+                    </div>
+                    <div class="form-check form-check-inline">
                         {{ form_widget(form.enableEmailNotification,{"attr":{"class":"form-check-input"}}) }}
                         {{ form_label(form.enableEmailNotification,null,{"label_attr":{"class":"form-check-label"}}) }}
                     </div>
-                    <div  id="public_informations" style="display: none">
+                    <div id="public_informations" style="display: none">
                         {{ form_row(form.mapperName) }}
                         {{ form_row(form.mapperDiscord) }}
                         {{ form_row(form.mapperDescription) }}
@@ -53,6 +58,26 @@
                 </div>
             </div>
 
+            <h2>20 last songs played</h2>
+            <table class="table songs">
+                <tr>
+                    <th>Song</th>
+                    <th class="text-right">level played</th>
+                    <th class="text-right">Score</th>
+                    <th class="text-right">Action</th>
+                </tr>
+                {% for score in scoreService.LastFromUser(app.user,50) %}
+                    <tr>
+                        <td class="song-preview tiny">
+                            {% set song = songService.getByhash(score.hash) %}
+                            {{ macro_song.description(song) }}
+                        </td>
+                        <td class="text-right">{{ score.difficulty }}</td>
+                        <td class="text-right">{{ score.score }}</td>
+                        <td class="text-right"><a href="" title="see progression"><i class="fas fa-eye"></i></a></td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 {% endblock %}
