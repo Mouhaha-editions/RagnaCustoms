@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% import "songs/macros/song.html.twig" as macro_song %}
+
+{% block title %}My progression{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <h1>{{ "My progression on"|trans }} {{ song.name }}</h1>
+
+            <canvas id="myChart" width="600" height="200"></canvas>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['{{ labels|join("','")|raw }}'],
+                        datasets: [{
+                            label: 'Distance',
+                            data: [{{ data|join(",") }}],
+                            fill: false,
+                            borderColor: '#890ab3',
+                            tension: 0.1
+                            // borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+
+        </div>
+    </div>
+{% endblock %}

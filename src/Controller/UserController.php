@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\ScoreHistory;
+use App\Entity\Song;
+use App\Entity\SongHash;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
+use App\Repository\ScoreHistoryRepository;
 use App\Repository\UtilisateurRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -17,26 +21,66 @@ class UserController extends AbstractController
     /**
      * @Route("/user/{id}", name="user_profile")
      */
-    public function profile(Request $request, Utilisateur $utilisateur,TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response
+    public function profile(Request $request, Utilisateur $utilisateur, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response
     {
 
         return $this->render('user/partial/song_played.html.twig', [
             'controller_name' => 'UserController',
-            'user'=>$utilisateur
+            'user' => $utilisateur
+        ]);
+    }
+
+    /**
+     * @Route("/user/progess/{id}/{level}", name="user_progress_song")
+     */
+    public function progressSong(Request $request, Song $song, string $level, Utilisateur $utilisateur,
+                                 ScoreHistoryRepository $scoreHistoryRepository): Response
+    {
+        $hashes = array_map(function (SongHash $hash) {
+            return $hash->getHash();
+        }, $song->getSongHashes()->toArray());
+
+        $scores = $scoreHistoryRepository->createQueryBuilder('score_history')
+            ->where('score_history.user = :user')
+            ->andWhere("score_history.hash IN (:hashes)")
+            ->andWhere("score_history.difficulty = :level")
+            ->setParameter("user", $this->getUser())
+            ->setParameter("hashes", $hashes)
+            ->setParameter("level", $level)
+            ->orderBy("score_history.updatedAt", "ASC")
+            ->getQuery()->getResult();
+
+        $labels = [];
+        $data = [];
+        /** @var ScoreHistory $score */
+        foreach ($scores as $score) {
+            $labels[]=$score->getUpdatedAt()->format("Y-d-m H:i");
+            $data[]=$score->getScore();
+        }
+
+
+        return $this->render('user/progress.html.twig', [
+            'controller_name' => 'UserController',
+            'scores' => $scores,
+            "song" => $song,
+            "level" => $level,
+            "labels" => $labels,
+            "data" => $data,
         ]);
     }
 
     /**
      * @Route("/user/mapped/{id}", name="user_mapped_profile")
      */
-    public function mappedProfile(Request $request, Utilisateur $utilisateur,TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response
+    public function mappedProfile(Request $request, Utilisateur $utilisateur, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response
     {
 
         return $this->render('user/partial/song_mapped.html.twig', [
             'controller_name' => 'UserController',
-            'user'=>$utilisateur
+            'user' => $utilisateur
         ]);
     }
+
     /**
      * @Route("/user", name="user")
      */
