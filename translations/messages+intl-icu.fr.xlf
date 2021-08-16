@@ -531,6 +531,18 @@
         <source>this account is certified</source>
         <target>Ce compte est certifié</target>
       </trans-unit>
+      <trans-unit id="67">
+        <source>Other thing it does:</source>
+        <target>Autres trucs qu'elle fait :</target>
+      </trans-unit>
+      <trans-unit id="68">
+        <source><![CDATA[Twitch requests & overlay]]></source>
+        <target><![CDATA[Requètes twitch & overlay]]></target>
+      </trans-unit>
+      <trans-unit id="69">
+        <source>Save your score online</source>
+        <target>Sauvegarde votre score en ligne</target>
+      </trans-unit>
 
 
     </body>
