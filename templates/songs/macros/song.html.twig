@@ -21,8 +21,9 @@
         <p class="title"> <a href="{{ url('song_detail',{id:song.id}) }}">{{ song.name }}</a></p>
         <p class="category"><a
                     href="{{ url('home') }}?search=artist:{{ song.authorName }}">{{ song.authorName }}</a></p>
-        <p class="creator">Mapped by : <a
-                    href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">{{ song.levelAuthorName }}</a>
+        <p class="creator">Mapped by :
+            <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
+{#            <a href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">{{ song.levelAuthorName }}</a>#}
         </p>
         <p class="difficulties">Difficulties :
             {% for diff in song.songDifficulties %}
