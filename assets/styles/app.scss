@@ -393,3 +393,12 @@ table.songs {
     }
   }
 }
+.user-picture{
+  position:relative;
+  .certified{
+    position: absolute;
+    height:20px;
+    right:3px;
+    top:3px;
+  }
+}

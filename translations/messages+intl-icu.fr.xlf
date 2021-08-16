@@ -515,6 +515,22 @@
             <source>Global ranking</source>
             <target>Classement général</target>
         </trans-unit>
+      <trans-unit id="63">
+        <source>Season Ranking</source>
+        <target>Classement saisonnier</target>
+      </trans-unit>
+      <trans-unit id="64">
+        <source>Song mapped</source>
+        <target>Custom songs envoyées</target>
+      </trans-unit>
+      <trans-unit id="65">
+        <source>Difficulties played</source>
+        <target>Difficultées jouées</target>
+      </trans-unit>
+      <trans-unit id="66">
+        <source>this account is certified</source>
+        <target>Ce compte est certifié</target>
+      </trans-unit>
 
 
     </body>
