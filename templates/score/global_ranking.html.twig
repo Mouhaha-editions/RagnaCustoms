@@ -17,7 +17,8 @@
                         <td>
                             <a href="{{ url("user_profile",{id:score["user_id"]}) }}">
                             <img style="border-radius:15px;width:30px;margin-right:10px;" src="https://www.gravatar.com/avatar/{{ score["gravatar"] }}?d={{ "https://ragnacustoms.com/apps/runes.png"|url_encode }}"
-                                 class="" alt="{{ score["username"] }}"/></a>{{ score["username"] }}</a></td>
+                                 class="" alt="{{ score["username"] }}"/></a>
+                            <a href="{{ url("user_profile",{id:score["user_id"]}) }}" class="text-level-9">{{ score["username"] }}</a></td>
                         <td class="text-right">{{ score["score"]|round(2) }} pts</td>
                         <td class="text-right">{{ score["count_song"] }}</td>
                     </tr>
