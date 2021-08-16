@@ -1,4 +1,3 @@
-{% import "songs/macros/song.html.twig" as macro_song %}
 
 {% extends 'base.html.twig' %}
     {% block title %}{{ user.username }}'s profile{% endblock %}
@@ -6,37 +5,35 @@
         <div class="row">
             <div class="col-12">
                 <h1>{{ user.username }}'s profile</h1>
-                <div class="d-flex">
-                    <div class="">
-                        <img src="{{ user.gravatar }}" style="max-height:100px;" alt="{{ user.username }}"/><br/>
+                <div class=row>
+                    <div class="col-md-2">
+                    <div class="user-picture" style="max-width:100px;">
+                        {% if user.certified %}
+                            <img src="/apps/certified.png" title="{{ "this account is certified"|trans }}" class="certified"  alt="certified"/>
+                        {% endif %}
+
+                        <img src="{{ user.gravatar }}" class="avatar" style="max-width:100px;" alt="{{ user.username }}"/><br/>
                     </div>
-                    <div class="p-3">
-                        Global ranking : #{{ scoreService.getRanking(user, "global") }}<br/>
-                        Season Ranking : #{{ scoreService.getRanking(user, "season") }}<br/>
+                    </div>
+                    <div class="col-md-3 ">
+                        {{ "Global ranking"|trans }} : #{{ scoreService.getRanking(user, "global") }}<br/>
+                        {{ "Season Ranking"|trans }} : #{{ scoreService.getRanking(user, "season") }}<br/>
+                        {{ "Difficulties played"|trans }} : {{ user.scoreHistories|length }} <a href="{{ url('user_profile',{id:user.id}) }}" class="text-level-5"><i class="fas fa-eye"></i></a><br/>
+                        {{ "Song mapped"|trans }} : {{ user.songs|length }} <a href="{{ url('user_mapped_profile',{id:user.id}) }}" class="text-level-5"><i class="fas fa-eye"></i></a><br/>
+                    </div>
+                    <div class="col-md-5">
+                        {%  if user.isMapper and user.isPublic %}
+                            Mapper information : <br/>
+                            {% if user.mapperDiscord is not null %}<i class="fab fa-discord"></i> {{ user.mapperDiscord }}<br/>{% endif %}
+
+                            {{ user.mapperDescription }}
+
+                        {% endif %}
                     </div>
                 </div>
             </div>
 
-            <div class="col-12">
-                <h2>20 last songs played</h2>
-                <table class="table songs">
-                    <tr>
-                        <th>Song</th>
-                        <th class="text-right">level played</th>
-                        <th class="text-right">Score</th>
-                    </tr>
-                    {% for score in scoreService.Last20FromUser(user) %}
-                        <tr>
-                            <td class="song-preview tiny">
-                                {% set song = songService.getByhash(score.hash) %}
-                                {{ macro_song.description(song) }}
-                            </td>
-                            <td class="text-right">{{ score.difficulty }}</td>
-                            <td class="text-right">{{ score.score }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
+            {% block detailed_content %}{% endblock %}
         </div>
     {% endblock %}
 

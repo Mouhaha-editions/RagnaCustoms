@@ -4,21 +4,7 @@
     <div class="row">
         <div class="col-12">
             <h1>{{ "My profile"|trans }}</h1>
-            <div class="form-group row pl-5 pt-5">
-                <label for="ApiKey" class="col-sm-2 col-form-label">{{ "Your API key"|trans }} : </label>
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <input id="ApiKey" class="form-control" value="{{ app.user.apiKey }}" readonly/>
-                        <div class="input-group-append">
-                            <div class="input-group-text copy-clipboard" title="{{ "copied !"|trans }}"
-                                 data-to-copy="{{ app.user.apiKey }}"><i class="fa fa-copy"></i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="pl-5 pt-2">
-                If you already get the application <a href="ragnac://api/{{ app.user.apiKey }}">click here</a> to auto-set your API key
-            </div>
+
             <div class="d-flex">
                 <div class="p-5">
                     <img src="{{ app.user.gravatar }}" alt="Your profile picture"/><br/>
@@ -26,7 +12,24 @@
 
                     <h2>{{ app.user.username }}</h2>
                 </div>
-                <div class="flex-fill p-5">
+                <div class="flex-fill ">
+                    <div class="form-group row pt-5">
+                        <label for="ApiKey" class="col-sm-2 col-form-label">{{ "Your API key"|trans }} : </label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input id="ApiKey" class="form-control" value="{{ app.user.apiKey }}" readonly/>
+                                <div class="input-group-append">
+                                    <div class="input-group-text copy-clipboard" title="{{ "copied !"|trans }}"
+                                         data-to-copy="{{ app.user.apiKey }}"><i class="fa fa-copy"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 pb-5">
+                        If you already get the application <a href="ragnac://api/{{ app.user.apiKey }}">click here</a> to auto-set your API key
+                    </div>
+
                     {{ form_start(form) }}
                     {{ form_errors(form) }}
                     {{ form_row(form.email) }}

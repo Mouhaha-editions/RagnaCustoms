@@ -20,7 +20,19 @@ class UserController extends AbstractController
     public function profile(Request $request, Utilisateur $utilisateur,TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response
     {
 
-        return $this->render('user/profile.html.twig', [
+        return $this->render('user/partial/song_played.html.twig', [
+            'controller_name' => 'UserController',
+            'user'=>$utilisateur
+        ]);
+    }
+
+    /**
+     * @Route("/user/mapped/{id}", name="user_mapped_profile")
+     */
+    public function mappedProfile(Request $request, Utilisateur $utilisateur,TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response
+    {
+
+        return $this->render('user/partial/song_mapped.html.twig', [
             'controller_name' => 'UserController',
             'user'=>$utilisateur
         ]);
