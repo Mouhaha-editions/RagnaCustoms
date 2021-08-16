@@ -5,7 +5,7 @@
 {% block body %}
     <div class="row">
         <div class="col-12">
-            <h1>{{ "My progression on"|trans }} {{ song.name }}</h1>
+            <h1>{{ "My progression on"|trans }} {{ song.name }} level {{ level }}</h1>
 
             <canvas id="myChart" width="600" height="200"></canvas>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
