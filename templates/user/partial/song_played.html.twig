@@ -10,7 +10,7 @@
                 <th class="text-right">level played</th>
                 <th class="text-right">Score</th>
             </tr>
-            {% for score in scoreService.Last20FromUser(user) %}
+            {% for score in scoreService.LastFromUser(user,20) %}
                 <tr>
                     <td class="song-preview tiny">
                         {% set song = songService.getByhash(score.hash) %}

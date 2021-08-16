@@ -91,9 +91,10 @@
                             {% for feedback in song.songFeedbackPublicOrMine(app.user) %}
                                 <div>
                                     {% if feedback.isAnonymous %}
-                                        <b>Anonymous : </b>
-                                    {% else %}
-                                    <b>{{ feedback.user.username }} : {% if not feedback.isModerated %}<div class="badge badge-danger">not moderated</div>{% endif %}</b>
+                                    <b>Anonymous : </b>
+                                {% else %}
+                                    <b>{{ feedback.user.username }} : {% if not feedback.isModerated %}
+                                            <div class="badge badge-danger">not moderated</div>{% endif %}</b>
                                     {% endif %}<br/>
                                     {{ feedback.feedback }}
                                 </div>
@@ -197,8 +198,7 @@
                 <div class="d-flex rating-wrap">
                     <label>{{ "Mapped by"|trans }} : </label>
                     <span>
-                        <a href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">
-                            {{ song.levelAuthorName }}</a>
+                        <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
                     </span>
                 </div>
                 <div class="d-flex rating-wrap">

@@ -22,6 +22,10 @@
                         {{ song.updatedAt.format('Y-m-d') }}
                     </td>
                 </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">I don't think he is a mapper</td>
+                </tr>
             {% endfor %}
         </table>
     </div>

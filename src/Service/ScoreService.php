@@ -99,16 +99,17 @@ class ScoreService
 
     /**
      * @param Utilisateur $user
+     * @param int $maxresult
      * @return ScoreHistory[]|ArrayCollection
      */
-    public function Last20FromUser(Utilisateur $user)
+    public function LastFromUser(Utilisateur $user, $maxresult = 20)
     {
         return $this->em->getRepository(ScoreHistory::class)->createQueryBuilder('s')
             ->where('s.user = :user')
             ->setParameter('user', $user)
             ->orderBy('s.updatedAt', "desc")
             ->setFirstResult(0)
-            ->setMaxResults(20)
+            ->setMaxResults($maxresult)
             ->getQuery()->getResult();
     }
 
@@ -178,7 +179,7 @@ class ScoreService
                     }
                     $i++;
                 }
-              return 'unknow';
+                return 'unknow';
 
                 break;
         }
