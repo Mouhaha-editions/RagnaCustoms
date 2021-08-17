@@ -543,6 +543,10 @@
         <source>Save your score online</source>
         <target>Sauvegarde votre score en ligne</target>
       </trans-unit>
+      <trans-unit id="70">
+        <source>Preview</source>
+        <target>Aperçu</target>
+      </trans-unit>
 
 
     </body>
