@@ -22,8 +22,8 @@
             <div>
                 <h1></h1>
                 <h3></h3>
-                <h4></h4>
                 <h6></h6>
+                <h4></h4>
             </div>
         </div>
     </div>
@@ -41,9 +41,9 @@
                 }
                 $('img').attr('src', data.cover);
                 $('h1').html(data.title);
-                $('h6').html("difficulty: "+data.level);
+                $('h6').html("Difficulty: "+data.level);
                 $('h3').html(data.author);
-                $('h4').html("mapped by "+data.mapper);
+                $('h4').html("Mapped by :"+data.mapper);
                 $('h5').html(data.duration);
             },
             error: function () {
