@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\DownloadCounter;
 use App\Entity\Score;
 use App\Entity\Song;
+use App\Entity\SongDifficulty;
 use App\Entity\SongFeedback;
 use App\Entity\ViewCounter;
 use App\Entity\Vote;
 use App\Form\SongFeedbackType;
 use App\Repository\DownloadCounterRepository;
 use App\Repository\ScoreRepository;
+use App\Repository\SongDifficultyRepository;
 use App\Repository\SongFeedbackRepository;
 use App\Repository\SongRepository;
 use App\Repository\ViewCounterRepository;
@@ -20,6 +22,7 @@ use App\Service\SongService;
 use App\Service\VoteService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Exception;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -71,7 +74,7 @@ class SongsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $song->setViews($song->getViews() + 1);
         $feedback = new SongFeedback();
-        $feedback->setSong($song);
+        $feedback->setHash($song->getNewGuid());
         $feedback->setUser($this->getUser());
         $feedbackForm = $this->createForm(SongFeedbackType::class, $feedback);
         $ip = $request->getClientIp();
@@ -91,15 +94,19 @@ class SongsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         if ($feedbackForm->isSubmitted() && $feedbackForm->isValid() && $this->getUser() != null) {
+            $dif = $feedbackForm->get('songDifficulty')->getData();
+            if ($dif != null) {
+                $feedback->setDifficulty($dif->getDifficultyRank()->getLevel());
+            }
             $em->persist($feedback);
             $em->flush();
             try {
                 $songService->newFeedback($feedback);
-            }catch(\Exception $e){
+            } catch (Exception $e) {
 
             }
             $feedback = new SongFeedback();
-            $feedback->setSong($song);
+            $feedback->setHash($song->getNewGuid());
             $feedback->setUser($this->getUser());
             $feedbackForm = $this->createForm(SongFeedbackType::class, $feedback);
             $this->addFlash("success", $translator->trans("Feedback sent!"));
@@ -254,9 +261,14 @@ class SongsController extends AbstractController
 
     /**
      * @Route("/song/feedback/{id}", name="song_feedback")
+     * @param Request $request
+     * @param Song $song
+     * @param TranslatorInterface $translator
+     * @param SongDifficultyRepository $songDifficultyRepository
+     * @return JsonResponse
      */
     public function formFeedback(Request $request, Song $song, TranslatorInterface $translator,
-                                 SongFeedbackRepository $feedbackRepository, VoteService $voteService)
+                                 SongDifficultyRepository $songDifficultyRepository)
     {
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
@@ -276,7 +288,7 @@ class SongsController extends AbstractController
         }
         $feedback = new SongFeedback();
         $feedback->setUser($this->getUser());
-        $feedback->setSong($song);
+        $feedback->setHash($song->getNewGuid());
         $form = $this->createForm(SongFeedbackType::class, $feedback, [
             'attr' => [
                 'class' => "form ajax-form",
@@ -290,6 +302,10 @@ class SongsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $dif = $form->get('songDifficulty')->getData();
+            if ($dif != null) {
+                $feedback->setDifficulty($dif->getDifficultyRank()->getLevel());
+            }
             $em->persist($feedback);
             $em->flush();
             return new JsonResponse([

@@ -45,7 +45,7 @@
                     <a class="nav-link "
                        data-toggle="tab" data-target="#feedback" type="button" role="tab"
                        aria-controls="home" aria-selected="true">{{ "Feedbacks"|trans }}
-                        <div class="badge badge-info">{{ song.songFeedbackPublic|length }}</div>
+                        <div class="badge badge-info">{{ songService.getSongFeedbackPublic(song)|length }}</div>
                     </a>
                 </li>
             </ul>
@@ -88,7 +88,7 @@
                             {% endif %}
                             <h1 class="mt-3">{{ "Feedbacks"|trans }}</h1>
 
-                            {% for feedback in song.songFeedbackPublicOrMine(app.user) %}
+                            {% for feedback in songService.getSongFeedbackPublicOrMine(app.user,song) %}
                                 <div>
                                     {% if feedback.isAnonymous %}
                                     <b>Anonymous : </b>

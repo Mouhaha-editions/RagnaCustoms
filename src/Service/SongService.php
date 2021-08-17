@@ -5,8 +5,10 @@ namespace App\Service;
 use App\Entity\Song;
 use App\Entity\SongFeedback;
 use App\Entity\SongHash;
+use App\Entity\Utilisateur;
 use App\Helper\AIMapper;
 use App\Repository\SongRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use FFMpeg\Coordinate\TimeCode;
@@ -148,27 +150,35 @@ class SongService
 
     public function newFeedback(SongFeedback $feedback)
     {
-        $song = $feedback->getSong();
-        $email = (new Email())
-            ->from('contact@ragnacustoms.com')
-            ->to('pierrick.pobelle@gmail.com')
-            ->subject('New feedback for ' . $song->getName() . '!');
-        $email->html("New feedback");
-        $this->mailer->send($email);
+        /** @var SongHash $songHash */
+        $songHash = $this->em->getRepository(SongHash::class)->findOneBy(['hash'=>$feedback->getHash()]);
+        if($songHash != null) {
+         $song = $songHash->getSong();
+            $email = (new Email())
+                ->from('contact@ragnacustoms.com')
+                ->to('pierrick.pobelle@gmail.com')
+                ->subject('New feedback for ' . $song->getName() . '!');
+            $email->html("New feedback");
+            $this->mailer->send($email);
+        }
     }
 
     public function newFeedbackForMapper(SongFeedback $feedback)
     {
-        $song = $feedback->getSong();
-        $mapper = $song->getUser();
+        /** @var SongHash $songHash */
+        $songHash = $this->em->getRepository(SongHash::class)->findOneBy(['hash'=>$feedback->getHash()]);
+        if($songHash != null) {
+            $song = $songHash->getSong();
+            $mapper = $song->getUser();
 
-        $email = (new Email())
-            ->from('contact@ragnacustoms.com')
-            ->to($mapper->getEmail())
-            ->addBcc("pierrick.pobelle@gmail.com")
-            ->subject('[Ragnacustoms.com] New feedback for ' . $song->getName() . '!');
-        $email->html("Hi " . $mapper->getUsername() . ",<br/>You get a new feedback for " . $song->getName() . "!<br/><br/>You can read it at https://ragnacustoms.com/song/detail/" . $song->getId() . "#feedback<br/><br/>See you soon,<br/> The Staff");
-        $this->mailer->send($email);
+            $email = (new Email())
+                ->from('contact@ragnacustoms.com')
+                ->to($mapper->getEmail())
+                ->addBcc("pierrick.pobelle@gmail.com")
+                ->subject('[Ragnacustoms.com] New feedback for ' . $song->getName() . '!');
+            $email->html("Hi " . $mapper->getUsername() . ",<br/>You get a new feedback for " . $song->getName() . "!<br/><br/>You can read it at https://ragnacustoms.com/song/detail/" . $song->getId() . "#feedback<br/><br/>See you soon,<br/> The Staff");
+            $this->mailer->send($email);
+        }
     }
 
     public function HashSong(array $files)
@@ -185,6 +195,45 @@ class SongService
     public function getByHash($hash)
     {
         return $this->em->getRepository(Song::class)->findOneByHash($hash);
+    }
+
+    /**
+     * @return Collection|SongFeedback[]
+     */
+    public function getSongFeedbackPublic(Song $song)
+    {
+        $hashes = array_map(function (SongHash $hash) {
+            return $hash->getHash();
+        }, $song->getSongHashes()->toArray());
+        return $this->em->getRepository(SongFeedback::class)
+            ->createQueryBuilder('f')
+            ->where('f.hash IN (:hashes)')
+            ->andWhere('f.isPublic = true')
+            ->andWhere('f.isModerated = true')
+            ->setParameter('hashes', $hashes)
+            ->getQuery()->getResult();
+    }
+
+    /**
+     * @param Utilisateur|null $user
+     * @param Song $song
+     * @return Collection|SongFeedback[]
+     */
+    public function getSongFeedbackPublicOrMine(?Utilisateur $user, Song $song)
+    {
+        if ($user == null) {
+            return $this->getSongFeedbackPublic($song);
+        }
+            $hashes = array_map(function (SongHash $hash) {
+                return $hash->getHash();
+            }, $song->getSongHashes()->toArray());
+        return $this->em->getRepository(SongFeedback::class)->createQueryBuilder('f')
+            ->where('(f.hash IN (:hashes) AND f.isPublic = true AND f.isModerated = true)')
+            ->orWhere('(f.hash IN (:hashes) AND f.user = :user)')
+            ->setParameter('hashes', $hashes)
+            ->setParameter('user', $user)
+            ->getQuery()->getResult();
+
     }
 }
 
