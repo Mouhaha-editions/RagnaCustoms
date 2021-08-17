@@ -22,17 +22,6 @@ class SongFeedback
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songFeedback")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $song;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="songFeedback")
-     */
-    private $songDifficulty;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $isPublic= true;
@@ -68,6 +57,16 @@ class SongFeedback
      */
     private $songFeedback;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $hash;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $difficulty;
+
     public function __construct()
     {
         $this->songFeedback = new ArrayCollection();
@@ -76,30 +75,6 @@ class SongFeedback
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getSong(): ?Song
-    {
-        return $this->song;
-    }
-
-    public function setSong(?Song $song): self
-    {
-        $this->song = $song;
-
-        return $this;
-    }
-
-    public function getSongDifficulty(): ?SongDifficulty
-    {
-        return $this->songDifficulty;
-    }
-
-    public function setSongDifficulty(?SongDifficulty $songDifficulty): self
-    {
-        $this->songDifficulty = $songDifficulty;
-
-        return $this;
     }
 
     public function getIsPublic(): ?bool
@@ -200,6 +175,30 @@ class SongFeedback
                 $songFeedback->setFeedbackParent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHash(): ?string
+    {
+        return $this->hash;
+    }
+
+    public function setHash(?string $hash): self
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
+    public function getDifficulty(): ?string
+    {
+        return $this->difficulty;
+    }
+
+    public function setDifficulty(?string $difficulty): self
+    {
+        $this->difficulty = $difficulty;
 
         return $this;
     }

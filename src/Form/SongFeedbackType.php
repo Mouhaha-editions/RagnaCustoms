@@ -23,11 +23,13 @@ class SongFeedbackType extends AbstractType
                 'label' => "Level to feedback",
                 'query_builder' => function (EntityRepository $er) use ($entity) {
                     return $er->createQueryBuilder('sd')
-                        ->where("sd.song = :song")
-                        ->setParameter("song", $entity->getSong());
+                        ->leftJoin('sd.song','song')
+                        ->where("song.newGuid = :hash")
+                        ->setParameter("hash", $entity->getHash());
                 },
                 "placeholder"=>"Global",
                 "required"=>false,
+                "mapped"=>false,
                 "attr" => [
                     "class" => "form-control"
                 ]

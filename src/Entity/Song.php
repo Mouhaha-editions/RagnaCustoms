@@ -215,7 +215,6 @@ class Song
         $this->votes = new ArrayCollection();
         $this->downloadCounters = new ArrayCollection();
         $this->viewCounters = new ArrayCollection();
-        $this->songFeedback = new ArrayCollection();
         $this->songHashes = new ArrayCollection();
     }
 
@@ -851,58 +850,6 @@ class Song
     public function setNewGuid(?string $newGuid): self
     {
         $this->newGuid = $newGuid;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|SongFeedback[]
-     */
-    public function getSongFeedback(): Collection
-    {
-        return $this->songFeedback;
-    }
-
-    /**
-     * @return Collection|SongFeedback[]
-     */
-    public function getSongFeedbackPublic(): Collection
-    {
-        return $this->songFeedback->filter(function(SongFeedback $e){
-            return $e->getIsPublic() && $e->getIsModerated();
-        });
-    }
-    /**
-     * @return Collection|SongFeedback[]
-     */
-    public function getSongFeedbackPublicOrMine(?Utilisateur $user): Collection
-    {
-        if($user == null){
-            return $this->getSongFeedbackPublic();
-        }
-        return $this->songFeedback->filter(function(SongFeedback $e)use($user){
-            return ($e->getIsPublic() && $e->getIsModerated()) || $e->getUser()->getId() == $user->getId();
-        });
-    }
-
-    public function addSongFeedback(SongFeedback $songFeedback): self
-    {
-        if (!$this->songFeedback->contains($songFeedback)) {
-            $this->songFeedback[] = $songFeedback;
-            $songFeedback->setSong($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSongFeedback(SongFeedback $songFeedback): self
-    {
-        if ($this->songFeedback->removeElement($songFeedback)) {
-            // set the owning side to null (unless already changed)
-            if ($songFeedback->getSong() === $this) {
-                $songFeedback->setSong(null);
-            }
-        }
 
         return $this;
     }
