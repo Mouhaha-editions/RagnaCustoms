@@ -51,7 +51,8 @@ class OverlayController extends AbstractController
             return new JsonResponse([
                 "enabled" => true,
                 "cover" => "/covers/" . $song->getId() . $song->getCoverImageExtension(),
-                'title' => $song->getName() . " level " . $diff->getDifficultyRank()->getLevel(),
+                'title' => $song->getName(),
+                'level' => $diff->getDifficultyRank()->getLevel(),
                 'mapper' => $song->getLevelAuthorName(),
                 'author' => $song->getAuthorName(),
                 'duration' => $tempPasse . " / " . $song->getApproximativeDurationMin()
@@ -62,6 +63,7 @@ class OverlayController extends AbstractController
                 "enabled" => false,
                 "cover" => "",
                 'title' => "",
+                'level' => "",
                 'mapper' => "",
                 'author' => "",
                 'duration' => ""
