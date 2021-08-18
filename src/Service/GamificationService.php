@@ -68,11 +68,11 @@ class GamificationService
             $gamification->setUser($user);
             $gamification->setAchievementNeeds($need);
             $this->em->persist($gamification);
-        }else{
-            $gamification->setAchievementCount($gamification->getAchievementCount()+$add);
-            $this->em->flush();
         }
+        $gamification->setAchievementCount($gamification->getAchievementCount() + $add);
+        $this->em->flush();
     }
+
     /**
      * @param Utilisateur $user
      * @return bool[]
