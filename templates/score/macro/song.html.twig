@@ -2,7 +2,7 @@
     <div class="col-md-2 score-frame">
         <div class="score">
             <div class="score-title text-center">
-                <a href="{{ url("song_detail",{id:song.id}) }}">
+                <a class="img" href="{{ url("song_detail",{id:song.id}) }}">
                     <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}" class="img-fluid"/>
                 </a>
                 <h6>{{ song.name }}</h6>
