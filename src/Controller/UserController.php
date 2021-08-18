@@ -11,11 +11,13 @@ use App\Form\UtilisateurType;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\GamificationService;
+use App\Service\StatisticService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
@@ -25,16 +27,33 @@ class UserController extends AbstractController
      * @param Request $request
      * @param Utilisateur $utilisateur
      * @param TranslatorInterface $translator
+     * @param StatisticService $statisticService
      * @param UtilisateurRepository $utilisateurRepository
      * @param GamificationService $gamificationService
      * @return Response
      */
     public function profile(Request $request, Utilisateur $utilisateur,
                             TranslatorInterface $translator,
+                            StatisticService $statisticService,
                             UtilisateurRepository $utilisateurRepository,
                             GamificationService $gamificationService
     ): Response
     {
+        if ($statisticService->getTotalDistance($utilisateur) >= 50000) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_1, $utilisateur);
+        }
+        if ($statisticService->getTotalDistance($utilisateur) >= 100000) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_2, $utilisateur);
+        }
+        if ($statisticService->getTotalDistance($utilisateur) >= 1000000) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_3, $utilisateur);
+        }
+        if ($statisticService->getTotalDistance($utilisateur) >= 5000000) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_4, $utilisateur);
+        }
+
+
+
         if ($utilisateur->getSongs()->count() >= 50) {
             $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_4, $utilisateur);
         }elseif($utilisateur->getSongs()->count() >= 15){
@@ -44,7 +63,7 @@ class UserController extends AbstractController
         }elseif($utilisateur->getSongs()->count() >= 1){
             $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_1, $utilisateur);
         }
-
+VarDumper::dump($utilisateur->getSongs()->count());
         return $this->render('user/partial/song_played.html.twig', [
             'controller_name' => 'UserController',
             'user' => $utilisateur

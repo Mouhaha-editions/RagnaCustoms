@@ -251,18 +251,6 @@ class ApiController extends AbstractController
                     ];
                 }
 
-                if ($statisticService->getTotalDistance($user) >= 50000) {
-                    $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_1, $user);
-                }
-                if ($statisticService->getTotalDistance($user) >= 100000) {
-                    $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_2, $user);
-                }
-                if ($statisticService->getTotalDistance($user) >= 1000000) {
-                    $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_3, $user);
-                }
-                if ($statisticService->getTotalDistance($user) >= 5000000) {
-                    $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_4, $user);
-                }
 
 
                 if($song->getWip()){

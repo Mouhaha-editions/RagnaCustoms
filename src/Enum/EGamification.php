@@ -61,18 +61,18 @@ const ICONS = [
     const TEXTS = [
         self::ACHIEVEMENT_USE_API => "Use your API key at least one time",
 
-        self::ACHIEVEMENT_DISTANCE_1 => "Travel",
-        self::ACHIEVEMENT_DISTANCE_2 => "Travel a lot",
-        self::ACHIEVEMENT_DISTANCE_3 => "Travel more",
-        self::ACHIEVEMENT_DISTANCE_4 => "Make the travel of your life",
+        self::ACHIEVEMENT_DISTANCE_1 => "Travel 50 000m",
+        self::ACHIEVEMENT_DISTANCE_2 => "Travel 100 000m",
+        self::ACHIEVEMENT_DISTANCE_3 => "Travel 1 000 000m",
+        self::ACHIEVEMENT_DISTANCE_4 => "Travel 5 000 000m",
 
         self::ACHIEVEMENT_HELPER_LVL_1 => "Help mapper on least one time",
         self::ACHIEVEMENT_HELPER_LVL_2 => "Help mappers 10 times",
         self::ACHIEVEMENT_HELPER_LVL_3 => "Help mappers 50 times",
 
-        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_1 => "Get 1000 points in global ranking",
-        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_2 => "Get 5 000 points in global ranking",
-        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_3 => "Get 10 000 points in global ranking",
+//        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_1 => "Get 1000 points in global ranking",
+//        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_2 => "Get 5 000 points in global ranking",
+//        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_3 => "Get 10 000 points in global ranking",
 
         self::ACHIEVEMENT_SONG_COUNT_1 => "Play at least 25 songs",
         self::ACHIEVEMENT_SONG_COUNT_2 => "Play at least 50 songs",
@@ -84,6 +84,34 @@ const ICONS = [
         self::ACHIEVEMENT_MAP_SONG_3 => "Map 15 songs",
         self::ACHIEVEMENT_MAP_SONG_4 => "MAp 50 songs",
     ];
+
+    const INDICES = [
+        self::ACHIEVEMENT_USE_API => "Something to do with your account",
+
+        self::ACHIEVEMENT_DISTANCE_1 => "Travel",
+        self::ACHIEVEMENT_DISTANCE_2 => "Travel more",
+        self::ACHIEVEMENT_DISTANCE_3 => "Travel even more",
+        self::ACHIEVEMENT_DISTANCE_4 => "Make the travel of a lifetime",
+
+        self::ACHIEVEMENT_HELPER_LVL_1 => "Search for WIP song",
+        self::ACHIEVEMENT_HELPER_LVL_2 => "Do it again and again .. ",
+        self::ACHIEVEMENT_HELPER_LVL_3 => "And again ...",
+
+        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_1 => "Get 1000 points in global ranking",
+        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_2 => "Get 5 000 points in global ranking",
+        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_3 => "Get 10 000 points in global ranking",
+
+        self::ACHIEVEMENT_SONG_COUNT_1 => "What can you do with all this custom songs ?",
+        self::ACHIEVEMENT_SONG_COUNT_2 => "No surprise do it more",
+        self::ACHIEVEMENT_SONG_COUNT_3 => "Last time was not enough",
+        self::ACHIEVEMENT_SONG_COUNT_4 => "Come on! you can do it! ",
+
+        self::ACHIEVEMENT_MAP_SONG_1 => "Are you a mapper?",
+        self::ACHIEVEMENT_MAP_SONG_2 => "Thank you for your contribution!",
+        self::ACHIEVEMENT_MAP_SONG_3 => "Thank you for your contribution!",
+        self::ACHIEVEMENT_MAP_SONG_4 => "Thank you for your contribution!",
+    ];
+
     const HIDDEN = [
         self::ACHIEVEMENT_DISTANCE_2 => "Travel a lot",
         self::ACHIEVEMENT_DISTANCE_3 => "Travel more",
