@@ -48,7 +48,7 @@
                         <div class="badge badge-info">{{ songService.getSongFeedbackPublic(song)|length }}</div>
                     </a>
                 </li>
-                {% if song.user == app.user %}
+                {% if song.user == app.user or is_granted('ROLE_ADMIN')  %}
                     <li class="nav-item">
                         <a class="nav-link "
                            data-toggle="tab" data-target="#statistics" type="button" role="tab"
@@ -58,7 +58,7 @@
                 {% endif %}
             </ul>
             <div class="tab-content" id="myTabContent">
-                {% if song.user == app.user %} <div
+                {% if song.user == app.user or is_granted('ROLE_ADMIN') %} <div
                         class="tab-pane fade show"
                         id="statistics" role="tabpanel">
                     <p>
@@ -185,9 +185,7 @@
             </div>
           {% if song.wip %}
               <div class="resume row pt-5 pb-5 text-center">
-
                  This song is a "Work in progress"
-
               </div>
 
 
