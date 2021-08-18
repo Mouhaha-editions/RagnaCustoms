@@ -30,6 +30,7 @@
                             <option {% if app.request.get('downloads_filter_difficulties') == 3 %}selected="selected"{% endif %}
                                     value="3">{{ "8-10"|trans }}</option>
                             <option {% if app.request.get('downloads_filter_difficulties') == 4 %}selected="selected"{% endif %} value="4">{{ "Ranked only"|trans }}</option>
+                            <option {% if app.request.get('downloads_filter_difficulties') == 5 %}selected="selected"{% endif %} value="5">{{ "WIP only"|trans }}</option>
 
                         </select>
                     </div>
