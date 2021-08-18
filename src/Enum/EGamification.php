@@ -20,10 +20,27 @@ class EGamification
     const ACHIEVEMENT_GLOBAL_RANKING_POINTS_2 = 9;
     const ACHIEVEMENT_GLOBAL_RANKING_POINTS_3 = 10;
 
-    const ACHIEVEMENT_SEASON_RANKING_TOP_1 = 11;
-    const ACHIEVEMENT_SEASON_RANKING_TOP_5 = 12;
+//    const ACHIEVEMENT_SEASON_RANKING_TOP_1 = 11;
+//    const ACHIEVEMENT_SEASON_RANKING_TOP_5 = 12;
 
+const ICONS = [
+     self::ACHIEVEMENT_USE_API => "fas fa-key  text-info",
+     self::ACHIEVEMENT_DISTANCE_1 => "fas fa-route text-info",
+     self::ACHIEVEMENT_DISTANCE_2 => "fas fa-route text-warning",
+     self::ACHIEVEMENT_DISTANCE_3 => "fas fa-route text-danger",
+     self::ACHIEVEMENT_DISTANCE_4 => "fas fa-route text-success",
 
+     self::ACHIEVEMENT_HELPER_LVL_1 =>"fas fa-hands-helping text-info",
+     self::ACHIEVEMENT_HELPER_LVL_2 =>"fas fa-hands-helping text-warning",
+     self::ACHIEVEMENT_HELPER_LVL_3 =>"fas fa-hands-helping text-danger",
+
+     self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_1 => "fas fa-trophy text-info",
+     self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_2 => "fas fa-trophy text-warning",
+     self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_3 => "fas fa-trophy text-danger",
+
+//     self::ACHIEVEMENT_SEASON_RANKING_TOP_1 => 11,
+//     self::ACHIEVEMENT_SEASON_RANKING_TOP_5 => 12,
+];
     const TEXTS = [
         self::ACHIEVEMENT_USE_API => "Use your API key at least one time",
 
@@ -40,8 +57,8 @@ class EGamification
         self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_2 => "Get 5 000 points in global ranking",
         self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_3 => "Get 10 000 points in global ranking",
 
-        self::ACHIEVEMENT_SEASON_RANKING_TOP_1 => "Be in top 1 at season ranking after the 7th day of the season",
-        self::ACHIEVEMENT_SEASON_RANKING_TOP_5 => "Be in top 5 at season ranking after the 7th day of the season",
+//        self::ACHIEVEMENT_SEASON_RANKING_TOP_1 => "Be in top 1 at season ranking after the 7th day of the season",
+//        self::ACHIEVEMENT_SEASON_RANKING_TOP_5 => "Be in top 5 at season ranking after the 7th day of the season",
 
     ];
     const HIDDEN = [
