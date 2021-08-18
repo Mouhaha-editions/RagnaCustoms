@@ -25,7 +25,9 @@ class SongType extends AbstractType
             ->add('approximativeDuration',null,[
                 "label"=>"Duration (in sec)"
             ])
-            ->add('converted', null,[
+            ->add('wip', null,[
+                'label'=> "Work in progress"
+            ]) ->add('converted', null,[
                 'label'=> "is a converted map ?"
             ])
             ->add('save',SubmitType::class,['attr'=>['class'=>'btn btn-success']])
