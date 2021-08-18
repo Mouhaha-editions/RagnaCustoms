@@ -39,7 +39,8 @@
                 </div>
                 <div class="row">
                     <div class="col-12 user-statitics">
-                        <h2>Achievements</h2>
+                        <h2>
+                            Achievements {{ gamificationService.count(user)/{{ constant("\\App\\Enum\\EGamification::TEXTS")|length}} }}</h2>
                         {% for key,text in constant("\\App\\Enum\\EGamification::TEXTS") %}
 
                             {% if  gamificationService.get(key,user) %}

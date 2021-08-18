@@ -115,10 +115,10 @@ class ApiController extends AbstractController
             $logger->error("API : " . $apiKey . " USER NOT FOUND");
             return new JsonResponse($results, 400);
         }
-        $gamificationService->unlock(EGamification::ACHIEVEMENT_USE_API, $user);
         configureScope(function (Scope $scope) use ($user): void {
             $scope->setUser(['username' => $user->getUsername()]);
         });
+        $gamificationService->unlock(EGamification::ACHIEVEMENT_USE_API, $user);
 
         $season = $seasonRepository->createQueryBuilder('s')
             ->where('s.startDate <= :now')
