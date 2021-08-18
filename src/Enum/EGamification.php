@@ -26,8 +26,6 @@ const ACHIEVEMENT_SONG_COUNT_1 = 41;
 const ACHIEVEMENT_SONG_COUNT_2 = 42;
 const ACHIEVEMENT_SONG_COUNT_3 = 43;
 const ACHIEVEMENT_SONG_COUNT_4 = 44;
-//    const ACHIEVEMENT_SEASON_RANKING_TOP_1 = 11;
-//    const ACHIEVEMENT_SEASON_RANKING_TOP_5 = 12;
 
 const ICONS = [
      self::ACHIEVEMENT_USE_API => "fas fa-key  text-info",
@@ -49,11 +47,6 @@ const ICONS = [
     self::ACHIEVEMENT_SONG_COUNT_3 => "fas fa-music text-danger",
     self::ACHIEVEMENT_SONG_COUNT_4 => "fas fa-music text-success",
 
-
-
-
-//     self::ACHIEVEMENT_SEASON_RANKING_TOP_1 => 11,
-//     self::ACHIEVEMENT_SEASON_RANKING_TOP_5 => 12,
 ];
     const TEXTS = [
         self::ACHIEVEMENT_USE_API => "Use your API key at least one time",
@@ -75,18 +68,12 @@ const ICONS = [
         self::ACHIEVEMENT_SONG_COUNT_2 => "Play at least 50 songs",
         self::ACHIEVEMENT_SONG_COUNT_3 => "Play at least 150 songs",
         self::ACHIEVEMENT_SONG_COUNT_4 => "Play at least 500 songs",
-//        self::ACHIEVEMENT_SEASON_RANKING_TOP_1 => "Be in top 1 at season ranking after the 7th day of the season",
-//        self::ACHIEVEMENT_SEASON_RANKING_TOP_5 => "Be in top 5 at season ranking after the 7th day of the season",
 
     ];
     const HIDDEN = [
-//        self::ACHIEVEMENT_DISTANCE_1 => "Travel",
         self::ACHIEVEMENT_DISTANCE_2 => "Travel a lot",
         self::ACHIEVEMENT_DISTANCE_3 => "Travel more",
         self::ACHIEVEMENT_DISTANCE_4 => "Make the travel of your life",
-//        self::ACHIEVEMENT_HELPER_LVL_1 => "Help mapper on least one time",
-//        self::ACHIEVEMENT_HELPER_LVL_2 => "Help mappers 10 times",
-//        self::ACHIEVEMENT_HELPER_LVL_3 => "help mappers 50 times",
 
     ];
 
