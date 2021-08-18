@@ -392,7 +392,6 @@ class SongsController extends AbstractController
                 case 2 :
                     $qb->andWhere('s.converted = true');
                     break;
-
             }
         }
         $qb->andWhere('s.moderated = true');
