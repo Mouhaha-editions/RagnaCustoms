@@ -84,7 +84,11 @@ class GamificationService
     public function count($user)
     {
         $this->getByUser($user);
-        return count(self::$gamification);
+        $count = 0;
+        foreach(self::$gamification AS $r){
+            $count+= $r?1:0;
+        }
+        return $count;
     }
 
     /**
