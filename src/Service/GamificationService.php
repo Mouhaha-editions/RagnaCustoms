@@ -72,7 +72,7 @@ class GamificationService
             $this->em->persist($gamification);
         }
         $unicity =  unserialize($gamification->getAchievementUnicity());
-        if(in_array($uniq, $unicity)) {
+        if(!in_array($uniq, $unicity)) {
             $gamification->setAchievementCount($gamification->getAchievementCount() + $add);
             $unicity[] = $uniq;
             $gamification->setAchievementUnicity(serialize($unicity));
