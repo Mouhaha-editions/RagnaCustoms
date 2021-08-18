@@ -21,7 +21,7 @@
             <div class="section-header">
                 <div class="section-header-info">
                     <h1 class="section-pretitle">{{ "Song details"|trans }}</h1>
-                    <h3 class="section-title">{{ song.name }} <small>{{ song.subName }}</small> - {{ song.authorName }}
+                    <h3 class="section-title">{% if song.wip %}[WIP]{% endif %}{{ song.name }} <small>{{ song.subName }}</small> - {{ song.authorName }}
                     </h3>
                 </div>
             </div>
