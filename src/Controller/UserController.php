@@ -6,9 +6,11 @@ use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\SongHash;
 use App\Entity\Utilisateur;
+use App\Enum\EGamification;
 use App\Form\UtilisateurType;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\UtilisateurRepository;
+use App\Service\GamificationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,9 +22,28 @@ class UserController extends AbstractController
 {
     /**
      * @Route("/user/{id}", name="user_profile")
+     * @param Request $request
+     * @param Utilisateur $utilisateur
+     * @param TranslatorInterface $translator
+     * @param UtilisateurRepository $utilisateurRepository
+     * @param GamificationService $gamificationService
+     * @return Response
      */
-    public function profile(Request $request, Utilisateur $utilisateur, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response
+    public function profile(Request $request, Utilisateur $utilisateur,
+                            TranslatorInterface $translator,
+                            UtilisateurRepository $utilisateurRepository,
+                            GamificationService $gamificationService
+    ): Response
     {
+        if ($utilisateur->getSongs()->count() >= 50) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_4, $utilisateur);
+        }elseif($utilisateur->getSongs()->count() >= 15){
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_3, $utilisateur);
+        }elseif($utilisateur->getSongs()->count() >= 5){
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_2, $utilisateur);
+        }elseif($utilisateur->getSongs()->count() >= 1){
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_1, $utilisateur);
+        }
 
         return $this->render('user/partial/song_played.html.twig', [
             'controller_name' => 'UserController',
@@ -52,8 +73,8 @@ class UserController extends AbstractController
         $data = [];
         /** @var ScoreHistory $score */
         foreach ($scores as $score) {
-            $labels[]=$score->getUpdatedAt()->format("Y-d-m H:i");
-            $data[]=$score->getScore();
+            $labels[] = $score->getUpdatedAt()->format("Y-d-m H:i");
+            $data[] = $score->getScore();
         }
 
 
