@@ -147,6 +147,11 @@ class Utilisateur implements UserInterface
      */
     private $scoreHistories;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Gamification::class, mappedBy="user")
+     */
+    private $gamifications;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -156,6 +161,7 @@ class Utilisateur implements UserInterface
         $this->scores = new ArrayCollection();
         $this->songFeedback = new ArrayCollection();
         $this->scoreHistories = new ArrayCollection();
+        $this->gamifications = new ArrayCollection();
     }
 
     public function __toString()
@@ -665,6 +671,36 @@ class Utilisateur implements UserInterface
             // set the owning side to null (unless already changed)
             if ($scoreHistory->getUser() === $this) {
                 $scoreHistory->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Gamification[]
+     */
+    public function getGamifications(): Collection
+    {
+        return $this->gamifications;
+    }
+
+    public function addGamification(Gamification $gamification): self
+    {
+        if (!$this->gamifications->contains($gamification)) {
+            $this->gamifications[] = $gamification;
+            $gamification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGamification(Gamification $gamification): self
+    {
+        if ($this->gamifications->removeElement($gamification)) {
+            // set the owning side to null (unless already changed)
+            if ($gamification->getUser() === $this) {
+                $gamification->setUser(null);
             }
         }
 

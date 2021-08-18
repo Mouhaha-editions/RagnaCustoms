@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\ApiModels\SessionModel;
 use App\ApiModels\ResultModel;
+use App\Entity\Gamification;
 use App\Entity\Overlay;
 use App\Entity\Score;
 use App\Entity\ScoreHistory;
@@ -17,8 +18,12 @@ use App\Repository\SeasonRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
+use App\Service\GamificationService;
 use App\Service\SongService;
+use App\Service\StatisticService;
+use ContainerCexz9GN\getMaker_AutoCommand_MakeMessengerMiddlewareService;
 use DateTime;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Sentry\State\Scope;
@@ -59,9 +64,11 @@ class ApiController extends AbstractController
      * @param SongRepository $songRepository
      * @param LoggerInterface $logger
      * @return Response
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function scoreV2(Request $request,
+                            StatisticService $statisticService,
+                            GamificationService $gamificationService,
                             SeasonRepository $seasonRepository,
                             DifficultyRankRepository $difficultyRankRepository,
                             SongDifficultyRepository $songDifficultyRepository,
@@ -171,7 +178,7 @@ class ApiController extends AbstractController
                     $score = $scoreRepository->findOneBy([
                         'user' => $user,
                         'difficulty' => $level,
-                        'hash'=>$hash,
+                        'hash' => $hash,
                         'season' => $season
                     ]);
                     if ($score != null) {
@@ -181,7 +188,7 @@ class ApiController extends AbstractController
                     $score = $scoreRepository->findOneBy([
                         'user' => $user,
                         'difficulty' => $level,
-                        'hash'=>$hash,
+                        'hash' => $hash,
                         'season' => null
                     ]);
                 }
@@ -239,6 +246,19 @@ class ApiController extends AbstractController
                         "message" => "Score not saved (old score : " . $oldscore . " >= new score : " . $scoreData . ")",
                         "error" => "SUCCESS"
                     ];
+                }
+
+                if ($statisticService->getTotalDistance($user) >= 50000) {
+                    $gamificationService->unlock(Gamification::ACHIEVEMENT_DISTANCE_1, $user);
+                }
+                if ($statisticService->getTotalDistance($user) >= 100000) {
+                    $gamificationService->unlock(Gamification::ACHIEVEMENT_DISTANCE_2, $user);
+                }
+                if ($statisticService->getTotalDistance($user) >= 1000000) {
+                    $gamificationService->unlock(Gamification::ACHIEVEMENT_DISTANCE_3, $user);
+                }
+                if ($statisticService->getTotalDistance($user) >= 5000000) {
+                    $gamificationService->unlock(Gamification::ACHIEVEMENT_DISTANCE_4, $user);
                 }
 
                 $results[] = [
