@@ -10,6 +10,7 @@ use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
+use App\Enum\EGamification;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\OverlayRepository;
 use App\Repository\ScoreHistoryRepository;
@@ -249,16 +250,26 @@ class ApiController extends AbstractController
                 }
 
                 if ($statisticService->getTotalDistance($user) >= 50000) {
-                    $gamificationService->unlock(Gamification::ACHIEVEMENT_DISTANCE_1, $user);
+                    $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_1, $user);
                 }
                 if ($statisticService->getTotalDistance($user) >= 100000) {
-                    $gamificationService->unlock(Gamification::ACHIEVEMENT_DISTANCE_2, $user);
+                    $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_2, $user);
                 }
                 if ($statisticService->getTotalDistance($user) >= 1000000) {
-                    $gamificationService->unlock(Gamification::ACHIEVEMENT_DISTANCE_3, $user);
+                    $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_3, $user);
                 }
                 if ($statisticService->getTotalDistance($user) >= 5000000) {
-                    $gamificationService->unlock(Gamification::ACHIEVEMENT_DISTANCE_4, $user);
+                    $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_4, $user);
+                }
+
+                if($song->getWip()){
+                    $gamificationService->unlock(EGamification::ACHIEVEMENT_HELPER_LVL_1,$user);
+                    /** @var ScoreHistory[] $scoreHistories */
+                    $scoreHistories = $scoreHistoryRepository->findOneBy(['hash'=>$song->getHashes()]);
+                    if(count($scoreHistories) === 1){
+                        $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_2,$user,1,10);
+                        $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_3,$user,1,50);
+                    }
                 }
 
                 $results[] = [
