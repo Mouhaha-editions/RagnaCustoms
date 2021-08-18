@@ -6,7 +6,6 @@ namespace App\Enum;
 
 class EGamification
 {
-    const ACHIEVEMENT_USE_API = 0;
     const ACHIEVEMENT_DISTANCE_1 = 1;
     const ACHIEVEMENT_DISTANCE_2 = 2;
     const ACHIEVEMENT_DISTANCE_3 = 3;
@@ -19,6 +18,7 @@ class EGamification
     const ACHIEVEMENT_GLOBAL_RANKING_POINTS_1 = 8;
     const ACHIEVEMENT_GLOBAL_RANKING_POINTS_2 = 9;
     const ACHIEVEMENT_GLOBAL_RANKING_POINTS_3 = 10;
+    const ACHIEVEMENT_USE_API = 11;
 
 //    const ACHIEVEMENT_SEASON_RANKING_TOP_1 = 11;
 //    const ACHIEVEMENT_SEASON_RANKING_TOP_5 = 12;
