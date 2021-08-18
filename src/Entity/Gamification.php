@@ -8,6 +8,10 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=GamificationRepository::class)
+ * @ORM\Table(name="gamification", uniqueConstraints={
+ *  @ORM\UniqueConstraint(name="user_achievement",
+ *            columns={"user_id", "achievement"})
+ *     })
  */
 class Gamification
 {
