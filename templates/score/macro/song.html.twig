@@ -2,19 +2,17 @@
     <div class="col-md-3 score-frame">
         <div class="score">
             <div class="score-title text-center">
+                <a class="edit-btn btn btn-sm btn-info ajax-modal-form"
+                   data-modal="#editSong"
+                   href="{{ url('edit_song',{id:song.id}) }}">
+                    <i class="fas fa-edit"></i> {{ "edit"|trans }}
+                </a>
                 <a class="img" href="{{ url("song_detail",{id:song.id}) }}">
                     <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}"
                          class="img-fluid"/>
                 </a>
                 <h6>{{ song.name }}</h6>
-                <div class="d-flex flex-fill text-center">
 
-                    <a class="btn btn-sm btn-info ajax-modal-form"
-                       data-modal="#editSong"
-                       href="{{ url('edit_song',{id:song.id}) }}">
-                        <i class="fas fa-edit"></i> edit
-                    </a>
-                </div>
             </div>
             <div class="score-body mt-2">
                 <table class="table table-sm">
@@ -35,7 +33,7 @@
                     <tr>
                         <td>u/downloads:</td>
                         <td class="">
-                            {{ song.uniqDownloads }}/{{ song.downloads }}</td>
+                            <span data-toggle="tooltip" title="unique download">{{ song.uniqDownloads }}/{{ song.downloads }}</td>
                     </tr>
                     <tr>
 
