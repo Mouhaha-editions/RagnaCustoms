@@ -43,7 +43,7 @@ class ScoreService
             $qb->andWhere('s.season = :season')
                 ->setParameter('season', $season);
         }
-
+        $qb->orderBy("s.score", 'DESC');
         $score = $qb->setFirstResult(0)
             ->setMaxResults(1)->getQuery()->getOneOrNullResult();
         if ($score == null) {
