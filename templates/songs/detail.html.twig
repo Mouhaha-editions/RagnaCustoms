@@ -48,8 +48,26 @@
                         <div class="badge badge-info">{{ songService.getSongFeedbackPublic(song)|length }}</div>
                     </a>
                 </li>
+                {% if song.user == app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link "
+                           data-toggle="tab" data-target="#statistics" type="button" role="tab"
+                           aria-controls="home" aria-selected="true">{{ "Statistics"|trans }}
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
             <div class="tab-content" id="myTabContent">
+                {% if song.user == app.user %} <div
+                        class="tab-pane fade show"
+                        id="statistics" role="tabpanel">
+                    <p>
+                        You love statistics ? me too, it's coming soon
+
+
+                    </p>
+                </div>
+                {% endif %}
                 <div
                         class="tab-pane fade show active"
                         id="description" role="tabpanel">
