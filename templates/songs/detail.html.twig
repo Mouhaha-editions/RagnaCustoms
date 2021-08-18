@@ -107,6 +107,9 @@
                 <div
                         class="tab-pane fade show"
                         id="leaderboard" role="tabpanel">
+                    {% if song.wip %}
+                        <p>Not available when the song is  in "WIP" mode</p>
+                    {% else %}
                     <div class="row">
                         {% for level in levels %}
                             <div class="col-md-4 mt-4 border-left border-right">
@@ -135,6 +138,7 @@
                             </div>
                         {% endfor %}
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -161,6 +165,15 @@
 
                 <a href="{{ url('song_direct_download',{id: song.id}) }}" class="btn btn-success">Download</a>
             </div>
+          {% if song.wip %}
+              <div class="resume row mt-2">
+
+                  Work in progress
+
+              </div>
+
+
+          {% else %}
             <div class="resume row mt-2">
 
                 <div class="col-md-6 text-center border-right">
@@ -186,6 +199,8 @@
                         data-song-id="{{ song.id }}"
                 >{{ "I want to vote"|trans }}</button>
             </div>
+
+            {% endif %}
             <h3 class="text-center">{{ "Informations"|trans }}</h3>
 
             <div class="informations">
