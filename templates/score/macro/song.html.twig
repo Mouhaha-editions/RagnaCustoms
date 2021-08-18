@@ -1,9 +1,62 @@
+{% macro uploadedSong(song) %}
+    <div class="col-md-3 score-frame">
+        <div class="score">
+            <div class="score-title text-center">
+                <a class="img" href="{{ url("song_detail",{id:song.id}) }}">
+                    <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}"
+                         class="img-fluid"/>
+                </a>
+                <h6>{{ song.name }}</h6>
+                <div class="d-flex flex-fill text-center">
+
+                    <a class="btn btn-sm btn-info ajax-modal-form"
+                       data-modal="#editSong"
+                       href="{{ url('edit_song',{id:song.id}) }}">
+                        <i class="fas fa-edit"></i> edit
+                    </a>
+                </div>
+            </div>
+            <div class="score-body mt-2">
+                <table class="table table-sm">
+                    <tr>
+                        <td>last update:</td>
+                        <td>{{ song.lastDateUpload.format('Y-m-d') }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>feedback:</td>
+                        <td>{{ songService.songFeedbackPublic(song)|length }}</td>
+                    </tr>
+                    <tr>
+                        <td>note (nb vote):</td>
+                        <td>{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }} ({{ song.countVotes is not null and song.countVotes >0 ? song.countVotes :0 }})
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>u/downloads:</td>
+                        <td class="">
+                            {{ song.uniqDownloads }}/{{ song.downloads }}</td>
+                    </tr>
+                    <tr>
+
+                    <tr>
+                        <td>u/views</td>
+                        <td>
+                            {{ song.uniqViews }}/{{ song.views }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
 {% macro scoringSong(song, selected_season = null) %}
     <div class="col-md-2 score-frame">
         <div class="score">
             <div class="score-title text-center">
                 <a class="img" href="{{ url("song_detail",{id:song.id}) }}">
-                    <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}" class="img-fluid"/>
+                    <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}"
+                         class="img-fluid"/>
                 </a>
                 <h6>{{ song.name }}</h6>
                 <div class="d-flex flex-fill justify-content-end text-center">
@@ -13,10 +66,15 @@
                         <i class="fab fa-twitch"></i>
                     </a>
                     {% set downloaded = downloadsService.alreadyDownloaded(song) %}
-                    <a href="ragnac://install/{{ song.id }}" data-toggle="tooltip"  {% if downloaded %}title="{{ "Already downloaded"|trans }}"{% else%}title="{{ "1 click downloader"|trans }}"{% endif %} class="btn btn-sm {% if downloaded %}downloaded{% endif%} btn-danger ml-1">
+                    <a href="ragnac://install/{{ song.id }}" data-toggle="tooltip"
+                       {% if downloaded %}title="{{ "Already downloaded"|trans }}"
+                       {% else %}title="{{ "1 click downloader"|trans }}"{% endif %}
+                       class="btn btn-sm {% if downloaded %}downloaded{% endif %} btn-danger ml-1">
                         <i class="fas fa-download"></i>
                     </a>
-                    <a href="{{ url("song_direct_download",{id:song.id}) }}" {% if downloaded %}data-toggle="tooltip" title="{{ "Already downloaded"|trans }}"{% endif%} class="btn btn-sm {% if downloaded %}downloaded{% endif%} ml-1 btn-success">
+                    <a href="{{ url("song_direct_download",{id:song.id}) }}" {% if downloaded %}data-toggle="tooltip"
+                       title="{{ "Already downloaded"|trans }}"{% endif %}
+                       class="btn btn-sm {% if downloaded %}downloaded{% endif %} ml-1 btn-success">
                         {{ "Download"|trans }}
                     </a>
                 </div>
@@ -25,68 +83,69 @@
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     {% for diff in song.songDifficulties %}
                         {% if selected_season is null or selected_season in diff.seasons %}
-                        <li class="nav-item">
-                            <a class="nav-link{% if loop.index == 1 %} active{% endif %} text-level-{{ diff.difficultyRank.level }}" id="home-tab"
-                               data-toggle="tab" data-target="#level-{{ diff.id }}" type="button" role="tab"
-                               aria-controls="home" aria-selected="true">{{ diff.difficultyRank.level }}</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link{% if loop.index == 1 %} active{% endif %} text-level-{{ diff.difficultyRank.level }}"
+                                   id="home-tab"
+                                   data-toggle="tab" data-target="#level-{{ diff.id }}" type="button" role="tab"
+                                   aria-controls="home" aria-selected="true">{{ diff.difficultyRank.level }}</a>
+                            </li>
                         {% endif %}
                     {% endfor %}
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     {% for diff in song.songDifficulties %}
                         {% if selected_season is null or selected_season in diff.seasons %}
-                        <div style="min-height:100px;"
-                             class="tab-pane fade show{% if loop.index == 1 %} active{% endif %}"
-                             id="level-{{ diff.id }}" role="tabpanel" aria-labelledby="level-{{ diff.id }}-tab">
-                            <table class="table table-sm">
-                                <tr>
-                                    <th>#</th>
-                                    <th>User</th>
-                                    <th>Score</th>
-                                </tr>
-                                {% set imin = false %}
-                                {% for score in scoreService.scoresTop(selected_season, diff) %}
-                                    {% if is_granted('ROLE_USER') %}
-                                        {% if score.user.id == app.user.id %}
-                                            {% set imin = true %}
-                                        {% endif %}
-                                    {% endif %}
-
-                                    <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-level-{{ diff.difficultyRank.level }}"{% endif %}>
-                                        <td>{{ loop.index }}</td>
-                                        <td>{{ score.user.username }}</td>
-                                        <td class="text-right">{{ score.score }}</td>
-                                    </tr>
-                                {% else %}
+                            <div style="min-height:100px;"
+                                 class="tab-pane fade show{% if loop.index == 1 %} active{% endif %}"
+                                 id="level-{{ diff.id }}" role="tabpanel" aria-labelledby="level-{{ diff.id }}-tab">
+                                <table class="table table-sm">
                                     <tr>
-                                        <td colspan="3">no score for now</td>
+                                        <th>#</th>
+                                        <th>User</th>
+                                        <th>Score</th>
                                     </tr>
-                                {% endfor %}
-                                {% if is_granted('ROLE_USER') and not imin %}
-                                    {% set myrank = scoreService.getMine(app.user, diff, selected_season) %}
-                                    {% if myrank != null %}
-                                       {% if myrank['place'] != 4 %}
-                                           <tr>
-                                            <td class="text-center" colspan="3">...</td>
-                                        </tr>
-                                           {% endif %}
-                                        <tr class="text-level-{{ diff.difficultyRank.level }}">
-                                            <td>{{ myrank['place'] }}</td>
-                                            <td>{{ myrank["score"].user.username }}</td>
-                                            <td class="text-right">{{ myrank["score"].score }}</td>
+                                    {% set imin = false %}
+                                    {% for score in scoreService.scoresTop(selected_season, diff) %}
+                                        {% if is_granted('ROLE_USER') %}
+                                            {% if score.user.id == app.user.id %}
+                                                {% set imin = true %}
+                                            {% endif %}
+                                        {% endif %}
+
+                                        <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-level-{{ diff.difficultyRank.level }}"{% endif %}>
+                                            <td>{{ loop.index }}</td>
+                                            <td>{{ score.user.username }}</td>
+                                            <td class="text-right">{{ score.score }}</td>
                                         </tr>
                                     {% else %}
                                         <tr>
-                                            <td colspan="3">You haven't played this song for now</td>
+                                            <td colspan="3">no score for now</td>
                                         </tr>
+                                    {% endfor %}
+                                    {% if is_granted('ROLE_USER') and not imin %}
+                                        {% set myrank = scoreService.getMine(app.user, diff, selected_season) %}
+                                        {% if myrank != null %}
+                                            {% if myrank['place'] != 4 %}
+                                                <tr>
+                                                    <td class="text-center" colspan="3">...</td>
+                                                </tr>
+                                            {% endif %}
+                                            <tr class="text-level-{{ diff.difficultyRank.level }}">
+                                                <td>{{ myrank['place'] }}</td>
+                                                <td>{{ myrank["score"].user.username }}</td>
+                                                <td class="text-right">{{ myrank["score"].score }}</td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="3">You haven't played this song for now</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% set imin = false %}
                                     {% endif %}
-                                    {% set imin = false %}
-                                {% endif  %}
 
-                            </table>
+                                </table>
 
-                        </div>
+                            </div>
                         {% endif %}
                     {% endfor %}
                 </div>
