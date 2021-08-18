@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\DownloadCounterRepository;
+use App\Repository\ViewCounterRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
