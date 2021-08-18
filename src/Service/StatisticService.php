@@ -38,6 +38,12 @@ class StatisticService
         return $days;
     }
 
+    /**
+     * @param $days
+     * @param Song $song
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function getViewsLastXDays($days, Song $song)
     {
         $first = (new DateTime())->modify("-" . $days . " days");

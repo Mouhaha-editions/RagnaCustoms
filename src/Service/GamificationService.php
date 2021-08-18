@@ -71,14 +71,20 @@ class GamificationService
             $gamification->setAchievementUnicity(serialize([]));
             $this->em->persist($gamification);
         }
-        $unicity =  unserialize($gamification->getAchievementUnicity());
-        if(!in_array($uniq, $unicity)) {
+        $unicity = unserialize($gamification->getAchievementUnicity());
+        if (!in_array($uniq, $unicity)) {
             $gamification->setAchievementCount($gamification->getAchievementCount() + $add);
             $unicity[] = $uniq;
             $gamification->setAchievementUnicity(serialize($unicity));
         }
         $this->em->flush();
 
+    }
+
+    public function count($user)
+    {
+        $this->getByUser($user);
+        return count(self::$gamification);
     }
 
     /**
