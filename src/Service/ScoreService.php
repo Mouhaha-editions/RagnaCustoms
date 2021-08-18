@@ -52,9 +52,10 @@ class ScoreService
         $return['score'] = $score;
 
         $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")
+            ->select("MAX(s.score)")
             ->where('s.difficulty = :difficulty')
             ->andWhere("s.hash = :hash")
-            ->andWhere("s.score >= :score")
+            ->having("MAX(s.score) >= :score")
             ->andWhere("s.user != :user")
             ->setParameter('score', $score->getScore())
             ->setParameter('user', $user)
@@ -64,6 +65,8 @@ class ScoreService
             $qb->andWhere('s.season = :season')
                 ->setParameter('season', $season);
         }
+        $qb->groupBy('s.user');
+
         $otherScore = $qb->getQuery()->getResult();
         $return['place'] = count($otherScore) + 1;
         return $return;
