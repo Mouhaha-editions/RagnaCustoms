@@ -63,7 +63,6 @@ class UserController extends AbstractController
         }elseif($utilisateur->getSongs()->count() >= 1){
             $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_1, $utilisateur);
         }
-VarDumper::dump($utilisateur->getSongs()->count());
         return $this->render('user/partial/song_played.html.twig', [
             'controller_name' => 'UserController',
             'user' => $utilisateur
