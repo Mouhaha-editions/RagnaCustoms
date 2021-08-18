@@ -212,7 +212,7 @@ class Song
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $wip;
+    private $wip = false;
 
     public function __construct()
     {

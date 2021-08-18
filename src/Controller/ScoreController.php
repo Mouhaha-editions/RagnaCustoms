@@ -27,6 +27,7 @@ class ScoreController extends AbstractController
     {
         $qb = $songRepository->createQueryBuilder('s')
             ->where('s.moderated = true')
+            ->andWhere('s.wip != true')
             ->distinct()
             ->orderBy('s.name', 'ASC');
         $selectedSeason = null;
