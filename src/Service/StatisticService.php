@@ -80,7 +80,6 @@ class StatisticService
 
     public function getPlayedLastXDays($days, Song $song)
     {
-        VarDumper:dump("#1");
 
         $hashes = $song->getHashes();
 
