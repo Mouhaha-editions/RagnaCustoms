@@ -337,24 +337,24 @@ class SongsController extends AbstractController
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
         $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")
-        ->andWhere('s.wip != true');
+        ->where('s.wip != true');
 
         if ($request->get('downloads_filter_difficulties', null)) {
             $qb->leftJoin('s.songDifficulties', 'song_difficulties')
                 ->leftJoin('song_difficulties.difficultyRank', 'rank');
             switch ($request->get('downloads_filter_difficulties')) {
                 case 1:
-                    $qb->where('rank.level BETWEEN 1 and 3');
+                    $qb->andWhere('rank.level BETWEEN 1 and 3');
                     break;
                 case 2 :
-                    $qb->where('rank.level BETWEEN 4 and 7');
+                    $qb->andWhere('rank.level BETWEEN 4 and 7');
                     break;
                 case 3 :
-                    $qb->where('rank.level BETWEEN 8 and 10');
+                    $qb->andWhere('rank.level BETWEEN 8 and 10');
                     break;
                 case 4 :
                     $qb->leftJoin('song_difficulties.seasons', 'season');
-                    $qb->where('season.startDate <= :now ')
+                    $qb->andWhere('season.startDate <= :now ')
                         ->andWhere('season.endDate >= :now')
                         ->setParameter('now', new DateTime());
 
