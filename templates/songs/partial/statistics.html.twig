@@ -1,27 +1,37 @@
-{#<canvas id="myChart" width="600" height="200"></canvas>#}
-{#<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>#}
+<canvas id="downloads-view" width="600" height="200"></canvas>
 
-{#<script>#}
-{#    var ctx = document.getElementById('myChart').getContext('2d');#}
-{#    var myChart = new Chart(ctx, {#}
-{#        type: 'line',#}
-{#        data: {#}
-{#            labels: ['{{ labels|join("','")|raw }}'],#}
-{#            datasets: [{#}
-{#                label: 'Distance',#}
-{#                data: [{{ data|join(",") }}],#}
-{#                fill: false,#}
-{#                borderColor: '#890ab3',#}
-{#                tension: 0.1#}
-{#                // borderWidth: 1#}
-{#            }]#}
-{#        },#}
-{#        options: {#}
-{#            scales: {#}
-{#                y: {#}
-{#                    beginAtZero: false#}
-{#                }#}
-{#            }#}
-{#        }#}
-{#    });#}
-{#</script>#}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    const labels = ['{{ statisticService.getLastXDays(45)|join("','")|raw }}'];
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'views',
+                data: [{{ statisticService.getViewsLastXDays(45,song)|join(",") }}],
+                borderColor: "#be6637",
+                backgroundColor: "#be6637",
+            },
+            {
+                label: 'download',
+                data: [{{ statisticService.getDownloadsLastXDays(45,song)|join(",") }}],
+                borderColor: "#17b9c8",
+                backgroundColor: "#17b9c8",
+            }
+        ]
+    };
+    var ctx = document.getElementById('downloads-view').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+</script>

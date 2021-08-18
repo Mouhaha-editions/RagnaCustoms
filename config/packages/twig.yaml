@@ -6,3 +6,4 @@ twig:
         twitchService: '@App\Service\TwitchService'
         scoreService: '@App\Service\ScoreService'
         songService: '@App\Service\SongService'
+        statisticService: '@App\Service\StatisticService'
