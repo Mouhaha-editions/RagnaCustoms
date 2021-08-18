@@ -376,6 +376,11 @@ table.songs {
   }
 }
 .score-title{
+  a{
+    display:block;
+    height:160px;
+  }
+  img{max-height:160px;}
   h6{
     min-height: 38px;
     font-size: 12px;

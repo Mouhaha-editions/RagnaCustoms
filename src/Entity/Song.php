@@ -186,18 +186,7 @@ class Song
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $guid;
-
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $newGuid;
-
-    /**
-     * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="song", orphanRemoval=true)
-     */
-    private $songFeedback;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -643,7 +632,10 @@ class Song
         return $this;
     }
 
-    public function isNew()
+    /**
+     * @return bool
+     */
+    public function isNew(): bool
     {
         return $this->getLastDateUpload() >= (new \DateTime())->modify('-3 days');
 }
@@ -831,18 +823,6 @@ class Song
     public function setInfoDatFile(?string $infoDatFile): self
     {
         $this->infoDatFile = $infoDatFile;
-
-        return $this;
-    }
-
-    public function getGuid(): ?string
-    {
-        return $this->guid;
-    }
-
-    public function setGuid(?string $guid): self
-    {
-        $this->guid = $guid;
 
         return $this;
     }
