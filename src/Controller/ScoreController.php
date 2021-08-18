@@ -109,7 +109,7 @@ class ScoreController extends AbstractController
                 FROM score s 
                     LEFT JOIN song sg ON sg.new_guid = s.hash 
                     LEFT JOIN utilisateur u on s.user_id = u.id        
-                WHERE sg.id IS NOT null 
+                WHERE sg.id IS NOT null and sg.wip != true
                 GROUP BY s.hash,s.difficulty,s.user_id
             ) AS ms GROUP BY user_id ORDER BY score DESC';
         $stmt = $conn->prepare($sql);

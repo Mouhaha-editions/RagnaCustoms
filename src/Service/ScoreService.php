@@ -133,7 +133,7 @@ class ScoreService
                 FROM score s 
                     LEFT JOIN song sg ON sg.new_guid = s.hash 
                     LEFT JOIN utilisateur u on s.user_id = u.id        
-                WHERE sg.id IS NOT null 
+                WHERE sg.id IS NOT null AND sg.wip != true
                 GROUP BY s.hash,s.difficulty,s.user_id
             ) AS ms GROUP BY user_id ORDER BY score DESC';
                 $stmt = $conn->prepare($sql);
@@ -146,7 +146,7 @@ class ScoreService
                     }
                     $i++;
                 }
-                return 'unknow';
+                return 'unknown';
                 break;
             case 'season':
                 $season = $this->em->getRepository(Season::class)->getCurrent();
@@ -165,7 +165,7 @@ class ScoreService
                 FROM score s 
                     LEFT JOIN song sg ON sg.new_guid = s.hash 
                     LEFT JOIN utilisateur u on s.user_id = u.id        
-                WHERE sg.id IS NOT null AND s.season_id = :season
+                WHERE sg.id IS NOT null AND s.season_id = :season AND sg.wip != true
                 GROUP BY s.hash,s.difficulty,s.user_id
             ) AS ms GROUP BY user_id ORDER BY score DESC';
                 $stmt = $conn->prepare($sql);
@@ -179,7 +179,7 @@ class ScoreService
                     }
                     $i++;
                 }
-                return 'unknow';
+                return 'unknown';
 
                 break;
         }
