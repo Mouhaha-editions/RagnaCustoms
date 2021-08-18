@@ -35,8 +35,13 @@ class UploadSongController extends AbstractController
 {
     /**
      * @Route("/upload/song/edit/{id}", name="edit_song")
+     * @param Request $request
+     * @param Song $song
+     * @param DiscordService $discordService
+     * @param TranslatorInterface $translator
+     * @return JsonResponse
      */
-    public function edit(Request $request, Song $song, TranslatorInterface $translator)
+    public function edit(Request $request, Song $song,DiscordService $discordService,TranslatorInterface $translator)
     {
         if ($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse([
@@ -49,8 +54,13 @@ class UploadSongController extends AbstractController
             'method' => "post",
             'action' => $this->generateUrl('edit_song', ['id' => $song->getId()])
         ]);
+        $isWip = $song->getWip();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if($isWip && !$song->getWip()){
+                $discordService->sendNewSongMessage($song);
+            }
             if ($song->getYoutubeLink() != null) {
                 if (!preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $song->getYoutubeLink())) {
                     $song->setYoutubeLink(null);

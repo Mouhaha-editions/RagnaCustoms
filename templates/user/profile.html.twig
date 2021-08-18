@@ -45,25 +45,43 @@
                         {% else %}
                             <i class="fas fa-question  p-2 fa-3x" title="Made at least one map"></i>
                         {% endif %}
-                        {% if gamificationService.get(constant("\\App\\Entity\\Gamification::ACHIEVEMENT_DISTANCE_1"),user) %}
+                        {% if gamificationService.get(constant("\\App\\Enum\\EGamification::ACHIEVEMENT_DISTANCE_1"),user) %}
                             <i class="fas fa-route text-info p-2 fa-3x" title="Travel"></i>
                         {% else %}
                             <i class="fas fa-question p-2 fa-3x" title="Travel a lot"></i>
                         {% endif %}
-                        {% if gamificationService.get(constant("\\App\\Entity\\Gamification::ACHIEVEMENT_DISTANCE_2"),user) %}
+                        {% if gamificationService.get(constant("\\App\\Enum\\EGamification::ACHIEVEMENT_DISTANCE_2"),user) %}
                             <i class="fas fa-route text-warning p-2 fa-3x" title="Travel a lot"></i>
                         {% else %}
                             <i class="fas fa-question p-2 fa-3x" title="Travel a lot"></i>
                         {% endif %}
-                        {% if gamificationService.get(constant("\\App\\Entity\\Gamification::ACHIEVEMENT_DISTANCE_3"),user) %}
+                        {% if gamificationService.get(constant("\\App\\Enum\\EGamification::ACHIEVEMENT_DISTANCE_3"),user) %}
                             <i class="fas fa-route p-2 text-danger fa-3x" title="Travel more"></i>
                         {% else %}
                             <i class="fas fa-question p-2 fa-3x" title="Travel more"></i>
                         {% endif %}
-                        {% if gamificationService.get(constant("\\App\\Entity\\Gamification::ACHIEVEMENT_DISTANCE_4"),user) %}
+                        {% if gamificationService.get(constant("\\App\\Enum\\EGamification::ACHIEVEMENT_DISTANCE_4"),user) %}
                             <i class="fas fa-route p-2 text-success fa-3x" title="Make the travel of your life"></i>
                         {% else %}
                             <i class="fas fa-question p-2 fa-3x" title="Make the travel of your life"></i>
+                        {% endif %}
+
+                        {% if gamificationService.get(constant("\\App\\Enum\\EGamification::ACHIEVEMENT_HELPER_LVL_1"),user) %}
+                            <i class="fas fa-hands-helping text-info p-2 fa-3x" title="Mapper's helper"></i>
+                        {% else %}
+                            <i class="fas fa-question p-2 fa-3x" title="Mapper's helper"></i>
+                        {% endif %}
+
+                        {% if gamificationService.get(constant("\\App\\Enum\\EGamification::ACHIEVEMENT_HELPER_LVL_2"),user) %}
+                            <i class="fas fa-hands-helping text-warning p-2 fa-3x" title="Mapper's friend"></i>
+                        {% else %}
+                            <i class="fas fa-question p-2 fa-3x" title="Mapper's friend"></i>
+                        {% endif %}
+
+                        {% if gamificationService.get(constant("\\App\\Enum\\EGamification::ACHIEVEMENT_HELPER_LVL_3"),user) %}
+                            <i class="fas fa-hands-helping text-danger p-2 fa-3x" title="Mapper's best friend"></i>
+                        {% else %}
+                            <i class="fas fa-question p-2 fa-3x" title="Mapper's best helper"></i>
                         {% endif %}
                     </div>
                 </div>

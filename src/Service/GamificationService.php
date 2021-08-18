@@ -42,11 +42,37 @@ class GamificationService
             $gamification = new Gamification();
             $gamification->setAchievement($achievement);
             $gamification->setUser($user);
+            $gamification->setAchievementNeeds(1);
+            $gamification->setAchievementCount(1);
             $this->em->persist($gamification);
             $this->em->flush();
         }
     }
 
+    /**
+     * @param int $achievement
+     * @param Utilisateur $user
+     * @param int $add
+     * @param int $need
+     */
+    public function add(int $achievement, Utilisateur $user, int $add, int $need): void
+    {
+        /** @var Gamification $gamification */
+        $gamification = $this->em->getRepository(Gamification::class)->findOneBy([
+            'achievement' => $achievement,
+            'user' => $user
+        ]);
+        if ($gamification == null) {
+            $gamification = new Gamification();
+            $gamification->setAchievement($achievement);
+            $gamification->setUser($user);
+            $gamification->setAchievementNeeds($need);
+            $this->em->persist($gamification);
+        }else{
+            $gamification->setAchievementCount($gamification->getAchievementCount()+$add);
+            $this->em->flush();
+        }
+    }
     /**
      * @param Utilisateur $user
      * @return bool[]
@@ -59,7 +85,7 @@ class GamificationService
                 'user' => $user
             ]);
             foreach ($gamifications as $gamification) {
-                self::$gamification[$gamification->getAchievement()] = true;
+                self::$gamification[$gamification->getAchievement()] = $gamification->getAchievementCount() >= $gamification->getAchievementNeeds();
             }
         }
     }
