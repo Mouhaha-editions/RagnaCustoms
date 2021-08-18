@@ -86,7 +86,6 @@ class StatisticService
         $first = (new DateTime())->modify("-" . $days . " days");
         $data = [];
         while ($first < new DateTime()) {
-
             $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
                 ->select('COUNT(d) AS nb')
                 ->where("d.hash IN (:hashes)")
@@ -99,6 +98,18 @@ class StatisticService
             $data[] = $result['nb'];
         }
         return $data;
+    }
+
+    public function getTotalDistance(Utilisateur $user)
+    {
+        $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
+                ->select('SUM(d.score) AS distance')
+                ->where("d.user = :user")
+                ->setParameter('user', $user)
+                ->groupBy('d.user')
+                ->setFirstResult(0)->setMaxResults(1)
+                ->getQuery()->getOneOrNullResult();
+        return $result['distance'];
     }
 }
 

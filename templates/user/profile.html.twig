@@ -15,12 +15,15 @@
                                  alt="{{ user.username }}"/><br/>
                         </div>
                     </div>
+                    {% set totalDistance = statisticService.getTotalDistance(user) %}
                     <div class="col-md-3 ">
                         {{ "Global ranking"|trans }} : #{{ scoreService.getRanking(user, "global") }}<br/>
                         {{ "Season Ranking"|trans }} : #{{ scoreService.getRanking(user, "season") }}<br/>
-                        {{ "Difficulties played"|trans }} : {{ user.scoreHistories|length }} <a
+                        {{ "Travelling:"|trans }} {{ totalDistance|number_format(2,'.',' ') }}m<br/>
+                        {{ "Song played"|trans }} : {{ user.scoreHistories|length }} <a
                                 href="{{ url('user_profile',{id:user.id}) }}" class="text-level-5"><i
                                     class="fas fa-eye"></i></a><br/>
+
                         {{ "Song mapped"|trans }} : {{ user.songs|length }} <a
                                 href="{{ url('user_mapped_profile',{id:user.id}) }}" class="text-level-5"><i
                                     class="fas fa-eye"></i></a><br/>
@@ -30,9 +33,37 @@
                             Mapper information : <br/>
                             {% if user.mapperDiscord is not null %}<i
                                     class="fab fa-discord"></i> {{ user.mapperDiscord }}<br/>{% endif %}
-
                             {{ user.mapperDescription }}
-
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 user-statitics">
+                        <h2>Achievements</h2>
+                        {% if user.songs|length > 0 %}
+                            <i class="fas fa-map text-success p-2 fa-3x" title="Made at least one map"></i>
+                        {% else %}
+                            <i class="fas fa-question  p-2 fa-3x" title="Made at least one map"></i>
+                        {% endif %}
+                        {% if gamificationService.get(constant("\\App\\Entity\\Gamification::ACHIEVEMENT_DISTANCE_1"),user) %}
+                            <i class="fas fa-route text-info p-2 fa-3x" title="Travel"></i>
+                        {% else %}
+                            <i class="fas fa-question p-2 fa-3x" title="Travel a lot"></i>
+                        {% endif %}
+                        {% if gamificationService.get(constant("\\App\\Entity\\Gamification::ACHIEVEMENT_DISTANCE_2"),user) %}
+                            <i class="fas fa-route text-warning p-2 fa-3x" title="Travel a lot"></i>
+                        {% else %}
+                            <i class="fas fa-question p-2 fa-3x" title="Travel a lot"></i>
+                        {% endif %}
+                        {% if gamificationService.get(constant("\\App\\Entity\\Gamification::ACHIEVEMENT_DISTANCE_3"),user) %}
+                            <i class="fas fa-route p-2 text-danger fa-3x" title="Travel more"></i>
+                        {% else %}
+                            <i class="fas fa-question p-2 fa-3x" title="Travel more"></i>
+                        {% endif %}
+                        {% if gamificationService.get(constant("\\App\\Entity\\Gamification::ACHIEVEMENT_DISTANCE_4"),user) %}
+                            <i class="fas fa-route p-2 text-success fa-3x" title="Make the travel of your life"></i>
+                        {% else %}
+                            <i class="fas fa-question p-2 fa-3x" title="Make the travel of your life"></i>
                         {% endif %}
                     </div>
                 </div>

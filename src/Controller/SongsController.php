@@ -42,7 +42,7 @@ class SongsController extends AbstractController
     public function sitemap(SongRepository $songRepository)
     {
         return $this->render('sitemap/index.html.twig', [
-            'songs' => $songRepository->findBy(['moderated' => true])
+            'songs' => $songRepository->findBy(['moderated' => true,"wip"=>false])
         ]);
     }
 
@@ -51,7 +51,7 @@ class SongsController extends AbstractController
      */
     public function rss(SongRepository $songRepository)
     {
-        $songs = $songRepository->findBy(['moderated' => true], ['createdAt' => "Desc"]);
+        $songs = $songRepository->findBy(['moderated' => true,"wip"=>false], ['createdAt' => "Desc"]);
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
 

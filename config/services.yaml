@@ -51,3 +51,5 @@ services:
         arguments: [ "%env(resolve:TWITCH_APPLICATION_ID)%","%env(resolve:TWITCH_SECRET_CLIENT)%" ]
     App\Service\ScoreService:
         arguments: [ "@doctrine.orm.entity_manager" ]
+    App\Service\GamificationService:
+        arguments: [ "@doctrine.orm.entity_manager" ]
