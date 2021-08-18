@@ -271,9 +271,9 @@ class ApiController extends AbstractController
                     $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_3,$user,1,50, $song->getId());
                 }else{
                     $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_1,$user,1,25, $song->getId());
-                    $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_1,$user,1,50, $song->getId());
-                    $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_1,$user,1,150, $song->getId());
-                    $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_1,$user,1,500, $song->getId());
+                    $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_2,$user,1,50, $song->getId());
+                    $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_3,$user,1,150, $song->getId());
+                    $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_4,$user,1,500, $song->getId());
                 }
 
                 $results[] = [
