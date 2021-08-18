@@ -209,6 +209,11 @@ class Song
      */
     private $songHashes;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $wip;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -892,6 +897,18 @@ class Song
                 $songHash->setSong(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getWip(): ?bool
+    {
+        return $this->wip;
+    }
+
+    public function setWip(?bool $wip): self
+    {
+        $this->wip = $wip;
 
         return $this;
     }

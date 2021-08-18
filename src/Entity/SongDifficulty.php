@@ -55,22 +55,13 @@ class SongDifficulty
     private $NotePerSecond;
 
     /**
-     * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="songDifficulty")
-     */
-    private $songFeedback;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Season::class, mappedBy="difficulties")
      */
     private $seasons;
 
-//    public function __toString()
-//    {
-//        return "level ".$this->getDifficultyRank()->getLevel();
-//    }
+
     public function __construct()
     {
-        $this->songFeedback = new ArrayCollection();
         $this->seasons = new ArrayCollection();
     }
 
@@ -164,36 +155,6 @@ class SongDifficulty
     public function setNotePerSecond(?float $NotePerSecond): self
     {
         $this->NotePerSecond = $NotePerSecond;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|SongFeedback[]
-     */
-    public function getSongFeedback(): Collection
-    {
-        return $this->songFeedback;
-    }
-
-    public function addSongFeedback(SongFeedback $songFeedback): self
-    {
-        if (!$this->songFeedback->contains($songFeedback)) {
-            $this->songFeedback[] = $songFeedback;
-            $songFeedback->setSongDifficulty($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSongFeedback(SongFeedback $songFeedback): self
-    {
-        if ($this->songFeedback->removeElement($songFeedback)) {
-            // set the owning side to null (unless already changed)
-            if ($songFeedback->getSongDifficulty() === $this) {
-                $songFeedback->setSongDifficulty(null);
-            }
-        }
 
         return $this;
     }

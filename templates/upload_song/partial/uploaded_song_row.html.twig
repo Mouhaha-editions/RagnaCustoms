@@ -26,7 +26,7 @@
             </div>
         </td>
         <td class="table-column padded">
-            {{ song.songFeedback|length }}
+            {{ songService.songFeedbackPublic(song)|length }}
         </td>
         <td class="table-column padded">
             {{ song.lastDateUpload.format('Y-m-d') }}

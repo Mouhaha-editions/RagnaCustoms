@@ -37,6 +37,7 @@ services:
         arguments:
             $webhookUrl: '%env(resolve:DISCORD_WEBHOOK)%'
             $webhookUrlUpdate: '%env(resolve:DISCORD_WEBHOOK_UPDATE)%'
+            $webhookWipUrl: '%env(resolve:DISCORD_WEBHOOK_WIP)%'
 
     App\EventSubscriber\LocaleSubscriber:
         arguments: [ '%kernel.default_locale%' ]

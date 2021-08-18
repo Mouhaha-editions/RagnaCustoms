@@ -121,6 +121,7 @@ class UploadSongController extends AbstractController
                 "attr" => ["placeholder" => $translator->trans("https://youtu...")]
             ])
             ->add("resetVote", CheckboxType::class, ["required" => false])
+            ->add("isWip", CheckboxType::class, ["required" => false])
             ->add("converted", CheckboxType::class, ["required" => false])
             ->add("replaceExisting", CheckboxType::class, [
                 "required" => false,
@@ -251,6 +252,7 @@ class UploadSongController extends AbstractController
                 $song->setVersion($json->_version);
                 $song->setName($json->_songName);
                 $song->setConverted((bool)$form->get('converted')->getData());
+                $song->setWip((bool)$form->get('isWip')->getData());
                 $song->setLastDateUpload(new DateTime());
                 $song->setSubName($json->_songSubName);
                 $song->setAuthorName($json->_songAuthorName);
@@ -287,6 +289,7 @@ class UploadSongController extends AbstractController
                 }
 
                 foreach ($song->getSongDifficulties() as $difficulty) {
+                    $difficulty->setSong(null);
                     $em->remove($difficulty);
                 }
 
@@ -347,7 +350,10 @@ class UploadSongController extends AbstractController
                     ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
                 if ($song->isModerated()) {
 //                    if ($this->container->getParameter('kernel.environment') != "dev") {
-                       if($new){
+                    if($song->getWip()){
+                        $discordService->sendWipSongMessage($song);
+
+                    }elseif($new){
                            $discordService->sendNewSongMessage($song);
                        }else{
                            $discordService->sendUpdatedSongMessage($song);

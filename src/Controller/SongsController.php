@@ -354,6 +354,7 @@ class SongsController extends AbstractController
                     $qb->leftJoin('song_difficulties.seasons', 'season');
                     $qb->where('season.startDate <= :now ')
                         ->andWhere('season.endDate >= :now')
+                        ->andWhere('s.wip != true')
                         ->setParameter('now', new DateTime());
 
                     break;

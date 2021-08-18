@@ -3,43 +3,50 @@
 {% block title %}Song upload{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-md-6 offset-md-3  mb-5">
-            <div class="card mt-4">
-                <div class="card-title text-center"><h2>Upload new song</h2></div>
-                <div class="card-body">
-                    <p class="pt-2">
-                        {{ "Upload a .zip file (max 20mb) containing all the files for the map."|trans }}
-                    </p>
+<div class="row">
+    <div class="col-md-6 offset-md-3  mb-5">
+        <div class="card mt-4">
+            <div class="card-title text-center"><h2>Upload new song</h2></div>
+            <div class="card-body">
+                <p class="pt-2">
+                    {{ "Upload a .zip file (max 20mb) containing all the files for the map."|trans }}
+                </p>
 
-                    {{ form_start(form) }}
-                    {{ form_widget(form.zipFile) }}
+                {{ form_start(form) }}
+                {{ form_widget(form.zipFile) }}
 
-                    {{ form_row(form.description,{"attr":{"class":'form-control'}}) }}
-                    <div class="text-right">
-                        <small>{{ "You can use <a target='_blank' href='https://guides.github.com/features/mastering-markdown/'>Markdown</a> in description"|trans|raw }}</small>
-                    </div>
-                    {{ form_row(form.youtubeLink,{"attr":{"class":'form-control mb-3'}}) }}
-
-                    {{ form_widget(form.replaceExisting) }}
-                    <label for="form_replaceExisting">{{ "Update an existing map"|trans }}</label><br/>
-                    <div class="d-none">
-                        {{ form_widget(form.resetVote) }}
-                        <label for="form_resetVote">{{ "Reset Vote"|trans }}</label><br/>
-                    </div>
-                    {{ form_widget(form.converted) }}
-                    <label for="form_converted">{{ "Converted map"|trans }}</label><br/>
-
-                    <button class="btn btn-sm btn-primary">{{ "Upload"|trans }}</button>
-
-                    {{ form_end(form) }}
+                {{ form_row(form.description,{"attr":{"class":'form-control'}}) }}
+                <div class="text-right">
+                    <small>{{ "You can use <a target='_blank' href='https://guides.github.com/features/mastering-markdown/'>Markdown</a> in description"|trans|raw }}</small>
                 </div>
+                {{ form_row(form.youtubeLink,{"attr":{"class":'form-control mb-3'}}) }}
+
+                <div class="row">
+                    <div class="col-6">
+                        {{ form_widget(form.replaceExisting) }}
+                        <label for="form_replaceExisting">{{ "Update an existing map"|trans }}</label><br/>
+                        <div class="d-none">
+                            {{ form_widget(form.resetVote) }}
+                            <label for="form_resetVote">{{ "Reset Vote"|trans }}</label><br/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        {{ form_widget(form.isWip) }}
+                        <label for="form_isWip">{{ "work in progress"|trans }}</label><br/>
+                        {{ form_widget(form.converted) }}
+                        <label for="form_converted">{{ "Converted map"|trans }}</label><br/>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-primary">{{ "Upload"|trans }}</button>
+
+                {{ form_end(form) }}
             </div>
         </div>
     </div>
-    </div>
-    <div class="container-fluid">
-        <div class="row">
+</div>
+</div>
+<div class="container-fluid">
+    <div class="row">
         <hr/>
         <div class="col-12">
             <h1> {{ "Your statistics"|trans }}</h1>
@@ -85,41 +92,41 @@
     </div>
 
 
-{% endblock %}
-{% block endBody %}
+    {% endblock %}
+    {% block endBody %}
 
-    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Song Review</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-review">
-                    ...
-                </div>
+        <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Song Review</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="form-review">
+                        ...
+                    </div>
 
+                </div>
             </div>
         </div>
-    </div>
-    <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Edit Song</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-edit">
-                    ...
-                </div>
+        <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Edit Song</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="form-edit">
+                        ...
+                    </div>
 
+                </div>
             </div>
         </div>
-    </div>
-{% endblock %}
+    {% endblock %}
