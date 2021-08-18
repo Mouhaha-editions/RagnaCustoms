@@ -264,12 +264,9 @@ class ApiController extends AbstractController
 
                 if($song->getWip()){
                     $gamificationService->unlock(EGamification::ACHIEVEMENT_HELPER_LVL_1,$user);
-                    /** @var ScoreHistory[] $scoreHistories */
-                    $scoreHistories = $scoreHistoryRepository->findOneBy(['hash'=>$song->getHashes()]);
-                    if(count($scoreHistories) === 1){
-                        $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_2,$user,1,10);
-                        $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_3,$user,1,50);
-                    }
+                    $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_2,$user,1,10, $song->getId());
+                    $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_3,$user,1,50, $song->getId());
+
                 }
 
                 $results[] = [

@@ -44,6 +44,7 @@ class GamificationService
             $gamification->setUser($user);
             $gamification->setAchievementNeeds(1);
             $gamification->setAchievementCount(1);
+            $gamification->setAchievementUnicity(serialize([]));
             $this->em->persist($gamification);
             $this->em->flush();
         }
@@ -55,7 +56,7 @@ class GamificationService
      * @param int $add
      * @param int $need
      */
-    public function add(int $achievement, Utilisateur $user, int $add, int $need): void
+    public function add(int $achievement, Utilisateur $user, int $add, int $need, string $uniq): void
     {
         /** @var Gamification $gamification */
         $gamification = $this->em->getRepository(Gamification::class)->findOneBy([
@@ -67,10 +68,17 @@ class GamificationService
             $gamification->setAchievement($achievement);
             $gamification->setUser($user);
             $gamification->setAchievementNeeds($need);
+            $gamification->setAchievementUnicity(serialize([]));
             $this->em->persist($gamification);
         }
-        $gamification->setAchievementCount($gamification->getAchievementCount() + $add);
+        $unicity =  unserialize($gamification->getAchievementUnicity());
+        if(in_array($uniq, $unicity)) {
+            $gamification->setAchievementCount($gamification->getAchievementCount() + $add);
+            $unicity[] = $uniq;
+            $gamification->setAchievementUnicity(serialize($unicity));
+        }
         $this->em->flush();
+
     }
 
     /**

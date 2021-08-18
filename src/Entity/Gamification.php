@@ -37,6 +37,11 @@ class Gamification
      */
     private $achievement_count;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $achievementUnicity;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class Gamification
     public function setAchievementCount(?int $achievement_count): self
     {
         $this->achievement_count = $achievement_count;
+
+        return $this;
+    }
+
+    public function getAchievementUnicity(): ?string
+    {
+        return $this->achievementUnicity;
+    }
+
+    public function setAchievementUnicity(string $achievementUnicity): self
+    {
+        $this->achievementUnicity = $achievementUnicity;
 
         return $this;
     }
