@@ -893,4 +893,11 @@ class Song
         return $this;
     }
 
+    public function getHashes()
+    {
+        return array_map(function (SongHash $hash) {
+            return $hash->getHash();
+        }, $this->getSongHashes()->toArray());
+    }
+
 }

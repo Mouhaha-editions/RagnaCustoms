@@ -36,9 +36,7 @@ class UserController extends AbstractController
     public function progressSong(Request $request, Song $song, string $level, Utilisateur $utilisateur,
                                  ScoreHistoryRepository $scoreHistoryRepository): Response
     {
-        $hashes = array_map(function (SongHash $hash) {
-            return $hash->getHash();
-        }, $song->getSongHashes()->toArray());
+        $hashes = $song->getHashes();
 
         $scores = $scoreHistoryRepository->createQueryBuilder('score_history')
             ->where('score_history.user = :user')
