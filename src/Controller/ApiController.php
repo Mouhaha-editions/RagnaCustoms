@@ -118,6 +118,7 @@ class ApiController extends AbstractController
         configureScope(function (Scope $scope) use ($user): void {
             $scope->setUser(['username' => $user->getUsername()]);
         });
+
         $gamificationService->unlock(EGamification::ACHIEVEMENT_USE_API, $user);
 
         $season = $seasonRepository->createQueryBuilder('s')
@@ -263,11 +264,16 @@ class ApiController extends AbstractController
                     $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_4, $user);
                 }
 
+
                 if($song->getWip()){
                     $gamificationService->unlock(EGamification::ACHIEVEMENT_HELPER_LVL_1,$user);
                     $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_2,$user,1,10, $song->getId());
                     $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_3,$user,1,50, $song->getId());
-
+                }else{
+                    $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_1,$user,1,25, $song->getId());
+                    $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_1,$user,1,50, $song->getId());
+                    $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_1,$user,1,150, $song->getId());
+                    $gamificationService->add(EGamification::ACHIEVEMENT_SONG_COUNT_1,$user,1,500, $song->getId());
                 }
 
                 $results[] = [
