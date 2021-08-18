@@ -44,51 +44,8 @@
         </div>
     </div>
 </div>
-</div>
-<div class="container-fluid">
     <div class="row">
-        <hr/>
-        <div class="col-12">
-            <h1> {{ "Your statistics"|trans }}</h1>
-            <table id="table-song" class="table songs">
-                <tr class="table-header">
-                    <th class="table-header-column">
-                        {{ "Song"|trans }}
-                    </th>
-                    <th class="table-header-column padded">
-                        {{ "Feedbacks"|trans }}
-                    </th>
-                    <th class="table-header-column padded">
-                        {{ "LastUpdate"|trans }}
-                    </th>
-                    <th class="table-header-column padded">
-                        {{ "Duration"|trans }}
-                    </th>
-                    <th class="table-header-column padded">
-                        {{ "BPM"|trans }}
-                    </th>
-                    <th class="table-header-column padded">
-                        {{ "Votes"|trans }}
-                    </th>
-                    <th class="table-header-column padded" title="all download">
-                        {{ "DL"|trans }}
-                    </th>
-                    <th class="table-header-column padded" title="unique download">
-                        {{ "DLU"|trans }}
-                    </th>
-
-                    <th>
-                        {{ "Views"|trans }}
-                    </th>
-                    <th title="unique views">
-                        {{ "U. Views"|trans }}
-                    </th>
-                    <th class="table-header-column padded-left"></th>
-                </tr>
-
-                {% include 'upload_song/partial/uploaded_song_row.html.twig' with {songs:songs} %}
-            </table>
-        </div>
+            {% include 'upload_song/partial/uploaded_song_row.html.twig' with {songs:songs} %}
     </div>
 
 

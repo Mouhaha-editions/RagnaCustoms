@@ -1,74 +1,10 @@
+{% import "score/macro/song.html.twig" as macro_song %}
 {% for song in songs.entities %}
-    <tr>
-        <td class="song-preview tiny d-flex flex-row">
-            <a href="{{ url('song_detail',{id:song.id}) }}">
-                <figure class="product-preview-image short liquid" style="position: relative">
-                    {% if song.converted %}
-                        <div class="white bold text-center bg-danger"
-                             style="font-size: 12px;bottom: 0;position: absolute;width: 100%;border-radius: 0 0 5px 5px;">
-                            converted
-                        </div>
-                    {% endif %}
-                    <img src="/covers/{{ song.id ~ song.coverImageExtension }}" class="img-fluid rounded thumbnail"
-                         alt="item-11">
-                </figure>
-            </a>
+{% endfor %}
 
-            <div class="song-preview pl-2">
-                <p class="title">{{ song.name }}</p>
-                <p class="category">{{ song.authorName }}</p>
-                <p class="creator">Mapped by : {{ song.levelAuthorName }}</p>
-                <p class="difficulties">Difficulties :
-                    {% for diff in song.songDifficulties %}
-                        {% if loop.index != 1 %}, {% endif %}
-                        <span style="color:#{{ diff.difficultyRank.color }}">{{ diff.difficultyRank.level }}</span>
-                    {% endfor %}</p>
-            </div>
-        </td>
-        <td class="table-column padded">
-            {{ songService.songFeedbackPublic(song)|length }}
-        </td>
-        <td class="table-column padded">
-            {{ song.lastDateUpload.format('Y-m-d') }}
-        </td>
+{% for song in songs.entities %}
+    {{ macro_song.uploadedSong(song) }}
 
-        <td class="table-column padded">
-            {{ song.approximativeDurationMS }}
-        </td>
-
-        <td class="table-column padded">
-            {{ song.beatsPerMinute|round }}
-        </td>
-
-        <td class="table-column padded text-center " style="width:90px;">
-            {{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}
-
-            <div class="song-vote-{{ song.id }}">
-                {% include 'songs/partial/vote.html.twig' with {song:song} %}
-            </div>
-        </td>
-        <td class="table-column padded">
-            {{ song.downloads }}</td>
-        <td>
-            {{ song.uniqDownloads }}
-        </td>
-        <td>
-            {{ song.views }}
-        </td>
-        <td>
-            {{ song.uniqViews }}
-        </td>
-        <td class="table-column padded-left">
-
-            <div class="d-flex flex-fill">
-{#                <a class="btn btn-sm btn-danger ask-for-confirmation" href="{{ url('delete_song',{id:song.id}) }}"><i#}
-{#                            class="fas fa-trash"></i></a>&nbsp;#}
-                <a class="btn btn-sm btn-info ajax-modal-form" data-modal="#editSong" href="{{ url('edit_song',{id:song.id}) }}"><i
-                            class="fas fa-edit"></i></a>
-            </div>
-
-        </td>
-    </tr>
 {% else %}
     <tr>
         <td>No song for now</td>
