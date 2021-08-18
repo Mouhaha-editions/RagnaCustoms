@@ -555,6 +555,10 @@
         <source>edit</source>
         <target>modifier</target>
       </trans-unit>
+      <trans-unit id="73">
+        <source>Difficulties</source>
+        <target>Difficultés</target>
+      </trans-unit>
 
 
     </body>

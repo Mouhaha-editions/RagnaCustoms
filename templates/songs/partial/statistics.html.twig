@@ -1,0 +1,27 @@
+{#<canvas id="myChart" width="600" height="200"></canvas>#}
+{#<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>#}
+
+{#<script>#}
+{#    var ctx = document.getElementById('myChart').getContext('2d');#}
+{#    var myChart = new Chart(ctx, {#}
+{#        type: 'line',#}
+{#        data: {#}
+{#            labels: ['{{ labels|join("','")|raw }}'],#}
+{#            datasets: [{#}
+{#                label: 'Distance',#}
+{#                data: [{{ data|join(",") }}],#}
+{#                fill: false,#}
+{#                borderColor: '#890ab3',#}
+{#                tension: 0.1#}
+{#                // borderWidth: 1#}
+{#            }]#}
+{#        },#}
+{#        options: {#}
+{#            scales: {#}
+{#                y: {#}
+{#                    beginAtZero: false#}
+{#                }#}
+{#            }#}
+{#        }#}
+{#    });#}
+{#</script>#}

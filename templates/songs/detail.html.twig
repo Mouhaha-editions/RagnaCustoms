@@ -63,7 +63,7 @@
                         id="statistics" role="tabpanel">
                     <p>
                         You love statistics ? me too, it's coming soon
-
+{% include 'songs/partial/statistics.html.twig' with {song:song} %}
 
                     </p>
                 </div>
@@ -232,6 +232,12 @@
                     <label>{{ "Mapped by"|trans }} : </label>
                     <span>
                         <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
+                    </span>
+                </div>
+                <div class="d-flex rating-wrap">
+                    <label>{{ "Difficulties"|trans }} : </label>
+                    <span>
+                        {{ song.songDifficultiesStr }}
                     </span>
                 </div>
                 <div class="d-flex rating-wrap">
