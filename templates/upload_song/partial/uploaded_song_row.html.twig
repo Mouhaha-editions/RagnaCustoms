@@ -1,6 +1,9 @@
 {% import "score/macro/song.html.twig" as macro_song %}
 {% for song in songs.entities %}
 {% endfor %}
+<div class="col-12">
+    <h2>{{ "My custom songs"|trans }}</h2>
+</div>
 
 {% for song in songs.entities %}
     {{ macro_song.uploadedSong(song) }}

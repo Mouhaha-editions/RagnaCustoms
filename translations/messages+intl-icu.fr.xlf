@@ -547,6 +547,14 @@
         <source>Preview</source>
         <target>Aperçu</target>
       </trans-unit>
+        <trans-unit id="71">
+            <source>My custom songs</source>
+            <target>Mes custom songs</target>
+        </trans-unit>
+      <trans-unit id="72">
+        <source>edit</source>
+        <target>modifier</target>
+      </trans-unit>
 
 
     </body>
