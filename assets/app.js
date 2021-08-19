@@ -244,6 +244,7 @@ $(function () {
             window.location.hash = $(this).data("target");
         });
     }
+    // createToast("my title", "some content", 12);
 });
 
 
@@ -270,6 +271,30 @@ function getCookie(cname) {
     return null;
 }
 
+let createToast = function(title,content, uid){
+ console.log("toast");
+    let container = $("body");
+
+    container.append(
+        "  <div class=\"toast\" id=\"t"+uid+"\">\n" +
+        "    <div class=\"toast-header\">\n" +
+        "      <strong class=\"mr-auto text-primary\">"+title+"</strong>\n" +
+        "      <small class=\"text-muted\">few sec</small>\n" +
+        "      <button type=\"button\" class=\"ml-2 mb-1 close\" data-dismiss=\"toast\">×</button>\n" +
+        "    </div>\n" +
+        "    <div class=\"toast-body\">\n" +
+        "      "+content+"\n" +
+        "    </div>\n" +
+        "  </div>\n" +
+        "</div>"
+    );
+
+$("#t"+uid).toast({
+    delay:1000
+});
+    $("#t"+uid).toast("show");
+
+}
 //
 // window.onload = function () {
 //     let value = 8;
@@ -310,3 +335,4 @@ function getCookie(cname) {
 //         favicon.href = canvas.toDataURL('image/png');
 //     };
 // };
+

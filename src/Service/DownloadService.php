@@ -57,6 +57,7 @@ class DownloadService
             ->andWhere('(dc.user = :user OR dc.ip = :ip)')
             ->setParameter('user', $user)
             ->setParameter('song', $song)
+            ->setFirstResult(0)->setMaxResults(1)
             ->setParameter('ip', $ip)->getQuery()->getOneOrNullResult();
         if ($dlu == null) {
             $dlu = new DownloadCounter();
