@@ -44,10 +44,11 @@
                         {% for key,text in constant("\\App\\Enum\\EGamification::TEXTS") %}
                             {% if  gamificationService.get(key,user) %}
                                 {% set icon = constant("\\App\\Enum\\EGamification::ICONS")[key] %}
-                                <i class="{{ icon }} p-2 fa-3x" title="{{ text }}"></i>
+                                <i class="{{ icon }} p-2 fa-3x" title="{{ text|trans }}"></i>
                             {% else %}
                                 {% set icon = constant("\\App\\Enum\\EGamification::ICONS")[key] %}
-                                <i class="{{ icon }} disabled p-2 fa-3x" title="{{ text }}"></i>
+                                {% set indice = constant("\\App\\Enum\\EGamification::INDICES")[key] %}
+                                <i class="{{ icon }} text-white-50 disabled p-2 fa-3x" data-toggle="tooltip" title="{{ indice|trans }}"></i>
                             {% endif %}
                         {% endfor %}
 
