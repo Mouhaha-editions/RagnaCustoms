@@ -201,6 +201,14 @@ class ApiController extends AbstractController
                     $score->setUser($user);
                     $score->setDifficulty($level);
                     $score->setHash($hash);
+                    $score->setPercentage($subScore["Percentage"] ?? null);
+                    $score->setPercentage2($subScore["Percentage2"] ?? null);
+                    $score->setCombos($subScore["Combos"] ?? null);
+                    $score->setNotesHit($subScore["NotesHit"] ?? null);
+                    $score->setNotesMissed($subScore["NotesMissed"] ?? null);
+                    $score->setNotesNotProcessed($subScore["NotesNotProcessed"] ?? null);
+                    $score->setHitAccuracy($subScore["HitAccuracy"] ?? null);
+                    $score->setHitSpeed($subScore["HitSpeed"] ?? null);
                     if ($season != null && $songDiff->isRanked()) {
                         $score->setSeason($season);
                         $ranked = true;
@@ -225,8 +233,25 @@ class ApiController extends AbstractController
 
                     $em->persist($scoreHistory);
                 }
+                $scoreHistory->setPercentage($subScore["Percentage"] ?? null);
+                $scoreHistory->setPercentage2($subScore["Percentage2"] ?? null);
+                $scoreHistory->setCombos($subScore["Combos"] ?? null);
+                $scoreHistory->setNotesHit($subScore["NotesHit"] ?? null);
+                $scoreHistory->setNotesMissed($subScore["NotesMissed"] ?? null);
+                $scoreHistory->setNotesNotProcessed($subScore["NotesNotProcessed"] ?? null);
+                $scoreHistory->setHitAccuracy($subScore["HitAccuracy"] ?? null);
+                $scoreHistory->setHitSpeed($subScore["HitSpeed"] ?? null);
+                $em->flush();
                 if ($score->getScore() < $scoreData) {
                     $score->setScore($scoreData);
+                    $score->setPercentage($subScore["Percentage"] ?? null);
+                    $score->setPercentage2($subScore["Percentage2"] ?? null);
+                    $score->setCombos($subScore["Combos"] ?? null);
+                    $score->setNotesHit($subScore["NotesHit"] ?? null);
+                    $score->setNotesMissed($subScore["NotesMissed"] ?? null);
+                    $score->setNotesNotProcessed($subScore["NotesNotProcessed"] ?? null);
+                    $score->setHitAccuracy($subScore["HitAccuracy"] ?? null);
+                    $score->setHitSpeed($subScore["HitSpeed"] ?? null);
                     if ($score->getScore() >= 99000) {
                         $score->setScore($score->getScore() / 1000000);
                     }
@@ -252,11 +277,10 @@ class ApiController extends AbstractController
                 }
 
 
-
-                if($song->getWip()){
-                    $gamificationService->unlock(EGamification::ACHIEVEMENT_HELPER_LVL_1,$user);
-                    $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_2,$user,1,10, $song->getId());
-                    $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_3,$user,1,50, $song->getId());
+                if ($song->getWip()) {
+                    $gamificationService->unlock(EGamification::ACHIEVEMENT_HELPER_LVL_1, $user);
+                    $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_2, $user, 1, 10, $song->getId());
+                    $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_3, $user, 1, 50, $song->getId());
                 }
 
                 $results[] = [

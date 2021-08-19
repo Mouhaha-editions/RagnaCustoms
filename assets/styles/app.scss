@@ -355,62 +355,85 @@ table.songs {
   .select2-container--default {
     .select2-selection--single {
 
-      background-color: transparent!important;
-      color: #e46565!important;
-      border: none!important;
+      background-color: transparent !important;
+      color: #e46565 !important;
+      border: none !important;
     }
   }
 }
 
 .pagination {
-  font-size:12pt;
-  a{
+  font-size: 12pt;
 
-    margin-left:6px;
-    &.active{
-      color:$color-level-5;
-      &:hover{
+  a {
+
+    margin-left: 6px;
+
+    &.active {
+      color: $color-level-5;
+
+      &:hover {
 
       }
     }
   }
 }
-.score-title{
-  a.img{
-    display:block;
-    height:160px;
+
+.score-title {
+  a.img {
+    display: block;
+    height: 160px;
   }
-  img{max-height:160px;}
-  h6{
+
+  img {
+    max-height: 160px;
+  }
+
+  h6 {
     min-height: 38px;
     font-size: 12px;
     padding-top: 8px;
   }
 }
-.score-body{
-  table{
+
+.score-body {
+  table {
     tr {
-      th{
-      border:none;
+      th {
+        border: none;
       }
 
     }
   }
 }
-.score-title{
-  .edit-btn{
-    position:absolute;
-    right:63px;
+
+.score-title {
+  .edit-btn {
+    position: absolute;
+    right: 63px;
     font-size: 10px;
-    top:0px;
+    top: 0px;
   }
 }
-.user-picture{
-  position:relative;
-  .certified{
+
+.user-picture {
+  position: relative;
+
+  .certified {
     position: absolute;
     height: 50px;
     right: -55px;
     top: 0;
+  }
+}
+
+.toast {
+  position: fixed;
+  bottom:50px;
+  right:10px;
+  background: $card-bg;
+  width:350px;
+  .toast-header{
+      background: $card-bg;
   }
 }

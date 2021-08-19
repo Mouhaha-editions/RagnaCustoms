@@ -41,6 +41,46 @@ class ScoreHistory
      */
     private $hash;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $notesHit;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $notesMissed;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $notesNotProcessed;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $hitAccuracy;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $percentage;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $percentage2;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $hitSpeed;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $combos;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +130,103 @@ class ScoreHistory
     public function setHash(string $hash): self
     {
         $this->hash = $hash;
+
+        return $this;
+    }
+
+
+    public function getNotesHit(): ?int
+    {
+        return $this->notesHit;
+    }
+
+    public function setNotesHit(?int $notesHit): self
+    {
+        $this->notesHit = $notesHit;
+
+        return $this;
+    }
+
+    public function getNotesMissed(): ?int
+    {
+        return $this->notesMissed;
+    }
+
+    public function setNotesMissed(?int $notesMissed): self
+    {
+        $this->notesMissed = $notesMissed;
+
+        return $this;
+    }
+
+    public function getNotesNotProcessed(): ?int
+    {
+        return $this->notesNotProcessed;
+    }
+
+    public function setNotesNotProcessed(?int $notesNotProcessed): self
+    {
+        $this->notesNotProcessed = $notesNotProcessed;
+
+        return $this;
+    }
+
+    public function getHitAccuracy(): ?string
+    {
+        return $this->hitAccuracy;
+    }
+
+    public function setHitAccuracy(?string $hitAccuracy): self
+    {
+        $this->hitAccuracy = $hitAccuracy;
+
+        return $this;
+    }
+
+    public function getPercentage(): ?string
+    {
+        return $this->percentage;
+    }
+
+    public function setPercentage(?string $percentage): self
+    {
+        $this->percentage = $percentage;
+
+        return $this;
+    }
+
+    public function getPercentage2(): ?string
+    {
+        return $this->percentage2;
+    }
+
+    public function setPercentage2(?string $percentage2): self
+    {
+        $this->percentage2 = $percentage2;
+
+        return $this;
+    }
+
+    public function getHitSpeed(): ?string
+    {
+        return $this->hitSpeed;
+    }
+
+    public function setHitSpeed(?string $hitSpeed): self
+    {
+        $this->hitSpeed = $hitSpeed;
+
+        return $this;
+    }
+
+    public function getCombos(): ?int
+    {
+        return $this->combos;
+    }
+
+    public function setCombos(?int $combos): self
+    {
+        $this->combos = $combos;
 
         return $this;
     }

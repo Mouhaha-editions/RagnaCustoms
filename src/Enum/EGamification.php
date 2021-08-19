@@ -66,13 +66,10 @@ const ICONS = [
         self::ACHIEVEMENT_DISTANCE_3 => "Travel 1 000 000m",
         self::ACHIEVEMENT_DISTANCE_4 => "Travel 5 000 000m",
 
-        self::ACHIEVEMENT_HELPER_LVL_1 => "Help mapper on least one time",
+        self::ACHIEVEMENT_HELPER_LVL_1 => "Help mappers at least one time",
         self::ACHIEVEMENT_HELPER_LVL_2 => "Help mappers 10 times",
         self::ACHIEVEMENT_HELPER_LVL_3 => "Help mappers 50 times",
 
-//        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_1 => "Get 1000 points in global ranking",
-//        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_2 => "Get 5 000 points in global ranking",
-//        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_3 => "Get 10 000 points in global ranking",
 
         self::ACHIEVEMENT_SONG_COUNT_1 => "Play at least 25 songs",
         self::ACHIEVEMENT_SONG_COUNT_2 => "Play at least 50 songs",
@@ -83,6 +80,12 @@ const ICONS = [
         self::ACHIEVEMENT_MAP_SONG_2 => "Map 5 songs",
         self::ACHIEVEMENT_MAP_SONG_3 => "Map 15 songs",
         self::ACHIEVEMENT_MAP_SONG_4 => "MAp 50 songs",
+
+
+
+//        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_1 => "Get 1000 points in global ranking",
+//        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_2 => "Get 5 000 points in global ranking",
+//        self::ACHIEVEMENT_GLOBAL_RANKING_POINTS_3 => "Get 10 000 points in global ranking",
     ];
 
     const INDICES = [
