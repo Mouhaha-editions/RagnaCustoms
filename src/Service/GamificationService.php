@@ -85,8 +85,8 @@ class GamificationService
     {
         $this->getByUser($user);
         $count = 0;
-        foreach(self::$gamification AS $r){
-            $count+= $r?1:0;
+        foreach (self::$gamification as $r) {
+            $count += $r ? 1 : 0;
         }
         return $count;
     }
@@ -117,6 +117,11 @@ class GamificationService
     {
         $this->getByUser($user);
         return isset(self::$gamification[$achievement]) && self::$gamification[$achievement];
+    }
+
+    public function reset()
+    {
+        self::$gamification = null;
     }
 }
 

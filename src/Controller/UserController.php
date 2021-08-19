@@ -95,7 +95,7 @@ class UserController extends AbstractController
         }
 
         #endregion
-
+$gamificationService->reset();
         return $this->render('user/partial/song_played.html.twig', [
             'controller_name' => 'UserController',
             'user' => $utilisateur
