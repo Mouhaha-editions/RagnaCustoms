@@ -115,7 +115,7 @@ class StatisticService
                 ->groupBy('d.user')
                 ->setFirstResult(0)->setMaxResults(1)
                 ->getQuery()->getOneOrNullResult();
-        return $result['distance'];
+        return $result != null ? $result['distance'] : 0;
     }
 }
 
