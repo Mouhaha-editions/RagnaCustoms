@@ -57,17 +57,17 @@ class ScoreHistory
     private $notesNotProcessed;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
      */
     private $hitAccuracy;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
      */
     private $percentage;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
      */
     private $percentage2;
 
