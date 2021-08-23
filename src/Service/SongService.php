@@ -215,6 +215,25 @@ class SongService
     }
 
     /**
+     * @param Song $song
+     * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countSongFeedbackPublic(Song $song)
+    {
+        $hashes = array_map(function (SongHash $hash) {
+            return $hash->getHash();
+        }, $song->getSongHashes()->toArray());
+        $result = $this->em->getRepository(SongFeedback::class)
+            ->createQueryBuilder('f')
+            ->select("COUNT(f) AS nb")->where('f.hash IN (:hashes)')
+            ->andWhere('f.isPublic = true')
+            ->andWhere('f.isModerated = true')
+            ->setParameter('hashes', $hashes)
+            ->getQuery()->getOneOrNullResult();
+        return $result['nb']??0;
+    }
+    /**
      * @param Utilisateur|null $user
      * @param Song $song
      * @return Collection|SongFeedback[]
