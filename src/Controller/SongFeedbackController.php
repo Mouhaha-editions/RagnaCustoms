@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\SongFeedback;
+use App\Entity\Utilisateur;
 use App\Repository\SongFeedbackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,9 +16,17 @@ class SongFeedbackController extends AbstractController
      */
     public function index(SongFeedbackRepository $songFeedbackRepository): Response
     {
+        /** @var Utilisateur $user */
+        $user = $this->getUser();
+        $hashes = [];
+        foreach($user->getSongs() AS $song){
+            $hashes = array_merge($hashes,$song->getHashes());
+        }
+
         return $this->render('song_feedback/index.html.twig', [
-            'feedbacks' => $songFeedbackRepository->createQueryBuilder('f')->join('f.song', 's')
-                ->where('s.user = :user')->setParameter('user', $this->getUser())->getQuery()->getResult(),
+            'feedbacks' => $songFeedbackRepository->createQueryBuilder('f')
+                ->where('f.hash IN (:hashes)')
+                ->setParameter('hashes', $hashes)
         ]);
     }
 }
