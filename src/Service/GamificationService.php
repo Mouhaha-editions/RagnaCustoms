@@ -85,6 +85,7 @@ class GamificationService
     {
         $this->getByUser($user);
         $count = 0;
+        if(self::$gamification == null )return 0;
         foreach (self::$gamification as $r) {
             $count += $r ? 1 : 0;
         }
