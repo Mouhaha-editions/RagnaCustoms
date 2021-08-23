@@ -43,59 +43,7 @@ class UserController extends AbstractController
                             GamificationService $gamificationService
     ): Response
     {
-        #region distances
-        if ($statisticService->getTotalDistance($utilisateur) >= 50000) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_1, $utilisateur);
-        }
-        if ($statisticService->getTotalDistance($utilisateur) >= 100000) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_2, $utilisateur);
-        }
-        if ($statisticService->getTotalDistance($utilisateur) >= 1000000) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_3, $utilisateur);
-        }
-        if ($statisticService->getTotalDistance($utilisateur) >= 5000000) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_4, $utilisateur);
-        }
-        #endregion
-
-        #region songs
-        $result = $scoreRepository->createQueryBuilder('s')
-            ->select("COUNT(DISTINCT(s.hash)) AS nb")
-            ->where('s.user = :user')
-            ->setParameter('user',$utilisateur)
-            ->setFirstResult(0)->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
-        $count = $result['nb'];
-        if ($count >= 500) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_SONG_COUNT_4, $utilisateur);
-        }
-        if ($count >= 150) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_SONG_COUNT_3, $utilisateur);
-        }
-        if ($count >= 50) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_SONG_COUNT_2, $utilisateur);
-        }
-        if ($count >= 25) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_SONG_COUNT_1, $utilisateur);
-        }
-        #endregion
-
-        #region mapper
-        if ($utilisateur->getSongs()->count() >= 50) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_4, $utilisateur);
-        }
-        if ($utilisateur->getSongs()->count() >= 15) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_3, $utilisateur);
-        }
-        if ($utilisateur->getSongs()->count() >= 5) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_2, $utilisateur);
-        }
-        if ($utilisateur->getSongs()->count() >= 1) {
-            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_1, $utilisateur);
-        }
-
-        #endregion
-$gamificationService->reset();
+        $this->gamification($utilisateur,$statisticService,$gamificationService, $scoreRepository);
         return $this->render('user/partial/song_played.html.twig', [
             'controller_name' => 'UserController',
             'user' => $utilisateur
@@ -142,8 +90,10 @@ $gamificationService->reset();
     /**
      * @Route("/user/mapped/{id}", name="user_mapped_profile")
      */
-    public function mappedProfile(Request $request, Utilisateur $utilisateur, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response
+    public function mappedProfile(Request $request, Utilisateur $utilisateur,
+                                  GamificationService $gamificationService, StatisticService $statisticService,ScoreRepository $scoreRepository): Response
     {
+        $this->gamification($utilisateur,$statisticService,$gamificationService, $scoreRepository);
 
         return $this->render('user/partial/song_mapped.html.twig', [
             'controller_name' => 'UserController',
@@ -187,6 +137,65 @@ $gamificationService->reset();
             'controller_name' => 'UserController',
             'form' => $form->createView()
         ]);
+    }
+
+    private function gamification(Utilisateur $utilisateur, StatisticService $statisticService,
+                                  GamificationService $gamificationService, ScoreRepository $scoreRepository)
+    {
+
+        #region distances
+        if ($statisticService->getTotalDistance($utilisateur) >= 50000) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_1, $utilisateur);
+        }
+        if ($statisticService->getTotalDistance($utilisateur) >= 100000) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_2, $utilisateur);
+        }
+        if ($statisticService->getTotalDistance($utilisateur) >= 1000000) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_3, $utilisateur);
+        }
+        if ($statisticService->getTotalDistance($utilisateur) >= 5000000) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_DISTANCE_4, $utilisateur);
+        }
+        #endregion
+
+        #region songs
+        $result = $scoreRepository->createQueryBuilder('s')
+            ->select("COUNT(DISTINCT(s.hash)) AS nb")
+            ->where('s.user = :user')
+            ->setParameter('user', $utilisateur)
+            ->setFirstResult(0)->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+        $count = $result['nb'];
+        if ($count >= 500) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_SONG_COUNT_4, $utilisateur);
+        }
+        if ($count >= 150) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_SONG_COUNT_3, $utilisateur);
+        }
+        if ($count >= 50) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_SONG_COUNT_2, $utilisateur);
+        }
+        if ($count >= 25) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_SONG_COUNT_1, $utilisateur);
+        }
+        #endregion
+
+        #region mapper
+        if ($utilisateur->getSongs()->count() >= 50) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_4, $utilisateur);
+        }
+        if ($utilisateur->getSongs()->count() >= 15) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_3, $utilisateur);
+        }
+        if ($utilisateur->getSongs()->count() >= 5) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_2, $utilisateur);
+        }
+        if ($utilisateur->getSongs()->count() >= 1) {
+            $gamificationService->unlock(EGamification::ACHIEVEMENT_MAP_SONG_1, $utilisateur);
+        }
+
+        #endregion
+        $gamificationService->reset();
     }
 
 
