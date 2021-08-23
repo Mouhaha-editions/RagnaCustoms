@@ -97,7 +97,7 @@ class ApiController extends AbstractController
                 "success" => false,
                 "error" => "0_NO_CONTENT"
             ];
-            return new JsonResponse($results);
+            return new JsonResponse($results,500);
         }
 
         /** @var Utilisateur $user */
@@ -195,10 +195,12 @@ class ApiController extends AbstractController
                         'season' => null
                     ]);
                 }
+                $scoreData = round(floatval($subScore['Score']) / 100, 2);
 
                 if ($score == null) {
                     $score = new Score();
                     $score->setUser($user);
+                    $score->setScore($scoreData);
                     $score->setDifficulty($level);
                     $score->setHash($hash);
                     $score->setPercentage($subScore["Percentage"] ?? null);
@@ -215,7 +217,6 @@ class ApiController extends AbstractController
                     }
                     $em->persist($score);
                 }
-                $scoreData = round(floatval($subScore['Score']) / 100, 2);
 
                 $scoreHistory = $scoreHistoryRepository->findOneBy([
                     'user' => $user,
