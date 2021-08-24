@@ -29,9 +29,9 @@
                     </div>
                     <div class="col-md-3 ">
                         {{ "Distance:"|trans }} {{ totalDistance|number_format(2,'.',' ') }}m<br/>
-                        {{ "Notes hit:"|trans }} {{ statisticService.totalNotesHit(user)|number_format(2,'.',' ') }}<br/>
-                        {{ "Notes missed:"|trans }} {{ statisticService.totalNotesMissed(user)|number_format(2,'.',' ') }}<br/>
-                        {{ "Notes not processed:"|trans }} {{ statisticService.totalNotesNotProcessed(user)|number_format(2,'.',' ') }}<br/>
+                        {{ "Notes hit:"|trans }} {{ statisticService.totalNotesHit(user)|number_format(0,'.',' ') }}<br/>
+                        {{ "Notes missed:"|trans }} {{ statisticService.totalNotesMissed(user)|number_format(0,'.',' ') }}<br/>
+                        {{ "Notes not processed:"|trans }} {{ statisticService.totalNotesNotProcessed(user)|number_format(0,'.',' ') }}<br/>
 
                     </div>
                     <div class="col-md-5">
