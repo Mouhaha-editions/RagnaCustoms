@@ -158,7 +158,7 @@ class SongService
                 ->from('contact@ragnacustoms.com')
                 ->to('pierrick.pobelle@gmail.com')
                 ->subject('New feedback for ' . $song->getName() . '!');
-            $email->html("New feedback");
+            $email->html("New feedback ");
             $this->mailer->send($email);
         }
     }
