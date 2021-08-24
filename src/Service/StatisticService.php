@@ -10,6 +10,7 @@ use App\Entity\ViewCounter;
 use App\Entity\Vote;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\VarDumper\VarDumper;
@@ -42,23 +43,29 @@ class StatisticService
      * @param $days
      * @param Song $song
      * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function getViewsLastXDays($days, Song $song)
     {
         $first = (new DateTime())->modify("-" . $days . " days");
         $data = [];
+        $i = 0;
         while ($first < new DateTime()) {
             $result = $this->em->getRepository(ViewCounter::class)->createQueryBuilder("d")
                 ->select('COUNT(d) AS nb')
                 ->where("d.song = :song")
                 ->andWhere("d.createdAt LIKE :date")
                 ->setParameter('song', $song)
-                ->setParameter('date', $first->format('Y-m-d')."%")
+                ->setParameter('date', $first->format('Y-m-d') . "%")
                 ->setFirstResult(0)->setMaxResults(1)
                 ->getQuery()->getOneOrNullResult();
             $first->modify("+1 day");
-            $data[] = $result['nb'];
+            if ($i == 0) {
+                $data[] = $result['nb'];
+            } else {
+                $data[] = $data[$i - 1] + $result['nb'];
+            }
+            $i++;
         }
         return $data;
     }
@@ -67,18 +74,24 @@ class StatisticService
     {
         $first = (new DateTime())->modify("-" . $days . " days");
         $data = [];
+        $i = 0;
         while ($first < new DateTime()) {
             $result = $this->em->getRepository(DownloadCounter::class)->createQueryBuilder("d")
                 ->select('COUNT(d) AS nb')
                 ->where("d.song = :song")
                 ->andWhere("d.createdAt LIKE :date")
                 ->setParameter('song', $song)
-                ->setParameter('date', $first->format('Y-m-d')."%")
+                ->setParameter('date', $first->format('Y-m-d') . "%")
                 ->setFirstResult(0)->setMaxResults(1)
                 ->getQuery()->getOneOrNullResult();
             $first->modify("+1 day");
 
-            $data[] = $result['nb'];
+            if ($i == 0) {
+                $data[] = $result['nb'];
+            } else {
+                $data[] = $data[$i - 1] + $result['nb'];
+            }
+            $i++;
         }
         return $data;
     }
@@ -91,17 +104,24 @@ class StatisticService
 
         $first = (new DateTime())->modify("-" . $days . " days");
         $data = [];
+        $i = 0;
         while ($first < new DateTime()) {
             $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
                 ->select('COUNT(d) AS nb')
                 ->where("d.hash IN (:hashes)")
                 ->andWhere("d.createdAt LIKE :date")
                 ->setParameter('hashes', $hashes)
-                ->setParameter('date', $first->format('Y-m-d')."%")
+                ->setParameter('date', $first->format('Y-m-d') . "%")
                 ->setFirstResult(0)->setMaxResults(1)
                 ->getQuery()->getOneOrNullResult();
             $first->modify("+1 day");
-            $data[] = $result['nb'];
+            if ($i == 0) {
+                $data[] = $result['nb'];
+            } else {
+                $data[] = $data[$i - 1] + $result['nb'];
+            }
+            $i++;
+
         }
         return $data;
     }
@@ -109,12 +129,12 @@ class StatisticService
     public function getTotalDistance(Utilisateur $user)
     {
         $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
-                ->select('SUM(d.score) AS distance')
-                ->where("d.user = :user")
-                ->setParameter('user', $user)
-                ->groupBy('d.user')
-                ->setFirstResult(0)->setMaxResults(1)
-                ->getQuery()->getOneOrNullResult();
+            ->select('SUM(d.score) AS distance')
+            ->where("d.user = :user")
+            ->setParameter('user', $user)
+            ->groupBy('d.user')
+            ->setFirstResult(0)->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
         return $result != null ? $result['distance'] : 0;
     }
 }
