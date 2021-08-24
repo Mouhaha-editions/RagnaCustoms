@@ -17,6 +17,9 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class StatisticService
 {
+    /** @var array */
+    private static $StatisticsOnScoreHistory;
+
     private $security;
     protected $requestStack;
     protected $em;
@@ -32,7 +35,7 @@ class StatisticService
     {
         $first = (new DateTime())->modify("-" . $days . " days");
         $days = [];
-        while ($first < new DateTime()) {
+        while ($first <= new DateTime()) {
             $days[] = $first->format('Y-m-d');
             $first->modify("+1 day");
         }
@@ -50,7 +53,7 @@ class StatisticService
         $first = (new DateTime())->modify("-" . $days . " days");
         $data = [];
         $i = 0;
-        while ($first < new DateTime()) {
+        while ($first <= new DateTime()) {
             $result = $this->em->getRepository(ViewCounter::class)->createQueryBuilder("d")
                 ->select('COUNT(d) AS nb')
                 ->where("d.song = :song")
@@ -75,7 +78,7 @@ class StatisticService
         $first = (new DateTime())->modify("-" . $days . " days");
         $data = [];
         $i = 0;
-        while ($first < new DateTime()) {
+        while ($first <= new DateTime()) {
             $result = $this->em->getRepository(DownloadCounter::class)->createQueryBuilder("d")
                 ->select('COUNT(d) AS nb')
                 ->where("d.song = :song")
@@ -105,7 +108,7 @@ class StatisticService
         $first = (new DateTime())->modify("-" . $days . " days");
         $data = [];
         $i = 0;
-        while ($first < new DateTime()) {
+        while ($first <= new DateTime()) {
             $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
                 ->select('COUNT(d) AS nb')
                 ->where("d.hash IN (:hashes)")
@@ -126,16 +129,50 @@ class StatisticService
         return $data;
     }
 
+    public function getStatisticsScoreHistory(Utilisateur $user)
+    {
+        if (self::$StatisticsOnScoreHistory == null) {
+            $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
+                ->select('SUM(d.score) AS distance')
+                ->addSelect('SUM(d.noteHit) AS count_notes_hit')
+                ->addSelect('SUM(d.noteMissed) AS count_notes_missed')
+                ->addSelect('SUM(d.noteNotProcessed) AS count_notes_not_processed')
+                ->where("d.user = :user")
+                ->setParameter('user', $user)
+                ->groupBy('d.user')
+                ->setFirstResult(0)->setMaxResults(1)
+                ->getQuery()->getOneOrNullResult();
+            self::$StatisticsOnScoreHistory = $result ?? [
+                    "distance" => 0,
+                    "count_notes_hit" => 0,
+                    "count_notes_missed" => 0,
+                    "count_notes_not_processed" => 0,
+                ];
+        }
+    }
+
     public function getTotalDistance(Utilisateur $user)
     {
-        $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
-            ->select('SUM(d.score) AS distance')
-            ->where("d.user = :user")
-            ->setParameter('user', $user)
-            ->groupBy('d.user')
-            ->setFirstResult(0)->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
-        return $result != null ? $result['distance'] : 0;
+        $this->getStatisticsScoreHistory($user);
+        return self::$StatisticsOnScoreHistory['distance'];
+    }
+
+    public function getTotalNotesMissed(Utilisateur $user)
+    {
+        $this->getStatisticsScoreHistory($user);
+        return self::$StatisticsOnScoreHistory['count_notes_missed'];
+    }
+
+    public function getTotalNotesHit(Utilisateur $user)
+    {
+        $this->getStatisticsScoreHistory($user);
+        return self::$StatisticsOnScoreHistory['count_notes_hit'];
+    }
+
+    public function getTotalNotesNotProcessed(Utilisateur $user)
+    {
+        $this->getStatisticsScoreHistory($user);
+        return self::$StatisticsOnScoreHistory['count_notes_not_processed'];
     }
 }
 
