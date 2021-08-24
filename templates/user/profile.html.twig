@@ -29,9 +29,9 @@
                                     class="fas fa-eye"></i></a><br/>
                     </div>
                     <div class="col-md-3 ">
-                        {{ "Notes hit"|trans }} : {{ statisticService.totalNotesHit(app.user) }}<br/>
-                        {{ "Notes missed"|trans }} : #{{ statisticService.totalNotesMissed(app.user) }}<br/>
-                        {{ "Notes not processed:"|trans }} {{ statisticService.totalNotesNotProcessed(app.user) }}<br/>
+                        {{ "Notes hit"|trans }} : {{ statisticService.totalNotesHit(user) }}<br/>
+                        {{ "Notes missed"|trans }} : {{ statisticService.totalNotesMissed(user) }}<br/>
+                        {{ "Notes not processed:"|trans }} {{ statisticService.totalNotesNotProcessed(user) }}<br/>
 
                     </div>
                     <div class="col-md-5">
