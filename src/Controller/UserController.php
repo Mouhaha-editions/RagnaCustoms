@@ -14,6 +14,7 @@ use App\Repository\SongHashRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\GamificationService;
 use App\Service\StatisticService;
+use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,7 +105,9 @@ class UserController extends AbstractController
     /**
      * @Route("/user", name="user")
      */
-    public function index(Request $request, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository): Response
+    public function index(Request $request, TranslatorInterface $translator,
+                          UtilisateurRepository $utilisateurRepository, ScoreHistoryRepository $scoreHistoryRepository,
+    PaginationService $paginationService): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account to access this page."));
@@ -133,8 +136,16 @@ class UserController extends AbstractController
             }
         }
 
+        $qb =  $scoreHistoryRepository->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('s.updatedAt', "desc");
+        $pagination =  $paginationService->setDefaults(25)->process($qb, $request);
+
+
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
+            'pagination'=>$pagination,
             'form' => $form->createView()
         ]);
     }
