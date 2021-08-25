@@ -58,7 +58,7 @@
                 </div>
             </div>
 
-            <h2>20 last songs played</h2>
+            <h2>Last songs played</h2>
             <table class="table songs">
                 <tr>
                     <th>Song</th>
@@ -66,7 +66,9 @@
                     <th class="text-right">Score</th>
                     <th class="text-right">Action</th>
                 </tr>
-                {% for score in scoreService.LastFromUser(app.user,50) %}
+                {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+                {% set songs = scoreService.LastFromUser(app.user,30) %}
+                {% for score in songs.entities %}
                     <tr>
                         <td class="song-preview tiny">
                             {% set song = songService.getByhash(score.hash) %}
@@ -74,10 +76,15 @@
                         </td>
                         <td class="text-right">{{ score.difficulty }}</td>
                         <td class="text-right">{{ score.score }}</td>
-                        <td class="text-right"><a target="_blank" href="{{ url("user_progress_song",{id:song.id, level:score.difficulty}) }}" title="see progression"><i class="fas fa-eye"></i></a></td>
+                        <td class="text-right"><a target="_blank"
+                                                  href="{{ url("user_progress_song",{id:song.id, level:score.difficulty}) }}"
+                                                  title="see progression"><i class="fas fa-eye"></i></a></td>
                     </tr>
                 {% endfor %}
             </table>
+            <div class="text-left pagination">
+                Pages : {{ macro_pagination.paginate(songs) }}
+            </div>
         </div>
     </div>
 {% endblock %}
