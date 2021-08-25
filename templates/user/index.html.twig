@@ -67,8 +67,7 @@
                     <th class="text-right">Action</th>
                 </tr>
                 {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-                {% set songs = scoreService.LastFromUser(app.user,30) %}
-                {% for score in songs.entities %}
+                {% for score in pagination.entities %}
                     <tr>
                         <td class="song-preview tiny">
                             {% set song = songService.getByhash(score.hash) %}
@@ -83,7 +82,7 @@
                 {% endfor %}
             </table>
             <div class="text-left pagination">
-                Pages : {{ macro_pagination.paginate(songs) }}
+                Pages : {{ macro_pagination.paginate(pagination) }}
             </div>
         </div>
     </div>

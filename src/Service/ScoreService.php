@@ -21,15 +21,10 @@ use ZipArchive;
 class ScoreService
 {
     private $em;
-    /**
-     * @var PaginationService
-     */
-    private $pagination;
 
-    public function __construct(EntityManagerInterface $em, PaginationService $paginationService)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->pagination = $paginationService;
     }
 
     public function getMine(Utilisateur $user, SongDifficulty $songDifficulty, ?Season $season)
@@ -105,20 +100,6 @@ class ScoreService
     public function getScoresTop(?Season $season, SongDifficulty $difficulty)
     {
         return array_slice($this->getScoresFiltered($season, $difficulty), 0, 3);
-    }
-
-    /**
-     * @param Utilisateur $user
-     * @param int $maxresult
-     * @return \Pkshetlie\PaginationBundle\Models\Pagination
-     */
-    public function LastFromUser(Request $request, Utilisateur $user, $maxresult = 20)
-    {
-        $qb =  $this->em->getRepository(ScoreHistory::class)->createQueryBuilder('s')
-            ->where('s.user = :user')
-            ->setParameter('user', $user)
-            ->orderBy('s.updatedAt', "desc");
-        return $this->pagination->setDefaults($maxresult)->process($qb, $request);
     }
 
     public function getRanking(Utilisateur $user, $type)
