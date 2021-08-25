@@ -12,17 +12,24 @@ use App\Repository\ScoreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use ZipArchive;
 
 class ScoreService
 {
     private $em;
+    /**
+     * @var PaginationService
+     */
+    private $pagination;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, PaginationService $paginationService)
     {
         $this->em = $em;
+        $this->pagination = $paginationService;
     }
 
     public function getMine(Utilisateur $user, SongDifficulty $songDifficulty, ?Season $season)
@@ -103,17 +110,15 @@ class ScoreService
     /**
      * @param Utilisateur $user
      * @param int $maxresult
-     * @return ScoreHistory[]|ArrayCollection
+     * @return \Pkshetlie\PaginationBundle\Models\Pagination
      */
-    public function LastFromUser(Utilisateur $user, $maxresult = 20)
+    public function LastFromUser(Request $request, Utilisateur $user, $maxresult = 20)
     {
-        return $this->em->getRepository(ScoreHistory::class)->createQueryBuilder('s')
+        $qb =  $this->em->getRepository(ScoreHistory::class)->createQueryBuilder('s')
             ->where('s.user = :user')
             ->setParameter('user', $user)
-            ->orderBy('s.updatedAt', "desc")
-            ->setFirstResult(0)
-            ->setMaxResults($maxresult)
-            ->getQuery()->getResult();
+            ->orderBy('s.updatedAt', "desc");
+        return $this->pagination->setDefaults($maxresult)->process($qb, $request);
     }
 
     public function getRanking(Utilisateur $user, $type)
