@@ -75,6 +75,7 @@ class UserController extends AbstractController
         foreach ($scores as $score) {
             $labels[] = $score->getUpdatedAt()->format("Y-d-m H:i");
             $data[] = $score->getScore();
+            $notesHit[] = $score->getNotesHit()??0;
         }
 
 
@@ -85,6 +86,7 @@ class UserController extends AbstractController
             "level" => $level,
             "labels" => $labels,
             "data" => $data,
+            "notesHit" => $notesHit,
         ]);
     }
 
