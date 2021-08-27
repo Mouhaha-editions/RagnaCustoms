@@ -3,7 +3,7 @@
      title="{{ "Rating"|trans }}"
      data-placement="top"
      data-content="{% include 'songs/partial/rate.html.twig' with {song:song} %}">
-    {{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }} ({{ song.countVotes }})
+    {{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }} ({{ song.countVotes+0 }})
 
     <a href='#' class='button ajax-load ajax-modal-form disabled with-only-icon popup-review-trigger song-review'
        data-toggle='modal' data-target='#reviewSong'
