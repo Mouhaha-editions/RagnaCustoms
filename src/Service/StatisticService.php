@@ -142,8 +142,10 @@ class StatisticService
                 ->groupBy('d.user')
                 ->setFirstResult(0)->setMaxResults(1)
                 ->getQuery()->getOneOrNullResult();
-            foreach($result AS $k=>$v) {
-                self::$StatisticsOnScoreHistory[$k] = $v??0;
+            if($result != null) {
+                foreach ($result as $k => $v) {
+                    self::$StatisticsOnScoreHistory[$k] = $v ?? 0;
+                }
             }
         }
     }
