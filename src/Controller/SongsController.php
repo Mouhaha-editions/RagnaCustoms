@@ -358,6 +358,7 @@ class SongsController extends AbstractController
                     $qb->andWhere('season.startDate <= :now ')
                         ->andWhere('season.endDate >= :now')
                         ->setParameter('now', new DateTime());
+                    break;
                 case 5 :
                     $wip = true;
                     break;
