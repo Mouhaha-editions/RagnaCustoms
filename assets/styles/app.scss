@@ -1,5 +1,20 @@
 @import "~select2/dist/css/select2.min.css";
 
+@font-face {
+  font-family: 'Gelio Fasolada';
+  src: url("../../public/apps/Gelio Fasolada.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Gelio Pasteli';
+  src: url("../../public/apps/Gelio Pasteli.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Gelio Retsina';
+  src: url("../../public/apps/Gelio Retsina.ttf") format('truetype');
+}
+
 $themes: (
         "light": (
                 "colors": (
@@ -146,8 +161,31 @@ body {
 }
 
 .navbar-brand {
+  font-family: "Gelio Retsina", serif;
+  font-size: 30px;
+  padding: 0;
+
   img {
-    max-width: 35px;
+    max-width: 45px;
+  }
+}
+.navbar{
+  font-size:18px
+}
+.viking-text {
+  font-family: "Gelio Pasteli", serif;
+
+  &-bold {
+    font-family: "Gelio Retsina", serif;
+  }
+}
+
+h1, h2, h3 {
+  font-family: "Gelio Retsina", serif;
+
+  small {
+    font-family: "Gelio Pasteli", serif;
+    font-size: 60%;
   }
 }
 
@@ -429,11 +467,12 @@ table.songs {
 
 .toast {
   position: fixed;
-  bottom:50px;
-  right:10px;
+  bottom: 50px;
+  right: 10px;
   background: $card-bg;
-  width:350px;
-  .toast-header{
-      background: $card-bg;
+  width: 350px;
+
+  .toast-header {
+    background: $card-bg;
   }
 }

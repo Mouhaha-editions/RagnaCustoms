@@ -59,9 +59,13 @@
 
                 </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-danger" href="{{ url("application") }}">RagnaCustoms Application</a>
+            <li class="nav-item viking-text-bold">
+                <a class="nav-link text-level-9" href="{{ url("application") }}">RagnaCustoms App.</a>
             </li>
+            <li class="nav-item viking-text-bold">
+                <a class="nav-link text-info" target="_blank" href="https://github.com/PKBeam/Edda/releases/">EDDA</a>
+            </li>
+
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin dashboard</a>
@@ -82,17 +86,7 @@
             {% endif %}
         </ul>
         <ul class="navbar-nav">
-            <li class="nav-item pt-1">
-                <input id="chkSwitch" type="checkbox"
-                       data-toggle="switchbutton"
-                       data-size="sm"
-                       data-onlabel="Dark mode"
-                       data-offlabel="Light "
-                       data-onstyle="dark"
-                       data-offstyle="light"
-                        {{ app.request.cookies.get('light-mode') == "dark" ?"checked='checked'":'' }}
-                />
-            </li>
+
             {% if not is_granted("ROLE_USER") %}
                 <li class="nav-item">
                     <a href="{{ url('app_login') }}" class="nav-link">{{ "Login"|trans }}</a>
@@ -136,6 +130,17 @@
             <li class="nav-item">
                 <a class="nav-link" title="How to ?" href="{{ url('howto') }}"><i
                             class="fas fa-question-circle"></i></a>
+            </li>
+            <li class="nav-item pt-1">
+                <input id="chkSwitch" type="checkbox"
+                       data-toggle="switchbutton"
+                       data-size="sm"
+                       data-onlabel="Dark mode"
+                       data-offlabel="Light "
+                       data-onstyle="dark"
+                       data-offstyle="light"
+                        {{ app.request.cookies.get('light-mode') == "dark" ?"checked='checked'":'' }}
+                />
             </li>
         </ul>
     </div>
