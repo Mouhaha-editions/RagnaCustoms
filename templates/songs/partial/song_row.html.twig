@@ -25,15 +25,8 @@
             {{ song.beatsPerMinute|round }}
         </td>
 
-        <td class="table-column padded text-center " style="width: 90px">
-            {{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}
-            <div class="song-vote-{{ song.id }} popover-trigger"  data-html="true"
-                 data-toggle="popover" data-trigger="hover"
-                 title="{{ "Rating"|trans }}"
-                 data-placement="top"
-                 data-content="{% include 'songs/partial/rate.html.twig' with {song:song} %}">
+        <td class="table-column padded text-center song-vote-content-{{ song.id }}" style="width: 90px">
                 {% include 'songs/partial/vote.html.twig' with {song:song} %}
-            </div>
         </td>
 <td style="font-size:20px;">
     <a href="#"  class="text-level-3 ajax-load popover-trigger song-feedback"
