@@ -2,11 +2,13 @@
 
 namespace App\Service;
 
+use App\Entity\Season;
 use App\Entity\Song;
 use App\Entity\SongFeedback;
 use App\Entity\SongHash;
 use App\Entity\Utilisateur;
 use App\Helper\AIMapper;
+use App\Repository\SeasonRepository;
 use App\Repository\SongRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -253,7 +255,11 @@ class SongService
             ->setParameter('hashes', $hashes)
             ->setParameter('user', $user)
             ->getQuery()->getResult();
+    }
 
+    public function getCurrentSeason()
+    {
+        return $this->em->getRepository(Season::class)->getCurrent();
     }
 }
 
