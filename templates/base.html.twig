@@ -26,6 +26,7 @@
     {% endblock %}
 </head>
 <body class="{{ app.request.cookies.get('light-mode','light') }}">
+{% set currentSeason = songService.currentSeason %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/"><img src="/apps/logo.png" class="img-fluid" alt="logo"/> RagnaCustoms</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -146,7 +147,9 @@
     </div>
 
 </nav>
-
+<div class="banner viking-text text-level-5 text-center">
+    <a href="{{ url("score_season_ranking") }}">{{ currentSeason.label }}</a> ends in <span id="demo"></span>
+</div>
 <div class="container">
 
     <div class="runes">
@@ -165,7 +168,6 @@
     {% endblock %}
 </div>
 {% block endBody %}
-
 {% endblock %}
 <hr/>
 <div class="p-3 text-center">
@@ -188,6 +190,10 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
+
+<div id="variables"
+data-season-ends-at="{{ currentSeason.endDate.format('Y-m-d H:i:s') }}"
+></div>
 <script>
     tarteaucitron.init({
         // "privacyUrl": "", /* Privacy policy url */

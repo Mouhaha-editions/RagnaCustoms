@@ -476,3 +476,21 @@ table.songs {
     background: $card-bg;
   }
 }
+.banner{
+  margin:auto;
+  margin-top:20px;
+  font-size:30px;
+  padding-top:8px;
+  padding-bottom:8px;
+  border-top: 10px double #fff;
+  border-bottom: 10px double #fff;
+  width:40%;
+  a:hover{
+    text-decoration: none;
+    color: $color-level-10;
+
+  }
+  a{
+    color: $color-level-9;
+  }
+}
