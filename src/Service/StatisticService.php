@@ -151,25 +151,25 @@ class StatisticService
     public function getTotalDistance(Utilisateur $user)
     {
         $this->getStatisticsScoreHistory($user);
-        return self::$StatisticsOnScoreHistory['distance'];
+        return self::$StatisticsOnScoreHistory['distance']??0;
     }
 
     public function getTotalNotesMissed(Utilisateur $user)
     {
         $this->getStatisticsScoreHistory($user);
-        return self::$StatisticsOnScoreHistory['count_notes_missed'];
+        return self::$StatisticsOnScoreHistory['count_notes_missed']??0;
     }
 
     public function getTotalNotesHit(Utilisateur $user)
     {
         $this->getStatisticsScoreHistory($user);
-        return self::$StatisticsOnScoreHistory['count_notes_hit'];
+        return self::$StatisticsOnScoreHistory['count_notes_hit']??0;
     }
 
     public function getTotalNotesNotProcessed(Utilisateur $user)
     {
         $this->getStatisticsScoreHistory($user);
-        return self::$StatisticsOnScoreHistory['count_notes_not_processed'];
+        return self::$StatisticsOnScoreHistory['count_notes_not_processed']??0;
     }
 }
 
