@@ -10,6 +10,7 @@ use App\Repository\SongRepository;
 use App\Service\DiscordService;
 use App\Service\SongService;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pkshetlie\PaginationBundle\Models\Pagination;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -82,20 +83,13 @@ class UploadSongController extends AbstractController
     /**
      * @Route("/upload/song/delete/{id}", name="delete_song")
      */
-    public function delete(Song $song, KernelInterface $kernel)
+    public function delete(Song $song, KernelInterface $kernel, EntityManagerInterface $em)
     {
+
         if ($song->getUser() == $this->getUser()) {
-            $em = $this->getDoctrine()->getManager();
-            unlink($kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-            unlink($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
+            $song->setIsDeleted(true);
             $this->addFlash('success', "Song removed from catalog.");
-            foreach ($song->getSongDifficulties() as $difficulty) {
-                $em->remove($difficulty);
-            }
-            foreach ($song->getVotes() as $vote) {
-                $em->remove($vote);
-            }
-            $em->remove($song);
+
             $em->flush();
             return $this->redirectToRoute("upload_song");
         } else {
@@ -386,6 +380,7 @@ class UploadSongController extends AbstractController
 
         $qb = $songRepository->createQueryBuilder('song')
             ->where('song.user = :user')
+            ->andWhere("song.isDeleted != true")
             ->setParameter('user', $this->getUser())
             ->orderBy('song.lastDateUpload', 'DESC');
 

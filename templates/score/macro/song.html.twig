@@ -2,10 +2,16 @@
     <div class="col-md-3 score-frame">
         <div class="score">
             <div class="score-title text-center">
+                <a class="delete-btn btn btn-sm btn-danger"
+                   data-confirm="Delete it ?"
+                   title="{{ "delete"|trans }}"
+                   href="{{ url('delete_song',{id:song.id}) }}">
+                    <i class="fas fa-trash"></i>
+                </a>
                 <a class="edit-btn btn btn-sm btn-info ajax-modal-form"
-                   data-modal="#editSong"
+                   data-modal="#editSong" title="{{ "edit"|trans }}"
                    href="{{ url('edit_song',{id:song.id}) }}">
-                    <i class="fas fa-edit"></i> {{ "edit"|trans }}
+                    <i class="fas fa-edit"></i>
                 </a>
                 <a title="see statistics" class="img" href="{{ url("song_detail",{id:song.id}) }}#statistics">
                     <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}"

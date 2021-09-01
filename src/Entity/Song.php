@@ -203,6 +203,16 @@ class Song
      */
     private $wip = false;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isDeleted;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=SongCategory::class, inversedBy="songs")
+     */
+    private $songCategories;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -210,6 +220,7 @@ class Song
         $this->downloadCounters = new ArrayCollection();
         $this->viewCounters = new ArrayCollection();
         $this->songHashes = new ArrayCollection();
+        $this->songCategories = new ArrayCollection();
     }
 
     public function isRanked()
@@ -898,6 +909,42 @@ class Song
         return array_map(function (SongHash $hash) {
             return $hash->getHash();
         }, $this->getSongHashes()->toArray());
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(?bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SongCategory[]
+     */
+    public function getSongCategories(): Collection
+    {
+        return $this->songCategories;
+    }
+
+    public function addSongCategory(SongCategory $songCategory): self
+    {
+        if (!$this->songCategories->contains($songCategory)) {
+            $this->songCategories[] = $songCategory;
+        }
+
+        return $this;
+    }
+
+    public function removeSongCategory(SongCategory $songCategory): self
+    {
+        $this->songCategories->removeElement($songCategory);
+
+        return $this;
     }
 
 }
