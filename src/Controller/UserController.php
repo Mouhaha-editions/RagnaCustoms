@@ -37,17 +37,27 @@ class UserController extends AbstractController
      * @return Response
      */
     public function profile(Request $request, Utilisateur $utilisateur,
-                            TranslatorInterface $translator,
+                            PaginationService $paginationService,
                             StatisticService $statisticService,
                             ScoreRepository $scoreRepository,
+                            ScoreHistoryRepository $scoreHistoryRepository,
                             UtilisateurRepository $utilisateurRepository,
                             GamificationService $gamificationService
     ): Response
     {
         $this->gamification($utilisateur,$statisticService,$gamificationService, $scoreRepository);
+
+
+        $qb =  $scoreHistoryRepository->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->setParameter('user', $utilisateur)
+            ->orderBy('s.updatedAt', "desc");
+        $pagination =  $paginationService->setDefaults(25)->process($qb, $request);
+
         return $this->render('user/partial/song_played.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $utilisateur
+            'pagination' => $pagination,
+            'user' => $utilisateur,
         ]);
     }
 
