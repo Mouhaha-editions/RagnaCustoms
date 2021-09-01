@@ -2,16 +2,21 @@
 
 namespace App\Service;
 
+use App\Entity\DifficultyRank;
 use App\Entity\Season;
 use App\Entity\Song;
+use App\Entity\SongDifficulty;
 use App\Entity\SongFeedback;
 use App\Entity\SongHash;
 use App\Entity\Utilisateur;
 use App\Helper\AIMapper;
+use App\Repository\DifficultyRankRepository;
 use App\Repository\SeasonRepository;
 use App\Repository\SongRepository;
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
@@ -19,6 +24,7 @@ use FFMpeg\FFProbe;
 use FFMpeg\Format\Audio\Mp3;
 use FFMpeg\Format\Audio\Vorbis;
 use FFMpeg\Format\Video\Ogg;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -40,12 +46,17 @@ class SongService
      * @var MailerInterface
      */
     private $mailer;
+    /**
+     * @var DiscordService
+     */
+    private $discordService;
 
-    public function __construct(KernelInterface $kernel, EntityManagerInterface $em, MailerInterface $mailer)
+    public function __construct(KernelInterface $kernel, EntityManagerInterface $em, MailerInterface $mailer, DiscordService $discordService)
     {
         $this->kernel = $kernel;
         $this->em = $em;
         $this->mailer = $mailer;
+        $this->discordService = $discordService;
     }
 
     public function AiMap()
@@ -153,9 +164,9 @@ class SongService
     public function newFeedback(SongFeedback $feedback)
     {
         /** @var SongHash $songHash */
-        $songHash = $this->em->getRepository(SongHash::class)->findOneBy(['hash'=>$feedback->getHash()]);
-        if($songHash != null) {
-         $song = $songHash->getSong();
+        $songHash = $this->em->getRepository(SongHash::class)->findOneBy(['hash' => $feedback->getHash()]);
+        if ($songHash != null) {
+            $song = $songHash->getSong();
             $email = (new Email())
                 ->from('contact@ragnacustoms.com')
                 ->to('pierrick.pobelle@gmail.com')
@@ -168,8 +179,8 @@ class SongService
     public function newFeedbackForMapper(SongFeedback $feedback)
     {
         /** @var SongHash $songHash */
-        $songHash = $this->em->getRepository(SongHash::class)->findOneBy(['hash'=>$feedback->getHash()]);
-        if($songHash != null) {
+        $songHash = $this->em->getRepository(SongHash::class)->findOneBy(['hash' => $feedback->getHash()]);
+        if ($songHash != null) {
             $song = $songHash->getSong();
             $mapper = $song->getUser();
 
@@ -220,7 +231,7 @@ class SongService
     /**
      * @param Song $song
      * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function countSongFeedbackPublic(Song $song)
     {
@@ -234,8 +245,9 @@ class SongService
             ->andWhere('f.isModerated = true')
             ->setParameter('hashes', $hashes)
             ->getQuery()->getOneOrNullResult();
-        return $result['nb']??0;
+        return $result['nb'] ?? 0;
     }
+
     /**
      * @param Utilisateur|null $user
      * @param Song $song
@@ -246,9 +258,9 @@ class SongService
         if ($user == null) {
             return $this->getSongFeedbackPublic($song);
         }
-            $hashes = array_map(function (SongHash $hash) {
-                return $hash->getHash();
-            }, $song->getSongHashes()->toArray());
+        $hashes = array_map(function (SongHash $hash) {
+            return $hash->getHash();
+        }, $song->getSongHashes()->toArray());
         return $this->em->getRepository(SongFeedback::class)->createQueryBuilder('f')
             ->where('(f.hash IN (:hashes) AND f.isPublic = true AND f.isModerated = true)')
             ->orWhere('(f.hash IN (:hashes) AND f.user = :user)')
@@ -261,5 +273,223 @@ class SongService
     {
         return $this->em->getRepository(Season::class)->getCurrent();
     }
+
+    public function processFile(FormInterface $form, Song $song)
+    {
+        $allowedFiles = [
+            'preview.ogg',
+            'info.dat',
+            'Info.dat',
+        ];
+        $finalFolder = $this->kernel->getProjectDir() . "/public/songs-files/";
+        $folder = $this->kernel->getProjectDir() . "/public/tmp-song/";
+        $unzipFolder = $folder . uniqid();
+        $file = $form->get('zipFile')->getData();
+        $file->move($unzipFolder, $file->getClientOriginalName());
+        $zip = new ZipArchive();
+        $theZip = $unzipFolder . "/" . $file->getClientOriginalName();
+        /** @var UploadedFile $file */
+        if ($zip->open($theZip) === TRUE) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $elt = $this->remove_utf8_bom($zip->getFromIndex($i));
+                $exp = explode("/", $filename);
+                if (end($exp) != "") {
+                    $fileinfo = pathinfo($filename);
+                    if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
+                        $result = file_put_contents($unzipFolder . "/" . strtolower($fileinfo['basename']), $elt);
+                    } else {
+                        $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
+                    }
+                }
+            }
+            $zip->close();
+        }
+        $file = $unzipFolder . "/info.dat";
+        if (!file_exists($file)) {
+            $file = $unzipFolder . "/Info.dat";
+            if (!file_exists($file)) {
+                $this->rrmdir($unzipFolder);
+                throw new Exception("The file seems to not be valid, at least info.dat is missing.");
+            }
+        }
+        $content = file_get_contents($file);
+        $json = json_decode($content);
+        if ($json == null) {
+            $this->rrmdir($unzipFolder);
+            throw new Exception("WTF? I can't read your info.dat please check the file encoding.");
+        }
+        $allowedFiles[] = $json->_coverImageFilename;
+        $allowedFiles[] = $json->_songFilename;
+
+
+        $new = $song->getId() == null;
+        foreach ($song->getSongDifficulties() as $difficulty) {
+            foreach ($difficulty->getSeasons() as $season) {
+                if ($season->isActive()) {
+                    $this->rrmdir($unzipFolder);
+                    throw new Exception("This song is used for this season ranking, you can't update it for now, come back a the end of the season..");
+                }
+            }
+        }
+        $new = false;
+
+
+        if ($form->get('description')->getData() != null) {
+            preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('description')->getData(), $match);
+            if (count($match) > 0) {
+                $song->setYoutubeLink($match[0]);
+            } else {
+                $song->setYoutubeLink(null);
+            }
+            $song->setDescription($form->get('description')->getData());
+        }
+        if ($form->get('youtubeLink')->getData() != null) {
+            if (preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('youtubeLink')->getData())) {
+                $song->setYoutubeLink($form->get('youtubeLink')->getData());
+            } else {
+
+            }
+        }
+        if (!isset($json->_songApproximativeDuration) || empty($json->_songApproximativeDuration)) {
+            $this->rrmdir($unzipFolder);
+            throw new Exception("\"_songApproximativeDuration\" is missing in the info.dat file!");
+        }
+
+        $song->setVersion($json->_version);
+        $song->setName(trim($json->_songName));
+        $song->setLastDateUpload(new DateTime());
+        $song->setSubName($json->_songSubName);
+        $song->setAuthorName($json->_songAuthorName);
+        $song->setLevelAuthorName($json->_levelAuthorName);
+        $song->setBeatsPerMinute($json->_beatsPerMinute);
+        $song->setShuffle($json->_shuffle);
+        $song->setShufflePeriod($json->_shufflePeriod);
+        $song->setPreviewStartTime($json->_previewStartTime);
+        $song->setPreviewDuration($json->_previewDuration);
+        $song->setApproximativeDuration($json->_songApproximativeDuration);
+        $song->setFileName($json->_songFilename);
+        $song->setCoverImageFileName($json->_coverImageFilename);
+        $song->setEnvironmentName($json->_environmentName);
+        $song->setModerated($song->getUser()->isCertified() ?: false);
+
+        $this->em->persist($song);
+
+
+        foreach ($song->getSongDifficulties() as $difficulty) {
+            $difficulty->setSong(null);
+            $this->em->remove($difficulty);
+        }
+
+        foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
+            $diff = new SongDifficulty();
+            $diff->setSong($song);
+            $diff->setDifficultyRank($this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]));
+            $diff->setDifficulty($difficulty->_difficulty);
+            $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
+            $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
+            $song->addSongDifficulty($diff);
+            $this->em->persist($diff);
+            $allowedFiles[] = $difficulty->_beatmapFilename;
+            $file = $difficulty->_beatmapFilename;
+
+            $file = $unzipFolder . "/" . $file;
+            $json2 = json_decode(file_get_contents($file));
+            $diff->setNotesCount(count($json2->_notes));
+            $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
+
+        }
+        $this->em->flush();
+
+        /** @var UploadedFile $file */
+        $patterns_flattened = implode('|', $allowedFiles);
+        $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
+        $zip = new ZipArchive();
+        if ($zip->open($theZip) === TRUE) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = ($zip->getNameIndex($i));
+                if (!preg_match('/' . $patterns_flattened . '/', $filename, $matches) || preg_match('/autosaves/', $filename, $matches)) {
+                    $zip->deleteName($filename);
+                } else {
+                    $newfilename = ($zip->getNameIndex($i));
+                    $filename = ($zip->getNameIndex($i));
+                    if (preg_match("/Info\.dat/", $newfilename)) {
+                        $newfilename = strtolower($filename);
+                    }
+                    $x = explode('/', $newfilename);
+                    $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
+                }
+            }
+            $zip->close();
+        }
+
+
+        copy($theZip, $finalFolder . $song->getId() . ".zip");
+        copy($unzipFolder . "/" . $json->_coverImageFilename, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
+
+        $email = (new Email())
+            ->from('contact@ragnacustoms.com')
+            ->to('pierrick.pobelle@gmail.com')
+            ->subject('Nouvelle Map by ' . $song->getUser()->getUsername() . ', ' . $song->getName() . '!');
+        if ($song->isModerated()) {
+            if ($this->kernel->getEnvironment() != "dev") {
+                if ($song->getWip()) {
+                    $this->discordService->sendWipSongMessage($song);
+                } elseif ($new) {
+                    $this->discordService->sendNewSongMessage($song);
+                } else {
+                    $this->discordService->sendUpdatedSongMessage($song);
+                }
+            }
+            $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com/admin/moderation?search=" . $song->getName() . "'>verifier</a>");
+        } else {
+            $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com/admin/moderation?search=" .  $song->getName() . "'>verifier</a>");
+        }
+        $this->mailer->send($email);
+        $this->emulatorFileDispatcher($song, true);
+
+        $this->rrmdir($unzipFolder);
+
+        return true;
+
+    }
+
+
+    function remove_utf8_bom($text)
+    {
+        return $this->stripUtf16Le($this->stripUtf16Be($this->stripUtf8Bom($text)));//mb_convert_encoding($text, 'UTF-8', 'UCS-2LE');
+    }
+
+    public function rrmdir($dir)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . "/" . $object))
+                        $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
+                    else
+                        unlink($dir . DIRECTORY_SEPARATOR . $object);
+                }
+            }
+            rmdir($dir);
+        }
+    }
+
+    function stripUtf8Bom($string)
+    {
+        return preg_replace('/^\xef\xbb\xbf/', '', $string);
+    }
+
+    function stripUtf16Le($string)
+    {
+        return preg_replace('/^\xff\xfe/', '', $string);
+    }
+
+    function stripUtf16Be($string)
+    {
+        return preg_replace('/^\xfe\xff/', '', $string);
+    }
+
 }
 

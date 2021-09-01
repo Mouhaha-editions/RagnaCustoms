@@ -2,6 +2,9 @@
 {% for song in songs.entities %}
 {% endfor %}
 <div class="col-12">
+    <a class="btn btn-success float-right ajax-modal-form"
+       data-modal="#editSong" title="{{ "edit"|trans }}"
+       href="{{ url('new_song') }}">Add a new song</a>
     <h2>{{ "My custom songs"|trans }}</h2>
 </div>
 

@@ -3,48 +3,23 @@
 {% block title %}Song upload{% endblock %}
 
 {% block body %}
-<div class="row">
-    <div class="col-md-6 offset-md-3  mb-5">
-        <div class="card mt-4">
-            <div class="card-title text-center"><h2>Upload new song</h2></div>
-            <div class="card-body">
-                <p class="pt-2">
-                    {{ "Upload a .zip file (max 20mb) containing all the files for the map."|trans }}
-                </p>
+{#<div class="row">#}
+{#    <div class="col-md-6 offset-md-3  mb-5">#}
+{#        <div class="card mt-4">#}
+{#            <div class="card-title text-center"><h2>Upload new song</h2></div>#}
+{#            <div class="card-body">#}
+{#                <div class="alert alert-warning">#}
+{#                    <small>{{"New ! to update a map please use the \"edit\" button on your song bellow."|trans}}</small>#}
+{#                </div>#}
 
-                {{ form_start(form) }}
-                {{ form_widget(form.zipFile) }}
+{#                {{ form_start(form) }}#}
+{#                {{ form_end(form) }}#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+    <div class="row mt-5">
 
-                {{ form_row(form.description,{"attr":{"class":'form-control'}}) }}
-                <div class="text-right">
-                    <small>{{ "You can use <a target='_blank' href='https://guides.github.com/features/mastering-markdown/'>Markdown</a> in description"|trans|raw }}</small>
-                </div>
-                {{ form_row(form.youtubeLink,{"attr":{"class":'form-control mb-3'}}) }}
-
-                <div class="row">
-                    <div class="col-6">
-                        {{ form_widget(form.replaceExisting) }}
-                        <label for="form_replaceExisting">{{ "Update an existing map"|trans }}</label><br/>
-                        <div class="d-none">
-                            {{ form_widget(form.resetVote) }}
-                            <label for="form_resetVote">{{ "Reset Vote"|trans }}</label><br/>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        {{ form_widget(form.isWip) }}
-                        <label for="form_isWip">{{ "work in progress"|trans }}</label><br/>
-                        {{ form_widget(form.converted) }}
-                        <label for="form_converted">{{ "Converted map"|trans }}</label><br/>
-                    </div>
-                </div>
-                <button class="btn btn-sm btn-primary">{{ "Upload"|trans }}</button>
-
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
-</div>
-    <div class="row">
             {% include 'upload_song/partial/uploaded_song_row.html.twig' with {songs:songs} %}
     </div>
 
@@ -74,7 +49,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Edit Song</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Custom Song</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
