@@ -46,7 +46,7 @@ services:
         arguments: [ "@security.helper","@request_stack",'@doctrine.orm.entity_manager' ]
 
     App\Service\SongService:
-        arguments: [ "@kernel","@doctrine.orm.entity_manager","@mailer" ]
+        arguments: [ "@kernel","@doctrine.orm.entity_manager","@mailer","@App\\Service\\DiscordService" ]
     App\Service\TwitchService:
         arguments: [ "%env(resolve:TWITCH_APPLICATION_ID)%","%env(resolve:TWITCH_SECRET_CLIENT)%" ]
     App\Service\ScoreService:

@@ -35,7 +35,7 @@ class SongCategory
     private $isReviewable;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Song::class, mappedBy="songCategories")
+     * @ORM\OneToMany(targetEntity=Song::class, mappedBy="songCategory")
      */
     private $songs;
 
@@ -43,6 +43,7 @@ class SongCategory
     {
         $this->songs = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -97,7 +98,7 @@ class SongCategory
     {
         if (!$this->songs->contains($song)) {
             $this->songs[] = $song;
-            $song->addSongCategory($this);
+            $song->setSongCategory($this);
         }
 
         return $this;
@@ -106,9 +107,13 @@ class SongCategory
     public function removeSong(Song $song): self
     {
         if ($this->songs->removeElement($song)) {
-            $song->removeSongCategory($this);
+            // set the owning side to null (unless already changed)
+            if ($song->getSongCategory() === $this) {
+                $song->setSongCategory(null);
+            }
         }
 
         return $this;
     }
+
 }

@@ -421,6 +421,8 @@ table.songs {
   a.img {
     display: block;
     height: 160px;
+    max-width: 160px;
+    margin: auto;
   }
   .edit-btn {
     position: absolute;

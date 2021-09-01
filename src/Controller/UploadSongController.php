@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Song;
+use App\Entity\SongCategory;
 use App\Entity\SongDifficulty;
 use App\Form\SongType;
 use App\Repository\DifficultyRankRepository;
@@ -14,12 +15,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pkshetlie\PaginationBundle\Models\Pagination;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,15 +37,38 @@ use ZipArchive;
 
 class UploadSongController extends AbstractController
 {
+
+    /**
+     * @Route("/upload/song/new", name="new_song")
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param SongService $songService
+     * @return JsonResponse
+     */
+    public function new(Request $request, TranslatorInterface $translator, SongService $songService)
+    {
+        if (!$this->isGranted("ROLE_USER")) {
+            return new JsonResponse([
+                'error' => true,
+                'errorMessage' => $translator->trans("You need to be connected"),
+                'response' => ""
+            ]);
+        }
+        $song = new Song();
+        $song->setUser($this->getUser());
+        return $this->edit($request, $song, $translator, $songService);
+    }
+
+
     /**
      * @Route("/upload/song/edit/{id}", name="edit_song")
      * @param Request $request
      * @param Song $song
-     * @param DiscordService $discordService
      * @param TranslatorInterface $translator
+     * @param SongService $songService
      * @return JsonResponse
      */
-    public function edit(Request $request, Song $song,DiscordService $discordService,TranslatorInterface $translator)
+    public function edit(Request $request, Song $song, TranslatorInterface $translator, SongService $songService)
     {
         if ($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse([
@@ -53,29 +79,70 @@ class UploadSongController extends AbstractController
         }
         $form = $this->createForm(SongType::class, $song, [
             'method' => "post",
-            'action' => $this->generateUrl('edit_song', ['id' => $song->getId()])
+            'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
         ]);
+
         $isWip = $song->getWip();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $file = $form->get('zipFile')->getData();
 
-            if($isWip && !$song->getWip()){
-                $discordService->sendNewSongMessage($song);
-            }
-            if ($song->getYoutubeLink() != null) {
-                if (!preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $song->getYoutubeLink())) {
-                    $song->setYoutubeLink(null);
-                    $this->addFlash("warning", $translator->trans("The Youtube link is not valid, please edit your song to insert the link."));
+                if($file == null){
+                    $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!", [
+                        "%song%" => $song->getName(),
+                        "%artist%" => $song->getAuthorName()
+                    ]));
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($song);
+                    $em->flush();
+                    return new JsonResponse([
+                        'error' => false,
+                        'reload' => true,
+                        'errorMessage' => null,
+                        'response' => $this->renderView('upload_song/partial/edit.html.twig', [
+                            'form' => $form->createView(),
+                            'song' => $song,
+                            "error" => null
+                        ])
+                    ]);
                 }
+                if ($songService->processFile($form, $song)) {
+                    $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!", [
+                        "%song%" => $song->getName(),
+                        "%artist%" => $song->getAuthorName()
+                    ]));
+                    return new JsonResponse([
+                        'error' => false,
+                        'reload' => true,
+                        'errorMessage' => null,
+                        'response' => $this->renderView('upload_song/partial/edit.html.twig', [
+                            'form' => $form->createView(),
+                            'song' => $song,
+                            "error" => null
+                        ])
+                    ]);
+                }
+            } catch (Exception $e) {
+                return new JsonResponse([
+                    'error' => true,
+                    'errorMessage' => null,
+                    'response' => $this->renderView('upload_song/partial/edit.html.twig', [
+                        'form' => $form->createView(),
+                        'song' => $song,
+                        "error" => $e->getMessage()
+                    ])
+                ]);
             }
-            $em = $this->getDoctrine()->getManager();
-            $em->flush();
+
         }
         return new JsonResponse([
             'error' => false,
             'errorMessage' => "",
             'response' => $this->renderView('upload_song/partial/edit.html.twig', [
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'song' => $song,
+                "error" => null
             ])
         ]);
     }
@@ -102,281 +169,12 @@ class UploadSongController extends AbstractController
     /**
      * @Route("/upload/song", name="upload_song")
      * @param Request $request
-     * @param KernelInterface $kernel
      * @param SongRepository $songRepository
-     * @param DifficultyRankRepository $difficultyRankRepository
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function index(Request $request, KernelInterface $kernel, DiscordService $discordService,
-                          MailerInterface $mailer, SongRepository $songRepository, TranslatorInterface $translator,
-                          DifficultyRankRepository $difficultyRankRepository, PaginationService $paginationService, SongService $songService): Response
+    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
-
-        $form = $this->createFormBuilder()
-            ->add("zipFile", FileType::class, [])
-            ->add("description", TextareaType::class, [
-                "required" => false,
-                "attr" => ["placeholder" => $translator->trans("This one is not required, but if you put a youtube link in the description we can catch the first one as song video ! ;)")]
-            ])
-            ->add("youtubeLink", TextType::class, [
-                "required" => false,
-                "label" => $translator->trans("Youtube link"),
-                "attr" => ["placeholder" => $translator->trans("https://youtu...")]
-            ])
-            ->add("resetVote", CheckboxType::class, ["required" => false])
-            ->add("isWip", CheckboxType::class, ["required" => false])
-            ->add("converted", CheckboxType::class, ["required" => false])
-            ->add("replaceExisting", CheckboxType::class, [
-                "required" => false,
-                'label' => "Replace existing song."
-            ])
-            ->getForm();
-        $allowedFiles = [
-            'preview.ogg',
-            'info.dat',
-            'Info.dat',
-        ];
-        $form->handleRequest($request);
-        $em = $this->getDoctrine()->getManager();
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $finalFolder = $kernel->getProjectDir() . "/public/songs-files/";
-            $folder = $kernel->getProjectDir() . "/public/tmp-song/";
-            $unzipFolder = $folder . uniqid();
-            $file = $form->get('zipFile')->getData();
-            $file->move($unzipFolder, $file->getClientOriginalName());
-            $zip = new ZipArchive();
-            $theZip = $unzipFolder . "/" . $file->getClientOriginalName();
-
-            try {
-                /** @var UploadedFile $file */
-                if ($zip->open($theZip) === TRUE) {
-                    for ($i = 0; $i < $zip->numFiles; $i++) {
-                        $filename = $zip->getNameIndex($i);
-                        $elt = $this->remove_utf8_bom($zip->getFromIndex($i));
-                        $exp = explode("/", $filename);
-                        if (end($exp) != "") {
-                            $fileinfo = pathinfo($filename);
-                            if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
-                                $result = file_put_contents($unzipFolder . "/" . strtolower($fileinfo['basename']), $elt);
-                            } else {
-                                $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
-                            }
-                        }
-                    }
-                    $zip->close();
-                }
-                try {
-                    $file = $unzipFolder . "/info.dat";
-                    if (!file_exists($file)) {
-                        $file = $unzipFolder . "/Info.dat";
-                        if (!file_exists($file)) {
-                            $this->addFlash('danger', $translator->trans("The file seems to not be valid, at least info.dat is missing."));
-                            $this->rrmdir($unzipFolder);
-                            return $this->redirectToRoute("upload_song");
-                        }
-                    }
-                    $content = file_get_contents($file);
-                    $json = json_decode($content);
-                    if ($json == null) {
-                        $this->addFlash('danger', $translator->trans("WTF? I can't read your info.dat please check the file encoding."));
-                        return $this->redirectToRoute("upload_song");
-                    }
-                    $allowedFiles[] = $json->_coverImageFilename;
-                    $allowedFiles[] = $json->_songFilename;
-
-                } catch (Exception $e) {
-                    $this->addFlash('danger', $translator->trans("The file seems to not be valid, at least info.dat is missing."));
-                    $this->rrmdir($unzipFolder);
-                    return $this->redirectToRoute("upload_song");
-                }
-                /** @var Song $song */
-                $song = $songRepository->findOneBy([
-                    "name" => $json->_songName,
-                    "authorName" => $json->_songAuthorName,
-                    "levelAuthorName" => $json->_levelAuthorName,
-                ]);
-
-                $new = true;
-                if ($song != null) {
-
-                    foreach($song->getSongDifficulties() AS $difficulty){
-                        foreach($difficulty->getSeasons() AS $season){
-                            if($season->isActive()){
-                                $this->addFlash("danger", $translator->trans("The song \"%song%\" by \"%artist%\" is used for this season ranking, you can't update it for now, come back a the end of the season..", [
-                                    "%song%" => $song->getName(),
-                                    "%artist%" => $song->getAuthorName(),
-
-                                ]));
-                                return $this->redirectToRoute("upload_song");
-                            }
-                        }
-                    }
-
-
-                    $new = false;
-                    if ($song->getUser() == $this->getUser() && $form->get('replaceExisting')->getData()) {
-
-                    } else {
-                        $this->rrmdir($unzipFolder);
-                        $this->addFlash("danger", $translator->trans("The song \"%song%\" by \"%artist%\" is already in our catalog.", [
-                            "%song%" => $song->getName(),
-                            "%artist%" => $song->getAuthorName(),
-
-                        ]));
-                        return $this->redirectToRoute("upload_song");
-                    }
-                } else {
-                    $song = new Song();
-                    $song->setUser($this->getUser());
-                }
-
-                if ($form->get('description')->getData() != null) {
-                    preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('description')->getData(), $match);
-                    if (count($match) > 0) {
-                        $song->setYoutubeLink($match[0]);
-                    } else {
-                        $song->setYoutubeLink(null);
-                    }
-                    $song->setDescription($form->get('description')->getData());
-                }
-                if ($form->get('youtubeLink')->getData() != null) {
-                    if (preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('youtubeLink')->getData())) {
-                        $song->setYoutubeLink($form->get('youtubeLink')->getData());
-                    } else {
-                        $this->addFlash("warning", $translator->trans("The Youtube link is not valid, please edit your song to insert the link."));
-                    }
-                }
-                if (!isset($json->_songApproximativeDuration) || empty($json->_songApproximativeDuration)) {
-                    $this->addFlash("danger", $translator->trans("\"_songApproximativeDuration\" is missing in the info.dat file!"));
-                    return $this->redirectToRoute("upload_song");
-                }
-
-                $song->setVersion($json->_version);
-                $song->setName($json->_songName);
-                $song->setConverted((bool)$form->get('converted')->getData());
-                $song->setWip((bool)$form->get('isWip')->getData());
-                $song->setLastDateUpload(new DateTime());
-                $song->setSubName($json->_songSubName);
-                $song->setAuthorName($json->_songAuthorName);
-                $song->setLevelAuthorName($json->_levelAuthorName);
-                $song->setBeatsPerMinute($json->_beatsPerMinute);
-                $song->setShuffle($json->_shuffle);
-                $song->setShufflePeriod($json->_shufflePeriod);
-                $song->setPreviewStartTime($json->_previewStartTime);
-                $song->setPreviewDuration($json->_previewDuration);
-                $song->setApproximativeDuration($json->_songApproximativeDuration);
-                $song->setFileName($json->_songFilename);
-                $song->setCoverImageFileName($json->_coverImageFilename);
-                $song->setEnvironmentName($json->_environmentName);
-                $song->setModerated($this->getUser()->isCertified() ?: false);
-
-                $em->persist($song);
-
-//                foreach ($song->getSongDifficulties() as $difficulty) {
-//                    foreach ($difficulty->getScores(null) AS $score){
-//                        $em->remove($score);
-//                    }
-//                    foreach ($difficulty->getScoreHistories() AS $score){
-//                        $em->remove($score);
-//                    }
-//                    $em->remove($difficulty);
-//                }
-//
-                if ($form->get('resetVote')->getData() != null) {
-                    foreach ($song->getVotes() as $vote) {
-                        $vote->setDisabled(true);
-                    }
-                    $song->setTotalVotes(null);
-                    $song->setCountVotes(null);
-                }
-
-                foreach ($song->getSongDifficulties() as $difficulty) {
-                    $difficulty->setSong(null);
-                    $em->remove($difficulty);
-                }
-
-                foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
-                    $diff = new SongDifficulty();
-                    $diff->setSong($song);
-                    $diff->setDifficultyRank($difficultyRankRepository->findOneBy(["level" => $difficulty->_difficultyRank]));
-                    $diff->setDifficulty($difficulty->_difficulty);
-                    $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
-                    $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
-                    $song->addSongDifficulty($diff);
-                    $em->persist($diff);
-                    $allowedFiles[] = $difficulty->_beatmapFilename;
-                    $file = $difficulty->_beatmapFilename;
-
-                    $file = $unzipFolder . "/" . $file;
-                    $json2 = json_decode(file_get_contents($file));
-                    $diff->setNotesCount(count($json2->_notes));
-                    $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
-
-                }
-
-                $em->flush();
-
-
-                /** @var UploadedFile $file */
-                $patterns_flattened = implode('|', $allowedFiles);
-                $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
-                $zip = new ZipArchive();
-                if ($zip->open($theZip) === TRUE) {
-                    for ($i = 0; $i < $zip->numFiles; $i++) {
-                        $filename = ($zip->getNameIndex($i));
-                        if (!preg_match('/' . $patterns_flattened . '/', $filename, $matches) || preg_match('/autosaves/', $filename, $matches)) {
-                            $zip->deleteName($filename);
-                        } else {
-                            $newfilename = ($zip->getNameIndex($i));
-                            $filename = ($zip->getNameIndex($i));
-                            if (preg_match("/Info\.dat/", $newfilename)) {
-                                $newfilename = strtolower($filename);
-                            }
-                            $x = explode('/', $newfilename);
-                            $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
-                        }
-                    }
-                    $zip->close();
-                }
-
-
-                copy($theZip, $finalFolder . $song->getId() . ".zip");
-                copy($unzipFolder . "/" . $json->_coverImageFilename, $kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-                $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!", [
-                    "%song%" => $song->getName(),
-                    "%artist%" => $song->getAuthorName()
-                ]));
-                $email = (new Email())
-                    ->from('contact@ragnacustoms.com')
-                    ->to('pierrick.pobelle@gmail.com')
-                    ->subject('Nouvelle Map by ' . $this->getUser()->getUsername() . ', ' . $song->getName() . '!');
-                if ($song->isModerated()) {
-//                    if ($this->container->getParameter('kernel.environment') != "dev") {
-                    if($song->getWip()){
-                        $discordService->sendWipSongMessage($song);
-
-                    }elseif($new){
-                           $discordService->sendNewSongMessage($song);
-                       }else{
-                           $discordService->sendUpdatedSongMessage($song);
-                       }
-//                    }
-                    $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
-                } else {
-                    $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com" . $this->generateUrl('moderate_song', ['search' => $song->getName()]) . "'>verifier</a>");
-                }
-                $mailer->send($email);
-                $songService->emulatorFileDispatcher($song, true);
-            } catch (Exception $e) {
-                $this->addFlash('danger', "Erreur lors de l'upload : " . $e->getMessage());
-                return $this->redirectToRoute("upload_song");
-            } finally {
-                $this->rrmdir($unzipFolder);
-            }
-
-        }
 
         $qb = $songRepository->createQueryBuilder('song')
             ->where('song.user = :user')
@@ -391,7 +189,6 @@ class UploadSongController extends AbstractController
             ]);
         }
         return $this->render('upload_song/index.html.twig', [
-            'form' => $form->createView(),
             'songs' => $pagination
         ]);
     }
@@ -417,15 +214,19 @@ class UploadSongController extends AbstractController
         }
     }
 
-    function stripUtf8Bom($string) {
+    function stripUtf8Bom($string)
+    {
         return preg_replace('/^\xef\xbb\xbf/', '', $string);
     }
 
-    function stripUtf16Le($string) {
+    function stripUtf16Le($string)
+    {
         return preg_replace('/^\xff\xfe/', '', $string);
     }
 
-    function stripUtf16Be($string) {
+    function stripUtf16Be($string)
+    {
         return preg_replace('/^\xfe\xff/', '', $string);
     }
+
 }

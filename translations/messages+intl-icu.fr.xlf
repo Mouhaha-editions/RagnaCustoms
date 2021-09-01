@@ -563,6 +563,10 @@
             <source>delete</source>
             <target>supprimer</target>
         </trans-unit>
+      <trans-unit id="75">
+        <source>New ! to update a map please use the \"edit\" button on your song bellow.</source>
+        <target>Nouveau ! pour mettre à jour une carte, veuillez utiliser le bouton \"modifier\" de votre chanson ci-dessous.</target>
+      </trans-unit>
 
 
     </body>

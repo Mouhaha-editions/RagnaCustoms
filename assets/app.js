@@ -23,14 +23,18 @@ require('bootstrap/js/dist/popover');
 require('bootstrap/js/dist/popover');
 import "select2/dist/js/select2.full.min";// const app = require('./js/utils/core');
 
-$(function(){
+$(function () {
+    $(document).change('input[type="file"]', function (e) {
+        var fileName = e.target.files[0].name;
+        $('.custom-file-label').html(fileName);
+    });
     let seasonEnd = $("#variables").data('season-ends-at');
     console.log(seasonEnd);
     var countDownDate = new Date(seasonEnd).getTime();
     console.log(countDownDate);
 
 // Update the count down every 1 second
-    var x = setInterval(function() {
+    var x = setInterval(function () {
 
         // Get today's date and time
         var now = new Date().getTime();
@@ -57,7 +61,6 @@ $(function(){
 })
 
 
-
 const copyToClipboard = str => {
     const el = document.createElement('textarea');
     el.value = str;
@@ -76,6 +79,36 @@ import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 let hashtag = window.location.hash;
 console.log(window.location)
+
+function loadForm(content) {
+    $("#form-edit").html(content);
+    $("#form-edit form").on('submit', function () {
+        let tt = $(this);
+        $.ajax({
+            url: tt.attr('action'),
+            data: new FormData(this),
+            type: tt.attr('method'),
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.reload) {
+                    window.location.reload();
+                }
+                if (data.error === true || data.success === false) {
+                    $("#form-edit").html(data.response);
+                    loadForm(data.response);
+                } else {
+                    t.closest(t.data('replace-selector')).html(data.response);
+                    $(tt).closest(".modal").modal('hide');
+                }
+
+            }
+        });
+        $("#form-review").html("<div class=\"popup-box-actions white full void\">Sending your form</div>");
+        return false;
+    });
+}
+
 $(function () {
 
 
@@ -207,25 +240,7 @@ $(function () {
         $.ajax({
             url: t.attr('href'),
             success: function (data) {
-                $("#form-edit").html(data.response);
-                $("#form-edit form").on('submit', function () {
-
-                    let tt = $(this);
-                    $.ajax({
-                        url: tt.attr('action'),
-                        data: tt.serialize(),
-                        type: tt.attr('method'),
-                        success: function (data) {
-                            t.closest(t.data('replace-selector')).html(data.response);
-                            $(tt).closest(".modal").modal('hide');
-                        }
-                    });
-
-                    $("#form-review").html("<div class=\"popup-box-actions white full void\">Sending your form</div>");
-
-
-                    return false;
-                });
+                loadForm(data.response);
             }
         });
         return false;
@@ -291,8 +306,6 @@ function setCookie(cname, cvalue) {
 }
 
 
-
-
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -309,28 +322,28 @@ function getCookie(cname) {
     return null;
 }
 
-let createToast = function(title,content, uid){
- console.log("toast");
+let createToast = function (title, content, uid) {
+    console.log("toast");
     let container = $("body");
 
     container.append(
-        "  <div class=\"toast\" id=\"t"+uid+"\">\n" +
+        "  <div class=\"toast\" id=\"t" + uid + "\">\n" +
         "    <div class=\"toast-header\">\n" +
-        "      <strong class=\"mr-auto text-primary\">"+title+"</strong>\n" +
+        "      <strong class=\"mr-auto text-primary\">" + title + "</strong>\n" +
         "      <small class=\"text-muted\">few sec</small>\n" +
         "      <button type=\"button\" class=\"ml-2 mb-1 close\" data-dismiss=\"toast\">×</button>\n" +
         "    </div>\n" +
         "    <div class=\"toast-body\">\n" +
-        "      "+content+"\n" +
+        "      " + content + "\n" +
         "    </div>\n" +
         "  </div>\n" +
         "</div>"
     );
 
-$("#t"+uid).toast({
-    delay:1000
-});
-    $("#t"+uid).toast("show");
+    $("#t" + uid).toast({
+        delay: 1000
+    });
+    $("#t" + uid).toast("show");
 
 }
 //
