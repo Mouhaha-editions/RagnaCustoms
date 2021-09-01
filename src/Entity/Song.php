@@ -206,7 +206,7 @@ class Song
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $isDeleted;
+    private $isDeleted = false;
 
     /**
      * @ORM\ManyToMany(targetEntity=SongCategory::class, inversedBy="songs")
