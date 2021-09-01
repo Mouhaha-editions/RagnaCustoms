@@ -42,7 +42,10 @@ class SongsController extends AbstractController
     public function sitemap(SongRepository $songRepository)
     {
         return $this->render('sitemap/index.html.twig', [
-            'songs' => $songRepository->findBy(['moderated' => true,"wip"=>false])
+            'songs' => $songRepository->findBy([
+                'moderated' => true,
+                "wip" => false
+            ])
         ]);
     }
 
@@ -51,7 +54,10 @@ class SongsController extends AbstractController
      */
     public function rss(SongRepository $songRepository)
     {
-        $songs = $songRepository->findBy(['moderated' => true,"wip"=>false], ['createdAt' => "Desc"]);
+        $songs = $songRepository->findBy([
+            'moderated' => true,
+            "wip" => false
+        ], ['createdAt' => "Desc"]);
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
 
@@ -67,7 +73,7 @@ class SongsController extends AbstractController
      */
     public function songDetail(Request $request, ScoreRepository $scoreRepository, Song $song, TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository, SongService $songService, PaginationService $paginationService)
     {
-        if (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) {
+        if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }
@@ -336,8 +342,9 @@ class SongsController extends AbstractController
      */
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
-        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")
-        ;
+        $qb = $this->getDoctrine()
+            ->getRepository(Song::class)
+            ->createQueryBuilder("s");
         $wip = false;
 
         if ($request->get('downloads_filter_difficulties', null)) {
@@ -431,7 +438,7 @@ class SongsController extends AbstractController
                     return array_pop($id);
                 }, $ids)));
         }
-
+        $qb->andWhere("s.isDeleted != true");
         $pagination = $paginationService->setDefaults(70)->process($qb, $request);
         if ($pagination->isPartial()) {
             return $this->render('songs/partial/song_row.html.twig', [
