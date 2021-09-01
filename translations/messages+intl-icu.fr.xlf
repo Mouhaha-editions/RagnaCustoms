@@ -559,6 +559,10 @@
         <source>Difficulties</source>
         <target>Difficultés</target>
       </trans-unit>
+        <trans-unit id="74">
+            <source>delete</source>
+            <target>supprimer</target>
+        </trans-unit>
 
 
     </body>

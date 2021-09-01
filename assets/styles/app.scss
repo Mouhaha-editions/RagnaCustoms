@@ -422,7 +422,18 @@ table.songs {
     display: block;
     height: 160px;
   }
-
+  .edit-btn {
+    position: absolute;
+    right: 63px;
+    font-size: 10px;
+    top: 0px;
+  }
+  .delete-btn {
+    position: absolute;
+    left: 63px;
+    font-size: 10px;
+    top: 0px;
+  }
   img {
     max-height: 160px;
   }
@@ -442,15 +453,6 @@ table.songs {
       }
 
     }
-  }
-}
-
-.score-title {
-  .edit-btn {
-    position: absolute;
-    right: 63px;
-    font-size: 10px;
-    top: 0px;
   }
 }
 
