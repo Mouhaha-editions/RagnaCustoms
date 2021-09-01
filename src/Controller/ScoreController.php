@@ -28,6 +28,7 @@ class ScoreController extends AbstractController
         $qb = $songRepository->createQueryBuilder('s')
             ->where('s.moderated = true')
             ->andWhere('s.wip != true')
+            ->andWhere("s.isDeleted != true")
             ->distinct()
             ->orderBy('s.name', 'ASC');
         $selectedSeason = null;
@@ -90,7 +91,7 @@ class ScoreController extends AbstractController
     /**
      * @Route("/ranking/global", name="score_global_ranking")
      */
-    public function globalRanking(Request $request, ScoreRepository $scoreRepository,PaginationService $paginationService, Season $season = null): Response
+    public function globalRanking(Request $request, ScoreRepository $scoreRepository, PaginationService $paginationService, Season $season = null): Response
     {
 
         $conn = $this->getDoctrine()->getConnection();
