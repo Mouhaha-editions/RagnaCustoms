@@ -39,7 +39,7 @@ class SongType extends AbstractType
                 "label" => "Category",
                 "choice_label" => "label",
                 "multiple" => false,
-                'required' => true
+                'required' => false
             ])
             ->add('approximativeDuration', HiddenType::class, [
                 "label" => "Duration (in sec) ",
