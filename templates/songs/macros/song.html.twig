@@ -1,35 +1,40 @@
 {% macro description(song) %}
-<div class="d-flex flex-row">
-    <a href="{{ url('song_detail',{id:song.id}) }}">
-        <figure class="product-preview-image short liquid" style="position: relative">
+    {% if song is null %}
+        deleted
+    {% else %}
+        <div class="d-flex flex-row">
+            <a href="{{ url('song_detail',{id:song.id}) }}">
+                <figure class="product-preview-image short liquid" style="position: relative">
 
-            {% if song.isNew %}
-                <span class="badge new badge-primary">new</span>
-            {% endif %}
-            {% if song.converted %}
-                <div class="white bold text-center bg-danger"
-                     style="font-size: 12px;bottom: 0;position: absolute;width: 100%;border-radius: 0 0 5px 5px;">
-                    converted
-                </div>
-            {% endif %}
-            <img src="/covers/{{ song.id ~ song.coverImageExtension }}" class="img-fluid rounded thumbnail"
-                 alt="cover">
-        </figure>
-    </a>
+                    {% if song.isNew %}
+                        <span class="badge new badge-primary">new</span>
+                    {% endif %}
+                    {% if song.converted %}
+                        <div class="white bold text-center bg-danger"
+                             style="font-size: 12px;bottom: 0;position: absolute;width: 100%;border-radius: 0 0 5px 5px;">
+                            converted
+                        </div>
+                    {% endif %}
+                    <img src="/covers/{{ song.id ~ song.coverImageExtension }}" class="img-fluid rounded thumbnail"
+                         alt="cover">
+                </figure>
+            </a>
 
-    <div class="song-preview pl-2">
-        <p class="title"> <a href="{{ url('song_detail',{id:song.id}) }}">{{ song.name }}</a></p>
-        <p class="category"><a
-                    href="{{ url('home') }}?search=artist:{{ song.authorName }}">{{ song.authorName }}</a></p>
-        <p class="creator">Mapped by :
-            <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
-{#            <a href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">{{ song.levelAuthorName }}</a>#}
-        </p>
-        <p class="difficulties">Difficulties :
-            {% for diff in song.songDifficulties %}
-                {% if loop.index != 1 %}, {% endif %}
-                <span style="color:#{{ diff.difficultyRank.color }}">{% if diff.isRanked%}<i class="fas fa-trophy"></i>{% endif %} {{ diff.difficultyRank.level }}</span>
-            {% endfor %}</p>
-    </div>
-</div>
+            <div class="song-preview pl-2">
+                <p class="title"><a href="{{ url('song_detail',{id:song.id}) }}">{{ song.name }}</a></p>
+                <p class="category"><a
+                            href="{{ url('home') }}?search=artist:{{ song.authorName }}">{{ song.authorName }}</a></p>
+                <p class="creator">Mapped by :
+                    <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
+                    {# <a href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">{{ song.levelAuthorName }}</a> #}
+                </p>
+                <p class="difficulties">Difficulties :
+                    {% for diff in song.songDifficulties %}
+                        {% if loop.index != 1 %}, {% endif %}
+                        <span style="color:#{{ diff.difficultyRank.color }}">{% if diff.isRanked %}<i
+                                    class="fas fa-trophy"></i>{% endif %} {{ diff.difficultyRank.level }}</span>
+                    {% endfor %}</p>
+            </div>
+        </div>
+    {% endif %}
 {% endmacro %}

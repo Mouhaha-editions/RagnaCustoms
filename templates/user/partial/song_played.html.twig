@@ -1,19 +1,20 @@
 {% extends "user/profile.html.twig" %}
 {% import "songs/macros/song.html.twig" as macro_song %}
+{% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
 
 {% block detailed_content %}
     <div class="col-12">
-        <h2>20 last songs played</h2>
+        <h2>Last songs played</h2>
         <table class="table songs">
             <tr>
                 <th>Song</th>
                 <th class="text-right">level played</th>
                 <th class="text-right">Score</th>
             </tr>
-            {% for score in scoreService.LastFromUser(user,20) %}
+            {% for score in pagination.entities %}
+                {% set song = songService.getByhash(score.hash) %}
                 <tr>
                     <td class="song-preview tiny">
-                        {% set song = songService.getByhash(score.hash) %}
                         {{ macro_song.description(song) }}
                     </td>
                     <td class="text-right">{{ score.difficulty }}</td>
@@ -21,5 +22,9 @@
                 </tr>
             {% endfor %}
         </table>
+        <div class="text-left pagination">
+            Pages : {{ macro_pagination.paginate(pagination) }}
+        </div>
+
     </div>
 {% endblock %}
