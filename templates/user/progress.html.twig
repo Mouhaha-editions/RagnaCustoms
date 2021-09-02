@@ -20,20 +20,30 @@
                             data: [{{ data|join(",") }}],
                             fill: false,
                             borderColor: '#890ab3',
-                            tension: 0.1
+                            tension: 0.1,
+                            yAxisID: 'y',
+
                             // borderWidth: 1
                         },{
                             label: 'Notes Hit',
                             data: [{{ notesHit|join(",") }}],
                             fill: false,
                             borderColor: '#0a64b3',
-                            tension: 0.1
+                            tension: 0.1,
+                            yAxisID: 'y1',
+
                         }]
                     },
                     options: {
                         scales: {
                             y: {
                                 beginAtZero: false
+                            },
+                            y1: {
+                                beginAtZero: false,
+                                position: 'right'
+
+
                             }
                         }
                     }
