@@ -58,7 +58,6 @@ function draw() {
 
 let isPlaying = null;
 
-console.log('v1.0.2');
 $(function () {
     draw();
 
@@ -83,7 +82,6 @@ $(function () {
         if (niveau === isPlaying) {
             return;
         } else if (isPlaying !== null) {
-            console.log(niveau);
             if (niveau === "pause") {
                 audio.pause();
                 $('.rune-pack#' + isPlaying).stop(true);
