@@ -24,14 +24,12 @@ require('bootstrap/js/dist/popover');
 import "select2/dist/js/select2.full.min";// const app = require('./js/utils/core');
 
 $(function () {
-    $(document).change('input[type="file"]', function (e) {
-        var fileName = e.target.files[0].name;
+    $(document).on('change','input[type="file"]', function (e) {
+        let fileName = e.target.files[0].name;
         $('.custom-file-label').html(fileName);
     });
     let seasonEnd = $("#variables").data('season-ends-at');
-    console.log(seasonEnd);
     var countDownDate = new Date(seasonEnd).getTime();
-    console.log(countDownDate);
 
 // Update the count down every 1 second
     var x = setInterval(function () {
@@ -78,7 +76,6 @@ import {createPopper} from 'bootstrap/js/dist/popover';
 import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 let hashtag = window.location.hash;
-console.log(window.location)
 
 function loadForm(content) {
     $("#form-edit").html(content);
