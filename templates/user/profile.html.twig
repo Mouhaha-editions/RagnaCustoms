@@ -8,8 +8,12 @@
                     <div class="col-md-2">
                         <div class="user-picture" style="max-width:100px;">
                             {% if user.certified %}
-                                <img src="/apps/certified.png" title="{{ "this account is certified"|trans }}"
+                                <img src="/apps/CertifiedViking.svg" title="{{ "this account is certified"|trans }}"
                                      class="certified" alt="certified"/>
+                            {% endif %}
+                            {% if user.songs|length > 0 %}
+                                <img src="/apps/Mapper.svg" title="{{ "Is a mapper"|trans }}"
+                                     class="mapper" alt="mapper"/>
                             {% endif %}
                             <img src="{{ user.gravatar }}" class="avatar" style="max-width:100px;"
                                  alt="{{ user.username }}"/><br/>
