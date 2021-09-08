@@ -28,6 +28,14 @@ class OverlayController extends AbstractController
     }
 
     /**
+     * @Route("/overlay/editor/", name="overlay_editor")
+     */
+    public function editor()
+    {
+        return $this->render('overlay/editor.html.twig', [
+        ]);
+    }
+    /**
      * @Route("/overlay/details/{apikey}", name="overlay_details")
      */
     public function detail(Request $request, string $apikey, OverlayRepository $overlayRepository, SongDifficultyRepository $songDifficultyRepository): Response

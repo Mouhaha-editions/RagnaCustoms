@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Leaderboard {{ parent() }}{% endblock %}
+
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 text-center mt-5 mb-5">
+            <h1 id="">Leaderboard</h1>
+            <div id="search-bar" class="col-12">
+                <form class=" search-and-filter">
+                    <div class="row">
+                        <div class="col-md-4 form-group active">
+                            <label for="search">{{ "Leaderboard"|trans }}</label>
+                            <select id="downloads-filter-category" name="season"
+                                    class="form-control form-control-sm">
+                                <option value="">{{ "Global"|trans }}</option>
+                                {% for season in seasons %}
+                                    <option {% if app.request.get('season') == season.id %}selected="selected"{% endif %}
+                                            value="{{ season.id }}">{{ season.label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2 pt-4">
+                            <button type="submit" class="btn btn-sm btn-primary">{{ "Filter"|trans }}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <div id="leaderboard" class="row">
+        {% include 'score/partial/songs_page.html.twig' with {songs:songs,selected_season:selected_season} %}
+    </div>
+
+{% endblock %}
