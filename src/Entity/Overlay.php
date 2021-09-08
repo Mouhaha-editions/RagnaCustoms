@@ -38,6 +38,16 @@ class Overlay
      */
     private $startAt;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $html;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $css;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +97,30 @@ class Overlay
     public function setStartAt(?\DateTimeInterface $startAt): self
     {
         $this->startAt = $startAt;
+
+        return $this;
+    }
+
+    public function getHtml(): ?string
+    {
+        return $this->html;
+    }
+
+    public function setHtml(?string $html): self
+    {
+        $this->html = $html;
+
+        return $this;
+    }
+
+    public function getCss(): ?string
+    {
+        return $this->css;
+    }
+
+    public function setCss(?string $css): self
+    {
+        $this->css = $css;
 
         return $this;
     }

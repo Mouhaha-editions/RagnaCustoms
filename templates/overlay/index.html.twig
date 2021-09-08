@@ -5,28 +5,45 @@
     <title></title>
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css' integrity='sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l' crossorigin='anonymous'>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <style>
-        h1, h3, h4, h5,h6 {
-            color: #ffffff;
-            text-shadow: 0 0 10px #000000;
-        }
-    </style>
+
 </head>
 <body>
+{% if overlay.html is null %}
+<style>
+    h1, h3, h4, h5,h6 {
+        color: #ffffff;
+        text-shadow: 0 0 10px #000000;
+    }
+</style>
     <div class="content">
         <div class='d-flex'>
             <div class='pr-3 text-center' >
                 <img style='width:160px;' src=''>
-                <h5></h5>
+                <h5 class="song-duration"></h5>
             </div>
             <div>
-                <h1></h1>
-                <h3></h3>
-                <h6></h6>
-                <h4></h4>
+                <h1 class="song-title"></h1>
+                <h3 class="song-level"></h3>
+                <h6 class="mapper"></h6>
+                <h4 class="artist"></h4>
             </div>
         </div>
     </div>
+    {% else %}
+<style>
+    #canvas .draggable{
+        display:block;
+        width:400px;
+        position:absolute;
+        white-space: nowrap;
+
+    }
+    {{ overlay.css }}
+</style>
+        {% autoescape 'html' %}
+    {{ overlay.html|raw }}
+    {% endautoescape %}
+{% endif %}
 </body>
 <script>
     var loadData = function () {
@@ -40,11 +57,13 @@
                     $('.content').hide();
                 }
                 $('img').attr('src', data.cover);
-                $('h1').html(data.title);
-                $('h6').html("Difficulty: "+data.level);
-                $('h3').html(data.author);
-                $('h4').html("Mapped by: "+data.mapper);
-                $('h5').html(data.duration);
+
+                $('.song-title-level').html(data.title+" Diff. "+data.level);
+                $('.song-title').html(data.title);
+                $('.song-level').html(data.level);
+                $('.artist').html(data.author);
+                $('.mapper').html(data.mapper);
+                $('.song-duration').html(data.duration);
             },
             error: function () {
                 $('.content').hide();
@@ -57,7 +76,7 @@
         loadData();
         setInterval(function () {
              loadData();
-        }, 1000);
+        }, 100000);
     });
 </script>
 </html>
