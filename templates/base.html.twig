@@ -102,6 +102,9 @@
                         <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "Upload Song"|trans }}</a>
                         <hr class="m-1"/>
                         <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
+                        <hr class="m-1"/>
+                        <a class="dropdown-item"
+                           href="{{ url('overlay_editor') }}">{{ "Overlay editor"|trans }}</a>
                         {% if app.user.songs|length > 0 %}
                             <hr class="m-1"/>
                             <a class="dropdown-item"

@@ -1,37 +1,86 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {{ encore_entry_link_tags('overlay_editor') }}
 
-{% block title %}Leaderboard {{ parent() }}{% endblock %}
+    <link id="favicon" rel="icon" href="/apps/favicon.ico">
+    <title>Overlay editor | RagnaCustoms</title>
+    <style id="customCss">
 
+    </style>
+</head>
+<body class="{{ app.request.cookies.get('light-mode','light') }}">
+<div class="container-fluid">
+    {% set currentSeason = songService.currentSeason %}
+    <div class="top-bar d-flex">
+        <a class="navbar-brand" href="/"><img src="/apps/logo.png" style="max-width:50px" class="img-fluid" alt="logo"/>
+            RagnaCustoms</a>
+        <div class="p-3">Canvas size (px): <input type="number" name="canvas_width" placeholder="width" value="1024"/> x
+            <input
+                    type="number" name="canvas_height" placeholder="height" value="200"/></div>
+        <div class="p-3">Background color (hex or rgba): <input type="text" name="canvas_bg_color" value="rgba(0,0,0,0)"
+                                                                placeholder="start with # or rgba( ..."></div>
+        {# <div class="p-3"> #}
+        {# Test with song: <select name="canvas_song_test"> #}
+        {# <option></option> #}
+        {# {% for song in songs %} #}
+        {# <option value="{{ song.id }}" #}
+        {# data-artist="" #}
+        {# data-mapper="" #}
+        {# data-title="{{ song.name }}" #}
+        {# >{{ song.name }}</option> #}
 
-{% block body %}
-    <div class="row">
-        <div class="col-12 text-center mt-5 mb-5">
-            <h1 id="">Leaderboard</h1>
-            <div id="search-bar" class="col-12">
-                <form class=" search-and-filter">
-                    <div class="row">
-                        <div class="col-md-4 form-group active">
-                            <label for="search">{{ "Leaderboard"|trans }}</label>
-                            <select id="downloads-filter-category" name="season"
-                                    class="form-control form-control-sm">
-                                <option value="">{{ "Global"|trans }}</option>
-                                {% for season in seasons %}
-                                    <option {% if app.request.get('season') == season.id %}selected="selected"{% endif %}
-                                            value="{{ season.id }}">{{ season.label }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-2 pt-4">
-                            <button type="submit" class="btn btn-sm btn-primary">{{ "Filter"|trans }}</button>
-                        </div>
-                    </div>
-                </form>
+        {# {% endfor %} #}
+        {# </select> #}
+        {# </div> #}
+    </div>
+    <div class="row mt-5">
+        <div class="col-3">
+            <div id="main-menu">
+                <select class="eltToAdd">
+                    <option data-fnc="addCustomText">Custom Text</option>
+                    <option data-fnc="addArtist">Artist</option>
+                    <option data-fnc="addMapper">Mapper</option>
+                    <option data-fnc="addCover">Cover</option>
+                    <option data-fnc="addTitle">Song title</option>
+                    <option data-fnc="addLevel">Song difficulty</option>
+                    <option data-fnc="addTitleAndLevel">Song title & difficulty</option>
+                    <option data-fnc="addDuration">Song duration</option>
+                </select>
+                <button class="addElt">+</button>
+                <br/>
+                <ul>
+                    <li id ="title">Elements:</li>
+                </ul>
+
             </div>
-
+        </div>
+        <div id="canvas-content" class="col-9"><p>Place the content in the area</p>
+           {% if overlay.html is not null %}
+               {% autoescape 'html' %}
+               {{ overlay.html|raw }}
+               {% endautoescape %}
+            {% else %}
+            <div id="canvas">
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-12">
+            <form id="save" action="{{ url("overlay_editor_save") }}" method="post">
+            Custom CSS:
+            <textarea style="width:100%" name="css" class="customCss">{{ overlay.css }}</textarea>
+            <textarea style="width:100%;display:none;" name="html" id="canvasSave"></textarea>
+            </form>
+            <a href="{{ url("overlay_reset") }}" class="btn btn-danger" onclick="return confirm('you are going to delete everything and go back to the default overlay, do you really want to continue?');">
+                Reset all & use default overlay
+            </a>
         </div>
     </div>
-    <div id="leaderboard" class="row">
-        {% include 'score/partial/songs_page.html.twig' with {songs:songs,selected_season:selected_season} %}
-    </div>
 
-{% endblock %}
+
+</div>
+{{ encore_entry_script_tags('overlay_editor') }}
+</body>
+</html>

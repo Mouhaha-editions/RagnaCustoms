@@ -1,0 +1,66 @@
+@import "~bootstrap";
+
+#main-menu {
+  padding: {
+
+  }
+
+  .draggable {
+    margin-top: 5px;
+    border: 1px solid #3c3c3c;
+    padding: 8px;
+    cursor: move;
+    //span:first-child{
+    //  display:none;
+    //}
+    //span:last-child{
+    //  display:inline-block;
+    //}
+  }
+}
+
+#canvas-content {
+  overflow: auto;
+}
+
+#canvas {
+  border: 1px dotted black;
+  width: 1024px;
+  height: 200px;
+  position:relative;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0);
+
+  .draggable {
+    cursor: move;
+    display: block;
+    width: 150px;
+    top:0px;
+    position:absolute;
+    border: 1px solid #eaeaea;
+    white-space: nowrap;
+    //span:first-child{
+    //  display:inline-block;
+    //}
+    //span:last-child{
+    //  display:none;
+    //}
+  }
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    &#title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+}
+
+.customCss {
+  min-height: 300px;
+}
