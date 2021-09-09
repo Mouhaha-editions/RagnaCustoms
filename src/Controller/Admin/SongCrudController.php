@@ -25,9 +25,9 @@ class SongCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
+//            IdField::new('id'),
             TextField::new('name'),
-            TextField::new('user'),
+//            TextField::new('user'),
             BooleanField::new('isModerated'),
             TextEditorField::new('description'),
         ];

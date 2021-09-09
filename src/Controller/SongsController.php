@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -47,6 +48,20 @@ class SongsController extends AbstractController
                 "wip" => false
             ])
         ]);
+    }
+    /**
+     * @Route("/songs/update", name="sitemap_song")
+     */
+    public function udpate(SongRepository $songRepository, SluggerInterface $slugger)
+    {
+        $em = $this->getDoctrine()->getManager();
+        foreach($songRepository->findAll() AS $song){
+            $song->setSlug($slugger->slug($song->getName()." ".$song->getLevelAuthorName()));
+            $em->persist($song);
+            $em->flush();
+        }
+
+        return new JsonResponse([]);
     }
 
     /**
