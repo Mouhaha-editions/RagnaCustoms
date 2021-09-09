@@ -17,13 +17,13 @@ use Symfony\Component\VarDumper\VarDumper;
 class ScoreController extends AbstractController
 {
     /**
-     * @Route("/leaderboard", name="score")
+     * @Route("/leaderboard/{slug}", name="score", defaults={"slug"=null})
      * @param Request $request
      * @param SongRepository $songRepository
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService, SeasonRepository $seasonRepository): Response
+    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService, SeasonRepository $seasonRepository, Season $selectedSeason = null): Response
     {
         $qb = $songRepository->createQueryBuilder('s')
             ->where('s.moderated = true')
@@ -31,13 +31,19 @@ class ScoreController extends AbstractController
             ->andWhere("s.isDeleted != true")
             ->distinct()
             ->orderBy('s.name', 'ASC');
-        $selectedSeason = null;
-        if ($request->get('season')) {
+
+        if ($request->get('season',null) !== null) {
+            if($request->get('season') ==0){
+                return $this->redirectToRoute('score');
+            }
+            $selectedSeason = $seasonRepository->find($request->get('season'));
+            return $this->redirectToRoute('score',['slug'=>$selectedSeason->getSlug()]);
+        }
+        if($selectedSeason!= null) {
             $qb->leftJoin('s.songDifficulties', 'difficulties')
                 ->leftJoin('difficulties.seasons', 'season')
                 ->andWhere('season.id = :season')
-                ->setParameter('season', $request->get('season'));
-            $selectedSeason = $seasonRepository->find($request->get('season'));
+                ->setParameter('season',$selectedSeason);
         }
         $songs = $paginationService->setDefaults(1000)->process($qb, $request);
 
@@ -54,37 +60,6 @@ class ScoreController extends AbstractController
             'seasons' => $seasonRepository->createQueryBuilder('s')->orderBy('s.id', "desc")->getQuery()->getResult(),
             'selected_season' => $selectedSeason,
 
-        ]);
-    }
-
-    /**
-     * @Route("/ranking/season/{id}", name="score_season_ranking", defaults={"id"=null})
-     */
-    public function seasonRanking(Request $request, ScoreRepository $scoreRepository, SeasonRepository $seasonRepository, PaginationService $paginationService, Season $season = null): Response
-    {
-        $oldSeason = $seasonRepository->getOld();
-
-        if ($season === null) {
-            $season = $seasonRepository->getCurrent();
-        }
-        $qb = $scoreRepository->createQueryBuilder('s')
-            ->select('u.username AS username,
-            u.id AS user_id, 
-            MD5(LOWER(u.email)) as gravatar, 
-            SUM(s.score)/1000 AS score, 
-            COUNT(s.hash) AS count_song')
-            ->leftJoin('s.user', 'u')
-            ->andWhere('s.season = :season')
-            ->setParameter('season', $season)
-            ->groupBy('s.user')
-            ->orderBy('SUM(s.score)', 'DESC');
-//        $scores = $qb->getQuery()->getResult();
-        $scores = $paginationService->setDefaults(200)->process($qb, $request);
-
-        return $this->render('score/season_ranking.html.twig', [
-            'scores' => $scores,
-            'season' => $season,
-            'oldSeasons' => $oldSeason,
         ]);
     }
 
@@ -121,5 +96,37 @@ class ScoreController extends AbstractController
             'scores' => $scores,
         ]);
     }
+
+    /**
+     * @Route("/ranking/{slug}", name="score_season_ranking", defaults={"slug"=null})
+     */
+    public function seasonRanking(Request $request, ScoreRepository $scoreRepository, SeasonRepository $seasonRepository, PaginationService $paginationService, Season $season = null): Response
+    {
+        $oldSeason = $seasonRepository->getOld();
+
+        if ($season === null) {
+            $season = $seasonRepository->getCurrent();
+        }
+        $qb = $scoreRepository->createQueryBuilder('s')
+            ->select('u.username AS username,
+            u.id AS user_id, 
+            MD5(LOWER(u.email)) as gravatar, 
+            SUM(s.score)/1000 AS score, 
+            COUNT(s.hash) AS count_song')
+            ->leftJoin('s.user', 'u')
+            ->andWhere('s.season = :season')
+            ->setParameter('season', $season)
+            ->groupBy('s.user')
+            ->orderBy('SUM(s.score)', 'DESC');
+//        $scores = $qb->getQuery()->getResult();
+        $scores = $paginationService->setDefaults(200)->process($qb, $request);
+
+        return $this->render('score/season_ranking.html.twig', [
+            'scores' => $scores,
+            'season' => $season,
+            'oldSeasons' => $oldSeason,
+        ]);
+    }
+
 
 }

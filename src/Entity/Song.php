@@ -7,6 +7,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -212,6 +213,12 @@ class Song
      * @ORM\ManyToOne(targetEntity=SongCategory::class, inversedBy="songs")
      */
     private $songCategory;
+
+    /**
+     * @Gedmo\Slug(fields={"name", "levelAuthorName"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $slug;
 
     public function __construct()
     {
@@ -930,6 +937,18 @@ class Song
     public function setSongCategory(?SongCategory $songCategory): self
     {
         $this->songCategory = $songCategory;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
