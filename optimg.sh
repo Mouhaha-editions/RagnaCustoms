@@ -3,7 +3,7 @@ BASE_FILE=$(cd ${0%/*} && echo $PWD/${0##*/})
 BASE_FOLDER=`dirname ${BASE_FILE}`
 
 # Chemin des sites à partir du home de l'utilisateur
-SITES="/var/www/woowine.com/web/media/cache/light_slider/uploads/sliders /var/www/woowine.com/web/uploads/creations /var/www/woowine.com/web/uploads/creations/cropped /var/www/woowine.com/web/uploads/shops /var/www/woowine.com/web/uploads/shops/cropped"
+SITES="/var/www/ragnacustoms.com/public/covers"
 MTIME=700000
 COMPR=7
 
