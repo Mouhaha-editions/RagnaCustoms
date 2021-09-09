@@ -65,11 +65,16 @@
     </tr>
 {% endfor %}
 <tr class="see-more-delete">
-    <td colspan="8">
+
+    <td colspan="4">
         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
         <div class="text-left pagination">
             Pages : {{ macro_pagination.paginate(songs) }}
         </div>
+
 {#        {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }}#}
+    </td>
+    <td colspan="4 text-end">
+       {{ songs.entities|length }} {{ "songs displayed on"|trans }} <small>{{ songs.count }}</small>
     </td>
 </tr>
