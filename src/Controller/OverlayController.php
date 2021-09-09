@@ -63,7 +63,7 @@ class OverlayController extends AbstractController
     }
 
     /**
-     *
+     * }
      * @Route("/overlay/editor/", name="overlay_editor")
      */
     public function editor(SongRepository $songRepository, OverlayRepository $overlayRepository)
