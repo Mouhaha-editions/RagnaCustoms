@@ -3,7 +3,7 @@
         deleted
     {% else %}
         <div class="d-flex flex-row">
-            <a href="{{ url('song_detail',{id:song.id}) }}">
+            <a href="{{ url('song_detail',{slug:song.slug}) }}">
                 <figure class="product-preview-image short liquid" style="position: relative">
 
                     {% if song.isNew %}
@@ -21,7 +21,7 @@
             </a>
 
             <div class="song-preview pl-2">
-                <p class="title"><a href="{{ url('song_detail',{id:song.id}) }}">{{ song.name }}</a></p>
+                <p class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.name }}</a></p>
                 <p class="category"><a
                             href="{{ url('home') }}?search=artist:{{ song.authorName }}">{{ song.authorName }}</a></p>
                 <p class="creator">Mapped by :
