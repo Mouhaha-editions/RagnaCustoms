@@ -8,17 +8,17 @@
         <description>All our catalog</description>
         {% for song in songs %}
             <item>
-                {# <id>{{ url('song_detail',{id:song.id}) }}</id> #}
+                {# <id>{{ url('song_detail',{slug:song.slug}) }}</id> #}
                 <title>{{ song.name }} - {{ song.authorName }} new custom song for #Ragnaröck #VR</title>
-                <guid>{{ url('song_detail',{id:song.id}) }}</guid>
-                <description><![CDATA[New Song : {{ song.name }}<br/>{{ url('song_detail',{id:song.id}) }} ]]>
+                <guid>{{ url('song_detail',{slug:song.slug}) }}</guid>
+                <description><![CDATA[New Song : {{ song.name }}<br/>{{ url('song_detail',{slug:song.slug}) }} ]]>
                 </description>
-                <link>{{ url('song_detail',{id:song.id}) }}</link>
+                <link>{{ url('song_detail',{slug:song.slug}) }}</link>
                 <image>
                     <url>https://ragnacustoms.com/covers/{{ song.id }}{{ song.coverImageExtension }}</url>
                 </image>
-                {# <url>{{ url('song_detail',{id:song.id}) }}</url> #}
-                {# <link rel="alternate" type="text/html" href="{{ url('song_detail',{id:song.id}) }}"/> #}
+                {# <url>{{ url('song_detail',{slug:song.slug}) }}</url> #}
+                {# <link rel="alternate" type="text/html" href="{{ url('song_detail',{slug:song.slug}) }}"/> #}
                 <pubDate>{{ song.createdAt.format('r') }}</pubDate>
             </item>
         {% endfor %}

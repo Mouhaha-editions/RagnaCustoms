@@ -13,7 +13,7 @@
                    href="{{ url('edit_song',{id:song.id}) }}">
                     <i class="fas fa-edit"></i>
                 </a>
-                <a title="see statistics" class="img" href="{{ url("song_detail",{id:song.id}) }}#statistics">
+                <a title="see statistics" class="img" href="{{ url('song_detail',{slug:song.slug}) }}#statistics">
                     <img data-src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}"
                          class="img-fluid lazyload"/>
                 </a>
@@ -58,7 +58,7 @@
     <div class="col-md-2 score-frame">
         <div class="score">
             <div class="score-title text-center">
-                <a class="img" href="{{ url("song_detail",{id:song.id}) }}">
+                <a class="img" href="{{ url('song_detail',{slug:song.slug}) }}">
                     <img data-src="/covers/{{ song.id }}{{ song.coverImageExtension }}" alt="{{ song.name }}"
                          class="img-fluid lazyload"/>
                 </a>

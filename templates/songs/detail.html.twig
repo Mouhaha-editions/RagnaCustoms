@@ -4,7 +4,7 @@
 
  {% block metas %}
      <meta property="description" value="{{ song.name }} - Custom Song detail | RagnaCustoms.com">
-     <meta property="og:url" content="{{ url('song_detail',{id:song.id}) }}"/>
+     <meta property="og:url" content="{{ url('song_detail',{slug:song.slug}) }}"/>
      <meta property="og:type" content="website"/>
      <meta property="og:title" content="{{ song.name }} - Custom Song detail | RagnaCustoms.com"/>
      <meta property="og:description" content="{{ song.name }} - Custom Song for Ragnaröck VR"/>
