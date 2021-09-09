@@ -74,7 +74,7 @@
 
 {#        {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }}#}
     </td>
-    <td colspan="4 text-end">
-       {{ songs.entities|length }} {{ "songs displayed on"|trans }} <small>{{ songs.count }}</small>
+    <td colspan="4">
+        <div class="text-right">{{ songs.entities|length }} {{ "songs displayed on"|trans }} {{ songs.count }}</div>
     </td>
 </tr>
