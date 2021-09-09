@@ -215,7 +215,7 @@ class Song
     private $songCategory;
 
     /**
-     * @Gedmo\Slug(fields={"name", "levelAuthorName"})
+     * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $slug;

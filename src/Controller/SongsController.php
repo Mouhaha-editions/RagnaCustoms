@@ -56,7 +56,7 @@ class SongsController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         foreach($songRepository->findAll() AS $song){
-            $song->setSlug($slugger->slug($song->getName()." ".$song->getLevelAuthorName()));
+            $song->setSlug($slugger->slug($song->getName()));
             $em->persist($song);
             $em->flush();
         }
