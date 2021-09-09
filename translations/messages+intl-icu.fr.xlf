@@ -567,6 +567,14 @@
         <source>New ! to update a map please use the \"edit\" button on your song bellow.</source>
         <target>Nouveau ! pour mettre à jour une carte, veuillez utiliser le bouton \"modifier\" de votre chanson ci-dessous.</target>
       </trans-unit>
+        <trans-unit id="76">
+            <source>Custom songs available</source>
+            <target>Customs songs disponibles</target>
+        </trans-unit>
+      <trans-unit id="77">
+        <source>songs displayed on</source>
+        <target>musiques affichées sur</target>
+      </trans-unit>
 
 
     </body>
