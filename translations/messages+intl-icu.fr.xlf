@@ -575,6 +575,10 @@
         <source>songs displayed on</source>
         <target>musiques affichées sur</target>
       </trans-unit>
+      <trans-unit id="78">
+        <source>Custom songs available for Ragnaröck VR</source>
+        <target>Customs songs disponibles pour Ragnaröck VR</target>
+      </trans-unit>
 
 
     </body>
