@@ -107,7 +107,7 @@ class UploadSongController extends AbstractController
                         ])
                     ]);
                 }
-                if ($songService->processFile($form, $song)) {
+                if ($songService->processFile($form, $song, $isWip)) {
                     $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!", [
                         "%song%" => $song->getName(),
                         "%artist%" => $song->getAuthorName()

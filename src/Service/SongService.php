@@ -274,7 +274,7 @@ class SongService
         return $this->em->getRepository(Season::class)->getCurrent();
     }
 
-    public function processFile(FormInterface $form, Song $song)
+    public function processFile(FormInterface $form, Song $song, bool $isWip = false)
     {
         $allowedFiles = [
             'preview.ogg',
@@ -332,7 +332,6 @@ class SongService
                 }
             }
         }
-        $new = false;
 
 
         if ($form->get('description')->getData() != null) {
@@ -399,6 +398,9 @@ class SongService
             $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
 
         }
+        if($isWip != $song->getWip()){
+            $song->setCreatedAt(new DateTime());
+        }
         $this->em->flush();
 
         /** @var UploadedFile $file */
@@ -438,6 +440,7 @@ class SongService
                 } elseif ($new) {
                     $this->discordService->sendNewSongMessage($song);
                 } else {
+
                     $this->discordService->sendUpdatedSongMessage($song);
                 }
             }
