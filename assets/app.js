@@ -81,6 +81,7 @@ let hashtag = window.location.hash;
 function loadForm(content) {
     $("#form-edit").html(content);
     $("#form-edit form").on('submit', function () {
+        $("#form-edit").html("<div class=\"popup-box-actions white full void\">Sending your form</div>");
         let tt = $(this);
         $.ajax({
             url: tt.attr('action'),
