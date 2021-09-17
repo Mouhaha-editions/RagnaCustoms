@@ -64,36 +64,41 @@
                 </div>
             </form>
         </div>
-        <div class="col-12">
-            <table  id="table-song"  class="table songs" >
-                    <tr class="table-header">
-                        <th class="table-header-column">
-                           {{ "Song"|trans }}
-                        </th>
-                        <th class="table-header-column padded">
-                            {{ "Note/sec"|trans }}
-                        </th>
-                        <th class="table-header-column padded">
-                            {{ "LastUpdate"|trans }}
-                        </th>
-                        <th class="table-header-column padded">
-                            {{ "Duration"|trans }}
-                        </th>
-                        <th class="table-header-column padded">
-                           {{ "BPM"|trans }}
-                        </th>
-                        <th class="table-header-column padded">
-                            {{ "Votes"|trans }}
-                        </th>
-                        <th class="table-header-column padded">
-                        </th>
-                        <th class="table-header-column padded-left"></th>
-                    </tr>
-
-                {% include 'songs/partial/song_row.html.twig' with {songs:songs} %}
-            </table>
-        </div>
     </div>
+    </div>
+
+{#        <div class="col-12">#}
+{#            <table  id="table-song"  class="table songs" >#}
+{#                    <tr class="table-header">#}
+{#                        <th class="table-header-column">#}
+{#                           {{ "Song"|trans }}#}
+{#                        </th>#}
+{#                        <th class="table-header-column padded">#}
+{#                            {{ "Note/sec"|trans }}#}
+{#                        </th>#}
+{#                        <th class="table-header-column padded">#}
+{#                            {{ "LastUpdate"|trans }}#}
+{#                        </th>#}
+{#                        <th class="table-header-column padded">#}
+{#                            {{ "Duration"|trans }}#}
+{#                        </th>#}
+{#                        <th class="table-header-column padded">#}
+{#                           {{ "BPM"|trans }}#}
+{#                        </th>#}
+{#                        <th class="table-header-column padded">#}
+{#                            {{ "Votes"|trans }}#}
+{#                        </th>#}
+{#                        <th class="table-header-column padded">#}
+{#                        </th>#}
+{#                        <th class="table-header-column padded-left"></th>#}
+{#                    </tr>#}
+
+{#                {% include 'songs/partial/song_row.html.twig' with {songs:songs} %}#}
+{#            </table>#}
+            {% include 'songs/partial/song_row_div.html.twig' with {songs:songs} %}
+
+{#        </div>#}
+{#    </div>#}
 
 {% endblock %}
 

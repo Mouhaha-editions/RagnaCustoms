@@ -152,6 +152,11 @@ class Utilisateur implements UserInterface
      */
     private $gamifications;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Playlist::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $playlists;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -162,6 +167,7 @@ class Utilisateur implements UserInterface
         $this->songFeedback = new ArrayCollection();
         $this->scoreHistories = new ArrayCollection();
         $this->gamifications = new ArrayCollection();
+        $this->playlists = new ArrayCollection();
     }
 
     public function __toString()
@@ -701,6 +707,36 @@ class Utilisateur implements UserInterface
             // set the owning side to null (unless already changed)
             if ($gamification->getUser() === $this) {
                 $gamification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Playlist[]
+     */
+    public function getPlaylists(): Collection
+    {
+        return $this->playlists;
+    }
+
+    public function addPlaylist(Playlist $playlist): self
+    {
+        if (!$this->playlists->contains($playlist)) {
+            $this->playlists[] = $playlist;
+            $playlist->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylist(Playlist $playlist): self
+    {
+        if ($this->playlists->removeElement($playlist)) {
+            // set the owning side to null (unless already changed)
+            if ($playlist->getUser() === $this) {
+                $playlist->setUser(null);
             }
         }
 

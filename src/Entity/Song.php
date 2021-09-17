@@ -220,6 +220,11 @@ class Song
      */
     private $slug;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Playlist::class, mappedBy="songs")
+     */
+    private $playlists;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -227,6 +232,7 @@ class Song
         $this->downloadCounters = new ArrayCollection();
         $this->viewCounters = new ArrayCollection();
         $this->songHashes = new ArrayCollection();
+        $this->playlists = new ArrayCollection();
     }
 
     public function isRanked()
@@ -949,6 +955,33 @@ class Song
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Playlist[]
+     */
+    public function getPlaylists(): Collection
+    {
+        return $this->playlists;
+    }
+
+    public function addPlaylist(Playlist $playlist): self
+    {
+        if (!$this->playlists->contains($playlist)) {
+            $this->playlists[] = $playlist;
+            $playlist->addSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylist(Playlist $playlist): self
+    {
+        if ($this->playlists->removeElement($playlist)) {
+            $playlist->removeSong($this);
+        }
 
         return $this;
     }
