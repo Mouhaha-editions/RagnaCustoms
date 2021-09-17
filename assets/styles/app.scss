@@ -223,6 +223,7 @@ table.songs {
   }
 
   .song-preview {
+    img{max-width:150px;}
     p {
       padding: 0;
       margin: 0;
@@ -233,7 +234,19 @@ table.songs {
     }
   }
 }
-
+.song-box{
+  border: 1px solid #636363;
+  border-radius: 5px;
+  padding: 15px;
+}
+.product-preview-image{
+  max-width:150px;
+  height:150px;
+  margin:0;
+  img{
+    max-height:150px;
+  }
+}
 .bg-twitch {
   background: #6f42c1;
   color: #ffffff;
@@ -380,11 +393,12 @@ table.songs {
   }
 
   &.text-twitch {
-    color: #6f42c1 !important;
     font-weight: bold;
   }
 }
-
+.text-twitch{
+  color: #6f42c1 !important;
+}
 .copy-clipboard {
   cursor: pointer;
 }

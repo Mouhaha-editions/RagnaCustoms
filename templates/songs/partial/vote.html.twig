@@ -1,23 +1,26 @@
-<div class="song-vote-{{ song.id }} popover-trigger" data-html="true"
+<div class="song-vote-{{ song.id }} d-flex justify-content-between popover-trigger" data-html="true"
      data-toggle="popover" data-trigger="hover"
      title="{{ "Rating"|trans }}"
      data-placement="top"
      data-content="{% include 'songs/partial/rate.html.twig' with {song:song} %}">
-    {{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }} ({{ song.countVotes+0 }})
-
-    <a href='#' class='button ajax-load ajax-modal-form disabled with-only-icon popup-review-trigger song-review'
-       data-toggle='modal' data-target='#reviewSong'
-       data-replace-closest-selector='.song-vote-content-{{ song.id }}'
-       data-url='{{ url('song_review',{id:song.id}) }}'
-       data-song-id='{{ song.id }}'>
-        <div class='rating-list d-flex flex-row'>
-            {% set rate = song.voteAverage|round(0) %}
-            {% for i in 0..4 %}
-                <div class='rating {% if rate > i %}filled text-warning{% endif %}'>
-                    <i class='{% if rate > i %}fas{% else %}far{% endif %} fa-star'></i>
-                </div>
-            {% endfor %}
-        </div>
-    </a>
+    <div>
+        {{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}
+        ({{ song.countVotes+0 }})
+    </div>
+    <div><a href='#' class='button ajax-load ajax-modal-form disabled with-only-icon popup-review-trigger song-review'
+            data-toggle='modal' data-target='#reviewSong'
+            data-replace-closest-selector='.song-vote-content-{{ song.id }}'
+            data-url='{{ url('song_review',{id:song.id}) }}'
+            data-song-id='{{ song.id }}'>
+            <div class='rating-list d-flex flex-row'>
+                {% set rate = song.voteAverage|round(0) %}
+                {% for i in 0..4 %}
+                    <div class='rating {% if rate > i %}filled text-warning{% endif %}'>
+                        <i class='{% if rate > i %}fas{% else %}far{% endif %} fa-star'></i>
+                    </div>
+                {% endfor %}
+            </div>
+        </a>
+    </div>
 </div>
 
