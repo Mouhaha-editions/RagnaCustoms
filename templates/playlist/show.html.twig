@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">{{ playlist.label }}, a {{ user.username }}'s Playlist</h1>
+            <p>{{ playlist.description }}</p>
+        </div>
+    </div>
+
+    </div>
+    {% include "songs/partial/song_row_div.html.twig" with {songs:songs} %}
+{% endblock %}
+
+{% block title %}
+    {{ playlist.label }}, a {{ user.username }}'s Playlist
+{% endblock %}
+

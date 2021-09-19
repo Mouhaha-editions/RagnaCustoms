@@ -15,7 +15,8 @@
                             converted
                         </div>
                     {% endif %}
-                    <img width="100%" data-src="/covers/{{ song.id ~ song.coverImageExtension }}" class="lazyload img-fluid rounded thumbnail"
+                    <img width="100%" data-src="/covers/{{ song.id ~ song.coverImageExtension }}"
+                         class="lazyload img-fluid rounded thumbnail"
                          alt="cover">
                 </figure>
             </a>
@@ -43,22 +44,38 @@
         deleted
     {% else %}
         <div class="d-flex flex-row">
-            <a href="{{ url('song_detail',{slug:song.slug}) }}">
-                <figure class="product-preview-image short liquid" style="position: relative">
+            <figure class="product-preview-image short liquid" style="position: relative">
 
-                    {% if song.isNew %}
-                        <span class="badge new badge-primary">new</span>
-                    {% endif %}
-                    {% if song.converted %}
-                        <div class="white bold text-center bg-danger"
-                             style="font-size: 12px;bottom: 0;position: absolute;width: 100%;border-radius: 0 0 5px 5px;">
-                            converted
-                        </div>
-                    {% endif %}
-                    <img width="100%" data-src="/covers/{{ song.id ~ song.coverImageExtension }}" class="lazyload img-fluid rounded thumbnail"
-                         alt="cover">
-                </figure>
-            </a>
+                {% if song.isNew %}
+                    <span class="badge new badge-primary">new</span>
+                {% endif %}
+                {% if song.converted %}
+                    <div class="white bold text-center bg-danger"
+                         style="font-size: 12px;bottom: 0;position: absolute;width: 100%;border-radius: 0 0 5px 5px;">
+                        converted
+                    </div>
+                {% endif %}
+                <div class="bookmark">
+                    <a href="#"
+                       class="text-level-10 ajax-load popover-trigger song-bookmark"
+                       data-trigger="hover"
+                       data-placement="top"
+                       data-content="{{ "Add to playlist"|trans }}"
+                       data-replace-selector="#songPlaylists .modal-body"
+                       data-toggle='modal' data-target='#songPlaylists'
+                       data-url='{{ url('song_playlist',{id:song.id}) }}'
+                       data-song-id='{{ song.id }}'>
+                        <i class="far fa-bookmark"></i>
+                    </a>
+                </div>
+
+                <a href="{{ url('song_detail',{slug:song.slug}) }}">
+                    <img width="100%" data-src="/covers/{{ song.id ~ song.coverImageExtension }}"
+                         class="lazyload img-fluid rounded thumbnail"
+                         alt="cover"/>
+                </a>
+            </figure>
+
 
             <div class="song-preview pl-2">
                 <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.name }}</a></div>

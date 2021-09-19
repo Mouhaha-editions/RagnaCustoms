@@ -15,7 +15,7 @@
     <div class="rating-wrap d-flex">
         <label>Fun Factor:</label>
         {% set rating = vote.funFactor %}
-        <input type="hidden" value="{{ rating }}" name="funFactor"/>
+        <input type="hidden"  class="verify-voted" value="{{ rating }}" name="funFactor"/>
         <div class="rating-list text-warning d-flex form-rating" data-input-selector="funFactor">
             {% for i in 0..4 %}
                 <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
@@ -30,7 +30,7 @@
         <label>Rhythm:</label>
 
         {% set rating = vote.rhythm %}
-        <input type="hidden" value="{{ rating }}" name="rhythm"/>
+        <input type="hidden"  class="verify-voted" value="{{ rating }}" name="rhythm"/>
         <div class="rating-list text-warning d-flex form-rating" data-input-selector="rhythm">
             {% for i in 0..4 %}
                 <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
@@ -46,7 +46,7 @@
         <label>Flow:</label>
 
         {% set rating = vote.flow %}
-        <input type="hidden" value="{{ rating }}" name="flow"/>
+        <input type="hidden"  class="verify-voted" value="{{ rating }}" name="flow"/>
         <div class="rating-list text-warning d-flex form-rating" data-input-selector="flow">
             {% for i in 0..4 %}
                 <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
@@ -62,7 +62,7 @@
         <label>Pattern quality:</label>
 
         {% set rating = vote.patternQuality %}
-        <input type="hidden" value="{{ rating }}" name="patternQuality"/>
+        <input type="hidden" value="{{ rating }}" class="verify-voted" name="patternQuality"/>
         <div class="rating-list text-warning d-flex form-rating" data-input-selector="patternQuality">
             {% for i in 0..4 %}
                 <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
@@ -78,7 +78,7 @@
         <label>Readability:</label>
 
         {% set rating = vote.readability %}
-        <input type="hidden" value="{{ rating }}" name="readability"/>
+        <input type="hidden" value="{{ rating }}"  class="verify-voted" name="readability"/>
         <div class="rating-list text-warning d-flex form-rating" data-input-selector="readability">
             {% for i in 0..4 %}
                 <div data-id="{{ i }}" class="rating medium {% if rating > i %}filled{% endif %}">
@@ -91,7 +91,7 @@
     <div class="rating-wrap d-flex">
         <label>Level quality:</label>
         {% set rating = vote.levelQuality %}
-        <input type="hidden" value="{{ rating }}" name="levelQuality"/>
+        <input type="hidden" value="{{ rating }}" class="verify-voted"  name="levelQuality"/>
         <div class="rating-list text-warning align-content-around  d-flex form-rating"
              data-input-selector="levelQuality">
             {% for i in 0..4 %}

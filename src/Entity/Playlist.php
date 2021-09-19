@@ -40,10 +40,10 @@ class Playlist
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPublic;
+    private $isPublic = false;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 

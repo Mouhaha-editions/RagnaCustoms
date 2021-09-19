@@ -1,0 +1,8 @@
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+<b>{{ song.name }}</b> <span class="light">by {{ song.authorName }}</span>
+{{ form_start(form) }}
+{{ form_row(form.playlist) }}
+{{ form_row(form.newPlaylist) }}
+
+<button type="submit" class="btn btn-sm btn-primary">{{"Save to playlist!"|trans}}</button>
+{{ form_end(form) }}
