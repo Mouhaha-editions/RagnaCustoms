@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\DownloadCounter;
+use App\Entity\Playlist;
 use App\Entity\Score;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\SongFeedback;
 use App\Entity\ViewCounter;
 use App\Entity\Vote;
+use App\Form\AddPlaylistFormType;
 use App\Form\SongFeedbackType;
 use App\Repository\DownloadCounterRepository;
 use App\Repository\ScoreRepository;
@@ -49,13 +51,14 @@ class SongsController extends AbstractController
             ])
         ]);
     }
+
     /**
      * @Route("/songs/update", name="sitemap_song")
      */
     public function udpate(SongRepository $songRepository, SluggerInterface $slugger)
     {
         $em = $this->getDoctrine()->getManager();
-        foreach($songRepository->findAll() AS $song){
+        foreach ($songRepository->findAll() as $song) {
             $song->setSlug($slugger->slug($song->getName()));
             $em->persist($song);
             $em->flush();
@@ -87,7 +90,7 @@ class SongsController extends AbstractController
      */
     public function songDetailId(Request $request, ScoreRepository $scoreRepository, Song $song, TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository, SongService $songService, PaginationService $paginationService)
     {
-       return $this->redirectToRoute("song_detail",['slug'=>$song->getSlug()],301);
+        return $this->redirectToRoute("song_detail", ['slug' => $song->getSlug()], 301);
     }
 
     /**
@@ -205,6 +208,92 @@ class SongsController extends AbstractController
             "response" => $this->renderView("songs/partial/form_review.html.twig", [
                 'song' => $song,
                 "vote" => $vote
+            ]),
+        ]);
+    }
+
+    /**
+     * @Route("/song/playlist/{id}", name="song_playlist")
+     * @param Request $request
+     * @param Song $song
+     * @param TranslatorInterface $translator
+     * @param SongDifficultyRepository $songDifficultyRepository
+     * @return JsonResponse
+     */
+    public function formPlaylist(Request $request, Song $song, TranslatorInterface $translator)
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => $translator->trans("You need an account to use playlist!"),
+                "response" => $translator->trans("You need an account to use playlist!"),
+            ]);
+        }
+
+        if ($song == null) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => $translator->trans("Song not found!"),
+                "response" => $translator->trans("Song not found!"),
+
+            ]);
+        }
+
+        $form = $this->createForm(AddPlaylistFormType::class, $this->getUser(), [
+            'attr' => [
+                'class' => "form ajax-form",
+                'method' => "post",
+                "action" => $this->generateUrl("song_playlist", ["id" => $song->getId()]),
+                "data-url" => $this->generateUrl("song_playlist", ["id" => $song->getId()])
+            ]
+        ]);
+
+        $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Playlist $playlist */
+            $playlist = $form->get('playlist')->getData();
+            if ($playlist == null) {
+                $label = trim($form->get('newPlaylist')->getData());
+                if ($label == null || empty($label)) {
+                    return new JsonResponse([
+                        "error" => true,
+                        "errorMessage" => $translator->trans("Playlist have to be named!"),
+                        "response" => $translator->trans("Playlist have to be named!"),
+
+                    ]);
+                }
+                $playlist = new Playlist();
+                $playlist->setLabel($label);
+                $this->getUser()->addPlaylist($playlist);
+                $playlist->setUser($this->getUser());
+                $em->persist($playlist);
+            }
+            foreach ($playlist->getSongs() AS $psong){
+                if($song->getId() === $psong->getId()){
+                    return new JsonResponse([
+                        "error" => true,
+                        "errorMessage" => $translator->trans("Song already in playlist!"),
+                        "response" => $translator->trans("Song already in playlist!"),
+                    ]);
+                }
+            }
+            $playlist->addSong($song);
+            $em->flush();
+            return new JsonResponse([
+                "error" => false,
+                "errorMessage" => "You need an account to vote !",
+                "response" => "<div class='alert alert-success'>" . $translator->trans("Song added to your playlist!") . "</div>",
+
+            ]);
+        }
+
+        return new JsonResponse([
+            "error" => false,
+            "errorMessage" => false,
+            "response" => $this->renderView("songs/partial/form_playlist.html.twig", [
+                'form' => $form->createView(),
+                'song' => $song,
             ]),
         ]);
     }

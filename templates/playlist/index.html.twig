@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PlaylistController!{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-12">
+        <h1>All your playlists</h1>
+        <table class="table table-sm">
+            <tr>
+                <th>Label</th>
+                <th>Songs</th>
+                <th>Public</th>
+                <th>Action</th>
+            </tr>
+{% for playlist in playlists %}
+    <tr>
+        <th>{{ playlist.label }}</th>
+        <th>{{ playlist.songs|length }}</th>
+        <th>{{ playlist.isPublic?"<i class='fas fa-check text-success'></i>":"<i class='fas fa-close text-danger'></i>" }}</th>
+        <th><a href="{{ url("playlist_show",{id:playlist.id}) }}"><i class="fas fa-eye"></i></a> <br/>soon edit, delete</th>
+    </tr>
+    {% else %}
+    <tr>
+        <td>No playlist for now</td>
+    </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -196,7 +196,7 @@ $(function () {
                 body.find("form").on('submit', function () {
                     let test = true;
                     $(this).find('input').each(function () {
-                        if ($(this).val() === undefined || $(this).val() === "") {
+                        if ($(this).is(".verify-voted") && ($(this).val() === undefined || $(this).val() === "")) {
                             test = false;
                         }
                     });
@@ -345,6 +345,16 @@ let createToast = function (title, content, uid) {
     $("#t" + uid).toast("show");
 
 }
+$(document).on('change','#add_playlist_form_playlist',function(){
+    let t = $(this);
+    if(t.val() !== undefined && t.val().trim() !== "" && t.val() !== null){
+        $("#add_playlist_form_newPlaylist").parent().hide();
+        $("#add_playlist_form_newPlaylist").removeAttr("required");
+    }else{
+        $("#add_playlist_form_newPlaylist").parent().show();
+        $("#add_playlist_form_newPlaylist").attr("required","required");
+    }
+})
 //
 // window.onload = function () {
 //     let value = 8;

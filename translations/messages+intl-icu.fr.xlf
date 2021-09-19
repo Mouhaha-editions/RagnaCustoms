@@ -579,6 +579,34 @@
         <source>Custom songs available for Ragnaröck VR</source>
         <target>Customs songs disponibles pour Ragnaröck VR</target>
       </trans-unit>
+        <trans-unit id="79">
+            <source>Add to playlist</source>
+            <target>Ajouter à ma playlist</target>
+        </trans-unit>
+      <trans-unit id="80">
+        <source>Playlist have to be named!</source>
+        <target>messages</target>
+      </trans-unit>
+      <trans-unit id="81">
+        <source>You need an account to use playlist!</source>
+        <target>messages</target>
+      </trans-unit>
+      <trans-unit id="82">
+        <source>Song added to your playlist!</source>
+        <target>messages</target>
+      </trans-unit>
+      <trans-unit id="83">
+        <source>Song already in playlist!</source>
+        <target>messages</target>
+      </trans-unit>
+      <trans-unit id="84">
+        <source>My playlists</source>
+        <target>messages</target>
+      </trans-unit>
+      <trans-unit id="85">
+        <source>Overlay editor</source>
+        <target>messages</target>
+      </trans-unit>
 
 
     </body>
