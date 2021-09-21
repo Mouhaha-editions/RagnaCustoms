@@ -34,7 +34,7 @@ class AddPlaylistFormType extends AbstractType
             ->add('newPlaylist', null, [
                 "label" => "Name of the new playlist",
                 "required"=>false,
-                "help"=>"Be careful, by default playlist are public.",
+                "help"=>"Be careful, by default playlists are public.",
                 "mapped"=>false
             ]);
     }

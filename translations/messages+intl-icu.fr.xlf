@@ -340,12 +340,12 @@
             <target>Je veux voter</target>
         </trans-unit>
       <trans-unit id="16">
-        <source>This application is not associated with Ragnaröck VR or WanadevStudio</source>
-        <target>Cette appication n'est pas associée avec Ragnaröck VR ni WanadevStudio</target>
+        <source>Ragnacustoms is not associated with Ragnaröck VR or WanadevStudio</source>
+        <target>Ragnacustoms n'est pas associée avec Ragnaröck VR ni WanadevStudio</target>
       </trans-unit>
       <trans-unit id="17">
-        <source><![CDATA[This application is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>]]></source>
-        <target><![CDATA[Cette appication n'est pas associée avec <b>Ragnaröck VR</b> VR ni <b>WanadevStudio</b>]]></target>
+        <source><![CDATA[Ragnacustoms is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>]]></source>
+        <target><![CDATA[Ragnacustoms n'est pas associée avec <b>Ragnaröck VR</b> VR ni <b>WanadevStudio</b>]]></target>
       </trans-unit>
         <trans-unit id="18">
             <source>copied</source>
@@ -606,6 +606,10 @@
       <trans-unit id="85">
         <source>Overlay editor</source>
         <target>messages</target>
+      </trans-unit>
+      <trans-unit id="86">
+        <source><![CDATA[RagnaCustoms is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>]]></source>
+        <target><![CDATA[Ragnacustoms n'est pas associée avec <b>Ragnaröck VR</b> VR ni <b>WanadevStudio</b>]]></target>
       </trans-unit>
 
 
