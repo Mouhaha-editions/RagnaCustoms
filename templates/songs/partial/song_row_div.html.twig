@@ -13,9 +13,18 @@
                         <div class="table-column padded text-center song-vote-content-{{ song.id }}">
                             {% include 'songs/partial/vote.html.twig' with {song:song} %}
                         </div>
-                        <div>last update: {{ song.lastDateUpload.format('Y-m-d') }}</div>
-                        <div>duration: {{ song.approximativeDurationMS }}</div>
-                        <div>bpm: {{ song.beatsPerMinute|round }}</div>
+                        <div class="d-flex justify-content-between">
+                            <div>Last update: </div>
+                            <div>&nbsp;{{ song.lastDateUpload.format('Y-m-d') }}</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <div>Duration: </div>
+                            <div>&nbsp;{{ song.approximativeDurationMS }}</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <div>Bpm: </div>
+                            <div>&nbsp;{{ song.beatsPerMinute|round }}</div>
+                        </div>
                     </div>
 
 
@@ -23,6 +32,9 @@
                         <div>
                             <a href="{{ url('song_detail',{slug:song.slug}) }}#feedback"
                                class="text-level-3"
+                               data-toggle="tooltip"
+                               title="{{ "Leave a feedback"|trans }}"
+
                                     {# data-trigger="hover" #}
                                     {# data-placement="top" #}
                                     {# data-content="{{ "Send a feedback"|trans }}" #}
@@ -52,6 +64,9 @@
                         <div>
                             <a href="#" data-to-copy="!rc {{ song.id }}"
                                data-original-title="{{ "copied"|trans }}"
+                               data-toggle="tooltip"
+                               title="{{ "Copy code for Twitch"|trans }}"
+
                                class="copy-clipboard text-twitch">
                                 <i class="fab fa-twitch"></i>
                             </a>
