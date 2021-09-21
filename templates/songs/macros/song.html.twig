@@ -89,7 +89,7 @@
                     {% for diff in song.songDifficulties %}
                         {% if loop.index != 1 %}, {% endif %}
                         <span style="color:#{{ diff.difficultyRank.color }}">{% if diff.isRanked %}<i
-                                    class="fas fa-trophy"></i>{% endif %} {{ diff.difficultyRank.level }}</span>
+                                    class="fas fa-trophy" data-toggle="tooltip" title="Ranked"></i>{% endif %} {{ diff.difficultyRank.level }}</span>
                     {% endfor %}</div>
             </div>
         </div>
