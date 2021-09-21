@@ -518,7 +518,11 @@ table.songs {
     color: $color-level-9;
   }
 }
-
+figure{
+  .new{
+    position:absolute;
+  }
+}
 .bookmark{
   position: absolute;
   top: 5px;
