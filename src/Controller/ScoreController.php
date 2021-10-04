@@ -45,7 +45,7 @@ class ScoreController extends AbstractController
                 ->andWhere('season.id = :season')
                 ->setParameter('season',$selectedSeason);
         }
-        $songs = $paginationService->setDefaults(1000)->process($qb, $request);
+        $songs = $paginationService->setDefaults(50)->process($qb, $request);
 
         if ($songs->isPartial()) {
             return $this->render('score/partial/songs_page.html.twig', [
