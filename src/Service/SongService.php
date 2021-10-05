@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\DifficultyRank;
+use App\Entity\Overlay;
 use App\Entity\Season;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
@@ -11,6 +12,7 @@ use App\Entity\SongHash;
 use App\Entity\Utilisateur;
 use App\Helper\AIMapper;
 use App\Repository\DifficultyRankRepository;
+use App\Repository\OverlayRepository;
 use App\Repository\SeasonRepository;
 use App\Repository\SongRepository;
 use DateTime;
@@ -323,7 +325,7 @@ class SongService
         $allowedFiles[] = $json->_songFilename;
 
 
-        $new = $song->getId() == null;
+        $new = $song->getId() == null || $isWip != $song->getWip();
         foreach ($song->getSongDifficulties() as $difficulty) {
             foreach ($difficulty->getSeasons() as $season) {
                 if ($season->isActive()) {
@@ -374,8 +376,12 @@ class SongService
 
         $this->em->persist($song);
 
-
         foreach ($song->getSongDifficulties() as $difficulty) {
+            $overlays = $this->em->getRepository(OverlayRepository::class)->findBy(["difficulty" => $difficulty]);
+            /** @var Overlay $overlay */
+            foreach ($overlays as $overlay) {
+                $overlay->setDifficulty(null);
+            }
             $difficulty->setSong(null);
             $this->em->remove($difficulty);
         }
@@ -398,7 +404,7 @@ class SongService
             $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
 
         }
-        if($isWip != $song->getWip()){
+        if ($isWip != $song->getWip()) {
             $song->setCreatedAt(new DateTime());
         }
         $this->em->flush();
@@ -425,7 +431,6 @@ class SongService
             $zip->close();
         }
 
-
         copy($theZip, $finalFolder . $song->getId() . ".zip");
         copy($unzipFolder . "/" . $json->_coverImageFilename, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
 
@@ -433,6 +438,7 @@ class SongService
             ->from('contact@ragnacustoms.com')
             ->to('pierrick.pobelle@gmail.com')
             ->subject('Nouvelle Map by ' . $song->getUser()->getUsername() . ', ' . $song->getName() . '!');
+
         if ($song->isModerated()) {
             if ($this->kernel->getEnvironment() != "dev") {
                 if ($song->getWip()) {
@@ -440,13 +446,12 @@ class SongService
                 } elseif ($new) {
                     $this->discordService->sendNewSongMessage($song);
                 } else {
-
                     $this->discordService->sendUpdatedSongMessage($song);
                 }
             }
             $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com/admin/moderation?search=" . $song->getName() . "'>verifier</a>");
         } else {
-            $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com/admin/moderation?search=" .  $song->getName() . "'>verifier</a>");
+            $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com/admin/moderation?search=" . $song->getName() . "'>verifier</a>");
         }
         $this->mailer->send($email);
         $this->emulatorFileDispatcher($song, true);

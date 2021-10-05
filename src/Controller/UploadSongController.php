@@ -87,7 +87,6 @@ class UploadSongController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $file = $form->get('zipFile')->getData();
-
                 if($file == null){
                     $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!", [
                         "%song%" => $song->getName(),
