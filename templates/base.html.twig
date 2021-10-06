@@ -67,7 +67,7 @@
                 <a class="nav-link text-info" target="_blank" rel="noopener" href="https://github.com/PKBeam/Edda/releases/">EDDA</a>
             </li>
 
-            {% if is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ROLE_MODERATOR') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin dashboard</a>
                 </li>

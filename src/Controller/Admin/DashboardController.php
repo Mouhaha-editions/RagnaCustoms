@@ -24,7 +24,7 @@ class DashboardController extends AbstractDashboardController
         // redirect to some CRUD controller
         $routeBuilder = $this->get(AdminUrlGenerator::class);
 
-        return $this->redirect($routeBuilder->setController(SongCrudController::class)->generateUrl());
+        return $this->redirect($routeBuilder->setController(SongFeedbackCrudController::class)->generateUrl());
 
         // you can also redirect to different pages depending on the current user
 //        if ('jane' === $this->getUser()->getUsername()) {
@@ -44,12 +44,12 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('Song', 'fa fa-music', Song::class);
-        yield MenuItem::linkToCrud('Feedback', 'fa fa-list', SongFeedback::class);
-        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', Utilisateur::class);
-        yield MenuItem::linkToCrud('Seasons', 'fa fa-tree', Season::class);
-        yield MenuItem::linkToCrud('Difficulties', 'fa fa-star', SongDifficulty::class);
+        yield MenuItem::linkToCrud('Feedback', 'fa fa-list', SongFeedback::class)->setPermission('ROLE_MODERATOR');
+        yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home')->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Song', 'fa fa-music', Song::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', Utilisateur::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Seasons', 'fa fa-tree', Season::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Difficulties', 'fa fa-star', SongDifficulty::class)->setPermission('ROLE_ADMIN');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 }

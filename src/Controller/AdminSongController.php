@@ -71,7 +71,7 @@ class AdminSongController extends AbstractController
     public function moderateSongAjaxList(request $request, Song $song, DiscordService $discordService)
     {
         $em = $this->getDoctrine()->getManager();
-        $song->setModerated(!$song->isModerated());
+        $song->setModerated(true);
         $em->flush();
 
         if ($song->isModerated()) {
