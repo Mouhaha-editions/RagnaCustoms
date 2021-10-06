@@ -11,13 +11,15 @@ class DiscordService
     private $webhookUrl;
     private $webhookUrlUpdate;
     private $webhookWipUrl;
+    private $webhookModerator;
 
-    public function __construct(string $webhookUrl,string $webhookUrlUpdate,string $webhookWipUrl)
+    public function __construct(string $webhookUrl,string $webhookUrlUpdate,string $webhookWipUrl,string $webhookModerator)
     {
 
         $this->webhookUrl = $webhookUrl;
         $this->webhookUrlUpdate = $webhookUrlUpdate;
         $this->webhookWipUrl = $webhookWipUrl;
+        $this->webhookModerator = $webhookModerator;
     }
 
     public function sendWipSongMessage(Song $song)

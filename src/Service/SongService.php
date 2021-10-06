@@ -372,7 +372,7 @@ class SongService
         $song->setFileName($json->_songFilename);
         $song->setCoverImageFileName($json->_coverImageFilename);
         $song->setEnvironmentName($json->_environmentName);
-        $song->setModerated($song->getUser()->isCertified() ?: false);
+        $song->setModerated(true);
 
         $this->em->persist($song);
 
@@ -434,26 +434,16 @@ class SongService
         copy($theZip, $finalFolder . $song->getId() . ".zip");
         copy($unzipFolder . "/" . $json->_coverImageFilename, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
 
-        $email = (new Email())
-            ->from('contact@ragnacustoms.com')
-            ->to('pierrick.pobelle@gmail.com')
-            ->subject('Nouvelle Map by ' . $song->getUser()->getUsername() . ', ' . $song->getName() . '!');
-
-        if ($song->isModerated()) {
-            if ($this->kernel->getEnvironment() != "dev") {
-                if ($song->getWip()) {
-                    $this->discordService->sendWipSongMessage($song);
-                } elseif ($new) {
-                    $this->discordService->sendNewSongMessage($song);
-                } else {
-                    $this->discordService->sendUpdatedSongMessage($song);
-                }
+        if ($this->kernel->getEnvironment() != "dev") {
+            if ($song->getWip()) {
+                $this->discordService->sendWipSongMessage($song);
+            } elseif ($new) {
+                $this->discordService->sendNewSongMessage($song);
+            } else {
+                $this->discordService->sendUpdatedSongMessage($song);
             }
-            $email->html("Nouvelle map auto-modérée <a href='https://ragnacustoms.com/admin/moderation?search=" . $song->getName() . "'>verifier</a>");
-        } else {
-            $email->html("Nouvelle map à modérée <a href='https://ragnacustoms.com/admin/moderation?search=" . $song->getName() . "'>verifier</a>");
         }
-        $this->mailer->send($email);
+
         $this->emulatorFileDispatcher($song, true);
 
         $this->rrmdir($unzipFolder);
