@@ -377,7 +377,7 @@ class SongService
         $this->em->persist($song);
 
         foreach ($song->getSongDifficulties() as $difficulty) {
-            $overlays = $this->em->getRepository(OverlayRepository::class)->findBy(["difficulty" => $difficulty]);
+            $overlays = $this->em->getRepository(Overlay::class)->findBy(["difficulty" => $difficulty]);
             /** @var Overlay $overlay */
             foreach ($overlays as $overlay) {
                 $overlay->setDifficulty(null);
