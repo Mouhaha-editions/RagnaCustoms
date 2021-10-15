@@ -65,8 +65,9 @@ class ScoreController extends AbstractController
 
     /**
      * @Route("/ranking/global", name="score_global_ranking")
+     * @return Response
      */
-    public function globalRanking(Request $request, ScoreRepository $scoreRepository, PaginationService $paginationService, Season $season = null): Response
+    public function globalRanking(): Response
     {
 
         $conn = $this->getDoctrine()->getConnection();
@@ -87,10 +88,12 @@ class ScoreController extends AbstractController
                     LEFT JOIN utilisateur u on s.user_id = u.id        
                 WHERE sg.id IS NOT null and sg.wip != true
                 GROUP BY s.hash,s.difficulty,s.user_id
-            ) AS ms GROUP BY user_id ORDER BY score DESC';
+            ) AS ms  GROUP BY user_id ORDER BY score DESC';
+        VarDumper::dump($sql);
         $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        $scores = $stmt->fetchAllAssociative();
+        $scores = $stmt->execute()->fetchAllAssociative();
+//        VarDumper::dump(
+//        $scores = $stmt->fetchAllAssociative();
 
         return $this->render('score/global_ranking.html.twig', [
             'scores' => $scores,
