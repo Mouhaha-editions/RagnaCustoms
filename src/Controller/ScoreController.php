@@ -89,7 +89,6 @@ class ScoreController extends AbstractController
                 WHERE sg.id IS NOT null and sg.wip != true
                 GROUP BY s.hash,s.difficulty,s.user_id
             ) AS ms  GROUP BY user_id ORDER BY score DESC';
-        VarDumper::dump($sql);
         $stmt = $conn->prepare($sql);
         $scores = $stmt->execute()->fetchAllAssociative();
 //        VarDumper::dump(
