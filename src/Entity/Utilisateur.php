@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
  * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
+ * @method string getUserIdentifier()
  */
 class Utilisateur implements UserInterface
 {
@@ -741,5 +742,10 @@ class Utilisateur implements UserInterface
         }
 
         return $this;
+    }
+
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement @method string getUserIdentifier()
     }
 }
