@@ -29,9 +29,10 @@ class UserController extends AbstractController
      * @Route("/user/{id}", name="user_profile")
      * @param Request $request
      * @param Utilisateur $utilisateur
-     * @param TranslatorInterface $translator
+     * @param PaginationService $paginationService
      * @param StatisticService $statisticService
      * @param ScoreRepository $scoreRepository
+     * @param ScoreHistoryRepository $scoreHistoryRepository
      * @param UtilisateurRepository $utilisateurRepository
      * @param GamificationService $gamificationService
      * @return Response
