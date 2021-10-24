@@ -18,7 +18,13 @@
         <th>{{ playlist.label }}</th>
         <th>{{ playlist.songs|length }}</th>
         <th>{{ playlist.isPublic?"<i class='fas fa-check text-success'></i>":"<i class='fas fa-close text-danger'></i>" }}</th>
-        <th><a href="{{ url("playlist_show",{id:playlist.id}) }}"><i class="fas fa-eye"></i></a> <br/>soon edit, delete</th>
+        <th>
+            <a href="{{ url("playlist_show",{id:playlist.id}) }}"><i class="fas fa-eye"></i></a>
+            <a class="text-info"  href="{{ url("playlist_edit",{id:playlist.id}) }}"><i class="fas fa-edit"></i></a>
+            <a class="text-danger"
+               data-confirm="{{ "You are going to delete a playlist, do you want to continue?" }}"
+               href="{{ url("playlist_delete",{id:playlist.id}) }}"><i class="fas fa-trash"></i></a>
+        </th>
     </tr>
     {% else %}
     <tr>
