@@ -44,6 +44,14 @@ class PlaylistController extends AbstractController
             ->where('playlist = :playlist')
             ->setParameter("playlist", $playlist)
         ->addOrderBy('s.name');
+        if ($request->get('onclick_dl')) {
+            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
+            return $this->redirect("ragnac://install/" . implode('-', array_map(function ($id) {
+                    return array_pop($id);
+                }, $ids)));
+        }
+
+
         $songs = $paginationService->setDefaults(72)->process($qb, $request);
         return $this->render('playlist/show.html.twig', [
             'playlist' => $playlist,
