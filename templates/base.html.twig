@@ -25,7 +25,7 @@
         <meta property="og:image" content="https://ragnacustoms.com/apps/logo.png"/>
     {% endblock %}
 </head>
-<body class="{{ app.request.cookies.get('light-mode','light') }}">
+<body class="{{ app.request.cookies.get('light-mode','dark') }}">
 {% set currentSeason = songService.currentSeason %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/"><img src="/apps/logo.png" class="img-fluid" alt="logo"/> RagnaCustoms</a>
@@ -138,17 +138,17 @@
                 <a class="nav-link"  title="How to ?" href="{{ url('howto') }}"><i
                             class="fas fa-question-circle"></i></a>
             </li>
-            <li class="nav-item pt-1">
-                <input id="chkSwitch" type="checkbox"
-                       data-toggle="switchbutton"
-                       data-size="sm"
-                       data-onlabel="Dark mode"
-                       data-offlabel="Light "
-                       data-onstyle="dark"
-                       data-offstyle="light"
-                        {{ app.request.cookies.get('light-mode') == "dark" ?"checked='checked'":'' }}
-                />
-            </li>
+{#            <li class="nav-item pt-1">#}
+{#                <input id="chkSwitch" type="checkbox"#}
+{#                       data-toggle="switchbutton"#}
+{#                       data-size="sm"#}
+{#                       data-onlabel="Dark mode"#}
+{#                       data-offlabel="Light "#}
+{#                       data-onstyle="dark"#}
+{#                       data-offstyle="light"#}
+{#                        {{ app.request.cookies.get('light-mode') == "dark" ?"checked='checked'":'' }}#}
+{#                />#}
+{#            </li>#}
         </ul>
     </div>
 
