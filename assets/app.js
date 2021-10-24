@@ -25,6 +25,7 @@ require('bootstrap/js/dist/popover');
 import "select2/dist/js/select2.full.min";// const app = require('./js/utils/core');
 
 $(function () {
+
     $(document).on('change','input[type="file"]', function (e) {
         let fileName = e.target.files[0].name;
         $('.custom-file-label').html(fileName);
@@ -58,7 +59,6 @@ $(function () {
         }
     }, 1000);
 })
-
 
 const copyToClipboard = str => {
     const el = document.createElement('textarea');
