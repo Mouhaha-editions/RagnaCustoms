@@ -15,7 +15,7 @@
                             converted
                         </div>
                     {% endif %}
-                    <img width="100%" data-src="/covers/{{ song.id ~ song.coverImageExtension }}"
+                    <img  data-src="/covers/{{ song.id ~ song.coverImageExtension }}"
                          class="lazyload img-fluid rounded thumbnail"
                          alt="cover">
                 </figure>
@@ -24,7 +24,7 @@
             <div class="song-preview pl-2">
                 <p class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.name }}</a></p>
                 <p class="category"><a
-                            href="{{ url('home') }}?search=artist:{{ song.authorName }}">{{ song.authorName }}</a></p>
+                            href="{{ url('home') }}?search=artist%3A{{ song.authorName }}">{{ song.authorName }}</a></p>
                 <p class="creator">Mapped by :
                     <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
                     {# <a href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">{{ song.levelAuthorName }}</a> #}
@@ -70,7 +70,7 @@
                 </div>
 
                 <a href="{{ url('song_detail',{slug:song.slug}) }}">
-                    <img width="100%" data-src="/covers/{{ song.id ~ song.coverImageExtension }}"
+                    <img data-src="/covers/{{ song.id ~ song.coverImageExtension }}"
                          class="lazyload img-fluid rounded thumbnail"
                          alt="cover"/>
                 </a>
@@ -80,7 +80,7 @@
             <div class="song-preview pl-2">
                 <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.name }}</a></div>
                 <div class="category"><a
-                            href="{{ url('home') }}?search=artist:{{ song.authorName }}">{{ song.authorName }}</a></div>
+                            href="{{ url('home') }}?search=artist%3A{{ song.authorName }}">{{ song.authorName }}</a></div>
                 <div class="creator">Mapped by :
                     <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
                     {# <a href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">{{ song.levelAuthorName }}</a> #}
