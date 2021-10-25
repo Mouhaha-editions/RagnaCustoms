@@ -366,6 +366,18 @@ class SongsController extends AbstractController
         ]);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+    
     /**
      * @Route("/", name="home")
      * @param Request $request
@@ -440,6 +452,16 @@ class SongsController extends AbstractController
             }
         }
         $qb->andWhere('s.moderated = true');
+        
+        //get the 'type' param (added for ajax search)
+        $type = $request->get('type',null);
+        //check if this is an ajax request
+        $ajaxRequest = $type == 'ajax';
+        //remove the 'type' parameter so pagination does not break
+        if($ajaxRequest){
+            $request->query->remove('type');
+        }
+       
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
             switch ($exp[0]) {
@@ -473,6 +495,20 @@ class SongsController extends AbstractController
         }
         $qb->andWhere("s.isDeleted != true");
         $pagination = $paginationService->setDefaults(72)->process($qb, $request);
+
+        //if this is an ajax request, send the HTML twig back to the calling fn in a json response
+        if($ajaxRequest){
+            //get the html from the twig
+            $html = $this->renderView('songs/partial/song_row_div.html.twig', [
+                'songs' => $pagination
+            ]);
+            //send the html back in json
+            return new JsonResponse([
+                "html" => $html
+            ]);
+        }
+
+
         if ($pagination->isPartial()) {
             return $this->render('songs/partial/song_row.html.twig', [
                 'songs' => $pagination
