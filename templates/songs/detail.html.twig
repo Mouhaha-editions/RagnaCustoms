@@ -241,7 +241,7 @@
                 <div class="d-flex rating-wrap">
                     <label>{{ "Artist"|trans }} : </label>
                     <span>
-                        <a href="{{ url('home') }}?search=artist%3A{{ song.authorName }}">
+                        <a href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">
                             {{ song.authorName }}</a>
                     </span>
                 </div>
