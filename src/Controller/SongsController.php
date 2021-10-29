@@ -52,20 +52,20 @@ class SongsController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/songs/update", name="sitemap_song")
-     */
-    public function udpate(SongRepository $songRepository, SluggerInterface $slugger)
-    {
-        $em = $this->getDoctrine()->getManager();
-        foreach ($songRepository->findAll() as $song) {
-            $song->setSlug($slugger->slug($song->getName()));
-            $em->persist($song);
-            $em->flush();
-        }
-
-        return new JsonResponse([]);
-    }
+//    /**
+//     * @Route("/songs/update", name="sitemap_song")
+//     */
+//    public function udpate(SongRepository $songRepository, SluggerInterface $slugger)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//        foreach ($songRepository->findAll() as $song) {
+//            $song->setSlug($slugger->slug($song->getName()));
+//            $em->persist($song);
+//            $em->flush();
+//        }
+//
+//        return new JsonResponse([]);
+//    }
 
     /**
      * @Route("/rss.xml", name="rss_song")
