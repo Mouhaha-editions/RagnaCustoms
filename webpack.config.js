@@ -23,6 +23,7 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('overlay_editor', './assets/overlay_editor.js')
     .addEntry('ragnabeat', './assets/ragna-beat.js')
+    .addEntry('ajax-search', './assets/js/ajax-search.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
