@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
  {% block metas %}
-     <meta property="description" value="{{ playlist.description}}">
+     <meta name="description" value="{{ playlist.description}}">
      <meta property="og:description" value="{{ playlist.description}}">
      <meta property="og:url" content="{{ url('playlist_show',{id:playlist.id}) }}"/>
      <meta property="og:type" content="website"/>
