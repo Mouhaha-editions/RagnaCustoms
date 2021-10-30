@@ -225,6 +225,11 @@ class Song
      */
     private $playlists;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isExplicit;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -982,6 +987,18 @@ class Song
         if ($this->playlists->removeElement($playlist)) {
             $playlist->removeSong($this);
         }
+
+        return $this;
+    }
+
+    public function getIsExplicit(): ?bool
+    {
+        return $this->isExplicit;
+    }
+
+    public function setIsExplicit(?bool $isExplicit): self
+    {
+        $this->isExplicit = $isExplicit;
 
         return $this;
     }

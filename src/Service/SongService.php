@@ -361,6 +361,7 @@ class SongService
         $song->setName(trim($json->_songName));
         $song->setLastDateUpload(new DateTime());
         $song->setSubName($json->_songSubName);
+        $song->setIsExplicit(isset($json->_explicit) ? (bool)$json->_explicit:false);
         $song->setAuthorName($json->_songAuthorName);
         $song->setLevelAuthorName($json->_levelAuthorName);
         $song->setBeatsPerMinute($json->_beatsPerMinute);
