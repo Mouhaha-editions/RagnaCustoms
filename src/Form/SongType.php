@@ -50,7 +50,11 @@ class SongType extends AbstractType
             ])
             ->add('wip', null, [
                 'label' => "Work in progress"
-            ])->add('converted', null, [
+            ])
+            ->add('isExplicit', null, [
+                'label' => "Song containing explicit content"
+            ])
+            ->add('converted', null, [
                 'label' => "is a converted map ?"
             ])
             ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-success']]);
