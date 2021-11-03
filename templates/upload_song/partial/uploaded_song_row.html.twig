@@ -19,6 +19,6 @@
 <tr class="see-more-delete">
     <td colspan="11" class="text-center">
         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-        {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }}
+        {{ macro_pagination.paginate(songs) }}
     </td>
 </tr>
