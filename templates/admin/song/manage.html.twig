@@ -115,7 +115,7 @@
                         {% include 'upload_song/partial/button_moderation.html.twigsongs/partial/song_row.html.twig' with {songs:songs} %}
 
                         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-                        {{ macro_pagination.seeMore(songs,"see more"|trans) }}
+                        {{ macro_pagination.paginate(songs) }}
 
                     </div>
 
