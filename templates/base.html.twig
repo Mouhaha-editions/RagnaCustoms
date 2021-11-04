@@ -159,7 +159,7 @@
     <a href="{{ url("score_season_ranking") }}">{{ currentSeason.label }}</a> ends in <span id="demo"></span>
 </div>
 <div class="container">
-    <div class="runes"><img width="512" height="512" src="/apps/runes.png" style="max-width:100%" alt="runes"/></div>
+    <div class="runes"><img width="512" src="/apps/runes.png"  alt="runes"/></div>
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="alert alert-dismissible alert-{{ label }}">
@@ -176,13 +176,13 @@
 <hr/>
 <div class="p-3 text-center">
     discuss with us :&nbsp;
-    <a class="text" href="https://discord.gg/nRnsgCCBvq" target="_blank"><i class="fab fa-discord"></i>
+    <a class="text" href="https://discord.gg/nRnsgCCBvq" rel="noreferrer" target="_blank"><i class="fab fa-discord"></i>
     </a>&nbsp;
-    <a class="text" href="https://www.facebook.com/RagnaCustoms" target="_blank"><i
+    <a class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank"><i
                 class="fab fa-facebook"></i></a>&nbsp;
-    <a class="text" href="https://twitter.com/ragnacustoms" target="_blank"><i
+    <a class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer" target="_blank"><i
                 class="fab fa-twitter"></i></a>&nbsp;
-    <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" target="_blank"><i
+    <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer" target="_blank"><i
                 class="fab fa-reddit"></i></a>
     <br/>
     {{ "RagnaCustoms is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>"|trans|raw }}
