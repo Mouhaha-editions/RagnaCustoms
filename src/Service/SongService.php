@@ -11,21 +11,13 @@ use App\Entity\SongFeedback;
 use App\Entity\SongHash;
 use App\Entity\Utilisateur;
 use App\Helper\AIMapper;
-use App\Repository\DifficultyRankRepository;
-use App\Repository\OverlayRepository;
-use App\Repository\SeasonRepository;
-use App\Repository\SongRepository;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
-use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
-use FFMpeg\Format\Audio\Mp3;
-use FFMpeg\Format\Audio\Vorbis;
-use FFMpeg\Format\Video\Ogg;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -81,88 +73,6 @@ class SongService
         return $ai->map($result, "C:\Users\pierr\Documents\Ragnarock\CustomSongs\otherworld\Level" . $level . ".dat");
     }
 
-    public function emulatorFileDispatcher(Song $song, bool $force = false)
-    {
-        if ($song->getInfoDatFile() !== null && !$force) {
-            return null;
-        }
-        $file = $this->kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip";
-        $uniqBeat = "/ragna-beat/" . uniqid();
-        $unzipFolder = $this->kernel->getProjectDir() . "/public" . $uniqBeat;
-        mkdir($this->kernel->getProjectDir() . "/public" . $uniqBeat);
-        $zip = new ZipArchive();
-//        try {
-
-        $files = [];
-        $getpreview = false;
-        $previewFile = "";
-        $previewLocalnameFile = "";
-        $songfile = "";
-        try {
-            if ($zip->open($file) === TRUE) {
-                for ($i = 0; $i < $zip->numFiles; $i++) {
-
-                    $filename = $zip->getNameIndex($i);
-                    $elt = $zip->getFromIndex($i);
-                    $exp = explode("/", $filename);
-                    if (end($exp) != "") {
-                        $fileinfo = pathinfo($filename);
-                        $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
-                        if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
-                            $zip->renameName($filename, strtolower($filename));
-                            $song->setInfoDatFile($uniqBeat . "/" . $fileinfo['basename']);
-                        }
-                        if (preg_match("#\.ogg#isU", $fileinfo['basename'])) {
-                            if (preg_match("#preview\.ogg#isU", $fileinfo['basename'])) {
-                                $getpreview = true;
-                            } else {
-                                $songfile = $this->kernel->getProjectDir() . "/public" . $uniqBeat . "/" . $fileinfo['basename'];
-                                $previewFile = $this->kernel->getProjectDir() . "/public" . $uniqBeat . "/preview.ogg";
-                                $previewLocalnameFile = $exp[0] . '/preview.ogg';
-                            }
-                        }
-                        if (preg_match("#\.dat#isU", $fileinfo['basename'])) {
-                            $files[] = $this->kernel->getProjectDir() . "/public" . $uniqBeat . "/" . $fileinfo['basename'];
-                        }
-                    }
-                }
-//                $filename = $song->getInfoDatFile();
-//                $song->setGuid(md5_file($this->kernel->getProjectDir() . "/public/" . $filename));
-//                $song->
-                $hash = $this->HashSong($files);
-
-                if ($song->getNewGuid() !== $hash) {
-                    $version = $this->em->getRepository(SongHash::class)->getLastVersion($song) + 1;
-                    $newHash = new SongHash();
-                    $newHash->setSong($song);
-                    $newHash->setHash($hash);
-                    $newHash->setVersion($version);
-                    $song->addSongHash($newHash);
-                    $this->em->persist($newHash);
-                }
-
-                $song->setNewGuid($hash);
-                $this->em->flush();
-
-                if (!$getpreview) {
-                    $ffprobe = FFProbe::create([
-                        'ffmpeg.binaries' => '/usr/bin/ffmpeg',
-                        'ffprobe.binaries' => '/usr/bin/ffprobe'
-                    ]);
-                    $probe = $ffprobe->format($songfile);
-                    $durationMp3 = (int)($probe->get('duration') / 2);
-                    exec('ffmpeg -y -i "' . $songfile . '"  -ss ' . $durationMp3 . ' -t 5 -c:a copy -b:a 96k "' . $previewFile . '"');
-
-                    $zip->addFile($previewFile, $previewLocalnameFile);
-                }
-                $zip->close();
-            }
-        } catch (Exception $e) {
-            VarDumper::dump($song->getId());
-        }
-
-    }
-
     public function newFeedback(SongFeedback $feedback)
     {
         /** @var SongHash $songHash */
@@ -197,37 +107,9 @@ class SongService
         }
     }
 
-    public function HashSong(array $files)
-    {
-        $md5s = [];
-        foreach ($files as $file) {
-            $md5s[] = md5_file($file);
-        }
-        sort($md5s);
-        $str = implode('', $md5s);
-        return md5($str);
-    }
-
     public function getByHash($hash)
     {
         return $this->em->getRepository(Song::class)->findOneByHash($hash);
-    }
-
-    /**
-     * @return Collection|SongFeedback[]
-     */
-    public function getSongFeedbackPublic(Song $song)
-    {
-        $hashes = array_map(function (SongHash $hash) {
-            return $hash->getHash();
-        }, $song->getSongHashes()->toArray());
-        return $this->em->getRepository(SongFeedback::class)
-            ->createQueryBuilder('f')
-            ->where('f.hash IN (:hashes)')
-            ->andWhere('f.isPublic = true')
-            ->andWhere('f.isModerated = true')
-            ->setParameter('hashes', $hashes)
-            ->getQuery()->getResult();
     }
 
     /**
@@ -268,6 +150,23 @@ class SongService
             ->orWhere('(f.hash IN (:hashes) AND f.user = :user)')
             ->setParameter('hashes', $hashes)
             ->setParameter('user', $user)
+            ->getQuery()->getResult();
+    }
+
+    /**
+     * @return Collection|SongFeedback[]
+     */
+    public function getSongFeedbackPublic(Song $song)
+    {
+        $hashes = array_map(function (SongHash $hash) {
+            return $hash->getHash();
+        }, $song->getSongHashes()->toArray());
+        return $this->em->getRepository(SongFeedback::class)
+            ->createQueryBuilder('f')
+            ->where('f.hash IN (:hashes)')
+            ->andWhere('f.isPublic = true')
+            ->andWhere('f.isModerated = true')
+            ->setParameter('hashes', $hashes)
             ->getQuery()->getResult();
     }
 
@@ -361,7 +260,7 @@ class SongService
         $song->setName(trim($json->_songName));
         $song->setLastDateUpload(new DateTime());
         $song->setSubName($json->_songSubName);
-        $song->setIsExplicit(isset($json->_explicit) ? (bool)$json->_explicit:false);
+        $song->setIsExplicit(isset($json->_explicit) ? $json->_explicit == "true" : false);
         $song->setAuthorName($json->_songAuthorName);
         $song->setLevelAuthorName($json->_levelAuthorName);
         $song->setBeatsPerMinute($json->_beatsPerMinute);
@@ -453,10 +352,24 @@ class SongService
 
     }
 
-
     function remove_utf8_bom($text)
     {
         return $this->stripUtf16Le($this->stripUtf16Be($this->stripUtf8Bom($text)));//mb_convert_encoding($text, 'UTF-8', 'UCS-2LE');
+    }
+
+    function stripUtf16Le($string)
+    {
+        return preg_replace('/^\xff\xfe/', '', $string);
+    }
+
+    function stripUtf16Be($string)
+    {
+        return preg_replace('/^\xfe\xff/', '', $string);
+    }
+
+    function stripUtf8Bom($string)
+    {
+        return preg_replace('/^\xef\xbb\xbf/', '', $string);
     }
 
     public function rrmdir($dir)
@@ -475,19 +388,97 @@ class SongService
         }
     }
 
-    function stripUtf8Bom($string)
+    public function emulatorFileDispatcher(Song $song, bool $force = false)
     {
-        return preg_replace('/^\xef\xbb\xbf/', '', $string);
+        if ($song->getInfoDatFile() !== null && !$force) {
+            return null;
+        }
+        $file = $this->kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip";
+        $uniqBeat = "/ragna-beat/" . uniqid();
+        $unzipFolder = $this->kernel->getProjectDir() . "/public" . $uniqBeat;
+        mkdir($this->kernel->getProjectDir() . "/public" . $uniqBeat);
+        $zip = new ZipArchive();
+//        try {
+
+        $files = [];
+        $getpreview = false;
+        $previewFile = "";
+        $previewLocalnameFile = "";
+        $songfile = "";
+        try {
+            if ($zip->open($file) === TRUE) {
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+
+                    $filename = $zip->getNameIndex($i);
+                    $elt = $zip->getFromIndex($i);
+                    $exp = explode("/", $filename);
+                    if (end($exp) != "") {
+                        $fileinfo = pathinfo($filename);
+                        $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
+                        if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
+                            $zip->renameName($filename, strtolower($filename));
+                            $song->setInfoDatFile($uniqBeat . "/" . $fileinfo['basename']);
+                        }
+                        if (preg_match("#\.ogg#isU", $fileinfo['basename'])) {
+                            if (preg_match("#preview\.ogg#isU", $fileinfo['basename'])) {
+                                $getpreview = true;
+                            } else {
+                                $songfile = $this->kernel->getProjectDir() . "/public" . $uniqBeat . "/" . $fileinfo['basename'];
+                                $previewFile = $this->kernel->getProjectDir() . "/public" . $uniqBeat . "/preview.ogg";
+                                $previewLocalnameFile = $exp[0] . '/preview.ogg';
+                            }
+                        }
+                        if (preg_match("#\.dat#isU", $fileinfo['basename'])) {
+                            $files[] = $this->kernel->getProjectDir() . "/public" . $uniqBeat . "/" . $fileinfo['basename'];
+                        }
+                    }
+                }
+//                $filename = $song->getInfoDatFile();
+//                $song->setGuid(md5_file($this->kernel->getProjectDir() . "/public/" . $filename));
+//                $song->
+                $hash = $this->HashSong($files);
+
+                if ($song->getNewGuid() !== $hash) {
+                    $version = $this->em->getRepository(SongHash::class)->getLastVersion($song) + 1;
+                    $newHash = new SongHash();
+                    $newHash->setSong($song);
+                    $newHash->setHash($hash);
+                    $newHash->setVersion($version);
+                    $song->addSongHash($newHash);
+                    $this->em->persist($newHash);
+                }
+
+                $song->setNewGuid($hash);
+                $this->em->flush();
+
+                if (!$getpreview) {
+                    $ffprobe = FFProbe::create([
+                        'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+                        'ffprobe.binaries' => '/usr/bin/ffprobe'
+                    ]);
+                    $probe = $ffprobe->format($songfile);
+                    $durationMp3 = (int)($probe->get('duration') / 2);
+                    exec('ffmpeg -y -i "' . $songfile . '"  -ss ' . $durationMp3 . ' -t 5 -c:a copy -b:a 96k "' . $previewFile . '"');
+
+                    $zip->addFile($previewFile, $previewLocalnameFile);
+                }
+                $zip->close();
+            }
+        } catch (Exception $e) {
+            VarDumper::dump($song->getId());
+        }
+
     }
 
-    function stripUtf16Le($string)
+    public function HashSong(array $files)
     {
-        return preg_replace('/^\xff\xfe/', '', $string);
-    }
-
-    function stripUtf16Be($string)
-    {
-        return preg_replace('/^\xfe\xff/', '', $string);
+        $md5s = [];
+        foreach ($files as $file) {
+            $md5s[] = md5_file($file);
+        }
+        sort($md5s);
+        $str = implode('', $md5s);
+        return md5($str);
     }
 
 }
