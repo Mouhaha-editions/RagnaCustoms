@@ -110,7 +110,7 @@
                     {
                         "@context": "https://schema.org",
                         "@type": "CreativeWork",
-                        "author": "{{ song.|escape }}",
+                        "author": "{{ song.levelAuthorName|escape }}",
                         "image": "https://ragnacustoms.com/covers/{{ song.id ~ song.coverImageExtension }}",
                         "name": "{{ song.name|escape }}",
                         "aggregateRating": {
