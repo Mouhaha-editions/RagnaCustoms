@@ -17,6 +17,7 @@ import 'lazysizes';
 
 // start the Stimulus application
 import 'bootstrap';
+import 'tarteaucitronjs';
 
 $(document).on('click', 'form .rating', function () {
     let t = $(this);

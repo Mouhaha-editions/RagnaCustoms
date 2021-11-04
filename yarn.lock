@@ -8175,6 +8175,11 @@ tar@^6.0.2:
     mkdirp "^1.0.3"
     yallist "^4.0.0"
 
+tarteaucitronjs@^1.9.5:
+  version "1.9.5"
+  resolved "https://registry.yarnpkg.com/tarteaucitronjs/-/tarteaucitronjs-1.9.5.tgz#905572bcfdfd1ae102166530f6efcff3d848ce46"
+  integrity sha512-csUmmbHAtlDQLwCjj++VTHjGMxmZX5cJaqH+bASR38psBr7taonmu/DkXhLDzBbZImZqWuHi28dYahz0bH8Fvw==
+
 terser-webpack-plugin@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-5.1.1.tgz#7effadee06f7ecfa093dbbd3e9ab23f5f3ed8673"
