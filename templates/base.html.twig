@@ -25,7 +25,7 @@
 <body class="{{ app.request.cookies.get('light-mode','dark') }}">
 {% set currentSeason = songService.currentSeason %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/"><img src="/apps/logo.png" class="img-fluid" alt="logo"/> RagnaCustoms</a>
+    <a class="navbar-brand" href="/"><img width="45" height="45" src="/apps/logo.png" class="img-fluid" alt="logo"/> RagnaCustoms</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -154,7 +154,7 @@
     <a href="{{ url("score_season_ranking") }}">{{ currentSeason.label }}</a> ends in <span id="demo"></span>
 </div>
 <div class="container">
-    <div class="runes"><img width="512" src="/apps/runes.png"  alt="runes"/></div>
+    <div class="runes"><img width="512" height="512" src="/apps/runes.png"  alt="runes"/></div>
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="alert alert-dismissible alert-{{ label }}">
