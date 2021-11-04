@@ -6,6 +6,11 @@
       "src": "/apps/logo.png",
       "sizes": "32x32",
       "type": "image/png"
+    },{
+      "src": "/apps/maskable_icon.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/apps/logo.png",
@@ -21,7 +26,7 @@
   "start_url": "/",
   "orientation": "landscape",
   "display": "standalone",
-  "theme_color": "#fff",
+  "theme_color": "#205294",
   "background_color": "#f1f1f1",
   "scope": "/"
 }
