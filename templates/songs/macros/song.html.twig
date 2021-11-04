@@ -39,6 +39,9 @@
         </div>
     {% endif %}
 {% endmacro %}
+
+
+
 {% macro description2(song) %}
     {% if song is null %}
         deleted
@@ -70,7 +73,7 @@
                 </div>
 
                 <a href="{{ url('song_detail',{slug:song.slug}) }}">
-                    <img src="#" data-src="/covers/{{ song.id ~ song.coverImageExtension }}"
+                    <img itemprop="image" src="/covers/{{ song.id ~ song.coverImageExtension }}" data-src="/covers/{{ song.id ~ song.coverImageExtension }}"
                          class="lazyload img-fluid rounded thumbnail"
                          alt="cover"/>
                 </a>
@@ -78,11 +81,11 @@
 
 
             <div class="song-preview pl-2">
-                <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.name }}</a></div>
+                <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song.name }}</a></div>
                 <div class="category"><a
                             href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a></div>
                 <div class="creator">Mapped by :
-                    <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
+                    <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}" itemprop="author">{{ song.levelAuthorName }}</a>
                     {# <a href="{{ url('home') }}?search=mapper:{{ song.levelAuthorName }}">{{ song.levelAuthorName }}</a> #}
                 </div>
                 <div class="difficulties">Difficulties :
