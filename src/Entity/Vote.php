@@ -84,6 +84,11 @@ class Vote
         return $this;
     }
 
+    public function getAverage()
+    {
+        return ($this->getLevelQuality()+$this->getReadability()+$this->getFlow()+$this->getRhythm()+$this->getFunFactor()+$this->getPatternQuality()) /6;
+    }
+
     public function getSong(): ?Song
     {
         return $this->song;

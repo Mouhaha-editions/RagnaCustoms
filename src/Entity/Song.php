@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\SongRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Timestampable\Traits\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -242,8 +242,8 @@ class Song
 
     public function isRanked()
     {
-        foreach($this->getSongDifficulties() as $difficulty){
-            foreach ($difficulty->getSeasons() AS $season) {
+        foreach ($this->getSongDifficulties() as $difficulty) {
+            foreach ($difficulty->getSeasons() as $season) {
                 if ($season->isActive()) {
                     return true;
                 }
@@ -251,13 +251,18 @@ class Song
         }
         return false;
     }
+
+    /**
+     * @return Collection|SongDifficulty[]
+     */
+    public function getSongDifficulties(): Collection
+    {
+        return $this->songDifficulties;
+    }
+
     public function __toString()
     {
-       return $this->getName();
-}
-    public function getId(): ?int
-    {
-        return $this->id;
+        return $this->getName();
     }
 
     public function getName(): ?string
@@ -270,6 +275,11 @@ class Song
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getSubName(): ?string
@@ -374,12 +384,14 @@ class Song
         $sec = $this->approximativeDuration - $min * 60;
         return $min . "m " . $sec . "s";
     }
+
     public function getApproximativeDurationMin(): ?string
     {
         $min = floor($this->approximativeDuration / 60);
         $sec = $this->approximativeDuration - $min * 60;
         return $min . ":" . $sec . "";
     }
+
     public function getApproximativeDuration(): ?int
     {
         return $this->approximativeDuration;
@@ -409,7 +421,6 @@ class Song
         $file = explode(".", $this->coverImageFileName);
         return "." . end($file);
     }
-
 
     public function getCoverImageFileName(): ?string
     {
@@ -445,14 +456,6 @@ class Song
         $this->timeOffset = $timeOffset;
 
         return $this;
-    }
-
-    /**
-     * @return Collection|SongDifficulty[]
-     */
-    public function getSongDifficulties(): Collection
-    {
-        return $this->songDifficulties;
     }
 
     public function addSongDifficulty(SongDifficulty $songDifficulty): self
@@ -553,17 +556,6 @@ class Song
         return $this;
     }
 
-    /**
-     * @return Collection|Vote[]
-     */
-    public function getVotes(): Collection
-    {
-        $song = $this;
-        return $this->votes->filter(function (Vote $vote) use ($song) {
-            return $song->getLastDateUpload() <= $vote->getUpdatedAt();
-        });
-    }
-
     public function addVote(Vote $vote): self
     {
         if (!$this->votes->contains($vote)) {
@@ -636,18 +628,6 @@ class Song
         return $this;
     }
 
-    public function getLastDateUpload(): ?DateTimeInterface
-    {
-        return $this->lastDateUpload;
-    }
-
-    public function setLastDateUpload(DateTimeInterface $lastDateUpload): self
-    {
-        $this->lastDateUpload = $lastDateUpload;
-
-        return $this;
-    }
-
     public function getViews(): ?int
     {
         return $this->views;
@@ -665,8 +645,21 @@ class Song
      */
     public function isNew(): bool
     {
-        return $this->getLastDateUpload() >= (new \DateTime())->modify('-3 days');
-}
+        return $this->getLastDateUpload() >= (new DateTime())->modify('-3 days');
+    }
+
+    public function getLastDateUpload(): ?DateTimeInterface
+    {
+        return $this->lastDateUpload;
+    }
+
+    public function setLastDateUpload(DateTimeInterface $lastDateUpload): self
+    {
+        $this->lastDateUpload = $lastDateUpload;
+
+        return $this;
+    }
+
     public function getConverted(): ?bool
     {
         return $this->converted;
@@ -678,7 +671,6 @@ class Song
 
         return $this;
     }
-
 
     public function getFunFactorAverage(): ?float
     {
@@ -693,6 +685,16 @@ class Song
         return $sum / count($votes);
     }
 
+    /**
+     * @return Collection|Vote[]
+     */
+    public function getVotes(): Collection
+    {
+        $song = $this;
+        return $this->votes->filter(function (Vote $vote) use ($song) {
+            return $song->getLastDateUpload() <= $vote->getUpdatedAt();
+        });
+    }
 
     public function getRhythmAverage(): ?float
     {
@@ -773,17 +775,17 @@ class Song
         return $this;
     }
 
+    public function getUniqDownloads()
+    {
+        return count($this->getDownloadCounters());
+    }
+
     /**
      * @return Collection|DownloadCounter[]
      */
     public function getDownloadCounters(): Collection
     {
         return $this->downloadCounters;
-    }
-
-    public function getUniqDownloads()
-    {
-        return count($this->getDownloadCounters());
     }
 
     public function addDownloadCounter(DownloadCounter $downloadCounter): self
@@ -808,17 +810,17 @@ class Song
         return $this;
     }
 
+    public function getUniqViews()
+    {
+        return count($this->getViewCounters());
+    }
+
     /**
      * @return Collection|ViewCounter[]
      */
     public function getViewCounters(): Collection
     {
         return $this->viewCounters;
-    }
-
-    public function getUniqViews()
-    {
-        return count($this->getViewCounters());
     }
 
     public function addViewCounter(ViewCounter $viewCounter): self
@@ -879,14 +881,6 @@ class Song
         return $this;
     }
 
-    /**
-     * @return Collection|SongHash[]
-     */
-    public function getSongHashes(): Collection
-    {
-        return $this->songHashes;
-    }
-
     public function addSongHash(SongHash $songHash): self
     {
         if (!$this->songHashes->contains($songHash)) {
@@ -921,11 +915,33 @@ class Song
         return $this;
     }
 
+    public function getBestRating()
+    {
+        $best = 0;
+        foreach ($this->getVotes() as $vote) {
+            if ($vote->getAverage() == 5) {
+                return 5;
+            }
+            if ($vote->getAverage() > $best) {
+                $best = $vote->getAverage();
+            }
+        }
+        return $best;
+    }
+
     public function getHashes()
     {
         return array_map(function (SongHash $hash) {
             return $hash->getHash();
         }, $this->getSongHashes()->toArray());
+    }
+
+    /**
+     * @return Collection|SongHash[]
+     */
+    public function getSongHashes(): Collection
+    {
+        return $this->songHashes;
     }
 
     public function getIsDeleted(): ?bool
