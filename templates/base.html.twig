@@ -77,7 +77,7 @@
             {% if app.request.locale == 'en' %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url("change_locale",{locale:"fr"}) }}">
-                        <img style="max-height:12px;" src="/flags/france.png" alt="fr"/>
+                        <img  height="12px" width="18px" src="/flags/france.png" alt="fr"/>
                     </a>
                 </li>
             {% else %}
@@ -159,7 +159,7 @@
     <a href="{{ url("score_season_ranking") }}">{{ currentSeason.label }}</a> ends in <span id="demo"></span>
 </div>
 <div class="container">
-    <div class="runes"><img src="/apps/runes.png" style="max-width:100%" alt="runes"/></div>
+    <div class="runes"><img width="512" height="512" src="/apps/runes.png" style="max-width:100%" alt="runes"/></div>
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="alert alert-dismissible alert-{{ label }}">
