@@ -21,6 +21,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
+    .addEntry('bootstrap', './assets/bootstrap.js')
     .addEntry('overlay_editor', './assets/overlay_editor.js')
     .addEntry('ragnabeat', './assets/ragna-beat.js')
     .addEntry('ajax-search', './assets/js/ajax-search.js')
