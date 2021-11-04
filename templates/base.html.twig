@@ -22,7 +22,7 @@
     {% endblock %}
 
 </head>
-<script class="{{ app.request.cookies.get('light-mode','dark') }}">
+<body class="{{ app.request.cookies.get('light-mode','dark') }}">
 {% set currentSeason = songService.currentSeason %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/"><img src="/apps/logo.png" class="img-fluid" alt="logo"/> RagnaCustoms</a>
@@ -193,9 +193,9 @@
 <div id="variables"
 data-season-ends-at="{{ currentSeason.endDate.format('Y-m-d H:i:s') }}"
 ></div>
-
-<script src="https://tarteaucitron.io/load.js"></script>
-<script>tarteaucitron.init({
+<script src="https://tarteaucitron.io/load.js" async/>
+<script>
+tarteaucitron.init({
 // "privacyUrl": "", /* Privacy policy url */
 
 "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
@@ -236,6 +236,5 @@ tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */
 };
 (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
 </script>
-
 </body>
 </html>
