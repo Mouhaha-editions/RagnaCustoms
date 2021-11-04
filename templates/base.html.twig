@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
 
 {#        <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans+Condensed:wght@300&display=swap"#}
 {#              rel="stylesheet">#}
@@ -241,5 +240,7 @@ data-season-ends-at="{{ currentSeason.endDate.format('Y-m-d H:i:s') }}"
     };
     (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
 </script>
+{{ encore_entry_link_tags('app') }}
+
 </body>
 </html>
