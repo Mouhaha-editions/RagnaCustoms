@@ -21,7 +21,9 @@
             <div class="section-header">
                 <div class="section-header-info">
                     <h1 class="section-pretitle">{{ "Song details"|trans }}</h1>
-                    <h3 class="section-title">{% if song.wip %}<span class="text-danger">[WIP]</span> {% endif %}{{ song.name }} <small>{{ song.subName }}</small> - {{ song.authorName }}
+                    <h3 class="section-title">{% if song.wip %}<span
+                                class="text-danger">[WIP]</span> {% endif %}{{ song.name }}
+                        <small>{{ song.subName }}</small> - {{ song.authorName }}
                     </h3>
                 </div>
             </div>
@@ -48,7 +50,7 @@
                         <div class="badge badge-info">{{ songService.getSongFeedbackPublic(song)|length }}</div>
                     </a>
                 </li>
-                {% if song.user == app.user or is_granted('ROLE_ADMIN')  %}
+                {% if song.user == app.user or is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
                         <a class="nav-link "
                            data-toggle="tab" data-target="#statistics" type="button" role="tab"
@@ -58,15 +60,16 @@
                 {% endif %}
             </ul>
             <div class="tab-content" id="myTabContent">
-                {% if song.user == app.user or is_granted('ROLE_ADMIN') %} <div
-                        class="tab-pane fade show"
-                        id="statistics" role="tabpanel">
-                    <p>
-                        You love statistics ? me too, it's coming soon
-                        {% include 'songs/partial/statistics.html.twig' with {song:song} %}
+                {% if song.user == app.user or is_granted('ROLE_ADMIN') %}
+                    <div
+                            class="tab-pane fade show"
+                            id="statistics" role="tabpanel">
+                        <p>
+                            You love statistics ? me too, it's coming soon
+                            {% include 'songs/partial/statistics.html.twig' with {song:song} %}
 
-                    </p>
-                </div>
+                        </p>
+                    </div>
                 {% endif %}
                 <div
                         class="tab-pane fade show active"
@@ -126,36 +129,37 @@
                         class="tab-pane fade show"
                         id="leaderboard" role="tabpanel">
                     {% if song.wip %}
-                        <p>Not available when the song is  in "WIP" mode</p>
+                        <p>Not available when the song is in "WIP" mode</p>
                     {% else %}
-                    <div class="row">
-                        {% for level in levels %}
-                            <div class="col-md-4 mt-4 border-left border-right">
-                                <h3 class="text-center text-level-{{ level['level'] }}">Level {{ level['level'] }}</h3>
-                                <table class="table table-sm">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>User</th>
-                                        <th>Score</th>
-                                    </tr>
-                                    {% set imin = false %}
-                                    {% for score in level['scores'].entities %}
-
-                                        <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-level-{{ level['level'] }}"{% endif %}>
-                                            <td>{{ loop.index+(50*(level['scores'].current-1)) }}</td>
-                                            <td>{{ score.user.username }}</td>
-                                            <td class="text-right">{{ score.user.bestScore(score) }}</td>
-                                        </tr>
-                                    {% else %}
+                        <div class="row">
+                            {% for level in levels %}
+                                <div class="col-md-4 mt-4 border-left border-right">
+                                    <h3 class="text-center text-level-{{ level['level'] }}">
+                                        Level {{ level['level'] }}</h3>
+                                    <table class="table table-sm">
                                         <tr>
-                                            <td colspan="3">{{ "no score for now"|trans }}</td>
+                                            <th>#</th>
+                                            <th>User</th>
+                                            <th>Score</th>
                                         </tr>
-                                    {% endfor %}
-                                </table>
-                                {{ macro_pagination.paginate(level['scores']) }}
-                            </div>
-                        {% endfor %}
-                    </div>
+                                        {% set imin = false %}
+                                        {% for score in level['scores'].entities %}
+
+                                            <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-level-{{ level['level'] }}"{% endif %}>
+                                                <td>{{ loop.index+(50*(level['scores'].current-1)) }}</td>
+                                                <td>{{ score.user.username }}</td>
+                                                <td class="text-right">{{ score.user.bestScore(score) }}</td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="3">{{ "no score for now"|trans }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                    {{ macro_pagination.paginate(level['scores']) }}
+                                </div>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -183,38 +187,38 @@
 
                 <a href="{{ url('song_direct_download',{id: song.id}) }}" class="btn btn-success">Download</a>
             </div>
-          {% if song.wip %}
-              <div class="resume row pt-5 pb-5 text-center">
-                 This song is a "Work in progress"
-              </div>
-
-
-          {% else %}
-            <div class="resume row mt-2">
-
-                <div class="col-md-6 text-center border-right">
-                    <p class="numeric"><span>{{ song.downloads }}</span></p>
-                    <p class="description">{{ "Downloads"|trans }}</p>
+            {% if song.wip %}
+                <div class="resume row pt-5 pb-5 text-center">
+                    This song is a "Work in progress"
                 </div>
 
-                <div class="col-md-6 text-center">
-                    <p class="numeric"><span>{{ song.voteAverage|round(2, "floor") }}</span>/5</p>
-                    <div class="description">
-                        {{ macro_vote.starsDisplay(song.voteAverage|round(2, "floor")) }}
+
+            {% else %}
+                <div class="resume row mt-2">
+
+                    <div class="col-md-6 text-center border-right">
+                        <p class="numeric"><span>{{ song.downloads }}</span></p>
+                        <p class="description">{{ "Downloads"|trans }}</p>
                     </div>
-                    <small>{{ song.countVotes }} vote(s)</small>
-                </div>
 
-            </div>
-            <div class="text-center">
-                <button class="btn btn-block ajax-load ajax-modal-form  btn-sm btn-info mt-1 mb-2 song-review"
-                        data-toggle="modal"
-                        data-target="#reviewSong"
-                        data-refresh="true"
-                        data-url="{{ url('song_review',{id:song.id}) }}"
-                        data-song-id="{{ song.id }}"
-                >{{ "I want to vote"|trans }}</button>
-            </div>
+                    <div class="col-md-6 text-center">
+                        <p class="numeric"><span>{{ song.voteAverage|round(2, "floor") }}</span>/5</p>
+                        <div class="description">
+                            {{ macro_vote.starsDisplay(song.voteAverage|round(2, "floor")) }}
+                        </div>
+                        <small>{{ song.countVotes }} vote(s)</small>
+                    </div>
+
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-block ajax-load ajax-modal-form  btn-sm btn-info mt-1 mb-2 song-review"
+                            data-toggle="modal"
+                            data-target="#reviewSong"
+                            data-refresh="true"
+                            data-url="{{ url('song_review',{id:song.id}) }}"
+                            data-song-id="{{ song.id }}"
+                    >{{ "I want to vote"|trans }}</button>
+                </div>
 
             {% endif %}
             <h3 class="text-center">{{ "Informations"|trans }}</h3>
@@ -266,6 +270,20 @@
             </div>
         </div>
     </div>
+    <script type="application/ld+json">
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "Product",
+                        "author": "{{ song.levelAuthorName|escape }}",
+                        "image": "https://ragnacustoms.com/covers/{{ song.id ~ song.coverImageExtension }}",
+                        "name": "{{ (song.name~" - "~song.authorName)|escape }}"{% if song.countVotes is not null %},
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "reviewCount": "{{ song.countVotes ? song.countVotes : 0 }}",
+                            "ratingValue": "{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}"
+                        }{% endif %}
+                    }
+    </script>
     <div id="info-dat" data-file="{{ song.infoDatFile }}"></div>
 
 {% endblock %}
