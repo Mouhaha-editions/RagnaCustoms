@@ -59,7 +59,8 @@
                             <option {% if app.request.get('downloads_filter_order') == 4 %}selected="selected"{% endif %} value="4">{{ "Alphabetical"|trans }}</option>
                         </select>
                     </div>
-                    <div class="col-md-2 pt-4">
+                    <div class="col-md-2 form-group">
+                        <label>&nbsp;</label><br/>
                         <button type="submit" name="search_btn" value="1" class="btn btn-sm btn-primary">{{ "Filter songs"|trans }}</button>
                         <button data-toggle="tooltips" title="{{ "Download filtered selection"|trans }}" type="submit" name="onclick_dl" value="42" class="btn btn-sm btn-danger" data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}" ><i class="fas fa-download"></i></button>
                     </div>
@@ -68,38 +69,9 @@
         </div>
     </div>
 </div>
-{#        <div class="col-12">#}
-{#            <table  id="table-song"  class="table songs" >#}
-{#                    <tr class="table-header">#}
-{#                        <th class="table-header-column">#}
-{#                           {{ "Song"|trans }}#}
-{#                        </th>#}
-{#                        <th class="table-header-column padded">#}
-{#                            {{ "Note/sec"|trans }}#}
-{#                        </th>#}
-{#                        <th class="table-header-column padded">#}
-{#                            {{ "LastUpdate"|trans }}#}
-{#                        </th>#}
-{#                        <th class="table-header-column padded">#}
-{#                            {{ "Duration"|trans }}#}
-{#                        </th>#}
-{#                        <th class="table-header-column padded">#}
-{#                           {{ "BPM"|trans }}#}
-{#                        </th>#}
-{#                        <th class="table-header-column padded">#}
-{#                            {{ "Votes"|trans }}#}
-{#                        </th>#}
-{#                        <th class="table-header-column padded">#}
-{#                        </th>#}
-{#                        <th class="table-header-column padded-left"></th>#}
-{#                    </tr>#}
 
-{#                {% include 'songs/partial/song_row.html.twig' with {songs:songs} %}#}
-{#            </table>#}
             {% include 'songs/partial/song_row_div.html.twig' with {songs:songs} %}
 
-{#        </div>#}
-{#    </div>#}
 
 {% endblock %}
 

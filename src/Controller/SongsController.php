@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\DownloadCounter;
 use App\Entity\Playlist;
 use App\Entity\Score;
 use App\Entity\Song;
-use App\Entity\SongDifficulty;
 use App\Entity\SongFeedback;
 use App\Entity\ViewCounter;
 use App\Entity\Vote;
@@ -15,7 +13,6 @@ use App\Form\SongFeedbackType;
 use App\Repository\DownloadCounterRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongDifficultyRepository;
-use App\Repository\SongFeedbackRepository;
 use App\Repository\SongRepository;
 use App\Repository\ViewCounterRepository;
 use App\Repository\VoteRepository;
@@ -33,40 +30,71 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SongsController extends AbstractController
 {
+    private $paginate = 25;
+
     /**
-     * @Route("/songs.xml", name="sitemap_song")
+     * @Route("/songs.xml", name="sitemap_songs")
      */
     public function sitemap(SongRepository $songRepository)
     {
+        $artists = $songRepository->createQueryBuilder('s')
+            ->select('COUNT(Distinct(s.authorName))')
+            ->where("s.moderated = true")
+            ->andWhere("s.wip = false")
+            ->andWhere('s.isDeleted = false')->getQuery()
+            ->getOneOrNullResult();
         return $this->render('sitemap/index.html.twig', [
-            'songs' => $songRepository->findBy([
-                'moderated' => true,
-                "wip" => false
-            ])
+            'songs' => $songRepository->count([
+                    'moderated' => true,
+                    "wip" => false,
+                    "isDeleted" => false,
+                ]) / $this->paginate,
+            'artists' => array_pop($artists)/$this->paginate
         ]);
     }
 
-//    /**
-//     * @Route("/songs/update", name="sitemap_song")
-//     */
-//    public function udpate(SongRepository $songRepository, SluggerInterface $slugger)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        foreach ($songRepository->findAll() as $song) {
-//            $song->setSlug($slugger->slug($song->getName()));
-//            $em->persist($song);
-//            $em->flush();
-//        }
-//
-//        return new JsonResponse([]);
-//    }
+    /**
+     * @Route("/artists-{page}.xml", name="sitemap_artists_page")
+     * @param SongRepository $songRepository
+     * @return Response
+     */
+    public function sitemapArtistsPage(SongRepository $songRepository, int $page)
+    {
+        return $this->render('sitemap/artists.html.twig', [
+            'songs' => $songRepository->createQueryBuilder('s')
+                ->where("s.moderated = true")
+                ->andWhere("s.wip = false")
+                ->andWhere('s.isDeleted = false')
+                ->groupBy('s.authorName')
+                ->orderBy('s.authorName')
+                ->setFirstResult($page * $this->paginate)
+                ->setMaxResults($this->paginate)
+                ->getQuery()->getResult()
+        ]);
+    }
 
+    /**
+     * @Route("/songs-{page}.xml", name="sitemap_songs_page")
+     * @param SongRepository $songRepository
+     * @return Response
+     */
+    public function sitemapSongsPage(SongRepository $songRepository, int $page)
+    {
+        return $this->render('sitemap/songs.html.twig', [
+            'songs' => $songRepository->createQueryBuilder('s')
+                ->where("s.moderated = true")
+                ->andWhere("s.wip = false")
+                ->andWhere('s.isDeleted = false')
+                ->setFirstResult($page * $this->paginate)
+                ->setMaxResults($this->paginate)
+                ->orderBy('s.name')
+                ->getQuery()->getResult()
+        ]);
+    }
     /**
      * @Route("/rss.xml", name="rss_song")
      */
@@ -269,8 +297,8 @@ class SongsController extends AbstractController
                 $playlist->setUser($this->getUser());
                 $em->persist($playlist);
             }
-            foreach ($playlist->getSongs() AS $psong){
-                if($song->getId() === $psong->getId()){
+            foreach ($playlist->getSongs() as $psong) {
+                if ($song->getId() === $psong->getId()) {
                     return new JsonResponse([
                         "error" => true,
                         "errorMessage" => $translator->trans("Song already in playlist!"),
@@ -367,17 +395,6 @@ class SongsController extends AbstractController
     }
 
 
-
-
-
-
-
-
-
-
-
-
-    
     /**
      * @Route("/", name="home")
      * @param Request $request
@@ -405,7 +422,7 @@ class SongsController extends AbstractController
                 case 3 :
                     $qb->andWhere('rank.level BETWEEN 8 and 10');
                     break;
-                    case 6 :
+                case 6 :
                     $qb->andWhere('rank.level > 10');
                     break;
                 case 4 :
@@ -455,16 +472,16 @@ class SongsController extends AbstractController
             }
         }
         $qb->andWhere('s.moderated = true');
-        
+
         //get the 'type' param (added for ajax search)
-        $type = $request->get('type',null);
+        $type = $request->get('type', null);
         //check if this is an ajax request
         $ajaxRequest = $type == 'ajax';
         //remove the 'type' parameter so pagination does not break
-        if($ajaxRequest){
+        if ($ajaxRequest) {
             $request->query->remove('type');
         }
-       
+
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
             switch ($exp[0]) {
@@ -500,7 +517,7 @@ class SongsController extends AbstractController
         $pagination = $paginationService->setDefaults(72)->process($qb, $request);
 
         //if this is an ajax request, send the HTML twig back to the calling fn in a json response
-        if($ajaxRequest){
+        if ($ajaxRequest) {
             //get the html from the twig
             $html = $this->renderView('songs/partial/song_row_div.html.twig', [
                 'songs' => $pagination

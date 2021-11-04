@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    {% for song in songs %}
-    <url>
-        <loc>{{ url('song_detail',{slug:song.slug}) }}</loc>
-        <lastmod>{{ song.lastDateUpload.format('Y-m-d') }}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
+    <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {% for page in 0..songs %}
+        <sitemap>
+            <loc>{{ url('sitemap_songs_page',{page:page}) }}</loc>
+        </sitemap>
 {% endfor %}
-</urlset>
+    {% for page in 0..artists %}
+        <sitemap>
+            <loc>{{ url('sitemap_artists_page',{page:page}) }}</loc>
+        </sitemap>
+    {% endfor %}
+</sitemapindex>
