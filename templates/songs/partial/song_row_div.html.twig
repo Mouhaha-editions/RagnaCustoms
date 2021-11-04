@@ -112,7 +112,7 @@
                         "@type": "Product",
                         "author": "{{ song.levelAuthorName|escape }}",
                         "image": "https://ragnacustoms.com/covers/{{ song.id ~ song.coverImageExtension }}",
-                        "name": "{{ song.name|escape }}",
+                        "name": "{{ (song.name~" - "~song.authorName)|escape }}",
                         "aggregateRating": {
                             "@type": "AggregateRating",
                             "reviewCount": "{{ song.countVotes ? song.countVotes : 0  }}",
