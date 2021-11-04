@@ -34,7 +34,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SongsController extends AbstractController
 {
-    private $paginate = 25;
+    private $paginate = 50;
 
     /**
      * @Route("/songs.xml", name="sitemap_songs")
