@@ -115,7 +115,7 @@
                         "name": "{{ song.name|escape }}",
                         "aggregateRating": {
                             "@type": "AggregateRating",
-                            "reviewCount": "{{ song.countVotes }}",
+                            "reviewCount": "{{ song.countVotes ? song.countVotes : 0  }}",
                             "ratingValue": "{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}"
                         }
                     }
