@@ -67,66 +67,66 @@ $purple: #bc3ee3;
 $youtube: #ff0000;
 $twitch: #6f42c1;
 $twitch-hover:#673eb1;
-
-$themes: (
-        "light": (
-                "colors": (
-                        "primary": #c85319,
-                        "secondary": #c85319,
-                        "tertiary": #c85319
-                ),
-                "shades": (
-                        "shade-0": #efefef,
-                        "shade-1": #e1e1e1,
-                        "shade-2": #d8d8d8,
-                        "shade-3": #bbbbbb,
-                        "shade-4": #979797,
-                        "shade-5": #535353,
-                        "shade-6": #323232,
-                        "shade-7": #ffffff
-                )
-        ),
-        "dark": (
-                "colors": (
-                        "primary": #c85319,
-                        "secondary": #c85319,
-                        "tertiary": #c85319
-                ),
-                "shades": (
-                        "shade-0": #404447,
-                        "shade-1": #303437,
-                        "shade-2": #616161,
-                        "shade-3": #757575,
-                        "shade-4": #9e9e9e,
-                        "shade-5": #bdbdbd,
-                        "shade-6": #f5f5f5,
-                        "shade-7": #434242
-                )
-        )
-);
-$color-level-1: #c85319;
-$color-level-2: #c85319;
-$color-level-3: #c85319;
-$color-level-4: #c85319;
-$color-level-5: #c85319;
-$color-level-6: #c85319;
-$color-level-7: #c85319;
-$color-level-8: #c85319;
-$color-level-9: #c85319;
-$color-level-10: #c85319;
-
-$youtube: #c85319;
-$twitch: #c85319;
-$twitch-hover: #c85319;
-
-$success: #c85319;
-$danger: #c85319;
-$info: #c85319;
-$warning: #c85319;
-$primary: #c85319;
-$link-color:#c85319;
-$link-green:#c85319;
-$purple: #c85319;
+//
+//$themes: (
+//        "light": (
+//                "colors": (
+//                        "primary": #c85319,
+//                        "secondary": #c85319,
+//                        "tertiary": #c85319
+//                ),
+//                "shades": (
+//                        "shade-0": #efefef,
+//                        "shade-1": #e1e1e1,
+//                        "shade-2": #d8d8d8,
+//                        "shade-3": #bbbbbb,
+//                        "shade-4": #979797,
+//                        "shade-5": #535353,
+//                        "shade-6": #323232,
+//                        "shade-7": #ffffff
+//                )
+//        ),
+//        "dark": (
+//                "colors": (
+//                        "primary": #c85319,
+//                        "secondary": #c85319,
+//                        "tertiary": #c85319
+//                ),
+//                "shades": (
+//                        "shade-0": #404447,
+//                        "shade-1": #303437,
+//                        "shade-2": #616161,
+//                        "shade-3": #757575,
+//                        "shade-4": #9e9e9e,
+//                        "shade-5": #bdbdbd,
+//                        "shade-6": #f5f5f5,
+//                        "shade-7": #434242
+//                )
+//        )
+//);
+//$color-level-1: #c85319;
+//$color-level-2: #c85319;
+//$color-level-3: #c85319;
+//$color-level-4: #c85319;
+//$color-level-5: #c85319;
+//$color-level-6: #c85319;
+//$color-level-7: #c85319;
+//$color-level-8: #c85319;
+//$color-level-9: #c85319;
+//$color-level-10: #c85319;
+//
+//$youtube: #c85319;
+//$twitch: #c85319;
+//$twitch-hover: #c85319;
+//
+//$success: #c85319;
+//$danger: #c85319;
+//$info: #c85319;
+//$warning: #c85319;
+//$primary: #c85319;
+//$link-color:#c85319;
+//$link-green:#c85319;
+//$purple: #c85319;
 
 @each $theme-name, $theme-vars in $themes {
   $shades: map-get($theme-vars, "shades");
