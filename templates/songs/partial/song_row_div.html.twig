@@ -15,7 +15,7 @@
         <div class="row">
 
             {% for song in songs.entities %}
-                <div itemscope itemtype="https://schema.org/CreativeWork" class="col-xl-4 col-lg-6 mb-3">
+                <div class="col-xl-4 col-lg-6 mb-3">
                     <div class="song-box d-flex justify-content-between">
                         <div class="song-preview tiny ">
                             {{ macro_song.description2(song) }}
@@ -105,6 +105,23 @@
                         </div>
                     </div>
                 </div>
+
+                <script type="application/ld+json">
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "CreativeWork",
+                        "author": "{{ song.|escape }}",
+                        "image": "https://ragnacustoms.com/covers/{{ song.id ~ song.coverImageExtension }}",
+                        "name": "{{ song.name|escape }}",
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "bestRating": "{{ song.bestRating }}",
+                            "ratingCount": "{{ song.countVotes }}",
+                            "ratingValue": "{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}"
+                        }
+                    }
+                </script>
+
             {% else %}
 
                 <div class="row">
