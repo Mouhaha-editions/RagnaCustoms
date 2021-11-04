@@ -1,14 +1,14 @@
 //@import "~select2/dist/css/select2.min.css";
 
-@font-face {
-  font-family: 'Gelio Pasteli';
-  src: url("../../public/apps/Gelio Pasteli.ttf") format('truetype');
-}
-
-@font-face {
-  font-family: 'Gelio Retsina';
-  src: url("../../public/apps/Gelio Retsina.ttf") format('truetype');
-}
+//@font-face {
+//  font-family: 'Gelio Pasteli';
+//  src: url("../../public/apps/Gelio Pasteli.ttf") format('truetype');
+//}
+//
+//@font-face {
+//  font-family: 'Gelio Retsina';
+//  src: url("../../public/apps/Gelio Retsina.ttf") format('truetype');
+//}
 
 $themes: (
         "light": (
@@ -170,8 +170,8 @@ $font-family-base: 'Rajdhani', sans-serif;
 $font-weight-base: 500;
 
 @import "~bootstrap";
-@import "~bootstrap/scss/tooltip";
-@import "~bootstrap/scss/popover";
+//@import "~bootstrap/scss/tooltip";
+//@import "~bootstrap/scss/popover";
 
 
 body {
@@ -221,7 +221,7 @@ body {
 }
 
 .navbar-brand {
-  font-family: "Gelio Retsina", serif;
+  //font-family: "Gelio Retsina", serif;
   font-size: 30px;
   padding: 0;
 
@@ -233,18 +233,18 @@ body {
   font-size:18px
 }
 .viking-text {
-  font-family: "Gelio Pasteli", serif;
+  //font-family: "Gelio Pasteli", serif;
 
   &-bold {
-    font-family: "Gelio Retsina", serif;
+    //font-family: "Gelio Retsina", serif;
   }
 }
 
 h1, h2, h3 {
-  font-family: "Gelio Retsina", serif;
+  //font-family: "Gelio Retsina", serif;
 
   small {
-    font-family: "Gelio Pasteli", serif;
+    //font-family: "Gelio Pasteli", serif;
     font-size: 60%;
   }
 }
