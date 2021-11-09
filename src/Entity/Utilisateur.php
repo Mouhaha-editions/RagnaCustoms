@@ -158,6 +158,21 @@ class Utilisateur implements UserInterface
      */
     private $playlists;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SongRequest::class, mappedBy="requestedBy", orphanRemoval=true)
+     */
+    private $songRequests;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=SongRequest::class, mappedBy="mapperOnIt")
+     */
+    private $currentlyMapped;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isPatreon;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -169,6 +184,8 @@ class Utilisateur implements UserInterface
         $this->scoreHistories = new ArrayCollection();
         $this->gamifications = new ArrayCollection();
         $this->playlists = new ArrayCollection();
+        $this->songRequests = new ArrayCollection();
+        $this->currentlyMapped = new ArrayCollection();
     }
 
     public function __toString()
@@ -747,5 +764,74 @@ class Utilisateur implements UserInterface
     public function __call($name, $arguments)
     {
         // TODO: Implement @method string getUserIdentifier()
+    }
+
+    /**
+     * @return Collection|SongRequest[]
+     */
+    public function getSongRequests(): Collection
+    {
+        return $this->songRequests;
+    }
+
+    public function addSongRequest(SongRequest $songRequest): self
+    {
+        if (!$this->songRequests->contains($songRequest)) {
+            $this->songRequests[] = $songRequest;
+            $songRequest->setRequestedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSongRequest(SongRequest $songRequest): self
+    {
+        if ($this->songRequests->removeElement($songRequest)) {
+            // set the owning side to null (unless already changed)
+            if ($songRequest->getRequestedBy() === $this) {
+                $songRequest->setRequestedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SongRequest[]
+     */
+    public function getCurrentlyMapped(): Collection
+    {
+        return $this->currentlyMapped;
+    }
+
+    public function addCurrentlyMapped(SongRequest $currentlyMapped): self
+    {
+        if (!$this->currentlyMapped->contains($currentlyMapped)) {
+            $this->currentlyMapped[] = $currentlyMapped;
+            $currentlyMapped->addMapperOnIt($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCurrentlyMapped(SongRequest $currentlyMapped): self
+    {
+        if ($this->currentlyMapped->removeElement($currentlyMapped)) {
+            $currentlyMapped->removeMapperOnIt($this);
+        }
+
+        return $this;
+    }
+
+    public function getIsPatreon(): ?bool
+    {
+        return $this->isPatreon;
+    }
+
+    public function setIsPatreon(?bool $isPatreon): self
+    {
+        $this->isPatreon = $isPatreon;
+
+        return $this;
     }
 }
