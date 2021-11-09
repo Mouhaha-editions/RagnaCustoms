@@ -20,3 +20,4 @@ doctrine:
         dql:
             string_functions:
                 MD5: DoctrineExtensions\Query\Mysql\Md5
+                IF: DoctrineExtensions\Query\Mysql\IfElse

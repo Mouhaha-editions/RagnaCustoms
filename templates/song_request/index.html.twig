@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RagnaCustoms.com, Your favorites custom songs for Ragnarock VR{% endblock %}
+
+{% block body %}
+    {% if form is not null %}
+        {{ form(form) }}
+    {% endif %}
+<div class="row">
+    {% for songRequest in songRequests %}
+    <div class="">
+{#        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}" title="{{ songRequest.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>#}
+        <iframe width="320" height="180" src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}" title="{{ songRequest.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+    </div>
+    {% else %}
+        <p>No song request</p>
+    {% endfor %}
+</div>
+{% endblock %}
