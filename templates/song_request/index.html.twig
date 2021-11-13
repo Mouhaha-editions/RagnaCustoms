@@ -25,7 +25,8 @@
                         allowfullscreen></iframe>
                 <br/>
                 {{ songRequest.title }} of {{ songRequest.author }}<br/>
-                <small>Requested by {{ songRequest.requestedBy.username }}</small>
+                <small>{{ "Requested by %username%"|trans({"%username%":songRequest.requestedBy.username}) }}</small><br/>
+                <small>{{ "Mapper working on it :"|trans }} {{ songRequest.getMapper == false ? ("<span class='text-danger'>"~("No one"|trans)~"</span>")|raw: songRequest.getMapper.username }}</small>
             </div>
         {% else %}
             <p>No song request</p>
