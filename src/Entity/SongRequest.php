@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * @ORM\Entity(repositoryClass=SongRequestRepository::class)
@@ -134,6 +135,15 @@ class SongRequest
         $this->link = $link;
 
         return $this;
+    }
+
+    /**
+     * @return Utilisateur|false
+     */
+    public function getMapper()
+    {
+        VarDumper::dump($this->getMapperOnIt()->first());
+        return $this->getMapperOnIt()->first();
     }
 
 }

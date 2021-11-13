@@ -10,7 +10,7 @@
         <target>Vos custom songs</target>
       </trans-unit>
       <trans-unit id="vGdhNXl" resname="Songs">
-        <source>Custom Songs</source>
+        <source>Songs</source>
         <target>Custom Songs</target>
       </trans-unit>
       <trans-unit id="x9Ej5Nc" resname="Filter by difficulties">
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="dMV.Tsf" resname="Converted map">
         <source>Converted map</source>
-        <target>Map Convertie</target>
+        <target>Est convertie</target>
       </trans-unit>
       <trans-unit id="twhySiO" resname="With">
         <source>With</source>
@@ -140,10 +140,6 @@
       <trans-unit id="gMOO3sH" resname="Our application does not need installation, you only have to download unzip and run it.">
         <source>Our application does not need installation, you only have to download unzip and run it.</source>
         <target>Notre application n'a pas besoin d'etre installée, Vous n'avez qu'à la télécharger et à la décompresser.</target>
-      </trans-unit>
-      <trans-unit id="PNjunTC" resname="Here are some screenshots:">
-        <source>Here are some screenshots:</source>
-        <target>Voici quelques screenshots :</target>
       </trans-unit>
       <trans-unit id="ADl38LV" resname="Download now">
         <source>Download now</source>
@@ -261,14 +257,9 @@
         <source>Download</source>
         <target>Téléchargement</target>
       </trans-unit>
-
-      <trans-unit id="HVtouPH" resname="Update an existing map">
+      <trans-unit id="ms.GJ29" resname="Update an existing map">
         <source>Update an existing map</source>
         <target>Remplacer la chanson si elle existe.</target>
-      </trans-unit>
-      <trans-unit id="OrvNErV" resname="Converted map">
-        <source>Converted map</source>
-        <target>Est convertie</target>
       </trans-unit>
       <trans-unit id="hl6J3nj" resname="Upload">
         <source>Upload</source>
@@ -278,341 +269,478 @@
         <source>Views</source>
         <target>Vues</target>
       </trans-unit>
-      <trans-unit id="0">
+      <trans-unit id="DwGT2Qc" resname="Search by title, artist or mapper">
         <source>Search by title, artist or mapper</source>
         <target>Chercher par titre, artiste ou mapper</target>
       </trans-unit>
-      <trans-unit id="1">
+      <trans-unit id="ScJmuqq" resname="Search">
         <source>Search</source>
         <target>Chercher</target>
       </trans-unit>
-      <trans-unit id="2">
+      <trans-unit id="es4SwnT" resname="The file seems to not be valid, at least info.dat is missing.">
         <source>The file seems to not be valid, at least info.dat is missing.</source>
         <target>Le fichier ne semble pas valide, il manque au moins le fichier info.dat</target>
       </trans-unit>
-      <trans-unit id="3">
+      <trans-unit id="p6c7.Ee" resname="The song \&quot;%song%\&quot; by \&quot;%artist%\&quot; is already in our catalog.">
         <source>The song \"%song%\" by \"%artist%\" is already in our catalog.</source>
         <target>La musique \"%song%\" par \"%artist%\" est déjà dans notre catalogue.</target>
       </trans-unit>
-      <trans-unit id="4">
+      <trans-unit id="gSVa8ly" resname="You don't add the _songApproximativeDuration in info.dat">
         <source>You don't add the _songApproximativeDuration in info.dat</source>
         <target>Vous n'avez pas ajouté le _songApproximativeDuration dans info.dat</target>
       </trans-unit>
-      <trans-unit id="5">
+      <trans-unit id="jTfGMNc" resname="Song \&quot;%song%\&quot; by \&quot;%artist%\&quot; added !">
         <source>Song \"%song%\" by \"%artist%\" added !</source>
         <target>Chanson \"%song%\" par \"%artist%\" ajoutée !</target>
       </trans-unit>
-
-      <trans-unit id="7">
+      <trans-unit id="vjqEKpm" resname="You need an account to vote !">
         <source>You need an account to vote !</source>
         <target>Vous devez avoir un compte pour voter !</target>
       </trans-unit>
-      <trans-unit id="8">
+      <trans-unit id="Yg3a6ad" resname="Custom song not found !">
         <source>Custom song not found !</source>
         <target>Nous n'avons pas trouvé la custom song !</target>
       </trans-unit>
-      <trans-unit id="9">
+      <trans-unit id="YcTuxIi" resname="You can't review a custom song you've submitted">
         <source>You can't review a custom song you've submitted</source>
         <target>Vous ne pouvez pas donner votre avis sur un custom song que vous avez envoyé.</target>
       </trans-unit>
-        <trans-unit id="10">
-            <source>Artist</source>
-            <target>Artiste</target>
-        </trans-unit>
-      <trans-unit id="11">
+      <trans-unit id="HTmBuh4" resname="Artist">
+        <source>Artist</source>
+        <target>Artiste</target>
+      </trans-unit>
+      <trans-unit id="Ldf2lJ5" resname="This Custom song is not your's">
         <source>This Custom song is not your's</source>
         <target>Cette custom song ne vous appartient pas.</target>
       </trans-unit>
-      <trans-unit id="12">
+      <trans-unit id="maFuQqj" resname="This one is not required, but if you put a youtube link in the description we can catch the first one as song video ! ;)">
         <source>This one is not required, but if you put a youtube link in the description we can catch the first one as song video ! ;)</source>
         <target>Ce dernier n'est pas requis, mais si vous mettez un lien youtube dans la description nous saurons retrouver le premier en tant que preview de la custom song</target>
       </trans-unit>
-      <trans-unit id="13">
+      <trans-unit id="6WXLz9O" resname="See custom song in action">
         <source>See custom song in action</source>
         <target>Voir la custom song en action</target>
       </trans-unit>
-        <trans-unit id="14">
-            <source>Alphabetical</source>
-            <target>Alphabétique</target>
-        </trans-unit>
-        <trans-unit id="15">
-            <source>I want to vote</source>
-            <target>Je veux voter</target>
-        </trans-unit>
-      <trans-unit id="16">
+      <trans-unit id="pJ1jH4x" resname="Alphabetical">
+        <source>Alphabetical</source>
+        <target>Alphabétique</target>
+      </trans-unit>
+      <trans-unit id="tMvlYt0" resname="I want to vote">
+        <source>I want to vote</source>
+        <target>Je veux voter</target>
+      </trans-unit>
+      <trans-unit id="JV0L2Wo" resname="Ragnacustoms is not associated with Ragnaröck VR or WanadevStudio">
         <source>Ragnacustoms is not associated with Ragnaröck VR or WanadevStudio</source>
         <target>Ragnacustoms n'est pas associée avec Ragnaröck VR ni WanadevStudio</target>
       </trans-unit>
-      <trans-unit id="17">
-        <source><![CDATA[Ragnacustoms is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>]]></source>
+      <trans-unit id="bk6vd70" resname="Ragnacustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;">
+        <source>Ragnacustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;</source>
         <target><![CDATA[Ragnacustoms n'est pas associée avec <b>Ragnaröck VR</b> VR ni <b>WanadevStudio</b>]]></target>
       </trans-unit>
-        <trans-unit id="18">
-            <source>copied</source>
-            <target>copié</target>
-        </trans-unit>
-      <trans-unit id="19">
+      <trans-unit id="_zBZPKM" resname="copied">
+        <source>copied</source>
+        <target>copié</target>
+      </trans-unit>
+      <trans-unit id="fjSMV5j" resname="Already downloaded">
         <source>Already downloaded</source>
         <target>Déjà Téléchargé</target>
       </trans-unit>
-      <trans-unit id="20">
+      <trans-unit id="rtR.mcY" resname="For lazy people">
         <source>For lazy people</source>
         <target>Pour les gens faignants</target>
       </trans-unit>
-      <trans-unit id="21">
+      <trans-unit id="sDsvsmr" resname="Global review">
         <source>Global review</source>
         <target>Avis global</target>
       </trans-unit>
-      <trans-unit id="22">
+      <trans-unit id="hf.EAnR" resname="You need &lt;a href='%url%' target='_blank'&gt;our app&lt;/a&gt; tu use 1 click installer button">
         <source>You need &lt;a href='%url%' target='_blank'&gt;our app&lt;/a&gt; tu use 1 click installer button</source>
-        <target>&lt;a href='%url%' target='_blank'&gt;l'application&lt;/a&gt; est requise pour le bouton 1 click</target>
+        <target><![CDATA[<a href='%url%' target='_blank'>l'application</a> est requise pour le bouton 1 click]]></target>
       </trans-unit>
-      <trans-unit id="24">
-        <source><![CDATA[You can use <a target='_blank' href='https://guides.github.com/features/mastering-markdown/'>Markdown</a> in description]]></source>
+      <trans-unit id="O0UL0sO" resname="You can use &lt;a target='_blank' href='https://guides.github.com/features/mastering-markdown/'&gt;Markdown&lt;/a&gt; in description">
+        <source>You can use &lt;a target='_blank' href='https://guides.github.com/features/mastering-markdown/'&gt;Markdown&lt;/a&gt; in description</source>
         <target><![CDATA[Vous pouvez utiliser le <a target='_blank' href='https://guides.github.com/features/mastering-markdown/'>Markdown</a> dans la description]]></target>
       </trans-unit>
-      <trans-unit id="25">
+      <trans-unit id="eWW1Qkx" resname="Upload a .zip file (max 20mb) containing all the files for the map.">
         <source>Upload a .zip file (max 20mb) containing all the files for the map.</source>
         <target>Envoyez un fichier .zip (max 20mb) contenant les fichiers nécéssaires à la map.</target>
       </trans-unit>
-      <trans-unit id="26">
+      <trans-unit id="1c7KLps" resname="Song \&quot;%song%\&quot; by \&quot;%artist%\&quot; successfully uploaded!">
         <source>Song \"%song%\" by \"%artist%\" successfully uploaded!</source>
         <target>\"%song%\" by \"%artist%\" bien ajoutée !</target>
       </trans-unit>
-      <trans-unit id="27">
+      <trans-unit id="rCsQa40" resname="\&quot;_songApproximativeDuration\&quot; is missing in the info.dat file!">
         <source>\"_songApproximativeDuration\" is missing in the info.dat file!</source>
         <target>\"_songApproximativeDuration\" est manquant dans le fichier info.dat !</target>
       </trans-unit>
-      <trans-unit id="28">
+      <trans-unit id="uQnsnU8" resname="Youtube link">
         <source>Youtube link</source>
         <target>Lien Youtube</target>
       </trans-unit>
-      <trans-unit id="29">
+      <trans-unit id="BhKLNCi" resname="The Youtube link is not valid, please edit your song to insert the link.">
         <source>The Youtube link is not valid, please edit your song to insert the link.</source>
         <target>Le lien Youtube n'ets pas valide, merci de modifier la custom song pour y ajouter le lien.</target>
       </trans-unit>
-      <trans-unit id="30">
+      <trans-unit id="Tw5OpqR" resname="Reset Vote">
         <source>Reset Vote</source>
         <target>Remettre les votes à zéro</target>
       </trans-unit>
-        <trans-unit id="31">
-            <source>This song is not available for now</source>
-            <target>messages</target>
-        </trans-unit>
-      <trans-unit id="32">
+      <trans-unit id="pI1CERE" resname="This song is not available for now">
+        <source>This song is not available for now</source>
+        <target>messages</target>
+      </trans-unit>
+      <trans-unit id="nlIwJ21" resname="This custom song is not available for now">
         <source>This custom song is not available for now</source>
         <target>Cette custom song n'est pas encore disponible.</target>
       </trans-unit>
-        <trans-unit id="33">
-            <source>Rating</source>
-            <target>Votes</target>
-        </trans-unit>
-      <trans-unit id="34">
+      <trans-unit id="nylTBGT" resname="Rating">
+        <source>Rating</source>
+        <target>Votes</target>
+      </trans-unit>
+      <trans-unit id="c1Zl2xv" resname="click to vote">
         <source>click to vote</source>
         <target>Clique pour voter</target>
       </trans-unit>
-        <trans-unit id="35">
-            <source>No online streamer for now</source>
-            <target>Pas de streamer en ligne en ce moment</target>
-        </trans-unit>
-      <trans-unit id="36">
+      <trans-unit id="Wwn7JNC" resname="No online streamer for now">
+        <source>No online streamer for now</source>
+        <target>Pas de streamer en ligne en ce moment</target>
+      </trans-unit>
+      <trans-unit id="DSG9UgI" resname="Online">
         <source>Online</source>
         <target>En ligne</target>
       </trans-unit>
-        <trans-unit id="37">
-            <source>You need an account to access this page.</source>
-            <target>Vous avez besoin d'un compte pour acceder à cette page.</target>
-        </trans-unit>
-      <trans-unit id="38">
+      <trans-unit id="WHkb.qH" resname="You need an account to access this page.">
+        <source>You need an account to access this page.</source>
+        <target>Vous avez besoin d'un compte pour acceder à cette page.</target>
+      </trans-unit>
+      <trans-unit id="Jxxi_i3" resname="My profile">
         <source>My profile</source>
         <target>messages</target>
       </trans-unit>
-        <trans-unit id="39">
-            <source>How to ?</source>
-            <target>Comment faire ?</target>
-        </trans-unit>
-        <trans-unit id="40">
-            <source>You need an account to send a feedback!</source>
-            <target>Vous devez avoir un compte pour envoyer des suggestions !</target>
-        </trans-unit>
-      <trans-unit id="41">
+      <trans-unit id="wIWBzLa" resname="How to ?">
+        <source>How to ?</source>
+        <target>Comment faire ?</target>
+      </trans-unit>
+      <trans-unit id="RO5Voch" resname="You need an account to send a feedback!">
+        <source>You need an account to send a feedback!</source>
+        <target>Vous devez avoir un compte pour envoyer des suggestions !</target>
+      </trans-unit>
+      <trans-unit id="_dlD6a4" resname="Please get and launch the .msi file">
         <source>Please get and launch the .msi file</source>
         <target>SVP récuperez le .msi et installez le.</target>
       </trans-unit>
-        <trans-unit id="42">
-            <source>Send a feedback</source>
-            <target>Envoyer un avis</target>
-        </trans-unit>
-      <trans-unit id="43">
+      <trans-unit id="cDGLMEx" resname="Send a feedback">
+        <source>Send a feedback</source>
+        <target>Envoyer un avis</target>
+      </trans-unit>
+      <trans-unit id="UpJKYO9" resname="Song not found!">
         <source>Song not found!</source>
         <target>Musique non trouvé</target>
       </trans-unit>
-        <trans-unit id="44">
-            <source>Our application is magic! It creates the necessary folders and unzips the files in the right place, it also renames the folder with the song title for optimal in-game song ordering.</source>
-            <target>Notre application est magique ! elle créer les dossier nécessaires au bon endroit, elle renomme aussi les dossier avec le titre de la chanson pour un jeu optimal et une recherche efficace.</target>
-        </trans-unit>
-      <trans-unit id="46">
+      <trans-unit id="YkSoo8Q" resname="Our application is magic! It creates the necessary folders and unzips the files in the right place, it also renames the folder with the song title for optimal in-game song ordering.">
+        <source>Our application is magic! It creates the necessary folders and unzips the files in the right place, it also renames the folder with the song title for optimal in-game song ordering.</source>
+        <target>Notre application est magique ! elle créer les dossier nécessaires au bon endroit, elle renomme aussi les dossier avec le titre de la chanson pour un jeu optimal et une recherche efficace.</target>
+      </trans-unit>
+      <trans-unit id="tG202en" resname="You can get the executable by clicking on the button below:">
         <source>You can get the executable by clicking on the button below:</source>
         <target>Vous pouvez récuperr le fichier executable en cliquant sur le bouton ci-dessous :</target>
       </trans-unit>
-      <trans-unit id="47">
+      <trans-unit id="v7kly9C" resname="You only need to install the application once, future updates are automatic.">
         <source>You only need to install the application once, future updates are automatic.</source>
         <target>Vous avez seulement besoin d'installer  l'application une fois, les mises a jour futures seront automatiques.</target>
       </trans-unit>
-      <trans-unit id="48">
+      <trans-unit id="8bCqTC3" resname="It also allows you to search through the catalogue and download without even visiting the website. A one-click option is also enabled for even simpler downloads!">
         <source>It also allows you to search through the catalogue and download without even visiting the website. A one-click option is also enabled for even simpler downloads!</source>
         <target>Elle vous permet également de rechercher dans notre catalogue sans aller sur le site web. Une option One-click est également activée lors de l'installation  pour des téléchargements plus faciles !</target>
       </trans-unit>
-        <trans-unit id="49">
-            <source>Your statistics</source>
-            <target>Vos statistiques</target>
-        </trans-unit>
-      <trans-unit id="50">
+      <trans-unit id="E12u.il" resname="Your statistics">
+        <source>Your statistics</source>
+        <target>Vos statistiques</target>
+      </trans-unit>
+      <trans-unit id="x7iK7GK" resname="Feedbacks">
         <source>Feedbacks</source>
         <target>Retours</target>
       </trans-unit>
-      <trans-unit id="51">
+      <trans-unit id="iuNfcWp" resname="My feedbacks">
         <source>My feedbacks</source>
         <target>Mes retours</target>
       </trans-unit>
-      <trans-unit id="52">
+      <trans-unit id="Oy0B016" resname="Feedbacks on my custom songs">
         <source>Feedbacks on my custom songs</source>
         <target>Retours sur mes custom songs</target>
       </trans-unit>
-        <trans-unit id="53">
-            <source>No archive for now</source>
-            <target>Pas d'archive pour le moment</target>
-        </trans-unit>
-      <trans-unit id="54">
+      <trans-unit id="NPV29eL" resname="No archive for now">
+        <source>No archive for now</source>
+        <target>Pas d'archive pour le moment</target>
+      </trans-unit>
+      <trans-unit id="hoja2Ew" resname="Ranked first">
         <source>Ranked first</source>
         <target>Ranked en premier</target>
       </trans-unit>
-      <trans-unit id="56">
+      <trans-unit id="7BmrasU" resname="Leaderboards">
         <source>Leaderboards</source>
         <target>Tableaux de score</target>
       </trans-unit>
-      <trans-unit id="57">
+      <trans-unit id="3Wx89es" resname="Leaderboards by song">
         <source>Leaderboards by song</source>
         <target>Tableaux par musique</target>
       </trans-unit>
-      <trans-unit id="58">
+      <trans-unit id="G.fsjoj" resname="Season ranking">
         <source>Season ranking</source>
         <target>Classement par saisons</target>
       </trans-unit>
-        <trans-unit id="59">
-            <source>Download filtered selection</source>
-            <target>Télécharger la sélection filtrée</target>
-        </trans-unit>
-      <trans-unit id="60">
+      <trans-unit id="GK9BVRd" resname="Download filtered selection">
+        <source>Download filtered selection</source>
+        <target>Télécharger la sélection filtrée</target>
+      </trans-unit>
+      <trans-unit id="zJUTwVH" resname="You are going to download a lot of custom songs and it can take a while, do you want to continue?">
         <source>You are going to download a lot of custom songs and it can take a while, do you want to continue?</source>
         <target>Vous allez télécharger un paquet de "custom songs" et cela va prendre du temps, voulez vous continuer ?</target>
       </trans-unit>
-        <trans-unit id="61">
-            <source>no score for now</source>
-            <target>pas de score pour le moment</target>
-        </trans-unit>
-        <trans-unit id="62">
-            <source>Global ranking</source>
-            <target>Classement général</target>
-        </trans-unit>
-      <trans-unit id="63">
+      <trans-unit id="g97FsBA" resname="no score for now">
+        <source>no score for now</source>
+        <target>pas de score pour le moment</target>
+      </trans-unit>
+      <trans-unit id="uTLlT96" resname="Global ranking">
+        <source>Global ranking</source>
+        <target>Classement général</target>
+      </trans-unit>
+      <trans-unit id="u6K_4NF" resname="Season Ranking">
         <source>Season Ranking</source>
         <target>Classement saisonnier</target>
       </trans-unit>
-      <trans-unit id="64">
+      <trans-unit id="l4Dh13_" resname="Song mapped">
         <source>Song mapped</source>
         <target>Custom songs envoyées</target>
       </trans-unit>
-      <trans-unit id="65">
+      <trans-unit id="O88aO1p" resname="Difficulties played">
         <source>Difficulties played</source>
         <target>Difficultées jouées</target>
       </trans-unit>
-      <trans-unit id="66">
+      <trans-unit id="XaVeqb." resname="this account is certified">
         <source>this account is certified</source>
         <target>Ce compte est certifié</target>
       </trans-unit>
-      <trans-unit id="67">
+      <trans-unit id="W3DV9nC" resname="Other thing it does:">
         <source>Other thing it does:</source>
         <target>Autres trucs qu'elle fait :</target>
       </trans-unit>
-      <trans-unit id="68">
-        <source><![CDATA[Twitch requests & overlay]]></source>
+      <trans-unit id="X9aLVJE" resname="Twitch requests &amp; overlay">
+        <source>Twitch requests &amp; overlay</source>
         <target><![CDATA[Requètes twitch & overlay]]></target>
       </trans-unit>
-      <trans-unit id="69">
+      <trans-unit id="12hUvwX" resname="Save your score online">
         <source>Save your score online</source>
         <target>Sauvegarde votre score en ligne</target>
       </trans-unit>
-      <trans-unit id="70">
+      <trans-unit id="MksTT1f" resname="Preview">
         <source>Preview</source>
         <target>Aperçu</target>
       </trans-unit>
-        <trans-unit id="71">
-            <source>My custom songs</source>
-            <target>Mes custom songs</target>
-        </trans-unit>
-      <trans-unit id="72">
+      <trans-unit id="u8Jb53Q" resname="My custom songs">
+        <source>My custom songs</source>
+        <target>Mes custom songs</target>
+      </trans-unit>
+      <trans-unit id="JiEhxTc" resname="edit">
         <source>edit</source>
         <target>modifier</target>
       </trans-unit>
-      <trans-unit id="73">
-        <source>Difficulties</source>
-        <target>Difficultés</target>
+      <trans-unit id="YZdZVQP" resname="delete">
+        <source>delete</source>
+        <target>supprimer</target>
       </trans-unit>
-        <trans-unit id="74">
-            <source>delete</source>
-            <target>supprimer</target>
-        </trans-unit>
-      <trans-unit id="75">
+      <trans-unit id="sE8cy9b" resname="New ! to update a map please use the \&quot;edit\&quot; button on your song bellow.">
         <source>New ! to update a map please use the \"edit\" button on your song bellow.</source>
         <target>Nouveau ! pour mettre à jour une carte, veuillez utiliser le bouton \"modifier\" de votre chanson ci-dessous.</target>
       </trans-unit>
-        <trans-unit id="76">
-            <source>Custom songs available</source>
-            <target>Customs songs disponibles</target>
-        </trans-unit>
-      <trans-unit id="77">
+      <trans-unit id="SQojqu6" resname="Custom songs available">
+        <source>Custom songs available</source>
+        <target>Customs songs disponibles</target>
+      </trans-unit>
+      <trans-unit id="rNAupNk" resname="songs displayed on">
         <source>songs displayed on</source>
         <target>musiques affichées sur</target>
       </trans-unit>
-      <trans-unit id="78">
+      <trans-unit id="ia_i3_Q" resname="Custom songs available for Ragnaröck VR">
         <source>Custom songs available for Ragnaröck VR</source>
         <target>Customs songs disponibles pour Ragnaröck VR</target>
       </trans-unit>
-        <trans-unit id="79">
-            <source>Add to playlist</source>
-            <target>Ajouter à ma playlist</target>
-        </trans-unit>
-      <trans-unit id="80">
+      <trans-unit id="XQIAlIX" resname="Add to playlist">
+        <source>Add to playlist</source>
+        <target>Ajouter à ma playlist</target>
+      </trans-unit>
+      <trans-unit id="wMsF86s" resname="Playlist have to be named!">
         <source>Playlist have to be named!</source>
         <target>messages</target>
       </trans-unit>
-      <trans-unit id="81">
+      <trans-unit id="cQEsJJT" resname="You need an account to use playlist!">
         <source>You need an account to use playlist!</source>
         <target>messages</target>
       </trans-unit>
-      <trans-unit id="82">
+      <trans-unit id="KkPzMqC" resname="Song added to your playlist!">
         <source>Song added to your playlist!</source>
         <target>messages</target>
       </trans-unit>
-      <trans-unit id="83">
+      <trans-unit id="gQZ.y3Y" resname="Song already in playlist!">
         <source>Song already in playlist!</source>
         <target>messages</target>
       </trans-unit>
-      <trans-unit id="84">
+      <trans-unit id="gfZ42tt" resname="My playlists">
         <source>My playlists</source>
         <target>messages</target>
       </trans-unit>
-      <trans-unit id="85">
+      <trans-unit id="NX6NrMb" resname="Overlay editor">
         <source>Overlay editor</source>
         <target>messages</target>
       </trans-unit>
-      <trans-unit id="86">
-        <source><![CDATA[RagnaCustoms is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>]]></source>
+      <trans-unit id="xAWYMJ." resname="RagnaCustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;">
+        <source>RagnaCustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;</source>
         <target><![CDATA[Ragnacustoms n'est pas associée avec <b>Ragnaröck VR</b> VR ni <b>WanadevStudio</b>]]></target>
       </trans-unit>
-
-
+      <trans-unit id="pARbIhG" resname="Your review has been sent!">
+        <source>Your review has been sent!</source>
+        <target>Votre vote a été envoyé !</target>
+      </trans-unit>
+      <trans-unit id="LzBuRE8" resname="Feedback sent!">
+        <source>Feedback sent!</source>
+        <target>Avis envoyé !</target>
+      </trans-unit>
+      <trans-unit id="c5LJ9v." resname="You need to be connected">
+        <source>You need to be connected</source>
+        <target>Vous devez etre connecté</target>
+      </trans-unit>
+      <trans-unit id="aL6gI1n" resname="Song &quot;%song%&quot; by &quot;%artist%&quot; successfully uploaded!">
+        <source>Song "%song%" by "%artist%" successfully uploaded!</source>
+        <target>Chanson "%song%" par "%artist%" a bien été envoyée !</target>
+      </trans-unit>
+      <trans-unit id="AO52KuB" resname="Custom Songs">
+        <source>Custom Songs</source>
+        <target>Custom Songs</target>
+      </trans-unit>
+      <trans-unit id="Em1EFUR" resname="Moderation">
+        <source>Moderation</source>
+        <target>Modération</target>
+      </trans-unit>
+      <trans-unit id="DYQW7sZ" resname="How to be in leaderboard">
+        <source>How to be in leaderboard</source>
+        <target>Comment être dans le tableau des scores</target>
+      </trans-unit>
+      <trans-unit id="ekHOigo" resname="How to download with one click ?">
+        <source>How to download with one click ?</source>
+        <target>Comment télécharger en un clic ?</target>
+      </trans-unit>
+      <trans-unit id="REgGQF4" resname="Download playlist with the app">
+        <source>Download playlist with the app</source>
+        <target>Télécharger la playlist en un clic</target>
+      </trans-unit>
+      <trans-unit id="MbRxIVh" resname="Leaderboard">
+        <source>Leaderboard</source>
+        <target>Tableau des scores</target>
+      </trans-unit>
+      <trans-unit id="olizD4j" resname="Global">
+        <source>Global</source>
+        <target>Global</target>
+      </trans-unit>
+      <trans-unit id="Y44kn0o" resname="Filter">
+        <source>Filter</source>
+        <target>Filtrer</target>
+      </trans-unit>
+      <trans-unit id="UigtRYc" resname="1 click downloader">
+        <source>1 click downloader</source>
+        <target>Téléchargement en un clic</target>
+      </trans-unit>
+      <trans-unit id="plYQfpn" resname="Statistics">
+        <source>Statistics</source>
+        <target>Statistiques</target>
+      </trans-unit>
+      <trans-unit id="l0mJzw2" resname="10+">
+        <source>10+</source>
+        <target>10+</target>
+      </trans-unit>
+      <trans-unit id="denQnlA" resname="Ranked only">
+        <source>Ranked only</source>
+        <target>Classées uniquement</target>
+      </trans-unit>
+      <trans-unit id="rNmTJ5X" resname="WIP only">
+        <source>WIP only</source>
+        <target>WIP seulement</target>
+      </trans-unit>
+      <trans-unit id="BIGW0.Y" resname="Save to playlist!">
+        <source>Save to playlist!</source>
+        <target>Enregistré dans la playlist !</target>
+      </trans-unit>
+      <trans-unit id="eAN19uO" resname="Leave a feedback">
+        <source>Leave a feedback</source>
+        <target>Laisser un avis</target>
+      </trans-unit>
+      <trans-unit id="beOfoMt" resname="Copy code for Twitch">
+        <source>Copy code for Twitch</source>
+        <target>Copie le code pour Twitch</target>
+      </trans-unit>
+      <trans-unit id="djsLN.8" resname="One click download">
+        <source>One click download</source>
+        <target>Téléchargement en un clic</target>
+      </trans-unit>
+      <trans-unit id="AW0Q.Ua" resname="Requested by %username%">
+        <source>Requested by %username%</source>
+        <target>Demandé par %username%</target>
+      </trans-unit>
+      <trans-unit id="8JX3BFP" resname="Mapper working on it :">
+        <source>Mapper working on it :</source>
+        <target>Mapper travaillant dessus :</target>
+      </trans-unit>
+      <trans-unit id="HhjWrbO" resname="No one">
+        <source>No one</source>
+        <target>Aucun</target>
+      </trans-unit>
+      <trans-unit id="rlY2k_l" resname="Your API key">
+        <source>Your API key</source>
+        <target>Votre clé API</target>
+      </trans-unit>
+      <trans-unit id="Y74EKO6" resname="copied !">
+        <source>copied !</source>
+        <target>copié !</target>
+      </trans-unit>
+      <trans-unit id="kYYOYQu" resname="Is a mapper">
+        <source>Is a mapper</source>
+        <target>Est un mapper</target>
+      </trans-unit>
+      <trans-unit id="yzPF5UO" resname="Song played">
+        <source>Song played</source>
+        <target>Chanson jouée</target>
+      </trans-unit>
+      <trans-unit id="VjX9FHA" resname="Distance:">
+        <source>Distance:</source>
+        <target>Distance:</target>
+      </trans-unit>
+      <trans-unit id="81Mt9jk" resname="Notes hit:">
+        <source>Notes hit:</source>
+        <target>Notes hit:</target>
+      </trans-unit>
+      <trans-unit id="ns__VmG" resname="Notes missed:">
+        <source>Notes missed:</source>
+        <target>Notes missed:</target>
+      </trans-unit>
+      <trans-unit id="viY4vbr" resname="Notes not processed:">
+        <source>Notes not processed:</source>
+        <target>Notes not processed:</target>
+      </trans-unit>
+      <trans-unit id=".ct.oJB" resname="My progression on">
+        <source>My progression on</source>
+        <target>Ma progression on</target>
+      </trans-unit>
+      <trans-unit id="O2aNZsQ" resname="My progression on %songname% level %level%">
+        <source>My progression on %songname% level %level%</source>
+        <target>Ma progression sur %songname% niveau %level%</target>
+      </trans-unit>
+      <trans-unit id="t733otb" resname="Distance">
+        <source>Distance</source>
+        <target>Distance</target>
+      </trans-unit>
+      <trans-unit id="BHLGy10" resname="Notes Hit">
+        <source>Notes Hit</source>
+        <target>Notes Frappées</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

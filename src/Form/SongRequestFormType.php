@@ -17,7 +17,7 @@ class SongRequestFormType extends AbstractType
             ->add('title', null, ["attr" => ["class" => "form-control form-control-sm"]])
             ->add('author', null, ["attr" => ["class" => "form-control form-control-sm"]])
             ->add('link', TextType::class, ["attr" => ["class" => "form-control form-control-sm","placeholder"=>"Youtube link please",]])
-            ->add('askThisSong', SubmitType::class, ['attr' => ["class" => "btn btn-info"]]);
+            ->add('askThisSong', SubmitType::class, ['attr' => ["class" => "btn btn-info btn-sm mt-1"]]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
