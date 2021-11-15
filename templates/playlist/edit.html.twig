@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+ {% block metas %}
+     <meta name="description" value="{{ playlist.description}}">
+     <meta property="og:description" value="{{ playlist.description}}">
+     <meta property="og:url" content="{{ url('playlist_show',{id:playlist.id}) }}"/>
+     <meta property="og:type" content="website"/>
+     <meta property="og:title" content="{{ playlist.label }}, a {{ playlist.user.username }}'s Playlist | RagnaCustoms.com"/>
+ {% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">{{ "Your playlist"|trans }}Your playlist</h1>
+
+        </div>
+    </div>
+    {{ form_start(form) }}
+    <div class="row mb-3">
+        <div class="col-md-6">
+            {{ form_row(form.label) }}
+            {{ form_row(form.description) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_widget(form.isPublic) }} {{ form_label(form.isPublic) }}
+            {{ form_row(form.save) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+    </div>
+    {% include "songs/partial/song_row_div.html.twig" with {songs:songs, edit:true, playlist:playlist} %}
+{% endblock %}
+
+{% block title %}
+    {{ playlist.label }}, a {{ playlist.user.username }}'s Playlist
+{% endblock %}
+

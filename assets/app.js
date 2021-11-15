@@ -208,6 +208,9 @@ $(function () {
                     case "replace":
                         $(t.data('replace-selector')).html(data.result);
                         break;
+                    case "remove":
+                        $(t.data('remove-selector')).remove();
+                        break;
                 }
             },
             error: function (data) {

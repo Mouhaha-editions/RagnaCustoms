@@ -13,11 +13,16 @@
     </h2>
     </div>
         <div class="row">
-
             {% for song in songs.entities %}
-                <div class="col-xl-4 col-lg-6 mb-3">
+                <div class="col-xl-4 col-lg-6 mb-3" id="song-box-{{ song.id }}">
                     <div class="song-box d-flex justify-content-between">
                         <div class="song-preview tiny ">
+                            {% if edit is defined and edit and playlist is defined%}
+                            <a data-url="{{ url("playlist_remove",{id:song.id, playlist_id:playlist.id}) }}" href="#"
+                               data-success-action="remove"
+                               data-remove-selector="#song-box-{{ song.id }}"
+                               class="ajax-link remove-from-playlist btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                            {% endif %}
                             {{ macro_song.description2(song) }}
                         </div>
 
