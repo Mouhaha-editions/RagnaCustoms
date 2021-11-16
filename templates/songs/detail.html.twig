@@ -31,7 +31,7 @@
                 <li class="nav-item">
                     <a class="nav-link active" id="description-tab"
                        data-toggle="tab" data-target="#description" type="button" role="tab"
-                       aria-controls="home" aria-selected="true">Description</a>
+                       aria-controls="home" aria-selected="true">{{ "Description"|trans }}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link "
@@ -65,7 +65,6 @@
                             class="tab-pane fade show"
                             id="statistics" role="tabpanel">
                         <p>
-                            You love statistics ? me too, it's coming soon
                             {% include 'songs/partial/statistics.html.twig' with {song:song} %}
 
                         </p>
@@ -112,10 +111,10 @@
                             {% for feedback in songService.getSongFeedbackPublicOrMine(app.user,song) %}
                                 <div>
                                     {% if feedback.isAnonymous %}
-                                    <b>Anonymous : </b>
+                                    <b>{{ "Anonymous:"|trans }} </b>
                                 {% else %}
                                     <b>{{ feedback.user.username }} : {% if not feedback.isModerated %}
-                                            <div class="badge badge-danger">not moderated</div>{% endif %}</b>
+                                            <div class="badge badge-danger">{{ "not moderated"|trans }}</div>{% endif %}</b>
                                     {% endif %}<br/>
                                     {{ feedback.feedback }}
                                 </div>
@@ -129,7 +128,7 @@
                         class="tab-pane fade show"
                         id="leaderboard" role="tabpanel">
                     {% if song.wip %}
-                        <p>Not available when the song is in "WIP" mode</p>
+                        <p>{{ "Not available when the song is in \"WIP\" mode"|trans }}</p>
                     {% else %}
                         <div class="row">
                             {% for level in levels %}
@@ -139,8 +138,8 @@
                                     <table class="table table-sm">
                                         <tr>
                                             <th>#</th>
-                                            <th>User</th>
-                                            <th>Score</th>
+                                            <th>{{ "User"|trans }}</th>
+                                            <th>{{ "Score"|trans }}</th>
                                         </tr>
                                         {% set imin = false %}
                                         {% for score in level['scores'].entities %}
@@ -182,14 +181,14 @@
                 </a>
 
                 <a href="ragnac://install/{{ song.id }}" class="btn btn-danger">
-                    1 click
+                    {{ "1 click"|trans }}
                 </a>
 
-                <a href="{{ url('song_direct_download',{id: song.id}) }}" class="btn btn-success">Download</a>
+                <a href="{{ url('song_direct_download',{id: song.id}) }}" class="btn btn-success">{{ "Download"|trans }}</a>
             </div>
             {% if song.wip %}
                 <div class="resume row pt-5 pb-5 text-center">
-                    This song is a "Work in progress"
+                    {{ "This song is a \"Work in progress\""|trans }}
                 </div>
 
 
@@ -224,45 +223,45 @@
             <h3 class="text-center">{{ "Informations"|trans }}</h3>
 
             <div class="informations">
-                {{ macro_vote.ratingDisplayLabel("Fun factor"|trans,song.funFactorAverage) }}
-                {{ macro_vote.ratingDisplayLabel("Rhythm"|trans,song.rhythmAverage) }}
-                {{ macro_vote.ratingDisplayLabel("Flow"|trans,song.flowAverage) }}
-                {{ macro_vote.ratingDisplayLabel("Pattern quality"|trans,song.patternQualityAverage) }}
-                {{ macro_vote.ratingDisplayLabel("Readability"|trans,song.readabilityAverage) }}
-                {{ macro_vote.ratingDisplayLabel("Level quality"|trans,song.levelQualityAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Fun factor:"|trans,song.funFactorAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Rhythm:"|trans,song.rhythmAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Flow:"|trans,song.flowAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Pattern quality:"|trans,song.patternQualityAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Readability:"|trans,song.readabilityAverage) }}
+                {{ macro_vote.ratingDisplayLabel("Level quality:"|trans,song.levelQualityAverage) }}
                 <div class="d-flex rating-wrap">
-                    <label>{{ "Mapped by"|trans }} : </label>
+                    <label>{{ "Mapped by:"|trans }}  </label>
                     <span>
                         <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
                     </span>
                 </div>
                 <div class="d-flex rating-wrap">
-                    <label>{{ "Difficulties"|trans }} : </label>
+                    <label>{{ "Difficulties:"|trans }}</label>
                     <span>
                         {{ song.songDifficultiesStr }}
                     </span>
                 </div>
                 <div class="d-flex rating-wrap">
-                    <label>{{ "Artist"|trans }} : </label>
+                    <label>{{ "Artist:"|trans }}</label>
                     <span>
                         <a href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">
                             {{ song.authorName }}</a>
                     </span>
                 </div>
                 <div class="d-flex rating-wrap">
-                    <label>{{ "Last update"|trans }} : </label>
+                    <label>{{ "Last update:"|trans }}</label>
                     <span>
                         <span class="bold">{{ song.lastDateUpload.format('Y-m-d') }}</span>
                     </span>
                 </div>
                 <div class="d-flex rating-wrap">
-                    <label>{{ "Duration"|trans }} : </label>
+                    <label>{{ "Duration:"|trans }} : </label>
                     <span>
                         <span class="bold">{{ song.approximativeDurationMS }}</span>
                     </span>
                 </div>
                 <div class="d-flex rating-wrap">
-                    <label>{{ "BPM"|trans }} : </label>
+                    <label>{{ "BPM:"|trans }} : </label>
                     <span>
                         <span class="bold">{{ song.beatsPerMinute|round(2) }}</span>
                     </span>
@@ -294,7 +293,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel1">Song Review</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel1">{{ "Song Review"|trans }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

@@ -1,4 +1,4 @@
-<b>{{ song.name }}</b> <span class="light">by {{ song.authorName }}</span>
+{{ "%song_name% by %artist%"|trans|replace({"%song_name%": song.name,"%artist%": song.authorName}) }}
 <form data-url="{{ url("form_review_save",{id:song.id}) }}" class="form ajax-form pt-4">
     <div class="rating-wrap d-flex">
         <label class="mb-0">{{ "Global review"|trans }} : <br/><small>{{ "For lazy people"|trans }}</small></label>
@@ -13,7 +13,7 @@
     </div>
 <hr class="mt-1 mb-1"/>
     <div class="rating-wrap d-flex">
-        <label>Fun Factor:</label>
+        <label>{{ "Fun factor:"|trans }}</label>
         {% set rating = vote.funFactor %}
         <input type="hidden"  class="verify-voted" value="{{ rating }}" name="funFactor"/>
         <div class="rating-list text-warning d-flex form-rating" data-input-selector="funFactor">
@@ -27,7 +27,7 @@
 
 
     <div class="rating-wrap d-flex">
-        <label>Rhythm:</label>
+        <label>{{ "Rhythm:"|trans }}</label>
 
         {% set rating = vote.rhythm %}
         <input type="hidden"  class="verify-voted" value="{{ rating }}" name="rhythm"/>
@@ -43,7 +43,7 @@
 
 
     <div class="rating-wrap d-flex">
-        <label>Flow:</label>
+        <label>{{ "Flow:"|trans }}</label>
 
         {% set rating = vote.flow %}
         <input type="hidden"  class="verify-voted" value="{{ rating }}" name="flow"/>
@@ -59,7 +59,7 @@
 
 
     <div class="rating-wrap d-flex">
-        <label>Pattern quality:</label>
+        <label>{{ "Pattern quality:"|trans }}</label>
 
         {% set rating = vote.patternQuality %}
         <input type="hidden" value="{{ rating }}" class="verify-voted" name="patternQuality"/>
@@ -75,7 +75,7 @@
 
 
     <div class="rating-wrap d-flex">
-        <label>Readability:</label>
+        <label>{{ "Readability:"|trans }}</label>
 
         {% set rating = vote.readability %}
         <input type="hidden" value="{{ rating }}"  class="verify-voted" name="readability"/>
@@ -89,7 +89,7 @@
     </div>
 
     <div class="rating-wrap d-flex">
-        <label>Level quality:</label>
+        <label>{{ "Level quality:"|trans }}</label>
         {% set rating = vote.levelQuality %}
         <input type="hidden" value="{{ rating }}" class="verify-voted"  name="levelQuality"/>
         <div class="rating-list text-warning align-content-around  d-flex form-rating"
@@ -102,7 +102,7 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-sm btn-primary">Save Review!</button>
+    <button type="submit" class="btn btn-sm btn-primary">{{"Save Review!"|trans}}</button>
 
 
 </form>

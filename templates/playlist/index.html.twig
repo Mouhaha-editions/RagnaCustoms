@@ -5,13 +5,13 @@
 {% block body %}
 <div class="row">
     <div class="col-12">
-        <h1>All your playlists</h1>
+        <h1>{{ "All your playlists"|trans }}</h1>
         <table class="table table-sm">
             <tr>
-                <th>Label</th>
-                <th>Songs</th>
-                <th>Public</th>
-                <th>Action</th>
+                <th>{{ "Label"|trans }}</th>
+                <th>{{ "Songs"|trans }}</th>
+                <th>{{ "Public"|trans }}</th>
+                <th></th>
             </tr>
 {% for playlist in playlists %}
     <tr>
@@ -28,7 +28,7 @@
     </tr>
     {% else %}
     <tr>
-        <td>No playlist for now</td>
+        <td>{{ "No playlist for now"|trans }}</td>
     </tr>
             {% endfor %}
         </table>

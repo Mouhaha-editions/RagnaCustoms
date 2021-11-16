@@ -9,21 +9,21 @@
         labels: labels,
         datasets: [
             {
-                label: 'views',
+                label: '{{ "Views"|trans }}',
                 data: [{{ statisticService.getViewsLastXDays(45,song)|join(",") }}],
                 borderColor: "#be6637",
                 backgroundColor: "#be6637",
                 yAxisID: 'y',
             },
             {
-                label: 'download',
+                label: '{{ "Downloads"|trans }}',
                 data: [{{ statisticService.getDownloadsLastXDays(45,song)|join(",") }}],
                 borderColor: "#17b9c8",
                 backgroundColor: "#17b9c8",
                 yAxisID: "y"
             },
             {
-                label: 'played',
+                label: '{{ "Played" }}',
                 data: [{{ statisticService.getPlayedLastXDays(45,song)|join(",") }}],
                 borderColor: "#ba2b30",
                 backgroundColor: "#ba2b30",

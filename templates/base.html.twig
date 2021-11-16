@@ -27,7 +27,8 @@
 <body class="{{ app.request.cookies.get('light-mode','dark') }}">
 {% set currentSeason = songService.currentSeason %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/"><img width="45" height="45" src="/apps/logo.png" class="img-fluid" alt="logo"/> RagnaCustoms</a>
+    <a class="navbar-brand" href="/"><img width="45" height="45" src="/apps/logo.png" class="img-fluid" alt="logo"/>
+        RagnaCustoms</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -38,12 +39,12 @@
                 <a class="nav-link" href="/">{{ "Custom Songs"|trans }}</a>
             </li>
 
-{#            <li class="nav-item">#}
-{#                {% set count = twitchService.countStreamers() %}#}
-{#                <a class="nav-link text-twitch" target="_blank" rel="nofollow"#}
-{#                   href="https://www.twitch.tv/directory/game/Ragnaröck">Live#}
-{#                    ({{ count }}{% if count == 100 %}+{% endif %})</a>#}
-{#            </li>#}
+            {# <li class="nav-item"> #}
+            {# {% set count = twitchService.countStreamers() %} #}
+            {# <a class="nav-link text-twitch" target="_blank" rel="nofollow" #}
+            {# href="https://www.twitch.tv/directory/game/Ragnaröck">Live #}
+            {# ({{ count }}{% if count == 100 %}+{% endif %})</a> #}
+            {# </li> #}
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
@@ -63,25 +64,37 @@
                 <a class="nav-link text-level-9" href="{{ url("application") }}">RagnaCustoms App.</a>
             </li>
             <li class="nav-item viking-text-bold">
-                <a class="nav-link text-info" target="_blank" rel="noopener" href="https://github.com/PKBeam/Edda/releases/">EDDA</a>
+                <a class="nav-link text-info" target="_blank" rel="noopener"
+                   href="https://github.com/PKBeam/Edda/releases/">EDDA</a>
             </li>
 
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ "Language"|trans }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    {% if app.request.locale != 'en' %}
+                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"en"}) }}">
+                            <img height="12px" width="18px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ec-1f1e7.svg" alt="fr"/> English
+                        </a>
+                    {% endif %}
+                    {% if app.request.locale != 'fr' %}
+                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"fr"}) }}">
+                            <img height="12px" width="18px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1eb-1f1f7.svg" alt="fr"/> Français
+                        </a>
+                    {% endif %}
+                    {% if app.request.locale != 'pl' %}
+                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"pl"}) }}">
+                            <img alt="pl" height="12px" width="18px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1f5-1f1f1.svg"/> Polski
+                        </a>
+                    {% endif %}
+
+                </div>
+            </li>
             {% if is_granted('ROLE_MODERATOR') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin dashboard</a>
-                </li>
-            {% endif %}
-            {% if app.request.locale == 'en' %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url("change_locale",{locale:"fr"}) }}">
-                        <img  height="12px" width="18px" src="/flags/france.png" alt="fr"/>
-                    </a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url("change_locale",{locale:"en"}) }}">
-                        <img style="max-height:12px;" src="/flags/united-kingdom.png" alt="en"/>
-                    </a>
                 </li>
             {% endif %}
         </ul>
@@ -107,18 +120,14 @@
                         <hr class="m-1"/>
                         <a class="dropdown-item"
                            href="{{ url('overlay_editor') }}">{{ "Overlay editor"|trans }}</a>
-                        {% if app.user.songs|length > 0 %}
-                            <hr class="m-1"/>
-                            <a class="dropdown-item"
-                               href="{{ url('user_song_feedback') }}">{{ "My feedbacks"|trans }}</a>
-                        {% endif %}
                         <hr class="m-1"/>
                         <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
                     </div>
                 </li>
             {% endif %}
             <li class="nav-item">
-                <a class="nav-link" rel="noopener" href="https://discord.gg/nRnsgCCBvq" target="_blank"><i class="fab fa-discord"></i>
+                <a class="nav-link" rel="noopener" href="https://discord.gg/nRnsgCCBvq" target="_blank"><i
+                            class="fab fa-discord"></i>
                 </a>
             </li>
             <li class="nav-item">
@@ -134,7 +143,7 @@
                             class="fab fa-reddit"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link"  title="How to ?" href="{{ url('howto') }}"><i
+                <a class="nav-link" title="How to ?" href="{{ url('howto') }}"><i
                             class="fas fa-question-circle"></i></a>
             </li>
             <li class="nav-item pt-1">
@@ -156,7 +165,7 @@
     <a href="{{ url("score_season_ranking") }}">{{ currentSeason.label }}</a> ends in <span id="demo"></span>
 </div>
 <div class="container">
-    <div class="runes"><img width="512" height="512" src="/apps/runes.png"  alt="runes"/></div>
+    <div class="runes"><img width="512" height="512" src="/apps/runes.png" alt="runes"/></div>
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="alert alert-dismissible alert-{{ label }}">
@@ -193,52 +202,52 @@
 {% endblock %}
 
 <div id="variables"
-data-season-ends-at="{{ currentSeason.endDate.format('Y-m-d H:i:s') }}"
+     data-season-ends-at="{{ currentSeason.endDate.format('Y-m-d H:i:s') }}"
 ></div>
 
 <script src="https://tarteaucitron.io/load.js"></script>
 
 <script>
-tarteaucitron.init({
+    tarteaucitron.init({
 // "privacyUrl": "", /* Privacy policy url */
 
-"hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
-"cookieName": "tarteaucitron", /* Cookie name */
+        "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
+        "cookieName": "tarteaucitron", /* Cookie name */
 
-"orientation": "bottom", /* Banner position (top - bottom - middle - popup) */
+        "orientation": "bottom", /* Banner position (top - bottom - middle - popup) */
 
-"groupServices": true, /* Group services by category */
+        "groupServices": true, /* Group services by category */
 
-"showAlertSmall": true, /* Show the small banner on bottom right */
-"cookieslist": true, /* Show the cookie list */
+        "showAlertSmall": true, /* Show the small banner on bottom right */
+        "cookieslist": true, /* Show the cookie list */
 
-"showIcon": true, /* Show cookie icon to manage cookies */
+        "showIcon": true, /* Show cookie icon to manage cookies */
 // "iconSrc": "", /* Optionnal: URL or base64 encoded image */
-"iconPosition": "BottomLeft", /* Position of the icon between BottomRight, BottomLeft, TopRight and TopLeft */
+        "iconPosition": "BottomLeft", /* Position of the icon between BottomRight, BottomLeft, TopRight and TopLeft */
 
-"adblocker": false, /* Show a Warning if an adblocker is detected */
+        "adblocker": false, /* Show a Warning if an adblocker is detected */
 
-"DenyAllCta": true, /* Show the deny all button */
-"AcceptAllCta": true, /* Show the accept all button when highPrivacy on */
-"highPrivacy": true, /* HIGHLY RECOMMANDED Disable auto consent */
+        "DenyAllCta": true, /* Show the deny all button */
+        "AcceptAllCta": true, /* Show the accept all button when highPrivacy on */
+        "highPrivacy": true, /* HIGHLY RECOMMANDED Disable auto consent */
 
-"handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */
+        "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */
 
-"removeCredit": true, /* Remove credit link */
-"moreInfoLink": true, /* Show more info link */
-"useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */
+        "removeCredit": true, /* Remove credit link */
+        "moreInfoLink": true, /* Show more info link */
+        "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */
 
 //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for subdomain website */
 
 // "readmoreLink": "", /* Change the default readmore link pointing to tarteaucitron.io */
 
-"mandatory": true /* Show a message about mandatory cookies */
-});
+        "mandatory": true /* Show a message about mandatory cookies */
+    });
 
-tarteaucitron.user.gtagUa = 'G-0JR780RBXK';
-tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */
-};
-(tarteaucitron.job = tarteaucitron.job || []).push('gtag');
+    tarteaucitron.user.gtagUa = 'G-0JR780RBXK';
+    tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */
+    };
+    (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
 </script>
 </body>
 </html>

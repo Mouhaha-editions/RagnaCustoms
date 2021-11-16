@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}{{"Be a virtual Viking!"|trans}}{% endblock %}
 
 {% block body %}
     <div class="widget-box">
@@ -22,7 +22,7 @@
                     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
                     <div class="form-group">
-                        <label for="inputUsername">Username</label>
+                        <label for="inputUsername">{{ "Username"|trans }}</label>
                         <input type="text" class="form-control" value="{{ last_username }}" name="username"
                                id="inputUsername" required autofocus>
                     </div>

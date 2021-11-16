@@ -3,12 +3,12 @@
 
 {% block detailed_content %}
     <div class="col-12">
-        <h2>Songs mapped</h2>
+        <h2>{{ "Songs mapped"|trans }}</h2>
         <table class="table songs">
             <tr>
-                <th>Song</th>
-                <th class="text-center">Review</th>
-                <th class="text-right">Date</th>
+                <th>{{ "Song"|trans }}</th>
+                <th class="text-center">{{ "Reviews"|trans }}</th>
+                <th class="text-right">{{ "Date" }}</th>
             </tr>
             {% for song in user.songs %}
                 <tr>
@@ -24,7 +24,7 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="3">I don't think he is a mapper</td>
+                    <td colspan="3">{{ "We don't think he is a mapper"|trans}}</td>
                 </tr>
             {% endfor %}
         </table>

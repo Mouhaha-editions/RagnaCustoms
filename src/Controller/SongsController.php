@@ -326,73 +326,73 @@ class SongsController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/song/feedback/{id}", name="song_feedback")
-     * @param Request $request
-     * @param Song $song
-     * @param TranslatorInterface $translator
-     * @param SongDifficultyRepository $songDifficultyRepository
-     * @return JsonResponse
-     */
-    public function formFeedback(Request $request, Song $song, TranslatorInterface $translator,
-                                 SongDifficultyRepository $songDifficultyRepository)
-    {
-        if (!$this->isGranted('ROLE_USER')) {
-            return new JsonResponse([
-                "error" => true,
-                "errorMessage" => $translator->trans("You need an account to send a feedback!"),
-                "response" => $translator->trans("You need an account to send a feedback!"),
-            ]);
-        }
-
-        if ($song == null) {
-            return new JsonResponse([
-                "error" => true,
-                "errorMessage" => "You need an account to vote !",
-                "response" => $translator->trans("Song not found!"),
-
-            ]);
-        }
-        $feedback = new SongFeedback();
-        $feedback->setUser($this->getUser());
-        $feedback->setHash($song->getNewGuid());
-        $form = $this->createForm(SongFeedbackType::class, $feedback, [
-            'attr' => [
-                'class' => "form ajax-form",
-                'method' => "post",
-                "action" => $this->generateUrl("song_feedback", ["id" => $song->getId()]),
-                "data-url" => $this->generateUrl("song_feedback", ["id" => $song->getId()])
-            ]
-        ]);
-
-        $form->handleRequest($request);
-        $em = $this->getDoctrine()->getManager();
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $dif = $form->get('songDifficulty')->getData();
-            if ($dif != null) {
-                $feedback->setDifficulty($dif->getDifficultyRank()->getLevel());
-            }
-            $em->persist($feedback);
-            $em->flush();
-            return new JsonResponse([
-                "error" => false,
-                "errorMessage" => "You need an account to vote !",
-                "response" => "<div class='alert alert-success'>" . $translator->trans("Your review has been sent!") . "</div>",
-
-            ]);
-        }
-
-        return new JsonResponse([
-            "error" => false,
-            "errorMessage" => false,
-            "response" => $this->renderView("songs/partial/form_feedback.html.twig", [
-                'form' => $form->createView(),
-                'song' => $song,
-                "vote" => $feedback
-            ]),
-        ]);
-    }
+//    /**
+//     * @Route("/song/feedback/{id}", name="song_feedback")
+//     * @param Request $request
+//     * @param Song $song
+//     * @param TranslatorInterface $translator
+//     * @param SongDifficultyRepository $songDifficultyRepository
+//     * @return JsonResponse
+//     */
+//    public function formFeedback(Request $request, Song $song, TranslatorInterface $translator,
+//                                 SongDifficultyRepository $songDifficultyRepository)
+//    {
+//        if (!$this->isGranted('ROLE_USER')) {
+//            return new JsonResponse([
+//                "error" => true,
+//                "errorMessage" => $translator->trans("You need an account to send a feedback!"),
+//                "response" => $translator->trans("You need an account to send a feedback!"),
+//            ]);
+//        }
+//
+//        if ($song == null) {
+//            return new JsonResponse([
+//                "error" => true,
+//                "errorMessage" => "You need an account to vote !",
+//                "response" => $translator->trans("Song not found!"),
+//
+//            ]);
+//        }
+//        $feedback = new SongFeedback();
+//        $feedback->setUser($this->getUser());
+//        $feedback->setHash($song->getNewGuid());
+//        $form = $this->createForm(SongFeedbackType::class, $feedback, [
+//            'attr' => [
+//                'class' => "form ajax-form",
+//                'method' => "post",
+//                "action" => $this->generateUrl("song_feedback", ["id" => $song->getId()]),
+//                "data-url" => $this->generateUrl("song_feedback", ["id" => $song->getId()])
+//            ]
+//        ]);
+//
+//        $form->handleRequest($request);
+//        $em = $this->getDoctrine()->getManager();
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $dif = $form->get('songDifficulty')->getData();
+//            if ($dif != null) {
+//                $feedback->setDifficulty($dif->getDifficultyRank()->getLevel());
+//            }
+//            $em->persist($feedback);
+//            $em->flush();
+//            return new JsonResponse([
+//                "error" => false,
+//                "errorMessage" => "You need an account to vote !",
+//                "response" => "<div class='alert alert-success'>" . $translator->trans("Your review has been sent!") . "</div>",
+//
+//            ]);
+//        }
+//
+//        return new JsonResponse([
+//            "error" => false,
+//            "errorMessage" => false,
+//            "response" => $this->renderView("songs/partial/form_feedback.html.twig", [
+//                'form' => $form->createView(),
+//                'song' => $song,
+//                "vote" => $feedback
+//            ]),
+//        ]);
+//    }
 
 
     /**
@@ -530,7 +530,7 @@ class SongsController extends AbstractController
 
 
         if ($pagination->isPartial()) {
-            return $this->render('songs/partial/song_row.html.twig', [
+            return $this->render('songs/partial/song_row_div.html.twig', [
                 'songs' => $pagination
             ]);
         }
