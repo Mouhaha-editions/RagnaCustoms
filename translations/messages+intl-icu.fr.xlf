@@ -483,7 +483,7 @@
       </trans-unit>
       <trans-unit id="3Wx89es" resname="Leaderboards by song">
         <source>Leaderboards by song</source>
-        <target>Tableaux par musique</target>
+        <target>Classement par musique</target>
       </trans-unit>
       <trans-unit id="G.fsjoj" resname="Season ranking">
         <source>Season ranking</source>
