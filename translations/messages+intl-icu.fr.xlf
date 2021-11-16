@@ -387,7 +387,7 @@
       </trans-unit>
       <trans-unit id="pI1CERE" resname="This song is not available for now">
         <source>This song is not available for now</source>
-        <target>messages</target>
+        <target>Cette map n'est pas accessible pour le moment</target>
       </trans-unit>
       <trans-unit id="nlIwJ21" resname="This custom song is not available for now">
         <source>This custom song is not available for now</source>
@@ -415,7 +415,7 @@
       </trans-unit>
       <trans-unit id="Jxxi_i3" resname="My profile">
         <source>My profile</source>
-        <target>messages</target>
+        <target>Mon profil</target>
       </trans-unit>
       <trans-unit id="wIWBzLa" resname="How to ?">
         <source>How to ?</source>
@@ -571,27 +571,27 @@
       </trans-unit>
       <trans-unit id="wMsF86s" resname="Playlist have to be named!">
         <source>Playlist have to be named!</source>
-        <target>messages</target>
+        <target>La playlist doit etre nommée !</target>
       </trans-unit>
       <trans-unit id="cQEsJJT" resname="You need an account to use playlist!">
         <source>You need an account to use playlist!</source>
-        <target>messages</target>
+        <target>Vous avez besoin d'un compte pour utiliser les playlists ! </target>
       </trans-unit>
       <trans-unit id="KkPzMqC" resname="Song added to your playlist!">
         <source>Song added to your playlist!</source>
-        <target>messages</target>
+        <target>Map ajoutée a votre playlist !</target>
       </trans-unit>
       <trans-unit id="gQZ.y3Y" resname="Song already in playlist!">
         <source>Song already in playlist!</source>
-        <target>messages</target>
+        <target>Map déjà dans votre playlist !</target>
       </trans-unit>
       <trans-unit id="gfZ42tt" resname="My playlists">
         <source>My playlists</source>
-        <target>messages</target>
+        <target>Mes playlists</target>
       </trans-unit>
       <trans-unit id="NX6NrMb" resname="Overlay editor">
         <source>Overlay editor</source>
-        <target>messages</target>
+        <target>Editeur D'overlay</target>
       </trans-unit>
       <trans-unit id="xAWYMJ." resname="RagnaCustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;">
         <source>RagnaCustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;</source>
@@ -743,7 +743,7 @@
       </trans-unit>
         <trans-unit id="0">
             <source>Your playlist</source>
-            <target>messages</target>
+            <target>Vos playlists</target>
         </trans-unit>
     </body>
   </file>
