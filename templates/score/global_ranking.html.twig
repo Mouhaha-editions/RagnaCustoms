@@ -3,13 +3,13 @@
 {% block body %}
     <div class="row mt-5">
         <div class="col-12">
-            <h1>Global ranking</h1>
+            <h1>{{ "Global ranking"|trans }}</h1>
             <table class="table">
                 <tr>
-                    <th>Rank</th>
-                    <th>User</th>
-                    <th class="text-right">Score</th>
-                    <th class="text-right">Songs played</th>
+                    <th>{{ "Rank"|trans }}</th>
+                    <th>{{ "User"|trans }}</th>
+                    <th class="text-right">{{ "Score"|trans }}</th>
+                    <th class="text-right">{{ "Songs played"|trans }}</th>
                 </tr>
                 {% for score in scores %}
                     <tr {% if is_granted('ROLE_USER') and score["username"] == app.user.username %}class="text-success"{% endif %}>
@@ -30,6 +30,6 @@
 {% endblock %}
 
 {% block title %}
-    Global ranking
+{{ "Global ranking"|trans }}
 {% endblock %}
 

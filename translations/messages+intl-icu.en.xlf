@@ -657,7 +657,7 @@
         <source>Notes hit:</source>
         <target>Notes hit:</target>
       </trans-unit>
-      <trans-unit id="nsVmG" resname="Notes missed:">
+      <trans-unit id="ns__VmG" resname="Notes missed:">
         <source>Notes missed:</source>
         <target>Notes missed:</target>
       </trans-unit>
@@ -680,6 +680,14 @@
       <trans-unit id="BHLGy10" resname="Notes Hit">
         <source>Notes Hit</source>
         <target>Notes Hit</target>
+      </trans-unit>
+      <trans-unit id="pBMNfSw" resname="Rank">
+        <source>Rank</source>
+        <target>Rank</target>
+      </trans-unit>
+      <trans-unit id="MetgMAN" resname="Songs played">
+        <source>Songs played</source>
+        <target>Songs played</target>
       </trans-unit>
     </body>
   </file>

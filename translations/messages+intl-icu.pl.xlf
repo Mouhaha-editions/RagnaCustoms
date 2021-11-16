@@ -229,6 +229,10 @@
         <source xml:space="preserve">Leaderboard</source>
         <target xml:space="preserve">Tabela wyników</target>
       </trans-unit>
+      <trans-unit id="MetgMAN">
+        <source xml:space="preserve">Songs played</source>
+        <target xml:space="preserve">Songs played</target>
+      </trans-unit>
       <trans-unit id="MksTT1f">
         <source xml:space="preserve">Preview</source>
         <target xml:space="preserve">Podgląd</target>
@@ -521,9 +525,9 @@
         <source xml:space="preserve">Global ranking:</source>
         <target xml:space="preserve">Globalny ranking:</target>
       </trans-unit>
-      <trans-unit id="nsVmG">
+      <trans-unit id="ns__VmG">
         <source xml:space="preserve">Notes missed:</source>
-        <target xml:space="preserve">Nuty nie trafione:</target>
+        <target xml:space="preserve">Nuty pominięte:</target>
       </trans-unit>
       <trans-unit id="nylTBGT">
         <source xml:space="preserve">Rating</source>
@@ -536,6 +540,10 @@
       <trans-unit id="p5GWI6U">
         <source xml:space="preserve">Save Review!</source>
         <target xml:space="preserve">Zapisz Recenzję!</target>
+      </trans-unit>
+      <trans-unit id="pBMNfSw">
+        <source xml:space="preserve">Rank</source>
+        <target xml:space="preserve">Rank</target>
       </trans-unit>
       <trans-unit id="pJ1jH4x">
         <source xml:space="preserve">Alphabetical</source>
