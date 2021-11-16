@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% import "songs/macros/song.html.twig" as macro_song %}
 
-{% block title %}My progression{% endblock %}
+{% block title %}{{ "My progression"|trans }}{% endblock %}
 {% block body %}
     <div class="row">
         <div class="col-12">
@@ -42,8 +42,6 @@
                             y1: {
                                 beginAtZero: false,
                                 position: 'right'
-
-
                             }
                         }
                     }

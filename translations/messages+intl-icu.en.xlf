@@ -37,14 +37,6 @@
         <source>Song added to your playlist!</source>
         <target>Song added to your playlist!</target>
       </trans-unit>
-      <trans-unit id="RO5Voch" resname="You need an account to send a feedback!">
-        <source>You need an account to send a feedback!</source>
-        <target>You need an account to send a feedback!</target>
-      </trans-unit>
-      <trans-unit id="pARbIhG" resname="Your review has been sent!">
-        <source>Your review has been sent!</source>
-        <target>Your review has been sent!</target>
-      </trans-unit>
       <trans-unit id="nlIwJ21" resname="This custom song is not available for now">
         <source>This custom song is not available for now</source>
         <target>This custom song is not available for now</target>
@@ -68,126 +60,6 @@
       <trans-unit id="WHkb.qH" resname="You need an account to access this page.">
         <source>You need an account to access this page.</source>
         <target>You need an account to access this page.</target>
-      </trans-unit>
-      <trans-unit id="tk.mIpp" resname="Your submitted songs">
-        <source>Your submitted songs</source>
-        <target>Your submitted songs</target>
-      </trans-unit>
-      <trans-unit id="AO52KuB" resname="Custom Songs">
-        <source>Custom Songs</source>
-        <target>Custom Songs</target>
-      </trans-unit>
-      <trans-unit id="x9Ej5Nc" resname="Filter by difficulties">
-        <source>Filter by difficulties</source>
-        <target>Filter by difficulties</target>
-      </trans-unit>
-      <trans-unit id="pSrOQg8" resname="All">
-        <source>All</source>
-        <target>All</target>
-      </trans-unit>
-      <trans-unit id="8mHT1EL" resname="1-3">
-        <source>1-3</source>
-        <target>1-3</target>
-      </trans-unit>
-      <trans-unit id="exHF9yC" resname="4-7">
-        <source>4-7</source>
-        <target>4-7</target>
-      </trans-unit>
-      <trans-unit id="VUipwrR" resname="8-10">
-        <source>8-10</source>
-        <target>8-10</target>
-      </trans-unit>
-      <trans-unit id="ijel8Hr" resname="Order by">
-        <source>Order by</source>
-        <target>Order by</target>
-      </trans-unit>
-      <trans-unit id="zw7jVHp" resname="Soon">
-        <source>Soon</source>
-        <target>Soon</target>
-      </trans-unit>
-      <trans-unit id="JAsu23F" resname="Filter songs">
-        <source>Filter songs</source>
-        <target>Filter songs</target>
-      </trans-unit>
-      <trans-unit id=".qS1zv_" resname="Song">
-        <source>Song</source>
-        <target>Song</target>
-      </trans-unit>
-      <trans-unit id="T8UqPEx" resname="Duration">
-        <source>Duration</source>
-        <target>Duration</target>
-      </trans-unit>
-      <trans-unit id="M_pvuDq" resname="BPM">
-        <source>BPM</source>
-        <target>BPM</target>
-      </trans-unit>
-      <trans-unit id="zY6XS_I" resname="Votes">
-        <source>Votes</source>
-        <target>Votes</target>
-      </trans-unit>
-      <trans-unit id="Em1EFUR" resname="Moderation">
-        <source>Moderation</source>
-        <target>Moderation</target>
-      </trans-unit>
-      <trans-unit id="ScJmuqq" resname="Search">
-        <source>Search</source>
-        <target>Search</target>
-      </trans-unit>
-      <trans-unit id="DwGT2Qc" resname="Search by title, artist or mapper">
-        <source>Search by title, artist or mapper</source>
-        <target>Search by title, artist or mapper</target>
-      </trans-unit>
-      <trans-unit id="jW33dhj" resname="Difficulties">
-        <source>Difficulties</source>
-        <target>Difficulties</target>
-      </trans-unit>
-      <trans-unit id="dMV.Tsf" resname="Converted map">
-        <source>Converted map</source>
-        <target>Converted map</target>
-      </trans-unit>
-      <trans-unit id="twhySiO" resname="With">
-        <source>With</source>
-        <target>With</target>
-      </trans-unit>
-      <trans-unit id="e8Jfqtu" resname="Without">
-        <source>Without</source>
-        <target>Without</target>
-      </trans-unit>
-      <trans-unit id="x1wPTSk" resname="Only converted">
-        <source>Only converted</source>
-        <target>Only converted</target>
-      </trans-unit>
-      <trans-unit id="6MMexlo" resname="Last added">
-        <source>Last added</source>
-        <target>Last added</target>
-      </trans-unit>
-      <trans-unit id="OCrF8wj" resname="Last updated">
-        <source>Last updated</source>
-        <target>Last updated</target>
-      </trans-unit>
-      <trans-unit id="zVWI22." resname="Vote">
-        <source>Vote</source>
-        <target>Vote</target>
-      </trans-unit>
-      <trans-unit id="D7tWh6R" resname="Note/sec">
-        <source>Note/sec</source>
-        <target>Note/sec</target>
-      </trans-unit>
-      <trans-unit id="4lQnFyu" resname="LastUpdate">
-        <source>LastUpdate</source>
-        <target>LastUpdate</target>
-      </trans-unit>
-      <trans-unit id="AIF3nCh" resname="level">
-        <source>level</source>
-        <target>level</target>
-      </trans-unit>
-      <trans-unit id="q1qpcHT" resname="notes">
-        <source>notes</source>
-        <target>notes</target>
-      </trans-unit>
-      <trans-unit id="sZpvY_r" resname="see more">
-        <source>see more</source>
-        <target>see more</target>
       </trans-unit>
       <trans-unit id="4chvCh2" resname="Our Application">
         <source>Our Application</source>
@@ -221,6 +93,10 @@
         <source>You can get the executable by clicking on the button below:</source>
         <target>You can get the executable by clicking on the button below:</target>
       </trans-unit>
+      <trans-unit id="AO52KuB" resname="Custom Songs">
+        <source>Custom Songs</source>
+        <target>Custom Songs</target>
+      </trans-unit>
       <trans-unit id="7BmrasU" resname="Leaderboards">
         <source>Leaderboards</source>
         <target>Leaderboards</target>
@@ -236,6 +112,10 @@
       <trans-unit id="uTLlT96" resname="Global ranking">
         <source>Global ranking</source>
         <target>Global ranking</target>
+      </trans-unit>
+      <trans-unit id="pP5lJk7" resname="Language">
+        <source>Language</source>
+        <target>Language</target>
       </trans-unit>
       <trans-unit id="nWMiwfT" resname="Login">
         <source>Login</source>
@@ -256,10 +136,6 @@
       <trans-unit id="NX6NrMb" resname="Overlay editor">
         <source>Overlay editor</source>
         <target>Overlay editor</target>
-      </trans-unit>
-      <trans-unit id="iuNfcWp" resname="My feedbacks">
-        <source>My feedbacks</source>
-        <target>My feedbacks</target>
       </trans-unit>
       <trans-unit id="0FJ_Sz1" resname="Logout">
         <source>Logout</source>
@@ -284,6 +160,30 @@
       <trans-unit id="ekHOigo" resname="How to download with one click ?">
         <source>How to download with one click ?</source>
         <target>How to download with one click ?</target>
+      </trans-unit>
+      <trans-unit id="KPJ6R4z" resname="Your playlist">
+        <source>Your playlist</source>
+        <target>Your playlist</target>
+      </trans-unit>
+      <trans-unit id="kyIu1Z1" resname="All your playlists">
+        <source>All your playlists</source>
+        <target>All your playlists</target>
+      </trans-unit>
+      <trans-unit id="DmY3P0X" resname="Label">
+        <source>Label</source>
+        <target>Label</target>
+      </trans-unit>
+      <trans-unit id="vGdhNXl" resname="Songs">
+        <source>Songs</source>
+        <target>Songs</target>
+      </trans-unit>
+      <trans-unit id="WRk1sVs" resname="Public">
+        <source>Public</source>
+        <target>Public</target>
+      </trans-unit>
+      <trans-unit id="kdVHOTi" resname="No playlist for now">
+        <source>No playlist for now</source>
+        <target>No playlist for now</target>
       </trans-unit>
       <trans-unit id="REgGQF4" resname="Download playlist with the app">
         <source>Download playlist with the app</source>
@@ -337,6 +237,14 @@
         <source>No archive for now</source>
         <target>No archive for now</target>
       </trans-unit>
+      <trans-unit id="8Cjk8Aq" resname="Be a virtual Viking!">
+        <source>Be a virtual Viking!</source>
+        <target>Be a virtual Viking!</target>
+      </trans-unit>
+      <trans-unit id="47ienTP" resname="Username">
+        <source>Username</source>
+        <target>Username</target>
+      </trans-unit>
       <trans-unit id="588_9PF" resname="Password">
         <source>Password</source>
         <target>Password</target>
@@ -357,6 +265,10 @@
         <source>Song details</source>
         <target>Song details</target>
       </trans-unit>
+      <trans-unit id="Um4Ah8w" resname="Description">
+        <source>Description</source>
+        <target>Description</target>
+      </trans-unit>
       <trans-unit id="MksTT1f" resname="Preview">
         <source>Preview</source>
         <target>Preview</target>
@@ -373,6 +285,26 @@
         <source>no description for now</source>
         <target>no description for now</target>
       </trans-unit>
+      <trans-unit id="9lzNr0C" resname="Anonymous:">
+        <source>Anonymous:</source>
+        <target>Anonymous:</target>
+      </trans-unit>
+      <trans-unit id="XdyGkjF" resname="not moderated">
+        <source>not moderated</source>
+        <target>not moderated</target>
+      </trans-unit>
+      <trans-unit id="EaSMvF7" resname="Not available when the song is in &quot;WIP&quot; mode">
+        <source>Not available when the song is in "WIP" mode</source>
+        <target>Not available when the song is in "WIP" mode</target>
+      </trans-unit>
+      <trans-unit id="tRLZfny" resname="User">
+        <source>User</source>
+        <target>User</target>
+      </trans-unit>
+      <trans-unit id="OOWkbLx" resname="Score">
+        <source>Score</source>
+        <target>Score</target>
+      </trans-unit>
       <trans-unit id="g97FsBA" resname="no score for now">
         <source>no score for now</source>
         <target>no score for now</target>
@@ -380,6 +312,14 @@
       <trans-unit id="HJGa8e4" resname="Youtube">
         <source>Youtube</source>
         <target>Youtube</target>
+      </trans-unit>
+      <trans-unit id="iRD1EqK" resname="1 click">
+        <source>1 click</source>
+        <target>1 click</target>
+      </trans-unit>
+      <trans-unit id="dVrtffu" resname="This song is a &quot;Work in progress&quot;">
+        <source>This song is a "Work in progress"</source>
+        <target>This song is a "Work in progress"</target>
       </trans-unit>
       <trans-unit id="1f3BrwI" resname="Downloads">
         <source>Downloads</source>
@@ -393,45 +333,89 @@
         <source>Informations</source>
         <target>Informations</target>
       </trans-unit>
-      <trans-unit id="Hz1Gs6n" resname="Fun factor">
-        <source>Fun factor</source>
-        <target>Fun factor</target>
+      <trans-unit id="_FtY.RV" resname="Fun factor:">
+        <source>Fun factor:</source>
+        <target>Fun factor:</target>
       </trans-unit>
-      <trans-unit id="WhZTROX" resname="Rhythm">
-        <source>Rhythm</source>
-        <target>Rhythm</target>
+      <trans-unit id="USNp9bJ" resname="Rhythm:">
+        <source>Rhythm:</source>
+        <target>Rhythm:</target>
       </trans-unit>
-      <trans-unit id="8Sc9xyy" resname="Flow">
-        <source>Flow</source>
-        <target>Flow</target>
+      <trans-unit id="GDhCgSF" resname="Flow:">
+        <source>Flow:</source>
+        <target>Flow:</target>
       </trans-unit>
-      <trans-unit id="iBY5Ldc" resname="Pattern quality">
-        <source>Pattern quality</source>
-        <target>Pattern quality</target>
+      <trans-unit id="5tzeNyy" resname="Pattern quality:">
+        <source>Pattern quality:</source>
+        <target>Pattern quality:</target>
       </trans-unit>
-      <trans-unit id="rCwYgpx" resname="Readability">
-        <source>Readability</source>
-        <target>Readability</target>
+      <trans-unit id="CaLAvI7" resname="Readability:">
+        <source>Readability:</source>
+        <target>Readability:</target>
       </trans-unit>
-      <trans-unit id="gc4D7SG" resname="Level quality">
-        <source>Level quality</source>
-        <target>Level quality</target>
+      <trans-unit id="tfH0juh" resname="Level quality:">
+        <source>Level quality:</source>
+        <target>Level quality:</target>
       </trans-unit>
-      <trans-unit id="CFAkWlH" resname="Mapped by">
-        <source>Mapped by</source>
-        <target>Mapped by</target>
+      <trans-unit id="3fO3X7H" resname="Mapped by:">
+        <source>Mapped by:</source>
+        <target>Mapped by:</target>
       </trans-unit>
-      <trans-unit id="HTmBuh4" resname="Artist">
-        <source>Artist</source>
-        <target>Artist</target>
+      <trans-unit id="Qzt36wp" resname="Difficulties:">
+        <source>Difficulties:</source>
+        <target>Difficulties:</target>
       </trans-unit>
-      <trans-unit id="s25GbG6" resname="Last update">
-        <source>Last update</source>
-        <target>Last update</target>
+      <trans-unit id="xzOXSvG" resname="Artist:">
+        <source>Artist:</source>
+        <target>Artist:</target>
+      </trans-unit>
+      <trans-unit id="Kc.KjPF" resname="Last update:">
+        <source>Last update:</source>
+        <target>Last update:</target>
+      </trans-unit>
+      <trans-unit id="KY1sdUn" resname="Duration:">
+        <source>Duration:</source>
+        <target>Duration:</target>
+      </trans-unit>
+      <trans-unit id="VVoBMuC" resname="BPM:">
+        <source>BPM:</source>
+        <target>BPM:</target>
+      </trans-unit>
+      <trans-unit id="fTXKUp1" resname="Song Review">
+        <source>Song Review</source>
+        <target>Song Review</target>
       </trans-unit>
       <trans-unit id="ia_i3_Q" resname="Custom songs available for Ragnaröck VR">
         <source>Custom songs available for Ragnaröck VR</source>
         <target>Custom songs available for Ragnaröck VR</target>
+      </trans-unit>
+      <trans-unit id="ScJmuqq" resname="Search">
+        <source>Search</source>
+        <target>Search</target>
+      </trans-unit>
+      <trans-unit id="DwGT2Qc" resname="Search by title, artist or mapper">
+        <source>Search by title, artist or mapper</source>
+        <target>Search by title, artist or mapper</target>
+      </trans-unit>
+      <trans-unit id="jW33dhj" resname="Difficulties">
+        <source>Difficulties</source>
+        <target>Difficulties</target>
+      </trans-unit>
+      <trans-unit id="pSrOQg8" resname="All">
+        <source>All</source>
+        <target>All</target>
+      </trans-unit>
+      <trans-unit id="8mHT1EL" resname="1-3">
+        <source>1-3</source>
+        <target>1-3</target>
+      </trans-unit>
+      <trans-unit id="exHF9yC" resname="4-7">
+        <source>4-7</source>
+        <target>4-7</target>
+      </trans-unit>
+      <trans-unit id="VUipwrR" resname="8-10">
+        <source>8-10</source>
+        <target>8-10</target>
       </trans-unit>
       <trans-unit id="l0mJzw2" resname="10+">
         <source>10+</source>
@@ -445,17 +429,73 @@
         <source>WIP only</source>
         <target>WIP only</target>
       </trans-unit>
+      <trans-unit id="dMV.Tsf" resname="Converted map">
+        <source>Converted map</source>
+        <target>Converted map</target>
+      </trans-unit>
+      <trans-unit id="twhySiO" resname="With">
+        <source>With</source>
+        <target>With</target>
+      </trans-unit>
+      <trans-unit id="e8Jfqtu" resname="Without">
+        <source>Without</source>
+        <target>Without</target>
+      </trans-unit>
+      <trans-unit id="x1wPTSk" resname="Only converted">
+        <source>Only converted</source>
+        <target>Only converted</target>
+      </trans-unit>
+      <trans-unit id="ijel8Hr" resname="Order by">
+        <source>Order by</source>
+        <target>Order by</target>
+      </trans-unit>
+      <trans-unit id="6MMexlo" resname="Last added">
+        <source>Last added</source>
+        <target>Last added</target>
+      </trans-unit>
+      <trans-unit id="OCrF8wj" resname="Last updated">
+        <source>Last updated</source>
+        <target>Last updated</target>
+      </trans-unit>
+      <trans-unit id="zVWI22." resname="Vote">
+        <source>Vote</source>
+        <target>Vote</target>
+      </trans-unit>
+      <trans-unit id="T8UqPEx" resname="Duration">
+        <source>Duration</source>
+        <target>Duration</target>
+      </trans-unit>
       <trans-unit id="pJ1jH4x" resname="Alphabetical">
         <source>Alphabetical</source>
         <target>Alphabetical</target>
+      </trans-unit>
+      <trans-unit id="JAsu23F" resname="Filter songs">
+        <source>Filter songs</source>
+        <target>Filter songs</target>
       </trans-unit>
       <trans-unit id="GK9BVRd" resname="Download filtered selection">
         <source>Download filtered selection</source>
         <target>Download filtered selection</target>
       </trans-unit>
+      <trans-unit id="04vg4Lv" resname="Add song to playlist">
+        <source>Add song to playlist</source>
+        <target>Add song to playlist</target>
+      </trans-unit>
       <trans-unit id="XQIAlIX" resname="Add to playlist">
         <source>Add to playlist</source>
         <target>Add to playlist</target>
+      </trans-unit>
+      <trans-unit id="9Ow4gNY" resname="Mapped by %mapper%">
+        <source>Mapped by %mapper%</source>
+        <target>Mapped by %mapper%</target>
+      </trans-unit>
+      <trans-unit id="nWPu_kY" resname="Difficulties: %difficultiesList%">
+        <source>Difficulties: %difficultiesList%</source>
+        <target>Difficulties: %difficultiesList%</target>
+      </trans-unit>
+      <trans-unit id="fKQydBi" resname="%song_name% by %artist%">
+        <source>%song_name% by %artist%</source>
+        <target>%song_name% by %artist%</target>
       </trans-unit>
       <trans-unit id="BIGW0.Y" resname="Save to playlist!">
         <source>Save to playlist!</source>
@@ -469,21 +509,25 @@
         <source>For lazy people</source>
         <target>For lazy people</target>
       </trans-unit>
+      <trans-unit id="88fgLSX" resname="Fun Factor:">
+        <source>Fun Factor:</source>
+        <target>Fun Factor:</target>
+      </trans-unit>
+      <trans-unit id="p5GWI6U" resname="Save Review!">
+        <source>Save Review!</source>
+        <target>Save Review!</target>
+      </trans-unit>
       <trans-unit id="c1Zl2xv" resname="click to vote">
         <source>click to vote</source>
         <target>click to vote</target>
       </trans-unit>
-      <trans-unit id="cDGLMEx" resname="Send a feedback">
-        <source>Send a feedback</source>
-        <target>Send a feedback</target>
+      <trans-unit id="9JuWNtT" resname="Bpm:">
+        <source>Bpm:</source>
+        <target>Bpm:</target>
       </trans-unit>
-      <trans-unit id="hf.EAnR" resname="You need &lt;a href='%url%' target='_blank'&gt;our app&lt;/a&gt; tu use 1 click installer button">
-        <source>You need &lt;a href='%url%' target='_blank'&gt;our app&lt;/a&gt; tu use 1 click installer button</source>
-        <target><![CDATA[You need <a href='%url%' target='_blank'>our app</a> tu use 1 click installer button]]></target>
-      </trans-unit>
-      <trans-unit id="rNAupNk" resname="songs displayed on">
-        <source>songs displayed on</source>
-        <target>songs displayed on</target>
+      <trans-unit id="qvoMcPi" resname="Explicit content">
+        <source>Explicit content</source>
+        <target>Explicit content</target>
       </trans-unit>
       <trans-unit id="eAN19uO" resname="Leave a feedback">
         <source>Leave a feedback</source>
@@ -497,69 +541,25 @@
         <source>One click download</source>
         <target>One click download</target>
       </trans-unit>
+      <trans-unit id="7FlU8FZ" resname="No song for now">
+        <source>No song for now</source>
+        <target>No song for now</target>
+      </trans-unit>
+      <trans-unit id="Dza7yWv" resname="Pages:">
+        <source>Pages:</source>
+        <target>Pages:</target>
+      </trans-unit>
+      <trans-unit id="rNAupNk" resname="songs displayed on">
+        <source>songs displayed on</source>
+        <target>songs displayed on</target>
+      </trans-unit>
+      <trans-unit id="acQEWR6" resname="Views">
+        <source>Views</source>
+        <target>Views</target>
+      </trans-unit>
       <trans-unit id="nylTBGT" resname="Rating">
         <source>Rating</source>
         <target>Rating</target>
-      </trans-unit>
-      <trans-unit id="Oy0B016" resname="Feedbacks on my custom songs">
-        <source>Feedbacks on my custom songs</source>
-        <target>Feedbacks on my custom songs</target>
-      </trans-unit>
-      <trans-unit id="u8Jb53Q" resname="My custom songs">
-        <source>My custom songs</source>
-        <target>My custom songs</target>
-      </trans-unit>
-      <trans-unit id="Jxxi_i3" resname="My profile">
-        <source>My profile</source>
-        <target>My profile</target>
-      </trans-unit>
-      <trans-unit id="rlY2k_l" resname="Your API key">
-        <source>Your API key</source>
-        <target>Your API key</target>
-      </trans-unit>
-      <trans-unit id="Y74EKO6" resname="copied !">
-        <source>copied !</source>
-        <target>copied !</target>
-      </trans-unit>
-      <trans-unit id="XaVeqb." resname="this account is certified">
-        <source>this account is certified</source>
-        <target>this account is certified</target>
-      </trans-unit>
-      <trans-unit id="kYYOYQu" resname="Is a mapper">
-        <source>Is a mapper</source>
-        <target>Is a mapper</target>
-      </trans-unit>
-      <trans-unit id="u6K_4NF" resname="Season Ranking">
-        <source>Season Ranking</source>
-        <target>Season Ranking</target>
-      </trans-unit>
-      <trans-unit id="yzPF5UO" resname="Song played">
-        <source>Song played</source>
-        <target>Song played</target>
-      </trans-unit>
-      <trans-unit id="l4Dh13_" resname="Song mapped">
-        <source>Song mapped</source>
-        <target>Song mapped</target>
-      </trans-unit>
-      <trans-unit id="VjX9FHA" resname="Distance:">
-        <source>Distance:</source>
-        <target>Distance:</target>
-      </trans-unit>
-      <trans-unit id="81Mt9jk" resname="Notes hit:">
-        <source>Notes hit:</source>
-        <target>Notes hit:</target>
-      </trans-unit>
-      <trans-unit id="ns__VmG" resname="Notes missed:">
-        <source>Notes missed:</source>
-        <target>Notes missed:</target>
-      </trans-unit>
-      <trans-unit id="viY4vbr" resname="Notes not processed:">
-        <source>Notes not processed:</source>
-        <target>Notes not processed:</target>
-      </trans-unit>
-      <trans-unit id=".ct.oJB" resname="My progression on">
-        <source>My progression on</source>
-        <target>My progression on</target>
       </trans-unit>
       <trans-unit id="AW0Q.Ua" resname="Requested by %username%">
         <source>Requested by %username%</source>
@@ -573,6 +573,102 @@
         <source>No one</source>
         <target>No one</target>
       </trans-unit>
+      <trans-unit id="YJxGA5K" resname="No song request">
+        <source>No song request</source>
+        <target>No song request</target>
+      </trans-unit>
+      <trans-unit id="u8Jb53Q" resname="My custom songs">
+        <source>My custom songs</source>
+        <target>My custom songs</target>
+      </trans-unit>
+      <trans-unit id="mRv6AVU" resname="My Profile">
+        <source>My Profile</source>
+        <target>My Profile</target>
+      </trans-unit>
+      <trans-unit id="Jxxi_i3" resname="My profile">
+        <source>My profile</source>
+        <target>My profile</target>
+      </trans-unit>
+      <trans-unit id="rlY2k_l" resname="Your API key">
+        <source>Your API key</source>
+        <target>Your API key</target>
+      </trans-unit>
+      <trans-unit id="Y74EKO6" resname="copied !">
+        <source>copied !</source>
+        <target>copied !</target>
+      </trans-unit>
+      <trans-unit id="ZCZ.iLb" resname="Songs mapped">
+        <source>Songs mapped</source>
+        <target>Songs mapped</target>
+      </trans-unit>
+      <trans-unit id=".qS1zv_" resname="Song">
+        <source>Song</source>
+        <target>Song</target>
+      </trans-unit>
+      <trans-unit id="hMt4cbd" resname="Reviews">
+        <source>Reviews</source>
+        <target>Reviews</target>
+      </trans-unit>
+      <trans-unit id="Jm1sMPX" resname="We don't think he is a mapper">
+        <source>We don't think he is a mapper</source>
+        <target>We don't think he is a mapper</target>
+      </trans-unit>
+      <trans-unit id="QuWIdWM" resname="Last songs played">
+        <source>Last songs played</source>
+        <target>Last songs played</target>
+      </trans-unit>
+      <trans-unit id="lYjTZTI" resname="Level played">
+        <source>Level played</source>
+        <target>Level played</target>
+      </trans-unit>
+      <trans-unit id="yADx6B5" resname="%username%'s profile">
+        <source>%username%'s profile</source>
+        <target>%username%'s profile</target>
+      </trans-unit>
+      <trans-unit id="XaVeqb." resname="this account is certified">
+        <source>this account is certified</source>
+        <target>this account is certified</target>
+      </trans-unit>
+      <trans-unit id="kYYOYQu" resname="Is a mapper">
+        <source>Is a mapper</source>
+        <target>Is a mapper</target>
+      </trans-unit>
+      <trans-unit id="nraec2X" resname="Global ranking:">
+        <source>Global ranking:</source>
+        <target>Global ranking:</target>
+      </trans-unit>
+      <trans-unit id="9Ieatc_" resname="Season Ranking:">
+        <source>Season Ranking:</source>
+        <target>Season Ranking:</target>
+      </trans-unit>
+      <trans-unit id="J8yB2ym" resname="Song played:">
+        <source>Song played:</source>
+        <target>Song played:</target>
+      </trans-unit>
+      <trans-unit id="ODMXl9D" resname="Song mapped:">
+        <source>Song mapped:</source>
+        <target>Song mapped:</target>
+      </trans-unit>
+      <trans-unit id="VjX9FHA" resname="Distance:">
+        <source>Distance:</source>
+        <target>Distance:</target>
+      </trans-unit>
+      <trans-unit id="81Mt9jk" resname="Notes hit:">
+        <source>Notes hit:</source>
+        <target>Notes hit:</target>
+      </trans-unit>
+      <trans-unit id="nsVmG" resname="Notes missed:">
+        <source>Notes missed:</source>
+        <target>Notes missed:</target>
+      </trans-unit>
+      <trans-unit id="viY4vbr" resname="Notes not processed:">
+        <source>Notes not processed:</source>
+        <target>Notes not processed:</target>
+      </trans-unit>
+      <trans-unit id="d4BN8eY" resname="My progression">
+        <source>My progression</source>
+        <target>My progression</target>
+      </trans-unit>
       <trans-unit id="O2aNZsQ" resname="My progression on %songname% level %level%">
         <source>My progression on %songname% level %level%</source>
         <target>My progression on %songname% level %level%</target>
@@ -584,10 +680,6 @@
       <trans-unit id="BHLGy10" resname="Notes Hit">
         <source>Notes Hit</source>
         <target>Notes Hit</target>
-      </trans-unit>
-      <trans-unit id="0">
-        <source>Your playlist</source>
-        <target>messages</target>
       </trans-unit>
     </body>
   </file>

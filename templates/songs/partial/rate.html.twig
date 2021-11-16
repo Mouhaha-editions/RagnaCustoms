@@ -1,9 +1,9 @@
 {% import "songs/macros/vote.html.twig" as macro_vote %}
 
-{{ macro_vote.ratingDisplay("Fun factor"|trans,song.funFactorAverage)|escape }}
-{{ macro_vote.ratingDisplay("Rhythm"|trans,song.rhythmAverage)|escape }}
-{{ macro_vote.ratingDisplay("Flow"|trans,song.flowAverage)|escape }}
-{{ macro_vote.ratingDisplay("Pattern quality"|trans,song.patternQualityAverage)|escape }}
-{{ macro_vote.ratingDisplay("Readability"|trans,song.readabilityAverage)|escape }}
-{{ macro_vote.ratingDisplay("Level quality"|trans,song.levelQualityAverage)|escape }}
+{{ macro_vote.ratingDisplay("Fun factor:"|trans,song.funFactorAverage)|escape }}
+{{ macro_vote.ratingDisplay("Rhythm:"|trans,song.rhythmAverage)|escape }}
+{{ macro_vote.ratingDisplay("Flow:"|trans,song.flowAverage)|escape }}
+{{ macro_vote.ratingDisplay("Pattern quality:"|trans,song.patternQualityAverage)|escape }}
+{{ macro_vote.ratingDisplay("Readability:"|trans,song.readabilityAverage)|escape }}
+{{ macro_vote.ratingDisplay("Level quality:"|trans,song.levelQualityAverage)|escape }}
 <p class='text-center'>{{ "click to vote"|trans }}</p>

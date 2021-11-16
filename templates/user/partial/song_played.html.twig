@@ -4,12 +4,12 @@
 
 {% block detailed_content %}
     <div class="col-12">
-        <h2>Last songs played</h2>
+        <h2>{{ "Last songs played"|trans }}</h2>
         <table class="table songs">
             <tr>
-                <th>Song</th>
-                <th class="text-right">level played</th>
-                <th class="text-right">Score</th>
+                <th>{{ "Song"|trans }}</th>
+                <th class="text-right">{{ "Level played"|trans }}</th>
+                <th class="text-right">{{ "Score"|trans }}</th>
             </tr>
             {% for score in pagination.entities %}
                 {% set song = songService.getByhash(score.hash) %}
@@ -23,7 +23,7 @@
             {% endfor %}
         </table>
         <div class="text-left pagination">
-            Pages : {{ macro_pagination.paginate(pagination) }}
+            {{ "Pages:"|trans }} {{ macro_pagination.paginate(pagination) }}
         </div>
 
     </div>

@@ -24,12 +24,12 @@
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 <br/>
-                {{ songRequest.title }} of {{ songRequest.author }}<br/>
+                {{"%song_name% by %artist%"|trans|replace({"%song_name%":songRequest.title,"%artist%":songRequest.author})}}<br/>
                 <small>{{ "Requested by %username%"|trans({"%username%":songRequest.requestedBy.username}) }}</small><br/>
                 <small>{{ "Mapper working on it :"|trans }} {{ songRequest.getMapper == false ? ("<span class='text-danger'>"~("No one"|trans)~"</span>")|raw: songRequest.getMapper.username }}</small>
             </div>
         {% else %}
-            <p>No song request</p>
+            <p>{{ "No song request"|trans }}</p>
         {% endfor %}
     </div>
 {% endblock %}

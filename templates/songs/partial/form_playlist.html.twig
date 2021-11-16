@@ -1,5 +1,5 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
-<b>{{ song.name }}</b> <span class="light">by {{ song.authorName }}</span>
+{{ "%song_name% by %artist%"|trans|replace({"%song_name%": song.name,"%artist%": song.authorName}) }}
 {{ form_start(form) }}
 {{ form_row(form.playlist) }}
 {{ form_row(form.newPlaylist) }}
