@@ -475,11 +475,11 @@
       </trans-unit>
       <trans-unit id="hoja2Ew" resname="Ranked first">
         <source>Ranked first</source>
-        <target>Ranked en premier</target>
+        <target>Classé en premier</target>
       </trans-unit>
       <trans-unit id="7BmrasU" resname="Leaderboards">
         <source>Leaderboards</source>
-        <target>Tableaux de score</target>
+        <target>Tableaux des scores</target>
       </trans-unit>
       <trans-unit id="3Wx89es" resname="Leaderboards by song">
         <source>Leaderboards by song</source>
