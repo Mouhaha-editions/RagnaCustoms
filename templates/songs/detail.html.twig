@@ -230,7 +230,7 @@
                 {{ macro_vote.ratingDisplayLabel("Readability:"|trans,song.readabilityAverage) }}
                 {{ macro_vote.ratingDisplayLabel("Level quality:"|trans,song.levelQualityAverage) }}
                 <div class="d-flex rating-wrap">
-                    <label>{{ "Mapped by:"|trans }}  </label>
+                    <label>{{ "Mapped by:"|trans }} </label>
                     <span>
                         <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
                     </span>
