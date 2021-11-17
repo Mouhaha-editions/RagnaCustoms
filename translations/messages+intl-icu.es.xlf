@@ -1,93 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-<file datatype="plaintext" original="file.ext" source-language="en" target-language="pl">
+<file datatype="plaintext" original="file.ext" source-language="en" target-language="es">
 <body>
 <trans-unit id=".qS1zv_">
 <source xml:space="preserve">Song</source>
-<target xml:space="preserve">Piosenka</target>
+<target xml:space="preserve">Canción</target>
 </trans-unit>
 <trans-unit id="04vg4Lv">
 <source xml:space="preserve">Add song to playlist</source>
-<target xml:space="preserve">Dodaj utwór do playlisty</target>
+<target xml:space="preserve">Añadir canción a la lista de reproducción</target>
 </trans-unit>
 <trans-unit id="0FJ_Sz1">
 <source xml:space="preserve">Logout</source>
-<target xml:space="preserve">Wyloguj</target>
+<target xml:space="preserve">Cerrar sesión</target>
 </trans-unit>
 <trans-unit id="0GkEJ7H">
 <source xml:space="preserve">Upload Song</source>
-<target xml:space="preserve">Prześlij utwór</target>
+<target xml:space="preserve">Subir Canción</target>
 </trans-unit>
 <trans-unit id="12hUvwX">
 <source xml:space="preserve">Save your score online</source>
-<target xml:space="preserve">Zapisz swój wynik online</target>
+<target xml:space="preserve">Guardar tu puntuación en línea</target>
 </trans-unit>
 <trans-unit id="1f3BrwI">
 <source xml:space="preserve">Downloads</source>
-<target xml:space="preserve">Pobrane</target>
+<target xml:space="preserve">Descargas
+</target>
 </trans-unit>
 <trans-unit id="1ur_gjW">
 <source xml:space="preserve">Download</source>
-<target xml:space="preserve">Pobierz</target>
+<target xml:space="preserve">Descarga</target>
 </trans-unit>
 <trans-unit id="3Wx89es">
 <source xml:space="preserve">Leaderboards by song</source>
-<target xml:space="preserve">Tabele rankingowe według utworu</target>
+<target xml:space="preserve">Tablas de clasificación por canción</target>
 </trans-unit>
 <trans-unit id="3fO3X7H">
 <source xml:space="preserve">Mapped by:</source>
-<target xml:space="preserve">Zmapowane przez:</target>
+<target xml:space="preserve">Mapeado por:</target>
 </trans-unit>
 <trans-unit id="47ienTP">
 <source xml:space="preserve">Username</source>
-<target xml:space="preserve">Nazwa użytkownika</target>
+<target xml:space="preserve">Nombre de usuario</target>
 </trans-unit>
 <trans-unit id="4chvCh2">
 <source xml:space="preserve">Our Application</source>
-<target xml:space="preserve">Nasza aplikacja</target>
+<target xml:space="preserve">Nuestra aplicación</target>
 </trans-unit>
 <trans-unit id="588_9PF">
 <source xml:space="preserve">Password</source>
-<target xml:space="preserve">Hasło</target>
+<target xml:space="preserve">Contraseña</target>
 </trans-unit>
 <trans-unit id="5tzeNyy">
 <source xml:space="preserve">Pattern quality:</source>
-<target xml:space="preserve">Jakość wzoru:</target>
+<target xml:space="preserve">Calidad de patrones</target>
 </trans-unit>
 <trans-unit id="6MMexlo">
 <source xml:space="preserve">Last added</source>
-<target xml:space="preserve">Ostatnio dodane</target>
+<target xml:space="preserve">Ultimo añadido</target>
 </trans-unit>
 <trans-unit id="7BmrasU">
 <source xml:space="preserve">Leaderboards</source>
-<target xml:space="preserve">Rankingi</target>
+<target xml:space="preserve">Tablas de clasificación</target>
 </trans-unit>
 <trans-unit id="7FlU8FZ">
 <source xml:space="preserve">No song for now</source>
-<target xml:space="preserve">Na razie brak utworu</target>
+<target xml:space="preserve">No hay canción por ahora</target>
 </trans-unit>
 <trans-unit id="7spPgKG">
 <source xml:space="preserve">Forgot Password?</source>
-<target xml:space="preserve">Nie pamiętasz hasła?</target>
+<target xml:space="preserve">¿Olvidaste tu contraseña?</target>
 </trans-unit>
 <trans-unit id="81Mt9jk">
 <source xml:space="preserve">Notes hit:</source>
-<target xml:space="preserve">Trafione nuty</target>
+<target xml:space="preserve">Notas acertadas:</target>
 </trans-unit>
 <trans-unit id="88fgLSX">
 <source xml:space="preserve">Fun factor:</source>
-<target xml:space="preserve">Czynnik zabawy:</target>
+<target xml:space="preserve">Factor de diversión</target>
 </trans-unit>
 <trans-unit id="8Cjk8Aq">
 <source xml:space="preserve">Be a virtual Viking!</source>
-<target xml:space="preserve">Bądź wirtualnym Wikingiem!</target>
+<target xml:space="preserve">¡Sé un Vikingo virtual!</target>
 </trans-unit>
 <trans-unit id="8JX3BFP">
 <source xml:space="preserve">Mapper working on it :</source>
-<target xml:space="preserve">Osoba mapująca:</target>
+<target xml:space="preserve">Mapeador trabajando en ello:</target>
 </trans-unit>
 <trans-unit id="8bCqTC3">
 <source xml:space="preserve">It also allows you to search through the catalogue and download without even visiting the website. A one-click option is also enabled for even simpler downloads!</source>
-<target xml:space="preserve">Pozwala również na przeglądanie katalogu i pobieranie bez odwiedzania strony internetowej. Opcja jednym kliknięciem jest również dostępna dla jeszcze prostszych pobrań!</target>
+<target xml:space="preserve">También te permite buscar en el catálogo y descargar sin siquiera visitar el sitio web. La opción de un solo clic también está habilitada para realizar descargas aún más sencillas.</target>
 </trans-unit>
 <trans-unit id="8mHT1EL">
 <source xml:space="preserve">1-3</source>
@@ -95,75 +96,75 @@
 </trans-unit>
 <trans-unit id="9Ieatc_">
 <source xml:space="preserve">Season Ranking:</source>
-<target xml:space="preserve">Ranking Sezonu:</target>
+<target xml:space="preserve">Clasificación de temporada:</target>
 </trans-unit>
 <trans-unit id="9JuWNtT">
 <source xml:space="preserve">Bpm:</source>
-<target xml:space="preserve">ud./min</target>
+<target xml:space="preserve">Bpm:</target>
 </trans-unit>
 <trans-unit id="9Ow4gNY">
 <source xml:space="preserve">Mapped by %mapper%</source>
-<target xml:space="preserve">Zmapowane przez %mapper%</target>
+<target xml:space="preserve">Mapeado por %mapper%</target>
 </trans-unit>
 <trans-unit id="9lzNr0C">
 <source xml:space="preserve">Anonymous:</source>
-<target xml:space="preserve">Anonim:</target>
+<target xml:space="preserve">Anónimo:</target>
 </trans-unit>
 <trans-unit id="AO52KuB">
 <source xml:space="preserve">Custom Songs</source>
-<target xml:space="preserve">Niestandardowe utwory</target>
+<target xml:space="preserve">Canciones personalizadas</target>
 </trans-unit>
 <trans-unit id="AW0Q.Ua">
 <source xml:space="preserve">Requested by %username%</source>
-<target xml:space="preserve">Żądany przez %username%</target>
+<target xml:space="preserve">Solicitado por %username%</target>
 </trans-unit>
 <trans-unit id="BHLGy10">
 <source xml:space="preserve">Notes Hit</source>
-<target xml:space="preserve">Nuty Trafione</target>
+<target xml:space="preserve">Notas acertadas</target>
 </trans-unit>
 <trans-unit id="BIGW0.Y">
 <source xml:space="preserve">Save to playlist!</source>
-<target xml:space="preserve">Zapisz do playlisty!</target>
+<target xml:space="preserve">¡Guardar en lista de reproducción!</target>
 </trans-unit>
 <trans-unit id="CaLAvI7">
 <source xml:space="preserve">Readability:</source>
-<target xml:space="preserve">Czytelność:</target>
+<target xml:space="preserve">Legibilidad:</target>
 </trans-unit>
 <trans-unit id="DYQW7sZ">
 <source xml:space="preserve">How to be in leaderboard</source>
-<target xml:space="preserve">Jak być w rankingu</target>
+<target xml:space="preserve">Cómo estar en la tabla de clasificación</target>
 </trans-unit>
 <trans-unit id="DmY3P0X">
 <source xml:space="preserve">Label</source>
-<target xml:space="preserve">Etykieta</target>
+<target xml:space="preserve">Etiqueta</target>
 </trans-unit>
 <trans-unit id="DwGT2Qc">
 <source xml:space="preserve">Search by title, artist or mapper</source>
-<target xml:space="preserve">Szukaj według tytułu, wykonawcy lub mapera</target>
+<target xml:space="preserve">Búsqueda por título, artista o mapeador</target>
 </trans-unit>
 <trans-unit id="Dza7yWv">
 <source xml:space="preserve">Pages:</source>
-<target xml:space="preserve">Strony:</target>
+<target xml:space="preserve">Páginas:</target>
 </trans-unit>
 <trans-unit id="EUcEJ9R">
 <source xml:space="preserve">An error occurs</source>
-<target xml:space="preserve">Wystąpił błąd</target>
+<target xml:space="preserve">Se produce un error</target>
 </trans-unit>
 <trans-unit id="EaSMvF7">
 <source xml:space="preserve">Not available when the song is in "WIP" mode</source>
-<target xml:space="preserve">Niedostępne, gdy utwór jest w trybie „WIP”</target>
+<target xml:space="preserve">No disponible cuando la canción está en modo "Trabajo en progreso"</target>
 </trans-unit>
 <trans-unit id="G.fsjoj">
 <source xml:space="preserve">Season ranking</source>
-<target xml:space="preserve">Ranking Sezonu</target>
+<target xml:space="preserve">Clasificación de temporada</target>
 </trans-unit>
 <trans-unit id="GDhCgSF">
 <source xml:space="preserve">Flow:</source>
-<target xml:space="preserve">Płynność:</target>
+<target xml:space="preserve">Fluidez</target>
 </trans-unit>
 <trans-unit id="GK9BVRd">
 <source xml:space="preserve">Download filtered selection</source>
-<target xml:space="preserve">Pobierz przefiltrowane</target>
+<target xml:space="preserve">Descargar selección filtrada</target>
 </trans-unit>
 <trans-unit id="HJGa8e4">
 <source xml:space="preserve">Youtube</source>
@@ -171,135 +172,135 @@
 </trans-unit>
 <trans-unit id="HhjWrbO">
 <source xml:space="preserve">No one</source>
-<target xml:space="preserve">Nikt</target>
+<target xml:space="preserve">Nadie</target>
 </trans-unit>
 <trans-unit id="J8yB2ym">
 <source xml:space="preserve">Song played:</source>
-<target xml:space="preserve">Utwór rozegrany:</target>
+<target xml:space="preserve">Canción reproducida:</target>
 </trans-unit>
 <trans-unit id="JAsu23F">
 <source xml:space="preserve">Filter songs</source>
-<target xml:space="preserve">Filtruj piosenki</target>
+<target xml:space="preserve">Filtrar canciones</target>
 </trans-unit>
 <trans-unit id="JiEhxTc">
 <source xml:space="preserve">edit</source>
-<target xml:space="preserve">edytuj</target>
+<target xml:space="preserve">Editar</target>
 </trans-unit>
 <trans-unit id="Jm1sMPX">
 <source xml:space="preserve">We don't think he is a mapper</source>
-<target xml:space="preserve">Nie sądzimy, że jest maperem</target>
+<target xml:space="preserve">No creemos que sea un mapeador</target>
 </trans-unit>
 <trans-unit id="Jxxi_i3">
 <source xml:space="preserve">My profile</source>
-<target xml:space="preserve">Mój profil</target>
+<target xml:space="preserve">Mi perfil</target>
 </trans-unit>
 <trans-unit id="KPJ6R4z">
 <source xml:space="preserve">Your playlist</source>
-<target xml:space="preserve">Twoja playlista</target>
+<target xml:space="preserve">Tu lista de reproducción</target>
 </trans-unit>
 <trans-unit id="KY1sdUn">
 <source xml:space="preserve">Duration:</source>
-<target xml:space="preserve">Czas trwania:</target>
+<target xml:space="preserve">Duración:</target>
 </trans-unit>
 <trans-unit id="Kc.KjPF">
 <source xml:space="preserve">Last update:</source>
-<target xml:space="preserve">Ostatnia aktualizacja:</target>
+<target xml:space="preserve">Última actualización:</target>
 </trans-unit>
 <trans-unit id="KkPzMqC">
 <source xml:space="preserve">Song added to your playlist!</source>
-<target xml:space="preserve">Piosenka dodana do playlisty!</target>
+<target xml:space="preserve">¡Canción añadida a tu lista de reproducción!</target>
 </trans-unit>
 <trans-unit id="KpL2_.m">
 <source xml:space="preserve">Remember Me</source>
-<target xml:space="preserve">Zapamiętaj mnie na tym urządzeniu</target>
+<target xml:space="preserve">Recordarme</target>
 </trans-unit>
 <trans-unit id="Ldf2lJ5">
 <source xml:space="preserve">This Custom song is not your's</source>
-<target xml:space="preserve">Ta Piosenka niestandardowa nie jest twoja</target>
+<target xml:space="preserve">Esta canción personalizada no es tuya</target>
 </trans-unit>
 <trans-unit id="LzBuRE8">
 <source xml:space="preserve">Feedback sent!</source>
-<target xml:space="preserve">Przesłano opinię!</target>
+<target xml:space="preserve">Comentarios enviados</target>
 </trans-unit>
 <trans-unit id="M0pAn1b">
 <source xml:space="preserve">Song details</source>
-<target xml:space="preserve">Szczegóły utworu</target>
+<target xml:space="preserve">Detalles de la canción</target>
 </trans-unit>
 <trans-unit id="MbRxIVh">
 <source xml:space="preserve">Leaderboard</source>
-<target xml:space="preserve">Tabela wyników</target>
+<target xml:space="preserve">Tabla de Clasificación</target>
 </trans-unit>
 <trans-unit id="MetgMAN">
 <source xml:space="preserve">Songs played</source>
-<target xml:space="preserve">Odtwarzane piosenki</target>
+<target xml:space="preserve">Canciones jugadas</target>
 </trans-unit>
 <trans-unit id="MksTT1f">
 <source xml:space="preserve">Preview</source>
-<target xml:space="preserve">Podgląd</target>
+<target xml:space="preserve">Previsualización</target>
 </trans-unit>
 <trans-unit id="NPV29eL">
 <source xml:space="preserve">No archive for now</source>
-<target xml:space="preserve">Na razie nie ma archiwum</target>
+<target xml:space="preserve">No hay archivo por ahora</target>
 </trans-unit>
 <trans-unit id="NX6NrMb">
 <source xml:space="preserve">Overlay editor</source>
-<target xml:space="preserve">Edytor nakładki</target>
+<target xml:space="preserve">Editor de superposiciones</target>
 </trans-unit>
 <trans-unit id="O2aNZsQ">
 <source xml:space="preserve">My progression on %songname% level %level%</source>
-<target xml:space="preserve">Mój postęp na %songname% poziom %level%</target>
+<target xml:space="preserve">Mi progresión en %songname% nivel %level%</target>
 </trans-unit>
 <trans-unit id="OCrF8wj">
 <source xml:space="preserve">Last updated</source>
-<target xml:space="preserve">Ostatnia aktualizacja</target>
+<target xml:space="preserve">Última actualización</target>
 </trans-unit>
 <trans-unit id="ODMXl9D">
 <source xml:space="preserve">Song mapped:</source>
-<target xml:space="preserve">Piosenka zmapowana:</target>
+<target xml:space="preserve">Canción mapeada:</target>
 </trans-unit>
 <trans-unit id="OOWkbLx">
 <source xml:space="preserve">Score</source>
-<target xml:space="preserve">Punktacja</target>
+<target xml:space="preserve">Puntuación</target>
 </trans-unit>
 <trans-unit id="QSvguc1">
 <source xml:space="preserve">Informations</source>
-<target xml:space="preserve">Informacje</target>
+<target xml:space="preserve">Informaciones</target>
 </trans-unit>
 <trans-unit id="QuWIdWM">
 <source xml:space="preserve">Last songs played</source>
-<target xml:space="preserve">Ostatnio rozegrane utowry</target>
+<target xml:space="preserve">Últimas canciones jugadas</target>
 </trans-unit>
 <trans-unit id="Qzt36wp">
 <source xml:space="preserve">Difficulties:</source>
-<target xml:space="preserve">Poziomy trudności:</target>
+<target xml:space="preserve">Dificultades:</target>
 </trans-unit>
 <trans-unit id="REgGQF4">
 <source xml:space="preserve">Download playlist with the app</source>
-<target xml:space="preserve">Pobierz playlistę z użyciem aplikacji</target>
+<target xml:space="preserve">Descarga la lista de reproducción con la aplicación</target>
 </trans-unit>
 <trans-unit id="ScJmuqq">
 <source xml:space="preserve">Search</source>
-<target xml:space="preserve">Szukaj</target>
+<target xml:space="preserve">Buscar</target>
 </trans-unit>
 <trans-unit id="T8UqPEx">
 <source xml:space="preserve">Duration</source>
-<target xml:space="preserve">Czas trwania</target>
+<target xml:space="preserve">Duración</target>
 </trans-unit>
 <trans-unit id="USNp9bJ">
 <source xml:space="preserve">Rhythm:</source>
-<target xml:space="preserve">Rytm:</target>
+<target xml:space="preserve">Ritmo:</target>
 </trans-unit>
 <trans-unit id="UigtRYc">
 <source xml:space="preserve">1 click downloader</source>
-<target xml:space="preserve">Pobierz jednym kliknięciem</target>
+<target xml:space="preserve">Descargador de 1 clic</target>
 </trans-unit>
 <trans-unit id="Um4Ah8w">
 <source xml:space="preserve">Description</source>
-<target xml:space="preserve">Opis</target>
+<target xml:space="preserve">Descripción</target>
 </trans-unit>
 <trans-unit id="UpJKYO9">
 <source xml:space="preserve">Song not found!</source>
-<target xml:space="preserve">Piosenka nie znaleziona!</target>
+<target xml:space="preserve">No se ha encontrado la canción.</target>
 </trans-unit>
 <trans-unit id="VUipwrR">
 <source xml:space="preserve">8-10</source>
@@ -307,135 +308,135 @@
 </trans-unit>
 <trans-unit id="VVoBMuC">
 <source xml:space="preserve">BPM:</source>
-<target xml:space="preserve">ud./min:</target>
+<target xml:space="preserve">BPM:</target>
 </trans-unit>
 <trans-unit id="VjX9FHA">
 <source xml:space="preserve">Distance:</source>
-<target xml:space="preserve">Dystans:</target>
+<target xml:space="preserve">Distancia:</target>
 </trans-unit>
 <trans-unit id="W3DV9nC">
 <source xml:space="preserve">Other thing it does:</source>
-<target xml:space="preserve">Inna rzecz, którą robi:</target>
+<target xml:space="preserve">Otra cosa que hace:</target>
 </trans-unit>
 <trans-unit id="WHkb.qH">
 <source xml:space="preserve">You need an account to access this page.</source>
-<target xml:space="preserve">Aby uzyskać dostęp do tej strony, potrzebujesz konta.</target>
+<target xml:space="preserve">Necesitas una cuenta para acceder a esta página.</target>
 </trans-unit>
 <trans-unit id="WRk1sVs">
 <source xml:space="preserve">Public</source>
-<target xml:space="preserve">Publiczny</target>
+<target xml:space="preserve">Público</target>
 </trans-unit>
 <trans-unit id="X9aLVJE">
 <source xml:space="preserve">Twitch requests &amp; overlay</source>
-<target xml:space="preserve">Nakładka żądań Twitch</target>
+<target xml:space="preserve">Solicitudes y superposición de Twitch</target>
 </trans-unit>
 <trans-unit id="XQIAlIX">
 <source xml:space="preserve">Add to playlist</source>
-<target xml:space="preserve">Dodaj do playlisty</target>
+<target xml:space="preserve">Agregar a la lista de reproducción</target>
 </trans-unit>
 <trans-unit id="XaVeqb.">
 <source xml:space="preserve">this account is certified</source>
-<target xml:space="preserve">to konto jest certyfikowane</target>
+<target xml:space="preserve">esta cuenta está certificada</target>
 </trans-unit>
 <trans-unit id="XdyGkjF">
 <source xml:space="preserve">not moderated</source>
-<target xml:space="preserve">nie moderowane</target>
+<target xml:space="preserve">no moderado</target>
 </trans-unit>
 <trans-unit id="Y44kn0o">
 <source xml:space="preserve">Filter</source>
-<target xml:space="preserve">Filtruj</target>
+<target xml:space="preserve">Filtro</target>
 </trans-unit>
 <trans-unit id="Y74EKO6">
 <source xml:space="preserve">copied !</source>
-<target xml:space="preserve">Skopiowano !</target>
+<target xml:space="preserve">¡Copiado!</target>
 </trans-unit>
 <trans-unit id="YJxGA5K">
 <source xml:space="preserve">No song request</source>
-<target xml:space="preserve">Brak żądania utworu</target>
+<target xml:space="preserve">Sin solicitud de canción</target>
 </trans-unit>
 <trans-unit id="YZdZVQP">
 <source xml:space="preserve">delete</source>
-<target xml:space="preserve">usuń</target>
+<target xml:space="preserve">Borrar</target>
 </trans-unit>
 <trans-unit id="YcTuxIi">
 <source xml:space="preserve">You can't review a custom song you've submitted</source>
-<target xml:space="preserve">Nie można ocenić utworu niestandardowego, który sam przesłałeś/aś</target>
+<target xml:space="preserve">No puedes revisar una canción personalizada que tú has subido</target>
 </trans-unit>
 <trans-unit id="Yg3a6ad">
 <source xml:space="preserve">Custom song not found !</source>
-<target xml:space="preserve">Nie znaleziono utworu niestandardowego !</target>
+<target xml:space="preserve">No se ha encontrado la canción personalizada.</target>
 </trans-unit>
 <trans-unit id="YkSoo8Q">
 <source xml:space="preserve">Our application is magic! It creates the necessary folders and unzips the files in the right place, it also renames the folder with the song title for optimal in-game song ordering.</source>
-<target xml:space="preserve">Nasza aplikacja jest magiczna! Tworzy niezbędne foldery i rozpakowuje pliki we właściwym miejscu, zmienia również nazwę folderu z tytułem utworu w celu optymalnej segregacji utworów w grze.</target>
+<target xml:space="preserve">¡Nuestra aplicación es mágica! Crea las carpetas necesarias y descomprime los archivos en el lugar correcto, también cambia el nombre de la carpeta con el título de la canción para un orden óptimo de las canciones en el juego.</target>
 </trans-unit>
 <trans-unit id="ZCZ.iLb">
 <source xml:space="preserve">Songs mapped</source>
-<target xml:space="preserve">Utwory zmapowane</target>
+<target xml:space="preserve">Canciones mapeadas</target>
 </trans-unit>
 <trans-unit id="_FtY.RV">
 <source xml:space="preserve">Fun factor:</source>
-<target xml:space="preserve">Czynnik zabawy:</target>
+<target xml:space="preserve">Factor de diversión:</target>
 </trans-unit>
 <trans-unit id="_zBZPKM">
 <source xml:space="preserve">copied</source>
-<target xml:space="preserve">skopiowano</target>
+<target xml:space="preserve">¡Copiado!</target>
 </trans-unit>
 <trans-unit id="aL6gI1n">
 <source xml:space="preserve">Song "%song%" by "%artist%" successfully uploaded!</source>
-<target xml:space="preserve">Utwór "%song%” w wykonaniu "%artist%” pomyślnie przesłany!</target>
+<target xml:space="preserve">La canción «%song%» de «%artist%» se ha subido correctamente.</target>
 </trans-unit>
 <trans-unit id="acQEWR6">
 <source xml:space="preserve">Views</source>
-<target xml:space="preserve">Wyświetlenia</target>
+<target xml:space="preserve">Vistas</target>
 </trans-unit>
 <trans-unit id="beOfoMt">
 <source xml:space="preserve">Copy code for Twitch</source>
-<target xml:space="preserve">Skopiuj kod dla Twitch</target>
+<target xml:space="preserve">Copiar código para Twitch</target>
 </trans-unit>
 <trans-unit id="c1Zl2xv">
 <source xml:space="preserve">click to vote</source>
-<target xml:space="preserve">kliknij, aby głosować</target>
+<target xml:space="preserve">haga clic para votar</target>
 </trans-unit>
 <trans-unit id="c5LJ9v.">
 <source xml:space="preserve">You need to be connected</source>
-<target xml:space="preserve">Musisz być połączony</target>
+<target xml:space="preserve">Necesitas estar conectado</target>
 </trans-unit>
 <trans-unit id="cQEsJJT">
 <source xml:space="preserve">You need an account to use playlist!</source>
-<target xml:space="preserve">Potrzebujesz konta, aby korzystać z playlisty!</target>
+<target xml:space="preserve">¡Necesitas una cuenta para usar las listas de reproducción!</target>
 </trans-unit>
 <trans-unit id="d4BN8eY">
 <source xml:space="preserve">My progression</source>
-<target xml:space="preserve">Mój postęp</target>
+<target xml:space="preserve">Mi progreso</target>
 </trans-unit>
 <trans-unit id="dMV.Tsf">
 <source xml:space="preserve">Converted map</source>
-<target xml:space="preserve">Przekonwertowana mapa</target>
+<target xml:space="preserve">Mapa convertido</target>
 </trans-unit>
 <trans-unit id="dVrtffu">
 <source xml:space="preserve">This song is a "Work in progress"</source>
-<target xml:space="preserve">Ta piosenka jest obecnie mapowana</target>
+<target xml:space="preserve">Esta canción es un «Trabajo en progreso»</target>
 </trans-unit>
 <trans-unit id="denQnlA">
 <source xml:space="preserve">Ranked only</source>
-<target xml:space="preserve">Tylko rankingowe</target>
+<target xml:space="preserve">Solo clasificatorias</target>
 </trans-unit>
 <trans-unit id="djsLN.8">
 <source xml:space="preserve">One click download</source>
-<target xml:space="preserve">Pobierz jednym kliknięciem</target>
+<target xml:space="preserve">Descarga con un clic</target>
 </trans-unit>
 <trans-unit id="e8Jfqtu">
 <source xml:space="preserve">Without</source>
-<target xml:space="preserve">Bez</target>
+<target xml:space="preserve">Sin</target>
 </trans-unit>
 <trans-unit id="eAN19uO">
 <source xml:space="preserve">Leave a feedback</source>
-<target xml:space="preserve">Zostaw opinię</target>
+<target xml:space="preserve">Dejar comentarios</target>
 </trans-unit>
 <trans-unit id="ekHOigo">
 <source xml:space="preserve">How to download with one click ?</source>
-<target xml:space="preserve">Jak pobrać jednym kliknięciem?</target>
+<target xml:space="preserve">¿Cómo descargar con un solo clic?</target>
 </trans-unit>
 <trans-unit id="exHF9yC">
 <source xml:space="preserve">4-7</source>
@@ -443,59 +444,59 @@
 </trans-unit>
 <trans-unit id="fKQydBi">
 <source xml:space="preserve">%song_name% by %artist%</source>
-<target xml:space="preserve">%song_name% ​w wykonaniu %artist%</target>
+<target xml:space="preserve">%song_name% de %artist%</target>
 </trans-unit>
 <trans-unit id="fTXKUp1">
 <source xml:space="preserve">Song Review</source>
-<target xml:space="preserve">Recenzja utworu</target>
+<target xml:space="preserve">Reseña de canción</target>
 </trans-unit>
 <trans-unit id="fjSMV5j">
 <source xml:space="preserve">Already downloaded</source>
-<target xml:space="preserve">Już pobrano</target>
+<target xml:space="preserve">Ya descargada</target>
 </trans-unit>
 <trans-unit id="g97FsBA">
 <source xml:space="preserve">no score for now</source>
-<target xml:space="preserve">Na razie nie ma wyniku</target>
+<target xml:space="preserve">sin puntuación por ahora</target>
 </trans-unit>
 <trans-unit id="gQZ.y3Y">
 <source xml:space="preserve">Song already in playlist!</source>
-<target xml:space="preserve">Piosenka już na playliście!</target>
+<target xml:space="preserve">¡La canción ya está en lista de reproducción!</target>
 </trans-unit>
 <trans-unit id="gfZ42tt">
 <source xml:space="preserve">My playlists</source>
-<target xml:space="preserve">Moje playlisty</target>
+<target xml:space="preserve">Mis listas de reproducción</target>
 </trans-unit>
 <trans-unit id="hMt4cbd">
 <source xml:space="preserve">Reviews</source>
-<target xml:space="preserve">Recenzje</target>
+<target xml:space="preserve">Reseñas</target>
 </trans-unit>
 <trans-unit id="iRD1EqK">
 <source xml:space="preserve">1 click</source>
-<target xml:space="preserve">1 kliknięcie</target>
+<target xml:space="preserve">1 clic</target>
 </trans-unit>
 <trans-unit id="ia_i3_Q">
 <source xml:space="preserve">Custom songs available for Ragnaröck VR</source>
-<target xml:space="preserve">Niestandardowe piosenki dostępne dla Ragnaröck VR</target>
+<target xml:space="preserve">Canciones personalizadas disponibles para Ragnaröck VR</target>
 </trans-unit>
 <trans-unit id="ijel8Hr">
 <source xml:space="preserve">Order by</source>
-<target xml:space="preserve">Sortuj według</target>
+<target xml:space="preserve">Ordenar por</target>
 </trans-unit>
 <trans-unit id="jW33dhj">
 <source xml:space="preserve">Difficulties</source>
-<target xml:space="preserve">Trudności</target>
+<target xml:space="preserve">Dificultades</target>
 </trans-unit>
 <trans-unit id="kYYOYQu">
 <source xml:space="preserve">Is a mapper</source>
-<target xml:space="preserve">Jest maperem</target>
+<target xml:space="preserve">Es un mapeador</target>
 </trans-unit>
 <trans-unit id="kdVHOTi">
 <source xml:space="preserve">No playlist for now</source>
-<target xml:space="preserve">Na razie brak playlisty</target>
+<target xml:space="preserve">No hay lista de reproducción por ahora</target>
 </trans-unit>
 <trans-unit id="kyIu1Z1">
 <source xml:space="preserve">All your playlists</source>
-<target xml:space="preserve">Twoje playlisty</target>
+<target xml:space="preserve">Todas tus listas de reproducción</target>
 </trans-unit>
 <trans-unit id="l0mJzw2">
 <source xml:space="preserve">10+</source>
@@ -503,187 +504,188 @@
 </trans-unit>
 <trans-unit id="lYjTZTI">
 <source xml:space="preserve">Level played</source>
-<target xml:space="preserve">Poziom rozegrany</target>
+<target xml:space="preserve">Nivel jugado</target>
 </trans-unit>
 <trans-unit id="mRv6AVU">
 <source xml:space="preserve">My Profile</source>
-<target xml:space="preserve">Mój Profil</target>
+<target xml:space="preserve">Mi perfil</target>
 </trans-unit>
 <trans-unit id="nWMiwfT">
 <source xml:space="preserve">Login</source>
-<target xml:space="preserve">Zaloguj</target>
+<target xml:space="preserve">Iniciar sesión</target>
 </trans-unit>
 <trans-unit id="nWPu_kY">
 <source xml:space="preserve">Difficulties: %difficultiesList%</source>
-<target xml:space="preserve">Poziomy trudności: %difficultiesList%</target>
+<target xml:space="preserve">Dificultades: %difficultiesList%</target>
 </trans-unit>
 <trans-unit id="nlIwJ21">
 <source xml:space="preserve">This custom song is not available for now</source>
-<target xml:space="preserve">Ta niestandardowa piosenka nie jest na razie dostępna</target>
+<target xml:space="preserve">Esta canción personalizada no está disponible por ahora</target>
 </trans-unit>
 <trans-unit id="nraec2X">
 <source xml:space="preserve">Global ranking:</source>
-<target xml:space="preserve">Globalny ranking:</target>
+<target xml:space="preserve">Clasificación global:</target>
 </trans-unit>
 <trans-unit id="ns__VmG">
 <source xml:space="preserve">Notes missed:</source>
-<target xml:space="preserve">Nuty pominięte:</target>
+<target xml:space="preserve">Notas fallidas:</target>
 </trans-unit>
 <trans-unit id="nylTBGT">
 <source xml:space="preserve">Rating</source>
-<target xml:space="preserve">Ocena</target>
+<target xml:space="preserve">Calificación</target>
 </trans-unit>
 <trans-unit id="olizD4j">
 <source xml:space="preserve">Global</source>
-<target xml:space="preserve">Globalny</target>
+<target xml:space="preserve">Global</target>
 </trans-unit>
 <trans-unit id="p5GWI6U">
 <source xml:space="preserve">Save Review!</source>
-<target xml:space="preserve">Zapisz Recenzję!</target>
+<target xml:space="preserve">¡Guardar reseña!</target>
 </trans-unit>
 <trans-unit id="pBMNfSw">
 <source xml:space="preserve">Rank</source>
-<target xml:space="preserve">Ranga</target>
+<target xml:space="preserve">Clasificación</target>
 </trans-unit>
 <trans-unit id="pJ1jH4x">
 <source xml:space="preserve">Alphabetical</source>
-<target xml:space="preserve">Alfabetycznie</target>
+<target xml:space="preserve">Alfabético</target>
 </trans-unit>
 <trans-unit id="pP5lJk7">
 <source xml:space="preserve">Language</source>
-<target xml:space="preserve">Język</target>
+<target xml:space="preserve">Idioma</target>
 </trans-unit>
 <trans-unit id="pSrOQg8">
 <source xml:space="preserve">All</source>
-<target xml:space="preserve">Wszystkie</target>
+<target xml:space="preserve">Todas</target>
 </trans-unit>
 <trans-unit id="plYQfpn">
 <source xml:space="preserve">Statistics</source>
-<target xml:space="preserve">Statystyki</target>
+<target xml:space="preserve">Estadísticas</target>
 </trans-unit>
 <trans-unit id="qvoMcPi">
 <source xml:space="preserve">Explicit content</source>
-<target xml:space="preserve">Treści dla dorosłych</target>
+<target xml:space="preserve">Contenido explícito</target>
 </trans-unit>
 <trans-unit id="rNAupNk">
 <source xml:space="preserve">songs displayed on</source>
-<target xml:space="preserve">utwory wyświetlane na</target>
+<target xml:space="preserve">canciones mostradas en</target>
 </trans-unit>
 <trans-unit id="rNmTJ5X">
 <source xml:space="preserve">WIP only</source>
-<target xml:space="preserve">Tylko WIP</target>
+<target xml:space="preserve">Solo "Trabajos en progreso"</target>
 </trans-unit>
 <trans-unit id="rlY2k_l">
 <source xml:space="preserve">Your API key</source>
-<target xml:space="preserve">Twój klucz API</target>
+<target xml:space="preserve">Tu clave API</target>
 </trans-unit>
 <trans-unit id="rtR.mcY">
 <source xml:space="preserve">For lazy people</source>
-<target xml:space="preserve">Dla leniwych</target>
+<target xml:space="preserve">Para gente perezosa</target>
 </trans-unit>
 <trans-unit id="sDsvsmr">
 <source xml:space="preserve">Global review</source>
-<target xml:space="preserve">Opinia globalna</target>
+<target xml:space="preserve">Reseña global</target>
 </trans-unit>
 <trans-unit id="t733otb">
 <source xml:space="preserve">Distance</source>
-<target xml:space="preserve">Odległość</target>
+<target xml:space="preserve">Distancia</target>
 </trans-unit>
 <trans-unit id="tG202en">
 <source xml:space="preserve">You can get the executable by clicking on the button below:</source>
-<target xml:space="preserve">Możesz uzyskać plik wykonywalny, klikając na poniższy przycisk:</target>
+<target xml:space="preserve">Puede obtener el ejecutable haciendo clic en el botón de abajo:</target>
 </trans-unit>
 <trans-unit id="tMvlYt0">
 <source xml:space="preserve">I want to vote</source>
-<target xml:space="preserve">Chcę głosować</target>
+<target xml:space="preserve">Quiero votar</target>
 </trans-unit>
 <trans-unit id="tPdniYe">
 <source xml:space="preserve">Login to your Account</source>
-<target xml:space="preserve">Zaloguj się na swoje konto</target>
+<target xml:space="preserve">Entra en tu cuenta</target>
 </trans-unit>
 <trans-unit id="tRLZfny">
 <source xml:space="preserve">User</source>
-<target xml:space="preserve">Użytkownik</target>
+<target xml:space="preserve">Usuario</target>
 </trans-unit>
 <trans-unit id="tTGBpNh">
 <source xml:space="preserve">My account</source>
-<target xml:space="preserve">Moje konto</target>
+<target xml:space="preserve">Mi cuenta</target>
 </trans-unit>
 <trans-unit id="tfH0juh">
 <source xml:space="preserve">Level quality:</source>
-<target xml:space="preserve">Jakość poziomu:</target>
+<target xml:space="preserve">Calidad del nivel:</target>
 </trans-unit>
 <trans-unit id="twhySiO">
 <source xml:space="preserve">With</source>
-<target xml:space="preserve">Z</target>
+<target xml:space="preserve">Con</target>
 </trans-unit>
 <trans-unit id="u3I07BJ">
 <source xml:space="preserve">Register</source>
-<target xml:space="preserve">Rejestracja</target>
+<target xml:space="preserve">Registrar</target>
 </trans-unit>
 <trans-unit id="u8Jb53Q">
 <source xml:space="preserve">My custom songs</source>
-<target xml:space="preserve">Moje niestandardowe piosenki</target>
+<target xml:space="preserve">Mis canciones personalizadas</target>
 </trans-unit>
 <trans-unit id="uTLlT96">
 <source xml:space="preserve">Global ranking</source>
-<target xml:space="preserve">Globalny ranking</target>
+<target xml:space="preserve">Clasificación global</target>
 </trans-unit>
 <trans-unit id="v7kly9C">
 <source xml:space="preserve">You only need to install the application once, future updates are automatic.</source>
-<target xml:space="preserve">Wystarczy zainstalować aplikację tylko raz, przyszłe aktualizacje są automatyczne.</target>
+<target xml:space="preserve">Solo necesitas instalar la aplicación una vez, las actualizaciones futuras son automáticas.</target>
 </trans-unit>
 <trans-unit id="vGdhNXl">
 <source xml:space="preserve">Songs</source>
-<target xml:space="preserve">Utwory</target>
+<target xml:space="preserve">Canciones</target>
 </trans-unit>
 <trans-unit id="vLvhD3E">
 <source xml:space="preserve">no description for now</source>
-<target xml:space="preserve">na razie brak opisu</target>
+<target xml:space="preserve">no hay descripción por ahora</target>
 </trans-unit>
 <trans-unit id="viY4vbr">
 <source xml:space="preserve">Notes not processed:</source>
-<target xml:space="preserve">Nuty nie przetworzone:</target>
+<target xml:space="preserve">Notas no procesadas:</target>
 </trans-unit>
 <trans-unit id="vjqEKpm">
 <source xml:space="preserve">You need an account to vote !</source>
-<target xml:space="preserve">Potrzebujesz konta, aby głosować !</target>
+<target xml:space="preserve">¡Necesitas una cuenta para votar!</target>
 </trans-unit>
 <trans-unit id="wIWBzLa">
 <source xml:space="preserve">How to ?</source>
-<target xml:space="preserve">Jak to zrobić ?</target>
+<target xml:space="preserve">Instrucciones</target>
 </trans-unit>
 <trans-unit id="wMsF86s">
 <source xml:space="preserve">Playlist have to be named!</source>
-<target xml:space="preserve">Lista odtwarzania musi być nazwana!</target>
+<target xml:space="preserve">¡La lista de reproducción tiene que tener nombre!</target>
 </trans-unit>
 <trans-unit id="x1wPTSk">
 <source xml:space="preserve">Only converted</source>
-<target xml:space="preserve">Tylko przekonwertowane</target>
+<target xml:space="preserve">Solo convertidos</target>
 </trans-unit>
 <trans-unit id="x7iK7GK">
 <source xml:space="preserve">Feedbacks</source>
-<target xml:space="preserve">Opinie</target>
+<target xml:space="preserve">Comentarios: </target>
 </trans-unit>
 <trans-unit id="xAWYMJ.">
 <source xml:space="preserve">RagnaCustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;</source>
-<target xml:space="preserve">RagnaCustoms nie jest powiązane z &lt;b&gt;Ragnaröck VR&lt;/b&gt; ani z &lt;b&gt;WanadevStudio&lt;/b&gt;</target>
+<target xml:space="preserve">RagnaCustoms no está asociado con <b>Ragnaröck VR</b> ni <b>WanadevStudio</b>
+</target>
 </trans-unit>
 <trans-unit id="xzOXSvG">
 <source xml:space="preserve">Artist:</source>
-<target xml:space="preserve">Artysta:</target>
+<target xml:space="preserve">Artista:</target>
 </trans-unit>
 <trans-unit id="yADx6B5">
 <source xml:space="preserve">%username%'s profile</source>
-<target xml:space="preserve">Profil użytkownika %username%</target>
+<target xml:space="preserve">Perfil de %username%</target>
 </trans-unit>
 <trans-unit id="zJUTwVH">
 <source xml:space="preserve">You are going to download a lot of custom songs and it can take a while, do you want to continue?</source>
-<target xml:space="preserve">Masz zamiar pobrać wiele utworów niestandardowych i może to trochę potrwać. Czy chcesz kontynuować?</target>
+<target xml:space="preserve">Vas a descargar muchas canciones personalizadas y puede tardar un tiempo, ¿quieres continuar?</target>
 </trans-unit>
 <trans-unit id="zVWI22.">
 <source xml:space="preserve">Vote</source>
-<target xml:space="preserve">Głosuj</target>
+<target xml:space="preserve">Votar</target>
 </trans-unit>
 </body>
 </file>

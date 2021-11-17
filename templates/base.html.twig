@@ -79,9 +79,19 @@
                             <img height="12px" width="18px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ec-1f1e7.svg" alt="fr"/> English
                         </a>
                     {% endif %}
+                    {% if app.request.locale != 'es' %}
+                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"es"}) }}">
+                            <img alt="es" height="12px" width="18px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ea-1f1f8.svg"/> Española
+                        </a>
+                    {% endif %}
                     {% if app.request.locale != 'fr' %}
                         <a class="dropdown-item" href="{{ url("change_locale",{locale:"fr"}) }}">
                             <img height="12px" width="18px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1eb-1f1f7.svg" alt="fr"/> Français
+                        </a>
+                    {% endif %}
+                    {% if app.request.locale != 'de' %}
+                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"de"}) }}">
+                            <img height="12px" width="18px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1e9-1f1ea.svg" alt="de"/> Deutsche
                         </a>
                     {% endif %}
                     {% if app.request.locale != 'pl' %}
@@ -89,6 +99,7 @@
                             <img alt="pl" height="12px" width="18px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1f5-1f1f1.svg"/> Polski
                         </a>
                     {% endif %}
+
 
                 </div>
             </li>
