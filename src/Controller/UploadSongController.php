@@ -133,7 +133,6 @@ class UploadSongController extends AbstractController
                     ])
                 ]);
             }
-
         }
         return new JsonResponse([
             'error' => false,

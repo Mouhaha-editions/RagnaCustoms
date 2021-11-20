@@ -21,6 +21,8 @@ class ScoreController extends AbstractController
      * @param Request $request
      * @param SongRepository $songRepository
      * @param PaginationService $paginationService
+     * @param SeasonRepository $seasonRepository
+     * @param Season|null $selectedSeason
      * @return Response
      */
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService, SeasonRepository $seasonRepository, Season $selectedSeason = null): Response
@@ -91,8 +93,6 @@ class ScoreController extends AbstractController
             ) AS ms  GROUP BY user_id ORDER BY score DESC';
         $stmt = $conn->prepare($sql);
         $scores = $stmt->execute()->fetchAllAssociative();
-//        VarDumper::dump(
-//        $scores = $stmt->fetchAllAssociative();
 
         return $this->render('score/global_ranking.html.twig', [
             'scores' => $scores,

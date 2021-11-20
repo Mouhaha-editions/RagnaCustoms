@@ -48,3 +48,4 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_MODERATOR }
         - { path: ^/upload, roles: ROLE_USER }
+        - { path: ^/playlists, roles: ROLE_USER }
