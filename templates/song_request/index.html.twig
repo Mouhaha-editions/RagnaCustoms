@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}RagnaCustoms.com, Song requests{% endblock %}
-        {% block body %}
+{% block body %}
 
-<div class="row mt-3">
-    <div class="col-12">
-        <h1>Song requests</h1>
+    <div class="row mt-3">
+        <div class="col-12">
+            <h1>Song requests</h1>
+        </div>
     </div>
-</div>
 
     <div class="row mt-3">
         <div class="col-md-4">
@@ -18,15 +18,49 @@
         </div>
         {% for songRequest in songRequests %}
             <div class="col-md-4">
+
                 {# <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}" title="{{ songRequest.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> #}
-                <iframe width="320" height="180" src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}"
+                <iframe width="350" height="180"
+                        src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}"
                         title="{{ songRequest.title }}" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 <br/>
-                {{"%song_name% by %artist%"|trans|replace({"%song_name%":songRequest.title,"%artist%":songRequest.author})}}<br/>
-                <small>{{ "Requested by %username%"|trans({"%username%":songRequest.requestedBy.username}) }}</small><br/>
-                <small>{{ "Mapper working on it :"|trans }} {{ songRequest.getMapper == false ? ("<span class='text-danger'>"~("No one"|trans)~"</span>")|raw: songRequest.getMapper.username }}</small>
+                {{ "%song_name% by %artist%"|trans|replace({"%song_name%":songRequest.title,"%artist%":songRequest.author}) }}
+                <br/>
+                <small>{{ "Requested by %username%"|trans|replace({"%username%":songRequest.requestedBy.username}) }}
+                    {% if songRequest.requestedBy.isPatreon %}<i class="fab fa-patreon text-level-6 "
+                                                                 title="Is a Patreon"></i>{% endif %}
+                </small><br/>
+                {% if songRequest.getMapper == false %}
+                    <div class="row">
+                        <div class="col-8">
+                            <small>{{ "Mapper working on it :"|trans }} {{ ("<span class='text-danger'>"~("No one"|trans)~"</span>")|raw }}</small>
+                        </div>
+                        <div class="col-4 text-right">
+                            {% if app.user.isMapper and app.user.songRequestInProgress is null %}
+                                <small><a href="{{ path('song_request_claim',{id:songRequest.id}) }}"
+                                          data-confirm="You are going to claim this request you get one month to submit your work before an other mapper can claim it"><i
+                                                class="fas fa-fist-raised"></i> {{ "Claim it"|trans }}
+                                    </a></small>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="row">
+                        <div class="col-8">
+                            <small>{{ "Mapper working on it :"|trans }} {{ songRequest.getMapper.username }}</small>
+                        </div>
+                        <div class="col-4 text-right">
+                            {% if app.user.songRequestInProgress is not null and app.user.songRequestInProgress.id == songRequest.id %}
+                                <small><a href="{{ path('song_request_unclaim',{id:songRequest.id}) }}"
+                                          data-confirm="You are going to unclaim this request, other mapper can claim it"><i
+                                                class="fas fa-sad-tear"></i> {{ "Unclaim it"|trans }}
+                                    </a></small>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         {% else %}
             <p>{{ "No song request"|trans }}</p>
