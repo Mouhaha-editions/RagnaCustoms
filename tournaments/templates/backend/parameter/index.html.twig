@@ -1,0 +1,32 @@
+{% extends 'base_backoffice.html.twig' %}
+
+{% block title %}Paramètres{% endblock %}
+
+{% block content %}
+    <h1>Paramètres</h1>
+{#    <a class="float-right btn btn-sm btn-success mb-2" href="{{ path('agn_temporary_parameter_new') }}"><i class="fas fa-plus"></i> ajouter</a>#}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Label</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for agn_temporary_parameter in agn_temporary_parameters %}
+            <tr>
+                <td>{{ agn_temporary_parameter.label }}</td>
+                <td>
+                    <a class="btn btn-sm btn-info" href="{{ path('parameter_edit', {'id': agn_temporary_parameter.id}) }}"><i class="fas fa-edit"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

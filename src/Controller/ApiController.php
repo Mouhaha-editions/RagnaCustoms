@@ -42,6 +42,7 @@ use function Sentry\configureScope;
 
 class ApiController extends AbstractController
 {
+<<<<<<< HEAD
     /**
      * @Route("/ai", name="ai")
      */
@@ -51,6 +52,8 @@ class ApiController extends AbstractController
         return new Response("OK");
     }
 
+=======
+>>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
     const CurrentVersion = "1.2.4";
 
     /**
@@ -392,6 +395,13 @@ class ApiController extends AbstractController
      * @Route("/api/overlay/", name="api_hash")
      * @param Request $request
      * @param UtilisateurRepository $utilisateurRepository
+<<<<<<< HEAD
+=======
+     * @param DifficultyRankRepository $difficultyRankRepository
+     * @param OverlayRepository $overlayRepository
+     * @param SongRepository $songRepository
+     * @param SongDifficultyRepository $songDifficultyRepository
+>>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
      * @return Response
      */
     public function overlay(Request $request, UtilisateurRepository $utilisateurRepository, DifficultyRankRepository $difficultyRankRepository, OverlayRepository $overlayRepository, SongRepository $songRepository, SongDifficultyRepository $songDifficultyRepository): Response

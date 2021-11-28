@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="hu" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id=".qS1zv_" resname="Song">
+        <source>Song</source>
+        <target>Zene</target>
+      </trans-unit>
+      <trans-unit id="04vg4Lv" resname="Add song to playlist">
+        <source>Add song to playlist</source>
+        <target>Hozzáadás lejátszási listához</target>
+      </trans-unit>
+      <trans-unit id="0FJ_Sz1" resname="Logout">
+        <source>Logout</source>
+        <target>Kijelentkezés</target>
+      </trans-unit>
+      <trans-unit id="0GkEJ7H" resname="Upload Song">
+        <source>Upload Song</source>
+        <target>Zene Feltöltése</target>
+      </trans-unit>
+      <trans-unit id="12hUvwX" resname="Save your score online">
+        <source>Save your score online</source>
+        <target>Pont mentése online</target>
+      </trans-unit>
+      <trans-unit id="1f3BrwI" resname="Downloads">
+        <source>Downloads</source>
+        <target>Letöltések</target>
+      </trans-unit>
+      <trans-unit id="1ur_gjW" resname="Download">
+        <source>Download</source>
+        <target>Letöltés</target>
+      </trans-unit>
+      <trans-unit id="3Wx89es" resname="Leaderboards by song">
+        <source>Leaderboards by song</source>
+        <target>Ranglisták dalonként</target>
+      </trans-unit>
+      <trans-unit id="3fO3X7H" resname="Mapped by:">
+        <source>Mapped by:</source>
+        <target>Pályakészítő:</target>
+      </trans-unit>
+      <trans-unit id="47ienTP" resname="Username">
+        <source>Username</source>
+        <target>Felhasználónév</target>
+      </trans-unit>
+      <trans-unit id="4chvCh2" resname="Our Application">
+        <source>Our Application</source>
+        <target>Alkalmazásunk</target>
+      </trans-unit>
+      <trans-unit id="588_9PF" resname="Password">
+        <source>Password</source>
+        <target>Jelszó</target>
+      </trans-unit>
+      <trans-unit id="5tzeNyy" resname="Pattern quality:">
+        <source>Pattern quality:</source>
+        <target>Rúnák minősége:</target>
+      </trans-unit>
+      <trans-unit id="6MMexlo" resname="Last added">
+        <source>Last added</source>
+        <target>Legutóbb hozzáadva</target>
+      </trans-unit>
+      <trans-unit id="7BmrasU" resname="Leaderboards">
+        <source>Leaderboards</source>
+        <target>Ranglisták</target>
+      </trans-unit>
+      <trans-unit id="7FlU8FZ" resname="No song for now">
+        <source>No song for now</source>
+        <target>Egyelőre nincs zene</target>
+      </trans-unit>
+      <trans-unit id="7spPgKG" resname="Forgot Password?">
+        <source>Forgot Password?</source>
+        <target>Elfelejtetted a jelszavad?</target>
+      </trans-unit>
+      <trans-unit id="81Mt9jk" resname="Notes hit:">
+        <source>Notes hit:</source>
+        <target>Eltalált rúnák:</target>
+      </trans-unit>
+      <trans-unit id="_FtY.RV" resname="Fun factor:">
+        <source>Fun factor:</source>
+        <target>Szórakozási faktor:</target>
+      </trans-unit>
+      <trans-unit id="8Cjk8Aq" resname="Be a virtual Viking!">
+        <source>Be a virtual Viking!</source>
+        <target>Légy virtuális viking!</target>
+      </trans-unit>
+      <trans-unit id="8JX3BFP" resname="Mapper working on it :">
+        <source>Mapper working on it :</source>
+        <target>Pályakészítő ezen dolgozik:</target>
+      </trans-unit>
+      <trans-unit id="8bCqTC3" resname="It also allows you to search through the catalogue and download without even visiting the website. A one-click option is also enabled for even simpler downloads!">
+        <source>It also allows you to search through the catalogue and download without even visiting the website. A one-click option is also enabled for even simpler downloads!</source>
+        <target>Azt is lehetővé teszi, hogy végignézd a katalógust és letölthess anélkül, hogy meglátogatnád a weboldalt. Az egykattintásos lehetőség mégjobban leegyszerűsíti a letöltéseket!</target>
+      </trans-unit>
+      <trans-unit id="8mHT1EL" resname="1-3">
+        <source>1-3</source>
+        <target>1-3</target>
+      </trans-unit>
+      <trans-unit id="9Ieatc_" resname="Season Ranking:">
+        <source>Season Ranking:</source>
+        <target>Szezonális rangsor:</target>
+      </trans-unit>
+      <trans-unit id="9JuWNtT" resname="Bpm:">
+        <source>Bpm:</source>
+        <target>Bpm:</target>
+      </trans-unit>
+      <trans-unit id="9Ow4gNY" resname="Mapped by %mapper%">
+        <source>Mapped by %mapper%</source>
+        <target>Pályát készítette: %mapper%</target>
+      </trans-unit>
+      <trans-unit id="9lzNr0C" resname="Anonymous:">
+        <source>Anonymous:</source>
+        <target>Névtelen:</target>
+      </trans-unit>
+      <trans-unit id="AO52KuB" resname="Custom Songs">
+        <source>Custom Songs</source>
+        <target>Egyedi Zenék</target>
+      </trans-unit>
+      <trans-unit id="AW0Q.Ua" resname="Requested by %username%">
+        <source>Requested by %username%</source>
+        <target>Kérte: %username%</target>
+      </trans-unit>
+      <trans-unit id="BHLGy10" resname="Notes Hit">
+        <source>Notes Hit</source>
+        <target>Eltalált rúnák</target>
+      </trans-unit>
+      <trans-unit id="BIGW0.Y" resname="Save to playlist!">
+        <source>Save to playlist!</source>
+        <target>Mentés a lejátszási listára!</target>
+      </trans-unit>
+      <trans-unit id="CaLAvI7" resname="Readability:">
+        <source>Readability:</source>
+        <target>Olvashatóság:</target>
+      </trans-unit>
+      <trans-unit id="DYQW7sZ" resname="How to be in leaderboard">
+        <source>How to be in leaderboard</source>
+        <target>Hogyan lehetsz a ranglistán?</target>
+      </trans-unit>
+      <trans-unit id="DmY3P0X" resname="Label">
+        <source>Label</source>
+        <target>Címke</target>
+      </trans-unit>
+      <trans-unit id="DwGT2Qc" resname="Search by title, artist or mapper">
+        <source>Search by title, artist or mapper</source>
+        <target>Keresés cím, előadó vagy pályakészítő szerint</target>
+      </trans-unit>
+      <trans-unit id="Dza7yWv" resname="Pages:">
+        <source>Pages:</source>
+        <target>Oldalak:</target>
+      </trans-unit>
+      <trans-unit id="EUcEJ9R" resname="An error occurs">
+        <source>An error occurs</source>
+        <target>Hiba történt</target>
+      </trans-unit>
+      <trans-unit id="EaSMvF7" resname="Not available when the song is in &quot;WIP&quot; mode">
+        <source>Not available when the song is in "WIP" mode</source>
+        <target>Nem elérhető, ha a dal "WIP" módban van</target>
+      </trans-unit>
+      <trans-unit id="G.fsjoj" resname="Season ranking">
+        <source>Season ranking</source>
+        <target>Szezonális rangsor</target>
+      </trans-unit>
+      <trans-unit id="GDhCgSF" resname="Flow:">
+        <source>Flow:</source>
+        <target>Áramlás:</target>
+      </trans-unit>
+      <trans-unit id="GK9BVRd" resname="Download filtered selection">
+        <source>Download filtered selection</source>
+        <target>Szűrt választék letöltése</target>
+      </trans-unit>
+      <trans-unit id="HJGa8e4" resname="Youtube">
+        <source>Youtube</source>
+        <target>Youtube</target>
+      </trans-unit>
+      <trans-unit id="HhjWrbO" resname="No one">
+        <source>No one</source>
+        <target>Senki</target>
+      </trans-unit>
+      <trans-unit id="J8yB2ym" resname="Song played:">
+        <source>Song played:</source>
+        <target>Játszott zene:</target>
+      </trans-unit>
+      <trans-unit id="JAsu23F" resname="Filter songs">
+        <source>Filter songs</source>
+        <target>Zenék szűrése</target>
+      </trans-unit>
+      <trans-unit id="JiEhxTc" resname="edit">
+        <source>edit</source>
+        <target>Szerkesztés</target>
+      </trans-unit>
+      <trans-unit id="Jm1sMPX" resname="We don't think he is a mapper">
+        <source>We don't think he is a mapper</source>
+        <target>Szerintünk Ő nem egy pályakészítő</target>
+      </trans-unit>
+      <trans-unit id="Jxxi_i3" resname="My profile">
+        <source>My profile</source>
+        <target>Saját profil</target>
+      </trans-unit>
+      <trans-unit id="KPJ6R4z" resname="Your playlist">
+        <source>Your playlist</source>
+        <target>Saját lejátszási listád</target>
+      </trans-unit>
+      <trans-unit id="KY1sdUn" resname="Duration:">
+        <source>Duration:</source>
+        <target>Hosszúság:</target>
+      </trans-unit>
+      <trans-unit id="Kc.KjPF" resname="Last update:">
+        <source>Last update:</source>
+        <target>Legutóbbi frissítés:</target>
+      </trans-unit>
+      <trans-unit id="KkPzMqC" resname="Song added to your playlist!">
+        <source>Song added to your playlist!</source>
+        <target>Zene hozzáadva a lejátszási listádhoz!</target>
+      </trans-unit>
+      <trans-unit id="KpL2_.m" resname="Remember Me">
+        <source>Remember Me</source>
+        <target>Emlékezzen rám</target>
+      </trans-unit>
+      <trans-unit id="Ldf2lJ5" resname="This Custom song is not your's">
+        <source>This Custom song is not your's</source>
+        <target>Ez az Egyedi zene nem a tiéd</target>
+      </trans-unit>
+      <trans-unit id="LzBuRE8" resname="Feedback sent!">
+        <source>Feedback sent!</source>
+        <target>Visszajelzés elküldve!</target>
+      </trans-unit>
+      <trans-unit id="M0pAn1b" resname="Song details">
+        <source>Song details</source>
+        <target>Zene részletei</target>
+      </trans-unit>
+      <trans-unit id="MbRxIVh" resname="Leaderboard">
+        <source>Leaderboard</source>
+        <target>Ranglista</target>
+      </trans-unit>
+      <trans-unit id="MetgMAN" resname="Songs played">
+        <source>Songs played</source>
+        <target>Játszott zenék</target>
+      </trans-unit>
+      <trans-unit id="MksTT1f" resname="Preview">
+        <source>Preview</source>
+        <target>Előnézet</target>
+      </trans-unit>
+      <trans-unit id="NPV29eL" resname="No archive for now">
+        <source>No archive for now</source>
+        <target>Egyelőre nincs archívum</target>
+      </trans-unit>
+      <trans-unit id="NX6NrMb" resname="Overlay editor">
+        <source>Overlay editor</source>
+        <target>Overlay szerkesztő</target>
+      </trans-unit>
+      <trans-unit id="O2aNZsQ" resname="My progression on %songname% level %level%">
+        <source>My progression on %songname% level %level%</source>
+        <target>Haladásom: %songname% , %level% szinten</target>
+      </trans-unit>
+      <trans-unit id="OCrF8wj" resname="Last updated">
+        <source>Last updated</source>
+        <target>Legutóbb frissítve</target>
+      </trans-unit>
+      <trans-unit id="ODMXl9D" resname="Song mapped:">
+        <source>Song mapped:</source>
+        <target>Készített pályák:</target>
+      </trans-unit>
+      <trans-unit id="OOWkbLx" resname="Score">
+        <source>Score</source>
+        <target>Pontszám</target>
+      </trans-unit>
+      <trans-unit id="QSvguc1" resname="Informations">
+        <source>Informations</source>
+        <target>Információk</target>
+      </trans-unit>
+      <trans-unit id="QuWIdWM" resname="Last songs played">
+        <source>Last songs played</source>
+        <target>Legutóbb játszott zenék</target>
+      </trans-unit>
+      <trans-unit id="Qzt36wp" resname="Difficulties:">
+        <source>Difficulties:</source>
+        <target>Nehézségi szintek:</target>
+      </trans-unit>
+      <trans-unit id="REgGQF4" resname="Download playlist with the app">
+        <source>Download playlist with the app</source>
+        <target>Lejátszási lista letöltése az alkalmazással</target>
+      </trans-unit>
+      <trans-unit id="ScJmuqq" resname="Search">
+        <source>Search</source>
+        <target>Keresés</target>
+      </trans-unit>
+      <trans-unit id="T8UqPEx" resname="Duration">
+        <source>Duration</source>
+        <target>Hosszúság</target>
+      </trans-unit>
+      <trans-unit id="USNp9bJ" resname="Rhythm:">
+        <source>Rhythm:</source>
+        <target>Ritmus:</target>
+      </trans-unit>
+      <trans-unit id="UigtRYc" resname="1 click downloader">
+        <source>1 click downloader</source>
+        <target>Egykattintásos letöltés</target>
+      </trans-unit>
+      <trans-unit id="Um4Ah8w" resname="Description">
+        <source>Description</source>
+        <target>Leírás</target>
+      </trans-unit>
+      <trans-unit id="UpJKYO9" resname="Song not found!">
+        <source>Song not found!</source>
+        <target>Nem található zene!</target>
+      </trans-unit>
+      <trans-unit id="VUipwrR" resname="8-10">
+        <source>8-10</source>
+        <target>8-10</target>
+      </trans-unit>
+      <trans-unit id="VVoBMuC" resname="BPM:">
+        <source>BPM:</source>
+        <target>BPM:</target>
+      </trans-unit>
+      <trans-unit id="VjX9FHA" resname="Distance:">
+        <source>Distance:</source>
+        <target>Megtett út:</target>
+      </trans-unit>
+      <trans-unit id="W3DV9nC" resname="Other thing it does:">
+        <source>Other thing it does:</source>
+        <target>Más dolog, amit csinál:</target>
+      </trans-unit>
+      <trans-unit id="WHkb.qH" resname="You need an account to access this page.">
+        <source>You need an account to access this page.</source>
+        <target>Fiókra van szükséged, hogy hozzáférhess az oldalhoz.</target>
+      </trans-unit>
+      <trans-unit id="WRk1sVs" resname="Public">
+        <source>Public</source>
+        <target>Nyilvános</target>
+      </trans-unit>
+      <trans-unit id="X9aLVJE" resname="Twitch requests &amp; overlay">
+        <source>Twitch requests &amp; overlay</source>
+        <target><![CDATA[Twitch kérések & overlay]]></target>
+      </trans-unit>
+      <trans-unit id="XQIAlIX" resname="Add to playlist">
+        <source>Add to playlist</source>
+        <target>Hozzáadás lejátszási listához</target>
+      </trans-unit>
+      <trans-unit id="XaVeqb." resname="this account is certified">
+        <source>this account is certified</source>
+        <target>ez a fiók hitelesített</target>
+      </trans-unit>
+      <trans-unit id="XdyGkjF" resname="not moderated">
+        <source>not moderated</source>
+        <target>nem moderált</target>
+      </trans-unit>
+      <trans-unit id="Y44kn0o" resname="Filter">
+        <source>Filter</source>
+        <target>Szűrés</target>
+      </trans-unit>
+      <trans-unit id="Y74EKO6" resname="copied !">
+        <source>copied !</source>
+        <target>másolva !</target>
+      </trans-unit>
+      <trans-unit id="YJxGA5K" resname="No song request">
+        <source>No song request</source>
+        <target>Nincs zenekérés</target>
+      </trans-unit>
+      <trans-unit id="YZdZVQP" resname="delete">
+        <source>delete</source>
+        <target>Törlés</target>
+      </trans-unit>
+      <trans-unit id="YcTuxIi" resname="You can't review a custom song you've submitted">
+        <source>You can't review a custom song you've submitted</source>
+        <target>Nem értékelheted a saját zenéd</target>
+      </trans-unit>
+      <trans-unit id="Yg3a6ad" resname="Custom song not found !">
+        <source>Custom song not found !</source>
+        <target>Egyedi zene nem található !</target>
+      </trans-unit>
+      <trans-unit id="YkSoo8Q" resname="Our application is magic! It creates the necessary folders and unzips the files in the right place, it also renames the folder with the song title for optimal in-game song ordering.">
+        <source>Our application is magic! It creates the necessary folders and unzips the files in the right place, it also renames the folder with the song title for optimal in-game song ordering.</source>
+        <target>Az alkalmazásunk varázslat! Létrehozza a szükséges mappákat és kicsomagolja a fájlokat a megfelelő helyükre. Átnevezi a mappákat a zene címére az optimális játékbeli rendezettség érdekében.</target>
+      </trans-unit>
+      <trans-unit id="ZCZ.iLb" resname="Songs mapped">
+        <source>Songs mapped</source>
+        <target>Készített pályák</target>
+      </trans-unit>
+      <trans-unit id="_zBZPKM" resname="copied">
+        <source>copied</source>
+        <target>Másolva</target>
+      </trans-unit>
+      <trans-unit id="aL6gI1n" resname="Song &quot;%song%&quot; by &quot;%artist%&quot; successfully uploaded!">
+        <source>Song "%song%" by "%artist%" successfully uploaded!</source>
+        <target>"%song%" , "%artist%" -tól/től sikeresen feltöltve!</target>
+      </trans-unit>
+      <trans-unit id="acQEWR6" resname="Views">
+        <source>Views</source>
+        <target>Megtekintések</target>
+      </trans-unit>
+      <trans-unit id="beOfoMt" resname="Copy code for Twitch">
+        <source>Copy code for Twitch</source>
+        <target>Twitch kód másolása</target>
+      </trans-unit>
+      <trans-unit id="c1Zl2xv" resname="click to vote">
+        <source>click to vote</source>
+        <target>Kattints a szavazáshoz</target>
+      </trans-unit>
+      <trans-unit id="c5LJ9v." resname="You need to be connected">
+        <source>You need to be connected</source>
+        <target>Csatlakoznod kell</target>
+      </trans-unit>
+      <trans-unit id="cQEsJJT" resname="You need an account to use playlist!">
+        <source>You need an account to use playlist!</source>
+        <target>A lejátszási lista használatához fiókra van szükséged!</target>
+      </trans-unit>
+      <trans-unit id="d4BN8eY" resname="My progression">
+        <source>My progression</source>
+        <target>Haladásom</target>
+      </trans-unit>
+      <trans-unit id="dMV.Tsf" resname="Converted map">
+        <source>Converted map</source>
+        <target>Konvertált pálya</target>
+      </trans-unit>
+      <trans-unit id="dVrtffu" resname="This song is a &quot;Work in progress&quot;">
+        <source>This song is a "Work in progress"</source>
+        <target>Ez a zene még "Folyamatban lévő munka"</target>
+      </trans-unit>
+      <trans-unit id="denQnlA" resname="Ranked only">
+        <source>Ranked only</source>
+        <target>Csak Rangsorolt</target>
+      </trans-unit>
+      <trans-unit id="djsLN.8" resname="One click download">
+        <source>One click download</source>
+        <target>Egykattintásos Letöltés</target>
+      </trans-unit>
+      <trans-unit id="e8Jfqtu" resname="Without">
+        <source>Without</source>
+        <target>Nélkül</target>
+      </trans-unit>
+      <trans-unit id="eAN19uO" resname="Leave a feedback">
+        <source>Leave a feedback</source>
+        <target>Visszajelzés küldése</target>
+      </trans-unit>
+      <trans-unit id="ekHOigo" resname="How to download with one click ?">
+        <source>How to download with one click ?</source>
+        <target>Hogyan lehet letölteni egy kattintással ?</target>
+      </trans-unit>
+      <trans-unit id="exHF9yC" resname="4-7">
+        <source>4-7</source>
+        <target>4-7</target>
+      </trans-unit>
+      <trans-unit id="fKQydBi" resname="%song_name% by %artist%">
+        <source>%song_name% by %artist%</source>
+        <target>%song_name% %artist% -tól/től</target>
+      </trans-unit>
+      <trans-unit id="fTXKUp1" resname="Song Review">
+        <source>Song Review</source>
+        <target>Zene Értékelése</target>
+      </trans-unit>
+      <trans-unit id="fjSMV5j" resname="Already downloaded">
+        <source>Already downloaded</source>
+        <target>Letöltve</target>
+      </trans-unit>
+      <trans-unit id="g97FsBA" resname="no score for now">
+        <source>no score for now</source>
+        <target>Egyelőre nincs pontszám</target>
+      </trans-unit>
+      <trans-unit id="gQZ.y3Y" resname="Song already in playlist!">
+        <source>Song already in playlist!</source>
+        <target>A zene már szerepel a lejátszási listán!</target>
+      </trans-unit>
+      <trans-unit id="gfZ42tt" resname="My playlists">
+        <source>My playlists</source>
+        <target>Lejátszási listáim</target>
+      </trans-unit>
+      <trans-unit id="hMt4cbd" resname="Reviews">
+        <source>Reviews</source>
+        <target>Értékelések</target>
+      </trans-unit>
+      <trans-unit id="iRD1EqK" resname="1 click">
+        <source>1 click</source>
+        <target>1 kattintás</target>
+      </trans-unit>
+      <trans-unit id="ia_i3_Q" resname="Custom songs available for Ragnaröck VR">
+        <source>Custom songs available for Ragnaröck VR</source>
+        <target>Egyedi zenék Ragnaröck VR-hoz</target>
+      </trans-unit>
+      <trans-unit id="ijel8Hr" resname="Order by">
+        <source>Order by</source>
+        <target>Rendezés</target>
+      </trans-unit>
+      <trans-unit id="jW33dhj" resname="Difficulties">
+        <source>Difficulties</source>
+        <target>Nehézségi szintek</target>
+      </trans-unit>
+      <trans-unit id="kYYOYQu" resname="Is a mapper">
+        <source>Is a mapper</source>
+        <target>Egy pályakészítő</target>
+      </trans-unit>
+      <trans-unit id="kdVHOTi" resname="No playlist for now">
+        <source>No playlist for now</source>
+        <target>Egyelőre nincs lejátszási lista</target>
+      </trans-unit>
+      <trans-unit id="kyIu1Z1" resname="All your playlists">
+        <source>All your playlists</source>
+        <target>Az összes lejátszási listád</target>
+      </trans-unit>
+      <trans-unit id="l0mJzw2" resname="10+">
+        <source>10+</source>
+        <target>10+</target>
+      </trans-unit>
+      <trans-unit id="lYjTZTI" resname="Level played">
+        <source>Level played</source>
+        <target>Játszott szint</target>
+      </trans-unit>
+      <trans-unit id="mRv6AVU" resname="My Profile">
+        <source>My Profile</source>
+        <target>Saját profil</target>
+      </trans-unit>
+      <trans-unit id="nWMiwfT" resname="Login">
+        <source>Login</source>
+        <target>Bejelentkezés</target>
+      </trans-unit>
+      <trans-unit id="nWPu_kY" resname="Difficulties: %difficultiesList%">
+        <source>Difficulties: %difficultiesList%</source>
+        <target>Nehézségi szintek: %difficultiesList%</target>
+      </trans-unit>
+      <trans-unit id="nlIwJ21" resname="This custom song is not available for now">
+        <source>This custom song is not available for now</source>
+        <target>Ez az egyedi zene egyelőre nem érhető el</target>
+      </trans-unit>
+      <trans-unit id="nraec2X" resname="Global ranking:">
+        <source>Global ranking:</source>
+        <target>Globális helyezés:</target>
+      </trans-unit>
+      <trans-unit id="ns__VmG" resname="Notes missed:">
+        <source>Notes missed:</source>
+        <target>Kihagyott rúnák:</target>
+      </trans-unit>
+      <trans-unit id="nylTBGT" resname="Rating">
+        <source>Rating</source>
+        <target>Értékelés</target>
+      </trans-unit>
+      <trans-unit id="olizD4j" resname="Global">
+        <source>Global</source>
+        <target>Globális</target>
+      </trans-unit>
+      <trans-unit id="p5GWI6U" resname="Save Review!">
+        <source>Save Review!</source>
+        <target>Értékelés mentése!</target>
+      </trans-unit>
+      <trans-unit id="pBMNfSw" resname="Rank">
+        <source>Rank</source>
+        <target>Helyezés</target>
+      </trans-unit>
+      <trans-unit id="pJ1jH4x" resname="Alphabetical">
+        <source>Alphabetical</source>
+        <target>Ábécé sorrend</target>
+      </trans-unit>
+      <trans-unit id="pP5lJk7" resname="Language">
+        <source>Language</source>
+        <target>Nyelv</target>
+      </trans-unit>
+      <trans-unit id="pSrOQg8" resname="All">
+        <source>All</source>
+        <target>Összes</target>
+      </trans-unit>
+      <trans-unit id="plYQfpn" resname="Statistics">
+        <source>Statistics</source>
+        <target>Statisztika</target>
+      </trans-unit>
+      <trans-unit id="qvoMcPi" resname="Explicit content">
+        <source>Explicit content</source>
+        <target>Kifogásolható tartalom</target>
+      </trans-unit>
+      <trans-unit id="rNAupNk" resname="songs displayed on">
+        <source>songs displayed on</source>
+        <target>zenék megjelenítése</target>
+      </trans-unit>
+      <trans-unit id="rNmTJ5X" resname="WIP only">
+        <source>WIP only</source>
+        <target>Csak WIP</target>
+      </trans-unit>
+      <trans-unit id="rlY2k_l" resname="Your API key">
+        <source>Your API key</source>
+        <target>Az API-kulcsod</target>
+      </trans-unit>
+      <trans-unit id="rtR.mcY" resname="For lazy people">
+        <source>For lazy people</source>
+        <target>Lusta embereknek</target>
+      </trans-unit>
+      <trans-unit id="sDsvsmr" resname="Global review">
+        <source>Global review</source>
+        <target>Globális értékelés</target>
+      </trans-unit>
+      <trans-unit id="t733otb" resname="Distance">
+        <source>Distance</source>
+        <target>Távolság</target>
+      </trans-unit>
+      <trans-unit id="tG202en" resname="You can get the executable by clicking on the button below:">
+        <source>You can get the executable by clicking on the button below:</source>
+        <target>Az exe fájlt az alábbi gombra kattintva szerezheted meg:</target>
+      </trans-unit>
+      <trans-unit id="tMvlYt0" resname="I want to vote">
+        <source>I want to vote</source>
+        <target>Szavazni akarok</target>
+      </trans-unit>
+      <trans-unit id="tPdniYe" resname="Login to your Account">
+        <source>Login to your Account</source>
+        <target>Jelentkezz be</target>
+      </trans-unit>
+      <trans-unit id="tRLZfny" resname="User">
+        <source>User</source>
+        <target>Felhasználó</target>
+      </trans-unit>
+      <trans-unit id="tTGBpNh" resname="My account">
+        <source>My account</source>
+        <target>Saját fiók</target>
+      </trans-unit>
+      <trans-unit id="tfH0juh" resname="Level quality:">
+        <source>Level quality:</source>
+        <target>Szint minősége:</target>
+      </trans-unit>
+      <trans-unit id="twhySiO" resname="With">
+        <source>With</source>
+        <target>Vele</target>
+      </trans-unit>
+      <trans-unit id="u3I07BJ" resname="Register">
+        <source>Register</source>
+        <target>Regisztráció</target>
+      </trans-unit>
+      <trans-unit id="u8Jb53Q" resname="My custom songs">
+        <source>My custom songs</source>
+        <target>Egyedi zenéim</target>
+      </trans-unit>
+      <trans-unit id="uTLlT96" resname="Global ranking">
+        <source>Global ranking</source>
+        <target>Globális rangsor</target>
+      </trans-unit>
+      <trans-unit id="v7kly9C" resname="You only need to install the application once, future updates are automatic.">
+        <source>You only need to install the application once, future updates are automatic.</source>
+        <target>Az alkalmazást csak egyszer kell telepítened, a jövőbeli frissítések automatikusak.</target>
+      </trans-unit>
+      <trans-unit id="vGdhNXl" resname="Songs">
+        <source>Songs</source>
+        <target>Zenék</target>
+      </trans-unit>
+      <trans-unit id="vLvhD3E" resname="no description for now">
+        <source>no description for now</source>
+        <target>egyelőre nincs leírás</target>
+      </trans-unit>
+      <trans-unit id="viY4vbr" resname="Notes not processed:">
+        <source>Notes not processed:</source>
+        <target>Nem feldolgozott rúnák:</target>
+      </trans-unit>
+      <trans-unit id="vjqEKpm" resname="You need an account to vote !">
+        <source>You need an account to vote !</source>
+        <target>Fiókra van szükséged a szavazáshoz !</target>
+      </trans-unit>
+      <trans-unit id="wIWBzLa" resname="How to ?">
+        <source>How to ?</source>
+        <target>Útmutató</target>
+      </trans-unit>
+      <trans-unit id="wMsF86s" resname="Playlist have to be named!">
+        <source>Playlist have to be named!</source>
+        <target>A lejátszási listát el kell nevezned!</target>
+      </trans-unit>
+      <trans-unit id="x1wPTSk" resname="Only converted">
+        <source>Only converted</source>
+        <target>Csak konvertált</target>
+      </trans-unit>
+      <trans-unit id="x7iK7GK" resname="Feedbacks">
+        <source>Feedbacks</source>
+        <target>Visszajelzések</target>
+      </trans-unit>
+      <trans-unit id="xAWYMJ." resname="RagnaCustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;">
+        <source>RagnaCustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;</source>
+        <target><![CDATA[A RagnaCustoms-nek nincs köze a <b>Ragnaröck VR</b> -hoz vagy a <b>WanadevStudio</b> -hoz.]]></target>
+      </trans-unit>
+      <trans-unit id="xzOXSvG" resname="Artist:">
+        <source>Artist:</source>
+        <target>Előadó:</target>
+      </trans-unit>
+      <trans-unit id="yADx6B5" resname="%username%'s profile">
+        <source>%username%'s profile</source>
+        <target>%username% profilja</target>
+      </trans-unit>
+      <trans-unit id="zJUTwVH" resname="You are going to download a lot of custom songs and it can take a while, do you want to continue?">
+        <source>You are going to download a lot of custom songs and it can take a while, do you want to continue?</source>
+        <target>Sok egyedi zenét fogsz letölteni és ez eltarthat egy darabig, szeretnéd folytatni?</target>
+      </trans-unit>
+      <trans-unit id="zVWI22." resname="Vote">
+        <source>Vote</source>
+        <target>Szavazás</target>
+      </trans-unit>
+      <trans-unit id="Jh79Hu0" resname="You need to be a mapper to access this page.">
+        <source>You need to be a mapper to access this page.</source>
+        <target>__You need to be a mapper to access this page.</target>
+      </trans-unit>
+      <trans-unit id="7i21odi" resname="This request is already taken by a mapper.">
+        <source>This request is already taken by a mapper.</source>
+        <target>__This request is already taken by a mapper.</target>
+      </trans-unit>
+      <trans-unit id="QsJGdgW" resname="You already claimed a request, one thing at a time please.">
+        <source>You already claimed a request, one thing at a time please.</source>
+        <target>__You already claimed a request, one thing at a time please.</target>
+      </trans-unit>
+      <trans-unit id="6SG1prA" resname="You are not the mapper that claim this request.">
+        <source>You are not the mapper that claim this request.</source>
+        <target>__You are not the mapper that claim this request.</target>
+      </trans-unit>
+      <trans-unit id="Q.X5P1L" resname="Download the installer">
+        <source>Download the installer</source>
+        <target>__Download the installer</target>
+      </trans-unit>
+      <trans-unit id="cXVRejc" resname="or">
+        <source>or</source>
+        <target>__or</target>
+      </trans-unit>
+      <trans-unit id="4s52dfs" resname="You haven't played this song for now">
+        <source>You haven't played this song for now</source>
+        <target>__You haven't played this song for now</target>
+      </trans-unit>
+      <trans-unit id="PUsk6dJ" resname="Claim it">
+        <source>Claim it</source>
+        <target>__Claim it</target>
+      </trans-unit>
+      <trans-unit id="SFRo3yr" resname="Unclaim it">
+        <source>Unclaim it</source>
+        <target>__Unclaim it</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,35 @@
+/**
+ * Styles de la page d'accueil
+ * Version 1.0
+ * 09/2020
+ */
+.home-title {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  .home-title h1 {
+    font-size: 2.8rem;
+    text-transform: uppercase; }
+
+.home-presentation .home-videos .text {
+  text-align: center; }
+
+.home-presentation .container .text {
+  margin-bottom: 2rem; }
+
+.home-presentation iframe {
+  width: 100%;
+  min-height: 274px; }
+
+.home-join-us iframe {
+  width: 100%;
+  min-height: 274px; }
+
+.home-howto-join-us img {
+  width: 100%; }
+
+.home-don .container {
+  text-align: center; }
+
+.home-don img {
+  width: 300px; }

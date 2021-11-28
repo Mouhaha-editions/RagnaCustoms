@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+{% block body %}
+    <main class="wrapper">
+        <section class="section-banner bg1 home-title">
+            <h1>{{ "Retrouvez tous les streamers en live"|trans }}</h1>
+        </section>
+
+        <section class="section-parallax static tv-main-list">
+            <div class="container">
+                
+                <div class="row">
+                    <div class="col-12">
+                        {{ render(controller("\\App\\Controller\\Component\\CmsBlockController::getCmsBlock",{slug:'hardcoreTv-1',default:"A personnaliser"})) }}
+                        <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
+                        <iframe
+                                frameborder="0"
+                                scrolling="no"
+                                allowfullscreen="true"
+                                width="100%"
+                                height="274px"
+                                src="https://player.twitch.tv/?muted=true&channel={{ parameter_service.value('twitch_channel') }}&parent={{ url('home')|replace({'https://':'','/':''}) }}&autoplay=false"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section-parallax static tv-list">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        {{ render(controller("\\App\\Controller\\Component\\CmsBlockController::getCmsBlock",{slug:'hardcoreTv-2',default:"A personnaliser"})) }}
+
+                    </div>
+                    {% for entity in entities %}
+                        {% if entity.displayOnTv %}
+                        <div class="col-12 col-md-4 col-lg-3 card-twitch-player">
+                            <a href="https://twitch.tv/{{ entity.TwitchId }}" target="_blank" class="bg_image_default">
+                                <p>{{ entity.TwitchId }}</p>
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<<<<<<< HEAD
     <file datatype="plaintext" original="file.ext" source-language="en" target-language="es">
+=======
+<file datatype="plaintext" original="file.ext" source-language="en" target-language="es">
+>>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
 <body>
 <trans-unit id=".qS1zv_">
 <source xml:space="preserve">Song</source>
@@ -668,7 +672,12 @@
 </trans-unit>
 <trans-unit id="xAWYMJ.">
 <source xml:space="preserve">RagnaCustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;</source>
+<<<<<<< HEAD
 <target xml:space="preserve">RagnaCustoms no está asociado con &lt;b&gt;Ragnaröck VR&lt;/b&gt; ni &lt;b>WanadevStudio&lt;/b&gt;</target>
+=======
+<target xml:space="preserve">RagnaCustoms no está asociado con <b>Ragnaröck VR</b> ni <b>WanadevStudio</b>
+</target>
+>>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
 </trans-unit>
 <trans-unit id="xzOXSvG">
 <source xml:space="preserve">Artist:</source>

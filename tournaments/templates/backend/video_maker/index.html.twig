@@ -1,0 +1,45 @@
+{% extends 'base_backoffice.html.twig' %}
+
+{% block title %}{{ "Clips"|trans }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default color-palette-box">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-tag"></i>
+                    {{ "Clips"|trans }} ({{ clips|length }})
+                </h3>
+            </div>
+            <div class="card-body">
+                {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}">{{ message }}</div>
+                {% endfor %}
+                {% endfor %}
+                {% set broadcaster = null %}
+                <div class="row">
+                    {% for clip in clips %}
+
+                    {% if clip['broadcaster']['display_name'] != broadcaster %}
+                </div>
+                <h3>{{ clip['broadcaster']['display_name'] }}</h3>
+                <hr/>
+                {% set broadcaster = clip['broadcaster']['display_name'] %}
+                <div class="row">
+                    {% endif %}
+                    <div class="col-md-3">
+                        Créé le {{ clip['created_at']}} par <b>{{ clip["curator"]["display_name"] }}</b><br/>
+                        <iframe src='{{ (clip['embed_url']|raw)~"&parent="~(app.request.server.get('HTTP_HOST')|replace({":8000":'',":80":''})) }}'
+                                width="350px" height="200px"></iframe>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+    {# <a href="{{ path('challenge_new') }}">{{ "Create new"|trans }}</a> #}
+

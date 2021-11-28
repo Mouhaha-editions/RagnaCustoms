@@ -1,0 +1,208 @@
+/**
+ * Styles de la page listant les challenges
+ * Version 1.0
+ * 10/2020
+ */
+
+ .challenges-list {
+     .card {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        margin: 15px 0;
+        &:hover {
+            cursor: pointer;
+        }
+     }
+    .card-img {
+        background-color: grey; 
+    }
+    
+    .card-title {
+        text-align: center;
+        font-weight: 600;
+        color: $black;
+    }
+
+    .card-body {
+        min-height: 257px;
+    }
+
+    .card-calendar {
+        width: 26px;
+        margin-right: 15px;
+    }
+
+    .card-text {
+        display: flex;
+        justify-content: center;
+        .dates-challenges {
+            display: flex;
+            flex-direction: column;
+            label {
+                margin: 0;
+                color: $black;
+                font-weight: 600;
+                font-size: 1em;
+                display: flex;
+            }
+        }
+        .dates-icon {
+            color: $black;
+        }
+    }
+
+    .link-to-chal:hover {
+        text-decoration: none;
+    }
+
+    .card-ringbell {
+        width: 44px;
+        position: absolute;
+        left: 0;
+    }
+
+    .card-buttons {
+        margin-top: 20px;
+        .btn-custom {
+            padding: 10px 13px;
+        }
+        .btn {
+            width: 100%;
+        }
+        .btn-cash {
+            background-color: $green;
+            color: $white;
+            text-align: center;
+            padding: 5px;
+            width: 100%;
+            label {
+                margin-bottom: 0.2rem;
+            }
+        }
+        .progress {
+            background-color: $grey;
+        }
+        .progress-bar {
+            background-color: $green;
+        }
+        .nb-inscrit, .nom-gagnant {
+            font-weight: 600;
+            margin: 5px 0 0 0;
+        }
+        .nom-gagnant svg {
+            width: 30px;
+        }
+        .btn-cash {
+            background-color: $green;
+            border: 1px solid $green;
+        }
+        .btn-in-coming {
+            color: $white;
+            background-color: $brown;
+            padding: 10px;
+            margin: 0;
+            label {
+                margin: 0;
+            }
+        }
+        .btn-bottom-right {
+            background-color: $brown;
+            border: 1px solid $brown;
+            &:hover {
+                background-color: $white;
+                color: $brown;
+            }
+        }
+        .alert-bell {
+            display: flex;
+            align-items: center;
+            a {
+                transition: 0.2s;
+                &:hover {
+                    transform: rotate(-20deg);
+                }
+            }
+            i {
+                color: $pastel-orange;
+            }
+            @media screen and (min-width: 1200px) {
+                margin-left: -7px;
+            }
+        }
+    }
+
+    .challenge-not-active {
+        img {
+           opacity: 0.4;
+        }
+        .card-buttons {
+            .btn-bottom-right, .btn-cash {
+                background-color: $pastel-red;
+                border: 1px solid $pastel-red;
+            }
+            .btn-bottom-right:hover {
+                background-color: $white;
+                color: $pastel-red;
+            }
+        }
+    }
+
+    #alert-futur-modal {
+        .modal-header {
+            background-color: $pastel-orange;
+            color: $white;
+            width: calc(100% - -13px);
+            height: 55px;
+            position: absolute;
+            z-index: 1;
+            top: -50px;
+            left: -7px;
+            border-radius: 2px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: none;
+            button:focus {
+                outline: none;
+            }
+            .close {
+                color: $white;
+                margin: 0;
+                position: absolute;
+                right: 0;
+                font-size: 2.5rem;
+            }
+        }
+        .flag {
+            position: absolute;
+            top: -41px;
+            border-radius: 2px;
+            opacity: 0.7;
+            border: 28px solid;
+            border-top-color: $pastel-orange;
+            border-bottom-color: $pastel-orange;
+            z-index: -1;
+        }
+        .flag-right {
+            right: -44px;
+            border-right-color: transparent;
+            border-left-color: $pastel-orange;
+        }
+        .flag-left {
+            left: -44px;
+            border-right-color: $pastel-orange;
+            border-left-color: transparent;
+        }
+        .mail-input-alert {
+            width: 300px;
+            margin: auto;
+            input {
+                width: 300px;
+            }
+        }
+        .send-mail-alert, .msg-mail-alert {
+            text-align: center;
+        }
+    }
+    
+ }

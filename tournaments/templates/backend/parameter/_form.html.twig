@@ -1,0 +1,14 @@
+{{ form_start(form) }}
+
+<h4>{{ agn_temporary_parameter.label }}</h4>
+{% if agn_temporary_parameter.fieldType == "file" %}
+    {{ form_row(form.valueText,{attr:{class:"d-none"},label_attr:{class:"d-none"}}) }}
+{% else %}
+    {{ form_row(form.valueText) }}
+{% endif %}
+{% if agn_temporary_parameter.fieldType == "text" %}
+    {{ form_row(form.valueFile,{attr:{class:"d-none"},label_attr:{class:"d-none"}}) }}
+{% else %}
+    {{ form_row(form.valueFile) }}
+{% endif %}    <button class="btn btn-success mb-5">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

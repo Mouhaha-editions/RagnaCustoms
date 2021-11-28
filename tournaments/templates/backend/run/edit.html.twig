@@ -1,0 +1,23 @@
+{% extends 'base_backoffice.html.twig' %}
+
+{% block title %}{{ "Infos run"|trans }}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-default color-palette-box">
+                <div class="card-header">
+
+                </div>
+                <div class="card-body">
+                    {% include 'backend/run/_editform.html.twig' %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{#    {{ encore_entry_script_tags('bo_run') }}#}
+{% endblock %}

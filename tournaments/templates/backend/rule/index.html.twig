@@ -1,0 +1,48 @@
+{% extends 'base_backoffice.html.twig' %}
+
+{% block title %}{{ "GEstion des règles"|trans }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default color-palette-box">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-tag"></i>
+                    {{ "Gestion des règles "|trans }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <a class="btn btn-success float-right"
+                   href="{{ path('rule_new') }}">{{ "Create new"|trans }}</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+{#                <th>Position</th>#}
+                <th>Label</th>
+                <th>Type</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for rule in rules %}
+            <tr>
+                <td>{{ rule.id }}</td>
+{#                <td>{{ rule.position }}</td>#}
+                <td>{{ rule.label }}</td>
+                <td>{{ rule.typeStr }}</td>
+                <td>
+                    <a class="btn btn-primary btn-xs" href="{{ path('rule_edit', {'id': rule.id}) }}"><i class="fas fa-edit"></i></a>
+                    <a class="btn btn-danger btn-xs" href="{{ path('rule_delete', {'id': rule.id}) }}"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

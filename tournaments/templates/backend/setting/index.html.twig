@@ -1,0 +1,67 @@
+{% extends 'base_backoffice.html.twig' %}
+
+{% block title %}{{ "Challenges"|trans }}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-default color-palette-box">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-tag"></i>
+                        {{ "Settings "|trans }} {{ challenge.title }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <a class="btn btn-success float-right"
+                       href="{{ path('challenge_admin_setting_new',{id:challenge.id}) }}">{{ "Create new"|trans }}</a>
+                    <table class="table table-condensed">
+                        <thead>
+                        <tr>
+                            <th>{{ "setting.label.label"|trans }}</th>
+                            <th>{{ "setting.label.ratio"|trans }}</th>
+                            <th>{{ "setting.label.autovalue"|trans }}</th>
+                            <th>{{ "setting.label.defaultValue"|trans }}</th>
+                            <th>{{ "setting.label.isUsedForScore"|trans }}</th>
+                            <th>{{ "setting.label.actions"|trans }}</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for settings in challenge.challengeSettings %}
+                            <tr>
+                                <td>{{ settings.label }}</td>
+                                <td>{{ settings.ratio }}</td>
+                                <td>{{ settings.autoValue }}</td>
+                                <td>{{ settings.defaultValue }}</td>
+                                <td>{{ settings.isUsedForScore ? "<i class='fas fa-check text-success'></i>" : "<i class='fas fa-time text-danger'></i>" }}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-info"
+                                       href="{{ path('challenge_admin_setting_edit', {'id': settings.id}) }}"><i
+                                                class="fas fa-edit"></i></a>
+                                    <a class="btn btn-sm btn-warning"
+                                       href="{{ path('challenge_admin_setting_duplicate', {'id': settings.id}) }}"><i
+                                                class="fas fa-copy"></i></a>
+                                  {% if not app.user.babyProof %}
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{{ path('challenge_admin_setting_delete', {'id': settings.id}) }}"><i
+                                                class="fas fa-trash"></i></a>
+                                    {% endif %}
+{#                                    <a class="btn btn-sm btn-danger confirm-action"#}
+{#                                       href="{{ path('challenge_admin_delete', {'id': settings.id}) }}"><i#}
+{#                                                class="fas fa-trash"></i></a>#}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="13">{{ "no records found"|trans }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

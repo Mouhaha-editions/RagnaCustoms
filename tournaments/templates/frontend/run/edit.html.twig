@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+{% block body %}
+<div class="container">
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-default color-palette-box">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                <h3>{{ challenger.username }}
+                    <small>{{ run.lastVisitedAt == null ? run.startDate.format('d/m/Y H:i'): run.lastVisitedAt.format('d/m/Y H:i') }}</small>
+                </h3>
+                <a href="{{ url('admin_runs_info',{'id': challenger.id,'id_challenge':challenge.id}) }}"
+                   class="float-right"
+                   target="_blank"><i class="fas fa-2x fa-info-circle"></i></a>
+                <p>Malus de run : <span id="malus-run" data-malus="{{ run.malus }}">{{ ((run.malus-1)*100) }}</span>%,
+                    Run
+                    n° {{ challenger.countRun(run.challenge) }}</p>
+                <table class="table table-sm  text-bold">
+                    <tr>
+                        <th>Libellé</th>
+                        <th>Valeur</th>
+                        <th>Multiplicateur</th>
+                        <th class="text-right">Total</th>
+                    </tr>
+                    {% for setting in form.runSettings %}
+
+                        <tr class="updatable"
+                            data-isaffectedbymalus="{{ setting.vars.data.challengeSetting.isAffectedByMalus }}"
+                            data-issteptovictory="{{ setting.vars.data.challengeSetting.isStepToVictory }}"
+                            data-steptovictorymin="{{ setting.vars.data.challengeSetting.stepToVictoryMin }}"
+                            data-steptovictorymax="{{ setting.vars.data.challengeSetting.stepToVictoryMax }}"
+                            data-isusedforscore="{{ setting.vars.data.challengeSetting.isUsedForScore }}"
+                            data-subtotal="{{ setting.vars.data.challengeSetting.subTotal }}"
+                        >
+                            <td style="font-size: 14px"><label
+                                        for="{{ setting.children["value"].vars['id'] }}">{{ setting.vars.data.challengeSetting.label }}</label>
+                            </td>
+                            <td data-default-value="{{ setting.vars.data.challengeSetting.defaultValue }}"
+                                data-input-type="{{ setting.vars.data.challengeSetting.inputType }}">{{ form_widget(setting) }}</td>
+                            {% set ratio = setting.vars.data.challengeSetting.ratio %}
+                            <td class="ratio"
+                                data-ratio="{{ ratio }}">{{ ratio <= 0 ? "x"~(ratio|number_format(1,'.',' ')) : (ratio >=1 ? "x"~(ratio|number_format(1,'.',' ')) : '/'~((1/ratio)|number_format(1,'.',' '))) }}</td>
+                            <td class="text-right total-line">0</td>
+                        </tr>
+
+                    {% endfor %}
+
+                    {% for total in run.runTotaux %}
+                        <tr>
+                            <td style="font-size: 12px" class="text-right" colspan="3"><b>{{ total }}</b></td>
+                            <td class="text-right sub-total" data-total="{{ total }}">0</td>
+                        </tr>
+                    {% endfor %}
+
+                    <tr>
+                        <td style="font-size: 12px" class="text-right" colspan="3"><b>Total malus compris</b></td>
+                        <td class="text-right total-run-with-malus">0</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">{{ form_widget(form.comment) }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form_widget(form.Enregistrer) }}</td>
+                        <td colspan="2"
+                            class="text-center {% if app.user.babyProof %}bg-warning{% endif %}">{% if app.user.babyProof %}{{ challenger.username }}{% endif %}</td>
+{#                        <td data-babyproof="{{ app.user.babyProof }}"#}
+{#                            data-challenger="{{ challenger.username }}">{{ form_widget(form.FinDeRun) }}</td>#}
+                    </tr>
+                </table>
+                {{ form_end(form) }}
+
+                <style>
+                    .form-group {
+                        margin-bottom: 0;
+                    }
+
+                    .form-control-sm {
+                        height: 26px;
+                    }
+                </style>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

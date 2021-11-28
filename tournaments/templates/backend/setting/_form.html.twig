@@ -1,0 +1,39 @@
+{# {% form_theme form 'bootstrap_4_layout.html.twig' %} #}
+
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.label) }}
+        {{ form_row(form.statLabel) }}
+        {{ form_row(form.ratio) }}
+        {{ form_row(form.inputType) }}
+        {{ form_row(form.defaultValue) }}
+        {{ form_row(form.position) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.isAffectedByMalus) }}
+        {{ form_row(form.autoValue) }}
+        {{ form_row(form.sendToMod) }}
+        {{ form_row(form.isReportedOnTheNextRun) }}
+        {{ form_row(form.isUsedForScore) }}
+        {{ form_row(form.isStepToVictory) }}
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.stepToVictoryMin) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.stepToVictoryMax) }}
+            </div>
+        </div>
+        {{ form_row(form.displayBestForStats) }}
+        {{ form_row(form.displayForStats) }}
+        {{ form_row(form.subTotal) }}
+    </div>
+</div>
+
+<button class="btn btn-info">{{ 'Save'|trans }}</button>
+
+<a class="btn btn-default confirm-action" title="Vous allez perdre toutes les informations non enregistrées"
+   href="{{ path('challenge_admin_settings_index',{id:challenge.id}) }}">{{ "back to list"|trans }}</a>
+
+{{ form_end(form) }}

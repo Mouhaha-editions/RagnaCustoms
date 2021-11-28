@@ -774,11 +774,31 @@ class Utilisateur implements UserInterface
         return $this->songRequests;
     }
 
+<<<<<<< HEAD
     public function addSongRequest(SongRequest $songRequest): self
     {
         if (!$this->songRequests->contains($songRequest)) {
             $this->songRequests[] = $songRequest;
             $songRequest->setRequestedBy($this);
+=======
+    /**
+     * @return ?SongRequest
+     */
+    public function getSongRequestInProgress(): ?SongRequest
+    {
+        foreach($this->getCurrentlyMapped() AS $request){
+            if($request->getState() == SongRequest::STATE_IN_PROGRESS){
+                return $request;
+            }
+        }
+        return null;
+    }
+
+    public function addSongRequest(SongRequest $songRequest): self
+    {
+        if (!$this->songRequests->contains($songRequest)) {
+           $songRequest->setRequestedBy($this);
+>>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
         }
 
         return $this;

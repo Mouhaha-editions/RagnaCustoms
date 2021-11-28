@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" type="image/png" href="{{ asset('build/castle.ico') }}" />
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+            <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
+        {% endblock %}
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-GLHHBT4B7G" data-children-count="0"></script>
+        <script data-children-count="0">
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-GLHHBT4B7G');
+        </script>
+    </head>
+    <body>
+    {% include 'frontend/base_template/navbar.html.twig' %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-dismissible alert-{{ label }}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                {{ message|trans }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% block HtmlBody %}
+            {% block body %}
+            {% endblock %}
+            <div id="btn-scroll-top"><i class="fa fa-angle-up"></i></div>
+            {% include 'frontend/base_template/footer.html.twig' %}
+        {% endblock %}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </body>
+</html>
+
+{# =========================== ALERT MODAL =========================== #}
+
+{# --- Modal d'erreur --- #}
+
+{#
+<div class="modal fade alert-modal warning-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="flag-center"><h2>Erreur</h2></div>
+            <i class="flag flag-right"></i>
+            <i class="flag flag-left"></i>
+            <div class="modal-body">
+                <div class="f-modal-alert">
+                    <div class="f-modal-icon f-modal-error animate">
+                        <span class="f-modal-x-mark">
+                            <span class="f-modal-line f-modal-left animateXLeft"></span>
+                            <span class="f-modal-line f-modal-right animateXRight"></span>
+                        </span>
+                        <div class="f-modal-placeholder"></div>
+                        <div class="f-modal-fix"></div>
+                    </div>
+                </div>
+                <div class="msg-mail-alert">
+                    <p class="text-center">coucou ceci est un message d'erreur !</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+#}
+
+{# --- Modal de warning --- #}
+
+{#
+<div class="modal fade alert-modal warning-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="flag-center"><h2>Warning</h2></div>
+            <i class="flag flag-right"></i>
+            <i class="flag flag-left"></i>
+            <div class="modal-body">
+                <div class="f-modal-alert">
+                    <div class="f-modal-icon f-modal-warning scaleWarning">
+                        <span class="f-modal-body pulseWarningIns"></span>
+                        <span class="f-modal-dot pulseWarningIns"></span>
+                    </div>
+                </div>
+                <div class="msg-mail-alert">
+                    <p class="text-center">coucou ceci est un message de warning !</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+#}
+
+{# --- Modal de succes --- #}
+
+{#
+<div class="modal fade alert-modal sucess-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="flag-center"><h2>Sucess</h2></div>
+            <i class="flag flag-right"></i>
+            <i class="flag flag-left"></i>
+            <div class="modal-body">
+                <div class="f-modal-alert">
+                    <div class="f-modal-icon f-modal-success animate">
+                        <span class="f-modal-line f-modal-tip animateSuccessTip"></span>
+                        <span class="f-modal-line f-modal-long animateSuccessLong"></span>
+                        <div class="f-modal-placeholder"></div>
+                        <div class="f-modal-fix"></div>
+                    </div>
+                </div>
+                <div class="msg-mail-alert">
+                    <p class="text-center">coucou ceci est un message de succès !</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+#}
+{# =================================================================== #}
+
+
+
+
+    

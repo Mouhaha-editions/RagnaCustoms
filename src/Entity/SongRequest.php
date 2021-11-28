@@ -16,6 +16,13 @@ class SongRequest
 {
     use TimestampableEntity;
 
+<<<<<<< HEAD
+=======
+    const STATE_ASKED = 1;
+    const STATE_IN_PROGRESS = 5;
+    const STATE_ENDED = 10;
+
+>>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -49,6 +56,14 @@ class SongRequest
      */
     private $author;
 
+<<<<<<< HEAD
+=======
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $state = self::STATE_ASKED;
+
+>>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
     public function __construct()
     {
         $this->mapperOnIt = new ArrayCollection();
@@ -146,4 +161,19 @@ class SongRequest
         return $this->getMapperOnIt()->first();
     }
 
+<<<<<<< HEAD
+=======
+    public function getState(): ?int
+    {
+        return $this->state;
+    }
+
+    public function setState(?int $state): self
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+>>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
 }

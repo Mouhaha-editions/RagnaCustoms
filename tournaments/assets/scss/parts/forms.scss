@@ -1,0 +1,152 @@
+/**
+ * Style des inputs et selects
+ * Version 1.1
+ * 12/2020
+ */
+
+/* --- INPUTS --- */
+
+.form-group {
+	position: relative;
+    margin-bottom: 45px;
+    
+    input {
+        display: block;
+        font-size: 14pt;
+        padding: 10px;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        border-radius: 0;
+    }
+
+    input::placeholder {
+        color: #c3c3c3;
+    }
+    
+    input:focus {
+        outline: none;
+        border: none;
+        box-shadow: none;
+    }
+    
+    label {
+        position: absolute;
+        top: 10px;
+        color: #999;
+        font-size: 14pt;
+        font-weight: normal;
+        pointer-events: none;
+        transition: all 0.2s ease;
+    }
+    
+    input:focus ~ label,
+    input.active ~ label {
+        top: -12px;
+        font-size: 10pt;
+        color: #5264AE;
+    }
+    
+    .bar {
+        display: block;
+        position: relative;
+    }
+    
+    .bar:before,
+    .bar:after {
+        content: "";
+        height: 2px;
+        width: 0;
+        bottom: 1px;
+        position: absolute;
+        background: #5264AE;
+        transition: all 0.2s ease;
+    }
+    
+    .bar:before {
+        left: 50%;
+    }
+    
+    .bar:after {
+        right: 50%;
+    }
+    
+    input:focus ~ .bar:before,
+    input:focus ~ .bar:after {
+        width: 50%;
+    }
+}
+
+/* --- SELECT --- */
+
+.light-custom-select {
+    position: relative;
+
+    select {
+        display: none; /*hide original SELECT element:*/
+    }
+
+    /*style the items (options), including the selected item:*/
+    .select-items div,.select-selected {
+        transition: 0.2s;
+        color: $black;
+        padding: 8px 5px;
+        border: 1px solid transparent;
+        //border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+        cursor: pointer;
+        user-select: none;
+        &:hover {
+            background-color: $light-grey;
+        }
+    }
+    
+    .select-selected {
+        background-color: $white;
+        border-color: transparent transparent #ccc transparent;
+        position: relative;
+        /* style the arrow inside the select element: */
+        &:after {
+            position: absolute;
+            content: "";
+            top: 50%;
+            transform: translateY(-15%);
+            right: 10px;
+            width: 0;
+            height: 0;
+            border: 6px solid transparent;
+            border-color: $dark-grey transparent transparent transparent;
+            transition: 0.2s;
+        }
+        /* point the arrow upwards when the select box is open (active): */
+        &.select-arrow-active:after {
+            transform: translateY(-65%) rotate(180deg);
+        }
+    }
+      
+    /*style items (options):*/
+    .select-items {
+        position: absolute;
+        transition: 0.2s;
+        background-color:  $white;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 99;
+    }
+      
+    /*hide the items when the select box is closed:*/
+    .select-hide {
+        display: none;
+    }
+      
+    .select-items div:hover, .same-as-selected {
+        background-color: $light-grey;
+    }
+
+    .default-value {
+        color: $grey;
+    }
+}
+  
+  
+  
+  

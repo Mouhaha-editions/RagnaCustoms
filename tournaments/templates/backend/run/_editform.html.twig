@@ -1,0 +1,30 @@
+{{ form_start(form) }}
+<h3>{{ challenger.twitchID is not empty ?  challenger.twitchID :  challenger.discordID }}<small>{{ run.lastVisitedAt == null ? run.startDate.format('d/m/Y H:i'): run.lastVisitedAt.format('d/m/Y H:i') }}</small></h3>
+<a href="{{ url('admin_runs_info',{'id': challenger.id,'id_challenge':challenge.id}) }}" class="float-right" target="_blank"><i class="fas fa-2x fa-info-circle"></i></a>
+<p>Malus de run : <span id="malus-run" data-malus="{{ run.malus }}">{{ ((run.malus-1)*100) }}</span>%</p>
+<table class="table table-sm">
+    <tr>
+        <th>Libellé</th>
+        <th>Valeur</th>
+    </tr>
+{% for setting in form.runSettings %}
+    <tr>
+        <td style="font-size: 12px">{{ setting.vars.data.challengeSetting.label }}</td>
+        <td>{{ form_widget(setting) }}</td>
+    </tr>
+{% endfor %}
+    <tr>
+        <td colspan="2">{{ form_widget(form.comment) }}</td>
+    </tr>
+
+</table>
+{{ form_end(form) }}
+
+<style>
+    .form-group{
+        margin-bottom:0;
+    }
+    .form-control-sm{
+        height: 24px;
+    }
+</style>

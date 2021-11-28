@@ -1,0 +1,12 @@
+{% extends 'base_backoffice.html.twig' %}
+
+{% block title %}Edit AgnTemporaryParameter{% endblock %}
+
+{% block content %}
+    <h1>Modifier un paramètre</h1>
+    <a class="float-right" href="{{ path('parameter_index') }}">retour à la liste</a>
+
+    {{ include('backend/parameter/_form.html.twig', {'button_label': 'Update'}) }}
+
+
+{% endblock %}

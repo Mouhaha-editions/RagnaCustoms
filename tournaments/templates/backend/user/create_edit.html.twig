@@ -1,0 +1,21 @@
+{% extends 'base_backoffice.html.twig' %}
+
+{% block title %}{{ "Users"|trans }}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-default color-palette-box">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-tag"></i>
+                        {{ "Users"|trans }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {{ include('backend/user/_form.html.twig', {'button_label': 'Update'}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

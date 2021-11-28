@@ -24,6 +24,7 @@ class ApplicationController extends AbstractController
     }
 
     /**
+<<<<<<< HEAD
      * @Route("/application/changelog", name="application_changelog")
      */
     public function changelog(): Response
@@ -35,6 +36,8 @@ class ApplicationController extends AbstractController
 
 
     /**
+=======
+>>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
      * @Route("/application", name="application")
      */
     public function index(): Response

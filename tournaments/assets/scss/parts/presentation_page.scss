@@ -1,0 +1,47 @@
+/**
+ * Styles de la page listant les chaines des streamers
+ * Version 1.0
+ * 11/2020
+ */
+
+ .tv-main-list {
+     padding: 40px 0;
+ }
+
+ .bg_image_default {
+    background-image: url("../img/default_twitch_image.jpg");
+    background-position: center;
+    background-size: cover;
+ }
+
+ .card-twitch-player {
+    transition: 0.3s;
+    min-height: 157px;
+    margin: 15px 0;
+     a {
+        width: 100%;
+        height: 100%;
+        color: #545454;
+        box-shadow: 0 4px 6px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+        &:hover {
+            -webkit-transform: translateY(-3px);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px 0;
+            cursor: pointer;
+            color: #545454;
+            text-decoration: none;
+         }
+     }
+     p {
+        color: $white;
+        margin: 0;
+        font-size: 1.5em;
+        overflow: hidden;
+white-space: nowrap; /* Don't forget this one */
+text-overflow: ellipsis;
+     }
+ }

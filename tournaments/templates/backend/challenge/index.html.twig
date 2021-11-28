@@ -1,0 +1,81 @@
+{% extends 'base_backoffice.html.twig' %}
+
+{% block title %}{{ "Challenges"|trans }}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-default color-palette-box">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-tag"></i>
+                        {{ "Challenges"|trans }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <a class="btn btn-success float-right"
+                       href="{{ path('challenge_admin_new') }}">{{ "Create new"|trans }}</a>
+                    <table class="table table-condensed">
+                        <thead>
+                        <tr>
+                            <th>{{ "challenge.label.season"|trans }}</th>
+                            <th>{{ "challenge.label.title"|trans }}</th>
+                            <th>{{ "challenge.label.dateStart"|trans }}</th>
+                            <th>{{ "challenge.label.dateEnd"|trans }}</th>
+                            <th>{{ "challenge.label.type"|trans }}</th>
+                            <th>{{ "challenge.label.challengers"|trans }}</th>
+                            <th>{{ "challenge.label.actions"|trans }}</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for challenge in paginator.entities %}
+                            <tr>
+                                <td>{{ challenge.season.label }}</td>
+                                <td>{{ challenge.title }}</td>
+                                <td>{{ challenge.registrationOpening ? challenge.registrationOpening|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>{{ challenge.registrationClosing ? challenge.registrationClosing|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>{{ challenge.typeStr }}</td>
+                                <td>{{ challenge.validatedParticipations|length }} <span data-toggle="tooltip"
+                                                                                         title="En attente">(<a
+                                                href="{{ path('challenge_admin_edit', {'id': challenge.id}) }}#participations">{{ challenge.waitingParticipations|length }}</a>)</span>
+                                    / {{ challenge.maxChallenger }}</td>
+                                <td>
+                                    <a class="btn btn-sm" target="_blank"
+                                       href="{{ path('admin_leaderboard_index', {'id': challenge.id}) }}"><i
+                                                class="fas fa-list"></i></a>
+                                    <a class="btn btn-sm btn-info"
+                                       href="{{ path('challenge_admin_edit', {'id': challenge.id}) }}"><i
+                                                class="fas fa-edit"></i></a>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <a class="btn btn-sm btn-default"
+                                           href="{{ path('challenge_admin_settings_index', {'id': challenge.id}) }}"><i
+                                                    class="fas fa-cogs"></i></a>
+                                        <a  class="btn btn-sm btn-warning" title="participations" href="{{ url("add_participation",{id: challenge.id}) }}"><i class="fas fa-users-cog"></i></a>
+                                        {% if not app.user.babyProof %}
+                                            <a class="btn btn-sm btn-danger confirm-action"
+                                               href="{{ path('challenge_admin_duplicate', {'id': challenge.id}) }}"><i
+                                                        class="fas fa-copy"></i></a>
+
+                                            <a class="btn btn-sm btn-danger confirm-action"
+                                               href="{{ path('challenge_admin_delete', {'id': challenge.id}) }}"><i
+                                                        class="fas fa-trash"></i></a>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="13">{{ "no records found"|trans }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+                    {{ macro_pagination.seeMore(paginator,"Voir plus"|trans) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

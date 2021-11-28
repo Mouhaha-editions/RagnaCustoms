@@ -1,0 +1,43 @@
+{
+    "devDependencies": {
+        "@symfony/webpack-encore": "^0.30.2",
+        "core-js": "^3.0.0",
+        "regenerator-runtime": "^0.13.2",
+        "webpack-notifier": "^1.8.0"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.1",
+        "admin-lte": "3.0",
+        "bigvideo.js": "^1.1.6",
+        "bootstrap": "^4.5.2",
+        "chart.js": "^2.9.4",
+        "gulp": "latest",
+        "gulp-autoprefixer": "latest",
+        "gulp-cssbeautify": "^3.0.0",
+        "gulp-csscomb": "latest",
+        "gulp-csso": "latest",
+        "gulp-load-plugins": "^2.0.5",
+        "gulp-rename": "latest",
+        "gulp-sass": "latest",
+        "jquery": "^3.5.1",
+        "jquery-resizable": "^1.0.6",
+        "jquery-ui": "^1.12.1",
+        "moment": "^2.29.1",
+        "node-sass": "^4.14.1",
+        "popper.js": "^1.16.1",
+        "sass-loader": "8.0.0",
+        "select2": "^4.0.13",
+        "trumbowyg": "^2.22.0",
+        "video.js": "^7.10.2",
+        "videojs": "^1.0.0",
+        "yarn": "^1.22.10"
+    }
+}
