@@ -295,11 +295,7 @@
 </trans-unit>
 <trans-unit id="Um4Ah8w">
 <source xml:space="preserve">Description</source>
-<<<<<<< HEAD
-<target xml:space="preserve">Description</target>
-=======
 <target xml:space="preserve">Description :</target>
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
 </trans-unit>
 <trans-unit id="UpJKYO9">
 <source xml:space="preserve">Song not found!</source>

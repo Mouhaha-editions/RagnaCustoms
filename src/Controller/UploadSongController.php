@@ -88,14 +88,8 @@ class UploadSongController extends AbstractController
             try {
                 $file = $form->get('zipFile')->getData();
                 if($file == null){
-<<<<<<< HEAD
-                    $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!", [
-                        "%song%" => $song->getName(),
-                        "%artist%" => $song->getAuthorName()
-                    ]));
-=======
+
                     $this->addFlash('success', str_replace(["%song%","%artist%"],[$song->getName(),$song->getAuthorName()],$translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($song);
                     $em->flush();
@@ -111,14 +105,8 @@ class UploadSongController extends AbstractController
                     ]);
                 }
                 if ($songService->processFile($form, $song, $isWip)) {
-<<<<<<< HEAD
-                    $this->addFlash('success', $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!", [
-                        "%song%" => $song->getName(),
-                        "%artist%" => $song->getAuthorName()
-                    ]));
-=======
+
                     $this->addFlash('success', str_replace(["%song%","%artist%"],[$song->getName(),$song->getAuthorName()],$translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
                     return new JsonResponse([
                         'error' => false,
                         'reload' => true,
@@ -141,10 +129,6 @@ class UploadSongController extends AbstractController
                     ])
                 ]);
             }
-<<<<<<< HEAD
-
-=======
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
         }
         return new JsonResponse([
             'error' => false,

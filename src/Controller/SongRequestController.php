@@ -3,21 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\SongRequest;
-<<<<<<< HEAD
-=======
+
 use App\Entity\Utilisateur;
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
 use App\Form\SongRequestFormType;
 use App\Repository\SongRequestRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-<<<<<<< HEAD
-=======
+
 use Symfony\Contracts\Translation;
 use Symfony\Contracts\Translation\TranslatorInterface;
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
 
 /**
  * @Route("/song-request", name="song_request")
@@ -37,11 +33,8 @@ class SongRequestController extends AbstractController
             $songReq = new SongRequest();
             $user = $this->getUser();
             $songReq->setRequestedBy($user);
-<<<<<<< HEAD
             $form = $this->createForm(SongRequestFormType::class, $songReq,['attr'=>["class"=>"form-horizontal"]]);
-=======
             $form = $this->createForm(SongRequestFormType::class, $songReq, ['attr' => ["class" => "form-horizontal"]]);
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -53,11 +46,9 @@ class SongRequestController extends AbstractController
         }
 
         $qb = $songRequestRepository->createQueryBuilder('sr');
-<<<<<<< HEAD
     $qb->leftJoin("sr.requestedBy",'u');
     $qb->orderBy("IF(u.isPatreon = true,1,0)","DESC")
     ->addOrderBy("sr.createdAt");
-=======
         $qb->leftJoin("sr.requestedBy", 'u');
         $qb->where('sr.state IN (:displayable)')
             ->setParameter('displayable', [
@@ -66,7 +57,6 @@ class SongRequestController extends AbstractController
             ]);
         $qb->orderBy("IF(u.isPatreon = true,1,0)", "DESC")
             ->addOrderBy("sr.createdAt", 'DESC');
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
 
         $songRequests = $qb->getQuery()
             ->getResult();
@@ -77,8 +67,6 @@ class SongRequestController extends AbstractController
             'form' => $form ? $form->createView() : null
         ]);
     }
-<<<<<<< HEAD
-=======
 
     /**
      * @Route("/claim/{id}", name="_claim")
@@ -153,5 +141,4 @@ class SongRequestController extends AbstractController
         return $this->redirectToRoute('song_request_index');
     }
 
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
 }

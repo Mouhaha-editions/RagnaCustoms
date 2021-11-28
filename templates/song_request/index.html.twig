@@ -1,15 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}RagnaCustoms.com, Song requests{% endblock %}
-<<<<<<< HEAD
-        {% block body %}
 
-<div class="row mt-3">
-    <div class="col-12">
-        <h1>Song requests</h1>
-    </div>
-</div>
-=======
 {% block body %}
 
     <div class="row mt-3">
@@ -17,7 +9,6 @@
             <h1>Song requests</h1>
         </div>
     </div>
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
 
     <div class="row mt-3">
         <div class="col-md-4">
@@ -28,24 +19,16 @@
         </div>
         {% for songRequest in songRequests %}
             <div class="col-md-4">
-<<<<<<< HEAD
-                {# <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}" title="{{ songRequest.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> #}
-                <iframe width="320" height="180" src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}"
-=======
+
 
                 {# <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}" title="{{ songRequest.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> #}
                 <iframe width="350" height="180"
                         src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}"
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
                         title="{{ songRequest.title }}" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 <br/>
-<<<<<<< HEAD
-                {{"%song_name% by %artist%"|trans|replace({"%song_name%":songRequest.title,"%artist%":songRequest.author})}}<br/>
-                <small>{{ "Requested by %username%"|trans({"%username%":songRequest.requestedBy.username}) }}</small><br/>
-                <small>{{ "Mapper working on it :"|trans }} {{ songRequest.getMapper == false ? ("<span class='text-danger'>"~("No one"|trans)~"</span>")|raw: songRequest.getMapper.username }}</small>
-=======
+
                 {{ "%song_name% by %artist%"|trans|replace({"%song_name%":songRequest.title,"%artist%":songRequest.author}) }}
                 <br/>
                 <small>{{ "Requested by %username%"|trans|replace({"%username%":songRequest.requestedBy.username}) }}
@@ -81,7 +64,6 @@
                         </div>
                     </div>
                 {% endif %}
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
             </div>
         {% else %}
             <p>{{ "No song request"|trans }}</p>

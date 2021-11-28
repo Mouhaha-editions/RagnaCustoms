@@ -70,11 +70,8 @@ class PlaylistController extends AbstractController
     /**
      * @Route("/playlist/remove", name="playlist_remove")
      * @param Request $request
-<<<<<<< HEAD
-=======
      * @param PlaylistRepository $playlistRepository
      * @param SongRepository $songRepository
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
      * @return Response
      */
     public function remove(Request $request,PlaylistRepository $playlistRepository, SongRepository $songRepository)

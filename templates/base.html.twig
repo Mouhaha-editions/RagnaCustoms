@@ -89,14 +89,12 @@
                             <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1eb-1f1f7.svg" alt="fr"/> Français
                         </a>
                     {% endif %}
-<<<<<<< HEAD
-=======
+
                     {% if app.request.locale != 'hu' %}
                         <a class="dropdown-item" href="{{ url("change_locale",{locale:"hu"}) }}">
                             <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ed-1f1fa.svg" alt="fr"/> Hungarian
                         </a>
                     {% endif %}
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
                     {% if app.request.locale != 'de' %}
                         <a class="dropdown-item" href="{{ url("change_locale",{locale:"de"}) }}">
                             <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1e9-1f1ea.svg" alt="de"/> Deutsch

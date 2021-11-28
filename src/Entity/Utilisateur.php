@@ -774,13 +774,7 @@ class Utilisateur implements UserInterface
         return $this->songRequests;
     }
 
-<<<<<<< HEAD
-    public function addSongRequest(SongRequest $songRequest): self
-    {
-        if (!$this->songRequests->contains($songRequest)) {
-            $this->songRequests[] = $songRequest;
-            $songRequest->setRequestedBy($this);
-=======
+
     /**
      * @return ?SongRequest
      */
@@ -798,7 +792,6 @@ class Utilisateur implements UserInterface
     {
         if (!$this->songRequests->contains($songRequest)) {
            $songRequest->setRequestedBy($this);
->>>>>>> 17ebaef6adaa1b59fb3003266577b0c437faf9eb
         }
 
         return $this;
