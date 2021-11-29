@@ -3,7 +3,7 @@
 <body>
 <trans-unit id=".qS1zv_">
 <source xml:space="preserve">Song</source>
-<target xml:space="preserve">Lied</target>
+<target xml:space="preserve">Song</target>
 </trans-unit>
 <trans-unit id="04vg4Lv">
 <source xml:space="preserve">Add song to playlist</source>
@@ -23,7 +23,7 @@
 </trans-unit>
 <trans-unit id="1f3BrwI">
 <source xml:space="preserve">Downloads</source>
-<target xml:space="preserve">Ordner für heruntergeladene Dokumente</target>
+<target xml:space="preserve">Downloads</target>
 </trans-unit>
 <trans-unit id="1ur_gjW">
 <source xml:space="preserve">Download</source>
@@ -31,7 +31,7 @@
 </trans-unit>
 <trans-unit id="3Wx89es">
 <source xml:space="preserve">Leaderboards by song</source>
-<target xml:space="preserve">Ranglisten nach Lied</target>
+<target xml:space="preserve">Bestenliste nach Song</target>
 </trans-unit>
 <trans-unit id="3fO3X7H">
 <source xml:space="preserve">Mapped by:</source>
@@ -45,6 +45,10 @@
 <source xml:space="preserve">Our Application</source>
 <target xml:space="preserve">Unsere Anwendung</target>
 </trans-unit>
+<trans-unit id="4s52dfs">
+<source xml:space="preserve">You haven't played this song for now</source>
+<target xml:space="preserve">You haven't played this song for now</target>
+</trans-unit>
 <trans-unit id="588_9PF">
 <source xml:space="preserve">Password</source>
 <target xml:space="preserve">Passwort</target>
@@ -57,13 +61,21 @@
 <source xml:space="preserve">Last added</source>
 <target xml:space="preserve">Zuletzt hinzugefügt</target>
 </trans-unit>
+<trans-unit id="6SG1prA">
+<source xml:space="preserve">You are not the mapper that claim this request.</source>
+<target xml:space="preserve">You are not the mapper that claim this request.</target>
+</trans-unit>
 <trans-unit id="7BmrasU">
 <source xml:space="preserve">Leaderboards</source>
 <target xml:space="preserve">Bestenlisten</target>
 </trans-unit>
 <trans-unit id="7FlU8FZ">
 <source xml:space="preserve">No song for now</source>
-<target xml:space="preserve">Derzeit kein Lied</target>
+<target xml:space="preserve">Vorerst kein Song</target>
+</trans-unit>
+<trans-unit id="7i21odi">
+<source xml:space="preserve">This request is already taken by a mapper.</source>
+<target xml:space="preserve">This request is already taken by a mapper.</target>
 </trans-unit>
 <trans-unit id="7spPgKG">
 <source xml:space="preserve">Forgot Password?</source>
@@ -72,10 +84,6 @@
 <trans-unit id="81Mt9jk">
 <source xml:space="preserve">Notes hit:</source>
 <target xml:space="preserve">Getroffene Runen:</target>
-</trans-unit>
-<trans-unit id="88fgLSX">
-<source xml:space="preserve">Fun factor:</source>
-<target xml:space="preserve">Spaßfaktor:</target>
 </trans-unit>
 <trans-unit id="8Cjk8Aq">
 <source xml:space="preserve">Be a virtual Viking!</source>
@@ -99,7 +107,7 @@
 </trans-unit>
 <trans-unit id="9JuWNtT">
 <source xml:space="preserve">Bpm:</source>
-<target xml:space="preserve">Apm</target>
+<target xml:space="preserve">BPM:</target>
 </trans-unit>
 <trans-unit id="9Ow4gNY">
 <source xml:space="preserve">Mapped by %mapper%</source>
@@ -137,6 +145,10 @@
 <source xml:space="preserve">Label</source>
 <target xml:space="preserve">Etikett</target>
 </trans-unit>
+<trans-unit id="DoVKmrW">
+<source xml:space="preserve">Song requests</source>
+<target xml:space="preserve">Song requests</target>
+</trans-unit>
 <trans-unit id="DwGT2Qc">
 <source xml:space="preserve">Search by title, artist or mapper</source>
 <target xml:space="preserve">Suche nach Titel, Künstler oder Mapper</target>
@@ -151,7 +163,7 @@
 </trans-unit>
 <trans-unit id="EaSMvF7">
 <source xml:space="preserve">Not available when the song is in "WIP" mode</source>
-<target xml:space="preserve">Nicht verfügbar während das Lied im "WIP" Modus ist</target>
+<target xml:space="preserve">Nicht verfügbar während der Song im "WIP" Modus ist</target>
 </trans-unit>
 <trans-unit id="G.fsjoj">
 <source xml:space="preserve">Season ranking</source>
@@ -159,7 +171,7 @@
 </trans-unit>
 <trans-unit id="GDhCgSF">
 <source xml:space="preserve">Flow:</source>
-<target xml:space="preserve">Fluss</target>
+<target xml:space="preserve">Fluss:</target>
 </trans-unit>
 <trans-unit id="GK9BVRd">
 <source xml:space="preserve">Download filtered selection</source>
@@ -175,11 +187,15 @@
 </trans-unit>
 <trans-unit id="J8yB2ym">
 <source xml:space="preserve">Song played:</source>
-<target xml:space="preserve">Gespieltes Lied:</target>
+<target xml:space="preserve">Gespielter Song:</target>
 </trans-unit>
 <trans-unit id="JAsu23F">
 <source xml:space="preserve">Filter songs</source>
-<target xml:space="preserve">Lieder filtern</target>
+<target xml:space="preserve">Songs filtern</target>
+</trans-unit>
+<trans-unit id="Jh79Hu0">
+<source xml:space="preserve">You need to be a mapper to access this page.</source>
+<target xml:space="preserve">You need to be a mapper to access this page.</target>
 </trans-unit>
 <trans-unit id="JiEhxTc">
 <source xml:space="preserve">edit</source>
@@ -199,7 +215,7 @@
 </trans-unit>
 <trans-unit id="KY1sdUn">
 <source xml:space="preserve">Duration:</source>
-<target xml:space="preserve">Dauer</target>
+<target xml:space="preserve">Dauer:</target>
 </trans-unit>
 <trans-unit id="Kc.KjPF">
 <source xml:space="preserve">Last update:</source>
@@ -207,7 +223,7 @@
 </trans-unit>
 <trans-unit id="KkPzMqC">
 <source xml:space="preserve">Song added to your playlist!</source>
-<target xml:space="preserve">Lied wurde zu deiner Playlist hinzugefügt!</target>
+<target xml:space="preserve">Song wurde zu deiner Playlist hinzugefügt!</target>
 </trans-unit>
 <trans-unit id="KpL2_.m">
 <source xml:space="preserve">Remember Me</source>
@@ -223,7 +239,7 @@
 </trans-unit>
 <trans-unit id="M0pAn1b">
 <source xml:space="preserve">Song details</source>
-<target xml:space="preserve">Titeldetails</target>
+<target xml:space="preserve">Details zum Song</target>
 </trans-unit>
 <trans-unit id="MbRxIVh">
 <source xml:space="preserve">Leaderboard</source>
@@ -231,7 +247,7 @@
 </trans-unit>
 <trans-unit id="MetgMAN">
 <source xml:space="preserve">Songs played</source>
-<target xml:space="preserve">Gespielte Lieder</target>
+<target xml:space="preserve">Gespielte Songs</target>
 </trans-unit>
 <trans-unit id="MksTT1f">
 <source xml:space="preserve">Preview</source>
@@ -255,19 +271,31 @@
 </trans-unit>
 <trans-unit id="ODMXl9D">
 <source xml:space="preserve">Song mapped:</source>
-<target xml:space="preserve">Gemapptes Lied:</target>
+<target xml:space="preserve">Gemappter Song:</target>
 </trans-unit>
 <trans-unit id="OOWkbLx">
 <source xml:space="preserve">Score</source>
 <target xml:space="preserve">Ergebnis</target>
 </trans-unit>
+<trans-unit id="PUsk6dJ">
+<source xml:space="preserve">Claim it</source>
+<target xml:space="preserve">Claim it</target>
+</trans-unit>
+<trans-unit id="Q.X5P1L">
+<source xml:space="preserve">Download the installer</source>
+<target xml:space="preserve">Download the installer</target>
+</trans-unit>
 <trans-unit id="QSvguc1">
 <source xml:space="preserve">Informations</source>
 <target xml:space="preserve">Informationen</target>
 </trans-unit>
+<trans-unit id="QsJGdgW">
+<source xml:space="preserve">You already claimed a request, one thing at a time please.</source>
+<target xml:space="preserve">You already claimed a request, one thing at a time please.</target>
+</trans-unit>
 <trans-unit id="QuWIdWM">
 <source xml:space="preserve">Last songs played</source>
-<target xml:space="preserve">Zuletzt gespielte Lieder</target>
+<target xml:space="preserve">Zuletzt gespielter Song</target>
 </trans-unit>
 <trans-unit id="Qzt36wp">
 <source xml:space="preserve">Difficulties:</source>
@@ -276,6 +304,10 @@
 <trans-unit id="REgGQF4">
 <source xml:space="preserve">Download playlist with the app</source>
 <target xml:space="preserve">Lade die Playlist mit der App herunter</target>
+</trans-unit>
+<trans-unit id="SFRo3yr">
+<source xml:space="preserve">Unclaim it</source>
+<target xml:space="preserve">Unclaim it</target>
 </trans-unit>
 <trans-unit id="ScJmuqq">
 <source xml:space="preserve">Search</source>
@@ -287,7 +319,7 @@
 </trans-unit>
 <trans-unit id="USNp9bJ">
 <source xml:space="preserve">Rhythm:</source>
-<target xml:space="preserve">Der Rhythmus</target>
+<target xml:space="preserve">Rhythmus:</target>
 </trans-unit>
 <trans-unit id="UigtRYc">
 <source xml:space="preserve">1 click downloader</source>
@@ -299,7 +331,7 @@
 </trans-unit>
 <trans-unit id="UpJKYO9">
 <source xml:space="preserve">Song not found!</source>
-<target xml:space="preserve">Lied nicht gefunden!</target>
+<target xml:space="preserve">Song nicht gefunden!</target>
 </trans-unit>
 <trans-unit id="VUipwrR">
 <source xml:space="preserve">8-10</source>
@@ -307,7 +339,7 @@
 </trans-unit>
 <trans-unit id="VVoBMuC">
 <source xml:space="preserve">BPM:</source>
-<target xml:space="preserve">Apm</target>
+<target xml:space="preserve">BPM:</target>
 </trans-unit>
 <trans-unit id="VjX9FHA">
 <source xml:space="preserve">Distance:</source>
@@ -351,7 +383,7 @@
 </trans-unit>
 <trans-unit id="YJxGA5K">
 <source xml:space="preserve">No song request</source>
-<target xml:space="preserve">Kein Liederwunsch</target>
+<target xml:space="preserve">Kein Songwunsch</target>
 </trans-unit>
 <trans-unit id="YZdZVQP">
 <source xml:space="preserve">delete</source>
@@ -371,7 +403,7 @@
 </trans-unit>
 <trans-unit id="ZCZ.iLb">
 <source xml:space="preserve">Songs mapped</source>
-<target xml:space="preserve">Lieder gemapped</target>
+<target xml:space="preserve">Songs gemapped</target>
 </trans-unit>
 <trans-unit id="_FtY.RV">
 <source xml:space="preserve">Fun factor:</source>
@@ -383,7 +415,7 @@
 </trans-unit>
 <trans-unit id="aL6gI1n">
 <source xml:space="preserve">Song "%song%" by "%artist%" successfully uploaded!</source>
-<target xml:space="preserve">Lied "%song%" von "%artist%" wurde erfolgreich hochgeladen!</target>
+<target xml:space="preserve">Song "%song%" von "%artist%" wurde erfolgreich hochgeladen!</target>
 </trans-unit>
 <trans-unit id="acQEWR6">
 <source xml:space="preserve">Views</source>
@@ -395,7 +427,7 @@
 </trans-unit>
 <trans-unit id="c1Zl2xv">
 <source xml:space="preserve">click to vote</source>
-<target xml:space="preserve">Klicken um Abzustimmen</target>
+<target xml:space="preserve">Klicken um zu bewerten</target>
 </trans-unit>
 <trans-unit id="c5LJ9v.">
 <source xml:space="preserve">You need to be connected</source>
@@ -404,6 +436,10 @@
 <trans-unit id="cQEsJJT">
 <source xml:space="preserve">You need an account to use playlist!</source>
 <target xml:space="preserve">Du benötigst ein Konto um eine Playlist zu benutzen.</target>
+</trans-unit>
+<trans-unit id="cXVRejc">
+<source xml:space="preserve">or</source>
+<target xml:space="preserve">or</target>
 </trans-unit>
 <trans-unit id="d4BN8eY">
 <source xml:space="preserve">My progression</source>
@@ -415,7 +451,7 @@
 </trans-unit>
 <trans-unit id="dVrtffu">
 <source xml:space="preserve">This song is a "Work in progress"</source>
-<target xml:space="preserve">Dieses Lied ist ein "Work in progress"</target>
+<target xml:space="preserve">Dieser Song ist in Arbeit. ("Work in Progress"/WIP)</target>
 </trans-unit>
 <trans-unit id="denQnlA">
 <source xml:space="preserve">Ranked only</source>
@@ -459,7 +495,7 @@
 </trans-unit>
 <trans-unit id="gQZ.y3Y">
 <source xml:space="preserve">Song already in playlist!</source>
-<target xml:space="preserve">Lied ist bereits in Playlist.</target>
+<target xml:space="preserve">Song ist bereits in Playlist.</target>
 </trans-unit>
 <trans-unit id="gfZ42tt">
 <source xml:space="preserve">My playlists</source>
@@ -475,7 +511,7 @@
 </trans-unit>
 <trans-unit id="ia_i3_Q">
 <source xml:space="preserve">Custom songs available for Ragnaröck VR</source>
-<target xml:space="preserve">Benutzerdefinierte Lieder für Ragnaröck VR verfügbar</target>
+<target xml:space="preserve">Verfügbare Custom Songs für Ragnaröck VR</target>
 </trans-unit>
 <trans-unit id="ijel8Hr">
 <source xml:space="preserve">Order by</source>
@@ -525,9 +561,9 @@
 <source xml:space="preserve">Global ranking:</source>
 <target xml:space="preserve">Globaler Rang:</target>
 </trans-unit>
-<trans-unit id="ns__VmG">
+<trans-unit id="nsVmG">
 <source xml:space="preserve">Notes missed:</source>
-<target xml:space="preserve">Verfehlte Runen:</target>
+<target xml:space="preserve">Notes missed:</target>
 </trans-unit>
 <trans-unit id="nylTBGT">
 <source xml:space="preserve">Rating</source>
@@ -535,7 +571,7 @@
 </trans-unit>
 <trans-unit id="olizD4j">
 <source xml:space="preserve">Global</source>
-<target xml:space="preserve">Globale Einstellungen</target>
+<target xml:space="preserve">Global</target>
 </trans-unit>
 <trans-unit id="p5GWI6U">
 <source xml:space="preserve">Save Review!</source>
@@ -567,7 +603,7 @@
 </trans-unit>
 <trans-unit id="rNAupNk">
 <source xml:space="preserve">songs displayed on</source>
-<target xml:space="preserve">Lieder angezeigt auf</target>
+<target xml:space="preserve">Songs angezeigt auf</target>
 </trans-unit>
 <trans-unit id="rNmTJ5X">
 <source xml:space="preserve">WIP only</source>
@@ -595,7 +631,7 @@
 </trans-unit>
 <trans-unit id="tMvlYt0">
 <source xml:space="preserve">I want to vote</source>
-<target xml:space="preserve">Ich möchte abstimmen</target>
+<target xml:space="preserve">Ich möchte bewerten</target>
 </trans-unit>
 <trans-unit id="tPdniYe">
 <source xml:space="preserve">Login to your Account</source>
@@ -615,7 +651,7 @@
 </trans-unit>
 <trans-unit id="twhySiO">
 <source xml:space="preserve">With</source>
-<target xml:space="preserve">mit</target>
+<target xml:space="preserve">Mit</target>
 </trans-unit>
 <trans-unit id="u3I07BJ">
 <source xml:space="preserve">Register</source>
@@ -635,7 +671,7 @@
 </trans-unit>
 <trans-unit id="vGdhNXl">
 <source xml:space="preserve">Songs</source>
-<target xml:space="preserve">Lieder</target>
+<target xml:space="preserve">Songs</target>
 </trans-unit>
 <trans-unit id="vLvhD3E">
 <source xml:space="preserve">no description for now</source>
@@ -647,7 +683,7 @@
 </trans-unit>
 <trans-unit id="vjqEKpm">
 <source xml:space="preserve">You need an account to vote !</source>
-<target xml:space="preserve">Du benötigst ein Konto um abzustimmen!</target>
+<target xml:space="preserve">Du benötigst ein Konto um zu bewerten!</target>
 </trans-unit>
 <trans-unit id="wIWBzLa">
 <source xml:space="preserve">How to ?</source>
@@ -663,7 +699,7 @@
 </trans-unit>
 <trans-unit id="x7iK7GK">
 <source xml:space="preserve">Feedbacks</source>
-<target xml:space="preserve">Feedback: %d</target>
+<target xml:space="preserve">Feedback</target>
 </trans-unit>
 <trans-unit id="xAWYMJ.">
 <source xml:space="preserve">RagnaCustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;</source>
@@ -671,7 +707,7 @@
 </trans-unit>
 <trans-unit id="xzOXSvG">
 <source xml:space="preserve">Artist:</source>
-<target xml:space="preserve">Künstler</target>
+<target xml:space="preserve">Künstler:</target>
 </trans-unit>
 <trans-unit id="yADx6B5">
 <source xml:space="preserve">%username%'s profile</source>
@@ -679,16 +715,12 @@
 </trans-unit>
 <trans-unit id="zJUTwVH">
 <source xml:space="preserve">You are going to download a lot of custom songs and it can take a while, do you want to continue?</source>
-<target xml:space="preserve">Sie werden viele benutzerdefinierte Songs herunterladen und es kann eine Weile dauern. Möchten Sie fortfahren?</target>
+<target xml:space="preserve">Du wirst viele Custom Songs herunterladen und es kann eine Weile dauern. Möchtest du fortfahren?</target>
 </trans-unit>
 <trans-unit id="zVWI22.">
 <source xml:space="preserve">Vote</source>
-<target xml:space="preserve">Abstimmen</target>
+<target xml:space="preserve">Bewertung</target>
 </trans-unit>
-    <trans-unit id="0">
-        <source>Song requests</source>
-        <target>messages</target>
-    </trans-unit>
 </body>
 </file>
 </xliff>

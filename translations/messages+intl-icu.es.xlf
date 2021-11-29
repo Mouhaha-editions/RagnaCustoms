@@ -46,6 +46,10 @@
 <source xml:space="preserve">Our Application</source>
 <target xml:space="preserve">Nuestra aplicación</target>
 </trans-unit>
+<trans-unit id="4s52dfs">
+<source xml:space="preserve">You haven't played this song for now</source>
+<target xml:space="preserve">You haven't played this song for now</target>
+</trans-unit>
 <trans-unit id="588_9PF">
 <source xml:space="preserve">Password</source>
 <target xml:space="preserve">Contraseña</target>
@@ -58,6 +62,10 @@
 <source xml:space="preserve">Last added</source>
 <target xml:space="preserve">Ultimo añadido</target>
 </trans-unit>
+<trans-unit id="6SG1prA">
+<source xml:space="preserve">You are not the mapper that claim this request.</source>
+<target xml:space="preserve">You are not the mapper that claim this request.</target>
+</trans-unit>
 <trans-unit id="7BmrasU">
 <source xml:space="preserve">Leaderboards</source>
 <target xml:space="preserve">Tablas de clasificación</target>
@@ -66,6 +74,10 @@
 <source xml:space="preserve">No song for now</source>
 <target xml:space="preserve">No hay canción por ahora</target>
 </trans-unit>
+<trans-unit id="7i21odi">
+<source xml:space="preserve">This request is already taken by a mapper.</source>
+<target xml:space="preserve">This request is already taken by a mapper.</target>
+</trans-unit>
 <trans-unit id="7spPgKG">
 <source xml:space="preserve">Forgot Password?</source>
 <target xml:space="preserve">¿Olvidaste tu contraseña?</target>
@@ -73,10 +85,6 @@
 <trans-unit id="81Mt9jk">
 <source xml:space="preserve">Notes hit:</source>
 <target xml:space="preserve">Notas acertadas:</target>
-</trans-unit>
-<trans-unit id="88fgLSX">
-<source xml:space="preserve">Fun factor:</source>
-<target xml:space="preserve">Factor de diversión</target>
 </trans-unit>
 <trans-unit id="8Cjk8Aq">
 <source xml:space="preserve">Be a virtual Viking!</source>
@@ -138,6 +146,10 @@
 <source xml:space="preserve">Label</source>
 <target xml:space="preserve">Etiqueta</target>
 </trans-unit>
+<trans-unit id="DoVKmrW">
+<source xml:space="preserve">Song requests</source>
+<target xml:space="preserve">Song requests</target>
+</trans-unit>
 <trans-unit id="DwGT2Qc">
 <source xml:space="preserve">Search by title, artist or mapper</source>
 <target xml:space="preserve">Búsqueda por título, artista o mapeador</target>
@@ -181,6 +193,10 @@
 <trans-unit id="JAsu23F">
 <source xml:space="preserve">Filter songs</source>
 <target xml:space="preserve">Filtrar canciones</target>
+</trans-unit>
+<trans-unit id="Jh79Hu0">
+<source xml:space="preserve">You need to be a mapper to access this page.</source>
+<target xml:space="preserve">You need to be a mapper to access this page.</target>
 </trans-unit>
 <trans-unit id="JiEhxTc">
 <source xml:space="preserve">edit</source>
@@ -262,9 +278,21 @@
 <source xml:space="preserve">Score</source>
 <target xml:space="preserve">Puntuación</target>
 </trans-unit>
+<trans-unit id="PUsk6dJ">
+<source xml:space="preserve">Claim it</source>
+<target xml:space="preserve">Claim it</target>
+</trans-unit>
+<trans-unit id="Q.X5P1L">
+<source xml:space="preserve">Download the installer</source>
+<target xml:space="preserve">Download the installer</target>
+</trans-unit>
 <trans-unit id="QSvguc1">
 <source xml:space="preserve">Informations</source>
 <target xml:space="preserve">Informaciones</target>
+</trans-unit>
+<trans-unit id="QsJGdgW">
+<source xml:space="preserve">You already claimed a request, one thing at a time please.</source>
+<target xml:space="preserve">You already claimed a request, one thing at a time please.</target>
 </trans-unit>
 <trans-unit id="QuWIdWM">
 <source xml:space="preserve">Last songs played</source>
@@ -277,6 +305,10 @@
 <trans-unit id="REgGQF4">
 <source xml:space="preserve">Download playlist with the app</source>
 <target xml:space="preserve">Descarga la lista de reproducción con la aplicación</target>
+</trans-unit>
+<trans-unit id="SFRo3yr">
+<source xml:space="preserve">Unclaim it</source>
+<target xml:space="preserve">Unclaim it</target>
 </trans-unit>
 <trans-unit id="ScJmuqq">
 <source xml:space="preserve">Search</source>
@@ -406,6 +438,10 @@
 <source xml:space="preserve">You need an account to use playlist!</source>
 <target xml:space="preserve">¡Necesitas una cuenta para usar las listas de reproducción!</target>
 </trans-unit>
+<trans-unit id="cXVRejc">
+<source xml:space="preserve">or</source>
+<target xml:space="preserve">or</target>
+</trans-unit>
 <trans-unit id="d4BN8eY">
 <source xml:space="preserve">My progression</source>
 <target xml:space="preserve">Mi progreso</target>
@@ -526,9 +562,9 @@
 <source xml:space="preserve">Global ranking:</source>
 <target xml:space="preserve">Clasificación global:</target>
 </trans-unit>
-<trans-unit id="ns__VmG">
+<trans-unit id="nsVmG">
 <source xml:space="preserve">Notes missed:</source>
-<target xml:space="preserve">Notas fallidas:</target>
+<target xml:space="preserve">Notes missed:</target>
 </trans-unit>
 <trans-unit id="nylTBGT">
 <source xml:space="preserve">Rating</source>
@@ -668,7 +704,7 @@
 </trans-unit>
 <trans-unit id="xAWYMJ.">
 <source xml:space="preserve">RagnaCustoms is not associated with &lt;b&gt;Ragnaröck VR&lt;/b&gt; or &lt;b&gt;WanadevStudio&lt;/b&gt;</source>
-<target xml:space="preserve">RagnaCustoms no está asociado con &lt;b&gt;Ragnaröck VR&lt;/b&gt; ni &lt;b&gt;WanadevStudio&lt;/b&gt;
+<target xml:space="preserve">RagnaCustoms no está asociado con <b>Ragnaröck VR</b> ni <b>WanadevStudio</b>
 </target>
 </trans-unit>
 <trans-unit id="xzOXSvG">
@@ -687,10 +723,6 @@
 <source xml:space="preserve">Vote</source>
 <target xml:space="preserve">Votar</target>
 </trans-unit>
-    <trans-unit id="0">
-        <source>Song requests</source>
-        <target>Song requests</target>
-    </trans-unit>
 </body>
 </file>
 </xliff>
