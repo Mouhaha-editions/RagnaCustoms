@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\Song;
 use App\Entity\SongCategory;
 use App\Entity\SongDifficulty;
+use App\Entity\SongRequest;
 use App\Form\SongType;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\SongRepository;
+use App\Repository\SongRequestRepository;
 use App\Service\DiscordService;
 use App\Service\SongService;
 use DateTime;
@@ -104,8 +106,14 @@ class UploadSongController extends AbstractController
                         ])
                     ]);
                 }
-                if ($songService->processFile($form, $song, $isWip)) {
 
+                if ($songService->processFile($form, $song, $isWip)) {
+                    /** @var ?SongRequest $song_request */
+                    $song_request = $form->get('song_request')->getData();
+                    if($song_request != null){
+                        $song_request->setState(SongRequest::STATE_ENDED);
+                        $this->getDoctrine()->getManager()->flush();
+                    }
                     $this->addFlash('success', str_replace(["%song%","%artist%"],[$song->getName(),$song->getAuthorName()],$translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
                     return new JsonResponse([
                         'error' => false,

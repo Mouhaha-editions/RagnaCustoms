@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\SongRequest;
-
 use App\Entity\Utilisateur;
 use App\Form\SongRequestFormType;
 use App\Repository\SongRequestRepository;
@@ -11,8 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-use Symfony\Contracts\Translation;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -33,7 +30,6 @@ class SongRequestController extends AbstractController
             $songReq = new SongRequest();
             $user = $this->getUser();
             $songReq->setRequestedBy($user);
-            $form = $this->createForm(SongRequestFormType::class, $songReq,['attr'=>["class"=>"form-horizontal"]]);
             $form = $this->createForm(SongRequestFormType::class, $songReq, ['attr' => ["class" => "form-horizontal"]]);
             $form->handleRequest($request);
 
@@ -46,9 +42,6 @@ class SongRequestController extends AbstractController
         }
 
         $qb = $songRequestRepository->createQueryBuilder('sr');
-    $qb->leftJoin("sr.requestedBy",'u');
-    $qb->orderBy("IF(u.isPatreon = true,1,0)","DESC")
-    ->addOrderBy("sr.createdAt");
         $qb->leftJoin("sr.requestedBy", 'u');
         $qb->where('sr.state IN (:displayable)')
             ->setParameter('displayable', [

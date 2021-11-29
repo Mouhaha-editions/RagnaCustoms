@@ -109,6 +109,9 @@
 
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('song_request_index') }}">{{ "Song requests"|trans }}</a>
+            </li>
             {% if is_granted('ROLE_MODERATOR') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin dashboard</a>

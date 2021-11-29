@@ -4,6 +4,9 @@ namespace App\Form;
 
 use App\Entity\Song;
 use App\Entity\SongCategory;
+use App\Entity\SongRequest;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -47,6 +50,18 @@ class SongType extends AbstractType
                 "attr" => [
                     "placeholder " => "leave empty on first upload",
                 ]
+            ])
+            ->add('song_request', EntityType::class,[
+                'mapped'=>false,
+                'class'=>SongRequest::class,
+                'required'=>false,
+                'placeholder'=>"Not a requested song",
+                'query_builder'=>function(EntityRepository $er)use($entity){
+                    return $er->createQueryBuilder("sr")
+                        ->leftJoin("sr.mapperOnIt",'mapper')
+                        ->where('mapper = :mapperid')
+                        ->setParameter('mapperid',$entity->getUser());
+                }
             ])
             ->add('wip', null, [
                 'label' => "Work in progress"

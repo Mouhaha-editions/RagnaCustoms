@@ -707,19 +707,23 @@
       </trans-unit>
       <trans-unit id="cXVRejc" resname="or">
         <source>or</source>
-        <target>__or</target>
+        <target>or</target>
       </trans-unit>
       <trans-unit id="4s52dfs" resname="You haven't played this song for now">
         <source>You haven't played this song for now</source>
-        <target>__You haven't played this song for now</target>
+        <target>You haven't played this song for now</target>
       </trans-unit>
       <trans-unit id="PUsk6dJ" resname="Claim it">
         <source>Claim it</source>
-        <target>__Claim it</target>
+        <target>Claim it</target>
       </trans-unit>
       <trans-unit id="SFRo3yr" resname="Unclaim it">
         <source>Unclaim it</source>
-        <target>__Unclaim it</target>
+        <target>Unclaim it</target>
+      </trans-unit>
+      <trans-unit id="0">
+        <source>Song requests</source>
+        <target>Song requests</target>
       </trans-unit>
     </body>
   </file>

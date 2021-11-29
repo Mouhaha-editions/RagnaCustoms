@@ -685,6 +685,10 @@
 <source xml:space="preserve">Vote</source>
 <target xml:space="preserve">Abstimmen</target>
 </trans-unit>
+    <trans-unit id="0">
+        <source>Song requests</source>
+        <target>messages</target>
+    </trans-unit>
 </body>
 </file>
 </xliff>
