@@ -157,7 +157,6 @@ class SongRequest
      */
     public function getMapper()
     {
-        VarDumper::dump($this->getMapperOnIt()->first());
         return $this->getMapperOnIt()->first();
     }
 
