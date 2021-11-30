@@ -57,6 +57,7 @@
                             <option {% if app.request.get('downloads_filter_order') == 2 %}selected="selected"{% endif %}
                                     value="2">{{ "Duration"|trans }}</option>
                             <option {% if app.request.get('downloads_filter_order') == 4 %}selected="selected"{% endif %} value="4">{{ "Alphabetical"|trans }}</option>
+                            <option {% if app.request.get('downloads_filter_order') == 5 %}selected="selected"{% endif %} value="5">{{ "Most downloaded"|trans }}</option>
                         </select>
                     </div>
                     <div class="col-md-2 form-group">

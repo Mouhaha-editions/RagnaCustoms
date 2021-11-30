@@ -405,8 +405,9 @@ class SongsController extends AbstractController
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
         $qb = $this->getDoctrine()
+
             ->getRepository(Song::class)
-            ->createQueryBuilder("s");
+            ->createQueryBuilder("s")->select('s');
         $wip = false;
 
         if ($request->get('downloads_filter_difficulties', null)) {
@@ -439,7 +440,6 @@ class SongsController extends AbstractController
         $qb->andWhere("s.wip = :wip")
             ->setParameter("wip", $wip);
         if ($request->get('downloads_filter_order', null)) {
-
             switch ($request->get('downloads_filter_order')) {
                 case 1:
                     $qb->orderBy('s.totalVotes/s.countVotes', 'DESC');
@@ -452,6 +452,12 @@ class SongsController extends AbstractController
                     break;
                 case 4 :
                     $qb->orderBy('s.name', 'ASC');
+                    break;
+                case 5 :
+                    $qb->leftJoin("s.downloadCounters",'dc');
+                    $qb->addSelect("COUNT(dc.id) AS HIDDEN count_dl");
+                    $qb->groupBy("s.id");
+                    $qb->orderBy('count_dl', 'DESC');
                     break;
                 default:
                     $qb->orderBy('s.lastDateUpload', 'DESC');
