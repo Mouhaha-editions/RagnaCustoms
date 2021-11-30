@@ -25,153 +25,129 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $username;
-
-    /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
-
-    /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
-     */
-    private $password;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $email;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isVerified = false;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Song::class, mappedBy="user")
-     * @ORM\OrderBy({"updatedAt"="desc"})
-     */
-    private $songs;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="user", orphanRemoval=true)
-     */
-    private $votes;
-
+    private $apiKey;
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $certified;
-
+    /**
+     * @ORM\ManyToMany(targetEntity=SongRequest::class, mappedBy="mapperOnIt")
+     */
+    private $currentlyMapped;
     /**
      * @ORM\OneToMany(targetEntity=DownloadCounter::class, mappedBy="user")
      */
     private $downloadCounters;
     /**
-     * @ORM\OneToMany(targetEntity=ViewCounter::class, mappedBy="user")
+     * @ORM\Column(type="string", length=255)
      */
-    private $viewCounters;
-
+    private $email;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private $steamCommunityId;
-
+    private $enableEmailNotification = false;
     /**
-     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Gamification::class, mappedBy="user")
      */
-    private $scores;
-
+    private $gamifications;
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $isMapper = false;
-
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    private $mapper_name;
-
+    private $isPatreon;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPublic = false;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $mailingNewSong = false;
     /**
      * @ORM\Column(type="text", nullable=true)
      *
      */
     private $mapper_description = null;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $mapper_img;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $mailingNewSong = false;
-
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $mapper_discord = null;
-
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $apiKey;
-
+    private $mapper_img;
     /**
-     * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="user")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $songFeedback;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isPublic = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $enableEmailNotification = false;
-
+    private $mapper_name;
     /**
      * @ORM\OneToOne(targetEntity=Overlay::class, mappedBy="user", cascade={"persist", "remove"})
      */
     private $overlay;
-
     /**
-     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="user", orphanRemoval=true)
+     * @var string The hashed password
+     * @ORM\Column(type="string")
      */
-    private $scoreHistories;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Gamification::class, mappedBy="user")
-     */
-    private $gamifications;
-
+    private $password;
     /**
      * @ORM\OneToMany(targetEntity=Playlist::class, mappedBy="user", orphanRemoval=true)
      */
     private $playlists;
-
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+    /**
+     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $scoreHistories;
+    /**
+     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="user")
+     */
+    private $scores;
+    /**
+     * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="user")
+     */
+    private $songFeedback;
+    /**
+     * @ORM\OneToMany(targetEntity=SongRequestVote::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $songRequestVotes;
     /**
      * @ORM\OneToMany(targetEntity=SongRequest::class, mappedBy="requestedBy", orphanRemoval=true)
      */
     private $songRequests;
-
     /**
-     * @ORM\ManyToMany(targetEntity=SongRequest::class, mappedBy="mapperOnIt")
+     * @ORM\OneToMany(targetEntity=Song::class, mappedBy="user")
+     * @ORM\OrderBy({"updatedAt"="desc"})
      */
-    private $currentlyMapped;
-
+    private $songs;
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $isPatreon;
+    private $steamCommunityId;
+    /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $username;
+    /**
+     * @ORM\OneToMany(targetEntity=ViewCounter::class, mappedBy="user")
+     */
+    private $viewCounters;
+    /**
+     * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $votes;
 
     public function __construct()
     {
@@ -186,6 +162,7 @@ class Utilisateur implements UserInterface
         $this->playlists = new ArrayCollection();
         $this->songRequests = new ArrayCollection();
         $this->currentlyMapped = new ArrayCollection();
+        $this->songRequestVotes = new ArrayCollection();
     }
 
     public function __toString()
@@ -274,16 +251,16 @@ class Utilisateur implements UserInterface
         return $this->email;
     }
 
-    public function getGravatar(): ?string
-    {
-        return $grav_url = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=300";
-    }
-
     public function setEmail(string $email): self
     {
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getGravatar(): ?string
+    {
+        return $grav_url = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=300";
     }
 
     public function isVerified(): bool
@@ -328,14 +305,6 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Vote[]
-     */
-    public function getVotes(): Collection
-    {
-        return $this->votes;
-    }
-
     public function addVote(Vote $vote): self
     {
         if (!$this->votes->contains($vote)) {
@@ -369,6 +338,14 @@ class Utilisateur implements UserInterface
             }
         }
         return false;
+    }
+
+    /**
+     * @return Collection|Vote[]
+     */
+    public function getVotes(): Collection
+    {
+        return $this->votes;
     }
 
     public function hasVotedDownFor(Song $song): bool
@@ -466,14 +443,6 @@ class Utilisateur implements UserInterface
         $this->steamCommunityId = $steamCommunityId;
 
         return $this;
-    }
-
-    /**
-     * @return Collection|Score[]
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
     }
 
     public function addScore(Score $score): self
@@ -638,7 +607,7 @@ class Utilisateur implements UserInterface
 
     public function getBestScore(Score $scoreSample, Season $season = null)
     {
-        $scores = $this->getScores()->filter(function (Score $score) use ($scoreSample,$season) {
+        $scores = $this->getScores()->filter(function (Score $score) use ($scoreSample, $season) {
             if ($season == null) {
                 return $score->getDifficulty() === $scoreSample->getDifficulty() && $scoreSample->getHash() == $score->getHash();
             }
@@ -652,6 +621,14 @@ class Utilisateur implements UserInterface
             }
         }
         return $max;
+    }
+
+    /**
+     * @return Collection|Score[]
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
     }
 
     public function getOverlay(): ?Overlay
@@ -780,18 +757,26 @@ class Utilisateur implements UserInterface
      */
     public function getSongRequestInProgress(): ?SongRequest
     {
-        foreach($this->getCurrentlyMapped() AS $request){
-            if($request->getState() == SongRequest::STATE_IN_PROGRESS){
+        foreach ($this->getCurrentlyMapped() as $request) {
+            if ($request->getState() == SongRequest::STATE_IN_PROGRESS) {
                 return $request;
             }
         }
         return null;
     }
 
+    /**
+     * @return Collection|SongRequest[]
+     */
+    public function getCurrentlyMapped(): Collection
+    {
+        return $this->currentlyMapped;
+    }
+
     public function addSongRequest(SongRequest $songRequest): self
     {
         if (!$this->songRequests->contains($songRequest)) {
-           $songRequest->setRequestedBy($this);
+            $songRequest->setRequestedBy($this);
         }
 
         return $this;
@@ -807,14 +792,6 @@ class Utilisateur implements UserInterface
         }
 
         return $this;
-    }
-
-    /**
-     * @return Collection|SongRequest[]
-     */
-    public function getCurrentlyMapped(): Collection
-    {
-        return $this->currentlyMapped;
     }
 
     public function addCurrentlyMapped(SongRequest $currentlyMapped): self
@@ -846,5 +823,46 @@ class Utilisateur implements UserInterface
         $this->isPatreon = $isPatreon;
 
         return $this;
+    }
+
+    public function addSongRequestVote(SongRequestVote $songRequestVote): self
+    {
+        if (!$this->songRequestVotes->contains($songRequestVote)) {
+            $this->songRequestVotes[] = $songRequestVote;
+            $songRequestVote->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSongRequestVote(SongRequestVote $songRequestVote): self
+    {
+        if ($this->songRequestVotes->removeElement($songRequestVote)) {
+            // set the owning side to null (unless already changed)
+            if ($songRequestVote->getUser() === $this) {
+                $songRequestVote->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param SongRequest $songRequest
+     * @return bool
+     */
+    public function getWantedToo(SongRequest $songRequest): bool
+    {
+        return $this->getSongRequestVotes()->filter(function (SongRequestVote $songRequestVote) use ($songRequest) {
+                return $songRequest === $songRequestVote->getSongRequest();
+            })->count() > 0;
+    }
+
+    /**
+     * @return Collection|SongRequestVote[]
+     */
+    public function getSongRequestVotes(): Collection
+    {
+        return $this->songRequestVotes;
     }
 }

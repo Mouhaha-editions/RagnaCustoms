@@ -59,9 +59,15 @@ class SongRequest
      * @ORM\Column(type="integer", nullable=true)
      */
     private $state = self::STATE_ASKED;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SongRequestVote::class, mappedBy="songRequest", orphanRemoval=true)
+     */
+    private $songRequestVotes;
     public function __construct()
     {
         $this->mapperOnIt = new ArrayCollection();
+        $this->songRequestVotes = new ArrayCollection();
     }
 
     public function __toString()
@@ -169,6 +175,36 @@ class SongRequest
     public function setState(?int $state): self
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SongRequestVote[]
+     */
+    public function getSongRequestVotes(): Collection
+    {
+        return $this->songRequestVotes;
+    }
+
+    public function addSongRequestVote(SongRequestVote $songRequestVote): self
+    {
+        if (!$this->songRequestVotes->contains($songRequestVote)) {
+            $this->songRequestVotes[] = $songRequestVote;
+            $songRequestVote->setSongRequest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSongRequestVote(SongRequestVote $songRequestVote): self
+    {
+        if ($this->songRequestVotes->removeElement($songRequestVote)) {
+            // set the owning side to null (unless already changed)
+            if ($songRequestVote->getSongRequest() === $this) {
+                $songRequestVote->setSongRequest(null);
+            }
+        }
 
         return $this;
     }

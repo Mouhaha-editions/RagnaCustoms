@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\SongRequest;
+use App\Entity\SongRequestVote;
 use App\Entity\Utilisateur;
 use App\Form\SongRequestFormType;
 use App\Repository\SongRequestRepository;
+use App\Repository\SongRequestVoteRepository;
+use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +26,7 @@ class SongRequestController extends AbstractController
      * @param SongRequestRepository $songRequestRepository
      * @return Response
      */
-    public function index(Request $request, SongRequestRepository $songRequestRepository): Response
+    public function index(Request $request, SongRequestRepository $songRequestRepository, PaginationService $pagination): Response
     {
         $form = null;
         if ($this->isGranted('ROLE_USER')) {
@@ -42,17 +45,29 @@ class SongRequestController extends AbstractController
         }
 
         $qb = $songRequestRepository->createQueryBuilder('sr');
+        $qb->select("sr");
         $qb->leftJoin("sr.requestedBy", 'u');
         $qb->where('sr.state IN (:displayable)')
             ->setParameter('displayable', [
                 SongRequest::STATE_ASKED,
                 SongRequest::STATE_IN_PROGRESS
             ]);
-        $qb->orderBy("IF(u.isPatreon = true,1,0)", "DESC")
-            ->addOrderBy("sr.createdAt", 'DESC');
+        switch($request->get('order')){
+            case 1:
+                $qb->addSelect('COUNT(v.id) AS HIDDEN count_votes');
+                $qb->leftJoin('sr.songRequestVotes','v');
+                $qb->groupBy("sr.id");
+                $qb->orderBy("count_votes", "DESC")
+                    ->addOrderBy("IF(u.isPatreon = true,1,0)", "DESC")
+                    ->addOrderBy("sr.createdAt", 'DESC');
+                break;
+            default:
+                $qb->orderBy("IF(u.isPatreon = true,1,0)", "DESC")
+                    ->addOrderBy("sr.createdAt", 'DESC');
+        }
 
-        $songRequests = $qb->getQuery()
-            ->getResult();
+
+        $songRequests = $pagination->setDefaults(50)->process($qb,$request);
 
 
         return $this->render('song_request/index.html.twig', [
@@ -134,4 +149,38 @@ class SongRequestController extends AbstractController
         return $this->redirectToRoute('song_request_index');
     }
 
+    /**
+     * @Route("/toggle/one/{id}", name="_toggle")
+     * @param Request $request
+     * @param SongRequest $songRequest
+     * @param SongRequestVoteRepository $songRequestVoteRepository
+     * @param TranslatorInterface $translator
+     * @return Response
+     */
+    public function toggleOne(Request $request, SongRequest $songRequest, SongRequestVoteRepository $songRequestVoteRepository,TranslatorInterface $translator): Response
+    {
+        // not connected
+        if (!$this->isGranted('ROLE_USER')) {
+            $this->addFlash('danger', $translator->trans("You need an account to access this page."));
+            return $this->redirectToRoute('home');
+        }
+
+        $vote = $songRequestVoteRepository->findOneBy([
+            'user' => $this->getUser(),
+            'songRequest' => $songRequest
+        ]);
+        $em = $this->getDoctrine()->getManager();
+
+        if ($vote == null) {
+            $vote = new SongRequestVote();
+            $vote->setSongRequest($songRequest);
+            $vote->setUser($this->getUser());
+            $em->persist($vote);
+        }else{
+            $em->remove($vote);
+        }
+        $em->flush();
+
+        return $this->redirectToRoute('song_request_index');
+    }
 }
