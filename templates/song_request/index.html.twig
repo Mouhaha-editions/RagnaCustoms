@@ -2,6 +2,14 @@
 
 {% block title %}RagnaCustoms.com, Song requests{% endblock %}
 
+ {% block metas %}
+     <meta name="description" value="On this page you can request a song to our community of mappers, maybe they can do it ;)">
+     <meta property="og:description" value="On this page you can request a song to our community of mappers, maybe they can do it ;)">
+     <meta property="og:url" content="{{ url('song_request_index') }}"/>
+     <meta property="og:type" content="website"/>
+     <meta property="og:title" content="Song requests | RagnaCustoms.com"/>
+ {% endblock %}
+
 {% block body %}
 
     <div class="row mt-3">

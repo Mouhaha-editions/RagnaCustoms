@@ -405,9 +405,10 @@ class SongsController extends AbstractController
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
         $qb = $this->getDoctrine()
-
             ->getRepository(Song::class)
-            ->createQueryBuilder("s")->select('s');
+            ->createQueryBuilder("s")
+            ->leftJoin("s.downloadCounters",'dc')
+            ->groupBy("s.id");
         $wip = false;
 
         if ($request->get('downloads_filter_difficulties', null)) {
@@ -442,7 +443,7 @@ class SongsController extends AbstractController
         if ($request->get('downloads_filter_order', null)) {
             switch ($request->get('downloads_filter_order')) {
                 case 1:
-                    $qb->orderBy('s.totalVotes/s.countVotes', 'DESC');
+                    $qb->orderBy('s.totalVotes/5*s.countVotes', 'DESC');
                     break;
                 case 2 :
                     $qb->orderBy('s.approximativeDuration', 'DESC');
@@ -454,7 +455,6 @@ class SongsController extends AbstractController
                     $qb->orderBy('s.name', 'ASC');
                     break;
                 case 5 :
-                    $qb->leftJoin("s.downloadCounters",'dc');
                     $qb->addSelect("COUNT(dc.id) AS HIDDEN count_dl");
                     $qb->groupBy("s.id");
                     $qb->orderBy('count_dl', 'DESC');
@@ -514,7 +514,7 @@ class SongsController extends AbstractController
         }
 
         if ($request->get('onclick_dl')) {
-            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
+            $ids = $qb->select('s.id')->addSelect("COUNT(dc.id) AS HIDDEN count_dl")->getQuery()->getArrayResult();
             return $this->redirect("ragnac://install/" . implode('-', array_map(function ($id) {
                     return array_pop($id);
                 }, $ids)));
