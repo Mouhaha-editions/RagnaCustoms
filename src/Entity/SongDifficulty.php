@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SongDifficultyRepository;
+use ContainerQGkBoxD\getUtilisateur2Service;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,47 +19,38 @@ class SongDifficulty
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $difficulty;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $noteJumpMovementSpeed;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $noteJumpStartBeatOffset;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=DifficultyRank::class, inversedBy="songDifficulties")
-     */
-    private $difficultyRank;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songDifficulties",cascade={"persist", "remove"})
-     */
-    private $song;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $notesCount;
-
     /**
      * @ORM\Column(type="float", nullable=true)
      */
     private $NotePerSecond;
-
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $difficulty;
+    /**
+     * @ORM\ManyToOne(targetEntity=DifficultyRank::class, inversedBy="songDifficulties")
+     */
+    private $difficultyRank;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $noteJumpMovementSpeed;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $noteJumpStartBeatOffset;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $notesCount;
     /**
      * @ORM\ManyToMany(targetEntity=Season::class, mappedBy="difficulties")
      */
     private $seasons;
-
+    /**
+     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songDifficulties",cascade={"persist", "remove"})
+     */
+    private $song;
 
     public function __construct()
     {
@@ -68,6 +60,30 @@ class SongDifficulty
     public function __toString()
     {
         return $this->getSong()->getName() . " Level " . $this->getDifficultyRank()->getLevel();
+    }
+
+    public function getSong(): ?Song
+    {
+        return $this->song;
+    }
+
+    public function setSong(?Song $song): self
+    {
+        $this->song = $song;
+
+        return $this;
+    }
+
+    public function getDifficultyRank(): ?DifficultyRank
+    {
+        return $this->difficultyRank;
+    }
+
+    public function setDifficultyRank(?DifficultyRank $difficultyRank): self
+    {
+        $this->difficultyRank = $difficultyRank;
+
+        return $this;
     }
 
     public function getId(): ?int
@@ -111,30 +127,6 @@ class SongDifficulty
         return $this;
     }
 
-    public function getDifficultyRank(): ?DifficultyRank
-    {
-        return $this->difficultyRank;
-    }
-
-    public function setDifficultyRank(?DifficultyRank $difficultyRank): self
-    {
-        $this->difficultyRank = $difficultyRank;
-
-        return $this;
-    }
-
-    public function getSong(): ?Song
-    {
-        return $this->song;
-    }
-
-    public function setSong(?Song $song): self
-    {
-        $this->song = $song;
-
-        return $this;
-    }
-
     public function getNotesCount(): ?int
     {
         return $this->notesCount;
@@ -159,14 +151,6 @@ class SongDifficulty
         return $this;
     }
 
-    /**
-     * @return Collection|Season[]
-     */
-    public function getSeasons(): Collection
-    {
-        return $this->seasons;
-    }
-
     public function addSeason(Season $season): self
     {
         if (!$this->seasons->contains($season)) {
@@ -186,6 +170,33 @@ class SongDifficulty
         return $this;
     }
 
+    /**
+     * @param Utilisateur $user
+     * @param Season|null $season
+     * @return bool
+     */
+    public function isPlayedBy(Utilisateur $user, Season $season = null)
+    {
+        if ($this->isRanked() && $season != null) {
+            foreach ($user->getScores() as $score) {
+                if ($score->getSeason() != null && in_array($score->getHash(), $this->getSong()->getHashes()) && $score->getDifficulty() == $this->getDifficultyRank()->getLevel() && $score->getSeason()->getId() === $season->getId() && $score->getUser() === $user) {
+                    return true;
+                }
+            }
+        }else{
+            foreach ($user->getScores() as $score) {
+                 $hashes = $this->getSong()->getHashes();
+                 $userId = $score->getUser()->getId();
+                 $level = $this->getDifficultyRank()->getLevel();
+
+                if (in_array($score->getHash(), $hashes) && $score->getDifficulty() == $level &&  $userId === $user->getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public function isRanked()
     {
         foreach ($this->getSeasons() as $season) {
@@ -194,6 +205,14 @@ class SongDifficulty
             }
         }
         return false;
+    }
+
+    /**
+     * @return Collection|Season[]
+     */
+    public function getSeasons(): Collection
+    {
+        return $this->seasons;
     }
 
 }

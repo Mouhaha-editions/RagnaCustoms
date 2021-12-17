@@ -43,9 +43,10 @@
                 <p class="creator">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('user_mapped_profile', {id:song.user.id}) ~'">'~song.levelAuthorName~'</a>'})|raw }}</p>
                 {% set diffs = '' %}
                 {% for diff in song.songDifficulties %}
-                    {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %}
-                    {% set diffs = diffs~'<span style="color:#'~diff.difficultyRank.color~'">'~(diff.isRanked?'<i
-                                    class="fas fa-trophy"></i>':'')~diff.difficultyRank.level~'</span>' %}
+{#                    {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %}#}
+                    {% set diffs = diffs~'<span style="color:#'~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "ffffff" : diff.difficultyRank.color)~'" >'~(diff.isRanked?'<i
+                                    class="fas fa-trophy"></i> ':'')~diff.difficultyRank.level~'</span> ' %}
+
                 {% endfor %}
                 <p class="difficulties">
                     {{ "Difficulties: %difficultiesList%"|trans|replace({"%difficultiesList%":diffs})|raw }} {% set diffs = "" %}
