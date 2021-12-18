@@ -3,117 +3,152 @@
 {% block title %}RagnaCustoms.com, Your favorites custom songs for Ragnarock VR{% endblock %}
 
 {% block body %}
-
+</div>
+<div class="container-fluid">
     <div class="row pt-3 highlight">
-        <div class="col-12">
-            <h1 class="text-center">
+        <div class="col-md-10 text-left">
+            <h1 class="">
                 {{ "Custom songs available for Ragnaröck VR"|trans }}
             </h1>
-        </div>
-        <div id="search-bar" class="col-12">
-            <form class=" search-and-filter">
-                <div class="row">
-                    <div class="col-md-4 form-group active">
-                        <label for="search">{{ "Search"|trans }}</label>
-                        <input type="text" value="{{ app.request.get('search') }}" class="form-control form-control-sm"
-                               placeholder="{{ "Search by title, artist or mapper"|trans }}" name="search" id="search">
+            <div id="search-bar">
+                <form class=" search-and-filter">
+                    <div class="row">
+                        <div class="col-md-4 form-group active">
+                            <label for="search">{{ "Search"|trans }}</label>
+                            <input type="text" value="{{ app.request.get('search') }}"
+                                   class="form-control form-control-sm"
+                                   placeholder="{{ "Search by title, artist or mapper"|trans }}" name="search"
+                                   id="search">
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label for="downloads-filter-category">{{ "Difficulties"|trans }}</label>
+                            <select id="downloads-filter-category" name="downloads_filter_difficulties"
+                                    class="form-control form-control-sm">
+                                <option value="">{{ "All"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_difficulties') == 1 %}selected="selected"{% endif %}
+                                        value="1">{{ "1-3"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_difficulties') == 2 %}selected="selected"{% endif %}
+                                        value="2">{{ "4-7"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_difficulties') == 3 %}selected="selected"{% endif %}
+                                        value="3">{{ "8-10"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_difficulties') == 6 %}selected="selected"{% endif %}
+                                        value="6">{{ "10+"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_difficulties') == 4 %}selected="selected"{% endif %}
+                                        value="4">{{ "Ranked only"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_difficulties') == 5 %}selected="selected"{% endif %}
+                                        value="5">{{ "WIP only"|trans }}</option>
+
+                            </select>
+                        </div>
+                        <div class="col-md-2 form-group ">
+                            <label for="downloads-filter-converted">{{ "Converted map"|trans }}</label>
+                            <select id="downloads-filter-converted" name="converted_maps"
+                                    class="form-control form-control-sm">
+                                <option value="">{{ "With"|trans }}</option>
+                                <option {% if app.request.get('converted_maps') == 1 %}selected="selected"{% endif %}
+                                        value="1">{{ "Without"|trans }}</option>
+                                <option {% if app.request.get('converted_maps') == 2 %}selected="selected"{% endif %}
+                                        value="2">{{ "Only converted"|trans }}</option>
+                            </select>
+
+                        </div>
+                        <div class="col-md-2 form-group ">
+                            <label for="downloads-filter-order">{{ "Order by"|trans }}</label>
+                            <select id="downloads-filter-order" name="downloads_filter_order"
+                                    class="form-control form-control-sm">
+                                <option value="">{{ "Last added"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_order') == 3 %}selected="selected"{% endif %}
+                                        value="3">{{ "Last updated"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_order') == 1 %}selected="selected"{% endif %}
+                                        value="1">{{ "Vote"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_order') == 2 %}selected="selected"{% endif %}
+                                        value="2">{{ "Duration"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_order') == 4 %}selected="selected"{% endif %}
+                                        value="4">{{ "Alphabetical"|trans }}</option>
+                                <option {% if app.request.get('downloads_filter_order') == 5 %}selected="selected"{% endif %}
+                                        value="5">{{ "Most downloaded"|trans }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label>&nbsp;</label><br/>
+                            <button type="submit" name="search_btn" value="1"
+                                    class="btn btn-sm btn-primary">{{ "Filter songs"|trans }}</button>
+                            <button data-toggle="tooltips" title="{{ "Download filtered selection"|trans }}"
+                                    type="submit" name="onclick_dl" value="42" class="btn btn-sm btn-danger"
+                                    data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}">
+                                <i class="fas fa-download"></i></button>
+                        </div>
                     </div>
-                    <div class="col-md-2 form-group">
-                        <label for="downloads-filter-category">{{ "Difficulties"|trans }}</label>
-                        <select id="downloads-filter-category" name="downloads_filter_difficulties"
-                                class="form-control form-control-sm">
-                            <option value="">{{ "All"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_difficulties') == 1 %}selected="selected"{% endif %}
-                                    value="1">{{ "1-3"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_difficulties') == 2 %}selected="selected"{% endif %}
-                                    value="2">{{ "4-7"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_difficulties') == 3 %}selected="selected"{% endif %}
-                                    value="3">{{ "8-10"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_difficulties') == 6 %}selected="selected"{% endif %}
-                                    value="6">{{ "10+"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_difficulties') == 4 %}selected="selected"{% endif %} value="4">{{ "Ranked only"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_difficulties') == 5 %}selected="selected"{% endif %} value="5">{{ "WIP only"|trans }}</option>
-
-                        </select>
-                    </div>
-                    <div class="col-md-2 form-group ">
-                        <label for="downloads-filter-converted">{{ "Converted map"|trans }}</label>
-                        <select id="downloads-filter-converted" name="converted_maps" class="form-control form-control-sm">
-                            <option value="">{{ "With"|trans }}</option>
-                            <option {% if app.request.get('converted_maps') == 1 %}selected="selected"{% endif %}
-                                    value="1">{{ "Without"|trans }}</option>
-                            <option {% if app.request.get('converted_maps') == 2 %}selected="selected"{% endif %}
-                                    value="2">{{ "Only converted"|trans }}</option>
-                        </select>
-
-                    </div>
-                    <div class="col-md-2 form-group ">
-                        <label for="downloads-filter-order">{{ "Order by"|trans }}</label>
-                        <select id="downloads-filter-order" name="downloads_filter_order" class="form-control form-control-sm">
-                            <option value="">{{ "Last added"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_order') == 3 %}selected="selected"{% endif %} value="3">{{ "Last updated"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_order') == 1 %}selected="selected"{% endif %}
-                                    value="1">{{ "Vote"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_order') == 2 %}selected="selected"{% endif %}
-                                    value="2">{{ "Duration"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_order') == 4 %}selected="selected"{% endif %} value="4">{{ "Alphabetical"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_order') == 5 %}selected="selected"{% endif %} value="5">{{ "Most downloaded"|trans }}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 form-group">
-                        <label>&nbsp;</label><br/>
-                        <button type="submit" name="search_btn" value="1" class="btn btn-sm btn-primary">{{ "Filter songs"|trans }}</button>
-                        <button data-toggle="tooltips" title="{{ "Download filtered selection"|trans }}" type="submit" name="onclick_dl" value="42" class="btn btn-sm btn-danger" data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}" ><i class="fas fa-download"></i></button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-{% include 'songs/partial/song_row_div.html.twig' with {songs:songs} %}
-
-
-{% endblock %}
-
-
-{% block endBody %}
-
-    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song Review"|trans }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-review">
-                    ...
-                </div>
-
+                </form>
             </div>
         </div>
+
     </div>
-    <div class="modal fade" id="songPlaylists" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel3">{{ "Add song to playlist"|trans }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-playlist">
-                    ...
-                </div>
+    <div class="row">
+        <div class="col-md-10">
+            {% include 'songs/partial/song_row_div.html.twig' with {songs:songs} %}
+
+        </div>
+        <div class="col-md-2">
+            <h2>The Community</h2>
+            <a class="text-discord" target="_blank" href="https://discord.gg/nRnsgCCBvq"><i class="fab fa-discord"></i> Discord</a><br/>
+            <a class="text-facebook" target="_blank" href="https://www.facebook.com/RagnaCustoms"><i class="fab fa-facebook"></i> Facebook</a><br/>
+            <a class="text-twitter" target="_blank" href="https://twitter.com/ragnacustoms"><i class="fab fa-twitter"></i> Twitter</a><br/>
+            <a class="text-reddit" target="_blank" href="https://www.reddit.com/r/RagnaCustoms_com/"><i class="fab fa-reddit"></i> Reddit</a><br/>
+            <h2>Help us</h2>
+            <p>We are regularly looking for new talents who want to help the community by doing graphics, code, events, and all other things. Come on discord and contact us ;)</p>
+            <p>You can also help us by becoming a <a class="text-patreon" style="display:inline-block" target="_blank" href="https://www.patreon.com/ragnacustoms_com"><i class="fab fa-patreon"></i> Patreon</a></p>
+            {% import "songs/macros/song.html.twig" as macro_song %}
+
+            <h2>Last songs played</h2>
+            {%  for song  in songService.lastSongsPlayed(15) %}
+                {{ macro_song.smallbox(song) }}
+            {% endfor %}
 
             </div>
-        </div>
     </div>
-{% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('ajax-search') }}
-{% endblock %}
+    {% endblock %}
+
+
+    {% block endBody %}
+
+        <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song Review"|trans }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="form-review">
+                        ...
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="songPlaylists" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel3" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel3">{{ "Add song to playlist"|trans }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="form-playlist">
+                        ...
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('ajax-search') }}
+    {% endblock %}
 

@@ -1,6 +1,5 @@
 {% import "songs/macros/song.html.twig" as macro_song %}
-<div class="song-container">
-    <div class="container-fluid">
+<div class="row song-container">
     <div class="loading-spinner">
         <h2>Loading 
         <span class="loading-icon">
@@ -12,6 +11,7 @@
         </span>
     </h2>
     </div>
+
         <div class="row">
             {% for song in songs.entities %}
                 <div class="col-xl-4 col-lg-6 mb-3" id="song-box-{{ song.id }}">
@@ -135,7 +135,6 @@
                 </div>
             {% endfor %}
         </div>
-    </div>
 
     <div class="col-12 d-flex justify-content-between">
         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}

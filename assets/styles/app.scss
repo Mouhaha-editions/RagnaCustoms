@@ -11,7 +11,6 @@
 }
 
 $themes: (
-
         "dark": (
                 "colors": (
                         "primary": #29a946,
@@ -41,11 +40,16 @@ $color-level-8: #983937;
 $color-level-9: #d58d56;
 $color-level-10: #e2cd6c;
 
-$link-green:#2dcc2a;
+$link-green: #2dcc2a;
 $purple: #bc3ee3;
 $youtube: #ff0000;
 $twitch: #6f42c1;
-$twitch-hover:#673eb1;
+$twitch-hover: #673eb1;
+$twitter: #1da1f2;
+$facebook: #1877f2;
+$reddit: #ff4500;
+$patreon: #f96854;
+$discord: #7289da;
 
 @each $theme-name, $theme-vars in $themes {
   $shades: map-get($theme-vars, "shades");
@@ -155,12 +159,14 @@ body {
     max-width: 45px;
   }
 }
-.navbar{
-  font-size:18px
+
+.navbar {
+  font-size: 18px
 }
+
 .navbar-nav {
-  .nav-link{
-    font-size:16px;
+  .nav-link {
+    font-size: 16px;
   }
 }
 
@@ -211,7 +217,10 @@ table.songs {
   }
 
   .song-preview {
-    img{max-width:150px;}
+    img {
+      max-width: 150px;
+    }
+
     p {
       padding: 0;
       margin: 0;
@@ -222,11 +231,14 @@ table.songs {
     }
   }
 }
-.song-box{
+
+.song-box {
   border: 1px solid #636363;
-  border-radius: 5px;
+  //border-radius: 5px;
   padding: 15px;
+  font-size: 14px;
 }
+
 .product-preview-image {
   max-width: 150px;
   height: 150px;
@@ -236,12 +248,14 @@ table.songs {
     max-height: 150px;
   }
 }
-.song-preview{
-  .remove-from-playlist{
-    position:absolute;
-    z-index:100;
+
+.song-preview {
+  .remove-from-playlist {
+    position: absolute;
+    z-index: 100;
   }
 }
+
 .bg-twitch {
   background: $twitch;
   color: #ffffff;
@@ -331,9 +345,10 @@ table.songs {
 }
 
 .song-detail {
-  .btn{
-    font-size:14px;
+  .btn {
+    font-size: 14px;
   }
+
   .resume {
     font-size: 20px;
 
@@ -359,7 +374,7 @@ table.songs {
 }
 
 .btn-youtube {
-  background-color: $youtube!important;
+  background-color: $youtube !important;
   color: #ffffff;
   font-weight: 500;
 
@@ -375,6 +390,7 @@ table.songs {
   bottom: 0;
   right: 0;
   opacity: 0.25;
+
   img {
     width: 50%;
   }
@@ -394,9 +410,11 @@ table.songs {
     font-weight: bold;
   }
 }
-.text-twitch{
+
+.text-twitch {
   color: $twitch !important;
 }
+
 .copy-clipboard {
   cursor: pointer;
 }
@@ -414,8 +432,10 @@ table.songs {
 
 .pagination {
   font-size: 12pt;
+
   a {
     margin-left: 6px;
+
     &.active {
       color: $color-level-5;
     }
@@ -429,18 +449,21 @@ table.songs {
     max-width: 160px;
     margin: auto;
   }
+
   .edit-btn {
     position: absolute;
     right: 63px;
     font-size: 10px;
     top: 0;
   }
+
   .delete-btn {
     position: absolute;
     left: 63px;
     font-size: 10px;
     top: 0;
   }
+
   img {
     max-height: 160px;
   }
@@ -464,12 +487,14 @@ table.songs {
 
 .user-picture {
   position: relative;
+
   .certified {
     position: absolute;
     height: 50px;
     right: -55px;
     top: 0;
   }
+
   .mapper {
     position: absolute;
     height: 50px;
@@ -489,66 +514,96 @@ table.songs {
     background: $card-bg;
   }
 }
-.banner{
+
+.banner {
   margin: 20px auto auto;
-  font-size:30px;
-  padding-top:8px;
-  padding-bottom:8px;
+  font-size: 30px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   border-top: 1px solid #fff;
   border-bottom: 1px solid #fff;
-  width:40%;
-  a:hover{
+  width: 40%;
+
+  a:hover {
     text-decoration: none;
     color: $color-level-10;
 
   }
-  a{
+
+  a {
     color: $color-level-9;
   }
 }
-figure{
-  .new{
-    position:absolute;
+
+figure {
+  .new {
+    position: absolute;
   }
 }
-.bookmark{
+
+.bookmark {
   position: absolute;
   top: 5px;
   right: 5px;
 }
+
 //.difficulties span{
 //  color:$success!important;
 //}
 
-.loading-spinner{
-  display:none;
-  text-align:center;
-  align-items:center;
-  margin-bottom:10px;
-  .loading-icon{
-    padding:0.75rem;
-    display:inline-block;
+.loading-spinner {
+  display: none;
+  text-align: center;
+  align-items: center;
+  margin-bottom: 10px;
+
+  .loading-icon {
+    padding: 0.75rem;
+    display: inline-block;
     transform: rotate(0deg);
     animation: spin 2s;
     animation-timing-function: steps(4, end);
     transform-origin: center;
-    svg{
+
+    svg {
       height: 1.25em;
       max-width: 1.5em;
     }
   }
 }
+
 @keyframes spin {
- from{
-   transform:rotate(0deg);
- }
- to{
-   transform:rotate(360deg);
- }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
-.btn-xs{
+
+.btn-xs {
   padding: 0.05rem 0.25rem;
   font-size: 0.875rem;
   line-height: 1;
   border-radius: 0.2rem;
+}
+
+.text-twitter {
+  color: $twitter;
+}
+
+.text-facebook {
+  color: #1877f2;
+}
+
+.text-reddit {
+  color: #ff4500;
+}
+
+.text-patreon {
+  color: #f96854;
+}
+
+.text-discord {
+  color: #7289da;
 }

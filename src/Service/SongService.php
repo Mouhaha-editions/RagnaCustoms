@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\DifficultyRank;
 use App\Entity\Overlay;
+use App\Entity\Score;
 use App\Entity\Season;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
@@ -481,5 +482,20 @@ class SongService
         return md5($str);
     }
 
+    public function getLastSongsPlayed ($count)
+    {
+       return $this->em->getRepository(Song::class)->createQueryBuilder('s')
+           ->leftJoin('s.songHashes','song_hashes')
+           ->leftJoin(
+               Score::class,
+               'score',
+               \Doctrine\ORM\Query\Expr\Join::WITH,
+               'score.hash = song_hashes.hash'
+           )
+            ->orderBy('score.updatedAt','DESC')
+            ->setFirstResult(0)->setMaxResults($count)
+            ->getQuery()->getResult();
+        
+}
 }
 

@@ -37,13 +37,15 @@
 
 
             <div class="song-preview pl-2">
-                <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song.name }}</a></div>
+                <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}"
+                                      itemprop="name">{{ song.name }}</a></div>
                 <div class="category"><a
-                            href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a></div>
+                            href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
+                </div>
                 <p class="creator">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('user_mapped_profile', {id:song.user.id}) ~'">'~song.levelAuthorName~'</a>'})|raw }}</p>
                 {% set diffs = '<br/>' %}
                 {% for diff in song.songDifficulties %}
-{#                    {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %}#}
+                    {# {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %} #}
                     {% set diffs = diffs~'<span style="padding:3px 6px;font-size:16px;background-color:#'~diff.difficultyRank.color~";color:"~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" )~'" title="'~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "already played" :"never played" )~'" data-toggle="tooltip" >'~(diff.isRanked?'<i
                                     class="fas fa-trophy"></i> ':'')~diff.difficultyRank.level~'</span> ' %}
 
@@ -55,3 +57,23 @@
         </div>
     {% endif %}
 {% endmacro %}
+
+{% macro smallbox(song) %}
+    <div class="d-flex flex-row mb-2">
+        <a href="{{ url('song_detail',{slug:song.slug}) }}">
+            <img src="#" data-src="/covers/{{ song.id ~ song.coverImageExtension }}"
+                 class="lazyload img-fluid rounded thumbnail" width="50px" height="50px"
+                 alt="cover"/>
+        </a>
+
+        <div class="song-preview pl-2">
+            <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song.name }}</a>
+            </div>
+            <div class="category"><a
+                        href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
+            </div>
+
+        </div>
+    </div>
+{% endmacro %}
+
