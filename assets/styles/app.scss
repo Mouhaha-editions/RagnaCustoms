@@ -1,14 +1,14 @@
 //@import "~select2/dist/css/select2.min.css";
 
-//@font-face {
-//  font-family: 'Gelio Pasteli';
-//  src: url("../../public/apps/Gelio Pasteli.ttf") format('truetype');
-//}
-//
-//@font-face {
-//  font-family: 'Gelio Retsina';
-//  src: url("../../public/apps/Gelio Retsina.ttf") format('truetype');
-//}
+@font-face {
+  font-family: 'Gelio Pasteli';
+  src: url("../../public/apps/Gelio Pasteli.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Gelio Retsina';
+  src: url("../../public/apps/Gelio Retsina.ttf") format('truetype');
+}
 
 $themes: (
 
@@ -158,11 +158,17 @@ body {
 .navbar{
   font-size:18px
 }
+.navbar-nav {
+  .nav-link{
+    font-size:16px;
+  }
+}
+
 .viking-text {
-  //font-family: "Gelio Pasteli", serif;
+  font-family: "Gelio Pasteli", serif;
 
   &-bold {
-    //font-family: "Gelio Retsina", serif;
+    font-family: "Gelio Retsina", serif;
   }
 }
 
