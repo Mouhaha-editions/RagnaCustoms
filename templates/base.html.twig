@@ -109,10 +109,10 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {% if app.request.locale != 'en' %}
+                    {% if app.request.locale == 'en' %}
                         <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ec-1f1e7.svg" alt="fr"/>
                     {% endif %}
-                    {% if app.request.locale != 'es' %}
+                    {% if app.request.locale == 'es' %}
                         <img alt="es" height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ea-1f1f8.svg"/>
                     {% endif %}
                     {% if app.request.locale == 'fr' %}
