@@ -60,7 +60,9 @@ class SongType extends AbstractType
                     return $er->createQueryBuilder("sr")
                         ->leftJoin("sr.mapperOnIt",'mapper')
                         ->where('mapper = :mapperid')
-                        ->setParameter('mapperid',$entity->getUser());
+                        ->andWhere('sr.state = :asked')
+                        ->setParameter('mapperid',$entity->getUser())
+                        ->setParameter('asked',SongRequest::STATE_ASKED);
                 }
             ])
             ->add('wip', null, [
