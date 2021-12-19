@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -15,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
  * @method string getUserIdentifier()
  */
-class Utilisateur implements UserInterface
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableEntity;
 
@@ -216,7 +217,7 @@ class Utilisateur implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string)$this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -327,38 +328,12 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-    public function hasVotedUpFor(Song $song): bool
-    {
-        foreach ($this->getVotes() as $vote) {
-            if ($song !== $vote->getSong()) {
-                continue;
-            }
-            if ($vote->getKind() == Vote::KIND_UP) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * @return Collection|Vote[]
      */
     public function getVotes(): Collection
     {
         return $this->votes;
-    }
-
-    public function hasVotedDownFor(Song $song): bool
-    {
-        foreach ($this->getVotes() as $vote) {
-            if ($song !== $vote->getSong()) {
-                continue;
-            }
-            if ($vote->getKind() == Vote::KIND_DOWN) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public function isCertified(): ?bool
