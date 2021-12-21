@@ -21,10 +21,10 @@
                 {% for mapper in mappers %}
                     <tr>
                         <td>
-                            <a href="{{ url("user_profile",{id:mapper.id}) }}">
+                            <a href="{{ url("user_mapped_profile",{id:mapper.id}) }}">
                                 <img style="border-radius:15px;width:30px;margin-right:10px;" src="{{ mapper.gravatar }}"
                                      class="" alt="{{ mapper.username }}"/></a>
-                            <a href="{{ url("user_profile",{id:mapper.id}) }}" class="text-level-9">{{ mapper.username }}</a></td>
+                            <a href="{{ url("user_mapped_profile",{id:mapper.id}) }}" class="text-level-9">{{ mapper.username }}</a></td>
                         <td class="text-right">{{ mapper.songs|length }}</td>
 {#                        <td class="text-right">{{ mapper.songAverage }}</td>#}
                     </tr>

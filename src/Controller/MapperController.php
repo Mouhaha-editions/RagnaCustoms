@@ -23,8 +23,9 @@ class MapperController extends AbstractController
         /** @var Utilisateur[] $mappers */
         $mappers = $utilisateurRepository->createQueryBuilder("u")
             ->leftJoin('u.songs','s')
-            ->select('u,SUM(s) AS HIDDEN count_song')
+            ->select('u,COUNT(s) AS HIDDEN count_song')
             ->where('u.isMapper = 1')
+            ->andWhere('s.id IS NOT NULL')
             ->where('s.isDeleted = 0')
             ->orderBy('count_song','desc')
 ->groupBy("u.id")
