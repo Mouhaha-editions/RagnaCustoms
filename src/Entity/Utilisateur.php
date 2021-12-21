@@ -261,7 +261,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getGravatar(): ?string
     {
-        return $grav_url = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=300";
+        return  "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=300";
     }
 
     public function isVerified(): bool
@@ -281,7 +281,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getSongs(): Collection
     {
-        return $this->songs;
+        return $this->songs->filter(function(Song $s){return !$s->getIsDeleted();});
     }
 
     public function addSong(Song $song): self

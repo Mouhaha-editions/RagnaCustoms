@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+ {% block metas %}
+{#     <meta name="description" value="{{ playlist.description}}">#}
+{#     <meta property="og:description" value="{{ playlist.description}}">#}
+{#     <meta property="og:url" content="{{ url('playlist_show',{id:playlist.id}) }}"/>#}
+     <meta property="og:type" content="website"/>
+     <meta property="og:title" content="Mappers on RagnaCustoms.com"/>
+ {% endblock %}
+
+{% block body %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h1>{{ "Mappers using RagnaCustoms"|trans }}</h1>
+            <table class="table">
+                <tr>
+                    <th>{{ "User"|trans }}</th>
+                    <th class="text-right">{{ "Nb. of songs"|trans }}</th>
+{#                    <th class="text-right">{{ "Songs played"|trans }}</th>#}
+                </tr>
+                {% for mapper in mappers %}
+                    <tr>
+                        <td>
+                            <a href="{{ url("user_profile",{id:mapper.id}) }}">
+                                <img style="border-radius:15px;width:30px;margin-right:10px;" src="{{ mapper.gravatar }}"
+                                     class="" alt="{{ mapper.username }}"/></a>
+                            <a href="{{ url("user_profile",{id:mapper.id}) }}" class="text-level-9">{{ mapper.username }}</a></td>
+                        <td class="text-right">{{ mapper.songs|length }}</td>
+{#                        <td class="text-right">{{ mapper.songAverage }}</td>#}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block title %}
+    {{ "Mappers using RagnaCustoms"|trans }}
+{% endblock %}
+
