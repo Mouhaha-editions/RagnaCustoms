@@ -230,6 +230,11 @@ class Song
      */
     private $isExplicit;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="song")
+     */
+    private $songFeedbacks;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -238,6 +243,7 @@ class Song
         $this->viewCounters = new ArrayCollection();
         $this->songHashes = new ArrayCollection();
         $this->playlists = new ArrayCollection();
+        $this->songFeedbacks = new ArrayCollection();
     }
 
     public function isRanked()
@@ -1015,6 +1021,36 @@ class Song
     public function setIsExplicit(?bool $isExplicit): self
     {
         $this->isExplicit = $isExplicit;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SongFeedback[]
+     */
+    public function getSongFeedbacks(): Collection
+    {
+        return $this->songFeedbacks;
+    }
+
+    public function addSongFeedback(SongFeedback $songFeedback): self
+    {
+        if (!$this->songFeedbacks->contains($songFeedback)) {
+            $this->songFeedbacks[] = $songFeedback;
+            $songFeedback->setSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSongFeedback(SongFeedback $songFeedback): self
+    {
+        if ($this->songFeedbacks->removeElement($songFeedback)) {
+            // set the owning side to null (unless already changed)
+            if ($songFeedback->getSong() === $this) {
+                $songFeedback->setSong(null);
+            }
+        }
 
         return $this;
     }

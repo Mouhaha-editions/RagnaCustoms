@@ -47,10 +47,11 @@ class SongFeedbackCrudController extends AbstractCrudController
         return [
             TextField::new('id')->hideOnForm()->hideOnIndex(),
             TextField::new('user'),
-            TextEditorField::new('feedback'),
+            TextField::new('feedback'),
+            TextField::new('song'),
             BooleanField::new('isModerated'),
-            BooleanField::new('isPublic'),
-            BooleanField::new('isAnonymous'),
+//            BooleanField::new('isPublic'),
+//            BooleanField::new('isAnonymous'),
         ];
     }
 

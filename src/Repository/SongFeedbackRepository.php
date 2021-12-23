@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Song;
 use App\Entity\SongFeedback;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

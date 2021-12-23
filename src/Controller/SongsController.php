@@ -16,6 +16,7 @@ use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\ViewCounterRepository;
 use App\Repository\VoteRepository;
+use App\Service\DiscordService;
 use App\Service\DownloadService;
 use App\Service\SongService;
 use App\Service\VoteService;
@@ -611,7 +612,9 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
-    public function songDetail(Request $request, ScoreRepository $scoreRepository, Song $song, TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository, SongService $songService, PaginationService $paginationService)
+    public function songDetail(Request $request, ScoreRepository $scoreRepository, Song $song,
+                               TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository,
+                               SongService $songService, PaginationService $paginationService, DiscordService $discordService)
     {
         if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
@@ -620,6 +623,7 @@ class SongsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $song->setViews($song->getViews() + 1);
         $feedback = new SongFeedback();
+        $feedback->setSong($song);
         $feedback->setHash($song->getNewGuid());
         $feedback->setUser($this->getUser());
         $feedbackForm = $this->createForm(SongFeedbackType::class, $feedback);
@@ -652,10 +656,12 @@ class SongsController extends AbstractController
 
             }
             $feedback = new SongFeedback();
+            $feedback->setSong($song);
             $feedback->setHash($song->getNewGuid());
             $feedback->setUser($this->getUser());
             $feedbackForm = $this->createForm(SongFeedbackType::class, $feedback);
             $this->addFlash("success", $translator->trans("Feedback sent!"));
+            $discordService->sendFeedback($feedback);
         }
         $songService->emulatorFileDispatcher($song);
         $em->flush();

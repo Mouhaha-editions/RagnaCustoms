@@ -67,6 +67,11 @@ class SongFeedback
      */
     private $difficulty;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songFeedbacks")
+     */
+    private $song;
+
     public function __construct()
     {
         $this->songFeedback = new ArrayCollection();
@@ -199,6 +204,18 @@ class SongFeedback
     public function setDifficulty(?string $difficulty): self
     {
         $this->difficulty = $difficulty;
+
+        return $this;
+    }
+
+    public function getSong(): ?Song
+    {
+        return $this->song;
+    }
+
+    public function setSong(?Song $song): self
+    {
+        $this->song = $song;
 
         return $this;
     }
