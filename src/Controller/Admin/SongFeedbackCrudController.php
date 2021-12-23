@@ -29,7 +29,7 @@ class SongFeedbackCrudController extends AbstractCrudController
           return $actions
             // ...
             // (the same permission is granted to the action on all pages)
-            ->setPermission(Action::EDIT, 'ROLE_ADMIN')
+            ->setPermission(Action::EDIT, 'ROLE_MODERATOR')
             ->setPermission(Action::DELETE, 'ROLE_ADMIN')
             // you can set permissions for built-in actions in the same way
             ->setPermission(Action::NEW, 'ROLE_ADMIN')
