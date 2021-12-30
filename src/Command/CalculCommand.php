@@ -65,6 +65,7 @@ class CalculCommand extends Command
                     var_dump("song : ".$infoFile->_songName);
                     var_dump("diff : ".$rank);
                     var_dump("calc : ".$calc);
+                    var_dump($e->getMessage());
                 }
             }
         }
