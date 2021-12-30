@@ -18,6 +18,7 @@ use App\Repository\ViewCounterRepository;
 use App\Repository\VoteRepository;
 use App\Service\DiscordService;
 use App\Service\DownloadService;
+use App\Service\ScoreService;
 use App\Service\SongService;
 use App\Service\VoteService;
 use DateTime;
@@ -612,7 +613,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
-    public function songDetail(Request $request, ScoreRepository $scoreRepository, Song $song,
+    public function songDetail(Request $request, ScoreRepository $scoreRepository,ScoreService $scoreService,Song $song,
                                TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository,
                                SongService $songService, PaginationService $paginationService, DiscordService $discordService)
     {
@@ -665,6 +666,8 @@ class SongsController extends AbstractController
         }
         $songService->emulatorFileDispatcher($song);
         $em->flush();
+
+        $scoreService->ClawwMethod($song);
 
         $levels = [];
         foreach ($song->getSongDifficulties() as $difficulty) {

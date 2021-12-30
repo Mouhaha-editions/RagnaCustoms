@@ -21,10 +21,15 @@ use ZipArchive;
 class ScoreService
 {
     private $em;
+    /**
+     * @var KernelInterface
+     */
+    private $kernel;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em,KernelInterface $kernel)
     {
         $this->em = $em;
+        $this->kernel = $kernel;
     }
 
     public function getMine(Utilisateur $user, SongDifficulty $songDifficulty, ?Season $season)
@@ -173,6 +178,77 @@ class ScoreService
                 break;
         }
 
+    }
+
+    public function ClawwMethod(Song $song)
+    {
+
+        $file = $this->kernel->getProjectDir() . '/public' . $song->getInfoDatFile();
+        $infoFile = json_decode(file_get_contents($file));
+        foreach ($infoFile->_difficultyBeatmapSets[0]->_difficultyBeatmaps as $diff) {
+            $diffFile = json_decode(file_get_contents(str_replace('info.dat', $diff->_beatmapFilename, $file)));
+            $rank = $diff->_difficultyRank;
+            /** @var SongDifficulty $diffEntity */
+            $diffEntity = $song->getSongDifficulties()->filter(function (SongDifficulty $sd) use ($rank) {
+                return $sd->getDifficultyRank()->getLevel() == $rank;
+            })->first();
+            $calc = round($this->calculate($diffFile, $infoFile), 4);
+            $diffEntity->setClawDifficulty($calc);
+        }
+        try {
+            $this->em->flush();
+        } catch (Exception $e) {
+            var_dump("song : " . $infoFile->_songName);
+            var_dump("diff : " . $rank);
+            var_dump("calc : " . $calc);
+            var_dump($e->getMessage());
+        }
+    }
+    private function calculate($diffFile, $infoFile)
+    {
+        $duration = $infoFile->_songApproximativeDuration;
+        $notelist = [];
+        foreach ($diffFile->_notes as $note) {
+            $notelist[] = $note->_time;
+        }
+        if ($notelist < 10) return 0;
+
+        $notes_per_second = count($notelist) / $duration;
+
+        # get rid of double notes to analyze distances between runes
+        $newNoteList = [];
+        for ($i = 1; $i < count($notelist); $i++) {
+            if (($notelist[$i] - $notelist[$i - 1]) > 0.000005) {
+                $newNoteList[] = $notelist[$i - 1];
+            }
+        }
+        if ($newNoteList < 10) return 0;
+        $notes_without_doubles = $newNoteList;
+        $distance_between_notes = [];
+        for ($i = 1; $i < count($notes_without_doubles); $i++) {
+            $distance_between_notes[] = $notes_without_doubles[$i] - $notes_without_doubles[$i - 1];
+        }
+        $standard_deviation = $this->Stand_Deviation($distance_between_notes);
+        return pow($notes_per_second, 1.3) * pow($standard_deviation, 0.3);
+
+    }
+
+    function Stand_Deviation($arr)
+    {
+        $num_of_elements = count($arr);
+
+        $variance = 0.0;
+        if ($num_of_elements == 0) return 0;
+        // calculating mean using array_sum() method
+        $average = array_sum($arr) / $num_of_elements;
+
+        foreach ($arr as $i) {
+            // sum of squares of differences between
+            // all numbers and means.
+            $variance += pow(($i - $average), 2);
+        }
+
+        return (float)sqrt($variance / $num_of_elements);
     }
 }
 
