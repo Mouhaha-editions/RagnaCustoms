@@ -55,8 +55,10 @@ class CalculCommand extends Command
                 $diffEntity = $song->getSongDifficulties()->filter(function (SongDifficulty $sd) use ($rank) {
                     return $sd->getDifficultyRank()->getLevel() == $rank;
                 })->first();
-                $diffEntity->setClawDifficulty($this->calculate($diffFile, $infoFile));
-
+                $calc = $this->calculate($diffFile, $infoFile);
+                if($calc != "Nan") {
+                    $diffEntity->setClawDifficulty();
+                }
             }
         }
         $em->flush();
