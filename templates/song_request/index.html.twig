@@ -57,7 +57,9 @@
                         allowfullscreen></iframe>
                 <br/>
 
-                {{ "%song_name% by %artist%"|trans|replace({"%song_name%":songRequest.title,"%artist%":songRequest.author}) }}
+                <a href="https://www.youtube.com/{{ songRequest.youtubeEmbeded }}" target="_blank">
+                    {{ "%song_name% by %artist%"|trans|replace({"%song_name%":songRequest.title,"%artist%":songRequest.author}) }}
+                </a>
                 <br/>
                 <small>{{ "Requested by %username%"|trans|replace({"%username%":songRequest.requestedBy.username}) }}
                     {% if songRequest.requestedBy.isPatreon %}<i class="fab fa-patreon text-level-6 "
@@ -80,7 +82,7 @@
                         </div>
                         <div class="col-4 text-right">
                             {% if app.user.isMapper and app.user.songRequestInProgress is null %}
-                                <small><a href="{{ path('song_request_claim',{id:songRequest.id}) }}"
+                                <small><a href="{{ path('song_request_claim',{id:songRequest.id}) }}" class="btn btn-success"
                                           data-confirm="You are going to claim this request you get one month to submit your work before an other mapper can claim it"><i
                                                 class="fas fa-fist-raised"></i> {{ "Claim it"|trans }}
                                     </a></small>
