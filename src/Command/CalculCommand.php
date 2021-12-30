@@ -57,8 +57,7 @@ class CalculCommand extends Command
                     return $sd->getDifficultyRank()->getLevel() == $rank;
                 })->first();
                 $calc = round($this->calculate($diffFile, $infoFile),4);
-
-                    $diffEntity->setClawDifficulty($calc);
+                $diffEntity->setClawDifficulty($calc);
 
                 try {
                     $em->flush();

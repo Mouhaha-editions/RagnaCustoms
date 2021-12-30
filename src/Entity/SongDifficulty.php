@@ -225,7 +225,7 @@ class SongDifficulty
         return $this->claw_difficulty;
     }
 
-    public function setClawDifficulty(?string $claw_difficulty): self
+    public function setClawDifficulty($claw_difficulty): self
     {
         $this->claw_difficulty = $claw_difficulty;
 
