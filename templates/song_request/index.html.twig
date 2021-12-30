@@ -57,7 +57,7 @@
                         allowfullscreen></iframe>
                 <br/>
 
-                <a href="https://www.youtube.com/{{ songRequest.youtubeEmbeded }}" target="_blank">
+                <a href="https://www.youtube.com/watch?v={{ songRequest.youtubeEmbeded }}" target="_blank">
                     {{ "%song_name% by %artist%"|trans|replace({"%song_name%":songRequest.title,"%artist%":songRequest.author}) }}
                 </a>
                 <br/>
