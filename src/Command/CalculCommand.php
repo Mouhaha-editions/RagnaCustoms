@@ -85,6 +85,8 @@ class CalculCommand extends Command
         foreach ($diffFile->_notes as $note) {
             $notelist[] = $note->_time;
         }
+        if ($notelist < 10) return 0;
+
         $notes_per_second = count($notelist) / $duration;
 
         # get rid of double notes to analyze distances between runes
@@ -110,7 +112,7 @@ class CalculCommand extends Command
         $num_of_elements = count($arr);
 
         $variance = 0.0;
-
+        if ($num_of_elements == 0) return 0;
         // calculating mean using array_sum() method
         $average = array_sum($arr) / $num_of_elements;
 
