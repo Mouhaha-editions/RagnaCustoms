@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Intervention\Image\ImageManagerStatic as Image;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,12 +57,18 @@ class CalculCommand extends Command
                     return $sd->getDifficultyRank()->getLevel() == $rank;
                 })->first();
                 $calc = $this->calculate($diffFile, $infoFile);
-                if($calc != "Nan") {
+                if ($calc != "Nan") {
                     $diffEntity->setClawDifficulty($calc);
+                }
+                try {
+                    $em->flush();
+                } catch (Exception $e) {
+                    var_dump("song : ".$infoFile->_songName);
+                    var_dump("diff : ".$rank);
+                    var_dump("calc : ".$infoFile->_songName);
                 }
             }
         }
-        $em->flush();
 
         return Command::SUCCESS;
     }
@@ -76,10 +83,10 @@ class CalculCommand extends Command
         $notes_per_second = count($notelist) / $duration;
 
         # get rid of double notes to analyze distances between runes
-        $newNoteList =[];
+        $newNoteList = [];
         for ($i = 1; $i < count($notelist); $i++) {
-            if (($notelist[$i] - $notelist[$i-1]) > 0.000005) {
-                $newNoteList[] = $notelist[$i-1];
+            if (($notelist[$i] - $notelist[$i - 1]) > 0.000005) {
+                $newNoteList[] = $notelist[$i - 1];
             }
         }
 
