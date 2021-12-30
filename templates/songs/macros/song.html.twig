@@ -44,15 +44,26 @@
                 </div>
                 <p class="creator">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('user_mapped_profile', {id:song.user.id}) ~'">'~song.levelAuthorName~'</a>'})|raw }}</p>
                 {% set diffs = '<br/>' %}
+                {% set adiffs = '<br/>' %}
                 {% for diff in song.songDifficulties %}
                     {# {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %} #}
-                    {% set diffs = diffs~'<span style="padding:3px 6px;font-size:16px;background-color:#'~diff.difficultyRank.color~";color:"~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" )~'" title="'~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "already played" :"never played" )~'" data-toggle="tooltip" title="a. diff : '~diff.clawDifficulty~'" >'~(diff.isRanked?'<i
+                    {% set diffs = diffs~'<span style="padding:3px 6px;font-size:16px;background-color:#'~diff.difficultyRank.color~";color:"~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" )~'" title="'~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "already played" :"never played" )~'" data-toggle="tooltip" >'~(diff.isRanked?'<i
                                     class="fas fa-trophy"></i> ':'')~diff.difficultyRank.level~'</span> ' %}
 
                 {% endfor %}
                 <p class="difficulties">
                     {{ "Difficulties: %difficultiesList%"|trans|replace({"%difficultiesList%":diffs})|raw }} {% set diffs = "" %}
                 </p>
+{% if is_granted('ROLE_MODERATOR') %}
+                {% for diff in song.songDifficulties %}
+                    {# {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %} #}
+                    {% set adiffs = adiffs~'<span style="padding:3px 6px;font-size:16px;background-color:#'~diff.difficultyRank.color~";color:"~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" )~'" title="algo difficulty" data-toggle="tooltip" >'~ diff.clawDifficulty ~'</span> ' %}
+
+                {% endfor %}
+                <p class="difficulties">
+                    {{ "Algo Difficulties: %difficultiesList%"|trans|replace({"%difficultiesList%":adiffs})|raw }} {% set diffs = "" %}
+                </p>
+                {% endif %}
             </div>
         </div>
     {% endif %}
