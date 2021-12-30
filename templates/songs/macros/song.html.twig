@@ -57,7 +57,7 @@
 {% if is_granted('ROLE_MODERATOR') %}
                 {% for diff in song.songDifficulties %}
                     {# {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %} #}
-                    {% set adiffs = adiffs~'<span style="padding:3px 6px;font-size:16px;background-color:#'~diff.difficultyRank.color~";color:"~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" )~'" title="algo difficulty" data-toggle="tooltip" >'~ diff.clawDifficulty ~'</span> ' %}
+                    {% set adiffs = adiffs~'<span style="padding:3px 6px;font-size:16px;background-color:#'~diff.difficultyRank.color~";color:"~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" )~'" title="'~diff.clawDifficulty~'" data-toggle="tooltip" >'~ (diff.clawDifficulty|round) ~'</span> ' %}
 
                 {% endfor %}
                 <p class="difficulties">
