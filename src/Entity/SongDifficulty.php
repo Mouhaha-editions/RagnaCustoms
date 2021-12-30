@@ -52,6 +52,11 @@ class SongDifficulty
      */
     private $song;
 
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=4, nullable=true)
+     */
+    private $claw_difficulty;
+
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
@@ -213,6 +218,18 @@ class SongDifficulty
     public function getSeasons(): Collection
     {
         return $this->seasons;
+    }
+
+    public function getClawDifficulty(): ?string
+    {
+        return $this->claw_difficulty;
+    }
+
+    public function setClawDifficulty(?string $claw_difficulty): self
+    {
+        $this->claw_difficulty = $claw_difficulty;
+
+        return $this;
     }
 
 }
