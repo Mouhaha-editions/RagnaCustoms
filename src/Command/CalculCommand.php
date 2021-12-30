@@ -44,18 +44,15 @@ class CalculCommand extends Command
         /** @var EntityManager $em */
         $em = $this->container->get('doctrine')->getManager();
         $songs = $em->getRepository(Song::class)->createQueryBuilder('s')
+            ->where("s.approximativeDuration > 60")
             ->getQuery()->getResult();
         /** @var Song $song */
         foreach ($songs as $song) {
+
             $file = $this->kernel->getProjectDir() . '/public' . $song->getInfoDatFile();
             $infoFile = json_decode(file_get_contents($file));
             foreach ($infoFile->_difficultyBeatmapSets[0]->_difficultyBeatmaps as $diff) {
-                if (!$em->isOpen()) {
-                    $em = $em->create(
-                        $em->getConnection(),
-                        $em->getConfiguration()
-                    );
-                }
+
                 $diffFile = json_decode(file_get_contents(str_replace('info.dat', $diff->_beatmapFilename, $file)));
                 $rank = $diff->_difficultyRank;
                 /** @var SongDifficulty $diffEntity */
