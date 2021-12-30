@@ -62,15 +62,16 @@ class CalculCommand extends Command
                 $calc = round($this->calculate($diffFile, $infoFile),4);
                 $diffEntity->setClawDifficulty($calc);
 
-                try {
-                    $em->flush();
-                } catch (Exception $e) {
-                    var_dump("song : ".$infoFile->_songName);
-                    var_dump("diff : ".$rank);
-                    var_dump("calc : ".$calc);
-                    var_dump($e->getMessage());
-                    break;
-                }
+
+            }
+            try {
+                $em->flush();
+            } catch (Exception $e) {
+                var_dump("song : ".$infoFile->_songName);
+                var_dump("diff : ".$rank);
+                var_dump("calc : ".$calc);
+                var_dump($e->getMessage());
+                break;
             }
         }
 
