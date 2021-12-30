@@ -57,7 +57,7 @@ class CalculCommand extends Command
                 })->first();
                 $calc = $this->calculate($diffFile, $infoFile);
                 if($calc != "Nan") {
-                    $diffEntity->setClawDifficulty();
+                    $diffEntity->setClawDifficulty($calc);
                 }
             }
         }
