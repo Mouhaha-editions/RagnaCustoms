@@ -59,7 +59,7 @@ class CalculCommand extends Command
                 $diffEntity = $song->getSongDifficulties()->filter(function (SongDifficulty $sd) use ($rank) {
                     return $sd->getDifficultyRank()->getLevel() == $rank;
                 })->first();
-                $calc = round($this->calculate($diffFile, $infoFile),4);
+                $calc = round($this->calculate($diffFile, $infoFile), 4);
                 $diffEntity->setClawDifficulty($calc);
 
 
@@ -67,9 +67,9 @@ class CalculCommand extends Command
             try {
                 $em->flush();
             } catch (Exception $e) {
-                var_dump("song : ".$infoFile->_songName);
-                var_dump("diff : ".$rank);
-                var_dump("calc : ".$calc);
+                var_dump("song : " . $infoFile->_songName);
+                var_dump("diff : " . $rank);
+                var_dump("calc : " . $calc);
                 var_dump($e->getMessage());
                 break;
             }
@@ -94,7 +94,7 @@ class CalculCommand extends Command
                 $newNoteList[] = $notelist[$i - 1];
             }
         }
-
+        if ($newNoteList < 10) return 0;
         $notes_without_doubles = $newNoteList;
         $distance_between_notes = [];
         for ($i = 1; $i < count($notes_without_doubles); $i++) {
