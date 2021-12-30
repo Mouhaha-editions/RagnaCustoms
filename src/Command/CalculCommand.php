@@ -65,7 +65,7 @@ class CalculCommand extends Command
                 } catch (Exception $e) {
                     var_dump("song : ".$infoFile->_songName);
                     var_dump("diff : ".$rank);
-                    var_dump("calc : ".$infoFile->_songName);
+                    var_dump("calc : ".$calc);
                 }
             }
         }
