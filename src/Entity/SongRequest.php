@@ -143,7 +143,7 @@ class SongRequest
     public function getYoutubeEmbeded()
     {
         preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $this->getLink(), $matches);
-        return $matches[1];
+        return $matches[1] ?? "";
     }
 
     public function getLink(): ?string
