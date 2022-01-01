@@ -64,6 +64,11 @@ class SongRequest
      * @ORM\OneToMany(targetEntity=SongRequestVote::class, mappedBy="songRequest", orphanRemoval=true)
      */
     private $songRequestVotes;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $wantToBeNotified = true;
     public function __construct()
     {
         $this->mapperOnIt = new ArrayCollection();
@@ -205,6 +210,18 @@ class SongRequest
                 $songRequestVote->setSongRequest(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getWantToBeNotified(): ?bool
+    {
+        return $this->wantToBeNotified;
+    }
+
+    public function setWantToBeNotified(?bool $wantToBeNotified): self
+    {
+        $this->wantToBeNotified = $wantToBeNotified;
 
         return $this;
     }

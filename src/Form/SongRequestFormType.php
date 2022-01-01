@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\SongRequest;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +17,18 @@ class SongRequestFormType extends AbstractType
         $builder
             ->add('title', null, ["attr" => ["class" => "form-control form-control-sm"]])
             ->add('author', null, ["attr" => ["class" => "form-control form-control-sm"]])
-            ->add('link', TextType::class, ["attr" => ["class" => "form-control form-control-sm","placeholder"=>"Youtube link please",]])
+            ->add('link', TextType::class, [
+                "attr" => [
+                    "class" => "form-control form-control-sm",
+                    "placeholder" => "Youtube link please",
+                ]
+            ])
+            ->add('wantToBeNotified', null, [
+                "attr" => [
+                    //"class" => "form-control form-control-sm",
+//                    "placeholder" => "Youtube link please",
+                ]
+            ])
             ->add('askThisSong', SubmitType::class, ['attr' => ["class" => "btn btn-info btn-sm mt-1"]]);
     }
 

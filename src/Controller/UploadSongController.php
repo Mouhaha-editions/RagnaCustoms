@@ -111,7 +111,11 @@ class UploadSongController extends AbstractController
                     /** @var ?SongRequest $song_request */
                     $song_request = $form->get('song_request')->getData();
                     if($song_request != null){
+
                         $song_request->setState(SongRequest::STATE_ENDED);
+                        if($song_request->getWantToBeNotified()){
+                            $songService->emailRequestDone($song_request, $song);
+                        }
                         $this->getDoctrine()->getManager()->flush();
                     }
                     $this->addFlash('success', str_replace(["%song%","%artist%"],[$song->getName(),$song->getAuthorName()],$translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));

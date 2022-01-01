@@ -10,6 +10,7 @@ use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\SongFeedback;
 use App\Entity\SongHash;
+use App\Entity\SongRequest;
 use App\Entity\Utilisateur;
 use App\Helper\AIMapper;
 use DateTime;
@@ -87,6 +88,17 @@ class SongService
             $email->html("New feedback ");
             $this->mailer->send($email);
         }
+    }
+
+    public function emailRequestDone(SongRequest $songRequest, Song $song)
+    {
+            $email = (new Email())
+                ->from('contact@ragnacustoms.com')
+                ->to($songRequest->getRequestedBy()->getEmail())
+                ->subject('Your Map request ' . $song->getName() . ' was done');
+            $email->html("Your Map request " . $song->getName() . " was done, you  can download it at https://ragnacustoms.com/song/detail/".$song->getId());
+            $this->mailer->send($email);
+
     }
 
     public function newFeedbackForMapper(SongFeedback $feedback)
