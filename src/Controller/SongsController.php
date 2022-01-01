@@ -492,26 +492,28 @@ class SongsController extends AbstractController
 
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
-            switch ($exp[0]) {
-                case 'mapper':
-                    $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
-                        ->setParameter('search_string', '%' . $exp[1] . '%');
-                    break;
-                case 'artist':
-                    $qb->andWhere('(s.authorName LIKE :search_string)')
-                        ->setParameter('search_string', '%' . $exp[1] . '%');
-                    break;
-                case 'title':
-                    $qb->andWhere('(s.name LIKE :search_string)')
-                        ->setParameter('search_string', '%' . $exp[1] . '%');
-                    break;
-                case 'desc':
-                    $qb->andWhere('(s.description LIKE :search_string)')
-                        ->setParameter('search_string', '%' . $exp[1] . '%');
-                    break;
-                default:
-                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-                        ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+            if(count($exp)>=2) {
+                switch ($exp[0]) {
+                    case 'mapper':
+                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        break;
+                    case 'artist':
+                        $qb->andWhere('(s.authorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        break;
+                    case 'title':
+                        $qb->andWhere('(s.name LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        break;
+                    case 'desc':
+                        $qb->andWhere('(s.description LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        break;
+                    default:
+                        $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+                }
             }
         }
 
