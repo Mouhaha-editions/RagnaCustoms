@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
+{% if form is not null %}
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
-
+{% endif %}
 {% block title %}RagnaCustoms.com, Song requests{% endblock %}
 
  {% block metas %}
