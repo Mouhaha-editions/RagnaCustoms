@@ -8,6 +8,7 @@ use App\Entity\Utilisateur;
 use App\Form\SongRequestFormType;
 use App\Repository\SongRequestRepository;
 use App\Repository\SongRequestVoteRepository;
+use App\Service\DiscordService;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,7 @@ class SongRequestController extends AbstractController
      * @param SongRequestRepository $songRequestRepository
      * @return Response
      */
-    public function index(Request $request, SongRequestRepository $songRequestRepository, PaginationService $pagination): Response
+    public function index(Request $request, SongRequestRepository $songRequestRepository, PaginationService $pagination, DiscordService $discordService): Response
     {
         $form = null;
         if ($this->isGranted('ROLE_USER')) {
@@ -40,6 +41,7 @@ class SongRequestController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($songReq);
                 $em->flush();
+                $discordService->sendRequestSongMessage($songReq);
                 return $this->redirectToRoute("song_request_index");
             }
         }
