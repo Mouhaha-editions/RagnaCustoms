@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+{% if currentSeason is not null %}
     <div class="banner viking-text text-level-5 text-center">
         <a href="{{ url("score_season_ranking") }}">{{ currentSeason.label }}</a> ends in <span id="demo"></span>
     </div>
@@ -29,6 +30,12 @@
             </table>
         </div>
     </div>
+{% else %}
+    <div class="banner viking-text text-level-5 text-center">
+        {{ "No current season"|trans }}
+    </div>
+{% endif %}
+    
     <div class="row mt-5">
         <div class="col-12">
             <h2>Archive</h2>

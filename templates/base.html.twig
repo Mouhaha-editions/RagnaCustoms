@@ -227,9 +227,11 @@
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
-<div id="variables"
-     data-season-ends-at="{{ currentSeason.endDate.format('Y-m-d H:i:s') }}"
-></div>
+{% if currentSeason is not null %}
+    <div id="variables"
+        data-season-ends-at="{{ currentSeason.endDate.format('Y-m-d H:i:s') }}"
+    ></div>
+{% endif %}
 
 <script src="https://tarteaucitron.io/load.js"></script>
 
