@@ -227,7 +227,7 @@
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
-{% if currentSeason != null %}
+{% if currentSeason is not null %}
     <div id="variables"
         data-season-ends-at="{{ currentSeason.endDate.format('Y-m-d H:i:s') }}"
     ></div>
