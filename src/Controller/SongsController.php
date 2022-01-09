@@ -531,7 +531,7 @@ class SongsController extends AbstractController
                 }, $ids)));
         }
         $qb->andWhere("s.isDeleted != true");
-        $pagination = $paginationService->setDefaults(51)->process($qb, $request);
+        $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
 
         //if this is an ajax request, send the HTML twig back to the calling fn in a json response
         if ($ajaxRequest) {
