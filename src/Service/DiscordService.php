@@ -112,6 +112,7 @@ class DiscordService
         $resp = curl_exec($ch);
         curl_close($ch);
     }
+
     public function sendWipSongMessage(Song $song)
     {
         $timestamp = date("c", strtotime("now"));
