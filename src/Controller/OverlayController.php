@@ -137,7 +137,7 @@ class OverlayController extends AbstractController
             }
             return new JsonResponse([
                 "enabled" => true,
-                "cover" => "/covers/" . $song->getId() . $song->getCoverImageExtension(),
+                "cover" => $song->getCover(),
                 'title' => $song->getName(),
                 'level' => $diff->getDifficultyRank()->getLevel(),
                 'mapper' => $song->getLevelAuthorName(),

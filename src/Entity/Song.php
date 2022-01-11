@@ -1055,5 +1055,14 @@ class Song
         return $this;
     }
 
+    public function getCover()
+    {
+        $cover = "/covers/" . $this->getId() . $this->getCoverImageExtension();
+        if(!file_exists(__DIR__."/../../public/".$cover)){
+            $cover = "/apps/logo.png";
+        }
+        return $cover;
+    }
+
 
 }

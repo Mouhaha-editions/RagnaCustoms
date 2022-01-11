@@ -8,7 +8,7 @@
      <meta property="og:url" content="{{ url('song_detail',{slug:song.slug}) }}"/>
      <meta property="og:type" content="website"/>
      <meta property="og:title" content="{{ song.name }} - Custom Song detail | RagnaCustoms.com"/>
-     <meta property="og:image" content="https://ragnacustoms.com/covers/{{ song.id }}{{ song.coverImageExtension }}"/>
+     <meta property="og:image" content="https://ragnacustoms.com/{{ song.cover }}"/>
  {% endblock %}
 
 
@@ -164,7 +164,7 @@
             </div>
         </div>
         <div class="col-md-4 song-detail border-left">
-            <img src="/covers/{{ song.id }}{{ song.coverImageExtension }}" class="img-fluid pt-2"
+            <img src="{{ song.cover }}" class="img-fluid pt-2"
                  alt="{{ song.name }}"/>
             <div class="text-center mt-3">
                 {% if song.youtubeLink != null %}
@@ -274,7 +274,7 @@
                         "@context": "https://schema.org",
                         "@type": "Product",
                         "author": "{{ song.levelAuthorName|escape }}",
-                        "image": "https://ragnacustoms.com/covers/{{ song.id ~ song.coverImageExtension }}",
+                        "image": "https://ragnacustoms.com{{ song.cover }}",
                         "name": "{{ (song.name~" - "~song.authorName)|escape }}",
                         "aggregateRating": {
                             "@type": "AggregateRating",

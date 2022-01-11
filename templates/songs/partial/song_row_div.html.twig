@@ -116,7 +116,7 @@
                         "@context": "https://schema.org",
                         "@type": "Product",
                         "author": "{{ song.levelAuthorName|escape }}",
-                        "image": "https://ragnacustoms.com/covers/{{ song.id ~ song.coverImageExtension }}",
+                        "image": "https://ragnacustoms.com{{ song.cover }}",
                         "name": "{{ (song.name~" - "~song.authorName)|escape }}",
                         "aggregateRating": {
                             "@type": "AggregateRating",

@@ -159,7 +159,7 @@ class DiscordService
 
                     // Image to send
                     "image" => [
-                        "url" => "https://ragnacustoms.com/covers/" . $song->getId() . $song->getCoverImageExtension()
+                        "url" => "https://ragnacustoms.com".$song->getCover()
                     ],
 
                     // Thumbnail
@@ -258,7 +258,7 @@ class DiscordService
 
                     // Image to send
                     "image" => [
-                        "url" => "https://ragnacustoms.com/covers/" . $song->getId() . $song->getCoverImageExtension()
+                        "url" => "https://ragnacustoms.com".$song->getCover()
                     ],
 
                     // Thumbnail
@@ -357,7 +357,7 @@ class DiscordService
 
                     // Image to send
                     "image" => [
-                        "url" => "https://ragnacustoms.com/covers/" . $song->getId() . $song->getCoverImageExtension()
+                        "url" => "https://ragnacustoms.com".$song->getCover()
                     ],
 
                     // Thumbnail
@@ -456,7 +456,7 @@ class DiscordService
 
                     // Image to send
                     "image" => [
-                        "url" => "https://ragnacustoms.com/covers/" . $song->getId() . $song->getCoverImageExtension()
+                        "url" => "https://ragnacustoms.com".$song->getCover()
                     ]
 
                     // Thumbnail

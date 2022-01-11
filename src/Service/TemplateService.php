@@ -62,7 +62,7 @@ class TemplateService
 
                     // Image to send
                     "image" => [
-                        "url" => "https://ragnacustoms.com/covers/".$song->getId().$song->getCoverImageExtension()
+                        "url" => "https://ragnacustoms.com".$song->getCover()
                     ],
 
                     // Thumbnail
