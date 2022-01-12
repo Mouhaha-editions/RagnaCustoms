@@ -409,8 +409,11 @@ class SongsController extends AbstractController
         $qb = $this->getDoctrine()
             ->getRepository(Song::class)
             ->createQueryBuilder("s")
-            ->leftJoin("s.downloadCounters",'dc')
+//            ->leftJoin("s.downloadCounters",'dc')
             ->groupBy("s.id");
+//        $qb->leftJoin('s.songDifficulties', 'song_difficulties')
+//            ->leftJoin('song_difficulties.difficultyRank', 'rank');
+//        $qb->addSelect('s,song_difficulties');
         $wip = false;
 
         if ($request->get('downloads_filter_difficulties', null)) {
@@ -457,9 +460,11 @@ class SongsController extends AbstractController
                     $qb->orderBy('s.name', 'ASC');
                     break;
                 case 5 :
-                    $qb->addSelect("COUNT(dc.id) AS HIDDEN count_dl");
-                    $qb->groupBy("s.id");
-                    $qb->orderBy('count_dl', 'DESC');
+                    $qb->orderBy('s.downloads', 'DESC');
+
+//                    $qb->addSelect("COUNT(dc.id) AS HIDDEN count_dl");
+//                    $qb->groupBy("s.id");
+//                    $qb->orderBy('count_dl', 'DESC');
                     break;
                 default:
                     $qb->orderBy('s.lastDateUpload', 'DESC');
