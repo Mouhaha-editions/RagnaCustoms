@@ -161,6 +161,7 @@ class UploadSongController extends AbstractController
 
         if ($song->getUser() == $this->getUser()) {
             $song->setIsDeleted(true);
+            $song->setSlug($song->getSlug().'-deleted');
             $this->addFlash('success', "Song removed from catalog.");
 
             $em->flush();
