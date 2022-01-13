@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% if form is not null %}
-{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
 {% endif %}
 {% block title %}RagnaCustoms.com, Song requests{% endblock %}
 
@@ -16,16 +16,20 @@
 
     <div class="row mt-3">
         <div class="col-12">
-            <h1>Song requests</h1>
+            <h1>Song requests for Ragnaröck VR</h1>
         </div>
     </div>
-<form class=" search-and-filter">
+<form class="search-and-filter">
 
 <div class="row">
-    <div class="col-md-2 form-group "></div>
-    <div class="col-md-2 form-group "></div>
-    <div class="col-md-2 form-group "></div>
-    <div class="col-md-2 form-group "></div>
+    <div class="col-12">
+        <p>In a first time you need to search the song you want to add : </p>
+    </div>
+    <div class="col-8 form-group ">
+        <label for="order">{{ "Search"|trans }}</label>
+        <input  type="text" class="form-control form-control-sm" name="search" placeholder="search by title or artist (exact words)"/>
+    </div>
+
     <div class="col-md-2 form-group ">
         <label for="order">{{ "Order by"|trans }}</label>
         <select id="order" name="order" class="form-control form-control-sm">
@@ -37,29 +41,24 @@
     </div>
         <div class="col-md-2 form-group">
             <label>&nbsp;</label><br/>
-            <button type="submit" name="search_btn" value="1" class="btn btn-sm btn-primary">{{ "Filter songs"|trans }}</button>
+            <button type="submit" name="search_btn" value="1" class="btn btn-sm btn-primary">{{ "Search"|trans }}</button>
         </div>
 </div>
 </form>
 
-    <div class="row mt-3">
-        <div class="col-md-4">
-            {% if form is not null %}
-                {{ form(form) }}
-            {% endif %}
 
-        </div>
+    <div class="row">
+        <div class=""></div>
         {% for songRequest in songRequests.entities %}
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4 border-1">
                 {# <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}" title="{{ songRequest.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> #}
-                <iframe width="350" height="180"
-                        src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}"
-                        title="{{ songRequest.title }}" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                <br/>
-
-                <a href="https://www.youtube.com/watch?v={{ songRequest.youtubeEmbeded }}" target="_blank">
+{#                <iframe width="350" height="180"#}
+{#                        src="https://www.youtube.com/embed/{{ songRequest.youtubeEmbeded }}"#}
+{#                        title="{{ songRequest.title }}" frameborder="0"#}
+{#                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"#}
+{#                        allowfullscreen></iframe>#}
+{#                <br/>#}
+                <a href="https://www.youtube.com/watch?v={{ songRequest.youtubeEmbeded }}"  rel="noreferrer" target="_blank">
                     {{ "%song_name% by %artist%"|trans|replace({"%song_name%":songRequest.title,"%artist%":songRequest.author}) }}
                 </a>
                 <br/>
@@ -118,6 +117,14 @@
             </div>
             <div class="text-right">{{ songRequests.entities|length }} {{ "songs displayed on"|trans }} {{ songRequests.count }}</div>
             {# {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }} #}
+        </div>
+
+        <div class="col-12">
+            {% if form is not null %}
+                <hr/>
+            <h2>If the song is not up to this you can request it.</h2>
+                {{ form(form) }}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

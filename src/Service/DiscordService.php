@@ -10,11 +10,11 @@ class DiscordService
 {
 
     private $webhookModerator;
+    private $webhookRequest;
     /** @var string */
     private $webhookUrl;
     private $webhookUrlUpdate;
     private $webhookWipUrl;
-    private $webhookRequest;
 
     public function __construct(string $webhookUrl, string $webhookUrlUpdate, string $webhookWipUrl, string $webhookModerator, string $webhookRequest)
     {
@@ -72,7 +72,7 @@ class DiscordService
 
                     // Image to send
                     "video" => [
-                        "url" =>  $song->getLink()
+                        "url" => $song->getLink()
                     ],
 
                     // Thumbnail
@@ -159,7 +159,7 @@ class DiscordService
 
                     // Image to send
                     "image" => [
-                        "url" => "https://ragnacustoms.com".$song->getCover()
+                        "url" => "https://ragnacustoms.com" . $song->getCover()
                     ],
 
                     // Thumbnail
@@ -258,7 +258,7 @@ class DiscordService
 
                     // Image to send
                     "image" => [
-                        "url" => "https://ragnacustoms.com".$song->getCover()
+                        "url" => "https://ragnacustoms.com" . $song->getCover()
                     ],
 
                     // Thumbnail
@@ -357,41 +357,26 @@ class DiscordService
 
                     // Image to send
                     "image" => [
-                        "url" => "https://ragnacustoms.com".$song->getCover()
+                        "url" => "https://ragnacustoms.com" . $song->getCover()
                     ],
 
-                    // Thumbnail
-                    //"thumbnail" => [
-                    //    "url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=400"
-                    //],
-
-                    // Author
-//                    "author" => [
-//                        "name" => "krasin.space",
-//                        "url" => "https://krasin.space/"
-//                    ],
-
-                    // Additional Fields array
                     "fields" => [
-////                        // Field 1
                         [
                             "name" => "Mapper",
                             "value" => "'" . $song->getLevelAuthorName() . "'",
                             "inline" => true
                         ],
-////                        // Field 2
                         [
                             "name" => "Difficulties",
                             "value" => "'" . $song->getSongDifficultiesStr() . "'",
                             "inline" => true
                         ],
-////                        // Field 2
                         [
                             "name" => "Duration",
                             "value" => "'" . $song->getApproximativeDurationMS() . "'",
                             "inline" => true
                         ]
-////                        // Etc..
+
                     ]
                 ]
             ]
@@ -412,86 +397,29 @@ class DiscordService
 
     public function sendFeedback(SongFeedback $feedback)
     {
-        $timestamp = date("c", strtotime("now"));
         $song = $feedback->getSong();
         $json_data = json_encode([
-            // Message
-//            "content" => "Hi vikings, there is a new map",
-
-            // Username
             "username" => "RagnaCustoms",
-
-            // Text-to-speech
             "tts" => false,
+            "content"=> "New feedback for ".$song->getName(),
 
-            // File upload
-//            "file" => "",
-
-            // Embeds Array
             "embeds" => [
                 [
-                    // Embed Title
-                    "title" => "New feedback for ".$song->getName() ,
-
-                    // Embed Type
+                    "title" => "**New feedback for " . $song->getName()."**",
                     "type" => "rich",
-
-                    // Embed Description
-//                    "description" => "",
-
-                    // URL of title link
+                    "description" => $feedback->getFeedback(),
+                    "author" => [
+                        "name" => $feedback->getUser()->getUsername()
+                    ],
                     "url" => "https://ragnacustoms.com/admin",
-
-                    // Timestamp of embed must be formatted as ISO8601
-//                    "timestamp" => $timestamp,
-
-                    // Embed left border color in HEX
-//                    "color" => "'".hexdec("3366ff")."'",
-
-                    // Footer
-//                    "footer" => [
-//                        "text" => "GitHub.com/Mo45",
-//                        "icon_url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=375"
-//                    ],
-
-                    // Image to send
+                    "fields" => [
+                        "name" => "Mapper",
+                        "value" => $song->getUser()->getUsername(),
+                        "inline" => true
+                    ],
                     "image" => [
-                        "url" => "https://ragnacustoms.com".$song->getCover()
+                        "url" => "https://ragnacustoms.com" . $song->getCover()
                     ]
-
-                    // Thumbnail
-                    //"thumbnail" => [
-                    //    "url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=400"
-                    //],
-
-                    // Author
-//                    "author" => [
-//                        "name" => "krasin.space",
-//                        "url" => "https://krasin.space/"
-//                    ],
-
-                    // Additional Fields array
-//                    "fields" => [
-//////                        // Field 1
-//                        [
-//                            "name" => "Mapper",
-//                            "value" => "'" . $song->getLevelAuthorName() . "'",
-//                            "inline" => true
-//                        ],
-//////                        // Field 2
-//                        [
-//                            "name" => "Difficulties",
-//                            "value" => "'" . $song->getSongDifficultiesStr() . "'",
-//                            "inline" => true
-//                        ],
-//////                        // Field 2
-//                        [
-//                            "name" => "Duration",
-//                            "value" => "'" . $song->getApproximativeDurationMS() . "'",
-//                            "inline" => true
-//                        ]
-//////                        // Etc..
-//                    ]
                 ]
             ]
 
