@@ -405,7 +405,7 @@ class DiscordService
             "embeds" => [
                 [
                     "title" => "Feedback content :",
-                    "description" => "'".addslashes($feedback->getFeedback())."'",
+                    "description" => ($feedback->getFeedback()),
                     "author" => [
                         "name" => $feedback->getUser()->getUsername()
                     ],

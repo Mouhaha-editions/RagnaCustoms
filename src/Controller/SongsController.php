@@ -670,13 +670,14 @@ class SongsController extends AbstractController
             } catch (Exception $e) {
 
             }
+            $discordService->sendFeedback($feedback);
+
             $feedback = new SongFeedback();
             $feedback->setSong($song);
             $feedback->setHash($song->getNewGuid());
             $feedback->setUser($this->getUser());
             $feedbackForm = $this->createForm(SongFeedbackType::class, $feedback);
             $this->addFlash("success", $translator->trans("Feedback sent!"));
-            $discordService->sendFeedback($feedback);
         }
         $songService->emulatorFileDispatcher($song);
         $em->flush();
