@@ -401,13 +401,13 @@ class DiscordService
         $json_data = json_encode([
             "username" => "RagnaCustoms",
             "tts" => false,
-            "content"=> "New feedback for ".$song->getName(),
+            "content"=> "**New feedback for " . $song->getName()."**",
 
             "embeds" => [
                 [
-                    "title" => "**New feedback for " . $song->getName()."**",
+                    "title" => "Feedback content :",
                     "type" => "rich",
-                    "description" => $feedback->getFeedback(),
+                    "description" => addslashes($feedback->getFeedback()),
                     "author" => [
                         "name" => $feedback->getUser()->getUsername()
                     ],
