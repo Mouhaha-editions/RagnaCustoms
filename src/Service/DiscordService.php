@@ -400,22 +400,22 @@ class DiscordService
         $song = $feedback->getSong();
         $json_data = json_encode([
             "username" => "RagnaCustoms",
-            "tts" => false,
-            "content"=> "**New feedback for " . $song->getName()."**",
+            "content" => "**New feedback for " . $song->getName() . "**",
 
             "embeds" => [
                 [
                     "title" => "Feedback content :",
-                    "type" => "rich",
                     "description" => addslashes($feedback->getFeedback()),
                     "author" => [
                         "name" => $feedback->getUser()->getUsername()
                     ],
                     "url" => "https://ragnacustoms.com/admin",
                     "fields" => [
-                        "name" => "Mapper",
-                        "value" => $song->getUser()->getUsername(),
-                        "inline" => true
+                        [
+                            "name" => "Mapper",
+                            "value" => $song->getUser()->getUsername(),
+                            "inline" => true
+                        ]
                     ],
                     "image" => [
                         "url" => "https://ragnacustoms.com" . $song->getCover()
