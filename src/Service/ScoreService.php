@@ -26,7 +26,7 @@ class ScoreService
      */
     private $kernel;
 
-    public function __construct(EntityManagerInterface $em,KernelInterface $kernel)
+    public function __construct(EntityManagerInterface $em, KernelInterface $kernel)
     {
         $this->em = $em;
         $this->kernel = $kernel;
@@ -81,6 +81,16 @@ class ScoreService
 
     /**
      * @param Season|null $season
+     * @param SongDifficulty $difficulty
+     * @return Score[]
+     */
+    public function getScoresTop(?Season $season, SongDifficulty $difficulty)
+    {
+        return array_slice($this->getScoresFiltered($season, $difficulty), 0, 3);
+    }
+
+    /**
+     * @param Season|null $season
      * @param SongDifficulty $songDifficulty
      * @return mixed
      */
@@ -95,16 +105,6 @@ class ScoreService
             $set[] = $score->getUser()->getId();
             return true;
         });
-    }
-
-    /**
-     * @param Season|null $season
-     * @param SongDifficulty $difficulty
-     * @return Score[]
-     */
-    public function getScoresTop(?Season $season, SongDifficulty $difficulty)
-    {
-        return array_slice($this->getScoresFiltered($season, $difficulty), 0, 3);
     }
 
     public function getRanking(Utilisateur $user, $type)
@@ -182,7 +182,6 @@ class ScoreService
 
     public function ClawwMethod(Song $song)
     {
-
         $file = $this->kernel->getProjectDir() . '/public' . $song->getInfoDatFile();
         $infoFile = json_decode(file_get_contents($file));
         foreach ($infoFile->_difficultyBeatmapSets[0]->_difficultyBeatmaps as $diff) {
@@ -204,6 +203,7 @@ class ScoreService
             var_dump($e->getMessage());
         }
     }
+
     private function calculate($diffFile, $infoFile)
     {
         $duration = $infoFile->_songApproximativeDuration;
@@ -249,6 +249,21 @@ class ScoreService
         }
 
         return (float)sqrt($variance / $num_of_elements);
+    }
+
+    public function calculateDifficulties(string $infoDat)
+    {
+        $calc = [];
+        $infoFile = json_decode(file_get_contents($infoDat));
+        foreach ($infoFile->_difficultyBeatmapSets[0]->_difficultyBeatmaps as $diff) {
+            $diffFile = json_decode(file_get_contents(str_replace('info.dat', $diff->_beatmapFilename, $infoDat)));
+            $calc[] = [
+                "rank" => $diff->_difficultyRank,
+                "fileName" => $diff->_beatmapFilename,
+                "algo" => round($this->calculate($diffFile, $infoFile), 4)
+            ];
+        }
+        return $calc;
     }
 }
 

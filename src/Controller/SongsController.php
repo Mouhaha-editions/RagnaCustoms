@@ -682,8 +682,6 @@ class SongsController extends AbstractController
         $songService->emulatorFileDispatcher($song);
         $em->flush();
 
-        $scoreService->ClawwMethod($song);
-
         $levels = [];
         foreach ($song->getSongDifficulties() as $difficulty) {
             $level = $difficulty->getDifficultyRank()->getLevel();

@@ -11,6 +11,7 @@ use App\Repository\DifficultyRankRepository;
 use App\Repository\SongRepository;
 use App\Repository\SongRequestRepository;
 use App\Service\DiscordService;
+use App\Service\ScoreService;
 use App\Service\SongService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -70,7 +71,7 @@ class UploadSongController extends AbstractController
      * @param SongService $songService
      * @return JsonResponse
      */
-    public function edit(Request $request, Song $song, TranslatorInterface $translator, SongService $songService)
+    public function edit(Request $request, Song $song, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
     {
         if ($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse([
@@ -111,13 +112,14 @@ class UploadSongController extends AbstractController
                     /** @var ?SongRequest $song_request */
                     $song_request = $form->get('song_request')->getData();
                     if($song_request != null){
-
                         $song_request->setState(SongRequest::STATE_ENDED);
                         if($song_request->getWantToBeNotified()){
                             $songService->emailRequestDone($song_request, $song);
                         }
                         $this->getDoctrine()->getManager()->flush();
                     }
+                    $scoreService->ClawwMethod($song);
+
                     $this->addFlash('success', str_replace(["%song%","%artist%"],[$song->getName(),$song->getAuthorName()],$translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
                     return new JsonResponse([
                         'error' => false,

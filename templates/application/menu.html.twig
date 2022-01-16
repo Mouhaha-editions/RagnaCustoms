@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 mt-4">
+            <h1>All our softwares</h1>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h2>{{ "RagnaCustoms.exe"|trans }}</h2>
+                </div>
+                <div class="card-body">
+                    <p>Application to download, send score, requests and overlay for streaming.</p>
+                    <a href="{{ path('application') }}" class="btn btn-block btn-lg btn-primary">More information</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h2>{{ "Overlay editor"|trans }}</h2>
+                </div>
+                <div class="card-body">
+                    <p>Online tool to edit your streaming overlay, need ragnacustoms.exe</p>
+                    <a href="{{ path('overlay_editor') }}" class="btn btn-block btn-lg btn-primary">Edit my overlay</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h2>{{ "Map evaluator"|trans }} <span class="badge badge-info">beta</span></h2>
+                </div>
+                <div class="card-body">
+                    <p>Online tool to check level of the custom song you made.</p>
+                    <a href="{{ path('map_evaluator') }}" class="btn btn-block btn-lg btn-primary">Try my map</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}
+    Softwares
+{% endblock %}
+

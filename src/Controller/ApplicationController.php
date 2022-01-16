@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Form\EvaluatorType;
+use App\Service\SongService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,7 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApplicationController extends AbstractController
 {
-
 
 
     /**
@@ -24,6 +25,16 @@ class ApplicationController extends AbstractController
     }
 
     /**
+     * @Route("/applications", name="applications")
+     */
+    public function menu(): Response
+    {
+        return $this->render('application/menu.html.twig', [
+            'controller_name' => 'ApplicationController',
+        ]);
+    }
+
+    /**
      * @Route("/application", name="application")
      */
     public function index(): Response
@@ -32,15 +43,38 @@ class ApplicationController extends AbstractController
             'controller_name' => 'ApplicationController',
         ]);
     }
+
     /**
      * @Route("/locale/{locale}", name="change_locale")
      */
-    public function changeLocale(Request $request, string $locale,SessionInterface $session)
+    public function changeLocale(Request $request, string $locale, SessionInterface $session)
     {
         $session->set('_locale', $locale);
-        if($request->headers->get('referer') == null){
+        if ($request->headers->get('referer') == null) {
             return $this->redirectToRoute('home');
         }
-        return $this->redirect($request->headers->get('referer') );
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+
+    /**
+     * @Route("/map-evaluator", name="map_evaluator")
+     */
+    public function mapEvaluator(Request $request, SongService $songService)
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            $this->addFlash("warning", "You need an account to access this feature.");
+            return $this->redirectToRoute("home");
+        }
+        $form = $this->createForm(EvaluatorType::class);
+        $ranks = null;
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ranks = $songService->evaluateFile($form);
+        }
+        return $this->render('application/map_evaluation.html.twig',[
+            "form" => $form->createView(),
+            "results"=>$ranks
+        ]);
     }
 }
