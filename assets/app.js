@@ -180,7 +180,6 @@ function loadForm(content) {
 
 $(function () {
 
-
     $(document).on('click', '[data-confirm]', function () {
         return confirm($(this).data('confirm'));
     });
@@ -308,6 +307,7 @@ $(function () {
         return false;
 
     });
+
 
 
     $(document).on('click', ".ajax-modal-form", function () {

@@ -55,7 +55,7 @@ class SongsController extends AbstractController
                     "wip" => false,
                     "isDeleted" => false,
                 ]) / $this->paginate,
-            'artists' => array_pop($artists)/$this->paginate
+            'artists' => array_pop($artists) / $this->paginate
         ]);
     }
 
@@ -97,6 +97,7 @@ class SongsController extends AbstractController
                 ->getQuery()->getResult()
         ]);
     }
+
     /**
      * @Route("/rss.xml", name="rss_song")
      */
@@ -497,36 +498,35 @@ class SongsController extends AbstractController
 
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
-                switch ($exp[0]) {
-                    case 'mapper':
-                        if(count($exp)>=2) {
-                            $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
-                                ->setParameter('search_string', '%' . $exp[1] . '%');
-                        }
-                        break;
-                    case 'artist':
-                        if(count($exp)>=2) {
-                            $qb->andWhere('(s.authorName LIKE :search_string)')
-                                ->setParameter('search_string', '%' . $exp[1] . '%');
-                        }
-                        break;
-                    case 'title':
-                        if(count($exp)>=2) {
-                            $qb->andWhere('(s.name LIKE :search_string)')
-                                ->setParameter('search_string', '%' . $exp[1] . '%');
-                        }
-                        break;
-                    case 'desc':
-                        if(count($exp)>=2) {
-                            $qb->andWhere('(s.description LIKE :search_string)')
-                                ->setParameter('search_string', '%' . $exp[1] . '%');
-                        }
-                        break;
-                    default:
-                        $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $request->get('search', null) . '%');
-                }
-
+            switch ($exp[0]) {
+                case 'mapper':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'artist':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.authorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'title':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.name LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'desc':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.description LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                default:
+                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
+                        ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+            }
         }
 
         if ($request->get('onclick_dl')) {
@@ -536,26 +536,28 @@ class SongsController extends AbstractController
                 }, $ids)));
         }
         $qb->andWhere("s.isDeleted != true");
-        $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
+        $pagination = null;
+      if($ajaxRequest) {
+          $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
 
-        //if this is an ajax request, send the HTML twig back to the calling fn in a json response
-        if ($ajaxRequest) {
-            //get the html from the twig
-            $html = $this->renderView('songs/partial/song_row_div.html.twig', [
-                'songs' => $pagination
-            ]);
-            //send the html back in json
-            return new JsonResponse([
-                "html" => $html
-            ]);
-        }
+          //if this is an ajax request, send the HTML twig back to the calling fn in a json response
+          if ($ajaxRequest) {
+              //get the html from the twig
+              $html = $this->renderView('songs/partial/song_row_div.html.twig', [
+                  'songs' => $pagination
+              ]);
+              //send the html back in json
+              return new JsonResponse([
+                  "html" => $html
+              ]);
+          }
 
-
-        if ($pagination->isPartial()) {
-            return $this->render('songs/partial/song_row_div.html.twig', [
-                'songs' => $pagination
-            ]);
-        }
+          if ($pagination->isPartial()) {
+              return $this->render('songs/partial/song_row_div.html.twig', [
+                  'songs' => $pagination
+              ]);
+          }
+      }
         return $this->render('songs/index.html.twig', [
             'controller_name' => 'SongsController',
             'songs' => $pagination
@@ -627,9 +629,9 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
-    public function songDetail(Request $request, ScoreRepository $scoreRepository,ScoreService $scoreService,Song $song,
+    public function songDetail(Request             $request, ScoreRepository $scoreRepository, ScoreService $scoreService, Song $song,
                                TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository,
-                               SongService $songService, PaginationService $paginationService, DiscordService $discordService)
+                               SongService         $songService, PaginationService $paginationService, DiscordService $discordService)
     {
         if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
