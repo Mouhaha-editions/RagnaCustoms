@@ -1,20 +1,20 @@
-var c,ctx,levelDetail,audio,infoDat,animationFrame;
-var isPlaying = false;
-var pauseTimestamp = 0;
-var ringTop = 0;
-var startTime = 0;
-var moveSpeed = 0;
-var jsonIteration = 0;
-var songBPS = 0;
-var runes = {};
-var rings = [];
-var ratio = 2.5;
-var levelDetails = {};
-var spawnDistance = 600;
-var circleRadius = 30;
-var margin = 12;
-var image_drum = new Image;
-var image_runes = {
+let c,ctx,levelDetail,audio,infoDat,animationFrame;
+let isPlaying = false;
+let pauseTimestamp = 0;
+let ringTop = 0;
+let startTime = 0;
+let moveSpeed = 0;
+let jsonIteration = 0;
+let songBPS = 0;
+let runes = {};
+let rings = [];
+let ratio = 2.5;
+let levelDetails = {};
+let spawnDistance = 600;
+let circleRadius = 30;
+let margin = 12;
+let image_drum = new Image;
+let image_runes = {
 	0: new Image,
 	1: new Image,
 	2: new Image,
@@ -23,9 +23,9 @@ var image_runes = {
 }
 
 function init() {
-	var diffsWrapper = $("#ragna-beat-diffs");
-	var buttonsWrapper = $("#ragna-beat-buttons");
-	var volumesWrapper = $("#ragna-beat-volumes");
+	let diffsWrapper = $("#ragna-beat-diffs");
+	let buttonsWrapper = $("#ragna-beat-buttons");
+	let volumesWrapper = $("#ragna-beat-volumes");
 
 	$.ajax({
 		url: $("#info-dat").data('file'),
@@ -36,8 +36,8 @@ function init() {
 			songBPS = infoDat._beatsPerMinute / 60;
 			moveSpeed = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[0]._noteJumpMovementSpeed / 3 * ratio;
 			setDelay();
-			var song = infoDat._songFilename;
-			var fileSong = $("#info-dat").data('file').replace('Info.dat', song).replace('info.dat', song);
+			let song = infoDat._songFilename;
+			let fileSong = $("#info-dat").data('file').replace('Info.dat', song).replace('info.dat', song);
 						
 			$('#ragna-beat-duration .max').text(new Date(infoDat._songApproximativeDuration * 1000).toISOString().substr(14, 5));
 			
@@ -58,20 +58,24 @@ function init() {
 			});
 			
 			audio.addEventListener("timeupdate", function() {
-				var percent = audio.currentTime / infoDat._songApproximativeDuration * 100;
+				let percent = audio.currentTime / infoDat._songApproximativeDuration * 100;
 				$('#ragna-beat-duration .current').text(new Date(audio.currentTime * 1000).toISOString().substr(14, 5));
 				$('#ragna-beat-duration input').val(percent);
 			});
-			
-			var drum_file = new Audio('/ragna-beat-assets/metronome.wav');
-			audio_drum = [
+
+			/** @var Audio drum_file */
+			let drum_file = new Audio('/ragna-beat-assets/metronome.wav');
+			/** @var Audio[] audio_drum */
+
+			let audio_drums = [
 				drum_file.cloneNode(),
 				drum_file.cloneNode(),
 				drum_file.cloneNode(),
 				drum_file.cloneNode()
 			];
-			for (var i=0;i<audio_drum.length;i++) {
-				audio_drum[i].volume = $("#drum-vol-control").val() / 100;
+			for (let i=0;i<audio_drums.length;i++) {
+				let audio_drum = audio_drums[i];
+				audio_drum.volume = $("#drum-vol-control").val() / 100;
 			}
 
 			c = document.getElementById("ragna-canvas");
@@ -88,10 +92,10 @@ function init() {
 				drawDrums();
 			});
 
-			for (var i = 0; i < infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps.length; i++) {
-				var niveau = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[i];
-				var level = niveau._beatmapFilename;
-				var fileLevel = $("#info-dat").data('file').replace('Info.dat', level).replace('info.dat', level);
+			for (let i = 0; i < infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps.length; i++) {
+				let niveau = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[i];
+				let level = niveau._beatmapFilename;
+				let fileLevel = $("#info-dat").data('file').replace('Info.dat', level).replace('info.dat', level);
 				diffsWrapper.append("<button data-level='" + niveau._difficulty + "' class='ragna-beat-diff btn-info btn btn-sm test-map mr-2 mb-2'>level " + niveau._difficultyRank + "</button>");
 
 				$.ajax({
@@ -114,9 +118,9 @@ $(function () {
     init();
 		
 	$(document).on('click','#ragna-beat-play', function () {
-		var level = $(this).attr('data-level');
+		let level = $(this).attr('data-level');
 		
-		if (level == 'play') {
+		if (level === 'play') {
 						
 			if ($(this).hasClass('playing')) {
 				startTime = Date.now() - audio.currentTime * 1000 - delay - 1000 / fps * 2;
@@ -137,7 +141,7 @@ $(function () {
 			isPlaying = true;
 			animationFrame = requestAnimationFrame(animate);
 		}
-		else if (level == "pause") {
+		else if (level === "pause") {
 			$(this).attr('data-level','play');
 			$(this).html('<i class="fas fa-play"></i>');
 			audio.pause();
@@ -165,23 +169,23 @@ $(function () {
 	});
 	
 	$(document).on('change','#drum-vol-control', function () {
-		var value = parseInt($(this).val()) / 100;
+		let value = parseInt($(this).val()) / 100;
 		
-		for (var index in audio_drum) {
+		for (let index in audio_drum) {
 			audio_drum[index].volume = value;
 		}
 	});
 	
 	document.addEventListener('visibilitychange', function() {
-		if (document.visibilityState == "visible" && isPlaying) {
+		if (document.visibilityState === "visible" && isPlaying) {
 			rings = [];
-			for (var index in runes) delete runes[index];
+			for (let index in runes) delete runes[index];
 			drawDrums();
-			var elapsedTime = (Date.now() - startTime) / 1000;
-			var timeStamp = 0;
-			for(var i=0;i<levelDetail._notes.length;i++) {
+			let elapsedTime = (Date.now() - startTime) / 1000;
+			let timeStamp = 0;
+			for(let i=0;i<levelDetail._notes.length;i++) {
 				timeStamp = levelDetail._notes[i]._time / songBPS;
-				if (timeStamp <= elapsedTime && i != levelDetail._notes.length) {
+				if (timeStamp <= elapsedTime && i !== levelDetail._notes.length) {
 					jsonIteration = i + 1;
 				}
 			}
@@ -191,13 +195,13 @@ $(function () {
 	$(document).on('mousedown','#ragna-beat-duration input', function () {
 		audio.pause();
 		isPlaying = false;
-		for (var index in runes) delete runes[index];
+		for (let index in runes) delete runes[index];
 		drawDrums();
 		cancelAnimationFrame(animationFrame);
 	});
 	
 	$(document).on('mouseup','#ragna-beat-duration input', function () {
-		var value = $(this).val() / 100 * infoDat._songApproximativeDuration;
+		let value = $(this).val() / 100 * infoDat._songApproximativeDuration;
 		audio.currentTime = value;
 		startTime = Date.now() - value * 1000 - delay - 1000 / fps * 2;
 		isPlaying = true;
@@ -210,19 +214,19 @@ $(function () {
 		$('#ragna-beat-play').addClass('playing');
 	});
 	
-	$(document).on('input','#ragna-beat-duration input', function () {		
-		var value = $(this).val() / 100 * infoDat._songApproximativeDuration;
+	$(document).on('input','#ragna-beat-duration input', function () {
+		let value = $(this).val() / 100 * infoDat._songApproximativeDuration;
 		$('#ragna-beat-duration .current').text(new Date(value * 1000).toISOString().substr(14, 5));
 	});
 	
 });
 
 function jsonIterationToCurrentTime(elapsedTime) {
-	for (var index in runes) delete runes[index];
-	var timeStamp = 0;
-	for(var i=0;i<levelDetail._notes.length;i++) {
+	for (let index in runes) delete runes[index];
+	let timeStamp = 0;
+	for(let i=0;i<levelDetail._notes.length;i++) {
 		timeStamp = levelDetail._notes[i]._time / songBPS;
-		if (timeStamp <= elapsedTime + delay / 1000 && i != levelDetail._notes.length) {
+		if (timeStamp <= elapsedTime + delay / 1000 && i !== levelDetail._notes.length) {
 			jsonIteration = i + 1;
 		}
 	}
@@ -274,12 +278,12 @@ function animate() {
 		drawDrums(); 
 					
 		if (jsonIteration < levelDetail._notes.length) {
-				var noteTimestamp = levelDetail._notes[jsonIteration]._time / songBPS;
-				var elapsedTime = (Date.now() - startTime) / 1000;
+				let noteTimestamp = levelDetail._notes[jsonIteration]._time / songBPS;
+				let elapsedTime = (Date.now() - startTime) / 1000;
 				
-				if (noteTimestamp.toFixed(5) - elapsedTime.toFixed(5) < 0.005 && runes[jsonIteration] == undefined) {
-					var lineIndex = levelDetail._notes[jsonIteration]._lineIndex;
-					var runeIndex = parseInt(levelDetail._notes[jsonIteration]._time.toFixed(2).split(".")[1])/25;
+				if (noteTimestamp.toFixed(5) - elapsedTime.toFixed(5) < 0.005 && runes[jsonIteration] === undefined) {
+					let lineIndex = levelDetail._notes[jsonIteration]._lineIndex;
+					let runeIndex = parseInt(levelDetail._notes[jsonIteration]._time.toFixed(2).split(".")[1])/25;
 					if (!Number.isInteger(runeIndex)) {
 						runeIndex = 4;
 					}
@@ -290,17 +294,17 @@ function animate() {
 						'positionTop': c.height - circleRadius - margin - spawnDistance,
 						'sound': true
 					};
-					
-					var nextIteration = jsonIteration + 1;
+
+					let nextIteration = jsonIteration + 1;
 					if (nextIteration <= levelDetail._notes.length - 1) {
-						var nextNoteTimestamp = levelDetail._notes[jsonIteration + 1]._time / songBPS;
-						var lineIndex = levelDetail._notes[jsonIteration + 1]._lineIndex;
-						var runeIndex = parseInt(levelDetail._notes[jsonIteration]._time.toFixed(2).split(".")[1])/25;
+						let nextNoteTimestamp = levelDetail._notes[jsonIteration + 1]._time / songBPS;
+						let lineIndex = levelDetail._notes[jsonIteration + 1]._lineIndex;
+						let runeIndex = parseInt(levelDetail._notes[jsonIteration]._time.toFixed(2).split(".")[1])/25;
 						if (!Number.isInteger(runeIndex)) {
 							runeIndex = 4;
 						}
 						
-						if (noteTimestamp.toFixed(5) == nextNoteTimestamp.toFixed(5)) {
+						if (noteTimestamp.toFixed(5) === nextNoteTimestamp.toFixed(5)) {
 							
 							runes[jsonIteration + 1] = {
 								'lineIndex': lineIndex,
