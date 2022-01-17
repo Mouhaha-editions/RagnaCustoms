@@ -55,16 +55,15 @@
                             <div>
                                 <a href="{{ url('song_detail',{slug:song.slug}) }}#feedback"
                                 class="text-level-3"
-                                data-toggle="tooltip"
+{#                                data-toggle="tooltip"#}
                                 title="{{ "Leave a feedback"|trans }}"
-
-                                         data-trigger="hover"
-                                         data-placement="top"
-                                         data-content="{{ "Send a feedback"|trans }}"
-                                         data-replace-selector="#feedbackSong .modal-body"
-                                         data-toggle='modal' data-target='#feedbackSong'
-                                         data-url='{{ url('song_detail',{id:song.id}) }}#feedback'
-                                         data-song-id='{{ song.id }}'
+                                data-trigger="hover"
+                                data-placement="top"
+                                data-content="{{ "Send a feedback"|trans }}"
+                                data-replace-selector="#feedbackSong .modal-body"
+                                data-toggle='modal' data-target='#feedbackSong'
+                                data-url='{{ url('song_detail',{id:song.id}) }}#feedback'
+                                data-song-id='{{ song.id }}'
                                 ><i class="far fa-comment-dots"></i></a>
                                  {{ (songService.songFeedbackPublic(song)|length) }}
                             </div>
@@ -73,13 +72,6 @@
                                 data-toggle="tooltip"
                                 title="{{ "Preview"|trans }}"
                                 class="text-level-9"
-                                         data-trigger="hover"
-                                         data-placement="top"
-                                         data-content="{{ "Send a feedback"|trans }}"
-                                         data-replace-selector="#feedbackSong .modal-body"
-                                         data-toggle='modal' data-target='#feedbackSong'
-                                         data-url='{{ url('song_detail',{id:song.id}) }}#feedback'
-                                         data-song-id='{{ song.id }}'
                                 ><i class="fas fa-play"></i></a>
                             </div>
 
