@@ -63,10 +63,7 @@ function init() {
 				$('#ragna-beat-duration input').val(percent);
 			});
 
-			/** @var Audio drum_file */
 			let drum_file = new Audio('/ragna-beat-assets/metronome.wav');
-			/** @var Audio[] audio_drum */
-
 			let audio_drums = [
 				drum_file.cloneNode(),
 				drum_file.cloneNode(),
@@ -170,9 +167,9 @@ $(function () {
 	
 	$(document).on('change','#drum-vol-control', function () {
 		let value = parseInt($(this).val()) / 100;
-		
-		for (let index in audio_drum) {
-			audio_drum[index].volume = value;
+		for (let index in audio_drums) {
+			let audio_drum= audio_drums[index]
+			audio_drum.volume = value;
 		}
 	});
 	
@@ -347,29 +344,30 @@ function animate() {
   		}  					 
 
 		for (const [i, value] of Object.entries(runes)) {
-			if (runes[i].lineIndex == 0) {
+			if (runes[i].lineIndex === 0) {
 				ctx.drawImage(image_runes[runes[i].runeIndex], margin,  runes[i].positionTop - margin - circleRadius/2, circleRadius*2, circleRadius*2);
 			}
-			else if (runes[i].lineIndex == 1) {
+			else if (runes[i].lineIndex === 1) {
 				ctx.drawImage(image_runes[runes[i].runeIndex], circleRadius * 2 + margin * 2,  runes[i].positionTop - margin - circleRadius/2, circleRadius*2, circleRadius*2);
 			}
-			else if (runes[i].lineIndex == 2) {
+			else if (runes[i].lineIndex === 2) {
 				ctx.drawImage(image_runes[runes[i].runeIndex], circleRadius * 4 + margin * 3,  runes[i].positionTop - margin - circleRadius/2, circleRadius*2, circleRadius*2);
 			}
-			else if (runes[i].lineIndex == 3) {
+			else if (runes[i].lineIndex === 3) {
 				ctx.drawImage(image_runes[runes[i].runeIndex], circleRadius * 6 + margin * 4,  runes[i].positionTop - margin - circleRadius/2, circleRadius*2, circleRadius*2);			
 			}
 
 			runes[i].positionTop += moveSpeed;
-			var distance = c.height - circleRadius - margin - runes[i].positionTop;
+			let distance = c.height - circleRadius - margin - runes[i].positionTop;
 									
 			if (distance < moveSpeed / 2 && distance > -moveSpeed / 2 ) {		
-				var ringX;
-				var lineIndex = runes[i].lineIndex;
+				let ringX;
+				let lineIndex = runes[i].lineIndex;
 				
-				if (runes[i].sound) {					
-					audio_drum[lineIndex].currentTime = 0;
-					audio_drum[lineIndex].play();										
+				if (runes[i].sound) {
+					let audio_drum = audio_drums[lineIndex];
+					audio_drum.currentTime = 0;
+					audio_drum.play();
 				}
 
 				switch(lineIndex) {
