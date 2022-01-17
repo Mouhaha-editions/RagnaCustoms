@@ -405,7 +405,7 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
+    public function index(Request $request, PaginationService $paginationService): Response
     {
         $qb = $this->getDoctrine()
             ->getRepository(Song::class)

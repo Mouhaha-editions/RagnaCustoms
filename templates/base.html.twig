@@ -25,7 +25,7 @@
 
 </head>
 <body class="{{ app.request.cookies.get('light-mode','dark') }}">
-{% set currentSeason = songService.currentSeason %}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand viking-text-bold" href="/"><img width="45" height="45" src="/apps/logo.png" class="img-fluid" alt="logo"/>
         RagnaCustoms</a>
@@ -225,11 +225,6 @@
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
-{% if currentSeason is not null %}
-    <div id="variables"
-        data-season-ends-at="{{ currentSeason.endDate.format('Y-m-d H:i:s') }}"
-    ></div>
-{% endif %}
 
 <script src="https://tarteaucitron.io/load.js"></script>
 
