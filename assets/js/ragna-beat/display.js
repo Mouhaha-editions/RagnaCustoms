@@ -14,6 +14,7 @@ let spawnDistance = 600;
 let circleRadius = 30;
 let margin = 12;
 let image_drum = new Image;
+let audio_drums = [];
 let image_runes = {
 	0: new Image,
 	1: new Image,
@@ -64,7 +65,7 @@ function init() {
 			});
 
 			let drum_file = new Audio('/ragna-beat-assets/metronome.wav');
-			let audio_drums = [
+			audio_drums = [
 				drum_file.cloneNode(),
 				drum_file.cloneNode(),
 				drum_file.cloneNode(),
