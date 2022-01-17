@@ -536,8 +536,8 @@ class SongsController extends AbstractController
                 }, $ids)));
         }
         $qb->andWhere("s.isDeleted != true");
-        $pagination = null;
-      if($ajaxRequest) {
+        //$pagination = null;
+      //if($ajaxRequest || $request->get('ppage1')) {
           $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
 
           //if this is an ajax request, send the HTML twig back to the calling fn in a json response
@@ -557,7 +557,7 @@ class SongsController extends AbstractController
                   'songs' => $pagination
               ]);
           }
-      }
+      //}
         return $this->render('songs/index.html.twig', [
             'controller_name' => 'SongsController',
             'songs' => $pagination
