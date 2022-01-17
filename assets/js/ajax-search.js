@@ -44,4 +44,3 @@ selects.forEach(el => {
     doSearch();
   })
 });
-doSearch();
