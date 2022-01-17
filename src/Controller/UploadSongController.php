@@ -48,7 +48,7 @@ class UploadSongController extends AbstractController
      * @param SongService $songService
      * @return JsonResponse
      */
-    public function new(Request $request, TranslatorInterface $translator, SongService $songService)
+    public function new(Request $request, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
     {
         if (!$this->isGranted("ROLE_USER")) {
             return new JsonResponse([
@@ -59,7 +59,7 @@ class UploadSongController extends AbstractController
         }
         $song = new Song();
         $song->setUser($this->getUser());
-        return $this->edit($request, $song, $translator, $songService);
+        return $this->edit($request, $song, $translator, $songService, $scoreService);
     }
 
 
