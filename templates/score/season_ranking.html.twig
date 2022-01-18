@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{% if currentSeason is not null %}
+    {% set currentSeason = songService.currentSeason %}
+
+    {% if currentSeason is not null %}
     <div class="banner viking-text text-level-5 text-center">
         <a href="{{ url("score_season_ranking") }}">{{ currentSeason.label }}</a> ends in <span id="demo"></span>
     </div>
@@ -49,7 +51,6 @@
             <p>{{ "No archive for now"|trans }}</p>
         {% endfor %}
     </div>
-    {% set currentSeason = songService.currentSeason %}
     {% if currentSeason is not null %}
         <div id="variables"
              data-season-ends-at="{{ currentSeason.endDate.format('Y-m-d H:i:s') }}"
