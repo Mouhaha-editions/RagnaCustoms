@@ -541,7 +541,7 @@ class SongsController extends AbstractController
         if ($ajaxRequest) {
             //get the html from the twig
             $html = $this->renderView('songs/partial/song_row_div.html.twig', [
-                'songs' => $pagination,
+                'songs' => $pagination
             ]);
            
             //send the html back in json
@@ -552,12 +552,12 @@ class SongsController extends AbstractController
 
         if ($pagination->isPartial()) {
             return $this->render('songs/partial/song_row_div.html.twig', [
-                'songs' => $pagination,
+                'songs' => $pagination
             ]);
         }
         return $this->render('songs/index.html.twig', [
             'controller_name' => 'SongsController',
-            'songs' => $pagination,
+            'songs' => $pagination
         ]);
     }
 
@@ -627,7 +627,7 @@ class SongsController extends AbstractController
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
     public function songDetail(Request $request, ScoreRepository $scoreRepository,ScoreService $scoreService,Song $song,
-                               TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository,VoteCounterRepository $voteCounterRepository,
+                               TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository,
                                SongService $songService, PaginationService $paginationService, DiscordService $discordService)
     {
         if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
@@ -680,6 +680,8 @@ class SongsController extends AbstractController
         }
         $songService->emulatorFileDispatcher($song);
         $em->flush();
+
+        $scoreService->ClawwMethod($song);
 
         $levels = [];
         foreach ($song->getSongDifficulties() as $difficulty) {

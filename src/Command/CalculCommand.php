@@ -50,9 +50,9 @@ class CalculCommand extends Command
             ->andWhere('s.isDeleted != 1')
             ->getQuery()->getResult();
         /** @var Song $song */
-        /**foreach ($songs as $song) {
+        foreach ($songs as $song) {
             $this->scoreService->ClawwMethod($song);
-        }*/
+        }
 
         return Command::SUCCESS;
     }
