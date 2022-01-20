@@ -25,22 +25,30 @@
                             {% endif %}
                             {{ macro_song.description(song) }}
                         </div>
-
+                       
                         <div class="table-column padded">
                             <div class="table-column padded text-center song-vote-content-{{ song.id }}">
+                                {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
                                 {% include 'songs/partial/vote.html.twig' with {song:song} %}
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <div>{{ "Last update:"|trans }} </div>
-                                <div>&nbsp;{{ song.lastDateUpload.format('Y-m-d') }}</div>
+                            <br>
+                            <div class="text-right">
+                                <div>
+                                    {{ song.lastDateUpload.format('Y-m-d') }}&nbsp;
+                                    <i class="far fa-calendar-plus"></i>
+                                </div>
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <div>{{ "Duration:"|trans }} </div>
-                                <div>&nbsp;{{ song.approximativeDurationMS }}</div>
+                            <div class="text-right">
+                                <div>
+                                    {{ song.ApproximativeDurationMin }}&nbsp;
+                                    <i class="fas fa-hourglass-half"></i>
+                                </div>
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <div>{{ "Bpm:"|trans }} </div>
-                                <div>&nbsp;{{ song.beatsPerMinute|round }}</div>
+                            <div class="text-right">
+                                <div>
+                                    {{ song.beatsPerMinute|round }} bpm&nbsp;
+                                    <i class="fas fa-drum"></i>
+                                </div>
                             </div>
                             {% if song.isExplicit %}
                             <div class="d-flex justify-content-between">

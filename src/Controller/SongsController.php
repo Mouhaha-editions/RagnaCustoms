@@ -8,6 +8,7 @@ use App\Entity\Song;
 use App\Entity\SongFeedback;
 use App\Entity\ViewCounter;
 use App\Entity\Vote;
+use App\Entity\VoteCounter;
 use App\Form\AddPlaylistFormType;
 use App\Form\SongFeedbackType;
 use App\Repository\DownloadCounterRepository;
@@ -15,6 +16,7 @@ use App\Repository\ScoreRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\ViewCounterRepository;
+use App\Repository\VoteCounterRepository;
 use App\Repository\VoteRepository;
 use App\Service\DiscordService;
 use App\Service\DownloadService;
@@ -33,6 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
 
 class SongsController extends AbstractController
 {
@@ -404,7 +407,8 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
+    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService,
+    VoteCounterRepository $voteCouterRepository): Response
     {
         $qb = $this->getDoctrine()
             ->getRepository(Song::class)
@@ -537,23 +541,23 @@ class SongsController extends AbstractController
         if ($ajaxRequest) {
             //get the html from the twig
             $html = $this->renderView('songs/partial/song_row_div.html.twig', [
-                'songs' => $pagination
+                'songs' => $pagination,
             ]);
+           
             //send the html back in json
             return new JsonResponse([
                 "html" => $html
             ]);
         }
 
-
         if ($pagination->isPartial()) {
             return $this->render('songs/partial/song_row_div.html.twig', [
-                'songs' => $pagination
+                'songs' => $pagination,
             ]);
         }
         return $this->render('songs/index.html.twig', [
             'controller_name' => 'SongsController',
-            'songs' => $pagination
+            'songs' => $pagination,
         ]);
     }
 
@@ -623,13 +627,14 @@ class SongsController extends AbstractController
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
     public function songDetail(Request $request, ScoreRepository $scoreRepository,ScoreService $scoreService,Song $song,
-                               TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository,
+                               TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository,VoteCounterRepository $voteCounterRepository,
                                SongService $songService, PaginationService $paginationService, DiscordService $discordService)
     {
         if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }
+        
         $em = $this->getDoctrine()->getManager();
         $song->setViews($song->getViews() + 1);
         $feedback = new SongFeedback();
@@ -676,8 +681,6 @@ class SongsController extends AbstractController
         $songService->emulatorFileDispatcher($song);
         $em->flush();
 
-        $scoreService->ClawwMethod($song);
-
         $levels = [];
         foreach ($song->getSongDifficulties() as $difficulty) {
             $level = $difficulty->getDifficultyRank()->getLevel();
@@ -696,13 +699,11 @@ class SongsController extends AbstractController
                 'scores' => $pagination
             ];
         }
-
+        
         return $this->render('songs/detail.html.twig', [
             'song' => $song,
             'levels' => $levels,
             "feedbackForm" => $feedbackForm->createView()
         ]);
     }
-
-
 }

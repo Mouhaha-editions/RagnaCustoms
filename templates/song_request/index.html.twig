@@ -85,7 +85,7 @@
                         <div class="col-4 text-right">
                             {% if app.user.isMapper and app.user.songRequestInProgress is null %}
                                 <small><a href="{{ path('song_request_claim',{id:songRequest.id}) }}" class="btn btn-sm btn-success"
-                                          data-confirm="You are going to claim this request you get one month to submit your work before an other mapper can claim it"><i
+                                          data-confirm="You claimed this request. You have month to submit your work before someone else can claim it"><i
                                                 class="fas fa-fist-raised"></i> {{ "Claim it"|trans }}
                                     </a></small>
                             {% endif %}
@@ -99,7 +99,7 @@
                         <div class="col-4 text-right">
                             {% if app.user.songRequestInProgress is not null and app.user.songRequestInProgress.id == songRequest.id %}
                                 <small><a href="{{ path('song_request_unclaim',{id:songRequest.id}) }}"
-                                          data-confirm="You are going to unclaim this request, other mapper can claim it"><i
+                                          data-confirm="You unclaimed this request, other mappers can claim it"><i
                                                 class="fas fa-sad-tear"></i> {{ "Unclaim it"|trans }}
                                     </a></small>
                             {% endif %}

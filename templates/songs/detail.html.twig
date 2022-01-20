@@ -11,7 +11,6 @@
      <meta property="og:image" content="https://ragnacustoms.com/covers/{{ song.id }}{{ song.coverImageExtension }}"/>
  {% endblock %}
 
-
 {% block body %}
     {# <div class="row pt-2"> #}
     {# <a href="{{ url('application') }}"><img src="/apps/banner.png" class="img-fluid" alt="application"></a> #}
@@ -24,6 +23,42 @@
                     <h3 class="section-title">{% if song.wip %}<span
                                 class="text-danger">[WIP]</span> {% endif %}{{ song.name }}
                         <small>{{ song.subName }}</small> - {{ song.authorName }}
+                        <span>&nbsp;</span>
+                        <span>
+                            {% set voteCounter =  null %}
+                            {% if is_granted('ROLE_USER') %}
+                                {% set voteCounter = song.isVoteCounterBy(app.user) %}
+                            {% endif %}
+                            {% if (voteCounter is null or not voteCounter.votesIndc)%}
+                                {% if is_granted('ROLE_USER') %}
+                                    <a style="text-decoration:none" href="{{ path('song_vote_upFromDetail',{id:song.id}) }}">                
+                                        <i style="color:grey" class="fas fa-angle-up"></i>
+                                    </a>
+                                {% else %}       
+                                        <i style="color:grey" class="fas fa-angle-up"></i>
+                                {% endif %}
+                            {% else %}
+                                <a style="text-decoration:none" href="{{ path('song_vote_deleteVoteFromDetail',{id:song.id}) }}">  
+                                    <i style="color:green;opacity:0.5" class="fas fa-angle-up"></i>
+                                </a>
+                            {% endif %}
+                                <small>{{ song.voteUp }}</small>
+                                <span>&nbsp;</span>
+                            {% if voteCounter is null or voteCounter.votesIndc %}
+                                {% if is_granted('ROLE_USER') %}
+                                    <a style="text-decoration:none" href="{{ path('song_vote_downFromDetail',{id:song.id}) }}">
+                                        <i style="color:grey" class="fas fa-angle-down"></i>
+                                    </a>
+                                {% else %}
+                                    <i style="color:grey" class="fas fa-angle-down"></i>
+                                {% endif %}
+                            {% else %}
+                                <a style="text-decoration:none" href="{{ path('song_vote_deleteVoteFromDetail',{id:song.id}) }}"> 
+                                    <i style="color:#dc3545;opacity:0.5" class="fas fa-angle-down"></i>
+                                </a>
+                            {% endif %}
+                            <small>{{ song.voteDown }}</small>                            
+                        </span>
                     </h3>
                 </div>
             </div>
@@ -315,7 +350,6 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('ragnabeat') }}
-
 {% endblock %}
 
 
