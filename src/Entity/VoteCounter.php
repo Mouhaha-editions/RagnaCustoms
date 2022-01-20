@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\VoteCounterRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=VoteCounterRepository::class)
@@ -54,12 +55,12 @@ class VoteCounter
         return $this;
     }
 
-    public function getUser(): ?Utilisateur
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?Utilisateur $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 

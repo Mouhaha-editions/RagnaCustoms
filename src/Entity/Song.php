@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=SongRepository::class)
@@ -211,9 +212,9 @@ class Song
         $this->voteCounter = new ArrayCollection();
     }
 
-    public function isVoteCounterBy(Utilisateur $user) {
+    public function isVoteCounterBy(UserInterface $user) {
         $votes = $this->voteCounter->filter(function(VoteCounter $voteCounter)use($user){
-            return $voteCounter->getUser()->getId() == $user->getId(); 
+            return $voteCounter->getUser() === $user;
         });
         return $votes->isEmpty() ? null : $votes->first();
     }

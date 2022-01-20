@@ -231,7 +231,9 @@ $(function () {
                 }
                 switch (action) {
                     case "replace":
-                        $(t.data('replace-selector')).html(data.result);
+                        console.log('replace'+t.data('replace-selector'))
+                        console.log(data.result)
+                        $(t.data('replace-selector')).replaceWith(data.result);
                         break;
                     case "remove":
                         $(t.data('remove-selector')).remove();
