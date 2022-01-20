@@ -39,7 +39,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SongsController extends AbstractController
 {
-    private $paginate = 50;
+    private $paginate = 51;
 
     /**
      * @Route("/songs.xml", name="sitemap_songs")
@@ -58,7 +58,7 @@ class SongsController extends AbstractController
                     "wip" => false,
                     "isDeleted" => false,
                 ]) / $this->paginate,
-            'artists' => array_pop($artists)/$this->paginate
+            'artists' => array_pop($artists) / $this->paginate
         ]);
     }
 
@@ -100,6 +100,7 @@ class SongsController extends AbstractController
                 ->getQuery()->getResult()
         ]);
     }
+
     /**
      * @Route("/rss.xml", name="rss_song")
      */
@@ -413,8 +414,11 @@ class SongsController extends AbstractController
         $qb = $this->getDoctrine()
             ->getRepository(Song::class)
             ->createQueryBuilder("s")
-            ->leftJoin("s.downloadCounters",'dc')
+//            ->leftJoin("s.downloadCounters",'dc')
             ->groupBy("s.id");
+//        $qb->leftJoin('s.songDifficulties', 'song_difficulties')
+//            ->leftJoin('song_difficulties.difficultyRank', 'rank');
+//        $qb->addSelect('s,song_difficulties');
         $wip = false;
 
         if ($request->get('downloads_filter_difficulties', null)) {
@@ -461,9 +465,11 @@ class SongsController extends AbstractController
                     $qb->orderBy('s.name', 'ASC');
                     break;
                 case 5 :
-                    $qb->addSelect("COUNT(dc.id) AS HIDDEN count_dl");
-                    $qb->groupBy("s.id");
-                    $qb->orderBy('count_dl', 'DESC');
+                    $qb->orderBy('s.downloads', 'DESC');
+
+//                    $qb->addSelect("COUNT(dc.id) AS HIDDEN count_dl");
+//                    $qb->groupBy("s.id");
+//                    $qb->orderBy('count_dl', 'DESC');
                     break;
                 default:
                     $qb->orderBy('s.lastDateUpload', 'DESC');
@@ -496,65 +502,68 @@ class SongsController extends AbstractController
 
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
-                switch ($exp[0]) {
-                    case 'mapper':
-                        if(count($exp)>=2) {
-                            $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
-                                ->setParameter('search_string', '%' . $exp[1] . '%');
-                        }
-                        break;
-                    case 'artist':
-                        if(count($exp)>=2) {
-                            $qb->andWhere('(s.authorName LIKE :search_string)')
-                                ->setParameter('search_string', '%' . $exp[1] . '%');
-                        }
-                        break;
-                    case 'title':
-                        if(count($exp)>=2) {
-                            $qb->andWhere('(s.name LIKE :search_string)')
-                                ->setParameter('search_string', '%' . $exp[1] . '%');
-                        }
-                        break;
-                    case 'desc':
-                        if(count($exp)>=2) {
-                            $qb->andWhere('(s.description LIKE :search_string)')
-                                ->setParameter('search_string', '%' . $exp[1] . '%');
-                        }
-                        break;
-                    default:
-                        $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $request->get('search', null) . '%');
-                }
-
+            switch ($exp[0]) {
+                case 'mapper':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'artist':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.authorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'title':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.name LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'desc':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.description LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                default:
+                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
+                        ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+            }
         }
 
         if ($request->get('onclick_dl')) {
-            $ids = $qb->select('s.id')->addSelect("COUNT(dc.id) AS HIDDEN count_dl")->getQuery()->getArrayResult();
+            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
             return $this->redirect("ragnac://install/" . implode('-', array_map(function ($id) {
                     return array_pop($id);
                 }, $ids)));
         }
         $qb->andWhere("s.isDeleted != true");
-        $pagination = $paginationService->setDefaults(51)->process($qb, $request);
 
-        //if this is an ajax request, send the HTML twig back to the calling fn in a json response
-        if ($ajaxRequest) {
-            //get the html from the twig
-            $html = $this->renderView('songs/partial/song_row_div.html.twig', [
-                'songs' => $pagination
-            ]);
-           
-            //send the html back in json
-            return new JsonResponse([
-                "html" => $html
-            ]);
-        }
+        //$pagination = null;
+      //if($ajaxRequest || $request->get('ppage1')) {
+          $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
 
-        if ($pagination->isPartial()) {
-            return $this->render('songs/partial/song_row_div.html.twig', [
-                'songs' => $pagination
-            ]);
-        }
+          //if this is an ajax request, send the HTML twig back to the calling fn in a json response
+          if ($ajaxRequest) {
+              //get the html from the twig
+              $html = $this->renderView('songs/partial/song_row_div.html.twig', [
+                  'songs' => $pagination
+              ]);
+              //send the html back in json
+              return new JsonResponse([
+                  "html" => $html
+              ]);
+          }
+
+          if ($pagination->isPartial()) {
+              return $this->render('songs/partial/song_row_div.html.twig', [
+                  'songs' => $pagination
+              ]);
+          }
+
+
         return $this->render('songs/index.html.twig', [
             'controller_name' => 'SongsController',
             'songs' => $pagination
@@ -670,18 +679,17 @@ class SongsController extends AbstractController
             } catch (Exception $e) {
 
             }
+            $discordService->sendFeedback($feedback);
+
             $feedback = new SongFeedback();
             $feedback->setSong($song);
             $feedback->setHash($song->getNewGuid());
             $feedback->setUser($this->getUser());
             $feedbackForm = $this->createForm(SongFeedbackType::class, $feedback);
             $this->addFlash("success", $translator->trans("Feedback sent!"));
-            $discordService->sendFeedback($feedback);
         }
         $songService->emulatorFileDispatcher($song);
         $em->flush();
-
-        $scoreService->ClawwMethod($song);
 
         $levels = [];
         foreach ($song->getSongDifficulties() as $difficulty) {

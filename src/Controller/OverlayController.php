@@ -70,6 +70,7 @@ class OverlayController extends AbstractController
     {
 
         if (!$this->isGranted('ROLE_USER')) {
+            $this->addFlash("warning","You need an account to access this feature.");
             return $this->redirectToRoute("home");
         }
         /** @var Song[] $songs */
@@ -137,7 +138,7 @@ class OverlayController extends AbstractController
             }
             return new JsonResponse([
                 "enabled" => true,
-                "cover" => "/covers/" . $song->getId() . $song->getCoverImageExtension(),
+                "cover" => $song->getCover(),
                 'title' => $song->getName(),
                 'level' => $diff->getDifficultyRank()->getLevel(),
                 'mapper' => $song->getLevelAuthorName(),

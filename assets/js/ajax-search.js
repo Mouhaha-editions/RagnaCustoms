@@ -43,4 +43,4 @@ selects.forEach(el => {
   el.addEventListener('change', function(){
     doSearch();
   })
-})
+});

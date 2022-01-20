@@ -135,3 +135,45 @@ $level10: #e2cd6c;
   }
 }
 
+#ragna-beat-diffs,#ragna-beat-buttons {
+  text-align: center;
+  margin: 14px 0 0;
+}
+#ragna-beat-buttons {
+  margin: 0;
+}
+
+#ragna-beat-volumes {
+  width: 300px;
+  margin: 10px auto;
+}
+#ragna-beat-volumes div::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+#ragna-beat-volumes input {
+  float: right;
+  width: 150px;
+}
+
+#ragna-canvas {
+  background-color: #3c3c3c;
+  display: block;
+  margin: 0 auto;
+}
+#ragna-beat-info {
+  text-align: center;
+  font-size: 14px;
+}
+#ragna-beat-duration {
+  width: 300px;
+  margin: 10px auto;
+}
+#ragna-beat-duration input {
+  display: block;
+  width: 100%;
+}
+#ragna-beat-duration .max {
+  float: right;
+}

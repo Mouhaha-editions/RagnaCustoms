@@ -125,9 +125,34 @@ let hashtag = window.location.hash;
 function loadForm(content) {
     $("#form-edit").html(content);
     $("#form-edit form").on('submit', function () {
-        $("#form-edit").html("<div class=\"popup-box-actions white full void\">Sending your form</div>");
+        $("#form-edit").html("<div class=\"popup-box-actions white full void\">Sending your form, please wait ... </div> " +
+            "<div class='progress-container'><div class='progress'></div></div>");
         let tt = $(this);
+
         $.ajax({
+            xhr: function () {
+                let xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        let percentComplete = evt.loaded / evt.total;
+                        $('.progress').css({
+                            width: percentComplete * 100 + '%'
+                        });
+                        if (percentComplete === 1) {
+                            $('.progress').addClass('hide');
+                        }
+                    }
+                }, false);
+                xhr.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        let percentComplete = evt.loaded / evt.total;
+                        $('.progress').css({
+                            width: percentComplete * 100 + '%'
+                        });
+                    }
+                }, false);
+                return xhr;
+            },
             url: tt.attr('action'),
             data: new FormData(this),
             type: tt.attr('method'),
@@ -141,19 +166,19 @@ function loadForm(content) {
                     $("#form-edit").html(data.response);
                     loadForm(data.response);
                 } else {
-                    t.closest(t.data('replace-selector')).html(data.response);
+                    tt.closest(tt.data('replace-selector')).html(data.response);
                     $(tt).closest(".modal").modal('hide');
                 }
-
             }
         });
+
+
         $("#form-review").html("<div class=\"popup-box-actions white full void\">Sending your form</div>");
         return false;
     });
 }
 
 $(function () {
-
 
     $(document).on('click', '[data-confirm]', function () {
         return confirm($(this).data('confirm'));
@@ -282,6 +307,7 @@ $(function () {
         return false;
 
     });
+
 
 
     $(document).on('click', ".ajax-modal-form", function () {
@@ -474,11 +500,12 @@ if (window.location.protocol === 'http:') {
 }
 
 window.addEventListener('beforeinstallprompt', (event) => {
-    console.log('👍', 'beforeinstallprompt', event);
     // Stash the event so it can be triggered later.
     window.deferredPrompt = event;
     // Remove the 'hidden' class from the install button container
-    divInstall.classList.toggle('hidden', false);
+    if(divInstall !== undefined && divInstall !== null) {
+        divInstall.classList.toggle('hidden', false);
+    }
 });
 
 Notification.requestPermission().then(function(result) {

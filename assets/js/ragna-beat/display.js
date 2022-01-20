@@ -1,126 +1,405 @@
-function readTextFile(file, callback) {
-    var rawFile = new XMLHttpRequest();
-    rawFile.overrideMimeType("application/json");
-    rawFile.open("GET", file, true);
-    rawFile.onreadystatechange = function () {
-        if (rawFile.readyState === 4 && rawFile.status == "200") {
-            callback(rawFile.responseText);
-        }
-    }
-    rawFile.send(null);
+let c,ctx,levelDetail,audio,infoDat,animationFrame;
+let isPlaying = false;
+let pauseTimestamp = 0;
+let ringTop = 0;
+let startTime = 0;
+let moveSpeed = 0;
+let jsonIteration = 0;
+let songBPS = 0;
+let runes = {};
+let rings = [];
+let ratio = 2.5;
+let levelDetails = {};
+let spawnDistance = 600;
+let circleRadius = 30;
+let margin = 12;
+let image_drum = new Image;
+let audio_drums = [];
+let image_runes = {
+	0: new Image,
+	1: new Image,
+	2: new Image,
+	3: new Image,
+	4: new Image
 }
 
-let ratio = 500;
-let audio;
+function init() {
+	let diffsWrapper = $("#ragna-beat-diffs");
+	let buttonsWrapper = $("#ragna-beat-buttons");
+	let volumesWrapper = $("#ragna-beat-volumes");
 
-function draw() {
-    let ragnaSelector = $("#ragna-beat");
-    ragnaSelector.append("<div class=\"drum\" id='drum-1'></div>");
-    ragnaSelector.append("<div class=\"drum\" id='drum-2'></div>");
-    ragnaSelector.append("<div class=\"drum\" id='drum-3'></div>");
-    ragnaSelector.append("<div class=\"drum\" id='drum-4'></div>");
-    // ragnaSelector.append("<div class=\"rune-pack\"></div>");
-    readTextFile($("#info-dat").data('file'), function (text) {
-        let infoDat = JSON.parse(text);
-        let ratio2 = 60 / infoDat._beatsPerMinute;
-        let song = infoDat._songFilename;
-        let fileSong = $("#info-dat").data('file').replace('Info.dat', song).replace('info.dat', song);
-        ragnaSelector.before("<input id=\"vol-control\" value='25' type=\"range\" min=\"0\" max=\"100\" step=\"1\"></input>");
-        // ragnaSelector.after("<input id=\"time-control\" style='width:300px;' value='0' type=\"range\" min=\"0\" max=\"" + (infoDat._songApproximativeDuration * (ratio)) + "\" step=\"1\"></input>");
-        ragnaSelector.before("<button data-level='pause' class='btn-warning btn btn-sm test-map mr-2 mb-2'><i class='fas fa-pause'></i></button>");
-        ragnaSelector.before("<button data-level='stop' class='btn-danger btn btn-sm test-map mr-2 mb-2'><i class='fas fa-stop'></i></button>");
-        // ragnaSelector.before("<input type='number'  min='0' max='100' value='50'/>");
-        audio = new Audio(fileSong)
-        audio.level = $("#vol-control").val() / 100;
-        audio.load();
+	$.ajax({
+		url: $("#info-dat").data('file'),
+		type: 'GET',
+		dataType: 'JSON',
+		success: function(result) {
+			infoDat = result;
+			songBPS = infoDat._beatsPerMinute / 60;
+			moveSpeed = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[0]._noteJumpMovementSpeed / 3 * ratio;
+			setDelay();
+			let song = infoDat._songFilename;
+			let fileSong = $("#info-dat").data('file').replace('Info.dat', song).replace('info.dat', song);
+						
+			$('#ragna-beat-duration .max').text(new Date(infoDat._songApproximativeDuration * 1000).toISOString().substr(14, 5));
+			
+			buttonsWrapper.append("<button id='ragna-beat-play' data-level='play' class='btn-warning btn btn-sm test-map mr-2 mb-2'><i class='fas fa-play'></i></button>");
+			buttonsWrapper.append("<button id='ragna-beat-stop' data-level='stop' class='btn-danger btn btn-sm test-map mr-2 mb-2'><i class='fas fa-stop'></i></button>");       
+			
+			volumesWrapper.append("<div>Music volume: <input id=\"vol-control\" value='20' type=\"range\" min=\"0\" max=\"100\" step=\"1\"></input></div>");
+			volumesWrapper.append("<div>Metronome volume: <input id=\"drum-vol-control\" value='20' type=\"range\" min=\"0\" max=\"100\" step=\"1\"></input></div>");
+			
+			audio = new Audio(fileSong);
+			audio.level = $("#vol-control").val() / 100;
+			audio.preload = "auto";
+			audio.volume = 0.2;
+			
+			$(audio).on('ended', function() {
+				isPlaying = false;
+				stopSong();
+			});
+			
+			audio.addEventListener("timeupdate", function() {
+				let percent = audio.currentTime / infoDat._songApproximativeDuration * 100;
+				$('#ragna-beat-duration .current').text(new Date(audio.currentTime * 1000).toISOString().substr(14, 5));
+				$('#ragna-beat-duration input').val(percent);
+			});
 
-        for (let i = 0; i < infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps.length; i++) {
-            let niveau = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[i];
-            let level = niveau._beatmapFilename;
-            let fileLevel = $("#info-dat").data('file').replace('Info.dat', level).replace('info.dat', level);
-            ragnaSelector.before("<button data-level='" + niveau._difficulty + "' class='btn-info btn btn-sm test-map mr-2 mb-2'>level " + niveau._difficultyRank + "</button>");
-            ragnaSelector.append("<div class=\"rune-pack\"  data-duration='" + infoDat._songApproximativeDuration + "' id='" + niveau._difficulty + "'></div>");
-            $(".rune-pack#" + niveau._difficulty + "").css({
-                height: (infoDat._songApproximativeDuration * (ratio)) + "px",
-            });
-            $('.rune-pack#' + niveau._difficulty).hide();
+			let drum_file = new Audio('/ragna-beat-assets/metronome.wav');
+			audio_drums = [
+				drum_file.cloneNode(),
+				drum_file.cloneNode(),
+				drum_file.cloneNode(),
+				drum_file.cloneNode()
+			];
+			for (let i=0;i<audio_drums.length;i++) {
+				let audio_drum = audio_drums[i];
+				audio_drum.volume = $("#drum-vol-control").val() / 100;
+			}
 
-            readTextFile(fileLevel, function (text) {
-                let levelDetail = JSON.parse(text);
-                for (let i = 0; i < levelDetail._notes.length; i++) {
-                    let note = levelDetail._notes[i];
-                    ragnaSelector.find(".rune-pack#" + niveau._difficulty).append("<div class=\"rune data-level-" + niveau._difficultyRank + "\" style='bottom:" + ((ratio * ratio2 * note._time)) + "px' id='drum-" + (note._lineIndex + 1) + "'>X</div>");
-                }
-            });
-        }
+			c = document.getElementById("ragna-canvas");
+			ctx = c.getContext("2d");
+			checkTop = c.height - circleRadius - margin - spawnDistance;
+				
+			image_drum.src = "/ragna-beat-assets/image_drum.png";
+			image_runes[0].src = "/ragna-beat-assets/image_rune_0.png";
+			image_runes[1].src = "/ragna-beat-assets/image_rune_1.png";
+			image_runes[2].src = "/ragna-beat-assets/image_rune_2.png";
+			image_runes[3].src = "/ragna-beat-assets/image_rune_3.png";
+			image_runes[4].src = "/ragna-beat-assets/image_rune_4.png";
+			image_drum.addEventListener('load', e => {
+				drawDrums();
+			});
+
+			for (let i = 0; i < infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps.length; i++) {
+				let niveau = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[i];
+				let level = niveau._beatmapFilename;
+				let fileLevel = $("#info-dat").data('file').replace('Info.dat', level).replace('info.dat', level);
+				diffsWrapper.append("<button data-level='" + niveau._difficulty + "' class='ragna-beat-diff btn-info btn btn-sm test-map mr-2 mb-2'>level " + niveau._difficultyRank + "</button>");
+
+				$.ajax({
+					url: fileLevel,
+					type: 'GET',
+					dataType: 'JSON',
+					indexValue: i,
+					success: function(result) {
+						levelDetails[this.indexValue] = result;
+						levelDetail = levelDetails[0]; //hack
+					}
+				});
+			}
+			$('.ragna-beat-diff').first().addClass('btn-dark');
+		}			
     });
 }
-
-let isPlaying = null;
 
 $(function () {
-    draw();
+    init();
+		
+	$(document).on('click','#ragna-beat-play', function () {
+		let level = $(this).attr('data-level');
+		
+		if (level === 'play') {
+						
+			if ($(this).hasClass('playing')) {
+				startTime = Date.now() - audio.currentTime * 1000 - delay - 1000 / fps * 2;
+				audio.play();
+			}
+			else {
+				startTime = Date.now();
+				
+				setTimeout(function(){					
+					audio.play();
+				}, delay);
+				
+				$(this).addClass('playing');				
+			}
+				
+			$(this).attr('data-level','pause');
+			$(this).html('<i class="fas fa-pause"></i>');
+			isPlaying = true;
+			animationFrame = requestAnimationFrame(animate);
+		}
+		else if (level === "pause") {
+			$(this).attr('data-level','play');
+			$(this).html('<i class="fas fa-play"></i>');
+			audio.pause();
+			isPlaying = false;
+			cancelAnimationFrame(animationFrame);
+		}
+	});
+	
+	$(document).on('click','.ragna-beat-diff', function () {
+		stopSong();
+		$('.ragna-beat-diff.btn-dark').removeClass('btn-dark');
+		var index = $(this).index('.ragna-beat-diff');
+		$('.ragna-beat-diff').eq(index).addClass('btn-dark');
+		levelDetail = levelDetails[index];
+		moveSpeed = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[index]._noteJumpMovementSpeed / 3 * ratio;	
+		setDelay();
+	});
+	
+	$(document).on('click','#ragna-beat-stop', function () {
+		stopSong();
+	});
+	
+	$(document).on('change','#vol-control', function () {
+		audio.volume = parseInt($(this).val()) / 100;
+	});
+	
+	$(document).on('change','#drum-vol-control', function () {
+		let value = parseInt($(this).val()) / 100;
+		for (let index in audio_drums) {
+			let audio_drum= audio_drums[index]
+			audio_drum.volume = value;
+		}
+	});
+	
+	document.addEventListener('visibilitychange', function() {
+		if (document.visibilityState === "visible" && isPlaying) {
+			rings = [];
+			for (let index in runes) delete runes[index];
+			drawDrums();
+			let elapsedTime = (Date.now() - startTime) / 1000;
+			let timeStamp = 0;
+			for(let i=0;i<levelDetail._notes.length;i++) {
+				timeStamp = levelDetail._notes[i]._time / songBPS;
+				if (timeStamp <= elapsedTime && i !== levelDetail._notes.length) {
+					jsonIteration = i + 1;
+				}
+			}
+		}
+	});
+	
+	$(document).on('mousedown','#ragna-beat-duration input', function () {
+		audio.pause();
+		isPlaying = false;
+		for (let index in runes) delete runes[index];
+		drawDrums();
+		cancelAnimationFrame(animationFrame);
+	});
+	
+	$(document).on('mouseup','#ragna-beat-duration input', function () {
+		let value = $(this).val() / 100 * infoDat._songApproximativeDuration;
+		audio.currentTime = value;
+		startTime = Date.now() - value * 1000 - delay - 1000 / fps * 2;
+		isPlaying = true;
+		rings = [];
+		animationFrame = requestAnimationFrame(animate);
+		audio.play();
+		jsonIterationToCurrentTime(value);
+		$('#ragna-beat-play').attr('data-level','pause');
+		$('#ragna-beat-play').html('<i class="fas fa-pause"></i>');
+		$('#ragna-beat-play').addClass('playing');
+	});
+	
+	$(document).on('input','#ragna-beat-duration input', function () {
+		let value = $(this).val() / 100 * infoDat._songApproximativeDuration;
+		$('#ragna-beat-duration .current').text(new Date(value * 1000).toISOString().substr(14, 5));
+	});
+	
+});
 
-    $(document).on('input', '#vol-control', function () {
-        audio.volume = parseInt($(this).val()) / 100;
-    });
-    // $(document).on('input', '#time-control', function () {
-    //     let val = parseInt($(this).val());
-    //     audio.currentTime = val / ratio;
-    //
-    //     let ratiotime = 1- audio.currentTime / audio.duration;
-    //     let pack = $('.rune-pack.active');
-    //     let top = pack.innerHeight();
-    //     pack.finish();
-    //     pack.css({"top" : (((top*ratiotime)-600)*-1)+"px"});
-    //     //console.log(pack.data('duration') * (1 - ratiotime));
-    //     // // pack.animate({'top': "600px"}, ((pack.data('duration')*(1-ratiotime)) * 1000), "linear");
-    //
-    // });
-    $(document).on('mousedown', ".test-map", function () {
-        let niveau = $(this).data("level");
-        if (niveau === isPlaying) {
-            return;
-        } else if (isPlaying !== null) {
-            if (niveau === "pause") {
-                audio.pause();
-                $('.rune-pack#' + isPlaying).stop(true);
-                $(this).data('level', "play");
-                $(this).html("<i class='fas fa-play'></i>");
-            } else if (niveau === "play") {
-                $(this).data('level', "pause");
-                $(this).html("<i class='fas fa-pause'></i>");
-                audio.play();
-                $('.rune-pack#' + niveau._difficulty).addClass('active');
-                let pack = $('.rune-pack#' + isPlaying);
-                pack.animate({'top': "600px"}, pack.data('duration') * 1000, "linear");
-            } else {
-                $('.rune-pack.active#' + niveau).removeClass('active');
-                audio.pause();
-                $('.rune-pack#' + isPlaying).stop(true).css({top: 'inherit'}).hide();
-            }
-        }
+function jsonIterationToCurrentTime(elapsedTime) {
+	for (let index in runes) delete runes[index];
+	let timeStamp = 0;
+	for(let i=0;i<levelDetail._notes.length;i++) {
+		timeStamp = levelDetail._notes[i]._time / songBPS;
+		if (timeStamp <= elapsedTime + delay / 1000 && i !== levelDetail._notes.length) {
+			jsonIteration = i + 1;
+		}
+	}
+}
 
-        if (niveau !== "stop" && niveau !== "pause" && niveau !== "play") {
-            isPlaying = niveau;
-            audio.volume = $("#vol-control").val() / 100;
-            audio.load();
-            audio.ontimeupdate = function () {
-                $("#time-control").val(audio.currentTime * ratio);
-            };
+function stopSong() {
+	rings = [];
+	isPlaying = false;
+	audio.pause();		
+	audio.currentTime = 0;	
+	jsonIteration = 0;
+	$('#ragna-beat-play').removeClass('playing');
+	$('#ragna-beat-play').html('<i class="fas fa-play"></i>');
+	$('#ragna-beat-play').attr('data-level','play');	
+	for (var index in runes) delete runes[index];
+	drawDrums();
+	cancelAnimationFrame(animationFrame);
+} 
 
-            $('.rune-pack.active#' + niveau).removeClass('active');
-            audio.addEventListener('canplaythrough', function () {
-                audio.play();
-                if (isPlaying === niveau) {
-                    let pack = $('.rune-pack#' + niveau);
-                    pack.show();
-                    pack.addClass('active');
-                    let ratiotime = 1-audio.currentTime/audio.duration;
-                    $('.rune-pack.active#' + niveau).animate({'top': "600px"}, (pack.data('duration')*ratiotime) * 1000, "linear");
-                }
-            })
+function drawDrums() {	
+	ctx.clearRect(0, 0, c.width, c.height);
+	ctx.drawImage(image_drum, margin,  c.height - margin - circleRadius*2, circleRadius*2, circleRadius*2);
+	ctx.drawImage(image_drum, circleRadius * 2 + margin * 2,  c.height - margin - circleRadius*2, circleRadius*2, circleRadius*2);
+	ctx.drawImage(image_drum, circleRadius * 4 + margin * 3,  c.height - margin - circleRadius*2, circleRadius*2, circleRadius*2);
+	ctx.drawImage(image_drum, circleRadius * 6 + margin * 4,  c.height - margin - circleRadius*2, circleRadius*2, circleRadius*2);
+}
 
-        }
-    });
-})
+function setDelay() {
+	delay = spawnDistance / moveSpeed * 1000 / fps;
+}
+
+
+var fps = 60;
+var now;
+var then = Date.now();
+var interval = 1000 / fps;
+var delta;
+  
+function animate() {
+	animationFrame = requestAnimationFrame(animate);
+    now = Date.now();
+    delta = now - then;
+	
+    if (delta > interval) {
+        then = now - (delta % interval);
+		
+		if (!isPlaying) return;
+	
+		drawDrums(); 
+					
+		if (jsonIteration < levelDetail._notes.length) {
+				let noteTimestamp = levelDetail._notes[jsonIteration]._time / songBPS;
+				let elapsedTime = (Date.now() - startTime) / 1000;
+				
+				if (noteTimestamp.toFixed(5) - elapsedTime.toFixed(5) < 0.005 && runes[jsonIteration] === undefined) {
+					let lineIndex = levelDetail._notes[jsonIteration]._lineIndex;
+					let runeIndex = parseInt(levelDetail._notes[jsonIteration]._time.toFixed(2).split(".")[1])/25;
+					if (!Number.isInteger(runeIndex)) {
+						runeIndex = 4;
+					}
+					
+					runes[jsonIteration] = {
+						'lineIndex': lineIndex,
+						'runeIndex': runeIndex,
+						'positionTop': c.height - circleRadius - margin - spawnDistance,
+						'sound': true
+					};
+
+					let nextIteration = jsonIteration + 1;
+					if (nextIteration <= levelDetail._notes.length - 1) {
+						let nextNoteTimestamp = levelDetail._notes[jsonIteration + 1]._time / songBPS;
+						let lineIndex = levelDetail._notes[jsonIteration + 1]._lineIndex;
+						let runeIndex = parseInt(levelDetail._notes[jsonIteration]._time.toFixed(2).split(".")[1])/25;
+						if (!Number.isInteger(runeIndex)) {
+							runeIndex = 4;
+						}
+						
+						if (noteTimestamp.toFixed(5) === nextNoteTimestamp.toFixed(5)) {
+							
+							runes[jsonIteration + 1] = {
+								'lineIndex': lineIndex,
+								'runeIndex': runeIndex,
+								'positionTop': c.height - circleRadius - margin - spawnDistance,
+								'sound': false
+							};
+							
+							jsonIteration++;		
+						}
+					}
+					
+					jsonIteration++;		
+				}
+		}
+		
+		for (i = 0; i < rings.length; i++) {
+		    if (rings[i].ringCounter < 35) {
+		        rings[i].ringRadius += 1.5;
+		    } 
+		    else {
+	    		rings[i].ringRadius = 0;
+			}
+		    
+		    ctx.lineWidth = 3;
+		    ctx.beginPath();
+		    ctx.arc(rings[i].ringX, rings[i].ringY, rings[i].ringRadius, 0, Math.PI * 2);
+		    var opacity = (35 - rings[i].ringCounter) / 50;
+		    ctx.strokeStyle = rings[i].ringColor.replace('%a',opacity);
+		    
+		    ctx.stroke();
+		    ctx.closePath();
+		    
+		    rings[i].ringCounter += rings[i].ringCounterVelocity;
+		    
+		    if (rings[i].ringCounter > 35) {
+				rings.splice(i,1);
+		    }
+			
+  		}  					 
+
+		for (const [i, value] of Object.entries(runes)) {
+			if (runes[i].lineIndex === 0) {
+				ctx.drawImage(image_runes[runes[i].runeIndex], margin,  runes[i].positionTop - margin - circleRadius/2, circleRadius*2, circleRadius*2);
+			}
+			else if (runes[i].lineIndex === 1) {
+				ctx.drawImage(image_runes[runes[i].runeIndex], circleRadius * 2 + margin * 2,  runes[i].positionTop - margin - circleRadius/2, circleRadius*2, circleRadius*2);
+			}
+			else if (runes[i].lineIndex === 2) {
+				ctx.drawImage(image_runes[runes[i].runeIndex], circleRadius * 4 + margin * 3,  runes[i].positionTop - margin - circleRadius/2, circleRadius*2, circleRadius*2);
+			}
+			else if (runes[i].lineIndex === 3) {
+				ctx.drawImage(image_runes[runes[i].runeIndex], circleRadius * 6 + margin * 4,  runes[i].positionTop - margin - circleRadius/2, circleRadius*2, circleRadius*2);			
+			}
+
+			runes[i].positionTop += moveSpeed;
+			let distance = c.height - circleRadius - margin - runes[i].positionTop;
+									
+			if (distance < moveSpeed / 2 && distance > -moveSpeed / 2 ) {		
+				let ringX;
+				let lineIndex = runes[i].lineIndex;
+				
+				if (runes[i].sound) {
+					let audio_drum = audio_drums[lineIndex];
+					audio_drum.currentTime = 0;
+					audio_drum.play();
+				}
+
+				switch(lineIndex) {
+					case 0:
+						ringX = margin + circleRadius;
+						break;
+					case 1:
+						ringX = circleRadius * 3 + margin * 2;
+						break;
+					case 2:
+						ringX =  ringX =  circleRadius * 6 + margin / 2;
+						break;
+					case 3:
+						ringX =  circleRadius * 7 + margin * 4;
+						break;
+				}				
+				
+				rings.push({
+					ringX : ringX,
+					ringY : c.height - margin - circleRadius*2 + circleRadius,
+					ringRadius : circleRadius - 5,
+					ringCounter : 0,
+					ringCounterVelocity : 3,
+					ringColor: 'rgba(189,217,255,%a)'
+				});
+			}
+			
+			if (runes[i].positionTop > 700) {
+				delete runes[i];			
+			}
+		}
+    }
+	
+}

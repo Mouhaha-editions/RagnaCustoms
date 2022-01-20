@@ -17,6 +17,7 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Exception;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
@@ -31,28 +32,33 @@ use ZipArchive;
 class SongService
 {
     /**
-     * @var KernelInterface
+     * @var DiscordService
      */
-    private $kernel;
+    private $discordService;
     /**
      * @var EntityManagerInterface
      */
     private $em;
     /**
+     * @var KernelInterface
+     */
+    private $kernel;
+    /**
      * @var MailerInterface
      */
     private $mailer;
     /**
-     * @var DiscordService
+     * @var ScoreService
      */
-    private $discordService;
+    private $scoreService;
 
-    public function __construct(KernelInterface $kernel, EntityManagerInterface $em, MailerInterface $mailer, DiscordService $discordService)
+    public function __construct(KernelInterface $kernel, EntityManagerInterface $em, MailerInterface $mailer, DiscordService $discordService, ScoreService $scoreService)
     {
         $this->kernel = $kernel;
         $this->em = $em;
         $this->mailer = $mailer;
         $this->discordService = $discordService;
+        $this->scoreService = $scoreService;
     }
 
     public function AiMap()
@@ -92,12 +98,12 @@ class SongService
 
     public function emailRequestDone(SongRequest $songRequest, Song $song)
     {
-            $email = (new Email())
-                ->from('contact@ragnacustoms.com')
-                ->to($songRequest->getRequestedBy()->getEmail())
-                ->subject('Your Map request ' . $song->getName() . ' was done');
-            $email->html("Your Map request " . $song->getName() . " was done, you  can download it at https://ragnacustoms.com/song/detail/".$song->getId());
-            $this->mailer->send($email);
+        $email = (new Email())
+            ->from('contact@ragnacustoms.com')
+            ->to($songRequest->getRequestedBy()->getEmail())
+            ->subject('Your Map request ' . $song->getName() . ' was done');
+        $email->html("Your Map request " . $song->getName() . " was done, you  can download it at https://ragnacustoms.com/song/detail/" . $song->getId());
+        $this->mailer->send($email);
 
     }
 
@@ -494,20 +500,78 @@ class SongService
         return md5($str);
     }
 
-    public function getLastSongsPlayed ($count)
+    public function getLastSongsPlayed($count)
     {
-       return $this->em->getRepository(Song::class)->createQueryBuilder('s')
-           ->leftJoin('s.songHashes','song_hashes')
-           ->leftJoin(
-               Score::class,
-               'score',
-               \Doctrine\ORM\Query\Expr\Join::WITH,
-               'score.hash = song_hashes.hash'
-           )
-            ->orderBy('score.updatedAt','DESC')
+        return $this->em->getRepository(Song::class)->createQueryBuilder('s')
+            ->leftJoin('s.songHashes', 'song_hashes')
+            ->leftJoin(
+                Score::class,
+                'score',
+                Join::WITH,
+                'score.hash = song_hashes.hash'
+            )
+            ->orderBy('score.updatedAt', 'DESC')
             ->setFirstResult(0)->setMaxResults($count)
             ->getQuery()->getResult();
-        
+
+    }
+
+    public function evaluateFile(FormInterface $form)
+    {
+        $allowedFiles = [
+            'preview.ogg',
+            'info.dat',
+            'Info.dat',
+        ];
+        $folder = $this->kernel->getProjectDir() . "/public/tmp-evaluator/";
+        $unzipFolder = $folder . uniqid();
+        $file = $form->get('zipFile')->getData();
+        $file->move($unzipFolder, $file->getClientOriginalName());
+        $zip = new ZipArchive();
+        $theZip = $unzipFolder . "/" . $file->getClientOriginalName();
+        /** @var UploadedFile $file */
+        if ($zip->open($theZip) === TRUE) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $elt = $this->remove_utf8_bom($zip->getFromIndex($i));
+                $exp = explode("/", $filename);
+                if (end($exp) != "") {
+                    $fileinfo = pathinfo($filename);
+                    if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
+                        $result = file_put_contents($unzipFolder . "/" . strtolower($fileinfo['basename']), $elt);
+                    } else {
+                        $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
+                    }
+                }
+            }
+            $zip->close();
+        }
+        $file = $unzipFolder . "/info.dat";
+        if (!file_exists($file)) {
+            $file = $unzipFolder . "/Info.dat";
+            if (!file_exists($file)) {
+                $this->rrmdir($unzipFolder);
+                throw new Exception("The file seems to not be valid, at least info.dat is missing.");
+            }
+        }
+        $content = file_get_contents($file);
+        $json = json_decode($content);
+        if ($json == null) {
+            $this->rrmdir($unzipFolder);
+            throw new Exception("WTF? I can't read your info.dat please check the file encoding.");
+        }
+        $allowedFiles[] = $json->_coverImageFilename;
+        $allowedFiles[] = $json->_songFilename;
+
+        if (!isset($json->_songApproximativeDuration) || empty($json->_songApproximativeDuration)) {
+            $this->rrmdir($unzipFolder);
+            throw new Exception("\"_songApproximativeDuration\" is missing in the info.dat file!");
+        }
+        $result = $this->scoreService->calculateDifficulties($file);
+        $this->rrmdir($unzipFolder);
+
+        return $result;
+
     }
 
 }

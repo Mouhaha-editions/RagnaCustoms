@@ -45,13 +45,18 @@ services:
         arguments: [ '%kernel.default_locale%' ]
 
     App\Service\DownloadService:
-        arguments: [ "@security.helper","@request_stack",'@doctrine.orm.entity_manager' ]
+        arguments: [ '@security.helper','@request_stack','@doctrine.orm.entity_manager' ]
 
     App\Service\SongService:
-        arguments: [ "@kernel","@doctrine.orm.entity_manager","@mailer","@App\\Service\\DiscordService" ]
+        arguments:
+            - '@kernel'
+            - '@doctrine.orm.entity_manager'
+            - '@mailer'
+            - '@App\Service\DiscordService'
+            - '@App\Service\ScoreService'
     App\Service\TwitchService:
-        arguments: [ "%env(resolve:TWITCH_APPLICATION_ID)%","%env(resolve:TWITCH_SECRET_CLIENT)%" ]
+        arguments: [ '%env(resolve:TWITCH_APPLICATION_ID)%','%env(resolve:TWITCH_SECRET_CLIENT)%' ]
     App\Service\ScoreService:
-        arguments: [ "@doctrine.orm.entity_manager",'@kernel' ]
+        arguments: [ '@doctrine.orm.entity_manager','@kernel' ]
     App\Service\GamificationService:
-        arguments: [ "@doctrine.orm.entity_manager" ]
+        arguments: [ '@doctrine.orm.entity_manager' ]

@@ -13,6 +13,7 @@
     </div>
 
         <div class="row">
+            {% if songs is not null %}
             {% for song in songs.entities %}
                 <div class="col-xl-4 col-lg-6 mb-3" id="song-box-{{ song.id }}">
                     <div class="song-box d-flex justify-content-between">
@@ -62,33 +63,24 @@
                             <div>
                                 <a href="{{ url('song_detail',{slug:song.slug}) }}#feedback"
                                 class="text-level-3"
-                                data-toggle="tooltip"
+{#                                data-toggle="tooltip"#}
                                 title="{{ "Leave a feedback"|trans }}"
-
-                                        {# data-trigger="hover" #}
-                                        {# data-placement="top" #}
-                                        {# data-content="{{ "Send a feedback"|trans }}" #}
-                                        {# data-replace-selector="#feedbackSong .modal-body" #}
-                                        {# data-toggle='modal' data-target='#feedbackSong' #}
-                                        {# data-url='{{ url('song_detail',{id:song.id}) }}#feedback' #}
-                                        {# data-song-id='{{ song.id }}' #}
+                                data-trigger="hover"
+                                data-placement="top"
+                                data-content="{{ "Send a feedback"|trans }}"
+                                data-replace-selector="#feedbackSong .modal-body"
+                                data-toggle='modal' data-target='#feedbackSong'
+                                data-url='{{ url('song_detail',{id:song.id}) }}#feedback'
+                                data-song-id='{{ song.id }}'
                                 ><i class="far fa-comment-dots"></i></a>
-                                {# {{ (songService.songFeedbackPublic(song)|length) }} #}
+                                 {{ (songService.songFeedbackPublic(song)|length) }}
                             </div>
                             <div>
                                 <a href="{{ url('song_detail',{slug:song.slug}) }}#preview"
                                 data-toggle="tooltip"
                                 title="{{ "Preview"|trans }}"
                                 class="text-level-9"
-                                        {# data-trigger="hover" #}
-                                        {# data-placement="top" #}
-                                        {# data-content="{{ "Send a feedback"|trans }}" #}
-                                        {# data-replace-selector="#feedbackSong .modal-body" #}
-                                        {# data-toggle='modal' data-target='#feedbackSong' #}
-                                        {# data-url='{{ url('song_detail',{id:song.id}) }}#feedback' #}
-                                        {# data-song-id='{{ song.id }}' #}
                                 ><i class="fas fa-play"></i></a>
-                                {# {{ (songService.songFeedbackPublic(song)|length) }} #}
                             </div>
 
                             <div>
@@ -124,7 +116,7 @@
                         "@context": "https://schema.org",
                         "@type": "Product",
                         "author": "{{ song.levelAuthorName|escape }}",
-                        "image": "https://ragnacustoms.com/covers/{{ song.id ~ song.coverImageExtension }}",
+                        "image": "https://ragnacustoms.com{{ song.cover }}",
                         "name": "{{ (song.name~" - "~song.authorName)|escape }}",
                         "aggregateRating": {
                             "@type": "AggregateRating",
@@ -142,14 +134,18 @@
                     </div>
                 </div>
             {% endfor %}
+        {% endif %}
         </div>
 
     <div class="col-12 d-flex justify-content-between">
+
+       {% if songs is not null %}
         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
         <div class="text-left pagination">
             {{ "Pages:"|trans }} {{ macro_pagination.paginate(songs) }}
         </div>
         <div class="text-right">{{ songs.entities|length }} {{ "songs displayed on"|trans }} {{ songs.count }}</div>
+        {% endif %}
     {# {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }} #}
     </div>
 </div>

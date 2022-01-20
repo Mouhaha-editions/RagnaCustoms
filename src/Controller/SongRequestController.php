@@ -54,10 +54,10 @@ class SongRequestController extends AbstractController
                 SongRequest::STATE_ASKED,
                 SongRequest::STATE_IN_PROGRESS
             ]);
-        switch($request->get('order')){
+        switch ($request->get('order')) {
             case 1:
                 $qb->addSelect('COUNT(v.id) AS HIDDEN count_votes');
-                $qb->leftJoin('sr.songRequestVotes','v');
+                $qb->leftJoin('sr.songRequestVotes', 'v');
                 $qb->groupBy("sr.id");
                 $qb->orderBy("count_votes", "DESC")
                     ->addOrderBy("IF(u.isPatreon = true,1,0)", "DESC")
@@ -67,9 +67,15 @@ class SongRequestController extends AbstractController
                 $qb->orderBy("IF(u.isPatreon = true,1,0)", "DESC")
                     ->addOrderBy("sr.createdAt", 'DESC');
         }
+        $search = $request->get('search');
+        if ($search != null) {
+            $qb->andWhere('(sr.title LIKE :search_string OR sr.author LIKE :search_string)')
+                ->setParameter('search_string', '%' . $search . '%');
+        }else{
+            $form = null;
+        }
 
-
-        $songRequests = $pagination->setDefaults(50)->process($qb,$request);
+        $songRequests = $pagination->setDefaults(50)->process($qb, $request);
 
 
         return $this->render('song_request/index.html.twig', [
@@ -159,7 +165,7 @@ class SongRequestController extends AbstractController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function toggleOne(Request $request, SongRequest $songRequest, SongRequestVoteRepository $songRequestVoteRepository,TranslatorInterface $translator): Response
+    public function toggleOne(Request $request, SongRequest $songRequest, SongRequestVoteRepository $songRequestVoteRepository, TranslatorInterface $translator): Response
     {
         // not connected
         if (!$this->isGranted('ROLE_USER')) {
@@ -178,7 +184,7 @@ class SongRequestController extends AbstractController
             $vote->setSongRequest($songRequest);
             $vote->setUser($this->getUser());
             $em->persist($vote);
-        }else{
+        } else {
             $em->remove($vote);
         }
         $em->flush();

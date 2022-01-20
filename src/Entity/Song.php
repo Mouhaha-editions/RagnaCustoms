@@ -24,216 +24,175 @@ class Song
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    private $name;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $subName;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $authorName;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $levelAuthorName;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $beatsPerMinute;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $shuffle;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $shufflePeriod;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $previewStartTime;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $previewDuration;
-
+    private $active;
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $approximativeDuration;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $fileName;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $coverImageFileName;
-
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $environmentName;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $timeOffset;
-
-    /**
-     * @ORM\OneToMany(targetEntity=SongDifficulty::class, mappedBy="song")
-     */
-    private $songDifficulties;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $version;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $voteUp = 0;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $voteDown = 0;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $downloads = 0;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $moderated = false;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="songs")
-     */
-    private $user;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="song", orphanRemoval=true)
-     */
-    private $votes;
-
+    private $authorName;
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $totalVotes;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $countVotes;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $lastDateUpload;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $views;
-
+    private $beatsPerMinute;
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $converted;
-
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $countVotes;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $coverImageFileName;
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $youtubeLink;
-
+    private $description;
     /**
      * @ORM\OneToMany(targetEntity=DownloadCounter::class, mappedBy="song")
      */
     private $downloadCounters;
     /**
-     * @ORM\OneToMany(targetEntity=ViewCounter::class, mappedBy="song")
+     * @ORM\Column(type="integer")
      */
-    private $viewCounters;
-
+    private $downloads = 0;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $environmentName;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $fileName;
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $infoDatFile;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $newGuid;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $active;
-
-    /**
-     * @ORM\OneToMany(targetEntity=SongHash::class, mappedBy="Song")
-     */
-    private $songHashes;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $wip = false;
-
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $isDeleted = false;
-
     /**
-     * @ORM\ManyToOne(targetEntity=SongCategory::class, inversedBy="songs")
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    private $songCategory;
-
+    private $isExplicit;
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $lastDateUpload;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $levelAuthorName;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $moderated = false;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $newGuid;
+    /**
+     * @ORM\ManyToMany(targetEntity=Playlist::class, mappedBy="songs")
+     */
+    private $playlists;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $previewDuration;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $previewStartTime;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $shuffle;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $shufflePeriod;
     /**
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $slug;
-
     /**
-     * @ORM\ManyToMany(targetEntity=Playlist::class, mappedBy="songs")
+     * @ORM\ManyToOne(targetEntity=SongCategory::class, inversedBy="songs")
      */
-    private $playlists;
-
+    private $songCategory;
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\OneToMany(targetEntity=SongDifficulty::class, mappedBy="song")
      */
-    private $isExplicit;
-
+    private $songDifficulties;
     /**
      * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="song")
      */
     private $songFeedbacks;
+    /**
+     * @ORM\OneToMany(targetEntity=SongHash::class, mappedBy="Song")
+     */
+    private $songHashes;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $subName;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $timeOffset;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $totalVotes;
+    /**
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="songs")
+     */
+    private $user;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $version;
+    /**
+     * @ORM\OneToMany(targetEntity=ViewCounter::class, mappedBy="song")
+     */
+    private $viewCounters;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $views;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $voteDown = 0;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $voteUp = 0;
+    /**
+     * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="song", orphanRemoval=true)
+     */
+    private $votes;
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $wip = false;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $youtubeLink;
 
     /**
      * @ORM\OneToMany(targetEntity=VoteCounter::class, mappedBy="song")
@@ -294,11 +253,6 @@ class Song
         $this->name = $name;
 
         return $this;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getSubName(): ?string
@@ -433,12 +387,6 @@ class Song
         $this->fileName = $fileName;
 
         return $this;
-    }
-
-    public function getCoverImageExtension(): ?string
-    {
-        $file = explode(".", $this->coverImageFileName);
-        return "." . end($file);
     }
 
     public function getCoverImageFileName(): ?string
@@ -728,7 +676,6 @@ class Song
         return $sum / count($votes);
     }
 
-
     public function getFlowAverage(): ?float
     {
         $sum = 0;
@@ -741,7 +688,6 @@ class Song
         }
         return $sum / count($votes);
     }
-
 
     public function getPatternQualityAverage(): ?float
     {
@@ -1068,5 +1014,29 @@ class Song
         return $this;
     }
 
+    public function getCover()
+    {
+        $cover = "/covers/" . $this->getId() . $this->getCoverImageExtension();
+        if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
+            $cover = $this->getPlaceholder();
+        }
+        return $cover;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getCoverImageExtension(): ?string
+    {
+        $file = explode(".", $this->coverImageFileName);
+        return "." . end($file);
+    }
+
+    public function getPlaceholder()
+    {
+        return "/apps/logo.png";
+    }
 
 }
