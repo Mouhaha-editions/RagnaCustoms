@@ -198,7 +198,7 @@ class Song
     /**
      * @ORM\OneToMany(targetEntity=VoteCounter::class, mappedBy="song")
      */
-    private $voteCounter;
+    private $voteCounters;
 
     public function __construct()
     {
@@ -209,11 +209,11 @@ class Song
         $this->songHashes = new ArrayCollection();
         $this->playlists = new ArrayCollection();
         $this->songFeedbacks = new ArrayCollection();
-        $this->voteCounter = new ArrayCollection();
+        $this->voteCounters = new ArrayCollection();
     }
 
     public function isVoteCounterBy(?UserInterface $user) {
-        $votes = $this->voteCounter->filter(function(VoteCounter $voteCounter)use($user){
+        $votes = $this->voteCounters->filter(function(VoteCounter $voteCounter)use($user){
             return $voteCounter->getUser() === $user;
         });
         return $votes->isEmpty() ? null : $votes->first();
@@ -1044,13 +1044,13 @@ class Song
      */
     public function getVoteCounters(): Collection
     {
-        return $this->voteCounter;
+        return $this->voteCounters;
     }
 
     public function addVoteCounter(VoteCounter $voteCounter): self
     {
-        if (!$this->voteCounter->contains($voteCounter)) {
-            $this->voteCounter[] = $voteCounter;
+        if (!$this->voteCounters->contains($voteCounter)) {
+            $this->voteCounters[] = $voteCounter;
             $voteCounter->setSong($this);
         }
 
@@ -1059,7 +1059,7 @@ class Song
 
     public function removeVoteCounter(VoteCounter $voteCounter): self
     {
-        if ($this->voteCounter->removeElement($voteCounter)) {
+        if ($this->voteCounters->removeElement($voteCounter)) {
             // set the owning side to null (unless already changed)
             if ($voteCounter->getSong() === $this) {
                 $voteCounter->setSong(null);

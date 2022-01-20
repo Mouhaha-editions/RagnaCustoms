@@ -22,13 +22,13 @@ class VoteCounter
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="VoteCounter")
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="voteCounter")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Song::class)
+     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="voteCounters")
      * @ORM\JoinColumn(nullable=false)
      */
     private $song;
