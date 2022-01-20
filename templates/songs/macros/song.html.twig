@@ -54,16 +54,16 @@
                 <p class="difficulties">
                     {{ "Difficulties: %difficultiesList%"|trans|replace({"%difficultiesList%":diffs})|raw }} {% set diffs = "" %}
                 </p>
-{% if is_granted('ROLE_MODERATOR') %}
-                {% for diff in song.songDifficulties %}
-                    {# {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %} #}
-                    {% set adiffs = adiffs~'<span style="padding:3px 6px;font-size:16px;background-color:#'~diff.difficultyRank.color~";color:"~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" )~'" title="'~diff.clawDifficulty~'" data-toggle="tooltip" >'~ (diff.clawDifficulty|round(1)) ~'</span> ' %}
+{#{% if is_granted('ROLE_MODERATOR') %}#}
+{#                {% for diff in song.songDifficulties %}#}
+{#                    #}{# {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %} #}
+{#                    {% set adiffs = adiffs~'<span style="padding:3px 6px;font-size:16px;background-color:#'~diff.difficultyRank.color~";color:"~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" )~'" title="'~diff.clawDifficulty~'" data-toggle="tooltip" >'~ (diff.clawDifficulty|round(1)) ~'</span> ' %}#}
 
-                {% endfor %}
-                <p class="difficulties">
-                    {{ "Algo Difficulties: %difficultiesList%"|trans|replace({"%difficultiesList%":adiffs})|raw }} {% set diffs = "" %}
-                </p>
-                {% endif %}
+{#                {% endfor %}#}
+{#                <p class="difficulties">#}
+{#                    {{ "Algo Difficulties: %difficultiesList%"|trans|replace({"%difficultiesList%":adiffs})|raw }} {% set diffs = "" %}#}
+{#                </p>#}
+{#                {% endif %}#}
             </div>
         </div>
     {% endif %}

@@ -1,32 +1,34 @@
-<div style="font-size:140%">
+<div class="up_down_vote">
     {% if not is_granted('ROLE_USER') %}
-        <i style="color:grey;opacity:0.5" class="fas fa-angle-up"></i>
+        <i style="color:grey;opacity:0.5" class="fas fa-arrow-up"></i>
         {{ song.voteUp }}
         <span>&nbsp;</span>
-        <i style="color:grey;opacity:0.5" class="fas fa-angle-down"></i>
+        <i style="color:grey;opacity:0.5" class="fas fa-arrow-down"></i>
         {{ song.voteDown }}
     {% else %}
     {% set voteCounter = song.isVoteCounterBy(app.user) %}
         {% if voteCounter is not null and voteCounter.votesIndc %}
-            <a style="text-decoration:none" href="{{ path('song_vote_deleteVoteFromMain',{id:song.id}) }}">                
-                <i style="color:green" class="fas fa-angle-up"></i>
+            <a style="text-decoration:none" data-toggle="tooltip" title="{{ "Remove my upvote for this song"|trans }}" href="{{ path('song_vote_deleteVoteFromMain',{id:song.id}) }}">
+                <i style="color:green" class="fas fa-arrow-up"></i>
+                {{ song.voteUp }}
             </a>
         {% else %}
-            <a style="text-decoration:none" href="{{ path('song_vote_upFromMain',{id:song.id}) }}">                
-                <i style="color:grey;opacity:0.5" class="fas fa-angle-up"></i>
+            <a style="text-decoration:none" data-toggle="tooltip" title="{{ "Upvote this song"|trans }}" href="{{ path('song_vote_upFromMain',{id:song.id}) }}">
+                <i style="color:grey;opacity:0.5" class="fas fa-arrow-up"></i>
+                {{ song.voteUp }}
             </a>
         {% endif %}
-        {{ song.voteUp }} 
         <span>&nbsp;</span>
         {% if voteCounter is not null and not voteCounter.votesIndc %}
             <a style="text-decoration:none" href="{{ path('song_vote_deleteVoteFromMain',{id:song.id}) }}">                
-                <i style="color:#dc3545" class="fas fa-angle-down"></i>
+                <i style="color:#dc3545" data-toggle="tooltip" title="{{ "Remove my downvote for this song"|trans }}" class="fas fa-arrow-down"></i>
+                {{ song.voteDown }}
             </a>
         {% else %}
             <a style="text-decoration:none" href="{{ path('song_vote_downFromMain',{id:song.id}) }}">                
-                <i style="color:grey;opacity:0.5" class="fas fa-angle-down"></i>
+                <i style="color:grey;opacity:0.5" data-toggle="tooltip" title="{{ "Downvote this song"|trans }}" class="fas fa-arrow-down"></i>
+                {{ song.voteDown }}
             </a>
         {% endif %}
-        {{ song.voteDown }}
     {% endif %}
 </div>
