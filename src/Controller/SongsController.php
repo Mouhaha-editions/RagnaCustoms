@@ -627,7 +627,7 @@ class SongsController extends AbstractController
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
     public function songDetail(Request $request, ScoreRepository $scoreRepository,ScoreService $scoreService,Song $song,
-                               TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository,
+                               TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository,VoteCounterRepository $voteCounterRepository,
                                SongService $songService, PaginationService $paginationService, DiscordService $discordService)
     {
         if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
