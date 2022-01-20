@@ -212,7 +212,7 @@ class Song
         $this->voteCounter = new ArrayCollection();
     }
 
-    public function isVoteCounterBy(UserInterface $user) {
+    public function isVoteCounterBy(?UserInterface $user) {
         $votes = $this->voteCounter->filter(function(VoteCounter $voteCounter)use($user){
             return $voteCounter->getUser() === $user;
         });
