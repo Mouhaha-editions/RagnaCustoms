@@ -150,6 +150,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $votes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=VoteCounter::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $voteCounter;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -164,6 +169,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->songRequests = new ArrayCollection();
         $this->currentlyMapped = new ArrayCollection();
         $this->songRequestVotes = new ArrayCollection();
+        $this->voteCounter = new ArrayCollection();
     }
 
     public function __toString()

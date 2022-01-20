@@ -4,10 +4,7 @@
      data-placement="top"
      data-content="{% include 'songs/partial/rate.html.twig' with {song:song} %}">
     <div>
-        <span >{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}</span>
-        ({{ song.countVotes+0 }})
-    </div>
-    <div><a href='#' class='button ajax-load ajax-modal-form disabled with-only-icon popup-review-trigger song-review'
+        <a href='#' class='button ajax-load ajax-modal-form disabled with-only-icon popup-review-trigger song-review'
             data-toggle='modal' data-target='#reviewSong'
             data-replace-closest-selector='.song-vote-content-{{ song.id }}'
             data-url='{{ url('song_review',{id:song.id}) }}'
@@ -22,5 +19,10 @@
             </div>
         </a>
     </div>
+    
 </div>
+<div>
+        <span >{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}</span>
+        ({{ song.countVotes+0 }})
+    </div>
 

@@ -1,0 +1,32 @@
+<div style="font-size:140%">
+    {% if not is_granted('ROLE_USER') %}
+        <i style="color:grey;opacity:0.5" class="fas fa-angle-up"></i>
+        {{ song.voteUp }}
+        <span>&nbsp;</span>
+        <i style="color:grey;opacity:0.5" class="fas fa-angle-down"></i>
+        {{ song.voteDown }}
+    {% else %}
+    {% set voteCounter = song.isVoteCounterBy(app.user) %}
+        {% if voteCounter is not null and voteCounter.votesIndc %}
+            <a style="text-decoration:none" href="{{ path('song_vote_deleteVoteFromMain',{id:song.id}) }}">                
+                <i style="color:green" class="fas fa-angle-up"></i>
+            </a>
+        {% else %}
+            <a style="text-decoration:none" href="{{ path('song_vote_upFromMain',{id:song.id}) }}">                
+                <i style="color:grey;opacity:0.5" class="fas fa-angle-up"></i>
+            </a>
+        {% endif %}
+        {{ song.voteUp }} 
+        <span>&nbsp;</span>
+        {% if voteCounter is not null and not voteCounter.votesIndc %}
+            <a style="text-decoration:none" href="{{ path('song_vote_deleteVoteFromMain',{id:song.id}) }}">                
+                <i style="color:#dc3545" class="fas fa-angle-down"></i>
+            </a>
+        {% else %}
+            <a style="text-decoration:none" href="{{ path('song_vote_downFromMain',{id:song.id}) }}">                
+                <i style="color:grey;opacity:0.5" class="fas fa-angle-down"></i>
+            </a>
+        {% endif %}
+        {{ song.voteDown }}
+    {% endif %}
+</div>

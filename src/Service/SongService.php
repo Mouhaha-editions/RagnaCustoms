@@ -513,6 +513,7 @@ class SongService
             ->orderBy('score.updatedAt', 'DESC')
             ->setFirstResult(0)->setMaxResults($count)
             ->getQuery()->getResult();
+
     }
 
     public function evaluateFile(FormInterface $form)

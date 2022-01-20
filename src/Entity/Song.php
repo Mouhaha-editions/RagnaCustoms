@@ -194,6 +194,11 @@ class Song
      */
     private $youtubeLink;
 
+    /**
+     * @ORM\OneToMany(targetEntity=VoteCounter::class, mappedBy="song")
+     */
+    private $voteCounter;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -203,6 +208,14 @@ class Song
         $this->songHashes = new ArrayCollection();
         $this->playlists = new ArrayCollection();
         $this->songFeedbacks = new ArrayCollection();
+        $this->voteCounter = new ArrayCollection();
+    }
+
+    public function isVoteCounterBy(Utilisateur $user) {
+        $votes = $this->voteCounter->filter(function(VoteCounter $voteCounter)use($user){
+            return $voteCounter->getUser()->getId() == $user->getId(); 
+        });
+        return $votes->isEmpty() ? null : $votes->first();
     }
 
     public function isRanked()
@@ -349,7 +362,7 @@ class Song
     {
         $min = floor($this->approximativeDuration / 60);
         $sec = $this->approximativeDuration - $min * 60;
-        return $min . ":" . $sec . "";
+        return sprintf("%d:%02d", $min, $sec);
     }
 
     public function getApproximativeDuration(): ?int
