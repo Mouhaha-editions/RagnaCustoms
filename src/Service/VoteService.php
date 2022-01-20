@@ -88,6 +88,7 @@ class VoteService
             $newVoteCounter->setSong($song);
             $newVoteCounter->setUser($user);
             $newVoteCounter->setVotesIndc(true);
+            $song->addVoteCounter($newVoteCounter);
             $this->em->persist($newVoteCounter);
             /**update the vote down of the song */
             $song->setVoteUp($song->getVoteUp() + 1);
@@ -127,6 +128,7 @@ class VoteService
             $newVoteCounter->setSong($song);
             $newVoteCounter->setUser($user);
             $newVoteCounter->setVotesIndc(false);
+            $song->addVoteCounter($newVoteCounter);
             $this->em->persist($newVoteCounter);
             /**update the vote down of the song */
             $song->setVoteDown($song->getVoteDown() + 1);

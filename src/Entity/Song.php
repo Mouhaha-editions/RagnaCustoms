@@ -1039,5 +1039,33 @@ class Song
     {
         return "/apps/logo.png";
     }
+    /**
+     * @return Collection|VoteCounter[]
+     */
+    public function getVoteCounters(): Collection
+    {
+        return $this->voteCounter;
+    }
 
+    public function addVoteCounter(VoteCounter $voteCounter): self
+    {
+        if (!$this->voteCounter->contains($voteCounter)) {
+            $this->voteCounter[] = $voteCounter;
+            $voteCounter->setSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoteCounter(VoteCounter $voteCounter): self
+    {
+        if ($this->voteCounter->removeElement($voteCounter)) {
+            // set the owning side to null (unless already changed)
+            if ($voteCounter->getSong() === $this) {
+                $voteCounter->setSong(null);
+            }
+        }
+
+        return $this;
+    }
 }
