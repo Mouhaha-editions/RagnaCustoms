@@ -22,15 +22,15 @@ class SongCrudController extends AbstractCrudController
         return $crud;
     }
 
-    public function configureFields(string $pageName): iterable
-    {
-        return [
-//            IdField::new('id'),
-            TextField::new('name'),
-//            TextField::new('user'),
-            BooleanField::new('isModerated'),
-            TextEditorField::new('description'),
-        ];
-    }
+//    public function configureFields(string $pageName): iterable
+//    {
+//        return [
+////            IdField::new('id'),
+//            TextField::new('name'),
+////            TextField::new('user'),
+//            BooleanField::new('isModerated'),
+//            TextEditorField::new('description'),
+//        ];
+//    }
 
 }

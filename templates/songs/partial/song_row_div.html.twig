@@ -33,24 +33,25 @@
                                 {% include 'songs/partial/vote.html.twig' with {song:song} %}
                             </div>
                             <br>
-                            <div class="text-right">
+                            <div class="text-right d-flex justify-content-end align-items-center">
                                 <div>
                                     {{ song.lastDateUpload.format('Y-m-d') }}&nbsp;
-                                    <i class="far fa-calendar-plus"></i>
                                 </div>
+                                    <i class="far fa-calendar-plus"></i>
                             </div>
-                            <div class="text-right">
+                            <div class="text-right d-flex justify-content-end align-items-center">
                                 <div>
                                     {{ song.ApproximativeDurationMin }}&nbsp;
-                                    <i class="fas fa-hourglass-half"></i>
                                 </div>
+                                    <i class="fas fa-hourglass-half"></i>
                             </div>
-                            <div class="text-right">
+                            <div class="text-right d-flex justify-content-end align-items-center">
                                 <div>
                                     {{ song.beatsPerMinute|round }} bpm&nbsp;
-                                    <i class="fas fa-drum"></i>
                                 </div>
+                                    <i class="fas fa-drum"></i>
                             </div>
+
                             {% if song.isExplicit %}
                             <div class="d-flex justify-content-between">
                                 <span class="text-danger">{{ "Explicit content"|trans }}</span>
