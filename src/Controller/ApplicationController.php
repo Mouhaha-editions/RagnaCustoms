@@ -70,7 +70,11 @@ class ApplicationController extends AbstractController
         $ranks = null;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $ranks = $songService->evaluateFile($form);
+            try {
+                $ranks = $songService->evaluateFile($form);
+            }catch(\Exception $e){
+                $this->addFlash('danger', $e->getMessage());
+            }
         }
         return $this->render('application/map_evaluation.html.twig',[
             "form" => $form->createView(),
