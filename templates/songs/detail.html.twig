@@ -267,7 +267,7 @@
                 <div class="d-flex rating-wrap">
                     <label>{{ "Category:"|trans }}</label>
                     <span>
-                        <a href="{{ url('home') }}?search=category%3A{{ song.songCategory }}">
+                        <a href="{{ url('home') }}?search=category%3A{{ song.songCategory.id }}">
                             {{ song.songCategory ? song.songCategory.label : "none"|trans }}</a>
                     </span>
                 </div>
