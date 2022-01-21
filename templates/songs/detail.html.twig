@@ -265,6 +265,13 @@
                     </span>
                 </div>
                 <div class="d-flex rating-wrap">
+                    <label>{{ "Category:"|trans }}</label>
+                    <span>
+                        <a href="{{ url('home') }}?search=category%3A{{ song.songCategory }}">
+                            {{ song.songCategory ? song.songCategory.label : "none"|trans }}</a>
+                    </span>
+                </div>
+                <div class="d-flex rating-wrap">
                     <label>{{ "Last update:"|trans }}</label>
                     <span>
                         <span class="bold">{{ song.lastDateUpload.format('Y-m-d') }}</span>
