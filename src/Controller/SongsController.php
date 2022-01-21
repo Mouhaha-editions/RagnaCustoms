@@ -401,7 +401,7 @@ class SongsController extends AbstractController
         if ($request->get('downloads_filter_order', null)) {
             switch ($request->get('downloads_filter_order')) {
                 case 1:
-                    $qb->orderBy('s.totalVotes/5*s.countVotes', 'DESC');
+                    $qb->orderBy('s.voteUp - s.voteDown', 'DESC');
                     break;
                 case 2 :
                     $qb->orderBy('s.approximativeDuration', 'DESC');
@@ -455,6 +455,12 @@ class SongsController extends AbstractController
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
                             ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'category':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.songCategory = :category)')
+                            ->setParameter('category', $exp[1] );
                     }
                     break;
                 case 'artist':
