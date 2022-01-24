@@ -458,9 +458,9 @@ class SongsController extends AbstractController
                     }
                     break;
                 case 'category':
-                    if (count($exp) >= 2) {
+                    if (count($exp) >= 1) {
                         $qb->andWhere('(s.songCategory = :category)')
-                            ->setParameter('category', $exp[1] );
+                            ->setParameter('category', $exp[1] == "" ? null:$exp[1]  );
                     }
                     break;
                 case 'artist':
