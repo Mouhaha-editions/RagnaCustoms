@@ -42,7 +42,7 @@ class SongType extends AbstractType
                 "label" => "Category",
                 "choice_label" => "label",
                 "query_builder" => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('sc')->where("sc.isForAdminOnly != 1");
+                    return $er->createQueryBuilder('sc')->where("sc.isOnlyForAdmin != 1");
                 },
                 "multiple" => false,
                 'required' => false
