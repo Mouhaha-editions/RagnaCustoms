@@ -28,8 +28,8 @@
                         </div>
                        
                         <div class="table-column padded">
-                            <div class="table-column padded text-center song-vote-content-{{ song.id }}">
                                 {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
+                            <div class="table-column padded text-center song-vote-content-{{ song.id }}">
                                 {% include 'songs/partial/vote.html.twig' with {song:song} %}
                             </div>
                             <br>
