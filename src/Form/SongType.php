@@ -37,10 +37,13 @@ class SongType extends AbstractType
                 "attr" => ["placeholder " => "https://youtu..."],
                 'required' => false
             ])
-            ->add('songCategory', null, [
+            ->add('songCategory', EntityType::class, [
                 "class" => SongCategory::class,
                 "label" => "Category",
                 "choice_label" => "label",
+                "query_builder" => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('sc')->where("sc.isForAdminOnly != 1");
+                },
                 "multiple" => false,
                 'required' => false
             ])
@@ -51,18 +54,18 @@ class SongType extends AbstractType
                     "placeholder " => "leave empty on first upload",
                 ]
             ])
-            ->add('song_request', EntityType::class,[
-                'mapped'=>false,
-                'class'=>SongRequest::class,
-                'required'=>false,
-                'placeholder'=>"Not a requested song",
-                'query_builder'=>function(EntityRepository $er)use($entity){
+            ->add('song_request', EntityType::class, [
+                'mapped' => false,
+                'class' => SongRequest::class,
+                'required' => false,
+                'placeholder' => "Not a requested song",
+                'query_builder' => function (EntityRepository $er) use ($entity) {
                     return $er->createQueryBuilder("sr")
-                        ->leftJoin("sr.mapperOnIt",'mapper')
+                        ->leftJoin("sr.mapperOnIt", 'mapper')
                         ->where('mapper = :mapperid')
                         ->andWhere('sr.state IN (:available)')
-                        ->setParameter('mapperid',$entity->getUser())
-                        ->setParameter('available',[SongRequest::STATE_IN_PROGRESS]);
+                        ->setParameter('mapperid', $entity->getUser())
+                        ->setParameter('available', [SongRequest::STATE_IN_PROGRESS]);
                 }
             ])
             ->add('wip', null, [

@@ -39,6 +39,11 @@ class SongCategory
      */
     private $songs;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isOnlyForAdmin;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -112,6 +117,18 @@ class SongCategory
                 $song->setSongCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsOnlyForAdmin(): ?bool
+    {
+        return $this->isOnlyForAdmin;
+    }
+
+    public function setIsOnlyForAdmin(?bool $isOnlyForAdmin): self
+    {
+        $this->isOnlyForAdmin = $isOnlyForAdmin;
 
         return $this;
     }
