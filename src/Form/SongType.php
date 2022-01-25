@@ -45,7 +45,7 @@ class SongType extends AbstractType
                     return $er->createQueryBuilder('sc')->where("sc.isOnlyForAdmin != 1")->orderBy('sc.label');
                 },
                 "multiple" => false,
-                'required' => false
+                'required' => true
             ])
             ->add('approximativeDuration', HiddenType::class, [
                 "label" => "Duration (in sec) ",
