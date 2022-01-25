@@ -41,6 +41,7 @@ class SongType extends AbstractType
                 "class" => SongCategory::class,
                 "label" => "Category",
                 "choice_label" => "label",
+                "placeholder" => "-- Choose a category --",
                 "query_builder" => function (EntityRepository $er) {
                     return $er->createQueryBuilder('sc')->where("sc.isOnlyForAdmin != 1")->orderBy('sc.label');
                 },
