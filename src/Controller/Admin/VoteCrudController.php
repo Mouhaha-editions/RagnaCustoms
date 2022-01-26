@@ -9,6 +9,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -41,9 +43,14 @@ class VoteCrudController extends AbstractCrudController
     {
         return [
             TextField::new('id')->hideOnForm()->hideOnIndex(),
+            DateField::new('createdAt'),
             TextField::new('user'),
-            TextField::new('feedback'),
             TextField::new('song'),
+            NumberField::new('funFactor'),
+            NumberField::new('rhythm'),
+            NumberField::new('patternQuality'),
+            NumberField::new('readability'),
+            TextField::new('feedback'),
             BooleanField::new('isModerated'),
 //            BooleanField::new('isPublic'),
 //            BooleanField::new('isAnonymous'),
