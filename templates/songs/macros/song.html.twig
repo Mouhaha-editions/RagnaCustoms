@@ -101,7 +101,15 @@
                          alt="cover"/>
                 </a>
             </figure>
-                <div style="font-size:25px;" class="text-right">
+                <div class="">
+                    {% for diff in song.songDifficulties %}
+                    <div style="padding:3px 6px;font-size:16px;background-color:#{{ diff.difficultyRank.color}};color:"{{ app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" }}"
+                    title="{{ app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "already played" :"never played" }}"
+                    data-toggle="tooltip" >
+                    {{ diff.difficultyRank.level}} </div>
+                {% endfor %}
+            </div>
+            <div style="font-size:25px;" class="text-right">
                     <div>
                         <a href="{{ url('song_detail',{slug:song.slug}) }}#preview"
                            data-toggle="tooltip"
@@ -135,14 +143,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="">
-                    {% for diff in song.songDifficulties %}
-                       <div style="padding:3px 6px;font-size:16px;background-color:#{{ diff.difficultyRank.color}};color:"{{ app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" }}"
-                        title="{{ app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "already played" :"never played" }}"
-                        data-toggle="tooltip" >
-                        {{ diff.difficultyRank.level}}  {{  diff.isRanked?'<i class="fas fa-trophy" style="font-size:9px;"></i> ':''}}</div>
-                    {% endfor %}
-                </div>
+
         </div>
 
             <div class="song-preview">
