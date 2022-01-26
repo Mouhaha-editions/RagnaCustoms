@@ -78,7 +78,7 @@ const ICONS = [
         self::ACHIEVEMENT_MAP_SONG_1 => "Map a first song",
         self::ACHIEVEMENT_MAP_SONG_2 => "Map 5 songs",
         self::ACHIEVEMENT_MAP_SONG_3 => "Map 15 songs",
-        self::ACHIEVEMENT_MAP_SONG_4 => "MAp 50 songs",
+        self::ACHIEVEMENT_MAP_SONG_4 => "Map 50 songs",
 
 
 
