@@ -37,20 +37,16 @@ class VoteService
 
     private function getMoyenne(Vote $vote)
     {
-        $total = $vote->getFlow() +
-            $vote->getFunFactor() +
-            $vote->getRhythm() +
-            $vote->getReadability() +
-            $vote->getLevelQuality() +
-            $vote->getPatternQuality();
-        return $total / 6;
+        if ($vote->getFlow() > 0) {
+            return ($vote->getFlow() + $vote->getLevelQuality() + $vote->getFunFactor() + $vote->getRhythm() + $vote->getReadability() + $vote->getPatternQuality()) / 6;
+        }
+        return ($vote->getFunFactor() + $vote->getRhythm() + $vote->getReadability() + $vote->getPatternQuality()) / 4;
     }
 
     public function addScore(Song $song, Vote $vote)
     {
         $song->setTotalVotes($song->getTotalVotes() + $this->getMoyenne($vote));
         $song->setCountVotes($song->getCountVotes() + 1);
-
     }
 
     /**

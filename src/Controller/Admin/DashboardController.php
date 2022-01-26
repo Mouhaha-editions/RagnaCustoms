@@ -6,8 +6,8 @@ use App\Entity\Season;
 use App\Entity\Song;
 use App\Entity\SongCategory;
 use App\Entity\SongDifficulty;
-use App\Entity\SongFeedback;
 use App\Entity\Utilisateur;
+use App\Entity\Vote;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -25,7 +25,7 @@ class DashboardController extends AbstractDashboardController
         // redirect to some CRUD controller
         $routeBuilder = $this->get(AdminUrlGenerator::class);
 
-        return $this->redirect($routeBuilder->setController(SongFeedbackCrudController::class)->generateUrl());
+        return $this->redirect($routeBuilder->setController(VoteCrudController::class)->generateUrl());
 
         // you can also redirect to different pages depending on the current user
 //        if ('jane' === $this->getUser()->getUsername()) {
@@ -45,7 +45,7 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToCrud('Feedback', 'fa fa-list', SongFeedback::class)->setPermission('ROLE_MODERATOR');
+        yield MenuItem::linkToCrud('Feedback', 'fa fa-list', Vote::class)->setPermission('ROLE_MODERATOR');
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home')->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToCrud('Song', 'fa fa-music', Song::class)->setPermission('ROLE_MODERATOR');
         yield MenuItem::linkToCrud('SongCategory', 'fa fa-music', SongCategory::class)->setPermission('ROLE_MODERATOR');

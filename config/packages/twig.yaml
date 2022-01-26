@@ -8,3 +8,5 @@ twig:
         songService: '@App\Service\SongService'
         statisticService: '@App\Service\StatisticService'
         gamificationService: '@App\Service\GamificationService'
+    form_themes:
+        - 'form/rating_type.html.twig'

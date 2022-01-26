@@ -1,0 +1,20 @@
+
+{% block rating_row %}
+    <div class="rating-wrap d-flex">
+        <label>{{ label|trans }}</label>
+        {{- form_widget(form) -}}
+    </div>
+
+{% endblock %}
+
+{% block rating_widget %}
+    <input type="hidden" required  class="verify-voted" value="{{ value }}" name="{{ form.vars.full_name }}"/>
+    <div class="rating-list text-warning d-flex form-rating" data-input-selector="{{ form.vars.full_name }}">
+        {% for i in 0..4 %}
+            <div data-id="{{ i }}" class="rating medium {% if value  > i %}filled{% endif %}">
+                <i class="{% if value > i %}fas{% else %}far{% endif %} fa-star"></i>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="text-right">&nbsp;&nbsp;<i class="fas fa-info-circle" title="{{ help|trans }}"></i> </div>
+{% endblock %}

@@ -8,10 +8,10 @@ use App\Entity\Score;
 use App\Entity\Season;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
-use App\Entity\SongFeedback;
 use App\Entity\SongHash;
 use App\Entity\SongRequest;
 use App\Entity\Utilisateur;
+use App\Entity\Vote;
 use App\Helper\AIMapper;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
@@ -61,27 +61,7 @@ class SongService
         $this->scoreService = $scoreService;
     }
 
-    public function AiMap()
-    {
-        $file = $this->kernel->getProjectDir() . "/public/song.ogg";
-        $ffprobe = FFProbe::create();
-        $ffmpeg = FFMpeg::create();
-        $audio = $ffmpeg->open($file);
-        $probe = $ffprobe->format($file);
-        $durationMp3 = (int)($probe->get('duration'));
-        $bpm = 140;
-        $ratio = 20;
-        $level = 7;
-        $durationbpm = round($bpm / 60 * $durationMp3, 0) * $ratio;
-        $waveform = $audio->waveform($durationbpm, round(($durationbpm * 9) / 25), array('#00FF00'));
-        $waveform->save($this->kernel->getProjectDir() . "/public/waveform.png");
-        $ai = new AIMapper($this->kernel->getProjectDir() . "/public/waveform.png", $durationMp3, $bpm, $ratio, $level);
-        $result = $ai->read();
-
-        return $ai->map($result, "C:\Users\pierr\Documents\Ragnarock\CustomSongs\otherworld\Level" . $level . ".dat");
-    }
-
-    public function newFeedback(SongFeedback $feedback)
+    public function newFeedback(Vote $feedback)
     {
         /** @var SongHash $songHash */
         $songHash = $this->em->getRepository(SongHash::class)->findOneBy(['hash' => $feedback->getHash()]);
@@ -107,7 +87,7 @@ class SongService
 
     }
 
-    public function newFeedbackForMapper(SongFeedback $feedback)
+    public function newFeedbackForMapper(Vote $feedback)
     {
         /** @var SongHash $songHash */
         $songHash = $this->em->getRepository(SongHash::class)->findOneBy(['hash' => $feedback->getHash()]);
@@ -136,12 +116,12 @@ class SongService
      * @return int
      * @throws NonUniqueResultException
      */
-    public function countSongFeedbackPublic(Song $song)
+    public function countVotePublic(Song $song)
     {
         $hashes = array_map(function (SongHash $hash) {
             return $hash->getHash();
         }, $song->getSongHashes()->toArray());
-        $result = $this->em->getRepository(SongFeedback::class)
+        $result = $this->em->getRepository(Vote::class)
             ->createQueryBuilder('f')
             ->select("COUNT(f) AS nb")->where('f.hash IN (:hashes)')
             ->andWhere('f.isPublic = true')
@@ -154,38 +134,18 @@ class SongService
     /**
      * @param Utilisateur|null $user
      * @param Song $song
-     * @return Collection|SongFeedback[]
+     * @return Collection|Vote[]
      */
-    public function getSongFeedbackPublicOrMine(?Utilisateur $user, Song $song)
+    public function getVotePublicOrMine(?Utilisateur $user, Song $song)
     {
-        if ($user == null) {
-            return $this->getSongFeedbackPublic($song);
-        }
         $hashes = array_map(function (SongHash $hash) {
             return $hash->getHash();
         }, $song->getSongHashes()->toArray());
-        return $this->em->getRepository(SongFeedback::class)->createQueryBuilder('f')
-            ->where('(f.hash IN (:hashes) AND f.isPublic = true AND f.isModerated = true)')
-            ->orWhere('(f.hash IN (:hashes) AND f.user = :user)')
+        return $this->em->getRepository(Vote::class)->createQueryBuilder('f')
+            ->where('(f.hash IN (:hashes) AND f.isPublic = true AND f.isModerated = true AND f.feedback is not null)')
+            ->orWhere('(f.hash IN (:hashes) AND f.user = :user AND f.feedback is not null)')
             ->setParameter('hashes', $hashes)
             ->setParameter('user', $user)
-            ->getQuery()->getResult();
-    }
-
-    /**
-     * @return Collection|SongFeedback[]
-     */
-    public function getSongFeedbackPublic(Song $song)
-    {
-        $hashes = array_map(function (SongHash $hash) {
-            return $hash->getHash();
-        }, $song->getSongHashes()->toArray());
-        return $this->em->getRepository(SongFeedback::class)
-            ->createQueryBuilder('f')
-            ->where('f.hash IN (:hashes)')
-            ->andWhere('f.isPublic = true')
-            ->andWhere('f.isModerated = true')
-            ->setParameter('hashes', $hashes)
             ->getQuery()->getResult();
     }
 

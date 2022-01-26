@@ -116,10 +116,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Score::class, mappedBy="user")
      */
     private $scores;
-    /**
-     * @ORM\OneToMany(targetEntity=SongFeedback::class, mappedBy="user")
-     */
-    private $songFeedback;
+
     /**
      * @ORM\OneToMany(targetEntity=SongRequestVote::class, mappedBy="user", orphanRemoval=true)
      */
@@ -162,7 +159,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->downloadCounters = new ArrayCollection();
         $this->viewCounters = new ArrayCollection();
         $this->scores = new ArrayCollection();
-        $this->songFeedback = new ArrayCollection();
         $this->scoreHistories = new ArrayCollection();
         $this->gamifications = new ArrayCollection();
         $this->playlists = new ArrayCollection();
@@ -528,36 +524,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setApiKey(?string $apiKey): self
     {
         $this->apiKey = $apiKey;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|SongFeedback[]
-     */
-    public function getSongFeedback(): Collection
-    {
-        return $this->songFeedback;
-    }
-
-    public function addSongFeedback(SongFeedback $songFeedback): self
-    {
-        if (!$this->songFeedback->contains($songFeedback)) {
-            $this->songFeedback[] = $songFeedback;
-            $songFeedback->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSongFeedback(SongFeedback $songFeedback): self
-    {
-        if ($this->songFeedback->removeElement($songFeedback)) {
-            // set the owning side to null (unless already changed)
-            if ($songFeedback->getUser() === $this) {
-                $songFeedback->setUser(null);
-            }
-        }
 
         return $this;
     }

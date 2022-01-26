@@ -3,8 +3,8 @@
 namespace App\Service;
 
 use App\Entity\Song;
-use App\Entity\SongFeedback;
 use App\Entity\SongRequest;
+use App\Entity\Vote;
 
 class DiscordService
 {
@@ -395,7 +395,7 @@ class DiscordService
         curl_close($ch);
     }
 
-    public function sendFeedback(SongFeedback $feedback)
+    public function sendFeedback(Vote $feedback)
     {
         $song = $feedback->getSong();
         $json_data = json_encode([

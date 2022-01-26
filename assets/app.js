@@ -266,11 +266,9 @@ $(function () {
             },
             success: function (data) {
                 body.html(data.response);
-
-
                 $(".rating-list").on('change', function () {
                     let t = $(this);
-                    $('input[name=' + t.data('input-selector') + ']').val(t.data('rating'));
+                    $('input[name="' + t.data('input-selector') + '"]').val(t.data('rating'));
                 });
                 body.find("form").on('submit', function () {
                     let test = true;

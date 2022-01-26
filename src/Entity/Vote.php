@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\VoteRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=VoteRepository::class)
@@ -19,7 +20,59 @@ class Vote
      * @ORM\Column(type="integer")
      */
     private $id;
-
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $flow;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $funFactor;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $levelQuality;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $patternQuality;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $readability;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $rhythm;
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $disabled = false;
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $feedback;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $hash;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isAnonymous = false;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isModerated = false;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPublic = true;
+    /**
+     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="votes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $song;
     /**
      * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="votes")
      * @ORM\JoinColumn(nullable=false)
@@ -27,57 +80,32 @@ class Vote
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="votes")
-     * @ORM\JoinColumn(nullable=false)
+     * @return mixed
      */
-    private $song;
+    public function getFeedback()
+    {
+        return $this->feedback;
+    }
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @param mixed $feedback
      */
-    private $FunFactor;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $Rhythm;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $Flow;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $PatternQuality;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $Readability;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $LevelQuality;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $disabled = false;
+    public function setFeedback($feedback): void
+    {
+        $this->feedback = $feedback;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUser(): ?Utilisateur
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?Utilisateur $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 
@@ -86,7 +114,82 @@ class Vote
 
     public function getAverage()
     {
-        return ($this->getLevelQuality()+$this->getReadability()+$this->getFlow()+$this->getRhythm()+$this->getFunFactor()+$this->getPatternQuality()) /6;
+        if($this->getFlow()>0){
+            return ($this->getFlow() +$this->getLevelQuality() +$this->getReadability() +  $this->getRhythm() + $this->getFunFactor() + $this->getPatternQuality()) / 6;
+        }
+        return ($this->getReadability() +  $this->getRhythm() + $this->getFunFactor() + $this->getPatternQuality()) / 4;
+    }
+
+    public function getLevelQuality(): ?float
+    {
+        return $this->levelQuality;
+    }
+
+    public function setLevelQuality(?float $levelQuality): self
+    {
+        $this->levelQuality = $levelQuality;
+
+        return $this;
+    }
+
+    public function getReadability(): ?float
+    {
+        return $this->readability;
+    }
+
+    public function setReadability(?float $readability): self
+    {
+        $this->readability = $readability;
+
+        return $this;
+    }
+
+    public function getFlow(): ?float
+    {
+        return $this->flow;
+    }
+
+    public function setFlow(?float $flow): self
+    {
+        $this->flow = $flow;
+
+        return $this;
+    }
+
+    public function getRhythm(): ?float
+    {
+        return $this->rhythm;
+    }
+
+    public function setRhythm(?float $rhythm): self
+    {
+        $this->rhythm = $rhythm;
+
+        return $this;
+    }
+
+    public function getFunFactor(): ?float
+    {
+        return $this->funFactor;
+    }
+
+    public function setFunFactor(?float $funFactor): self
+    {
+        $this->funFactor = $funFactor;
+
+        return $this;
+    }
+
+    public function getPatternQuality(): ?float
+    {
+        return $this->patternQuality;
+    }
+
+    public function setPatternQuality(?float $patternQuality): self
+    {
+        $this->patternQuality = $patternQuality;
+
+        return $this;
     }
 
     public function getSong(): ?Song
@@ -97,78 +200,6 @@ class Vote
     public function setSong(?Song $song): self
     {
         $this->song = $song;
-
-        return $this;
-    }
-
-    public function getFunFactor(): ?float
-    {
-        return $this->FunFactor;
-    }
-
-    public function setFunFactor(?float $FunFactor): self
-    {
-        $this->FunFactor = $FunFactor;
-
-        return $this;
-    }
-
-    public function getRhythm(): ?float
-    {
-        return $this->Rhythm;
-    }
-
-    public function setRhythm(?float $Rhythm): self
-    {
-        $this->Rhythm = $Rhythm;
-
-        return $this;
-    }
-
-    public function getFlow(): ?float
-    {
-        return $this->Flow;
-    }
-
-    public function setFlow(?float $Flow): self
-    {
-        $this->Flow = $Flow;
-
-        return $this;
-    }
-
-    public function getPatternQuality(): ?float
-    {
-        return $this->PatternQuality;
-    }
-
-    public function setPatternQuality(?float $PatternQuality): self
-    {
-        $this->PatternQuality = $PatternQuality;
-
-        return $this;
-    }
-
-    public function getReadability(): ?float
-    {
-        return $this->Readability;
-    }
-
-    public function setReadability(float $Readability): self
-    {
-        $this->Readability = $Readability;
-
-        return $this;
-    }
-
-    public function getLevelQuality(): ?float
-    {
-        return $this->LevelQuality;
-    }
-
-    public function setLevelQuality(float $LevelQuality): self
-    {
-        $this->LevelQuality = $LevelQuality;
 
         return $this;
     }
@@ -184,4 +215,54 @@ class Vote
 
         return $this;
     }
+
+
+    public function getIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): self
+    {
+        $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    public function getIsAnonymous(): ?bool
+    {
+        return $this->isAnonymous;
+    }
+
+    public function setIsAnonymous(bool $isAnonymous): self
+    {
+        $this->isAnonymous = $isAnonymous;
+
+        return $this;
+    }
+
+    public function getIsModerated(): ?bool
+    {
+        return $this->isModerated;
+    }
+
+    public function setIsModerated(bool $isModerated): self
+    {
+        $this->isModerated = $isModerated;
+
+        return $this;
+    }
+
+    public function getHash(): ?string
+    {
+        return $this->hash;
+    }
+
+    public function setHash(?string $hash): self
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
 }

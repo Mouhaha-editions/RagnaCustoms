@@ -5,12 +5,11 @@ namespace App\Controller;
 use App\Entity\Playlist;
 use App\Entity\Score;
 use App\Entity\Song;
-use App\Entity\SongFeedback;
 use App\Entity\ViewCounter;
 use App\Entity\Vote;
 use App\Entity\VoteCounter;
 use App\Form\AddPlaylistFormType;
-use App\Form\SongFeedbackType;
+use App\Form\VoteType;
 use App\Repository\DownloadCounterRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongDifficultyRepository;
@@ -40,6 +39,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SongsController extends AbstractController
 {
     private $paginate = 51;
+
     /**
      * @Route("/beta", name="beta")
      * @param Request $request
@@ -47,14 +47,12 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function beta(Request $request, SongRepository $songRepository, PaginationService $paginationService,
-                          VoteCounterRepository $voteCouterRepository): Response
+    public function beta(Request               $request, SongRepository $songRepository, PaginationService $paginationService,
+                         VoteCounterRepository $voteCouterRepository): Response
     {
         return new Response();
 
     }
-
-
 
 
     /**
@@ -143,124 +141,7 @@ class SongsController extends AbstractController
         return $this->redirectToRoute("song_detail", ['slug' => $song->getSlug()], 301);
     }
 
-    /**
-     * @Route("/song/form/review/{id}", name="form_review_save")
-     */
-    public function formReviewSave(Request $request, Song $song, VoteRepository $voteRepository, VoteService $voteService)
-    {
-        if (!$this->isGranted('ROLE_USER')) {
-            return new JsonResponse([
-                "error" => true,
-                "errorMessage" => "You need an account to vote !",
-                "response" => "You need an account to vote !",
-            ]);
-        }
 
-        if ($song == null) {
-            return new JsonResponse([
-                "error" => true,
-                "errorMessage" => "You need an account to vote !",
-                "response" => "Song not found !",
-            ]);
-        }
-
-        if ($song->getUser() == $this->getUser()) {
-            return new JsonResponse([
-                "error" => true,
-                "errorMessage" => "You need an account to vote !",
-                "response" => "You can't review a song you've submitted",
-            ]);
-        }
-        $em = $this->getDoctrine()->getManager();
-        $vote = $voteRepository->findOneBy([
-            'song' => $song,
-            'user' => $this->getUser()
-        ]);
-        if ($vote == null) {
-            $vote = new Vote();
-            $vote->setSong($song);
-            $vote->setUser($this->getUser());
-            $em->persist($vote);
-        } else {
-            if (!$vote->getDisabled()) {
-                $voteService->subScore($song, $vote);
-            }
-        }
-        $vote->setFunFactor($request->get('funFactor'));
-        $vote->setRhythm($request->get('rhythm'));
-        $vote->setFlow($request->get('flow'));
-        $vote->setPatternQuality($request->get('patternQuality'));
-        $vote->setReadability($request->get('readability'));
-        $vote->setLevelQuality($request->get('levelQuality'));
-        $vote->setDisabled(false);
-        $voteService->addScore($song, $vote);
-        $em->flush();
-        return new JsonResponse([
-            "error" => false,
-            "errorMessage" => false,
-            "response" => $this->renderView("songs/partial/vote.html.twig", [
-                'song' => $song,
-                "vote" => $vote
-            ]),
-        ]);
-    }
-
-
-    /**
-     * @Route("/song/review/{id}", name="song_review")
-     * @param Request $request
-     * @param Song $song
-     * @param VoteRepository $voteRepository
-     * @return Response
-     */
-    public function songReview(Request $request, Song $song, VoteRepository $voteRepository, TranslatorInterface $translator): Response
-    {
-        if ($song == null) {
-            return new JsonResponse([
-                "error" => true,
-                "errorMessage" => $translator->trans("You need an account to vote !"),
-                "response" => $translator->trans("Custom song not found !"),
-            ]);
-        }
-
-        if (!$this->isGranted('ROLE_USER')) {
-            return new JsonResponse([
-                "error" => true,
-                "errorMessage" => $translator->trans("You need an account to vote !"),
-                "response" => $this->renderView('songs/partial/detail_vote.html.twig', [
-                    "song" => $song,
-                    'message' => $translator->trans("You need an account to vote !")
-                ])
-            ]);
-        }
-
-        if ($song->getUser() == $this->getUser()) {
-            return new JsonResponse([
-                "error" => true,
-                "errorMessage" => $translator->trans("You need an account to vote !"),
-                "response" => $this->renderView('songs/partial/detail_vote.html.twig', [
-                    "song" => $song,
-                    'message' => $translator->trans("You can't review a custom song you've submitted")
-                ])
-            ]);
-        }
-        $vote = $voteRepository->findOneBy([
-            'song' => $song,
-            'user' => $this->getUser()
-        ]);
-
-        if ($vote == null) {
-            $vote = new Vote();
-        }
-        return new JsonResponse([
-            "error" => false,
-            "errorMessage" => false,
-            "response" => $this->renderView("songs/partial/form_review.html.twig", [
-                'song' => $song,
-                "vote" => $vote
-            ]),
-        ]);
-    }
 
     /**
      * @Route("/song/playlist/{id}", name="song_playlist")
@@ -356,8 +237,8 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService,
-    VoteCounterRepository $voteCouterRepository): Response
+    public function index(Request               $request, SongRepository $songRepository, PaginationService $paginationService,
+                          VoteCounterRepository $voteCouterRepository): Response
     {
         $qb = $this->getDoctrine()
             ->getRepository(Song::class)
@@ -460,7 +341,7 @@ class SongsController extends AbstractController
                 case 'category':
                     if (count($exp) >= 1) {
                         $qb->andWhere('(s.songCategory = :category)')
-                            ->setParameter('category', $exp[1] == "" ? null:$exp[1]  );
+                            ->setParameter('category', $exp[1] == "" ? null : $exp[1]);
                     }
                     break;
                 case 'artist':
@@ -496,26 +377,26 @@ class SongsController extends AbstractController
         $qb->andWhere("s.isDeleted != true");
 
         //$pagination = null;
-      //if($ajaxRequest || $request->get('ppage1')) {
-          $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
+        //if($ajaxRequest || $request->get('ppage1')) {
+        $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
 
-          //if this is an ajax request, send the HTML twig back to the calling fn in a json response
-          if ($ajaxRequest) {
-              //get the html from the twig
-              $html = $this->renderView('songs/partial/song_row_div.html.twig', [
-                  'songs' => $pagination
-              ]);
-              //send the html back in json
-              return new JsonResponse([
-                  "html" => $html
-              ]);
-          }
+        //if this is an ajax request, send the HTML twig back to the calling fn in a json response
+        if ($ajaxRequest) {
+            //get the html from the twig
+            $html = $this->renderView('songs/partial/song_row_div.html.twig', [
+                'songs' => $pagination
+            ]);
+            //send the html back in json
+            return new JsonResponse([
+                "html" => $html
+            ]);
+        }
 
-          if ($pagination->isPartial()) {
-              return $this->render('songs/partial/song_row_div.html.twig', [
-                  'songs' => $pagination
-              ]);
-          }
+        if ($pagination->isPartial()) {
+            return $this->render('songs/partial/song_row_div.html.twig', [
+                'songs' => $pagination
+            ]);
+        }
 
 
         return $this->render('songs/index.html.twig', [
@@ -589,22 +470,22 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
-    public function songDetail(Request $request, ScoreRepository $scoreRepository,ScoreService $scoreService,Song $song,
-                               TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository,VoteCounterRepository $voteCounterRepository,
-                               SongService $songService, PaginationService $paginationService, DiscordService $discordService)
+    public function songDetail(Request             $request, ScoreRepository $scoreRepository, ScoreService $scoreService, Song $song,
+                               TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository, VoteCounterRepository $voteCounterRepository,
+                               SongService         $songService, PaginationService $paginationService, DiscordService $discordService)
     {
         if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }
-        
+
         $em = $this->getDoctrine()->getManager();
         $song->setViews($song->getViews() + 1);
-        $feedback = new SongFeedback();
+        $feedback = new Vote();
         $feedback->setSong($song);
         $feedback->setHash($song->getNewGuid());
         $feedback->setUser($this->getUser());
-        $feedbackForm = $this->createForm(SongFeedbackType::class, $feedback);
+        $feedbackForm = $this->createForm(VoteType::class, $feedback);
         $ip = $request->getClientIp();
         $dlu = $viewCounterRepository->findOneBy([
             'song' => $song,
@@ -635,11 +516,11 @@ class SongsController extends AbstractController
             }
             $discordService->sendFeedback($feedback);
 
-            $feedback = new SongFeedback();
+            $feedback = new Vote();
             $feedback->setSong($song);
             $feedback->setHash($song->getNewGuid());
             $feedback->setUser($this->getUser());
-            $feedbackForm = $this->createForm(SongFeedbackType::class, $feedback);
+            $feedbackForm = $this->createForm(VoteType::class, $feedback);
             $this->addFlash("success", $translator->trans("Feedback sent!"));
         }
         $songService->emulatorFileDispatcher($song);
@@ -663,7 +544,7 @@ class SongsController extends AbstractController
                 'scores' => $pagination
             ];
         }
-        
+
         return $this->render('songs/detail.html.twig', [
             'song' => $song,
             'levels' => $levels,

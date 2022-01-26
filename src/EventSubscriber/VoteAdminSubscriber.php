@@ -4,14 +4,14 @@
 namespace App\EventSubscriber;
 
 
-use App\Entity\SongFeedback;
+use App\Entity\Vote;
 use App\Service\SongService;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\MailerInterface;
 
-class SongFeedbackAdminSubscriber implements EventSubscriberInterface
+class VoteAdminSubscriber implements EventSubscriberInterface
 {
 
 
@@ -38,9 +38,9 @@ class SongFeedbackAdminSubscriber implements EventSubscriberInterface
     public function sendMail(AfterEntityUpdatedEvent $event)
     {
 
-        /** @var SongFeedback $entity */
+        /** @var Vote $entity */
         $entity = $event->getEntityInstance();
-        if(get_class($entity) == SongFeedback::class){
+        if(get_class($entity) == Vote::class){
             $song = $this->songService->getByhash($entity->getHash());
 
             if($song->getUser()->getEnableEmailNotification() && $entity->getIsModerated()) {
