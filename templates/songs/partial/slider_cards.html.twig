@@ -1,0 +1,8 @@
+{% import "songs/macros/song.html.twig" as macro_song %}
+
+
+{% for song in songs %}
+
+    {{ macro_song.song_card(song) }}
+
+{% endfor %}

@@ -7,15 +7,10 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
-// import {Chart} from "chart.js";
 import 'lazysizes';
 
 'chart.js/dist/chart.min';
-// import './src/sass/main.scss';
 
-//import { Tooltip, Toast, Popover } from 'bootstrap';
-
-// start the Stimulus application
 import 'bootstrap';
 
 $(document).on('click', 'form .rating', function () {
@@ -63,12 +58,19 @@ $(document).on('click', 'form .rating', function () {
 });
 
 
-// import '../public/bundles/pagination/js/see-more.js';
-
-//require('bootstrap/js/dist/popover');
-// import "select2/dist/js/select2.full.min";// const app = require('./js/utils/core');
-
 $(function () {
+
+    $('[data-load]').each( function(){
+        let t = $(this);
+       $.ajax({
+           url : t.data('load'),
+           dataType:'html',
+           success : function(data){
+               console.log(data)
+               t.html(data)
+           }
+       })
+    });
 
     $(document).on('change','input[type="file"]', function (e) {
         let fileName = e.target.files[0].name;

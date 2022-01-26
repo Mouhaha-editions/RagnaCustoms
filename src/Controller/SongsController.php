@@ -50,8 +50,7 @@ class SongsController extends AbstractController
     public function beta(Request               $request, SongRepository $songRepository, PaginationService $paginationService,
                          VoteCounterRepository $voteCouterRepository): Response
     {
-        return new Response();
-
+        return $this->render('songs/beta.html.twig');
     }
 
 
@@ -140,7 +139,6 @@ class SongsController extends AbstractController
     {
         return $this->redirectToRoute("song_detail", ['slug' => $song->getSlug()], 301);
     }
-
 
 
     /**
@@ -551,4 +549,29 @@ class SongsController extends AbstractController
             "feedbackForm" => $feedbackForm->createView()
         ]);
     }
+
+    /**
+     * @Route("/song/partial/last-played", name="last_songs_played")
+     */
+    public function lastSongsPlayed(Request $request, SongService $songService)
+    {
+        return $this->render('songs/partial/slider_cards.html.twig', ['songs' => $songService->getLastSongsPlayed(8)]);
+    }
+
+    /**
+     * @Route("/song/partial/best", name="best_songs")
+     */
+    public function bestSongs(Request $request, SongService $songService)
+    {
+        return $this->render('songs/partial/slider_cards.html.twig', ['songs' => $songService->getLastSongsPlayed(8)]);
+    }
+
+    /**
+     * @Route("/song/partial/last-added", name="last_songs_added")
+     */
+    public function lastSongsAdded(Request $request, SongService $songService)
+    {
+        return $this->render('songs/partial/slider_cards.html.twig', ['songs' => $songService->getLastSongsPlayed(8)]);
+    }
+
 }
