@@ -7,6 +7,7 @@ use App\Entity\Vote;
 use App\Entity\VoteCounter;
 use App\Form\VoteType;
 use App\Repository\VoteRepository;
+use App\Service\DiscordService;
 use App\Service\VoteService;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -59,7 +60,9 @@ class VotesController extends AbstractController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function songReview(Request $request, Song $song, VoteRepository $voteRepository, TranslatorInterface $translator, VoteService $voteService): Response
+    public function songReview(Request $request, Song $song,
+                               VoteRepository $voteRepository, TranslatorInterface $translator,
+                               VoteService $voteService, DiscordService $discordService): Response
     {
         if ($song == null) {
             return new JsonResponse([
@@ -117,8 +120,14 @@ class VotesController extends AbstractController
             $vote->setLevelQuality(null);
             $vote->setFlow(null);
             $voteService->addScore($song, $vote);
+
+            if($vote->getFeedback() != null && !empty($vote->getFeedback())){
+                $discordService->sendFeedback($vote);
+                $vote->setIsModerated(false);
+            }
             $em->persist($vote);
             $em->flush();
+
             return new JsonResponse([
                 "error" => false,
                 "errorMessage" => false,
