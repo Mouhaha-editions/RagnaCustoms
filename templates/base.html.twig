@@ -170,17 +170,17 @@
                 <a class="nav-link text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="norenoopenerferrer" target="_blank"><i class="fab fa-patreon"></i> Patreon</a>
             </li>
 
-            <li class="nav-item pt-1">
-                <input id="chkSwitch" type="checkbox"
-                       data-toggle="switchbutton"
-                       data-size="sm"
-                       data-onlabel="Dark mode"
-                       data-offlabel="Light "
-                       data-onstyle="dark"
-                       data-offstyle="light"
-                        {{ app.request.cookies.get('light-mode') == "dark" ?"checked='checked'":'' }}
-                />
-            </li>
+{#            <li class="nav-item pt-1">#}
+{#                <input id="chkSwitch" type="checkbox"#}
+{#                       data-toggle="switchbutton"#}
+{#                       data-size="sm"#}
+{#                       data-onlabel="Dark mode"#}
+{#                       data-offlabel="Light "#}
+{#                       data-onstyle="dark"#}
+{#                       data-offstyle="light"#}
+{#                        {{ app.request.cookies.get('light-mode') == "dark" ?"checked='checked'":'' }}#}
+{#                />#}
+{#            </li>#}
 
         </ul>
     </div>
