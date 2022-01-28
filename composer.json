@@ -18,6 +18,7 @@
         "gedmo/doctrine-extensions": "^3.1",
         "intervention/image": "^2.7",
         "knpuniversity/oauth2-client-bundle": "^2.8",
+        "mediafigaro/google-analytics-api-symfony": "^1.22",
         "nelmio/api-doc-bundle": "^4.4",
         "nicklaw5/twitch-api-php": "^4.2",
         "php-ffmpeg/php-ffmpeg": "^0.18.0",

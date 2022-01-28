@@ -121,7 +121,7 @@ class VotesController extends AbstractController
             $vote->setFlow(null);
             $voteService->addScore($song, $vote);
 
-            if($vote->getFeedback() != null && !empty($vote->getFeedback())){
+            if($vote->getFeedback() != null && !empty($vote->getFeedback()) && $vote->getFeedback() !== $voteBefore->getFeedback()){
                 $discordService->sendFeedback($vote);
                 $vote->setIsModerated(false);
             }
