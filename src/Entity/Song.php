@@ -980,7 +980,14 @@ class Song
 
         return $this;
     }
-
+    public function hasCover():bool
+    {
+        $cover = "/covers/" . $this->getId() . $this->getCoverImageExtension();
+        if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
+           return false;
+        }
+        return true;
+    }
     public function getCover()
     {
         $cover = "/covers/" . $this->getId() . $this->getCoverImageExtension();
