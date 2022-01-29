@@ -498,6 +498,13 @@ class SongsController extends AbstractController
             $em->persist($dlu);
             $em->flush();
         }
+
+        if(!$song->hasCover()){
+            $song->setName("Missing cover - ".$song->getName());
+            $song->setWip(true);
+            $em->flush();
+
+        }
         $feedbackForm->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
 
