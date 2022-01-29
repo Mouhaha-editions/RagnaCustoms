@@ -490,9 +490,7 @@ class SongsController extends AbstractController
             "ip" => $ip
         ]);
         if ($dlu == null) {
-            if(!$song->hasCover()){
-                $song->setWip(true);
-            }
+
             $dlu = new ViewCounter();
             $dlu->setSong($song);
             $dlu->setUser($this->getUser());
