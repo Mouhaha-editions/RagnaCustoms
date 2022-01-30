@@ -508,12 +508,12 @@ class Song
         $this->moderated = $moderated;
     }
 
-    public function getUser(): ?Utilisateur
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?Utilisateur $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 

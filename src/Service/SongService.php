@@ -21,6 +21,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Exception;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
+use Intervention\Image\ImageManagerStatic as Image;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -338,6 +339,7 @@ class SongService
         }
 
         $this->emulatorFileDispatcher($song, true);
+        $this->coverOptimisation($song);
 
         $this->rrmdir($unzipFolder);
 
@@ -545,6 +547,35 @@ class SongService
         $this->rrmdir($unzipFolder);
 
         return $result;
+
+    }
+
+    private function coverOptimisation(Song $song)
+    {
+
+        $cdir = scandir($this->kernel->getProjectDir()."/public/covers");
+        foreach ($cdir as $key => $value) {
+            if($value == "." || $value == ".." ){continue;}
+            try {
+                $filedir = $this->kernel->getProjectDir() . "/public/covers/" . $value;
+
+                $image = Image::make($filedir);
+
+                $background = Image::canvas(349, 349, 'rgba(255, 255, 255, 0)');
+
+                if ($image->width() >= $image->height()) {
+                    $image->widen(349);
+                } else {
+                    $image->heighten(349);
+                }
+                $background->insert($image, 'center-center');
+                $background->save($filedir);
+
+
+            }catch(\Exception $exception){
+
+            }
+        }
 
     }
 

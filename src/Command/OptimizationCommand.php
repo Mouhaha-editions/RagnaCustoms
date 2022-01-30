@@ -50,7 +50,7 @@ class OptimizationCommand extends Command
 
                 $background->save($filedir);
             }catch(\Exception $exception){
-
+                echo $exception->getMessage();
             }
         }
         return Command::SUCCESS;
