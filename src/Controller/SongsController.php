@@ -499,7 +499,7 @@ class SongsController extends AbstractController
             $em->flush();
         }
 
-        if(!$song->hasCover()){
+        if(!$song->hasCover() && !$song->getWip()){
             $song->setName("Missing cover - ".$song->getName());
             $song->setSlug($song->getSlug());
             $song->setWip(true);
