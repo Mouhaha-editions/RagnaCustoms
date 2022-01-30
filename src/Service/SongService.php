@@ -339,7 +339,7 @@ class SongService
         }
 
         $this->emulatorFileDispatcher($song, true);
-        $this->coverOptimisation($song);
+//        $this->coverOptimisation($song);
 
         $this->rrmdir($unzipFolder);
 
