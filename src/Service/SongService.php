@@ -154,6 +154,13 @@ class SongService
         return $this->em->getRepository(Season::class)->getCurrent();
     }
 
+    /**
+     * @param FormInterface $form
+     * @param Song $song
+     * @param bool $isWip
+     * @return bool
+     * @throws Exception
+     */
     public function processFile(FormInterface $form, Song $song, bool $isWip = false)
     {
         $allowedFiles = [
@@ -235,6 +242,10 @@ class SongService
             throw new Exception("\"_songApproximativeDuration\" is missing in the info.dat file!");
         }
 
+        if (empty($json->_coverImageFilename)) {
+            throw new Exception("Cover is missing, please fix it and upload again");
+        }
+
         $song->setVersion($json->_version);
         $song->setName(trim($json->_songName));
         $song->setLastDateUpload(new DateTime());
@@ -249,9 +260,10 @@ class SongService
         $song->setPreviewDuration($json->_previewDuration);
         $song->setApproximativeDuration($json->_songApproximativeDuration);
         $song->setFileName($json->_songFilename);
-        $song->setCoverImageFileName($json->_coverImageFilename);
+        $song->setCoverImageFileName();
         $song->setEnvironmentName($json->_environmentName);
         $song->setModerated(true);
+
 
         $this->em->persist($song);
 
