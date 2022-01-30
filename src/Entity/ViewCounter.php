@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ViewCounterRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use OpenApi\Tests\Fixtures\Parser\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ViewCounterRepository::class)
@@ -53,12 +54,12 @@ class ViewCounter
         return $this;
     }
 
-    public function getUser(): ?Utilisateur
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?Utilisateur $user = null): self
+    public function setUser(?UserInterface $user = null): self
     {
         $this->user = $user;
 

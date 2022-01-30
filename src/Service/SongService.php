@@ -261,7 +261,7 @@ class SongService
         $song->setPreviewDuration($json->_previewDuration);
         $song->setApproximativeDuration($json->_songApproximativeDuration);
         $song->setFileName($json->_songFilename);
-        $song->setCoverImageFileName();
+        $song->setCoverImageFileName($json->_coverImageFilename);
         $song->setEnvironmentName($json->_environmentName);
         $song->setModerated(true);
 
