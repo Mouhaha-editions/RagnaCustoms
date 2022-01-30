@@ -324,7 +324,9 @@ class SongService
 
         copy($theZip, $finalFolder . $song->getId() . ".zip");
         copy($unzipFolder . "/" . $json->_coverImageFilename, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-
+        if (!$song->hasCover()) {
+            $song->setWip(true);
+        }
         if ($this->kernel->getEnvironment() != "dev") {
             if ($song->getWip()) {
                 $this->discordService->sendWipSongMessage($song);
