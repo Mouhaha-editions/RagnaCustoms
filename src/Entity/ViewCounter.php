@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Repository\ViewCounterRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use OpenApi\Tests\Fixtures\Parser\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ViewCounterRepository::class)
