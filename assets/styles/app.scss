@@ -1,4 +1,4 @@
-//@import "~select2/dist/css/select2.min.css";
+@import "~select2/dist/css/select2.min.css";
 
 @font-face {
   font-family: 'Gelio Pasteli';
@@ -665,8 +665,17 @@ figure {
     margin-right: 10px;
     margin-left: 10px;
     float: left;
-    img{
-      width:250px;
+
+    img {
+      width: 250px;
     }
   }
+}
+
+.select2-results__option {
+  color: #000;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+ background: #205a91;
+ border-color: #205a91;
 }

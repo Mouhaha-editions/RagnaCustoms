@@ -10,3 +10,4 @@ twig:
         gamificationService: '@App\Service\GamificationService'
     form_themes:
         - 'form/rating_type.html.twig'
+        - '@TetranzSelect2Entity/Form/fields.html.twig'

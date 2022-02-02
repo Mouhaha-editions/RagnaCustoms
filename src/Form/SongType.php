@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 use function React\Partial\placeholder;
 
 class SongType extends AbstractType
@@ -37,15 +38,18 @@ class SongType extends AbstractType
                 "attr" => ["placeholder " => "https://youtu..."],
                 'required' => false
             ])
-            ->add('songCategory', EntityType::class, [
+            ->add('categoryTags', Select2EntityType::class, [
                 "class" => SongCategory::class,
-                "label" => "Category",
-                "choice_label" => "label",
-                "placeholder" => "-- Choose a category --",
-                "query_builder" => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('sc')->where("sc.isOnlyForAdmin != 1")->orderBy('sc.label');
-                },
-                "multiple" => false,
+                'remote_route' => 'api_song_categories',
+                'multiple' => true,
+                "label" => "Categories",
+                'primary_key' => 'id',
+                'text_property' => 'label',
+                'minimum_input_length' => 0,
+                'allow_clear' => true,
+                'delay' => 250,
+                'placeholder' => 'Select a categorie, or more ..',
+
                 'required' => true
             ])
             ->add('approximativeDuration', HiddenType::class, [

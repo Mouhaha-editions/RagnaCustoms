@@ -43,8 +43,7 @@
                             href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
                 </div>
                 <p class="creator mb-1">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('user_mapped_profile', {id:song.user.id}) ~'">'~song.levelAuthorName~'</a>'})|raw }}</p>
-                <p>                        <a href="{{ url('home') }}?search=category%3A{{ song.songCategory ? song.songCategory.id : null }}">
-                        {{ song.songCategory ? song.songCategory.label : "none" }}</a>&nbsp;</p>
+                <p>{{ song.songCategoryTags|join(', ') }}&nbsp;</p>
                 {% set diffs = '<br/>' %}
                 {% set adiffs = '<br/>' %}
                 {% for diff in song.songDifficulties %}
@@ -153,8 +152,7 @@
                             href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
                 </div>
                 <p class="creator mb-1">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('user_mapped_profile', {id:song.user.id}) ~'">'~song.levelAuthorName~'</a>'})|raw }}</p>
-                <p>                        <a href="{{ url('home') }}?search=category%3A{{ song.songCategory ? song.songCategory.id : null }}">
-                        {{ song.songCategory ? song.songCategory.label : "none" }}</a>&nbsp;</p>
+                        {{ song.songCategoryTags|join(', ') }}&nbsp;</p>
 
 
 

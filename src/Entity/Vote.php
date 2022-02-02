@@ -49,7 +49,7 @@ class Vote
      */
     private $disabled = false;
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $feedback;
     /**

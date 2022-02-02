@@ -166,6 +166,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/google/auth" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpseclib/phpseclib" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mediafigaro/google-analytics-api-symfony" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/tetranz/select2entity-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

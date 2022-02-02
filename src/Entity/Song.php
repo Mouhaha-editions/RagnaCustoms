@@ -130,10 +130,7 @@ class Song
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $slug;
-    /**
-     * @ORM\ManyToOne(targetEntity=SongCategory::class, inversedBy="songs")
-     */
-    private $songCategory;
+
     /**
      * @ORM\OneToMany(targetEntity=SongDifficulty::class, mappedBy="song")
      */
@@ -197,6 +194,11 @@ class Song
      */
     private $voteCounters;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=SongCategory::class, inversedBy="songs")
+     */
+    private $categoryTags;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -206,6 +208,7 @@ class Song
         $this->songHashes = new ArrayCollection();
         $this->playlists = new ArrayCollection();
         $this->voteCounters = new ArrayCollection();
+        $this->categoryTags = new ArrayCollection();
     }
 
     public function isVoteCounterBy(?UserInterface $user) {
@@ -918,18 +921,6 @@ class Song
         return $this;
     }
 
-    public function getSongCategory(): ?SongCategory
-    {
-        return $this->songCategory;
-    }
-
-    public function setSongCategory(?SongCategory $songCategory): self
-    {
-        $this->songCategory = $songCategory;
-
-        return $this;
-    }
-
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -1038,6 +1029,44 @@ class Song
                 $voteCounter->setSong(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SongCategory[]
+     */
+    public function getCategoryTags(): Collection
+    {
+        return $this->categoryTags;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSongCategoryTags(): array
+    {
+        $result = [];
+        /** @var SongCategory $cat */
+        foreach($this->categoryTags AS $cat){
+             $result[] = $cat->getLabel();
+         }
+
+         return count($result)>0 ? $result: ["none"];
+    }
+
+    public function addCategoryTag(SongCategory $categoryTag): self
+    {
+        if (!$this->categoryTags->contains($categoryTag)) {
+            $this->categoryTags[] = $categoryTag;
+        }
+
+        return $this;
+    }
+
+    public function removeCategoryTag(SongCategory $categoryTag): self
+    {
+        $this->categoryTags->removeElement($categoryTag);
 
         return $this;
     }

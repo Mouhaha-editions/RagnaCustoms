@@ -703,6 +703,9 @@
     "team-reflex/discord-php": {
         "version": "v5.1.2"
     },
+    "tetranz/select2entity-bundle": {
+        "version": "v3.1.0"
+    },
     "trafficcophp/bytebuffer": {
         "version": "v0.3"
     },

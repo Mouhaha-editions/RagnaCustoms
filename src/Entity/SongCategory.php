@@ -34,21 +34,21 @@ class SongCategory
      */
     private $isReviewable;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Song::class, mappedBy="songCategory")
-     */
-    private $songs;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $isOnlyForAdmin;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Song::class, mappedBy="categoryTags")
+     */
+    private $songs;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -91,6 +91,19 @@ class SongCategory
         return $this;
     }
 
+
+    public function getIsOnlyForAdmin(): ?bool
+    {
+        return $this->isOnlyForAdmin;
+    }
+
+    public function setIsOnlyForAdmin(?bool $isOnlyForAdmin): self
+    {
+        $this->isOnlyForAdmin = $isOnlyForAdmin;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Song[]
      */
@@ -103,7 +116,7 @@ class SongCategory
     {
         if (!$this->songs->contains($song)) {
             $this->songs[] = $song;
-            $song->setSongCategory($this);
+            $song->addCategoryTag($this);
         }
 
         return $this;
@@ -112,23 +125,8 @@ class SongCategory
     public function removeSong(Song $song): self
     {
         if ($this->songs->removeElement($song)) {
-            // set the owning side to null (unless already changed)
-            if ($song->getSongCategory() === $this) {
-                $song->setSongCategory(null);
-            }
+            $song->removeCategoryTag($this);
         }
-
-        return $this;
-    }
-
-    public function getIsOnlyForAdmin(): ?bool
-    {
-        return $this->isOnlyForAdmin;
-    }
-
-    public function setIsOnlyForAdmin(?bool $isOnlyForAdmin): self
-    {
-        $this->isOnlyForAdmin = $isOnlyForAdmin;
 
         return $this;
     }

@@ -12,11 +12,14 @@ import 'lazysizes';
 'chart.js/dist/chart.min';
 
 import 'bootstrap';
+window.$ = window.jQuery = $;
+import 'select2/dist/js/select2.full.min';
+require('../public/bundles/tetranzselect2entity/js/select2entity');
 
 $(document).on('click', 'form .rating', function () {
+
     let t = $(this);
     let ratingItems = $(this).parent().find('.rating');
-
 
     let getStarsRating = function () {
         let rating = 0;
@@ -59,6 +62,7 @@ $(document).on('click', 'form .rating', function () {
 
 
 $(function () {
+    $('.select2entity[data-autostart="true"]').select2entity();
 
     $('[data-load]').each( function(){
         let t = $(this);
@@ -118,14 +122,14 @@ const copyToClipboard = str => {
     document.body.removeChild(el);
 };
 
-import {createPopper} from 'bootstrap/js/dist/popover';
-
 import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 let hashtag = window.location.hash;
 
 function loadForm(content) {
+
     $("#form-edit").html(content);
+
     $("#form-edit form").on('submit', function () {
         $("#form-edit").html("<div class=\"popup-box-actions white full void\">Sending your form, please wait ... </div> " +
             "<div class='progress-container'><div class='progress'></div></div>");
@@ -167,6 +171,8 @@ function loadForm(content) {
                 if (data.error === true || data.success === false) {
                     $("#form-edit").html(data.response);
                     loadForm(data.response);
+                    $('.select2entity').select2entity();
+
                 } else {
                     tt.closest(tt.data('replace-selector')).html(data.response);
                     $(tt).closest(".modal").modal('hide');
@@ -319,7 +325,11 @@ $(function () {
         $.ajax({
             url: t.attr('href'),
             success: function (data) {
+                console.log("load form");
                 loadForm(data.response);
+                console.log("enable select2");
+
+                $('.select2entity').select2entity();
             }
         });
         return false;

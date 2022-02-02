@@ -12,6 +12,7 @@ use App\Form\AddPlaylistFormType;
 use App\Form\VoteType;
 use App\Repository\DownloadCounterRepository;
 use App\Repository\ScoreRepository;
+use App\Repository\SongCategoryRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\ViewCounterRepository;
@@ -40,11 +41,13 @@ class SongsController extends AbstractController
 {
     private $paginate = 51;
 
+
     /**
      * @Route("/beta", name="beta")
      * @param Request $request
      * @param SongRepository $songRepository
      * @param PaginationService $paginationService
+     * @param VoteCounterRepository $voteCouterRepository
      * @return Response
      */
     public function beta(Request               $request, SongRepository $songRepository, PaginationService $paginationService,

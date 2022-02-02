@@ -29,7 +29,7 @@
 
                     <tr>
                         <td>feedback:</td>
-                        <td>{{ songService.votePublic(song)|length }}</td>
+                        <td>{{ songService.votePublicOrMine(app.user,song)|length }}</td>
                     </tr>
                     <tr>
                         <td>note (nb vote):</td>

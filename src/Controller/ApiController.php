@@ -16,6 +16,7 @@ use App\Repository\OverlayRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SeasonRepository;
+use App\Repository\SongCategoryRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
@@ -48,6 +49,8 @@ class ApiController extends AbstractController
     /**
      * @Route("/api/score/v2", name="api_score_v2")
      * @param Request $request
+     * @param StatisticService $statisticService
+     * @param GamificationService $gamificationService
      * @param SeasonRepository $seasonRepository
      * @param DifficultyRankRepository $difficultyRankRepository
      * @param SongDifficultyRepository $songDifficultyRepository
@@ -59,17 +62,17 @@ class ApiController extends AbstractController
      * @return Response
      * @throws NonUniqueResultException
      */
-    public function scoreV2(Request $request,
-                            StatisticService $statisticService,
-                            GamificationService $gamificationService,
-                            SeasonRepository $seasonRepository,
+    public function scoreV2(Request                  $request,
+                            StatisticService         $statisticService,
+                            GamificationService      $gamificationService,
+                            SeasonRepository         $seasonRepository,
                             DifficultyRankRepository $difficultyRankRepository,
                             SongDifficultyRepository $songDifficultyRepository,
-                            ScoreRepository $scoreRepository,
-                            ScoreHistoryRepository $scoreHistoryRepository,
-                            UtilisateurRepository $utilisateurRepository,
-                            SongRepository $songRepository,
-                            LoggerInterface $logger): Response
+                            ScoreRepository          $scoreRepository,
+                            ScoreHistoryRepository   $scoreHistoryRepository,
+                            UtilisateurRepository    $utilisateurRepository,
+                            SongRepository           $songRepository,
+                            LoggerInterface          $logger): Response
     {
         $em = $this->getDoctrine()->getManager();
         $results = [];
@@ -89,7 +92,7 @@ class ApiController extends AbstractController
                 "success" => false,
                 "error" => "0_NO_CONTENT"
             ];
-            return new JsonResponse($results,500);
+            return new JsonResponse($results, 500);
         }
 
         /** @var Utilisateur $user */
@@ -441,4 +444,21 @@ class ApiController extends AbstractController
         return new Response("OK");
     }
 
+    /**
+     * @param Request $request
+     * @Route("/api/song-categories", name="api_song_categories")
+     */
+    public function songCategories(Request $request, SongCategoryRepository $categoryRepository)
+    {
+        $data = $categoryRepository->createQueryBuilder("sc")
+            ->select("sc.id AS id, sc.label AS text")->where('sc.label LIKE :search')
+            ->setParameter('search', '%'.$request->get('q').'%')
+            ->andWhere('sc.isOnlyForAdmin = false')
+            ->orderBy('sc.label')
+            ->getQuery()->getArrayResult();
+
+        return new JsonResponse([
+            'results'=>$data
+        ]);
+    }
 }
