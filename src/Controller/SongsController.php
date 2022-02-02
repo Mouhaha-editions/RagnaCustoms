@@ -339,12 +339,12 @@ class SongsController extends AbstractController
                             ->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
-                case 'category':
-                    if (count($exp) >= 1) {
-                        $qb->andWhere('(s.songCategory = :category)')
-                            ->setParameter('category', $exp[1] == "" ? null : $exp[1]);
-                    }
-                    break;
+//                case 'category':
+//                    if (count($exp) >= 1) {
+//                        $qb->andWhere('(s.songCategory = :category)')
+//                            ->setParameter('category', $exp[1] == "" ? null : $exp[1]);
+//                    }
+//                    break;
                 case 'artist':
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.authorName LIKE :search_string)')
