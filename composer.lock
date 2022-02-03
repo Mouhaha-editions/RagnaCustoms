@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "59486ea8f579a7ae2c1a33e44fdf642a",
+    "content-hash": "f4108e44151ca9aba06c8cc1c5971adb",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -2198,12 +2198,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Google\\Service\\": "src"
-                },
                 "files": [
                     "autoload.php"
-                ]
+                ],
+                "psr-4": {
+                    "Google\\Service\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2995,59 +2995,6 @@
                 "source": "https://github.com/thephpleague/oauth2-client/tree/2.6.1"
             },
             "time": "2021-12-22T16:42:49+00:00"
-        },
-        {
-            "name": "mediafigaro/google-analytics-api-symfony",
-            "version": "1.22",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mediafigaro/google-analytics-api-symfony.git",
-                "reference": "cafb11d1f82088cae34ff005193621ff1f117bef"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mediafigaro/google-analytics-api-symfony/zipball/cafb11d1f82088cae34ff005193621ff1f117bef",
-                "reference": "cafb11d1f82088cae34ff005193621ff1f117bef",
-                "shasum": ""
-            },
-            "require": {
-                "google/apiclient": "^2.0",
-                "symfony/framework-bundle": ">=2.3",
-                "symfony/twig-bundle": ">=2.0",
-                "twig/twig": ">=1.6"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "6.5.*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "MediaFigaro\\GoogleAnalyticsApi\\": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kendrick"
-                }
-            ],
-            "description": "Google Analytics API v4 Symfony",
-            "homepage": "https://github.com/mediafigaro/google-analytics-api-symfony",
-            "keywords": [
-                "analytics",
-                "api",
-                "google",
-                "symfony",
-                "v4"
-            ],
-            "support": {
-                "issues": "https://github.com/mediafigaro/google-analytics-api-symfony/issues",
-                "source": "https://github.com/mediafigaro/google-analytics-api-symfony/tree/1.22"
-            },
-            "time": "2018-04-03T15:43:08+00:00"
         },
         {
             "name": "mollie/polyfill-libsodium",

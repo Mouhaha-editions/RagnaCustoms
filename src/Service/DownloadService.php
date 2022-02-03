@@ -35,37 +35,27 @@ class DownloadService
                 }
             }
         }
-        $ip = $this->requestStack->getCurrentRequest()->getClientIp();
-        foreach ($song->getDownloadCounters() as $downloadCounter) {
-            if ($downloadCounter->getIp() === $ip && $song->getLastDateUpload() < $downloadCounter->getUpdatedAt()) {
-                return true;
-            }
-        }
-
         return false;
     }
 
     public function addOne(Song $song)
     {
-
-        $ip = $this->requestStack->getCurrentRequest()->getClientIp();
         /** @var Utilisateur $user */
         $user = $this->security->getUser();
 
         $dlu = $this->em->getRepository(DownloadCounter::class)->createQueryBuilder('dc')
             ->where('dc.song = :song')
-            ->andWhere('(dc.user = :user OR dc.ip = :ip)')
+            ->andWhere('(dc.user = :user)')
             ->setParameter('user', $user)
             ->setParameter('song', $song)
             ->setFirstResult(0)->setMaxResults(1)
-            ->setParameter('ip', $ip)->getQuery()->getOneOrNullResult();
+            ->getQuery()->getOneOrNullResult();
         if ($dlu == null) {
             $dlu = new DownloadCounter();
             $dlu->setSong($song);
             $this->em->persist($dlu);
         }
         $dlu->setUser($user);
-        $dlu->setIp($ip);
         $dlu->setUpdatedAt(new DateTime());
         $this->em->flush();
     }

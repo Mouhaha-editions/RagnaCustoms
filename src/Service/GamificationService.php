@@ -7,7 +7,6 @@ use App\Entity\Gamification;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
-use App\Entity\ViewCounter;
 use App\Entity\Vote;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;

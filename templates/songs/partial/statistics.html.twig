@@ -9,13 +9,6 @@
         labels: labels,
         datasets: [
             {
-                label: '{{ "Views"|trans }}',
-                data: [{{ statisticService.getViewsLastXDays(45,song)|join(",") }}],
-                borderColor: "#be6637",
-                backgroundColor: "#be6637",
-                yAxisID: 'y',
-            },
-            {
                 label: '{{ "Downloads"|trans }}',
                 data: [{{ statisticService.getDownloadsLastXDays(45,song)|join(",") }}],
                 borderColor: "#17b9c8",

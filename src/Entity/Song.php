@@ -160,10 +160,7 @@ class Song
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $version;
-    /**
-     * @ORM\OneToMany(targetEntity=ViewCounter::class, mappedBy="song")
-     */
-    private $viewCounters;
+
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -204,7 +201,6 @@ class Song
         $this->songDifficulties = new ArrayCollection();
         $this->votes = new ArrayCollection();
         $this->downloadCounters = new ArrayCollection();
-        $this->viewCounters = new ArrayCollection();
         $this->songHashes = new ArrayCollection();
         $this->playlists = new ArrayCollection();
         $this->voteCounters = new ArrayCollection();
@@ -769,41 +765,6 @@ class Song
             // set the owning side to null (unless already changed)
             if ($downloadCounter->getSong() === $this) {
                 $downloadCounter->setSong(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getUniqViews()
-    {
-        return count($this->getViewCounters());
-    }
-
-    /**
-     * @return Collection|ViewCounter[]
-     */
-    public function getViewCounters(): Collection
-    {
-        return $this->viewCounters;
-    }
-
-    public function addViewCounter(ViewCounter $viewCounter): self
-    {
-        if (!$this->viewCounters->contains($viewCounter)) {
-            $this->viewCounters[] = $viewCounter;
-            $viewCounter->setSong($this);
-        }
-
-        return $this;
-    }
-
-    public function removeViewCounter(ViewCounter $viewCounter): self
-    {
-        if ($this->viewCounters->removeElement($viewCounter)) {
-            // set the owning side to null (unless already changed)
-            if ($viewCounter->getSong() === $this) {
-                $viewCounter->setSong(null);
             }
         }
 

@@ -138,10 +138,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
-    /**
-     * @ORM\OneToMany(targetEntity=ViewCounter::class, mappedBy="user")
-     */
-    private $viewCounters;
+
     /**
      * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="user", orphanRemoval=true)
      */
@@ -157,7 +154,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->songs = new ArrayCollection();
         $this->votes = new ArrayCollection();
         $this->downloadCounters = new ArrayCollection();
-        $this->viewCounters = new ArrayCollection();
         $this->scores = new ArrayCollection();
         $this->scoreHistories = new ArrayCollection();
         $this->gamifications = new ArrayCollection();
@@ -374,36 +370,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($downloadCounter->getUser() === $this) {
                 $downloadCounter->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|ViewCounter[]
-     */
-    public function getViewCounters(): Collection
-    {
-        return $this->viewCounters;
-    }
-
-    public function addViewCounter(ViewCounter $viewCounters): self
-    {
-        if (!$this->viewCounters->contains($viewCounters)) {
-            $this->viewCounters[] = $viewCounters;
-            $viewCounters->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeViewCounter(ViewCounter $viewCounters): self
-    {
-        if ($this->viewCounters->removeElement($viewCounters)) {
-            // set the owning side to null (unless already changed)
-            if ($viewCounters->getUser() === $this) {
-                $viewCounters->setUser(null);
             }
         }
 

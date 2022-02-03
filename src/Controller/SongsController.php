@@ -5,24 +5,17 @@ namespace App\Controller;
 use App\Entity\Playlist;
 use App\Entity\Score;
 use App\Entity\Song;
-use App\Entity\ViewCounter;
 use App\Entity\Vote;
-use App\Entity\VoteCounter;
 use App\Form\AddPlaylistFormType;
 use App\Form\VoteType;
 use App\Repository\DownloadCounterRepository;
 use App\Repository\ScoreRepository;
-use App\Repository\SongCategoryRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
-use App\Repository\ViewCounterRepository;
 use App\Repository\VoteCounterRepository;
-use App\Repository\VoteRepository;
 use App\Service\DiscordService;
 use App\Service\DownloadService;
-use App\Service\ScoreService;
 use App\Service\SongService;
-use App\Service\VoteService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
@@ -138,7 +131,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/detail/{id}", name="song_detail_old")
      */
-    public function songDetailId(Request $request, ScoreRepository $scoreRepository, Song $song, TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository, SongService $songService, PaginationService $paginationService)
+    public function songDetailId(Request $request, Song $song)
     {
         return $this->redirectToRoute("song_detail", ['slug' => $song->getSlug()], 301);
     }
@@ -149,7 +142,6 @@ class SongsController extends AbstractController
      * @param Request $request
      * @param Song $song
      * @param TranslatorInterface $translator
-     * @param SongDifficultyRepository $songDifficultyRepository
      * @return JsonResponse
      */
     public function formPlaylist(Request $request, Song $song, TranslatorInterface $translator)
@@ -471,9 +463,8 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
-    public function songDetail(Request             $request, ScoreRepository $scoreRepository, ScoreService $scoreService, Song $song,
-                               TranslatorInterface $translator, ViewCounterRepository $viewCounterRepository, VoteCounterRepository $voteCounterRepository,
-                               SongService         $songService, PaginationService $paginationService, DiscordService $discordService)
+    public function songDetail(Request $request, Song $song, TranslatorInterface $translator,
+                               SongService $songService, PaginationService $paginationService, DiscordService $discordService)
     {
         if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
@@ -487,23 +478,9 @@ class SongsController extends AbstractController
         $feedback->setHash($song->getNewGuid());
         $feedback->setUser($this->getUser());
         $feedbackForm = $this->createForm(VoteType::class, $feedback);
-        $ip = $request->getClientIp();
-        $dlu = $viewCounterRepository->findOneBy([
-            'song' => $song,
-            "ip" => $ip
-        ]);
-        if ($dlu == null) {
 
-            $dlu = new ViewCounter();
-            $dlu->setSong($song);
-            $dlu->setUser($this->getUser());
-            $dlu->setIp($ip);
-            $em->persist($dlu);
-            $em->flush();
-        }
-
-        if(!$song->hasCover() && !$song->getWip()){
-            $song->setName("Missing cover - ".$song->getName());
+        if (!$song->hasCover() && !$song->getWip()) {
+            $song->setName("Missing cover - " . $song->getName());
             $song->setSlug($song->getSlug());
             $song->setWip(true);
             $em->flush();

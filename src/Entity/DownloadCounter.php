@@ -34,11 +34,6 @@ class DownloadCounter
      */
     private $user;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $ip;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -59,24 +54,5 @@ class DownloadCounter
     public function getUser(): ?Utilisateur
     {
         return $this->user;
-    }
-
-    public function setUser(?Utilisateur $user = null): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    public function getIp(): ?string
-    {
-        return $this->ip;
-    }
-
-    public function setIp(string $ip): self
-    {
-        $this->ip = $ip;
-
-        return $this;
     }
 }

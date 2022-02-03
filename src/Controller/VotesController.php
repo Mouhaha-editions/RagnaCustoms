@@ -4,17 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Song;
 use App\Entity\Vote;
-use App\Entity\VoteCounter;
 use App\Form\VoteType;
 use App\Repository\VoteRepository;
 use App\Service\DiscordService;
 use App\Service\VoteService;
-
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 
@@ -60,9 +58,9 @@ class VotesController extends AbstractController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function songReview(Request $request, Song $song,
+    public function songReview(Request        $request, Song $song,
                                VoteRepository $voteRepository, TranslatorInterface $translator,
-                               VoteService $voteService, DiscordService $discordService): Response
+                               VoteService    $voteService, DiscordService $discordService): Response
     {
         if ($song == null) {
             return new JsonResponse([
@@ -108,7 +106,7 @@ class VotesController extends AbstractController
             'action' => $this->generateUrl('song_vote_review', ['id' => $song->getId()]),
             "attr" => [
                 "class" => "form ajax-form",
-                "data-url" =>  $this->generateUrl("song_vote_review", ['id' => $song->getId()])
+                "data-url" => $this->generateUrl("song_vote_review", ['id' => $song->getId()])
             ]
         ]);
         $form->handleRequest($request);
@@ -121,7 +119,7 @@ class VotesController extends AbstractController
             $vote->setFlow(null);
             $voteService->addScore($song, $vote);
 
-            if($vote->getFeedback() != null && !empty($vote->getFeedback()) && $vote->getFeedback() !== $voteBefore->getFeedback()){
+            if ($vote->getFeedback() != null && !empty($vote->getFeedback()) && $vote->getFeedback() !== $voteBefore->getFeedback()) {
                 $discordService->sendFeedback($vote);
                 $vote->setIsModerated(false);
             }

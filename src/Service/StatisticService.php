@@ -6,7 +6,6 @@ use App\Entity\DownloadCounter;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
-use App\Entity\ViewCounter;
 use App\Entity\Vote;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,37 +39,6 @@ class StatisticService
             $first->modify("+1 day");
         }
         return $days;
-    }
-
-    /**
-     * @param $days
-     * @param Song $song
-     * @return array
-     * @throws NonUniqueResultException
-     */
-    public function getViewsLastXDays($days, Song $song)
-    {
-        $first = (new DateTime())->modify("-" . $days . " days");
-        $data = [];
-        $i = 0;
-        while ($first <= new DateTime()) {
-            $result = $this->em->getRepository(ViewCounter::class)->createQueryBuilder("d")
-                ->select('COUNT(d) AS nb')
-                ->where("d.song = :song")
-                ->andWhere("d.createdAt LIKE :date")
-                ->setParameter('song', $song)
-                ->setParameter('date', $first->format('Y-m-d') . "%")
-                ->setFirstResult(0)->setMaxResults(1)
-                ->getQuery()->getOneOrNullResult();
-            $first->modify("+1 day");
-            if ($i == 0) {
-                $data[] = $result['nb'];
-            } else {
-                $data[] = $data[$i - 1] + $result['nb'];
-            }
-            $i++;
-        }
-        return $data;
     }
 
     public function getDownloadsLastXDays($days, Song $song)

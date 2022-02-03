@@ -3,40 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\Song;
-use App\Entity\SongCategory;
-use App\Entity\SongDifficulty;
 use App\Entity\SongRequest;
 use App\Form\SongType;
-use App\Repository\DifficultyRankRepository;
 use App\Repository\SongRepository;
-use App\Repository\SongRequestRepository;
-use App\Service\DiscordService;
 use App\Service\ScoreService;
 use App\Service\SongService;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Pkshetlie\PaginationBundle\Models\Pagination;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use ZipArchive;
 
 class UploadSongController extends AbstractController
 {
@@ -46,6 +27,7 @@ class UploadSongController extends AbstractController
      * @param Request $request
      * @param TranslatorInterface $translator
      * @param SongService $songService
+     * @param ScoreService $scoreService
      * @return JsonResponse
      */
     public function new(Request $request, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
@@ -90,9 +72,15 @@ class UploadSongController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $file = $form->get('zipFile')->getData();
-                if($file == null){
+                if ($file == null) {
 
-                    $this->addFlash('success', str_replace(["%song%","%artist%"],[$song->getName(),$song->getAuthorName()],$translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
+                    $this->addFlash('success', str_replace([
+                        "%song%",
+                        "%artist%"
+                    ], [
+                        $song->getName(),
+                        $song->getAuthorName()
+                    ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($song);
                     $em->flush();
@@ -111,16 +99,22 @@ class UploadSongController extends AbstractController
                 if ($songService->processFile($form, $song, $isWip)) {
                     /** @var ?SongRequest $song_request */
                     $song_request = $form->get('song_request')->getData();
-                    if($song_request != null){
+                    if ($song_request != null) {
                         $song_request->setState(SongRequest::STATE_ENDED);
-                        if($song_request->getWantToBeNotified()){
+                        if ($song_request->getWantToBeNotified()) {
                             $songService->emailRequestDone($song_request, $song);
                         }
                         $this->getDoctrine()->getManager()->flush();
                     }
                     $scoreService->ClawwMethod($song);
 
-                    $this->addFlash('success', str_replace(["%song%","%artist%"],[$song->getName(),$song->getAuthorName()],$translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
+                    $this->addFlash('success', str_replace([
+                        "%song%",
+                        "%artist%"
+                    ], [
+                        $song->getName(),
+                        $song->getAuthorName()
+                    ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
                     return new JsonResponse([
                         'error' => false,
                         'reload' => true,
@@ -163,7 +157,7 @@ class UploadSongController extends AbstractController
 
         if ($song->getUser() == $this->getUser()) {
             $song->setIsDeleted(true);
-            $song->setSlug($song->getSlug().'-deleted');
+            $song->setSlug($song->getSlug() . '-deleted');
             $this->addFlash('success', "Song removed from catalog.");
 
             $em->flush();
@@ -207,6 +201,21 @@ class UploadSongController extends AbstractController
         return $this->stripUtf16Le($this->stripUtf16Be($this->stripUtf8Bom($text)));//mb_convert_encoding($text, 'UTF-8', 'UCS-2LE');
     }
 
+    function stripUtf16Le($string)
+    {
+        return preg_replace('/^\xff\xfe/', '', $string);
+    }
+
+    function stripUtf16Be($string)
+    {
+        return preg_replace('/^\xfe\xff/', '', $string);
+    }
+
+    function stripUtf8Bom($string)
+    {
+        return preg_replace('/^\xef\xbb\xbf/', '', $string);
+    }
+
     public function rrmdir($dir)
     {
         if (is_dir($dir)) {
@@ -221,21 +230,6 @@ class UploadSongController extends AbstractController
             }
             rmdir($dir);
         }
-    }
-
-    function stripUtf8Bom($string)
-    {
-        return preg_replace('/^\xef\xbb\xbf/', '', $string);
-    }
-
-    function stripUtf16Le($string)
-    {
-        return preg_replace('/^\xff\xfe/', '', $string);
-    }
-
-    function stripUtf16Be($string)
-    {
-        return preg_replace('/^\xfe\xff/', '', $string);
     }
 
 }
