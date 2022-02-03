@@ -2,22 +2,18 @@
 
 namespace App\Service;
 
-use Google_Client;
-use Google_Service_AnalyticsReporting;
-use Google_Service_AnalyticsReporting_DateRange;
-use Google_Service_AnalyticsReporting_GetReportsRequest;
-use Google_Service_AnalyticsReporting_Metric;
-use Google_Service_AnalyticsReporting_ReportRequest;
+use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\DateRange;
+use Google\Analytics\Data\V1beta\Dimension;
+use Google\Analytics\Data\V1beta\Metric;
 use Symfony\Component\VarDumper\VarDumper;
 
 class GoogleAnalyticsService
 {
+
+
     /**
-     * @var Google_Service_AnalyticsReporting
-     */
-    private $analytics;
-    /**
-     * @var Google_Client
+     * @var BetaAnalyticsDataClient
      */
     private $client;
     private $file ;
@@ -27,38 +23,38 @@ class GoogleAnalyticsService
     public function __construct(string $file,string $viewId)
     {
         $this->viewId = $viewId;
-        $this->client = new Google_Client();
-        $this->client->setApplicationName("Hello Analytics Reporting");
-        $this->client->setAuthConfig($file);
-        $this->client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
-        $this->analytics = new Google_Service_AnalyticsReporting($this->client);
+        putenv('GOOGLE_APPLICATION_CREDENTIALS='.$file);
+        $this->client = new BetaAnalyticsDataClient();
+
     }
 
 
     public function getStats()
     {
         // Replace with your view ID, for example XXXX.
-        $VIEW_ID = $this->viewId;
 
-        // Create the DateRange object.
-        $dateRange = new Google_Service_AnalyticsReporting_DateRange();
-        $dateRange->setStartDate("7daysAgo");
-        $dateRange->setEndDate("today");
-
-        // Create the Metrics object.
-        $sessions = new Google_Service_AnalyticsReporting_Metric();
-        $sessions->setExpression("ga:sessions");
-        $sessions->setAlias("sessions");
-
-        // Create the ReportRequest object.
-        $request = new Google_Service_AnalyticsReporting_ReportRequest();
-        $request->setViewId($VIEW_ID);
-        $request->setDateRanges($dateRange);
-        $request->setMetrics(array($sessions));
-
-        $body = new Google_Service_AnalyticsReporting_GetReportsRequest();
-        $body->setReportRequests( array( $request) );
-        VarDumper::dump($this->analytics->reports->batchGet( $body ));
+        $response = $this->client->runReport([
+            'property' => 'properties/268384948',
+            'dateRanges' => [
+                new DateRange([
+                    'start_date' => (new \DateTime())->modify("-30 days")->format('Y-m-d'),
+                    'end_date' => 'today',
+                ]),
+                ],
+                'dimensions' => [new Dimension(
+                    [
+                        'name' => 'customEvent:download_1',
+                    ]
+                ),
+                ],
+                'metrics' => [new Metric(
+                    [
+                        'name' => 'eventCount',
+                    ]
+                )
+            ],
+        ]);
+        VarDumper::dump($response->getRows()->offsetGet(0));
     }
 }
 

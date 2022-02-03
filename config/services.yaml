@@ -34,7 +34,7 @@ services:
         tags: ['pkshetlie.pagination']
     App\Service\GoogleAnalyticsService:
         arguments:
-            $file: '../ragnacustoms-69f866a653e3.json'
+            $file: '../Ragnacustoms-ec54cc8bdcad.json'
             $viewId: '%env(resolve:GOOGLE_VIEW_ID)%'
 
     App\Service\DiscordService:

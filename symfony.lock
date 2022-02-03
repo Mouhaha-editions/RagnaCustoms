@@ -121,23 +121,26 @@
     "gedmo/doctrine-extensions": {
         "version": "v3.0.3"
     },
-    "google/apiclient": {
-        "version": "2.12",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "2.0",
-            "ref": "49c5d7a66d863d28513979bf0666dc77599100c0"
-        },
-        "files": [
-            "./config/packages/google_apiclient.yaml"
-        ]
-    },
-    "google/apiclient-services": {
-        "version": "v0.233.0"
+    "google/analytics-data": {
+        "version": "v0.8.0"
     },
     "google/auth": {
         "version": "v1.18.0"
+    },
+    "google/common-protos": {
+        "version": "2.0.0"
+    },
+    "google/gax": {
+        "version": "v1.11.4"
+    },
+    "google/grpc-gcp": {
+        "version": "v0.2.0"
+    },
+    "google/protobuf": {
+        "version": "v3.19.4"
+    },
+    "grpc/grpc": {
+        "version": "1.42.0"
     },
     "guzzlehttp/guzzle": {
         "version": "7.3.0"
@@ -212,9 +215,6 @@
     "nikic/php-parser": {
         "version": "v4.10.4"
     },
-    "paragonie/constant_time_encoding": {
-        "version": "v2.5.0"
-    },
     "paragonie/random_compat": {
         "version": "v9.99.100"
     },
@@ -247,9 +247,6 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.4.0"
-    },
-    "phpseclib/phpseclib": {
-        "version": "3.0.13"
     },
     "pkshetlie/pagination-bundle": {
         "version": "v2.0.2"
