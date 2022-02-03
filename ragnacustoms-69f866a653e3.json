@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "ragnacustoms",
+  "private_key_id": "69f866a653e3140d87f79741c2c1ddee07d18dbd",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDNNzzy2OcbFu0Y\npvDfWSFVLTGsHLsQ38l5UZNynKWm6mN1nOXqesU5IykS2rFhr7bni44NKDZuix1r\nFmCFVr7nvwa9qESUkANkdJi2++R05XP8Obmdji3UKOCjWlJrkGwa5mxJSL3qGAK5\nOzqGsbNrR9xpRDmop4dGwdCInSAwFlZA4B5tJWin/f7wlbaxPPqnm929mmBqtqf8\n1EbC+IsXwFysrMRkZD0b7c0EMK7jh1YTNUK7Yuvlsb/AUdMreUhpYEVFS5q3DvQY\nzxs+qjW94cCOEtKkxZPY6ah543vAWijJdaj6mb50KhvAtLGLGJVE0l5+6nJnN1UP\nmxMOSKaHAgMBAAECggEAGOJo3p3UsGFAUOv1a2/4bca0LkWxnWM1oCN3OL+sCqiD\ndQCYlK1cewg7c9DXD5xqFnvCtu+4YgE2iQTGoYSaU6nDXH4qCsXH04eb+RxkYJRu\nUxiA3I0gG4j1bHmIYwi5Qy3L1bsfZGKS+fknqKulsQ2euZkPUNc3vSnFart66rmj\nFAGci/3a2FCIYoTf+jVbM06j2yD8x2nQksWoeVcTyzwUrTsXpZxc9GEj+UCe/ySQ\nW8Z+a7e0Aeo+BRuKCcKeeCgAjBwhco61/TtUbk5DUJGVPd7UYjs6QhuVdK1y7c+G\nvlAih2d5HlKet2Iz8Sg1UWOyHpU9DZVXJPiMwFp2MQKBgQDqUtueTc1tWkkRus+G\nCKPDttE6737t6ngsay0k6gKJblqY1Gh8lOK30ho1hFvLj3kNASiarM2GKvgpS3uL\nWU2YPZtNxPD4zlznNQj9qADVn5Im1RTC0RGCKw2JK0oQoA8igLQrQs0TwKYj6/n7\nE4q66MwbqZHz5dQfu7uEo0WbPwKBgQDgMw+Ypk4QsBMIG0lQnJJ4BcSCmWD/vm3W\nOxaEraX76uxzwJCplnzlW2l4LNzmr6cW97xf0+MCI0gaGfHqOzrJ8u4EKFt7+LuR\nYqb54CZ47ZuImkpugA7EKbF8XPgz9+o806G71xxgz2u1yxminKi8YbnNX9HSVJkk\ncBHh81UKuQKBgCILm+EqSLikr40l6VT+GF0tSMUZWwXSVVeO0uZUIb46DGu8INpI\n/4/ZtPklm/i9hcb/7hhbFxlxUNEfKHocpYuDF/d6r9BWm2T0bbP9HvHq119RAk0z\n9ylEfBj78yzrNIe8z3Chqg4+pWT+ujlio3t4q38xagVX1TQvIJWq60gdAoGAbtNO\nxlqPBFjFT6CNYTfEf2f6d8Rx2nm7ucaDnxpnjlvWfnGWEP6+xnGldS5YFACITCYy\nC/ylnozqO1zP5MVajjFzzsJUVrfhoEBv4d0Xp3dtBt2eJXlP00/42EzstGO8ekzz\nCfOPp5tg1wCKr4NZNaXpPsg65AnFmel8LYEnbKECgYEA5GSRWKGzoIaFem64sT09\np5PQuoVI6P6TJtnAm9HfPQEjTnZ0zAPlWG2EBd4KHGxYQj6zEH0tByeqRYFBsRk7\nnpw4QHCGyUUQuU/Th01Q5pbZwGWC3Fn5Wtv6EKmKd7aMylQaDmYFor++EUoFJC+6\n2L03aiRCqd5QTfyjG4o2h+4=\n-----END PRIVATE KEY-----\n",
+  "client_email": "ragnacustoms-analytics@ragnacustoms.iam.gserviceaccount.com",
+  "client_id": "107269822756750517575",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ragnacustoms-analytics%40ragnacustoms.iam.gserviceaccount.com"
+}

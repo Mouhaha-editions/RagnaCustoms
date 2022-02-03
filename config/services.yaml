@@ -32,6 +32,10 @@ services:
     Pkshetlie\PaginationBundle\Service\:
         resource: '../vendor/pkshetlie/pagination-bundle/Service'
         tags: ['pkshetlie.pagination']
+    App\Service\GoogleAnalyticsService:
+        arguments:
+            $file: '../ragnacustoms-69f866a653e3.json'
+            $viewId: '%env(resolve:GOOGLE_VIEW_ID)%'
 
     App\Service\DiscordService:
         arguments:

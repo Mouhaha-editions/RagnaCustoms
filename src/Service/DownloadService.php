@@ -40,6 +40,7 @@ class DownloadService
 
     public function addOne(Song $song)
     {
+        if(!$this->security->isGranted('ROLE_USER')){return;}
         /** @var Utilisateur $user */
         $user = $this->security->getUser();
 

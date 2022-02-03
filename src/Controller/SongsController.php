@@ -15,6 +15,7 @@ use App\Repository\SongRepository;
 use App\Repository\VoteCounterRepository;
 use App\Service\DiscordService;
 use App\Service\DownloadService;
+use App\Service\GoogleAnalyticsService;
 use App\Service\SongService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -464,8 +465,11 @@ class SongsController extends AbstractController
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
     public function songDetail(Request $request, Song $song, TranslatorInterface $translator,
-                               SongService $songService, PaginationService $paginationService, DiscordService $discordService)
+                               SongService $songService, PaginationService $paginationService, DiscordService $discordService, GoogleAnalyticsService $analyticsService)
     {
+
+//        $analyticsService->getStats();die;
+
         if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
