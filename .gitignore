@@ -20,3 +20,4 @@ public/covers/*
 public/ragna-beat/*
 public/tmp-song/*
 public/tmp-evaluator/*
+*.json

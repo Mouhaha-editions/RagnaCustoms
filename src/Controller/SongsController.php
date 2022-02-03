@@ -465,7 +465,7 @@ class SongsController extends AbstractController
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
     public function songDetail(Request $request, Song $song, TranslatorInterface $translator,
-                               SongService $songService, PaginationService $paginationService, DiscordService $discordService, GoogleAnalyticsService $analyticsService)
+                               SongService $songService, PaginationService $paginationService, DiscordService $discordService)
     {
 
 //        $analyticsService->getStats();die;
