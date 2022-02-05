@@ -400,9 +400,9 @@ class SongsController extends AbstractController
     }
 
     /**
-     * @Route("/songs/download/{id}", name="song_download")
+     * @Route("/songs/download/{id}/{api}", name="song_download", defaults={"api"=null})
      */
-    public function download(Request $request, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    public function download(Request $request, Song $song, string $api,KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -412,7 +412,7 @@ class SongsController extends AbstractController
         $em->flush();
 
         $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
-        $downloadService->addOne($song);
+        $downloadService->addOne($song, $api);
 
         $response = new Response($fileContent);
 

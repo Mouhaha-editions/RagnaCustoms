@@ -38,11 +38,18 @@ class DownloadService
         return false;
     }
 
-    public function addOne(Song $song)
+    public function addOne(Song $song, $apiKey = null)
     {
-        if(!$this->security->isGranted('ROLE_USER')){return;}
-        /** @var Utilisateur $user */
-        $user = $this->security->getUser();
+        if($apiKey == null) {
+            if (!$this->security->isGranted('ROLE_USER')) {
+                return;
+            }
+            /** @var Utilisateur $user */
+            $user = $this->security->getUser();
+        }else{
+            $user = $this->em->getRepository(Utilisateur::class)
+                ->findOneBy(['apiKey'=>$apiKey]);
+        }
 
         $dlu = $this->em->getRepository(DownloadCounter::class)->createQueryBuilder('dc')
             ->where('dc.song = :song')
