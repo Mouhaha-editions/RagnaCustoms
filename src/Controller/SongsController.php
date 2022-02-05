@@ -398,11 +398,38 @@ class SongsController extends AbstractController
             'songs' => $pagination
         ]);
     }
-
     /**
-     * @Route("/songs/download/{id}/{api}", name="song_download", defaults={"api"=null})
+     * @Route("/songs/download/{id}", name="song_download")
      */
-    public function download(Request $request, Song $song, string $api,KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    public function download(Request $request, Song $song,KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    {
+        if (!$song->isModerated()) {
+            return new Response("Not available now", 403);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $song->setDownloads($song->getDownloads() + 1);
+        $em->flush();
+
+        $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
+        $downloadService->addOne($song);
+
+        $response = new Response($fileContent);
+
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $song->getId() . '.zip'
+        );
+        $response->headers->set('Content-Disposition', $disposition);
+        $response->headers->set('Content-type', "application/octet-stream");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
+
+        return $response;
+    }
+    /**
+     * @Route("/songs/download/{id}/{api}", name="song_download_api", defaults={"api"=null})
+     */
+    public function downloadApiKey(Request $request, Song $song, string $api,KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
