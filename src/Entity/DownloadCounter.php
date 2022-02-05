@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\DownloadCounterRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=DownloadCounterRepository::class)
@@ -50,8 +51,13 @@ class DownloadCounter
 
         return $this;
     }
+    public function setUser(UserInterface $user):self
+    {
+        $this->user = $user;
+        return $this;
+    }
 
-    public function getUser(): ?Utilisateur
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
