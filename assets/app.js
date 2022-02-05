@@ -63,7 +63,7 @@ $(document).on('click', 'form .rating', function () {
 
 $(function () {
     $('.select2entity[data-autostart="true"]').select2entity();
-
+    $('.select2').select2();
     $('[data-load]').each( function(){
         let t = $(this);
        $.ajax({

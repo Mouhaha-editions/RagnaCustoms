@@ -10,6 +10,7 @@ use App\Form\AddPlaylistFormType;
 use App\Form\VoteType;
 use App\Repository\DownloadCounterRepository;
 use App\Repository\ScoreRepository;
+use App\Repository\SongCategoryRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\VoteCounterRepository;
@@ -17,6 +18,7 @@ use App\Service\DiscordService;
 use App\Service\DownloadService;
 use App\Service\GoogleAnalyticsService;
 use App\Service\SongService;
+use ContainerG3DgQT1\getCrudResponseListenerService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
@@ -227,12 +229,11 @@ class SongsController extends AbstractController
     /**
      * @Route("/", name="home")
      * @param Request $request
-     * @param SongRepository $songRepository
+     * @param SongCategoryRepository $categoryRepository
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function index(Request               $request, SongRepository $songRepository, PaginationService $paginationService,
-                          VoteCounterRepository $voteCouterRepository): Response
+    public function index(Request $request, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
     {
         $qb = $this->getDoctrine()
             ->getRepository(Song::class)
@@ -273,7 +274,16 @@ class SongsController extends AbstractController
         }
         $qb->andWhere("s.wip = :wip")
             ->setParameter("wip", $wip);
-        if ($request->get('downloads_filter_order', null)) {
+        $categories = $request->get('downloads_filter_categories', null);
+        if ($categories != null) {
+            $qb->leftJoin('s.categoryTags','t');
+            foreach($categories AS $k=>$v){
+                $qb->andWhere("t.id = :tag$k")
+                    ->setParameter("tag$k", $v);
+            }
+        }
+
+            if ($request->get('downloads_filter_order', null)) {
             switch ($request->get('downloads_filter_order')) {
                 case 1:
                     $qb->orderBy('s.voteUp - s.voteDown', 'DESC');
@@ -392,10 +402,15 @@ class SongsController extends AbstractController
             ]);
         }
 
+        $categories = $categoryRepository->createQueryBuilder("c")
+            ->where('c.isOnlyForAdmin != true')
+            ->orderBy('c.label')
+            ->getQuery()->getResult();
 
         return $this->render('songs/index.html.twig', [
             'controller_name' => 'SongsController',
-            'songs' => $pagination
+            'songs' => $pagination,
+            'categories' => $categories
         ]);
     }
     /**
