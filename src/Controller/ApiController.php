@@ -2,9 +2,6 @@
 
 namespace App\Controller;
 
-use App\ApiModels\SessionModel;
-use App\ApiModels\ResultModel;
-use App\Entity\Gamification;
 use App\Entity\Overlay;
 use App\Entity\Score;
 use App\Entity\ScoreHistory;
@@ -21,7 +18,6 @@ use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\GamificationService;
-use App\Service\SongService;
 use App\Service\StatisticService;
 use ContainerCexz9GN\getMaker_AutoCommand_MakeMessengerMiddlewareService;
 use DateTime;
@@ -34,12 +30,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Security;
-
-
 use function Sentry\configureScope;
+
 
 class ApiController extends AbstractController
 {
@@ -52,10 +44,24 @@ class ApiController extends AbstractController
      */
     public function checkUpdates(Request $request, SongRepository $songRepository): Response
     {
+
+        /**
+         *  "Id" => $song->getId(),
+         * "Name" => $song->getName(),
+         * "Author" => $song->getAuthorName(),
+         * "IsRanked" => $song->isRanked(),
+         * "Hash" => $song->getNewGuid(),
+         * "Mapper" => $song->getLevelAuthorName(),
+         * "Difficulties" => $song->getSongDifficultiesStr(),
+         */
         $songs = $songRepository->createQueryBuilder('s')
-            ->select('s.id,s.newGuid AS hash')
+            ->select('s.id, s.name, s.authorName, s.levelAuthorName, s.newGuid AS hash, GROUP_CONCAT(r.level)')
+           ->leftJoin("s.songDifficulties",'sd')
+            ->leftJoin('sd.difficultyRank','r')
             ->where("s.isDeleted != 1")
-        ->getQuery()->getArrayResult();
+            ->groupBy('s.id')
+            ->getQuery()
+            ->getArrayResult();
 
         return new JsonResponse($songs);
     }
@@ -154,7 +160,7 @@ class ApiController extends AbstractController
             $hash = $subScore["HashInfo"];
             $level = $subScore["Level"];
             try {
-                $song = $songRepository->findOneBy(['newGuid'=>$hash]);
+                $song = $songRepository->findOneBy(['newGuid' => $hash]);
                 if ($song == null) {
                     $results[] = [
                         "hash" => $hash,
@@ -469,13 +475,13 @@ class ApiController extends AbstractController
     {
         $data = $categoryRepository->createQueryBuilder("sc")
             ->select("sc.id AS id, sc.label AS text")->where('sc.label LIKE :search')
-            ->setParameter('search', '%'.$request->get('q').'%')
+            ->setParameter('search', '%' . $request->get('q') . '%')
             ->andWhere('sc.isOnlyForAdmin = false')
             ->orderBy('sc.label')
             ->getQuery()->getArrayResult();
 
         return new JsonResponse([
-            'results'=>$data
+            'results' => $data
         ]);
     }
 }

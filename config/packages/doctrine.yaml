@@ -19,5 +19,6 @@ doctrine:
                 alias: App
         dql:
             string_functions:
+                GROUP_CONCAT: DoctrineExtensions\Query\Mysql\GroupConcat
                 MD5: DoctrineExtensions\Query\Mysql\Md5
                 IF: DoctrineExtensions\Query\Mysql\IfElse
