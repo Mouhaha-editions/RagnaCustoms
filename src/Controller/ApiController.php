@@ -46,6 +46,21 @@ class ApiController extends AbstractController
 
     const CurrentVersion = "1.2.4";
 
+
+    /**
+     * @Route("/api/song/check-updates", name="api_song_check_updates")
+     */
+    public function checkUpdates(Request $request, SongRepository $songRepository): Response
+    {
+        $songs = $songRepository->createQueryBuilder('s')
+            ->select('s.id,s.newGuid AS hash')
+            ->where("s.isDeleted != 1")
+        ->getQuery()->getArrayResult();
+
+        return new JsonResponse($songs);
+    }
+
+
     /**
      * @Route("/api/score/v2", name="api_score_v2")
      * @param Request $request
@@ -139,7 +154,7 @@ class ApiController extends AbstractController
             $hash = $subScore["HashInfo"];
             $level = $subScore["Level"];
             try {
-                $song = $songRepository->findOneByHash($hash);
+                $song = $songRepository->findOneBy(['newGuid'=>$hash]);
                 if ($song == null) {
                     $results[] = [
                         "hash" => $hash,
@@ -314,7 +329,7 @@ class ApiController extends AbstractController
         $songsEntities = $songRepository->createQueryBuilder('s')
             ->where('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
             ->andWhere('s.moderated = true')
-            ->andWhere('s.isDeleted = false')
+            ->andWhere('s.isDeleted != true')
             ->setParameter('search_string', '%' . $term . '%')
             ->getQuery()->getResult();
         $songs = [];
@@ -357,6 +372,7 @@ class ApiController extends AbstractController
             ]
         );
     }
+
 
     /**
      * @Route("/api/hash/{hash}", name="api_hash")
