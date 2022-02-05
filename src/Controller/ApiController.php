@@ -55,7 +55,7 @@ class ApiController extends AbstractController
          * "Difficulties" => $song->getSongDifficultiesStr(),
          */
         $songs = $songRepository->createQueryBuilder('s')
-            ->select('s.id, s.name, s.authorName, s.levelAuthorName, s.newGuid AS hash, GROUP_CONCAT(r.level)')
+            ->select('s.id, s.name, s.authorName AS author, s.levelAuthorName AS mapper, s.newGuid AS hash, GROUP_CONCAT(r.level) AS Difficulties')
            ->leftJoin("s.songDifficulties",'sd')
             ->leftJoin('sd.difficultyRank','r')
             ->where("s.isDeleted != 1")
