@@ -361,6 +361,7 @@ class SongsController extends AbstractController
                         ->setParameter('search_string', '%' . $request->get('search', null) . '%');
             }
         }
+        $qb->andWhere("s.isDeleted != true");
 
         if ($request->get('onclick_dl')) {
             $ids = $qb->select('s.id')->getQuery()->getArrayResult();
@@ -368,7 +369,6 @@ class SongsController extends AbstractController
                     return array_pop($id);
                 }, $ids)));
         }
-        $qb->andWhere("s.isDeleted != true");
 
         //$pagination = null;
         //if($ajaxRequest || $request->get('ppage1')) {
