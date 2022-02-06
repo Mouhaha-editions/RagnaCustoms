@@ -22,6 +22,12 @@ body{
     border-radius: 15px;
   }
   .btn-blue{font-size:16px;}
+  a.nav-link{
+    color:#fff;
+    &:hover{
+      color: #c4c4c4;
+    }
+  }
 }
 .btn{
   &.btn-blue{
@@ -45,6 +51,7 @@ header{
       color:#ffd004;
     }
   }
+
   .header-link{
     color:#fff;
     text-decoration: underline;
