@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('v2') }}
+    {% endblock %}
+
+    <link id="favicon" rel="icon" href="/apps/favicon.ico">
+    <title>{% block title %}| RagnaCustoms{% endblock %}</title>
+    <meta name="theme-color" content="#205294"/>
+    <link rel="alternate" type="application/rss+xml" title="RagnaCustoms.com our catalog"
+          href="https://ragnacustoms.com/rss.xml">
+    <link rel="manifest" href="/manifest.json">
+
+    {% block metas %}
+        <meta name="description" content="The best place to find your favorite custom songs for Ragnaröck VR">
+        <meta property="og:url" content="https://ragnacustoms.com"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="RagnaCustoms.com, Your favorites custom songs for Ragnarock VR"/>
+        <meta property="og:description" content="The best place to find your favorite custom songs for Ragnaröck VR"/>
+        <meta property="og:image" content="https://ragnacustoms.com/apps/logo.png"/>
+    {% endblock %}
+
+</head>
+<body class="">
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+    <a class="navbar-brand viking-text-bold" href="/"><img width="30" height="30" src="/apps/logo.png" class="img-fluid" alt="logo"/>
+        RagnaCustoms</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse d-flex" id="navbarNav">
+        <ul class="navbar-nav flex-grow-1">
+            {% if is_granted('ROLE_MODERATOR') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin</a>
+                </li>
+            {% endif %}  </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#">{{ "Getting started"|trans }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">{{ "Song library"|trans }}</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ "Leaderboards"|trans }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{{ url('score') }}">{{ "Leaderboards by song"|trans }}</a>
+                    <hr class="m-1"/>
+                    <a class="dropdown-item" href="{{ url('score_season_ranking') }}">{{ "Season ranking"|trans }}</a>
+                    <hr class="m-1"/>
+                    <a class="dropdown-item" href="{{ url('score_global_ranking') }}">{{ "Global ranking"|trans }}</a>
+
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('mappers') }}">Mappers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-level-9" href="{{ url("applications") }}">{{ "Apps"|trans }}</a>
+            </li>
+
+
+            <li class="nav-item">
+                <a href="#" class="btn btn-sm btn-blue mt-2 p-0 pl-2 pr-2">{{ "Submit"|trans }}</a>
+            </li>
+
+
+
+            {% if not is_granted("ROLE_USER") %}
+                <li class="nav-item">
+                    <a href="{{ url('app_login') }}" class="nav-link">{{ "Login"|trans }}</a>
+                </li>
+            {% else %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ app.user.gravatar }}" alt="" class="avatar-mini" width="30px" height="30px"/>
+                        {{ app.user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "Upload Song"|trans }}</a>
+                        <hr class="m-1"/>
+                        <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
+                        <hr class="m-1"/>
+                        <a class="dropdown-item"
+                           href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a>
+
+                        <hr class="m-1"/>
+                        <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
+                    </div>
+                </li>
+            {% endif %}
+
+
+        </ul>
+    </div>
+    </div>
+</nav>
+<div class="container">
+{#    <div class="runes"><img width="512" height="512" src="/apps/runes.png" alt="runes"/></div>#}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-dismissible alert-{{ label }}">
+                {{ message|trans }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% block body %}
+
+    {% endblock %}
+</div>
+{% block endBody %}
+{% endblock %}
+<hr/>
+<div class="p-3 text-center">
+    <a class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer" target="_blank"><i class="fab fa-patreon"></i>
+     Patreon</a>&nbsp;
+    <a class="text" href="https://discord.gg/nRnsgCCBvq" rel="noreferrer" target="_blank"><i class="fab fa-discord"></i>
+    </a>&nbsp;
+    <a class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank"><i
+                class="fab fa-facebook"></i></a>&nbsp;
+    <a class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer" target="_blank"><i
+                class="fab fa-twitter"></i></a>&nbsp;
+    <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer" target="_blank"><i
+                class="fab fa-reddit"></i></a>
+    <br/>
+    {{ "RagnaCustoms is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>"|trans|raw }}
+
+
+</div>
+
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('v2') }}
+{% endblock %}
+
+
+<script src="https://tarteaucitron.io/load.js"></script>
+
+<script>
+    tarteaucitron.init({
+// "privacyUrl": "", /* Privacy policy url */
+
+        "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
+        "cookieName": "tarteaucitron", /* Cookie name */
+
+        "orientation": "bottom", /* Banner position (top - bottom - middle - popup) */
+
+        "groupServices": true, /* Group services by category */
+
+        "showAlertSmall": true, /* Show the small banner on bottom right */
+        "cookieslist": true, /* Show the cookie list */
+
+        "showIcon": true, /* Show cookie icon to manage cookies */
+// "iconSrc": "", /* Optionnal: URL or base64 encoded image */
+        "iconPosition": "BottomLeft", /* Position of the icon between BottomRight, BottomLeft, TopRight and TopLeft */
+
+        "adblocker": false, /* Show a Warning if an adblocker is detected */
+
+        "DenyAllCta": true, /* Show the deny all button */
+        "AcceptAllCta": true, /* Show the accept all button when highPrivacy on */
+        "highPrivacy": true, /* HIGHLY RECOMMANDED Disable auto consent */
+
+        "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */
+
+        "removeCredit": true, /* Remove credit link */
+        "moreInfoLink": true, /* Show more info link */
+        "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */
+
+//"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for subdomain website */
+
+// "readmoreLink": "", /* Change the default readmore link pointing to tarteaucitron.io */
+
+        "mandatory": true /* Show a message about mandatory cookies */
+    });
+
+    tarteaucitron.user.gtagUa = 'G-0JR780RBXK';
+    tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */
+    };
+    (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
+
+    tarteaucitron.user.googletagmanagerId = 'GTM-T8ZFK2C';
+    (tarteaucitron.job = tarteaucitron.job || []).push('googletagmanager');
+
+</script>
+</body>
+</html>

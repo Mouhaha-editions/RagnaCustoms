@@ -1,40 +1,14 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_v2.html.twig' %}
 
 {% block title %}RagnaCustoms.com, Your favorites custom songs for Ragnarock VR{% endblock %}
 
 {% block body %}
-</div>
-<div class="container-fluid" id="homepage">
-    <div class="row pt-3 highlight">
-        <div class="col-md-12 text-left">
-            <h2>Last songs played</h2>
-            <div class="slider" data-load="{{ url("last_songs_played") }}">
-
-            </div>
-
-            <h2>Best songs</h2>
-            <div class="slider" data-load="{{ url("best_songs") }}">
-
-            </div>
-
-            <h2>Last songs added</h2>
-            <div class="slider" data-load="{{ url("last_songs_added") }}">
-
-            </div>
 
 
 
-        </div>
-    </div>
+{% endblock %}
 
-
-
-
-    {% endblock %}
-
-
-    {% block endBody %}
-
+{% block endBody %}
         <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
              aria-labelledby="staticBackdropLabel2" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -72,5 +46,4 @@
     {% endblock %}
     {% block javascripts %}
         {{ parent() }}
-{#        {{ encore_entry_script_tags('ajax-search') }}#}
     {% endblock %}

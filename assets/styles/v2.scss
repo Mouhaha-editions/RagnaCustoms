@@ -1,0 +1,31 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+$font-family-base: 'Rajdhani', sans-serif;
+$font-weight-base: 500;
+
+@import "~bootstrap";
+
+/** Colors */
+$bg : #2c2b2c;
+$bg-darker : #181718;
+
+body{
+  background:$bg;
+}
+
+.navbar{
+  padding:0;
+  background: linear-gradient($bg-darker, $bg) ;
+  box-shadow: 0 0 10px $bg-darker;
+  .avatar-mini{
+    border-radius: 15px;
+  }
+}
+.btn{
+  &.btn-blue{
+    background: linear-gradient(#174774,#1d5588 ,#174774);
+    border-radius: 3px;
+    border:1px solid #1d5588;
+   color:#fff;
+  }
+}

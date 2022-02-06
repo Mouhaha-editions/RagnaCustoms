@@ -39,7 +39,7 @@ class SongsController extends AbstractController
 
 
     /**
-     * @Route("/beta", name="beta")
+     * @Route("/v2", name="beta")
      * @param Request $request
      * @param SongRepository $songRepository
      * @param PaginationService $paginationService
