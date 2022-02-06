@@ -41,6 +41,45 @@
         </div>
     </div>
 </div>
+<h5>Fullpage 3 cols</h5>
+    <div class="container-fluid homepage">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>{{ "Top Rated"|trans }}</h2>
+                {{ render(controller("\\App\\Controller\\SongPartialController::topRated")) }}
+            </div>
+            <div class="col-md-4">
+                <h2>{{ "Latest songs"|trans }}</h2>
+                {{ render(controller("\\App\\Controller\\SongPartialController::latestSongs")) }}
+            </div>
+            <div class="col-md-4">
+                <h2>{{ "Last played"|trans }}</h2>
+                {{ render(controller("\\App\\Controller\\SongPartialController::lastPlayed")) }}
+            </div>
+        </div>
+    </div>
+
+    <h5>Fullpage 4 cols</h5>
+    <div class="container-fluid homepage">
+        <div class="row">
+            <div class="col-md-3">
+                <h2>{{ "Top Rated"|trans }}</h2>
+                {{ render(controller("\\App\\Controller\\SongPartialController::topRated")) }}
+            </div>
+            <div class="col-md-3">
+                <h2>{{ "Latest songs"|trans }}</h2>
+                {{ render(controller("\\App\\Controller\\SongPartialController::latestSongs")) }}
+            </div>
+            <div class="col-md-3">
+                <h2>{{ "Last played"|trans }}</h2>
+                {{ render(controller("\\App\\Controller\\SongPartialController::lastPlayed")) }}
+            </div>
+            <div class="col-md-3">
+                <h2>{{ "Last played"|trans }}</h2>
+                {{ render(controller("\\App\\Controller\\SongPartialController::lastPlayed")) }}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 
