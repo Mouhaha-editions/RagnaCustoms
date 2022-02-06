@@ -17,15 +17,38 @@ body{
   padding:0;
   background: linear-gradient($bg-darker, $bg) ;
   box-shadow: 0 0 10px $bg-darker;
+  color:#fff;
   .avatar-mini{
     border-radius: 15px;
   }
+  .btn-blue{font-size:16px;}
 }
 .btn{
   &.btn-blue{
     background: linear-gradient(#174774,#1d5588 ,#174774);
     border-radius: 3px;
     border:1px solid #1d5588;
-   color:#fff;
+    color:#fff;
+    padding: 0 15px!important;
+  }
+}
+header{
+  padding:50px 0 ;
+  position:relative;
+  background:url("../img/env.jpg") no-repeat center center;
+  max-height:315px;
+  h1{
+    font-size:40px;
+    font-weight: bold;
+    color:#fff;
+    span{
+      color:#ffd004;
+    }
+  }
+  .header-link{
+    color:#fff;
+    text-decoration: underline;
+    font-size:18px;
+    padding:15px 0 ;
   }
 }

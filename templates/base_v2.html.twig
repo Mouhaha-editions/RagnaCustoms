@@ -68,13 +68,9 @@
             <li class="nav-item">
                 <a class="nav-link text-level-9" href="{{ url("applications") }}">{{ "Apps"|trans }}</a>
             </li>
-
-
             <li class="nav-item">
-                <a href="#" class="btn btn-sm btn-blue mt-2 p-0 pl-2 pr-2">{{ "Submit"|trans }}</a>
+                <a href="#" class="btn btn-sm btn-blue mt-2 ">{{ "Submit"|trans }}</a>
             </li>
-
-
 
             {% if not is_granted("ROLE_USER") %}
                 <li class="nav-item">
@@ -106,7 +102,6 @@
     </div>
     </div>
 </nav>
-<div class="container">
 {#    <div class="runes"><img width="512" height="512" src="/apps/runes.png" alt="runes"/></div>#}
     {% for label, messages in app.flashes %}
         {% for message in messages %}
@@ -118,7 +113,6 @@
     {% block body %}
 
     {% endblock %}
-</div>
 {% block endBody %}
 {% endblock %}
 <hr/>

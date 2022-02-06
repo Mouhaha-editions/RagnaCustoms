@@ -3,47 +3,68 @@
 {% block title %}RagnaCustoms.com, Your favorites custom songs for Ragnarock VR{% endblock %}
 
 {% block body %}
-
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-8">
+                    <h1>Search over <span class="song-counter">{{ songService.count() }}</span> custom songs for<br/>
+                        Ragnarock VR on Steam and Meta Quest
+                    </h1>
+                    <form class=" search-and-filter">
+                        <div class="input-group">
+                            <input type="text" value="{{ app.request.get('search') }}"
+                                   class="form-control form-control-lg"
+                                   placeholder="{{ "Search an artist, title, mapper or genre"|trans }}" name="search"
+                                   id="search">
+                            <button type="submit" name="search_btn" value="1"
+                                    class="btn btn-sm btn-blue btn-outline-secondary">{{ "Search"|trans }}</button>
+                        </div>
+                    </form>
+                    <a href="#" class="header-link float-right">{{ "Advanced search"|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </header>
 
 
 {% endblock %}
 
 {% block endBody %}
-        <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
-             aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song Review"|trans }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="form-review">
-                        ...
-                    </div>
-
+    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song Review"|trans }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                <div class="modal-body" id="form-review">
+                    ...
+                </div>
+
             </div>
         </div>
-        <div class="modal fade" id="songPlaylists" data-backdrop="static" data-keyboard="false" tabindex="-1"
-             aria-labelledby="staticBackdropLabel3" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel3">{{ "Add song to playlist"|trans }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="form-playlist">
-                        ...
-                    </div>
-
+    </div>
+    <div class="modal fade" id="songPlaylists" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel3" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel3">{{ "Add song to playlist"|trans }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                <div class="modal-body" id="form-playlist">
+                    ...
+                </div>
+
             </div>
         </div>
-    {% endblock %}
+    </div>
+{% endblock %}
     {% block javascripts %}
         {{ parent() }}
     {% endblock %}

@@ -12,14 +12,12 @@ use App\Entity\SongHash;
 use App\Entity\SongRequest;
 use App\Entity\Utilisateur;
 use App\Entity\Vote;
-use App\Helper\AIMapper;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Exception;
-use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use Intervention\Image\ImageManagerStatic as Image;
 use Symfony\Component\Form\FormInterface;
@@ -553,9 +551,11 @@ class SongService
     private function coverOptimisation(Song $song)
     {
 
-        $cdir = scandir($this->kernel->getProjectDir()."/public/covers");
+        $cdir = scandir($this->kernel->getProjectDir() . "/public/covers");
         foreach ($cdir as $key => $value) {
-            if($value == "." || $value == ".." ){continue;}
+            if ($value == "." || $value == "..") {
+                continue;
+            }
             try {
                 $filedir = $this->kernel->getProjectDir() . "/public/covers/" . $value;
 
@@ -570,13 +570,22 @@ class SongService
                 }
                 $background->insert($image, 'center-center');
                 $background->save($filedir);
-
-
-            }catch(\Exception $exception){
+            } catch (Exception $exception) {
 
             }
         }
 
+    }
+
+    public function count()
+    {
+        $songs = $this->em->getRepository(Song::class)->createQueryBuilder('s')
+            ->where('s.isDeleted != true')
+            ->select('COUNT(s.id) AS count')
+            ->setFirstResult(0)
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+        return $songs['count'];
     }
 
 }
