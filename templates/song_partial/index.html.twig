@@ -1,0 +1,33 @@
+{% import "songs/macros/song.html.twig" as macro_song %}
+
+{% for song in songs %}
+    {% if loop.index == 1 %}
+        {{ macro_song.featuredBox(song) }}
+<table class="featured-table table table-sm">
+    <tr>
+        <th>{{ "Song"|trans }}</th>
+        <th>{{ "Mapper"|trans }}</th>
+        <th>{{ "Rating"|trans }}</th>
+        <th></th>
+    </tr>
+    {% else %}
+        <tr>
+            <td>
+                <div class="d-flex ">
+                    <img src="{{ song.cover }}" alt="cover"/>
+                    <div class="song pl-1">
+                        <div class="title"><a href="">{{ song.name }}</a></div>
+                        <div class="author"><a href="">{{ song.authorName }}</a></div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="mapper"><a href="">{{ song.levelAuthorName }}</a></div>
+            </td>
+            <td class="small-col">{% include 'songs/partial/downupvote.html.twig' with {song:song} %}</td>
+            <td class="small-col"><i class="fas fa-check"></i></td>
+        </tr>
+    {% endif %}
+
+    {% endfor %}
+</table>

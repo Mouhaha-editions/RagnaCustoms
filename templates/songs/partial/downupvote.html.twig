@@ -3,7 +3,7 @@
     {% if not is_granted('ROLE_USER') %}
         <i style="color:grey;opacity:0.5" class="fas fa-arrow-up"></i>
         {{ song.voteUp }}
-        <span>&nbsp;</span>
+{#        <span>&nbsp;</span>#}
         <i style="color:grey;opacity:0.5" class="fas fa-arrow-down"></i>
         {{ song.voteDown }}
     {% else %}
@@ -25,7 +25,7 @@
             <i class="{{  isPositive ? "text-success":"text-grey" }} fas fa-arrow-up"></i>
             {{ song.voteUp }}
         </a>
-        <span>&nbsp;</span>
+{#        <span>&nbsp;</span>#}
 
         <a style="text-decoration:none"
            data-toggle="tooltip"
