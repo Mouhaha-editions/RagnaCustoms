@@ -10,6 +10,7 @@ use App\Service\ScoreService;
 use App\Service\SongService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Intervention\Image\ImageManagerStatic as Image;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -126,6 +127,18 @@ class UploadSongController extends AbstractController
                         ])
                     ]);
                 }
+                $filedir = $this->get('kernel')->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension();
+
+                $image = Image::make($filedir);
+                $background = Image::canvas(349, 349, 'rgba(255, 255, 255, 0)');
+                if ($image->width() >= $image->height()) {
+                    $image->widen(349);
+                } else {
+                    $image->heighten(349);
+                }
+                $background->insert($image, 'center-center');
+                $background->save($filedir);
+
             } catch (Exception $e) {
                 return new JsonResponse([
                     'error' => true,
