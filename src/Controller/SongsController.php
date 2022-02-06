@@ -501,23 +501,13 @@ class SongsController extends AbstractController
     {
         return preg_replace('/[^a-zA-Z]/i', '', $getName);
     }
-
-    /**
-     * @Route("/test", name="test")
-     */
-    public function test(GoogleAnalyticsService $analyticsService)
-    {
-        $analyticsService->getStats();die;
-
-    }
+    
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
     public function songDetail(Request $request, Song $song, TranslatorInterface $translator,
                                SongService $songService, PaginationService $paginationService, DiscordService $discordService)
     {
-
-//        $analyticsService->getStats();die;
 
         if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));

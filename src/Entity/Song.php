@@ -946,7 +946,7 @@ class Song
         if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
             $cover = $this->getPlaceholder();
         }
-        return $cover;
+        return $cover."?t=".date('dmYH');
     }
 
     public function getId(): ?int
