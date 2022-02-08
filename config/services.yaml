@@ -58,8 +58,6 @@ services:
             - '@mailer'
             - '@App\Service\DiscordService'
             - '@App\Service\ScoreService'
-    App\Service\TwitchService:
-        arguments: [ '%env(resolve:TWITCH_APPLICATION_ID)%','%env(resolve:TWITCH_SECRET_CLIENT)%' ]
     App\Service\ScoreService:
         arguments: [ '@doctrine.orm.entity_manager','@kernel' ]
     App\Service\GamificationService:
