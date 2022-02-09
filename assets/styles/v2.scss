@@ -16,6 +16,7 @@ $song-mapper-color: #F4505D;
 
 /** Colors */
 $bg: #2c2b2c;
+$bg-lighter: #413f41;
 $bg-darker: #181718;
 
 body {
@@ -60,8 +61,7 @@ body {
 
     &:hover, &:focus, &:active {
       color: #fff;
-      background: #235886;
-      box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.25);
+      background: #3D90D9;
     }
   }
 }
@@ -183,6 +183,11 @@ header {
     border-top:none;
     border-bottom:1px solid #8F8F8F;
   }
+  tr{
+    &:hover{
+      background: $bg-lighter;
+    }
+  }
   td{
     img{
       height:50px;
@@ -226,7 +231,17 @@ header {
 
   &:hover, &:focus, &:active {
     color: #fff;
-    background: #235886;
-    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.25);
+    background: #3D90D9;
+  ;
+  }
+}
+section {
+  &.discord{
+    background: url("../img/env.jpg") no-repeat center center;
+  }
+  color: $white;
+  font-size:25px;
+  h2{
+    font-size:60px;
   }
 }

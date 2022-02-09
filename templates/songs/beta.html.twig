@@ -41,46 +41,45 @@
         </div>
     </div>
 </div>
-<h5>Fullpage 3 cols</h5>
-    <div class="container-fluid homepage">
+    <section class="discord pt-5 pb-5">
+    <div class="container">
         <div class="row">
-            <div class="col-md-4">
-                <h2>{{ "Top Rated"|trans }}</h2>
-                {{ render(controller("\\App\\Controller\\SongPartialController::topRated")) }}
+            <div class="col-md-6">
+                <iframe src="https://discord.com/widget?id=824960946404327450&theme=dark" style="margin:auto" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
             </div>
-            <div class="col-md-4">
-                <h2>{{ "Latest songs"|trans }}</h2>
-                {{ render(controller("\\App\\Controller\\SongPartialController::latestSongs")) }}
-            </div>
-            <div class="col-md-4">
-                <h2>{{ "Last played"|trans }}</h2>
-                {{ render(controller("\\App\\Controller\\SongPartialController::lastPlayed")) }}
+            <div class="col-md-6">
+                <h2 class="mb-5">Join the Community</h2>
+                <p class="m-0">We are regularly looking for new talents who want to help the community!</p>
+                <p class="m-0">We are looking for the following:</p>
+                <ul class="m-0">
+                    <li class="m-0">Developers</li>
+                    <li class="m-0">Graphic</li>
+                    <li class="m-0">Designers</li>
+                    <li class="m-0">Event coordinators</li>
+                    <li class="m-0">Streamers</li>
+                </ul>
+                <p class="m-0">Find us on <b>Discord</b> to learn more!</p>
             </div>
         </div>
     </div>
-
-    <h5>Fullpage 4 cols</h5>
-    <div class="container-fluid homepage">
+    </section>
+<section class="faq pt-5 pb-5">
+<div class="container">
         <div class="row">
-            <div class="col-md-3">
-                <h2>{{ "Top Rated"|trans }}</h2>
-                {{ render(controller("\\App\\Controller\\SongPartialController::topRated")) }}
-            </div>
-            <div class="col-md-3">
-                <h2>{{ "Latest songs"|trans }}</h2>
-                {{ render(controller("\\App\\Controller\\SongPartialController::latestSongs")) }}
-            </div>
-            <div class="col-md-3">
-                <h2>{{ "Last played"|trans }}</h2>
-                {{ render(controller("\\App\\Controller\\SongPartialController::lastPlayed")) }}
-            </div>
-            <div class="col-md-3">
-                <h2>{{ "Last played"|trans }}</h2>
-                {{ render(controller("\\App\\Controller\\SongPartialController::lastPlayed")) }}
-            </div>
+           <div class="col-12">
+               <h2>Frequently Asked Questions</h2>
+               <p>Q: Can I play custom songs on the Quest 2 version?<br/>
+                   A: Yes! Read our Getting Started Guide to learn more.</p>
+               <p>Q: How do I upload my scores for custom songs?<br/>
+                   A: You must have the official RagnaCustoms app running before you launch Ragnarock. Download it from our <a href="{{ url('applications') }}">Apps page</a>.</p>
+{#               <p>Q: What are credits and how do they work?<br/>#}
+{#                   A: Credits are used to request custom songs from our mapping community. Read more here.</p>#}
+               <p>Q: How do I map custom songs in Ragnarock VR?<br/>
+                   A: You can download Edda by PKBeam <a href="https://pkbeam.github.io/Edda/" rel="noreferrer">here</a> to learn how to map customs songs.</p>
+           </div>
         </div>
     </div>
-
+</section>
 {% endblock %}
 
 {% block endBody %}
@@ -114,7 +113,6 @@
                 <div class="modal-body" id="form-playlist">
                     ...
                 </div>
-
             </div>
         </div>
     </div>
