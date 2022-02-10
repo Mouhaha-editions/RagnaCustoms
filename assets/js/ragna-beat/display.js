@@ -131,7 +131,8 @@ function init() {
         }
     });
 }
-$(function () {
+
+function start(){
     init();
 
     $(document).on('click', '#ragna-beat-play', function () {
@@ -241,122 +242,17 @@ $(function () {
             audio_drums[i].src = drumSounds[index].url;
         }
     });
+}
 
+$(function () {
+    start();
 });
 
 $(document).on('preview-ready',function () {
-    init();
-
-    $(document).on('click', '#ragna-beat-play', function () {
-        let level = $(this).attr('data-level');
-        if (level === 'play') {
-            if ($(this).hasClass('playing')) {
-                startTime = Date.now() - audio.currentTime * 1000 - delay - 1000 / fps * 2;
-                audio.play();
-            } else {
-                startTime = Date.now();
-
-                setTimeout(function () {
-                    audio.play();
-                }, delay);
-
-                $(this).addClass('playing');
-            }
-
-            $(this).attr('data-level', 'pause');
-            $(this).html('<i class="fas fa-pause"></i>');
-            isPlaying = true;
-            animationFrame = requestAnimationFrame(animate);
-        } else if (level === "pause") {
-            $(this).attr('data-level', 'play');
-            $(this).html('<i class="fas fa-play"></i>');
-            audio.pause();
-            isPlaying = false;
-            cancelAnimationFrame(animationFrame);
-        }
-    });
-
-    $(document).on('click', '.ragna-beat-diff', function () {
-        stopSong();
-        $('.ragna-beat-diff.btn-dark').removeClass('btn-dark');
-        let index = $(this).index('.ragna-beat-diff');
-        $('.ragna-beat-diff').eq(index).addClass('btn-dark');
-        levelDetail = levelDetails[index];
-        moveSpeed = infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[index]._noteJumpMovementSpeed / 3 * ratio;
-        setDelay();
-    });
-
-    $(document).on('click', '#ragna-beat-stop', function () {
-        stopSong();
-    });
-
-    $(document).on('change', '#vol-control', function () {
-        audio.volume = parseInt($(this).val()) / 100;
-    });
-
-    $(document).on('change', '#drum-vol-control', function () {
-        let value = parseInt($(this).val()) / 100;
-        for (let index in audio_drums) {
-            audio_drums[index].volume = value;
-        }
-    });
-
-    document.addEventListener('visibilitychange', function () {
-        if (document.visibilityState === "visible" && isPlaying) {
-            rings = [];
-            for (let index in runes) delete runes[index];
-            drawDrums();
-            let elapsedTime = (Date.now() - startTime) / 1000;
-            let timeStamp = 0;
-            for (let i = 0; i < levelDetail._notes.length; i++) {
-                timeStamp = levelDetail._notes[i]._time / songBPS;
-                if (timeStamp <= elapsedTime && i !== levelDetail._notes.length) {
-                    jsonIteration = i + 1;
-                }
-            }
-        }
-    });
-
-    $(document).on('mousedown', '#ragna-beat-duration input', function () {
-        audio.pause();
-        isPlaying = false;
-        for (let index in runes) delete runes[index];
-        drawDrums();
-        cancelAnimationFrame(animationFrame);
-    });
-
-    $(document).on('mouseup', '#ragna-beat-duration input', function () {
-        let value = $(this).val() / 100 * infoDat._songApproximativeDuration;
-        audio.currentTime = value;
-        startTime = Date.now() - value * 1000 - delay - 1000 / fps * 2;
-        isPlaying = true;
-        rings = [];
-        animationFrame = requestAnimationFrame(animate);
-        audio.play();
-        jsonIterationToCurrentTime(value);
-        $('#ragna-beat-play').attr('data-level', 'pause');
-        $('#ragna-beat-play').html('<i class="fas fa-pause"></i>');
-        $('#ragna-beat-play').addClass('playing');
-    });
-
-    $(document).on('input', '#ragna-beat-duration input', function () {
-        let value = $(this).val() / 100 * infoDat._songApproximativeDuration;
-        $('#ragna-beat-duration .current').text(new Date(value * 1000).toISOString().substr(14, 5));
-    });
-
-    $(document).on('click', '#ragna-beat-sounds button', function () {
-        let index = $(this).index('#ragna-beat-sounds button');
-
-        $('#ragna-beat-sounds button').removeClass('btn-dark');
-        $(this).addClass('btn-dark');
-
-        for (let i in audio_drums) {
-            audio_drums[i].src = drumSounds[index].url;
-        }
-    });
+    start();
 
     $("#previewSong").on("hide.bs.modal", function () {
-        audio.pause();
+        stopSong();
     });
 });
 
