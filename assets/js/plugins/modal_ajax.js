@@ -10,6 +10,7 @@ $(document).on('click', ".ajax-load", function () {
         },
         success: function (data) {
             body.html(data.response);
+            console.log(data)
             $(".rating-list").on('change', function () {
                 let t = $(this);
                 $('input[name="' + t.data('input-selector') + '"]').val(t.data('rating'));
