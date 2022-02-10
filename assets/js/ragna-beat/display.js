@@ -355,9 +355,9 @@ $(document).on('preview-ready',function () {
         }
     });
 
-    // $("#previewSong").on("hide.bs.modal", function () {
-    //     stopSong();
-    // });
+    $("#previewSong").on("hide.bs.modal", function () {
+        audio.pause();
+    });
 });
 
 function jsonIterationToCurrentTime(elapsedTime) {
