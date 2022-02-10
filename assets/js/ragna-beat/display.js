@@ -132,7 +132,7 @@ function init() {
     });
 }
 
-function start(){
+function startInit(){
     init();
 
     $(document).on('click', '#ragna-beat-play', function () {
@@ -245,11 +245,11 @@ function start(){
 }
 
 $(function () {
-    start();
+    startInit();
 });
 
-$(document).on('preview-ready',function () {
-    start();
+$("#previewSong").on("shown.bs.modal",function () {
+    startInit();
 
     $("#previewSong").on("hide.bs.modal", function () {
         stopSong();
