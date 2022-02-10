@@ -248,7 +248,7 @@ $(function () {
     startInit();
 });
 
-$("#previewSong").on("shown.bs.modal",function () {
+$(document).on('preview-ready',function () {
     startInit();
 
     $("#previewSong").on("hide.bs.modal", function () {
