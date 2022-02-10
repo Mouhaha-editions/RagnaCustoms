@@ -28,6 +28,7 @@ let audio_drums = [
 
 
 function init() {
+    console.log('init');
     let diffsWrapper = $("#ragna-beat-diffs");
     let buttonsWrapper = $("#ragna-beat-buttons");
     let volumesWrapper = $("#ragna-beat-volumes");
@@ -133,6 +134,7 @@ function init() {
 
 $(function () {
     init();
+    console.log('loaded')
     $(document).on('click','#ragna-beat-play', function () {
         let level = $(this).attr('data-level');
 
