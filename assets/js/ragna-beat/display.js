@@ -29,8 +29,6 @@ let audio_drums = [
 let singleton = false;
 
 function init() {
-
-    singleton = true;
     let diffsWrapper = $("#ragna-beat-diffs");
     let buttonsWrapper = $("#ragna-beat-buttons");
     let volumesWrapper = $("#ragna-beat-volumes");
@@ -135,7 +133,7 @@ function init() {
 }
 
 
-$(document).one('preview-ready',function () {
+$(document).on('preview-ready',function () {
     init();
 
     $(document).on('click', '#ragna-beat-play', function () {
