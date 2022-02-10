@@ -2,7 +2,7 @@ $(document).on('click', ".ajax-load", function () {
     let t = $(this);
     let body = $(t.data('target') + " .modal-body");
     body.html("loading ...");
-    let target = t.data('target');
+
     $.ajax({
         url: t.data('url'),
         data: {

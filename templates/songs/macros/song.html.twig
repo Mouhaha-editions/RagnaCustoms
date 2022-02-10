@@ -200,10 +200,21 @@
                 <a href="#"><i class="fas fa-list-ol"></i> {{ "Leaderboards"|trans }}</a>
             </div>
             <div class="d-flex buttons">
-                <div class="pr-2 pt-1"><a href="#" class="ajax-link"><i class="fas fa-play-circle"></i></a></div>
+                <div class="pr-2 pt-1">
+                    <a href="#"
+                        data-toggle="modal"
+                        data-target="#previewSong"
+                        data-refresh="true"
+                        data-url="{{url("partial_preview_song",{id:song.id})}}"
+                        class="ajax-load">
+                        <i class="fas fa-play-circle"></i>
+                    </a>
+                </div>
 
                 <div><a href="{{ url("song_direct_download",{id:song.id}) }}"
-                        class="btn btn-ragnacustoms">{{ "Download"|trans }}</a></div>
+                        class="btn btn-info btn-sm btn-download-zip"><i class="fas fa-download"></i> {{ "Zip"|trans }}</a></div>
+                <div class="ml-2"><a href="ragnac://install/{{ song.id }}"
+                                     class="btn btn-sm btn-success btn-download-1-click"><i class="fas fa-download"></i> {{ "1 click"|trans }}</a></div>
             </div>
         </div>
     </div>

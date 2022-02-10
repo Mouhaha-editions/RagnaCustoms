@@ -130,9 +130,9 @@ function init() {
     });
 }
 
+
 $(function () {
     init();
-
     $(document).on('click','#ragna-beat-play', function () {
         let level = $(this).attr('data-level');
 

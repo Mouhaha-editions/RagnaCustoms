@@ -276,14 +276,14 @@ class SongsController extends AbstractController
             ->setParameter("wip", $wip);
         $categories = $request->get('downloads_filter_categories', null);
         if ($categories != null) {
-            $qb->leftJoin('s.categoryTags','t');
-            foreach($categories AS $k=>$v){
+            $qb->leftJoin('s.categoryTags', 't');
+            foreach ($categories as $k => $v) {
                 $qb->andWhere("t.id = :tag$k")
                     ->setParameter("tag$k", $v);
             }
         }
 
-            if ($request->get('downloads_filter_order', null)) {
+        if ($request->get('downloads_filter_order', null)) {
             switch ($request->get('downloads_filter_order')) {
                 case 1:
                     $qb->orderBy('s.voteUp - s.voteDown', 'DESC');
@@ -413,10 +413,11 @@ class SongsController extends AbstractController
             'categories' => $categories
         ]);
     }
+
     /**
      * @Route("/songs/download/{id}", name="song_download")
      */
-    public function download(Request $request, Song $song,KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    public function download(Request $request, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -441,10 +442,11 @@ class SongsController extends AbstractController
 
         return $response;
     }
+
     /**
      * @Route("/songs/download/{id}/{api}", name="song_download_api", defaults={"api"=null})
      */
-    public function downloadApiKey(Request $request, Song $song, string $api,KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    public function downloadApiKey(Request $request, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -501,11 +503,11 @@ class SongsController extends AbstractController
     {
         return preg_replace('/[^a-zA-Z]/i', '', $getName);
     }
-    
+
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
-    public function songDetail(Request $request, Song $song, TranslatorInterface $translator,
+    public function songDetail(Request     $request, Song $song, TranslatorInterface $translator,
                                SongService $songService, PaginationService $paginationService, DiscordService $discordService)
     {
 
@@ -605,4 +607,11 @@ class SongsController extends AbstractController
         return $this->render('songs/partial/slider_cards.html.twig', ['songs' => $songService->getLastSongsPlayed(8)]);
     }
 
+    /**
+     * @Route("/song/partial/preview/{id}", name="partial_preview_song")
+     */
+    public function partialPreview(Song $song)
+    {
+        return new JsonResponse(['response'=>$this->renderView("songs/partial/preview_player.html.twig", ['song' => $song])]);
+    }
 }

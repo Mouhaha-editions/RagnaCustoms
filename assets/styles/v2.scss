@@ -12,6 +12,10 @@ $song-title-color: #E4AE09;
 $song-author-color: #FFF;
 $song-mapper-color: #F4505D;
 
+$success :#32B027 ;
+$info :#235886 ;
+$danger: #F4505D;
+
 @import "~bootstrap";
 
 /** Colors */
@@ -254,7 +258,7 @@ header {
           right: 0;
           width: 60px;
           vertical-align: middle;
-          background: #235886;
+          background: $success;
           height: 100%;
           padding-top:12px;
           line-height:18px;
@@ -264,7 +268,7 @@ header {
           position: absolute;
           right: 60px;
           width: 60px;
-          background: #32B027;
+          background: $info;
           height: 100%;
           padding-top:12px;
           line-height:18px;
@@ -353,11 +357,15 @@ section {
   &.discord {
     background: url("../img/env.jpg") no-repeat center center;
   }
-
   color: $white;
   font-size: 25px;
-
   h2 {
     font-size: 60px;
+  }
+  &.faq{
+    a{
+      color:#fff;
+      text-decoration:underline;
+    }
   }
 }
