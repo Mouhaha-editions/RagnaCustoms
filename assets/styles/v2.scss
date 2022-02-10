@@ -16,9 +16,13 @@ $song-mapper-color: #F4505D;
 
 /** Colors */
 $bg: #2c2b2c;
-$bg-lighter: #413f41;
+$bg-lighter: #414141;
 $bg-darker: #181718;
-
+@media (min-width: 1200px) {
+  .container-xl, .container-lg, .container-md, .container-sm, .container {
+    max-width: 1440px;
+  }
+}
 body {
   background: $bg;
   font-family: $font-family-base;
@@ -137,6 +141,7 @@ header {
   img {
     box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
   }
+
   .level {
     width: 24px;
     line-height: 24px;
@@ -146,81 +151,190 @@ header {
     margin-left: 5px;
     float: left;
   }
+
   .level-list {
     position: absolute;
     bottom: 7px;
     right: 9px;
   }
+
   .title a {
     color: $song-title-color;
     font-size: 18px;
     font-weight: 700;
   }
+
   .author a {
     color: $song-author-color;
     font-size: 16px;
     font-weight: 400;
   }
+
   .mapper a {
     color: $song-mapper-color;
     font-size: 16px;
     font-weight: 400;
   }
+
   .buttons a {
     color: #fff;
   }
+
   .up_down_vote {
     a {
       color: #fff;
     }
   }
 }
-.featured-table{
-  th{
-    font-size:12px;
-    color:#8F8F8F;
-    font-weight:400;
-    border-top:none;
-    border-bottom:1px solid #8F8F8F;
+
+.featured-table {
+  th {
+    font-size: 12px;
+    color: #8F8F8F;
+    font-weight: 400;
+    border-top: none;
+    border-bottom: 1px solid #8F8F8F;
   }
-  tr{
-    &:hover{
+
+  .level-list {
+    //display:none;
+    .level {
+      display: inline-block;
+      width: 14px;
+      line-height: 14px;
+      border-radius: 7px;
+      font-size: 10px;
+      text-align: center;
+      color: #fff;
+      margin-left: 2px;
+      float: left;
+    }
+  }
+
+  tr {
+    &:hover {
       background: $bg-lighter;
+
+      .level-list {
+        display: block;
+      }
     }
   }
-  td{
-    img{
-      height:50px;
+
+  td {
+    position: relative;
+
+    img {
+      height: 50px;
     }
-    &.small-col{
-      width:30px;
+
+    &.small-col {
+      width: 40px;
+
     }
+
+    &.download {
+      width: 60px;
+      text-align: center;
+      vertical-align: middle;
+
+      .big-buttons {
+        position: absolute;
+        height: 100%;
+        right: 0;
+        top: 0;
+
+        a {
+          color: #fff;
+          text-decoration: none;
+        }
+
+        .one-click {
+          position: absolute;
+          right: 0;
+          width: 60px;
+          vertical-align: middle;
+          background: #235886;
+          height: 100%;
+          padding-top:12px;
+          line-height:18px;
+        }
+
+        .ddl {
+          position: absolute;
+          right: 60px;
+          width: 60px;
+          background: #32B027;
+          height: 100%;
+          padding-top:12px;
+          line-height:18px;
+        }
+      }
+
+      i.fa-check {
+        color: $bg-lighter;
+        font-size: 20px;
+      }
+
+      .preview-popup {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .non-hover {
+        display: block;
+
+      }
+
+      .on-hover {
+        display: none;
+
+      }
+
+      &:hover {
+        .non-hover {
+          display: none;
+        }
+
+        .on-hover {
+          display: block;
+        }
+      }
+
+    }
+
     .title a {
       color: $song-title-color;
       font-size: 14px;
-      line-height:12px;
+      line-height: 12px;
       font-weight: 700;
     }
+
     .author a {
       color: $song-author-color;
       font-size: 12px;
       font-weight: 400;
     }
+
     .mapper a {
       color: $song-mapper-color;
       font-size: 12px;
       font-weight: 400;
     }
+
     .buttons a {
       color: #fff;
     }
+
     .up_down_vote {
       a {
         color: #fff;
       }
     }
+
   }
 }
+
 .btn.btn-ragnacustoms {
   padding: 0 25px;
   font-size: 16px;
@@ -231,17 +345,19 @@ header {
 
   &:hover, &:focus, &:active {
     color: #fff;
-    background: #3D90D9;
-  ;
+    background: #3D90D9;;
   }
 }
+
 section {
-  &.discord{
+  &.discord {
     background: url("../img/env.jpg") no-repeat center center;
   }
+
   color: $white;
-  font-size:25px;
-  h2{
-    font-size:60px;
+  font-size: 25px;
+
+  h2 {
+    font-size: 60px;
   }
 }

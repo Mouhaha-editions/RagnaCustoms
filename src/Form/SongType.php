@@ -48,7 +48,7 @@ class SongType extends AbstractType
                 'minimum_input_length' => 0,
                 'allow_clear' => true,
                 'delay' => 250,
-                'placeholder' => 'Select a categorie, or more ..',
+                'placeholder' => 'Select a category, or more ..',
 
                 'required' => true
             ])

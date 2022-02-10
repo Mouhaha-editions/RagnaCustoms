@@ -1,5 +1,6 @@
 import './styles/v2.scss';
 import 'bootstrap';
+
 window.$ = window.jQuery = $;
 
 import '../assets/js/plugins/rating';
@@ -10,7 +11,14 @@ import '../assets/js/plugins/modal_ajax';
 import '../assets/js/plugins/playlist';
 
 $(function () {
+    $(document).on('mouseout', '.download', function () {
 
+    });
+    $(document).on('click', '.open-download-buttons', function () {
+        let t = $(this).closest('.on-hover').find('.big-buttons')
+        t.toggleClass('d-none');
+        return false;
+    });
     $(document).on('mouseover', ".popover-trigger", function () {
         $(this).popover("show");
     });
