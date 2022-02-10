@@ -46,9 +46,14 @@
                         <a href="{{ url("song_direct_download",{id:song.id}) }}" class="ddl"><i class="fas fa-download"></i><br/>ZIP</a>
                     </div>
                     <a href="#"
-                       class="preview-popup">
+                       data-toggle="modal"
+                       data-target="#previewSong"
+                       data-refresh="true"
+                       data-url="{{url("partial_preview_song",{id:song.id})}}"
+                       class="ajax-load">
                         <i class="fas fa-play-circle"></i>
                     </a>
+
                     <a href="#"
                        class="open-download-buttons text-success ml-1">
                         <i class="fas fa-download"></i>
