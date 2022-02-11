@@ -12,8 +12,8 @@ $song-title-color: #E4AE09;
 $song-author-color: #FFF;
 $song-mapper-color: #F4505D;
 
-$success :#32B027 ;
-$info :#235886 ;
+$success: #32B027;
+$info: #235886;
 $danger: #F4505D;
 
 @import "~bootstrap";
@@ -27,6 +27,7 @@ $bg-darker: #181718;
     max-width: 1440px;
   }
 }
+
 body {
   background: $bg;
   font-family: $font-family-base;
@@ -74,6 +75,16 @@ body {
   }
 }
 
+h1 {
+  font-size: 48px;
+  color: #fff;
+  font-weight: 700;
+
+  span {
+    color: #ffd004;
+    font-size: 42px;
+  }
+}
 
 header {
   padding: 50px 0;
@@ -91,6 +102,7 @@ header {
       font-size: 42px;
     }
   }
+
 
   form {
     input::placeholder {
@@ -260,8 +272,8 @@ header {
           vertical-align: middle;
           background: $success;
           height: 100%;
-          padding-top:12px;
-          line-height:18px;
+          padding-top: 12px;
+          line-height: 18px;
         }
 
         .ddl {
@@ -270,8 +282,8 @@ header {
           width: 60px;
           background: $info;
           height: 100%;
-          padding-top:12px;
-          line-height:18px;
+          padding-top: 12px;
+          line-height: 18px;
         }
       }
 
@@ -337,7 +349,139 @@ header {
     }
 
   }
+
 }
+
+.featured-table-lg {
+  color: #fff;
+
+  th {
+    font-size: 18px;
+    color: #8F8F8F;
+    font-weight: 400;
+    border-top: none;
+    border-bottom: 1px solid #8F8F8F;
+  }
+
+  .level-list {
+    //display:none;
+    .level {
+      display: inline-block;
+      width: 22px;
+      line-height: 22px;
+      border-radius: 11px;
+      font-size: 18px;
+      text-align: center;
+      color: #fff;
+      margin-left: 2px;
+      float: left;
+    }
+  }
+
+  td {
+    position: relative;
+    vertical-align: middle;
+    &.download {
+      width: 60px;
+      text-align: center;
+      vertical-align: middle;
+
+      .big-buttons {
+        position: absolute;
+        height: 100%;
+        right: 0;
+        top: 0;
+
+        a {
+          color: #fff;
+          text-decoration: none;
+        }
+
+        .one-click {
+          position: absolute;
+          right: 0;
+          width: 60px;
+          vertical-align: middle;
+          background: $success;
+          height: 100%;
+          padding-top: 12px;
+          line-height: 18px;
+        }
+
+        .ddl {
+          position: absolute;
+          right: 60px;
+          width: 60px;
+          background: $info;
+          height: 100%;
+          padding-top: 12px;
+          line-height: 18px;
+        }
+      }
+
+      i.fa-check {
+        color: $bg-lighter;
+        font-size: 20px;
+      }
+
+      .preview-popup {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .non-hover {
+        display: block;
+
+      }
+
+      .on-hover {
+        display: none;
+
+      }
+
+      &:hover {
+        .non-hover {
+          display: none;
+        }
+
+        .on-hover {
+          display: block;
+        }
+      }
+
+    }
+
+    .up_down_vote {
+      a {
+        color: #fff;
+      }
+    }
+
+    .title a {
+      color: $song-title-color;
+      font-size: 16px;
+      line-height: 12px;
+      font-weight: 500;
+    }
+
+    .author a {
+      color: $song-author-color;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .mapper a {
+      color: $song-mapper-color;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    img {
+      width: 53px;
+    }
+  }
+}
+
 
 .btn.btn-ragnacustoms {
   padding: 0 25px;
@@ -357,15 +501,18 @@ section {
   &.discord {
     background: url("../img/env.jpg") no-repeat center center;
   }
+
   color: $white;
   font-size: 25px;
+
   h2 {
     font-size: 60px;
   }
-  &.faq{
-    a{
-      color:#fff;
-      text-decoration:underline;
+
+  &.faq {
+    a {
+      color: #fff;
+      text-decoration: underline;
     }
   }
 }

@@ -1,0 +1,28 @@
+<div class="d-flex">
+    <div class="song-vote-{{ song.id }} text-left popover-trigger pt-2 pb-2 pr-1" data-html="true"
+     data-toggle="popover" data-trigger="hover"
+     title="{{ "Rating"|trans }}"
+     data-placement="top"
+     data-content="{% include 'songs/partial/rate.html.twig' with {song:song} %}">
+    <div>
+        <a href='#' class='button ajax-load ajax-modal-form disabled with-only-icon popup-review-trigger song-review'
+           data-toggle='modal' data-target='#reviewSong'
+           data-replace-closest-selector='.song-vote-content-{{ song.id }}'
+           data-url='{{ url('song_vote_review',{id:song.id}) }}'
+           data-song-id='{{ song.id }}'>
+            <div class='rating-list d-flex flex-row'>
+                {% set rate = is_granted('ROLE_USER') and song.isReviewedBy(app.user) %}
+                <div class='rating {% if rate  %}filled text-warning{% endif %}'>
+                    <i class='{% if rate   %}fas{% else %}far{% endif %} fa-star'></i>
+                </div>
+
+            </div>
+        </a>
+    </div>
+
+</div>
+<div class="text-right pt-2 pb-2 ">
+    <span>{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}</span>
+    ({{ song.countVotes+0 }})
+</div>
+</div>

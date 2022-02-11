@@ -213,6 +213,12 @@ class Song
         });
         return $votes->isEmpty() ? null : $votes->first();
     }
+    public function isReviewedBy(?UserInterface $user) {
+        $votes = $this->votes->filter(function(Vote $vote)use($user){
+            return $vote->getUser() === $user;
+        });
+        return count($votes)>0;
+    }
 
     public function isRanked()
     {
