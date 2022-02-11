@@ -14,8 +14,8 @@
                     <i class="fas fa-edit"></i>
                 </a>
                 <a title="see statistics" class="img" href="{{ url('song_detail',{slug:song.slug}) }}#statistics">
-                    <img data-src="{{ song.cover }}" alt="{{ song.name }}"
-                         class="img-fluid lazyload"/>
+                    <img src="{{ song.cover }}" alt="{{ song.name }}"
+                         class="img-fluid"/>
                 </a>
                 <h6>{{ song.name }}</h6>
 
@@ -51,8 +51,8 @@
         <div class="score">
             <div class="score-title text-center">
                 <a class="img" href="{{ url('song_detail',{slug:song.slug}) }}">
-                    <img data-src="{{ song.cover }}" alt="{{ song.name }}"
-                         class="img-fluid lazyload"/>
+                    <img src="{{ song.cover }}" alt="{{ song.name }}"
+                         class="img-fluid "/>
                 </a>
                 <h6>{{ song.name }}</h6>
                 <div class="d-flex flex-fill justify-content-end text-center">
