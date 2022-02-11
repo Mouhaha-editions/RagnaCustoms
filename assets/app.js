@@ -312,10 +312,7 @@ $(function () {
             }
         });
         return false;
-
     });
-
-
 
     $(document).on('click', ".ajax-modal-form", function () {
         let t = $(this);
