@@ -158,7 +158,7 @@ $(function () {
         save();
     });
     $(".customCss").on('change', function () {
-        $("#customCss").html($(this).val());
+        $("#customCss").text($(this).val());
         save();
     });
     $("#canvas").droppable({});
