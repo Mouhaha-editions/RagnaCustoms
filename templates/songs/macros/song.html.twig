@@ -29,8 +29,8 @@
                 </div>
 
                 <a href="{{ url('song_detail',{slug:song.slug}) }}">
-                    <img src="{{ song.placeholder }}" data-src="{{ song.cover }}"
-                         class="lazyload img-fluid rounded thumbnail" width="150px" height="150px"
+                    <img src="{{ song.cover }}"
+                         class="img-fluid rounded thumbnail" width="150px" height="150px"
                          alt="cover"/>
                 </a>
             </figure>
@@ -73,9 +73,9 @@
 {% macro smallbox(song) %}
     <div class="d-flex flex-row mb-2">
         <a href="{{ url('song_detail',{slug:song.slug}) }}">
-            <img src="{{ song.placeholder }}" data-src="{{ song.cover }}"
+            <img src="{{ song.cover }}"
 
-                 class="lazyload img-fluid rounded thumbnail" width="50px" height="50px"
+                 class=" img-fluid rounded thumbnail" width="50px" height="50px"
                  alt="cover"/>
         </a>
 
@@ -95,8 +95,8 @@
         <div class="d-flex flex-row justify-content-between">
             <figure class="product-preview-image short liquid" style="position: relative">
                 <a href="{{ url('song_detail',{slug:song.slug}) }}">
-                    <img src="{{ song.placeholder }}" data-src="{{ song.cover }}"
-                         class="lazyload img-fluid rounded thumbnail" width="150px" height="150px"
+                    <img src="{{ song.cover }}"
+                         class=" img-fluid rounded thumbnail" width="150px" height="150px"
                          alt="cover"/>
                 </a>
             </figure>
