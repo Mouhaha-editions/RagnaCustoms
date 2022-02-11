@@ -3,7 +3,7 @@
         "@babel/core": "^7.6.2",
         "@babel/preset-env": "^7.6.2",
         "@symfony/stimulus-bridge": "^2.0.0",
-        "@symfony/webpack-encore": "^1.8.1",
+        "@symfony/webpack-encore": "^0.24.0",
         "autoprefixer": "^10.4.2",
         "babelify": "^10.0.0",
         "core-js": "^3.0.0",
@@ -26,14 +26,12 @@
     },
     "dependencies": {
         "bootstrap": "^4.6.0",
-        "bootstrap-switch-button": "^1.1.0",
         "chart.js": "^3.5.0",
         "jquery": "^3.6.0",
         "jquery-ui": "^1.12.1",
         "lazysizes": "^5.3.2",
         "popper.js": "^1.16.1",
-        "select2": "^4.1.0-rc.0",
-        "tarteaucitronjs": "^1.9.5"
+        "select2": "^4.1.0-rc.0"
     },
     "license": "UNLICENSED",
     "private": true,
