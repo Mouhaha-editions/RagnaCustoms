@@ -121,7 +121,6 @@ const copyToClipboard = str => {
     document.body.removeChild(el);
 };
 
-import 'bootstrap-switch-button/dist/bootstrap-switch-button.min';
 
 let hashtag = window.location.hash;
 
