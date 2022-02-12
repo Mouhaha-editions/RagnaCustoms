@@ -515,6 +515,9 @@ class SongsController extends AbstractController
                 }, $ids)));
         }
 
+        if($request->get('order_by')){
+            $qb->orderBy($request->get('order_by'),$request->get('order_sort','asc'));
+        }
         //$pagination = null;
         //if($ajaxRequest || $request->get('ppage1')) {
         $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);

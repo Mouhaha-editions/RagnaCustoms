@@ -20,13 +20,22 @@
                     <i class="fas fa-download"></i> {{ '1 click'|trans }}</button>
                 <table class="featured-table-lg table table-sm">
                     <tr>
-                        <th>{{ "Title"|trans }}</th>
+                        <th><a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.name", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
+                            class="{% if app.request.get('order_by') == "s.name" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">
+                            {{ "Title"|trans }}
+                            </a>
+                        </th>
                         <th>{{ "Difficulties"|trans }}</th>
                         <th>{{ "Mapper"|trans }}</th>
                         <th>{{ "Votes"|trans }}</th>
                         <th>{{ "Rating"|trans }}</th>
                         <th class="text-right">{{ "Upload Date"|trans }}</th>
-                        <th class="text-right">{{ "Downloads"|trans }}</th>
+                        <th class="text-right">
+                            <a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.downloads", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
+                               class="{% if app.request.get('order_by') == "s.downloads" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">
+
+                            {{ "Downloads"|trans }}
+                        </th>
                         <th></th>
                     </tr>
                     {% for song in songs.entities %}
