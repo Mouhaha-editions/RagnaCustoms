@@ -33,20 +33,25 @@
                         {% include 'songs/partial/song_row.html.twig' with {songs:songs} %}
                     {% else %}
 
-                        <tr class="row">
+                        <tr>
                             <td colspan="8">
                                 {{ "No song for now"|trans }}
                             </td>
                         </tr>
                     {% endfor %}
                 </table>
-                <div class="col-12 d-flex justify-content-between">
+
+                <div class="row">
                     {% if songs is not null %}
                         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-                        <div class="text-left pagination">
-                            {{ "Pages:"|trans }} {{ macro_pagination.paginate(songs) }}
+                        <div class="text-center col-md-6">
+                            {{ "Showing %SongCount% on %SongTotal%"|trans|replace({"%SongCount%":songs.entities|length,"%SongTotal%":songs.count}) }}
                         </div>
-                        <div class="text-right">{{ songs.entities|length }} {{ "songs displayed on"|trans }} {{ songs.count }}</div>
+
+                        <div class="text-center  col-md-6 pagination">
+                            {{ "Pages:"|trans }}&nbsp;{{ macro_pagination.paginate(songs) }}
+                            <a class="no-decoration ml-3" href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({("ppage"~songs.identifier):songs.current+1})) }}">{{ "Next page"|trans }}</a>
+                        </div>
                     {% endif %}
                     {# {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }} #}
                 </div>

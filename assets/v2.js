@@ -21,11 +21,11 @@ $(function () {
         t.toggleClass('d-none');
         return false;
     });
-    $(document).on('focusout', 'tr', function () {
-        let t = $(this).find('.on-hover').find('.big-buttons')
-        t.addClass('d-none');
-        return false;
-    });
+    // $(document).on('focusout', 'tr', function () {
+    //     let t = $(this).find('.on-hover').find('.big-buttons')
+    //     t.addClass('d-none');
+    //     return false;
+    // });
     $(document).on('mouseover', ".popover-trigger", function () {
         $(this).popover("show");
     });

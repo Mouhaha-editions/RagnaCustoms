@@ -34,6 +34,7 @@ body {
   background: $bg;
   font-family: $font-family-base;
   font-weight: 400;
+  color:#fff;
 }
 
 .navbar {
@@ -414,6 +415,11 @@ header {
     position: relative;
     vertical-align: middle;
 
+    a {
+      color: #fff;
+      text-decoration: none;
+    }
+
     &.download {
       width: 60px;
       text-align: center;
@@ -425,10 +431,6 @@ header {
         right: 0;
         top: 0;
 
-        a {
-          color: #fff;
-          text-decoration: none;
-        }
 
         .one-click {
           position: absolute;
@@ -557,5 +559,20 @@ section {
   label{
     color:#fff;
     font-weight:400;
+  }
+}
+.pagination{
+  a{
+    color:#fff;
+    text-decoration: underline;
+    margin-left:3px;
+    margin-right:3px;
+    &.active, &:hover{
+      color:$active;
+      text-decoration:none;
+    }
+    &.no-decoration{
+      text-decoration: none;
+    }
   }
 }
