@@ -419,6 +419,8 @@ class SongsController extends AbstractController
         } else {
             $qb->orderBy('s.createdAt', 'DESC');
         }
+
+
         if ($request->get('converted_maps', null)) {
 
             switch ($request->get('converted_maps')) {
@@ -427,6 +429,41 @@ class SongsController extends AbstractController
                     break;
                 case 2 :
                     $qb->andWhere('s.converted = true');
+                    break;
+            }
+        }
+
+        if ($request->get('downloads_submitted_date', null)) {
+
+            switch ($request->get('downloads_submitted_date')) {
+                case 1:
+                    $qb->andWhere('(s.lastDateUpload >= :last7days)')
+                    ->setParameter('last7days', (new DateTime())->modify('-7 days'));
+                    break;
+                case 2 :
+                    $qb->andWhere('(s.lastDateUpload >= :last15days)')
+                        ->setParameter('last15days', (new DateTime())->modify('-15 days'));
+                    break;
+                case 3 :
+                    $qb->andWhere('(s.lastDateUpload >= :last45days)')
+                        ->setParameter('last45days', (new DateTime())->modify('-45 days'));
+                    break;
+            }
+        }
+        if ($request->get('downloads_submitted_date', null)) {
+
+            switch ($request->get('downloads_submitted_date')) {
+                case 1:
+                    $qb->andWhere('(s.lastDateUpload >= :last7days)')
+                        ->setParameter('last7days', (new DateTime())->modify('-7 days'));
+                    break;
+                case 2 :
+                    $qb->andWhere('(s.lastDateUpload >= :last15days)')
+                        ->setParameter('last15days', (new DateTime())->modify('-15 days'));
+                    break;
+                case 3 :
+                    $qb->andWhere('(s.lastDateUpload >= :last45days)')
+                        ->setParameter('last45days', (new DateTime())->modify('-45 days'));
                     break;
             }
         }

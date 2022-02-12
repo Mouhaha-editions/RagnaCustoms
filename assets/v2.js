@@ -9,19 +9,27 @@ import '../assets/js/plugins/ajax_link';
 import '../assets/js/plugins/copy_to_clipboard';
 import '../assets/js/plugins/modal_ajax';
 import '../assets/js/plugins/playlist';
+import 'select2/dist/js/select2.full.min';
+require('../public/bundles/tetranzselect2entity/js/select2entity');
 
 $(function () {
-    $(document).on('mouseout', '.download', function () {
+    $('.select2entity[data-autostart="true"]').select2entity();
+    $('.select2').select2();
 
-    });
     $(document).on('click', '.open-download-buttons', function () {
         let t = $(this).closest('.on-hover').find('.big-buttons')
         t.toggleClass('d-none');
         return false;
     });
+    $(document).on('focusout', 'tr', function () {
+        let t = $(this).find('.on-hover').find('.big-buttons')
+        t.addClass('d-none');
+        return false;
+    });
     $(document).on('mouseover', ".popover-trigger", function () {
         $(this).popover("show");
     });
+
     $("[data-toggle=\"tooltip\"]").tooltip('enable');
 
     $(document).on('change', '#review-global', function () {
