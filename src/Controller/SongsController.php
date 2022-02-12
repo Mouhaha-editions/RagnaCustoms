@@ -345,7 +345,9 @@ class SongsController extends AbstractController
     {
         $qb = $this->getDoctrine()
             ->getRepository(Song::class)
+
             ->createQueryBuilder("s")
+->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
 //            ->leftJoin("s.downloadCounters",'dc')
             ->groupBy("s.id");
 //        $qb->leftJoin('s.songDifficulties', 'song_difficulties')
