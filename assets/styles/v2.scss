@@ -595,7 +595,6 @@ section {
 }
 
 a{
-
   &.sort-asc:after{
     font-size:12px;
     content:"▲";
@@ -604,4 +603,16 @@ a{
     content:"▼";
     font-size:12px;
   }
+}
+a.back-button{
+  font-size:25px;
+  color:$white;
+  &:hover{
+    text-decoration: none;
+  }
+
+}
+
+#song-detail{
+  background: radial-gradient(185.83% 163.79% at 19.58% 14.22%, rgba(126, 77, 46, 0.2) 0%, rgba(0, 0, 0, 0) 100%), #2B2B2B;
 }

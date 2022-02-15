@@ -12,12 +12,13 @@
 
             </div>
         </div>
-        <div class="row">
+        <div id="song-list" class="row">
             <div class="col-md-10">
                 <button data-toggle="tooltips" title="{{ "Download this selection"|trans }}"
                         type="submit" name="onclick_dl" value="42" class="btn btn-sm btn-success float-right mb-2"
                         data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}">
                     <i class="fas fa-download"></i> {{ '1 click'|trans }}</button>
+
                 <table class="featured-table-lg table table-sm">
                     <tr>
                         <th><a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.name", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"

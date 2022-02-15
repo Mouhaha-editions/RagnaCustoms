@@ -13,10 +13,18 @@
  {% endblock %}
 
 {% block body %}
-    <div {{ stimulus_controller('song-detail') }}>
-
+    <div {{ stimulus_controller('song-detail') }} {{ stimulus_target('song-detail', 'background') }}id="song-detail">
+<div class="container">
     <div class="row pt-2">
-        <div class="col-md-8">
+        <div class="col-12 pt-2 pb-2"><a href="#" {{ stimulus_action('song-detail', 'back') }} class="back-button "><i class="fas fa-arrow-left"></i> {{ "Back"|trans }}</a></div>
+        <div class="col-md-3">
+            <div class="figure">
+            <img {{ stimulus_target('song-detail', 'img') }} src="{{ song.cover }}" class="img-fluid pt-2"
+                 alt="{{ song.name }}"/>
+            </div>
+
+
+
             <div class="section-header">
                 <div class="section-header-info">
                     <h1 class="section-pretitle">{{ "Song details"|trans }}</h1>
@@ -164,8 +172,7 @@
             </div>
         </div>
         <div class="col-md-4 song-detail border-left">
-            <img src="{{ song.cover }}" class="img-fluid pt-2"
-                 alt="{{ song.name }}"/>
+
             <div class="text-center mt-3">
                 {% if song.youtubeLink != null %}
                     <a target="_blank" href="{{ song.youtubeLink }}"
@@ -289,17 +296,7 @@
                         }
                     }
     </script>
-    <div id="info-dat" data-file="{{ song.infoDatFile }}"></div>
-
-        <input type="text" {{ stimulus_target('song-detail', 'name') }}>
-
-        <button {{ stimulus_action('song-detail', 'greet') }}>
-            Greet
-        </button>
-
-        <div {{ stimulus_target('song-detail', 'output') }}></div>
-
-    </div>
+</div>
 {% endblock %}
 {% block endBody %}
 
