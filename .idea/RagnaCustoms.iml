@@ -204,6 +204,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/dbrekelmans/bdi" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/fig/http-message-util" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/twig/markdown-extra" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/ux-swup" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

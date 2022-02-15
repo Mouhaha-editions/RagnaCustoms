@@ -345,9 +345,8 @@ class SongsController extends AbstractController
     {
         $qb = $this->getDoctrine()
             ->getRepository(Song::class)
-
             ->createQueryBuilder("s")
-->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
+            ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
 //            ->leftJoin("s.downloadCounters",'dc')
             ->groupBy("s.id");
 //        $qb->leftJoin('s.songDifficulties', 'song_difficulties')
@@ -440,7 +439,7 @@ class SongsController extends AbstractController
             switch ($request->get('downloads_submitted_date')) {
                 case 1:
                     $qb->andWhere('(s.lastDateUpload >= :last7days)')
-                    ->setParameter('last7days', (new DateTime())->modify('-7 days'));
+                        ->setParameter('last7days', (new DateTime())->modify('-7 days'));
                     break;
                 case 2 :
                     $qb->andWhere('(s.lastDateUpload >= :last15days)')
@@ -454,7 +453,7 @@ class SongsController extends AbstractController
         }
         if ($request->get('not_downloaded', 0) > 0 && $this->isGranted('ROLE_USER')) {
             $qb
-                ->leftJoin("s.downloadCounters",'download_counters')
+                ->leftJoin("s.downloadCounters", 'download_counters')
                 ->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")
                 ->andHaving("count_download_user = 0")
                 ->setParameter('user', $this->getuser());
@@ -517,8 +516,8 @@ class SongsController extends AbstractController
                 }, $ids)));
         }
 
-        if($request->get('order_by')){
-            $qb->orderBy($request->get('order_by'),$request->get('order_sort','asc'));
+        if ($request->get('order_by')) {
+            $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
         }
         //$pagination = null;
         //if($ajaxRequest || $request->get('ppage1')) {
@@ -643,6 +642,84 @@ class SongsController extends AbstractController
     {
         return preg_replace('/[^a-zA-Z]/i', '', $getName);
     }
+    /**
+     * @Route("/v2/song/{slug}", name="song_detail_v2", defaults={"slug"=null})
+     */
+    public function songDetailV2(Request     $request, Song $song, TranslatorInterface $translator,
+                               SongService $songService, PaginationService $paginationService, DiscordService $discordService)
+    {
+
+        if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
+            $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
+            return $this->redirectToRoute('home');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $song->setViews($song->getViews() + 1);
+        $feedback = new Vote();
+        $feedback->setSong($song);
+        $feedback->setHash($song->getNewGuid());
+        $feedback->setUser($this->getUser());
+        $feedbackForm = $this->createForm(VoteType::class, $feedback);
+
+        if (!$song->hasCover() && !$song->getWip()) {
+            $song->setName("Missing cover - " . $song->getName());
+            $song->setSlug($song->getSlug());
+            $song->setWip(true);
+            $em->flush();
+        }
+        $feedbackForm->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+
+        if ($feedbackForm->isSubmitted() && $feedbackForm->isValid() && $this->getUser() != null) {
+            $dif = $feedbackForm->get('songDifficulty')->getData();
+            if ($dif != null) {
+                $feedback->setDifficulty($dif->getDifficultyRank()->getLevel());
+            }
+            $em->persist($feedback);
+            $em->flush();
+            try {
+                $songService->newFeedback($feedback);
+            } catch (Exception $e) {
+
+            }
+            $discordService->sendFeedback($feedback);
+
+            $feedback = new Vote();
+            $feedback->setSong($song);
+            $feedback->setHash($song->getNewGuid());
+            $feedback->setUser($this->getUser());
+            $feedbackForm = $this->createForm(VoteType::class, $feedback);
+            $this->addFlash("success", $translator->trans("Feedback sent!"));
+        }
+        $songService->emulatorFileDispatcher($song);
+        $em->flush();
+
+        $levels = [];
+        foreach ($song->getSongDifficulties() as $difficulty) {
+            $level = $difficulty->getDifficultyRank()->getLevel();
+            $scores = $this->getDoctrine()->getRepository(Score::class)->createQueryBuilder('s')
+                ->select('s, MAX(s.score) AS HIDDEN max_score')
+                ->where('s.difficulty = :diff')
+                ->andWhere('s.hash = :hash')
+                ->setParameter('diff', $level)
+                ->setParameter('hash', $difficulty->getSong()->getNewGuid())
+                ->groupBy('s.user')
+                ->orderBy('max_score', 'DESC');
+
+            $pagination = $paginationService->setDefaults(50)->process($scores, $request);
+            $levels [] = [
+                "level" => $level,
+                'scores' => $pagination
+            ];
+        }
+
+        return $this->render('songs/detail_v2.html.twig', [
+            'song' => $song,
+            'levels' => $levels,
+            "feedbackForm" => $feedbackForm->createView()
+        ]);
+    }
 
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
@@ -752,6 +829,6 @@ class SongsController extends AbstractController
      */
     public function partialPreview(Song $song)
     {
-        return new JsonResponse(['response'=>$this->renderView("songs/partial/preview_player.html.twig", ['song' => $song])]);
+        return new JsonResponse(['response' => $this->renderView("songs/partial/preview_player.html.twig", ['song' => $song])]);
     }
 }

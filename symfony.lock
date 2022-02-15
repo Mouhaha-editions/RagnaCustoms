@@ -791,6 +791,9 @@
     "symfony/uid": {
         "version": "v5.2.4"
     },
+    "symfony/ux-swup": {
+        "version": "v2.0.1"
+    },
     "symfony/validator": {
         "version": "4.3",
         "recipe": {

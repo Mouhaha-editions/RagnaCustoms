@@ -201,6 +201,7 @@
       <path value="$PROJECT_DIR$/vendor/dbrekelmans/bdi" />
       <path value="$PROJECT_DIR$/vendor/fig/http-message-util" />
       <path value="$PROJECT_DIR$/vendor/twig/markdown-extra" />
+      <path value="$PROJECT_DIR$/vendor/symfony/ux-swup" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
