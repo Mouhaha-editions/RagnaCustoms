@@ -17,6 +17,18 @@ $success: #32B027;
 $info: #235886;
 $danger: #F4505D;
 $active: #E4AE09;
+$link-green: #2dcc2a;
+$purple: #bc3ee3;
+$youtube: #ff0000;
+$twitch: #6f42c1;
+$twitch-hover: #673eb1;
+$twitter: #1da1f2;
+$playlist: #1da1f2;
+$facebook: #1877f2;
+$reddit: #ff4500;
+$patreon: #f96854;
+$discord: #7289da;
+
 
 @import "~bootstrap";
 
@@ -386,7 +398,8 @@ header {
         }
       }
     }
-    &:hover:first-child{
+
+    &:hover:first-child {
       background: none;
     }
   }
@@ -594,24 +607,115 @@ section {
   }
 }
 
-a{
-  &.sort-asc:after{
-    font-size:12px;
-    content:"▲";
+a {
+  &.sort-asc:after {
+    font-size: 12px;
+    content: "▲";
   }
-  &.sort-desc:after{
-    content:"▼";
-    font-size:12px;
+
+  &.sort-desc:after {
+    content: "▼";
+    font-size: 12px;
   }
 }
-a.back-button{
-  font-size:25px;
-  color:$white;
-  &:hover{
+
+a.back-button {
+  font-size: 25px;
+  color: $white;
+
+  &:hover {
     text-decoration: none;
   }
 
 }
 
-#song-detail{
+#song-detail {
+  .figure {
+    position: relative;
+
+    .level-list {
+      position: absolute;
+      bottom: 0;
+      right: 5px;
+      //display:none;
+      .level {
+        display: block;
+        width: 30px;
+        line-height: 18px;
+        border-radius: 4px;
+        font-size: 16px;
+        text-align: center;
+        color: #fff;
+        margin-left: 2px;
+        margin-bottom: 5px;
+        //float: left;
+      }
+    }
+  }
+
+  .download-buttons {
+    margin-top: 8px;
+
+    a {
+      font-size: 20px;
+      font-weight: 400;
+      padding: 2px 25px;
+    }
+  }
+
+  .tags {
+    span {
+      font-size: 12px;
+      margin-right: 4px;
+      padding: 2px 5px;
+      background: $bg;
+    }
+  }
+
+  .buttons-middle {
+    .btn{
+      font-size:14px;
+      padding:4px 16px;
+      line-height:10px;
+      margin-right:5px;
+    }
+    .btn-twitch {
+      border: 2px solid $twitch;
+      color: $twitch;
+    }
+
+    .btn-youtube {
+      border: 2px solid $youtube;
+      color: $youtube;
+    }
+
+    .btn-playlist {
+      border: 2px solid $playlist;
+      color: $playlist;
+    }
+  }
+  .btn.song-review{
+    border: 2px solid $warning;
+    color: $warning;
+  }
+  .label{
+    color:#868686;
+    font-size:14px;
+  }
+  .mapper{
+    font-size:20px;
+    color:$danger;
+  }
+  .description{
+    font-size:14px;
+  }
+
+  .rating-up{
+    font-size:24px;
+
+  }
+  .rating-wrap label {
+    display: inline-block;
+    width: 60%;
+  }
 }
