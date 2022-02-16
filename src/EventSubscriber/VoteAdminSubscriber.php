@@ -41,8 +41,7 @@ class VoteAdminSubscriber implements EventSubscriberInterface
         /** @var Vote $entity */
         $entity = $event->getEntityInstance();
         if(get_class($entity) == Vote::class){
-            $song = $this->songService->getByhash($entity->getHash());
-
+            $song = $entity->getSong();
             if($song->getUser()->getEnableEmailNotification() && $entity->getIsModerated()) {
                 $this->songService->newFeedbackForMapper($entity);
             }
