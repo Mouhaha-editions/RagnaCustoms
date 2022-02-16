@@ -221,43 +221,20 @@
                             "ratingValue": "{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}"
                         }
                     }
-
-
-
-
     </script>
 
 
 {% endblock %}
-{% block endBody %}
 
-    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel1">{{ "Song Review"|trans }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-review">
-                    ...
-                </div>
-
-            </div>
-        </div>
-    </div>
-{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('ragnabeat') }}
+
 {% endblock %}
 
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('ragnabeat') }}
 {% endblock %}
 
 
