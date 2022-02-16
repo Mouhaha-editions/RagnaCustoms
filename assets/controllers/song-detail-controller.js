@@ -8,9 +8,10 @@ export default class extends Controller {
         average(this.imgTarget.src, { amount: 1 }).then(color => {
             $("body").attr('style', " background: radial-gradient(100% 100% at 0% 0%, rgba("+color[0]+", "+color[1]+", "+color[2]+", 0.2) 0%, rgba(0, 0, 0, 0) 100%), #2B2B2B;");
         });
-            $(".back-button").attr('href', document.referrer);
+          $(".back-button").attr('href', document.referrer !== undefined ?document.referrer:"#");
     }
     back() {
-       if($(".back-button").attr('href') === undefined || $(".back-button").attr('href') === "" ) history.back();// Swup instance
+       // history.back();// Swup instance
+       //  return false;
     }
 }

@@ -54,7 +54,6 @@ class ScoreController extends AbstractController
                 'songs' => $songs,
                 'seasons' => $seasonRepository->createQueryBuilder('s')->orderBy('s.id', "desc")->getQuery()->getResult(),
                 'selected_season' => $selectedSeason,
-
             ]);
         }
         return $this->render('score/index.html.twig', [

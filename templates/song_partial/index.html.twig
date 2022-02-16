@@ -67,6 +67,7 @@
             </td>
         </tr>
     {% endif %}
-
+{% else %}
+    <p class="text-warning">{{ "No song found"|trans }}</p>
     {% endfor %}
 </table>

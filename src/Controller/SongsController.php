@@ -710,6 +710,7 @@ class SongsController extends AbstractController
             $pagination = $paginationService->setDefaults(50)->process($scores, $request);
             $levels [] = [
                 "level" => $level,
+                "color" => $difficulty->getDifficultyRank()->getColor(),
                 'scores' => $pagination
             ];
         }

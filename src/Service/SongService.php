@@ -588,5 +588,20 @@ class SongService
         return $songs['count'];
     }
 
+    public function getSimilarSongs(Song $song, $max = 10)
+    {
+        return $this->em->getRepository(Song::class)
+            ->createQueryBuilder('s')
+            ->distinct()
+            ->leftJoin('s.categoryTags','category_tags')
+            ->where("category_tags.id IN (:categories)")
+            ->andWhere('s.id != :song')
+            ->setParameter('categories', $song->getCategoryTags())
+            ->setParameter('song', $song)
+//            ->orderBy('s')
+            ->setMaxResults($max)
+            ->setFirstResult(0)
+            ->getQuery()->getResult();
+    }
 }
 

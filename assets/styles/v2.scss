@@ -48,7 +48,15 @@ body {
   font-weight: 400;
   color: #fff;
 }
+.up_down_vote {
+  a {
+    color: #fff;
+    .disabled{
+      color:#868686;
+    }
+  }
 
+}
 .navbar {
   padding: 0;
   background: linear-gradient($bg-darker, $bg);
@@ -211,11 +219,7 @@ header {
     color: #fff;
   }
 
-  .up_down_vote {
-    a {
-      color: #fff;
-    }
-  }
+
 }
 
 .featured-table {
@@ -630,6 +634,10 @@ a.back-button {
 }
 
 #song-detail {
+  .darker {
+    background: url('../img/pixel_21.png');
+  }
+
   .figure {
     position: relative;
 
@@ -673,12 +681,13 @@ a.back-button {
   }
 
   .buttons-middle {
-    .btn{
-      font-size:14px;
-      padding:4px 16px;
-      line-height:10px;
-      margin-right:5px;
+    .btn {
+      font-size: 14px;
+      padding: 4px 16px;
+      line-height: 10px;
+      margin-right: 5px;
     }
+
     .btn-twitch {
       border: 2px solid $twitch;
       color: $twitch;
@@ -694,28 +703,65 @@ a.back-button {
       color: $playlist;
     }
   }
-  .btn.song-review{
+
+  .btn.song-review {
     border: 2px solid $warning;
     color: $warning;
   }
-  .label{
-    color:#868686;
-    font-size:14px;
-  }
-  .mapper{
-    font-size:20px;
-    color:$danger;
-  }
-  .description{
-    font-size:14px;
+
+  .label {
+    color: #868686;
+    font-size: 14px;
   }
 
-  .rating-up{
-    font-size:24px;
+  .mapper {
+    font-size: 20px;
+    color: $danger;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .rating-up {
+    font-size: 20px;
 
   }
+
   .rating-wrap label {
     display: inline-block;
     width: 60%;
+  }
+
+  .nav-pills {
+    li {
+      color: #fff;
+      margin-right: 12px;
+
+      .nav-link {
+        padding: 1px 15px;
+        color: #fff;
+        filter: grayscale(1);
+        &.active{
+          filter: grayscale(0);
+        }
+      }
+    }
+  }
+  .leaderboards{
+    table{
+      color:#fff;
+      border:none;
+      font-size:18px;
+      tr{
+        border-bottom: 1px solid #868686;
+        &:last-child{
+          border: none;
+        }
+      }
+    }
+  }
+  .up_down_vote{
+    font-size:24px;
   }
 }
