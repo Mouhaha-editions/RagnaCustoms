@@ -137,13 +137,10 @@ class SongService
      */
     public function getVotePublicOrMine(?Utilisateur $user, Song $song)
     {
-        $hashes = array_map(function (SongHash $hash) {
-            return $hash->getHash();
-        }, $song->getSongHashes()->toArray());
         return $this->em->getRepository(Vote::class)->createQueryBuilder('f')
-            ->where('(f.hash IN (:hashes) AND f.isPublic = true AND f.isModerated = true AND f.feedback is not null)')
-            ->orWhere('(f.hash IN (:hashes) AND f.user = :user AND f.feedback is not null)')
-            ->setParameter('hashes', $hashes)
+            ->where('(f.song = :song AND f.isPublic = true AND f.isModerated = true AND f.feedback is not null)')
+            ->orWhere('(f.song = :song AND f.user = :user AND f.feedback is not null)')
+            ->setParameter('song', $song)
             ->setParameter('user', $user)
             ->getQuery()->getResult();
     }
