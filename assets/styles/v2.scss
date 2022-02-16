@@ -636,6 +636,9 @@ a.back-button {
 #song-detail {
   .darker {
     background: url('../img/pixel_21.png');
+    .up_down_vote{
+      font-size:24px;
+    }
   }
 
   .figure {
@@ -761,7 +764,5 @@ a.back-button {
       }
     }
   }
-  .up_down_vote{
-    font-size:24px;
-  }
+
 }
