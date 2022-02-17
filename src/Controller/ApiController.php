@@ -175,6 +175,269 @@ class ApiController extends AbstractController
 //                    return new JsonResponse($results,400);
                 }
                 $rank = $difficultyRankRepository->findOneBy(['level' => $level]);
+                $rank = $difficultyRankRepository->findOneBy(['level' => $level]);
+                $songDiff = $songDifficultyRepository->findOneBy([
+                    'song' => $song,
+                    "difficultyRank" => $rank
+                ]);
+
+                if ($songDiff == null) {
+                    $results[] = [
+                        "hash" => $hash,
+                        "level" => $level,
+                        "ranked" => $ranked,
+                        "message" => "Score not saved (level not found) ",
+                        "success" => false,
+                        "error" => "2_LEVEL_NOT_FOUND"
+                    ];
+                    $logger->error("API : " . $apiKey . " " . $hash . " " . $level . " 2_LEVEL_NOT_FOUND");
+                    continue;
+                }
+
+                if ($season != null && $songDiff->isRanked()) {
+                    $score = $scoreRepository->findOneBy([
+                        'user' => $user,
+                        'difficulty' => $level,
+                        'hash' => $hash,
+                        'season' => $season
+                    ]);
+                    if ($score != null) {
+                        $ranked = true;
+                    }
+                } else {
+                    $score = $scoreRepository->findOneBy([
+                        'user' => $user,
+                        'difficulty' => $level,
+                        'hash' => $hash,
+                        'season' => null
+                    ]);
+                }
+                $scoreData = round(floatval($subScore['Score']) / 100, 2);
+
+                if ($score == null) {
+                    $score = new Score();
+                    $score->setUser($user);
+                    $score->setScore($scoreData);
+                    $score->setDifficulty($level);
+                    $score->setSong($song);
+                    $score->setSongDifficulty($songDiff);
+                    $score->setHash($hash);
+                    $score->setPercentage($subScore["Percentage"] ?? null);
+                    $score->setPercentage2($subScore["Percentage2"] ?? null);
+                    $score->setCombos($subScore["Combos"] ?? null);
+                    $score->setNotesHit($subScore["NotesHit"] ?? null);
+                    $score->setNotesMissed($subScore["NotesMissed"] ?? null);
+                    $score->setNotesNotProcessed($subScore["NotesNotProcessed"] ?? null);
+                    $score->setHitAccuracy($subScore["HitAccuracy"] ?? null);
+                    $score->setHitSpeed($subScore["HitSpeed"] ?? null);
+                    if ($season != null && $songDiff->isRanked()) {
+                        $score->setSeason($season);
+                        $ranked = true;
+                    }
+                    $em->persist($score);
+                }
+
+                $scoreHistory = $scoreHistoryRepository->findOneBy([
+                    'user' => $user,
+                    'difficulty' => $level,
+                    'hash' => $hash,
+                    "score" => $scoreData
+                ]);
+                $oldscore = $score->getScore();
+                if ($scoreHistory == null) {
+                    $scoreHistory = new ScoreHistory();
+                    $scoreHistory->setUser($user);
+                    $scoreHistory->setDifficulty($level);
+                    $scoreHistory->setSong($song);
+                    $scoreHistory->setSongDifficulty($songDiff);
+                    $scoreHistory->setHash($hash);
+                    $scoreHistory->setScore($scoreData);
+
+                    $em->persist($scoreHistory);
+                }
+                $scoreHistory->setPercentage($subScore["Percentage"] ?? null);
+                $scoreHistory->setPercentage2($subScore["Percentage2"] ?? null);
+                $scoreHistory->setCombos($subScore["Combos"] ?? null);
+                $scoreHistory->setNotesHit($subScore["NotesHit"] ?? null);
+                $scoreHistory->setNotesMissed($subScore["NotesMissed"] ?? null);
+                $scoreHistory->setNotesNotProcessed($subScore["NotesNotProcessed"] ?? null);
+                $scoreHistory->setHitAccuracy($subScore["HitAccuracy"] ?? null);
+                $scoreHistory->setHitSpeed($subScore["HitSpeed"] ?? null);
+                $em->flush();
+                if ($score->getScore() < $scoreData) {
+                    $score->setScore($scoreData);
+                    $score->setPercentage($subScore["Percentage"] ?? null);
+                    $score->setPercentage2($subScore["Percentage2"] ?? null);
+                    $score->setCombos($subScore["Combos"] ?? null);
+                    $score->setNotesHit($subScore["NotesHit"] ?? null);
+                    $score->setNotesMissed($subScore["NotesMissed"] ?? null);
+                    $score->setNotesNotProcessed($subScore["NotesNotProcessed"] ?? null);
+                    $score->setHitAccuracy($subScore["HitAccuracy"] ?? null);
+                    $score->setHitSpeed($subScore["HitSpeed"] ?? null);
+                    if ($score->getScore() >= 99000) {
+                        $score->setScore($score->getScore() / 1000000);
+                    }
+                    $em->flush();
+                    $results[] = [
+                        "hash" => $hash,
+                        "level" => $level,
+                        "success" => true,
+                        "ranked" => $ranked,
+                        "message" => "Score saved (old score : " . $oldscore . " < new score : " . $scoreData . ") ",
+                        "error" => "SUCCESS"
+                    ];
+                } else {
+                    $em->flush();
+                    $results[] = [
+                        "hash" => $hash,
+                        "level" => $level,
+                        "success" => true,
+                        "ranked" => $ranked,
+                        "message" => "Score not saved (old score : " . $oldscore . " >= new score : " . $scoreData . ")",
+                        "error" => "SUCCESS"
+                    ];
+                }
+
+
+                if ($song->getWip()) {
+                    $gamificationService->unlock(EGamification::ACHIEVEMENT_HELPER_LVL_1, $user);
+                    $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_2, $user, 1, 10, $song->getId());
+                    $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_3, $user, 1, 50, $song->getId());
+                }
+
+                $results[] = [
+                    "hash" => $hash,
+                    "level" => $level,
+                    "success" => true,
+                    "message" => "Score saved",
+                    "error" => "SUCCESS"
+                ];
+            } catch (Exception $e) {
+                $results[] = [
+                    "hash" => $hash,
+                    "level" => $level,
+                    "success" => false,
+                    "error" => "3_SCORE_NOT_SAVED",
+                    "message" => "Score not saved because of an unexpected error",
+                    'detail' => $e->getMessage()
+                ];
+                $logger->error("API : " . $apiKey . " " . $hash . " " . $subScore["Level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage()." ");
+
+//                return new JsonResponse($results,400);
+
+            }
+        }
+
+        return new JsonResponse($results, 200);
+    }
+    /**
+     * @Route("/api/score/v3", name="api_score_v3")
+     * @param Request $request
+     * @param StatisticService $statisticService
+     * @param GamificationService $gamificationService
+     * @param SeasonRepository $seasonRepository
+     * @param DifficultyRankRepository $difficultyRankRepository
+     * @param SongDifficultyRepository $songDifficultyRepository
+     * @param ScoreRepository $scoreRepository
+     * @param ScoreHistoryRepository $scoreHistoryRepository
+     * @param UtilisateurRepository $utilisateurRepository
+     * @param SongRepository $songRepository
+     * @param LoggerInterface $logger
+     * @return Response
+     * @throws NonUniqueResultException
+     */
+    public function scoreV3(Request                  $request,
+                            StatisticService         $statisticService,
+                            GamificationService      $gamificationService,
+                            SeasonRepository         $seasonRepository,
+                            DifficultyRankRepository $difficultyRankRepository,
+                            SongDifficultyRepository $songDifficultyRepository,
+                            ScoreRepository          $scoreRepository,
+                            ScoreHistoryRepository   $scoreHistoryRepository,
+                            UtilisateurRepository    $utilisateurRepository,
+                            SongRepository           $songRepository,
+                            LoggerInterface          $logger): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $results = [];
+        $apiKey = $request->headers->get('x-api-key');
+        $ranked = false;
+
+        $data = json_decode($request->getContent(), true);
+
+        if ($data == null) {
+            $logger->error("no data");
+            $results[] = [
+                "user" => $apiKey,
+                "hash" => "all",
+                "ranked" => $ranked,
+                "level" => "",
+                "message" => "Score not saved (no data) ",
+                "success" => false,
+                "error" => "0_NO_CONTENT"
+            ];
+            return new JsonResponse($results, 500);
+        }
+
+        /** @var Utilisateur $user */
+        $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
+        if ($user == null) {
+            $results[] = [
+                "user" => $apiKey,
+                "hash" => "all",
+                "level" => "",
+                "ranked" => $ranked,
+                "message" => "Score not saved (user not found) ",
+                "success" => false,
+                "error" => "0_USER_NOT_FOUND"
+            ];
+            $logger->error("API : " . $apiKey . " USER NOT FOUND");
+            return new JsonResponse($results, 400);
+        }
+        configureScope(function (Scope $scope) use ($user): void {
+            $scope->setUser(['username' => $user->getUsername()]);
+        });
+
+        $gamificationService->unlock(EGamification::ACHIEVEMENT_USE_API, $user);
+
+        $season = $seasonRepository->createQueryBuilder('s')
+            ->where('s.startDate <= :now')
+            ->andWhere('s.endDate >= :now')
+            ->setParameter('now', new DateTime())
+            ->setFirstResult(0)->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+
+        foreach ($data as $subScore) {
+            if ($subScore["AppVersion"] < self::CurrentVersion) {
+                $results[] = [
+                    "user" => $apiKey,
+                    "hash" => "all",
+                    "ranked" => $ranked,
+                    "level" => "",
+                    "message" => "Score not saved (wrong app version, need : " . (self::CurrentVersion) . " get at least " . $data["AppVersion"] . " )",
+                    "success" => false,
+                    "error" => "0_WRONG_APP"
+                ];
+            }
+            $hash = $subScore["HashInfo"];
+            $level = $subScore["Level"];
+            try {
+                $song = $songRepository->findOneBy(['newGuid' => $hash]);
+                if ($song == null) {
+                    $results[] = [
+                        "hash" => $hash,
+                        "level" => $level,
+                        "message" => "Score not saved (song not found) ",
+                        "ranked" => $ranked,
+                        "success" => false,
+                        "error" => "1_SONG_NOT_FOUND"
+                    ];
+                    $logger->error("API : " . $apiKey . " " . $hash . " 1_SONG_NOT_FOUND");
+                    continue;
+//                    return new JsonResponse($results,400);
+                }
+                $rank = $difficultyRankRepository->findOneBy(['level' => $level]);
                 $songDiff = $songDifficultyRepository->findOneBy([
                     'song' => $song,
                     "difficultyRank" => $rank
@@ -316,7 +579,7 @@ class ApiController extends AbstractController
                     "message" => "Score not saved because of an unexpected error",
                     'detail' => $e->getMessage()
                 ];
-                $logger->error("API : " . $apiKey . " " . $hash . " " . $subScore["Level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage());
+                $logger->error("API : " . $apiKey . " " . $hash . " " . $subScore["Level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage()." ");
 
 //                return new JsonResponse($results,400);
 

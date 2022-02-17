@@ -57,9 +57,21 @@ class SongDifficulty
      */
     private $claw_difficulty;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="SongDifficulty")
+     */
+    private $scores;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="SongDifficulty")
+     */
+    private $scoreHistories;
+
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
+        $this->scores = new ArrayCollection();
+        $this->scoreHistories = new ArrayCollection();
     }
 
     public function __toString()
@@ -228,6 +240,66 @@ class SongDifficulty
     public function setClawDifficulty($claw_difficulty): self
     {
         $this->claw_difficulty = $claw_difficulty;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Score[]
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): self
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores[] = $score;
+            $score->setSongDifficulty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): self
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getSongDifficulty() === $this) {
+                $score->setSongDifficulty(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ScoreHistory[]
+     */
+    public function getScoreHistories(): Collection
+    {
+        return $this->scoreHistories;
+    }
+
+    public function addScoreHistory(ScoreHistory $scoreHistory): self
+    {
+        if (!$this->scoreHistories->contains($scoreHistory)) {
+            $this->scoreHistories[] = $scoreHistory;
+            $scoreHistory->setSongDifficulty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScoreHistory(ScoreHistory $scoreHistory): self
+    {
+        if ($this->scoreHistories->removeElement($scoreHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($scoreHistory->getSongDifficulty() === $this) {
+                $scoreHistory->setSongDifficulty(null);
+            }
+        }
 
         return $this;
     }

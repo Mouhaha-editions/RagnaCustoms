@@ -196,6 +196,16 @@ class Song
      */
     private $categoryTags;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="Song")
+     */
+    private $scores;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="Song")
+     */
+    private $scoreHistories;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -205,6 +215,8 @@ class Song
         $this->playlists = new ArrayCollection();
         $this->voteCounters = new ArrayCollection();
         $this->categoryTags = new ArrayCollection();
+        $this->scores = new ArrayCollection();
+        $this->scoreHistories = new ArrayCollection();
     }
 
     public function isVoteCounterBy(?UserInterface $user) {
@@ -1045,5 +1057,65 @@ class Song
     public function getTimeAgo()
     {
         return $this->getLastDateUpload()->format('Y-m-d');
+    }
+
+    /**
+     * @return Collection|Score[]
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): self
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores[] = $score;
+            $score->setSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): self
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getSong() === $this) {
+                $score->setSong(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ScoreHistory[]
+     */
+    public function getScoreHistories(): Collection
+    {
+        return $this->scoreHistories;
+    }
+
+    public function addScoreHistory(ScoreHistory $scoreHistory): self
+    {
+        if (!$this->scoreHistories->contains($scoreHistory)) {
+            $this->scoreHistories[] = $scoreHistory;
+            $scoreHistory->setSong($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScoreHistory(ScoreHistory $scoreHistory): self
+    {
+        if ($this->scoreHistories->removeElement($scoreHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($scoreHistory->getSong() === $this) {
+                $scoreHistory->setSong(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -90,6 +90,16 @@ class Score
      */
     private $combos;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="scores")
+     */
+    private $Song;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scores")
+     */
+    private $SongDifficulty;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -250,6 +260,30 @@ class Score
     public function setCombos(?int $combos): self
     {
         $this->combos = $combos;
+
+        return $this;
+    }
+
+    public function getSong(): ?Song
+    {
+        return $this->Song;
+    }
+
+    public function setSong(?Song $Song): self
+    {
+        $this->Song = $Song;
+
+        return $this;
+    }
+
+    public function getSongDifficulty(): ?SongDifficulty
+    {
+        return $this->SongDifficulty;
+    }
+
+    public function setSongDifficulty(?SongDifficulty $SongDifficulty): self
+    {
+        $this->SongDifficulty = $SongDifficulty;
 
         return $this;
     }
