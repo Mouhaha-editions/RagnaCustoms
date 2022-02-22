@@ -497,7 +497,7 @@ class SongsController extends AbstractController
                 ->addOrderBy('s.score', 'DESC')
             ;
 
-            $pagination = $paginationService->setDefaults(100)->process($scores, $request);
+            $pagination = $paginationService->setDefaults(20)->process($scores, $request);
             $levels [] = [
                 "level" => $level,
                 "difficulty" => $difficulty,
