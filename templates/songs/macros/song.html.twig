@@ -168,7 +168,7 @@
         <div class="col-6 pr-0">
 
             <figure style="position: relative">
-                <a href="{{ url('song_detail_v2',{slug:song.slug}) }}">
+                <a href="{{ url('song_detail',{slug:song.slug}) }}">
                     <img src="{{ song.cover }}" class="img-fluid" alt="cover"/>
                 </a>
                 <div class="level-list">
@@ -185,7 +185,7 @@
         <div class="col-6">
 
             <div class="title">
-                <a href="{{ url('song_detail_v2',{slug:song.slug}) }}" itemprop="name">{{ song.name }}</a>
+                <a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song.name }}</a>
             </div>
             <div class="author pb-3">
                 <a href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>

@@ -60,21 +60,6 @@ class SongService
         $this->scoreService = $scoreService;
     }
 
-    public function newFeedback(Vote $feedback)
-    {
-        /** @var SongHash $songHash */
-        $songHash = $this->em->getRepository(SongHash::class)->findOneBy(['hash' => $feedback->getHash()]);
-        if ($songHash != null) {
-            $song = $songHash->getSong();
-            $email = (new Email())
-                ->from('contact@ragnacustoms.com')
-                ->to('pierrick.pobelle@gmail.com')
-                ->subject('New feedback for ' . $song->getName() . '!');
-            $email->html("New feedback ");
-            $this->mailer->send($email);
-        }
-    }
-
     public function emailRequestDone(SongRequest $songRequest, Song $song)
     {
         $email = (new Email())

@@ -13,77 +13,148 @@
  {% endblock %}
 
 {% block body %}
-    {# <div class="row pt-2"> #}
-    {# <a href="{{ url('application') }}"><img src="/apps/banner.png" class="img-fluid" alt="application"></a> #}
-    {# </div> #}
-    <div class="row pt-2">
-        <div class="col-md-8">
-            <div class="section-header">
-                <div class="section-header-info">
-                    <h1 class="section-pretitle">{{ "Song details"|trans }}</h1>
-                    <h3 class="section-title">{% if song.wip %}<span
-                                class="text-danger">[WIP]</span> {% endif %}{{ song.name }}
-                        <small>{{ song.subName }}</small> - {{ song.authorName }}
-                        <span>&nbsp;</span>
-                        {% include 'songs/partial/downupvote.html.twig' with {song:song, app: app} %}
-                    </h3>
+    <div {{ stimulus_controller('song-detail') }} {{ stimulus_target('song-detail', 'background') }}id="song-detail">
+        <div class="darker">
+            <div class="container">
+                <div class="row pt-2">
+                    <div class="col-12 pt-2 pb-2"><a href="#" {{ stimulus_action('song-detail', 'back') }}
+                                                     class="back-button "><i
+                                    class="fas fa-arrow-left"></i> {{ "Back"|trans }}</a></div>
+                    <div class="col-md-3">
+                        <div class="figure">
+                            <img {{ stimulus_target('song-detail', 'img') }} src="{{ song.cover }}"
+                                                                             class="img-fluid pt-2"
+                                                                             alt="{{ song.name }}"/>
+
+                            <div class="level-list">
+                                {% for diff in song.songDifficulties %}
+                                    <div class='level' style="background-color:#{{ diff.difficultyRank.color }};"
+                                         title="{{ app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "already played" :"never played" }}"
+                                         data-toggle="tooltip">
+                                        {{ diff.difficultyRank.level }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between pt-1">
+                            <div>
+                                {{ song.timeAgo }}
+                            </div>
+                            <div>
+                                <i class="fas fa-clock"></i> {{ song.approximativeDurationMin }}
+                            </div>
+                            <div>
+                                <i class="fas fa-drum"></i> {{ song.beatsPerMinute|round }}
+                            </div>
+                        </div>
+                        <div class="download-buttons">
+                            <div class="d-inline-block">
+                                <a href="ragnac://install/{{ song.id }}"
+                                   class="btn btn-block mr-1 btn-success">{{ "Install via RC App"|trans }}</a>
+                            </div>
+                            <div class="d-inline-block">
+                                <a href="{{ url('song_direct_download',{id: song.id}) }}"
+                                   class="btn btn-block ml-1 btn-info">{{ "ZIP"|trans }}</a>
+                            </div>
+                        </div>
+                        <div>
+                            <small class="text-warning">{{ song.downloads }} {{ "Downloads"|trans }}</small>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <h1 class="text-warning">{{ song.name }}</h1>
+                        <h2>{{ song.authorName }}</h2>
+                        <div class="tags">
+                            {% for category in song.categoryTags %}
+                                <span>{{ category.label }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-3 mb-3">
+                            {% include 'songs/partial/downupvote.html.twig' %}
+                        </div>
+                        <div class="buttons-middle">
+                            <div class="d-inline-block">
+                                <a href="#"
+                                   class="text-level-10 ajax-load popover-trigger btn btn-playlist"
+                                   data-trigger="hover"
+                                   data-placement="top"
+                                   data-content="{{ "Add to playlist"|trans }}"
+                                   data-replace-selector="#songPlaylists .modal-body"
+                                   data-toggle='modal' data-target='#songPlaylists'
+                                   data-url='{{ url('song_playlist',{id:song.id}) }}'
+                                   data-song-id='{{ song.id }}'>
+                                    <i class="fas fa-heart"></i>
+                                </a>
+                            </div>
+                            {% if song.youtubeLink != null %}
+                                <div class="d-inline-block">
+                                    <a target="_blank" href="{{ song.youtubeLink }}"
+                                       class="btn btn-youtube">
+                                        <i class="fab fa-youtube"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+                            <div class="d-inline-block">
+                                <a href="#" data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn btn-twitch">
+                                    <i class="fab fa-twitch"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="label">{{ "Mapped by"|trans }}</div>
+                            <div class="mapper">{{ song.levelAuthorName }}</div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="label">{{ "Description"|trans }}</div>
+                            <div class="description">   {% apply markdown_to_html %}
+                                    {{ song.description is not null ? song.description|nl2br : "no description for now"|trans }}
+                                {% endapply %}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div>
+                            <div class="label">{{ "Rating" }}</div>
+
+                            {% if song.wip %}
+                                <div class="rating-up">
+                                    <span class="text-danger">{{ "Not available when the song is in \"WIP\" mode"|trans }}</span>
+                                </div>
+                            {% else %}
+                                <div class="d-inline-flex rating-up">
+                                    <div>{{ macro_vote.starsDisplay(song.voteAverage|round(2, "floor")) }}</div>
+                                    <div class="ml-3">{{ song.voteAverage|round(2, "floor") }}
+                                        ({{ song.countVotes+0 }})
+                                    </div>
+                                </div>
+                                <hr class="mt-1 mb-3"/>
+                                <div>
+                                    {{ macro_vote.ratingDisplayLabel("Fun factor:"|trans,song.funFactorAverage) }}
+                                    {{ macro_vote.ratingDisplayLabel("Rhythm:"|trans,song.rhythmAverage) }}
+                                    {{ macro_vote.ratingDisplayLabel("Pattern quality:"|trans,song.patternQualityAverage) }}
+                                    {{ macro_vote.ratingDisplayLabel("Readability:"|trans,song.readabilityAverage) }}
+                                </div>
+                                <div>
+                                    <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-1 mb-2 song-review"
+                                            data-toggle="modal"
+                                            data-target="#reviewSong"
+                                            data-refresh="true"
+                                            data-url="{{ url('song_vote_review',{id:song.id}) }}"
+                                            data-song-id="{{ song.id }}"
+                                    >{{ "Submit rating"|trans }}</button>
+                                    <button class="btn btn-block btn-sm mt-1 mb-2 song-feedback"
+
+                                    >{{ "Read Feedback"|trans }}</button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="description-tab"
-                       data-toggle="tab" data-target="#description" type="button" role="tab"
-                       aria-controls="home" aria-selected="true">{{ "Description"|trans }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link "
-                       data-toggle="tab" data-target="#preview" type="button" role="tab"
-                       aria-controls="home" aria-selected="true">{{ "Preview"|trans }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link "
-                       data-toggle="tab" data-target="#leaderboard" type="button" role="tab"
-                       aria-controls="home" aria-selected="true">{{ "Leaderboard"|trans }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link "
-                       data-toggle="tab" data-target="#feedback" type="button" role="tab"
-                       aria-controls="home" aria-selected="true">{{ "Feedbacks"|trans }}
-                    </a>
-                </li>
-                {% if song.user == app.user or is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link "
-                           data-toggle="tab" data-target="#statistics" type="button" role="tab"
-                           aria-controls="home" aria-selected="true">{{ "Statistics"|trans }}
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-            <div class="tab-content" id="myTabContent">
-                {% if song.user == app.user or is_granted('ROLE_ADMIN') %}
-                    <div
-                            class="tab-pane fade show"
-                            id="statistics" role="tabpanel">
-                        <p>
-                            {% include 'songs/partial/statistics.html.twig' with {song:song} %}
-
-                        </p>
-                    </div>
-                {% endif %}
-                <div
-                        class="tab-pane fade show active"
-                        id="description" role="tabpanel">
-                    <p>
-                        {% apply markdown_to_html %}
-                            {{ song.description is not null ? song.description|nl2br : "no description for now"|trans }}
-                        {% endapply %}
-                    </p>
-                </div>
-                <div
-                        class="tab-pane fade show"
-                        id="preview" role="tabpanel">
-
+        </div>
+        <div class="container">
+            <div class="row pt-2">
+                <div class="col-md-3">
+                    <h3>{{ "Preview"|trans }}</h3>
                     <div id="ragna-beat-diffs"></div>
                     <div id="ragna-beat-buttons"></div>
                     <div id="ragna-beat-sounds" class="text-center"></div>
@@ -97,184 +168,48 @@
                     </div>
 
                     <div class="text-center">New player by <b>Ratzee</b></div>
-
+                    <div id="info-dat" data-file="{{ song.infoDatFile }}"></div>
 
                 </div>
-                {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-
-                <div
-                        class="tab-pane fade show"
-                        id="feedback" role="tabpanel">
-                    <div class="row">
-                        <div class="col-12">
-                            <h1 class="mt-3">{{ "Feedbacks"|trans }}</h1>
-
-                            {% for feedback in songService.getVotePublicOrMine(app.user,song) %}
-                                <div>
-                                    {% if feedback.isAnonymous %}
-                                    <b>{{ "Anonymous:"|trans }} </b>
-                                {% else %}
-                                    <b>{{ feedback.user.username }} : {% if not feedback.isModerated %}
-                                            <div class="badge badge-danger">{{ "not moderated"|trans }}</div>{% endif %}</b>
-                                    {% endif %}<br/>
-                                    {{ feedback.feedback }}
-                                </div>
-                                <hr/>
-                            {% else %}
-                            {% endfor %}
-                        </div>
+                <div class="col-md-5">
+                    <h3>
+                        {{ "LeaderBoard"|trans }}
+                    </h3>
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        {% for level in levels %}
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link {% if loop.index == 1 %}active{% endif %}"
+                                   id="pills-level-{{ level['level'] }}"
+                                   data-toggle="pill"
+                                   href="#pills-leaderboard-{{ level['level'] }}"
+                                   role="tab"
+                                   aria-controls="pills-leaderboard-{{ level['level'] }}"
+                                   style="background-color:#{{ level['color'] }};"
+                                >level {{ level['level'] }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content leaderboards" id="pills-tabContent">
+                        {% for level in levels %}
+                            <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
+                                 id="pills-leaderboard-{{ level['level'] }}" role="tabpanel"
+                                 aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
+                                {% include 'songs/partial/leaderboard.html.twig' with {level:level} %}
+                            </div>
+                        {% endfor %}
                     </div>
-                </div>
-                <div
-                        class="tab-pane fade show"
-                        id="leaderboard" role="tabpanel">
-                    {% if song.wip %}
-                        <p>{{ "Not available when the song is in \"WIP\" mode"|trans }}</p>
-                    {% else %}
-                        <div class="row">
-                            {% for level in levels %}
-                                <div class="col-md-4 mt-4 border-left border-right">
-                                    <h3 class="text-center text-level-{{ level['level'] }}">
-                                        Level {{ level['level'] }}</h3>
-                                    <table class="table table-sm">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>{{ "User"|trans }}</th>
-                                            <th>{{ "Score"|trans }}</th>
-                                        </tr>
-                                        {% set imin = false %}
-                                        {% for score in level['scores'].entities %}
 
-                                            <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-level-{{ level['level'] }}"{% endif %}>
-                                                <td>{{ loop.index+(50*(level['scores'].current-1)) }}</td>
-                                                <td>{{ score.user.username }}</td>
-                                                <td class="text-right">{{ score.user.bestScore(score) }}</td>
-                                            </tr>
-                                        {% else %}
-                                            <tr>
-                                                <td colspan="3">{{ "no score for now"|trans }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
-                                    {{ macro_pagination.paginate(level['scores']) }}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+
+                </div>
+                <div class="col-md-4">
+                    <h3>{{ "Similar songs"|trans }}</h3>
+
+                    {% include "song_partial/index.html.twig" with {songs:songService.similarSongs(song)} %}
+
                 </div>
             </div>
         </div>
-        <div class="col-md-4 song-detail border-left">
-            <img src="{{ song.cover }}" class="img-fluid pt-2"
-                 alt="{{ song.name }}"/>
-            <div class="text-center mt-3">
-                {% if song.youtubeLink != null %}
-                    <a target="_blank" href="{{ song.youtubeLink }}"
-                       class="btn btn-youtube" style="background:#F00;">
-                        <i class="fab fa-youtube"></i>
-                        {{ "Youtube"|trans }}
-                    </a>
-                {% endif %}
 
-                <a href="#" data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn bg-twitch">
-                    <i class="fab fa-twitch"></i>
-                    !rc {{ song.id }}
-                </a>
-
-                <a href="ragnac://install/{{ song.id }}" class="btn btn-danger">
-                    {{ "1 click"|trans }}
-                </a>
-
-                <a href="{{ url('song_direct_download',{id: song.id}) }}" class="btn btn-success">{{ "Download"|trans }}</a>
-            </div>
-            {% if song.wip %}
-                <div class="resume row pt-5 pb-5 text-center">
-                    {{ "This song is a \"Work in progress\""|trans }}
-                </div>
-
-
-            {% else %}
-                <div class="resume row mt-2">
-
-                    <div class="col-md-6 text-center border-right">
-                        <p class="numeric"><span>{{ song.downloads }}</span></p>
-                        <p class="description">{{ "Downloads"|trans }}</p>
-                    </div>
-
-                    <div class="col-md-6 text-center">
-                        <p class="numeric"><span>{{ song.voteAverage|round(2, "floor") }}</span>/5</p>
-                        <div class="description">
-                            {{ macro_vote.starsDisplay(song.voteAverage|round(2, "floor")) }}
-                        </div>
-                        <small>{{ song.countVotes }} vote(s)</small>
-                    </div>
-
-                </div>
-                <div class="text-center">
-                    <button class="btn btn-block ajax-load ajax-modal-form  btn-sm btn-info mt-1 mb-2 song-review"
-                            data-toggle="modal"
-                            data-target="#reviewSong"
-                            data-refresh="true"
-                            data-url="{{ url('song_vote_review',{id:song.id}) }}"
-                            data-song-id="{{ song.id }}"
-                    >{{ "I want to vote"|trans }}</button>
-                </div>
-
-            {% endif %}
-            <h3 class="text-center">{{ "Informations"|trans }}</h3>
-
-            <div class="informations">
-                {{ macro_vote.ratingDisplayLabel("Fun factor:"|trans,song.funFactorAverage) }}
-                {{ macro_vote.ratingDisplayLabel("Rhythm:"|trans,song.rhythmAverage) }}
-{#                {{ macro_vote.ratingDisplayLabel("Flow:"|trans,song.flowAverage) }}#}
-                {{ macro_vote.ratingDisplayLabel("Pattern quality:"|trans,song.patternQualityAverage) }}
-                {{ macro_vote.ratingDisplayLabel("Readability:"|trans,song.readabilityAverage) }}
-{#                {{ macro_vote.ratingDisplayLabel("Level quality:"|trans,song.levelQualityAverage) }}#}
-                <div class="d-flex rating-wrap">
-                    <label>{{ "Mapped by:"|trans }} </label>
-                    <span>
-                        <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
-                    </span>
-                </div>
-                <div class="d-flex rating-wrap">
-                    <label>{{ "Difficulties:"|trans }}</label>
-                    <span>
-                        {{ song.songDifficultiesStr }}
-                    </span>
-                </div>
-                <div class="d-flex rating-wrap">
-                    <label>{{ "Artist:"|trans }}</label>
-                    <span>
-                        <a href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">
-                            {{ song.authorName }}</a>
-                    </span>
-                </div>
-                <div class="d-flex rating-wrap">
-                    <label>{{ "Category:"|trans }}</label>
-                    <span>
-                            {{ song.songCategoryTags|join(', ')  }}
-                    </span>
-                </div>
-                <div class="d-flex rating-wrap">
-                    <label>{{ "Last update:"|trans }}</label>
-                    <span>
-                        <span class="bold">{{ song.lastDateUpload.format('Y-m-d') }}</span>
-                    </span>
-                </div>
-                <div class="d-flex rating-wrap">
-                    <label>{{ "Duration:"|trans }} : </label>
-                    <span>
-                        <span class="bold">{{ song.approximativeDurationMS }}</span>
-                    </span>
-                </div>
-                <div class="d-flex rating-wrap">
-                    <label>{{ "BPM:"|trans }} : </label>
-                    <span>
-                        <span class="bold">{{ song.beatsPerMinute|round(2) }}</span>
-                    </span>
-                </div>
-            </div>
-        </div>
     </div>
     <script type="application/ld+json">
                     {
@@ -290,38 +225,19 @@
                         }
                     }
     </script>
-    <div id="info-dat" data-file="{{ song.infoDatFile }}"></div>
+
 
 {% endblock %}
-{% block endBody %}
 
-    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel1">{{ "Song Review"|trans }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-review">
-                    ...
-                </div>
-
-            </div>
-        </div>
-    </div>
-{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('ragnabeat') }}
+
 {% endblock %}
 
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('ragnabeat') }}
 {% endblock %}
 
 

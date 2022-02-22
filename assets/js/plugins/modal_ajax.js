@@ -10,7 +10,6 @@ $(document).on('click', ".ajax-load", function () {
         },
         success: function (data) {
             body.html(data.response);
-            console.log(data)
             $(".rating-list").on('change', function () {
                 let t = $(this);
                 $('input[name="' + t.data('input-selector') + '"]').val(t.data('rating'));
@@ -41,10 +40,7 @@ $(document).on('click', ".ajax-load", function () {
                         $(".modal:visible").modal('hide');
                     }
                 });
-
                 body.html("<div class=\"popup-box-actions white full void\">Sending your form</div>");
-
-
                 return false;
             });
         }
@@ -55,15 +51,11 @@ $(document).on('click', ".ajax-load", function () {
 
 $(document).on('click', ".ajax-modal-form", function () {
     let t = $(this);
-
     $(t.data('modal')).modal('show');
     $.ajax({
         url: t.attr('href'),
         success: function (data) {
-            console.log("load form");
             loadForm(data.response);
-            console.log("enable select2");
-
             $('.select2entity').select2entity();
         }
     });

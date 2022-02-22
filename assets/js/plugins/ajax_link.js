@@ -11,8 +11,6 @@ $(document).on("click", ".ajax-link", function () {
             }
             switch (action) {
                 case "replace":
-                    console.log('replace'+t.data('replace-selector'))
-                    console.log(data.result)
                     $(t.data('replace-selector')).replaceWith(data.result);
                     break;
                 case "remove":

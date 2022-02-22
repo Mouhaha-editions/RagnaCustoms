@@ -39,14 +39,9 @@ class SongsController extends AbstractController
 
     /**
      * @Route("/", name="home")
-     * @param Request $request
-     * @param SongRepository $songRepository
-     * @param PaginationService $paginationService
-     * @param VoteCounterRepository $voteCouterRepository
      * @return Response
      */
-    public function beta(Request               $request, SongRepository $songRepository, PaginationService $paginationService,
-                         VoteCounterRepository $voteCouterRepository): Response
+    public function homepage(): Response
     {
         return $this->render('songs/homepage.html.twig');
     }
@@ -454,9 +449,9 @@ class SongsController extends AbstractController
         return preg_replace('/[^a-zA-Z]/i', '', $getName);
     }
     /**
-     * @Route("/v2/song/{slug}", name="song_detail_v2", defaults={"slug"=null})
+     * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
-    public function songDetailV2(Request     $request, Song $song, TranslatorInterface $translator,
+    public function songDetail(Request     $request, Song $song, TranslatorInterface $translator,
                                SongService $songService, PaginationService $paginationService, DiscordService $discordService)
     {
 
@@ -464,8 +459,6 @@ class SongsController extends AbstractController
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }
-
-        $em = $this->getDoctrine()->getManager();
         $song->setViews($song->getViews() + 1);
         $feedback = new Vote();
         $feedback->setSong($song);
@@ -473,29 +466,13 @@ class SongsController extends AbstractController
         $feedback->setUser($this->getUser());
         $feedbackForm = $this->createForm(VoteType::class, $feedback);
 
-        if (!$song->hasCover() && !$song->getWip()) {
-            $song->setName("Missing cover - " . $song->getName());
-            $song->setSlug($song->getSlug());
-            $song->setWip(true);
-            $em->flush();
-        }
         $feedbackForm->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
 
         if ($feedbackForm->isSubmitted() && $feedbackForm->isValid() && $this->getUser() != null) {
-            $dif = $feedbackForm->get('songDifficulty')->getData();
-            if ($dif != null) {
-                $feedback->setDifficulty($dif->getDifficultyRank()->getLevel());
-            }
             $em->persist($feedback);
             $em->flush();
-            try {
-                $songService->newFeedback($feedback);
-            } catch (Exception $e) {
-
-            }
             $discordService->sendFeedback($feedback);
-
             $feedback = new Vote();
             $feedback->setSong($song);
             $feedback->setHash($song->getNewGuid());
@@ -522,85 +499,6 @@ class SongsController extends AbstractController
             $levels [] = [
                 "level" => $level,
                 "color" => $difficulty->getDifficultyRank()->getColor(),
-                'scores' => $pagination
-            ];
-        }
-
-        return $this->render('songs/detail_v2.html.twig', [
-            'song' => $song,
-            'levels' => $levels,
-            "feedbackForm" => $feedbackForm->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
-     */
-    public function songDetail(Request     $request, Song $song, TranslatorInterface $translator,
-                               SongService $songService, PaginationService $paginationService, DiscordService $discordService)
-    {
-
-        if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
-            $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
-            return $this->redirectToRoute('home');
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $song->setViews($song->getViews() + 1);
-        $feedback = new Vote();
-        $feedback->setSong($song);
-        $feedback->setHash($song->getNewGuid());
-        $feedback->setUser($this->getUser());
-        $feedbackForm = $this->createForm(VoteType::class, $feedback);
-
-        if (!$song->hasCover() && !$song->getWip()) {
-            $song->setName("Missing cover - " . $song->getName());
-            $song->setSlug($song->getSlug());
-            $song->setWip(true);
-            $em->flush();
-        }
-        $feedbackForm->handleRequest($request);
-        $em = $this->getDoctrine()->getManager();
-
-        if ($feedbackForm->isSubmitted() && $feedbackForm->isValid() && $this->getUser() != null) {
-            $dif = $feedbackForm->get('songDifficulty')->getData();
-            if ($dif != null) {
-                $feedback->setDifficulty($dif->getDifficultyRank()->getLevel());
-            }
-            $em->persist($feedback);
-            $em->flush();
-            try {
-                $songService->newFeedback($feedback);
-            } catch (Exception $e) {
-
-            }
-            $discordService->sendFeedback($feedback);
-
-            $feedback = new Vote();
-            $feedback->setSong($song);
-            $feedback->setHash($song->getNewGuid());
-            $feedback->setUser($this->getUser());
-            $feedbackForm = $this->createForm(VoteType::class, $feedback);
-            $this->addFlash("success", $translator->trans("Feedback sent!"));
-        }
-        $songService->emulatorFileDispatcher($song);
-        $em->flush();
-
-        $levels = [];
-        foreach ($song->getSongDifficulties() as $difficulty) {
-            $level = $difficulty->getDifficultyRank()->getLevel();
-            $scores = $this->getDoctrine()->getRepository(Score::class)->createQueryBuilder('s')
-                ->select('s, MAX(s.score) AS HIDDEN max_score')
-                ->where('s.difficulty = :diff')
-                ->andWhere('s.hash = :hash')
-                ->setParameter('diff', $level)
-                ->setParameter('hash', $difficulty->getSong()->getNewGuid())
-                ->groupBy('s.user')
-                ->orderBy('max_score', 'DESC');
-
-            $pagination = $paginationService->setDefaults(50)->process($scores, $request);
-            $levels [] = [
-                "level" => $level,
                 'scores' => $pagination
             ];
         }

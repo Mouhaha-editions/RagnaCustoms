@@ -29,6 +29,10 @@ $reddit: #ff4500;
 $patreon: #f96854;
 $discord: #7289da;
 
+$modal-content-bg: #2c2b2c;
+$popover-bg: #414141;
+$popover-body-color: #fff;
+$popover-header-bg: #414141;
 
 @import "~bootstrap";
 
@@ -708,8 +712,11 @@ a.back-button {
   }
 
   .btn.song-review {
-    border: 2px solid $warning;
-    color: $warning;
+
+  }
+.btn.song-feedback {
+  border: 2px solid $warning;
+  color: $warning;
   }
 
   .label {

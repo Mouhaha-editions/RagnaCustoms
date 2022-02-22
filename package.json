@@ -32,7 +32,7 @@
         "webpack-notifier": "^1.6.0"
     },
     "dependencies": {
-        "bootstrap": "^4.6.0",
+        "bootstrap": "^4",
         "chart.js": "^3.5.0",
         "color.js": "^1.2.0",
         "jquery": "^3.6.0",
