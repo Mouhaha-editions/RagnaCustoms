@@ -289,7 +289,7 @@ class SongService
             $diff->setNotesCount(count($json2->_notes));
             $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
 
-            $theoricalMaxScore = $this->calculateTheoricalMaxScore($song, $diff);
+            $theoricalMaxScore = $this->calculateTheoricalMaxScore($diff);
             $diff->setTheoricalMaxScore($theoricalMaxScore);
 
         }
@@ -588,14 +588,14 @@ class SongService
     }
 
     //get the theorical max score for the calculation of the PP ranking score
-    private function calculateTheoricalMaxScore($song, $diff) {
+    public function calculateTheoricalMaxScore(SongDifficulty $diff) {
         // we consider that no note were missed
         $miss = 0;
         // We consider that none blue combo is used
         $maxBlueCombo = 0;
         // base speed of the boat given by Wanadev
         $baseSpeed = 17.18;
-        $duration = $song->getApproximativeDuration();
+        $duration = $diff->getSong()->getApproximativeDuration();
         $noteCount = $diff->getNotesCount();
         
         //calculation of the theorical number of yellow combos

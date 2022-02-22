@@ -21,6 +21,7 @@ use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\GamificationService;
+use App\Service\SongService;
 use App\Service\StatisticService;
 use ContainerCexz9GN\getMaker_AutoCommand_MakeMessengerMiddlewareService;
 use DateTime;
@@ -96,6 +97,7 @@ class ApiController extends AbstractController
                             ScoreHistoryRepository   $scoreHistoryRepository,
                             UtilisateurRepository    $utilisateurRepository,
                             SongRepository           $songRepository,
+                            SongService              $songService,
                             RankedScoresRepository   $rankedScoresRepository,
                             LoggerInterface          $logger): Response
     {
@@ -174,7 +176,7 @@ class ApiController extends AbstractController
                     "error" => "1_SONG_NOT_FOUND"
                 ];
                 $logger->error("API : " . $apiKey . " " . $hash . " 1_SONG_NOT_FOUND");
-                return new JsonResponse($results,400);
+                return new JsonResponse($results, 400);
             }
             $rank = $difficultyRankRepository->findOneBy(['level' => $level]);
             $rank = $difficultyRankRepository->findOneBy(['level' => $level]);
@@ -193,7 +195,10 @@ class ApiController extends AbstractController
                     "error" => "2_LEVEL_NOT_FOUND"
                 ];
                 $logger->error("API : " . $apiKey . " " . $hash . " " . $level . " 2_LEVEL_NOT_FOUND");
-                return new JsonResponse($results,400);
+                return new JsonResponse($results, 400);
+            }
+            if ($songDiff->getTheoricalMaxScore() <= 0) {
+                $songDiff->setTheoricalMaxScore($songService->calculateTheoricalMaxScore($songDiff));
             }
 
             if ($songDiff->isRanked()) {
@@ -277,7 +282,7 @@ class ApiController extends AbstractController
             $scoreHistory->setHitAccuracy($data["HitAccuracy"] ?? null);
             $scoreHistory->setHitSpeed($data["HitSpeed"] ?? null);
             $em->flush();
-            if ($score->getScore() < $scoreData) {
+            if ($score->getScore() <= $scoreData) {
                 $score->setScore($scoreData);
                 $score->setPercentage($data["Percentage"] ?? null);
                 $score->setPercentage2($data["Percentage2"] ?? null);
@@ -437,6 +442,7 @@ class ApiController extends AbstractController
                             ScoreHistoryRepository   $scoreHistoryRepository,
                             UtilisateurRepository    $utilisateurRepository,
                             SongRepository           $songRepository,
+                            SongService              $songService,
                             LoggerInterface          $logger): Response
     {
         $em = $this->getDoctrine()->getManager();
@@ -536,6 +542,10 @@ class ApiController extends AbstractController
                 return new JsonResponse($results, 400);
             }
 
+            if ($songDiff->getTheoricalMaxScore() <= 0) {
+                $songDiff->setTheoricalMaxScore($songService->calculateTheoricalMaxScore($songDiff));
+                $em->flush();
+            }
             if ($season != null && $songDiff->isSeasonRanked()) {
                 $score = $scoreRepository->findOneBy([
                     'user' => $user,
@@ -602,7 +612,7 @@ class ApiController extends AbstractController
             $scoreHistory->setHitAccuracy($data["HitAccuracy"] ?? null);
             $scoreHistory->setHitSpeed($data["HitSpeed"] ?? null);
             $em->flush();
-            if ($score->getScore() < $scoreData) {
+            if ($score->getScore() <= $scoreData) {
                 $score->setScore($scoreData);
                 $score->setPercentage($data["Percentage"] ?? null);
                 $score->setPercentage2($data["Percentage2"] ?? null);
