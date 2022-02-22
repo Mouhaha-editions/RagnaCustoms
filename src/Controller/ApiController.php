@@ -385,7 +385,6 @@ class ApiController extends AbstractController
         $userScore = $score->getScore();
         $songLevel = $score->getDifficulty();
         $maxSongScore = $songDiff->getTheoricalMaxScore();
-
         // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
         // it is ponderated by the song level
         $rawPP = (($userScore / $maxSongScore) * (0.4 + 0.1 * $songLevel)) * 100;
