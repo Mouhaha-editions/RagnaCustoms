@@ -762,8 +762,13 @@ a.back-button {
     table{
       color:#fff;
       border:none;
-      font-size:18px;
+      font-size:14px;
       tr{
+        th{
+          color:#868686;
+          border-top:none;
+          font-weight:normal;
+        }
         border-bottom: 1px solid #868686;
         &:last-child{
           border: none;
