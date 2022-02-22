@@ -91,6 +91,11 @@ class Score
     private $combos;
 
     /**
+    * @ORM\Column(type="float", nullable=true)
+    */
+    private $rawPP;
+
+    /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="scores")
      */
     private $Song;
@@ -260,6 +265,18 @@ class Score
     public function setCombos(?int $combos): self
     {
         $this->combos = $combos;
+
+        return $this;
+    }
+
+    public function getRawPP(): ?float
+    {
+        return $this->rawPP;
+    }
+
+    public function setRawPP(?float $rawPP): self
+    {
+        $this->rawPP = $rawPP;
 
         return $this;
     }
