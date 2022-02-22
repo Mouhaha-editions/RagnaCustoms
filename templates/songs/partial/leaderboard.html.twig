@@ -1,24 +1,32 @@
 {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
 <div class="row">
-    <div class="col-md-6">
-        Coming soon, work in progress
-{#        <table class="table table-sm">#}
+    <div class="col-12">
+        {% if is_granted('ROLE_USER') %}
+            <span class="text-danger">{{ "Your place: #%place%"|trans|replace({"%place%":songService.leaderboardPosition(app.user,level['difficulty'])}) }}</span>
+{% endif %}
+        <table class="table table-sm">
+            <tr>
+                <th class="text-right">#</th>
+                <th>{{ "player"|trans }}</th>
+                <th class="text-right">{{ "distance"|trans }}</th>
+                <th class="text-right">{{ "PP"|trans }}</th>
+            </tr>
+            {% set imin = false %}
+            {% for score in level['scores'].entities %}
 
-{#            {% set imin = false %}#}
-{#            {% for score in level['scores'].entities %}#}
+                <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-level-{{ level['level'] }}"{% endif %}>
+                    <td class="text-right">{{ loop.index+(50*(level['scores'].current-1)) }}.</td>
+                    <td>{{ score.user.username }}</td>
+                    <td class="text-right">{{ score.score }}</td>
+                    <td class="text-right">{{ score.rawPP }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">{{ "no score for now"|trans }}</td>
+                </tr>
+            {% endfor %}
 
-{#                <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-level-{{ level['level'] }}"{% endif %}>#}
-{#                    <td class="text-right">{{ loop.index+(50*(level['scores'].current-1)) }}.</td>#}
-{#                    <td>{{ score.user.username }}</td>#}
-{#                    <td class="text-right">{{ score.user.bestScore(score) }}</td>#}
-{#                </tr>#}
-{#            {% else %}#}
-{#                <tr>#}
-{#                    <td colspan="3">{{ "no score for now"|trans }}</td>#}
-{#                </tr>#}
-{#            {% endfor %}#}
-{#            #}
-{#        </table>#}
+        </table>
 {#        {{ macro_pagination.paginate(level['scores']) }}#}
     </div>
 </div>

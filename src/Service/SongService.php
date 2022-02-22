@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\VarDumper\VarDumper;
 use ZipArchive;
 
@@ -365,6 +366,44 @@ class SongService
         }
     }
 
+    public function calculateTheoricalMaxScore(SongDifficulty $diff)
+    {
+        // we consider that no note were missed
+        $miss = 0;
+        // We consider that none blue combo is used
+        $maxBlueCombo = 0;
+        // base speed of the boat given by Wanadev
+        $baseSpeed = 17.18;
+        $duration = $diff->getSong()->getApproximativeDuration();
+        $noteCount = $diff->getNotesCount();
+
+        //calculation of the theorical number of yellow combos
+        $consumedNotes = 0;
+        $combo = 0;
+
+        while ($consumedNotes <= $noteCount) {
+            $combo = $combo + 1;
+            $consumedNotes = $consumedNotes + (2 * (15 + 10 * $combo));
+
+            $maxYellowCombo = $combo - 1;
+        }
+
+        // Score calculation based on Wanadev public formula (unit is the distance traveled by the boat):
+        //   base speed * duration of the song
+        // + 1/4 of the base speed for each note for 0.3 second
+        // - 1/4 of the base speed for each miss note for 0.3 second
+        // + Number of blue combos * base speed for 0.75 second
+        // + Number of yellow combos * base speed for 3 second
+
+        $theoricalMaxScore = ($baseSpeed * $duration)
+            + ($noteCount * 0.3 * $baseSpeed / 4)
+            - ($miss * 0.3 * $baseSpeed / 4)
+            + ($maxBlueCombo * 3 / 4 * $baseSpeed)
+            + ($maxYellowCombo * 3 * $baseSpeed);
+
+        return round($theoricalMaxScore, 2);
+    }
+
     public function emulatorFileDispatcher(Song $song, bool $force = false)
     {
         if ($song->getInfoDatFile() !== null && !$force) {
@@ -561,6 +600,8 @@ class SongService
 
     }
 
+    //get the theorical max score for the calculation of the PP ranking score
+
     public function count()
     {
         $songs = $this->em->getRepository(Song::class)->createQueryBuilder('s')
@@ -572,50 +613,12 @@ class SongService
         return $songs['count'];
     }
 
-    //get the theorical max score for the calculation of the PP ranking score
-    public function calculateTheoricalMaxScore(SongDifficulty $diff) {
-        // we consider that no note were missed
-        $miss = 0;
-        // We consider that none blue combo is used
-        $maxBlueCombo = 0;
-        // base speed of the boat given by Wanadev
-        $baseSpeed = 17.18;
-        $duration = $diff->getSong()->getApproximativeDuration();
-        $noteCount = $diff->getNotesCount();
-        
-        //calculation of the theorical number of yellow combos
-        $consumedNotes = 0;
-        $combo = 0;
-
-        while ($consumedNotes <= $noteCount) {
-            $combo = $combo + 1;
-            $consumedNotes = $consumedNotes + (2 * (15 + 10 * $combo));
-
-            $maxYellowCombo = $combo - 1;
-        }
-
-        // Score calculation based on Wanadev public formula (unit is the distance traveled by the boat):
-        //   base speed * duration of the song
-        // + 1/4 of the base speed for each note for 0.3 second
-        // - 1/4 of the base speed for each miss note for 0.3 second
-        // + Number of blue combos * base speed for 0.75 second
-        // + Number of yellow combos * base speed for 3 second
-
-        $theoricalMaxScore = ($baseSpeed * $duration) 
-        + ($noteCount * 0.3 * $baseSpeed / 4) 
-        - ($miss * 0.3 * $baseSpeed / 4) 
-        + ($maxBlueCombo * 3 / 4 * $baseSpeed) 
-        + ($maxYellowCombo * 3 * $baseSpeed);
-
-        return round($theoricalMaxScore,2);
-    }
-
     public function getSimilarSongs(Song $song, $max = 10)
     {
         return $this->em->getRepository(Song::class)
             ->createQueryBuilder('s')
             ->distinct()
-            ->leftJoin('s.categoryTags','category_tags')
+            ->leftJoin('s.categoryTags', 'category_tags')
             ->where("category_tags.id IN (:categories)")
             ->andWhere('s.id != :song')
             ->setParameter('categories', $song->getCategoryTags())
@@ -624,6 +627,29 @@ class SongService
             ->setMaxResults($max)
             ->setFirstResult(0)
             ->getQuery()->getResult();
+    }
+
+    public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty)
+    {
+        $mine = $this->em->getRepository(Score::class)->findOneBy([
+            'user' => $user,
+            'songDifficulty' => $songDifficulty
+        ]);
+        if ($mine == null) {
+            return "-";
+        }
+        return count($this->em->getRepository(Score::class)->createQueryBuilder("s")
+                ->select('s.id')
+                ->where('s.rawPP > :my_score')
+                ->andWhere('s.songDifficulty = :difficulty')
+                ->andWhere('s.user != :me')
+                ->setParameter('my_score', $mine->getRawPP())
+                ->setParameter('difficulty', $songDifficulty)
+                ->setParameter('me', $user)
+                ->groupBy('s.user')
+                ->getQuery()->getResult()) + 1;
+
+
     }
 }
 

@@ -98,12 +98,12 @@ class Score
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="scores")
      */
-    private $Song;
+    private $song;
 
     /**
      * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scores")
      */
-    private $SongDifficulty;
+    private $songDifficulty;
 
     public function getId(): ?int
     {
@@ -283,24 +283,24 @@ class Score
 
     public function getSong(): ?Song
     {
-        return $this->Song;
+        return $this->song;
     }
 
-    public function setSong(?Song $Song): self
+    public function setSong(?Song $song): self
     {
-        $this->Song = $Song;
+        $this->song = $song;
 
         return $this;
     }
 
     public function getSongDifficulty(): ?SongDifficulty
     {
-        return $this->SongDifficulty;
+        return $this->songDifficulty;
     }
 
     public function setSongDifficulty(?SongDifficulty $SongDifficulty): self
     {
-        $this->SongDifficulty = $SongDifficulty;
+        $this->songDifficulty = $SongDifficulty;
 
         return $this;
     }

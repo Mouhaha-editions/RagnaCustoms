@@ -526,7 +526,7 @@ class ApiController extends AbstractController
     {
         $totalPP = 0;
         $scores = $scoreRepository->createQueryBuilder('score')
-            ->leftJoin('score.SongDifficulty', 'diff')
+            ->leftJoin('score.songDifficulty', 'diff')
             ->where('score.user = :user')
             ->andWhere('diff.isRanked = true')
             ->setParameter('user', $user)
