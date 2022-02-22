@@ -487,14 +487,13 @@ class SongsController extends AbstractController
         foreach ($song->getSongDifficulties() as $difficulty) {
             $level = $difficulty->getDifficultyRank()->getLevel();
             $scores = $this->getDoctrine()->getRepository(Score::class)->createQueryBuilder('s')
-                ->select('s')
-                ->where('s.difficulty = :diff')
+                ->select('s, MAX(s.score) AS HIDDEN max_score')
+                ->where('s.songDifficulty = :diff')
                 ->andWhere('s.hash = :hash')
-                ->setParameter('diff', $level)
+                ->setParameter('diff', $difficulty)
                 ->setParameter('hash', $difficulty->getSong()->getNewGuid())
                 ->groupBy('s.user')
-                ->orderBy('s.rawPP', 'DESC')
-                ->addOrderBy('s.score', 'DESC')
+                ->addOrderBy('max_score', 'DESC')
             ;
 
             $pagination = $paginationService->setDefaults(20)->process($scores, $request);

@@ -91,11 +91,6 @@ class SongService
         }
     }
 
-    public function getByHash($hash)
-    {
-        return $this->em->getRepository(Song::class)->findOneByHash($hash);
-    }
-
     /**
      * @param Song $song
      * @return int
@@ -129,11 +124,6 @@ class SongService
             ->setParameter('song', $song)
             ->setParameter('user', $user)
             ->getQuery()->getResult();
-    }
-
-    public function getCurrentSeason()
-    {
-        return $this->em->getRepository(Season::class)->getCurrent();
     }
 
     /**
@@ -322,7 +312,6 @@ class SongService
         }
 
         $this->emulatorFileDispatcher($song, true);
-//        $this->coverOptimisation($song);
 
         $this->rrmdir($unzipFolder);
 
@@ -629,27 +618,6 @@ class SongService
             ->getQuery()->getResult();
     }
 
-    public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty)
-    {
-        $mine = $this->em->getRepository(Score::class)->findOneBy([
-            'user' => $user,
-            'songDifficulty' => $songDifficulty
-        ]);
-        if ($mine == null) {
-            return "-";
-        }
-        return count($this->em->getRepository(Score::class)->createQueryBuilder("s")
-                ->select('s.id')
-                ->where('s.rawPP > :my_score')
-                ->andWhere('s.songDifficulty = :difficulty')
-                ->andWhere('s.user != :me')
-                ->setParameter('my_score', $mine->getRawPP())
-                ->setParameter('difficulty', $songDifficulty)
-                ->setParameter('me', $user)
-                ->groupBy('s.user')
-                ->getQuery()->getResult()) + 1;
 
-
-    }
 }
 

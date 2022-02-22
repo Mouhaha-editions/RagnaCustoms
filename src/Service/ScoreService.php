@@ -16,6 +16,7 @@ use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use ZipArchive;
 
 class ScoreService
@@ -107,102 +108,6 @@ class ScoreService
         });
     }
 
-    public function getRanking(Utilisateur $user, $type)
-    {
-        switch ($type) {
-            case 'global':
-                $conn = $this->em->getConnection();
-
-                $sql = '
-           SELECT SUM(max_score)/1000 AS score, 
-                  username,
-                  user_id,
-                  MD5(LOWER(email)) as gravatar, 
-                  COUNT(*) AS count_song 
-           FROM (
-                SELECT u.username,
-                       u.email,
-                       s.user_id, 
-                       MAX(s.score) AS max_score 
-                FROM score s 
-                    LEFT JOIN song sg ON sg.new_guid = s.hash 
-                    LEFT JOIN utilisateur u on s.user_id = u.id        
-                WHERE sg.id IS NOT null AND sg.wip != true
-                GROUP BY s.hash,s.difficulty,s.user_id
-            ) AS ms GROUP BY user_id ORDER BY score DESC';
-                $stmt = $conn->prepare($sql);
-                $result = $stmt->executeQuery();
-                $scores = $result->fetchAllAssociative();
-                $i = 1;
-                foreach ($scores as $score) {
-                    if ($score['user_id'] == $user->getId()) {
-                        return $i;
-                    }
-                    $i++;
-                }
-                return 'unknown';
-                break;
-            case 'season':
-                $season = $this->em->getRepository(Season::class)->getCurrent();
-                $conn = $this->em->getConnection();
-                $sql = '
-           SELECT SUM(max_score)/1000 AS score, 
-                  username,
-                  user_id,
-                  MD5(LOWER(email)) as gravatar, 
-                  COUNT(*) AS count_song 
-           FROM (
-                SELECT u.username,
-                       u.email,
-                       s.user_id, 
-                       MAX(s.score) AS max_score 
-                FROM score s 
-                    LEFT JOIN song sg ON sg.new_guid = s.hash 
-                    LEFT JOIN utilisateur u on s.user_id = u.id        
-                WHERE sg.id IS NOT null AND s.season_id = :season AND sg.wip != true
-                GROUP BY s.hash,s.difficulty,s.user_id
-            ) AS ms GROUP BY user_id ORDER BY score DESC';
-                $stmt = $conn->prepare($sql);
-                $result = $stmt->executeQuery(['season' => $season->getId()]);
-                $scores = $result->fetchAllAssociative();
-
-                $i = 1;
-                foreach ($scores as $score) {
-                    if ($score['user_id'] == $user->getId()) {
-                        return $i;
-                    }
-                    $i++;
-                }
-                return 'unknown';
-
-                break;
-        }
-
-    }
-
-    public function ClawwMethod(Song $song)
-    {
-        $file = $this->kernel->getProjectDir() . '/public' . $song->getInfoDatFile();
-        $infoFile = json_decode(file_get_contents($file));
-        foreach ($infoFile->_difficultyBeatmapSets[0]->_difficultyBeatmaps as $diff) {
-            $diffFile = json_decode(file_get_contents(str_replace('info.dat', $diff->_beatmapFilename, $file)));
-            $rank = $diff->_difficultyRank;
-            /** @var SongDifficulty $diffEntity */
-            $diffEntity = $song->getSongDifficulties()->filter(function (SongDifficulty $sd) use ($rank) {
-                return $sd->getDifficultyRank()->getLevel() == $rank;
-            })->first();
-            $calc = round($this->calculate($diffFile, $infoFile), 4);
-            $diffEntity->setClawDifficulty($calc);
-        }
-        try {
-            $this->em->flush();
-        } catch (Exception $e) {
-            var_dump("song : " . $infoFile->_songName);
-            var_dump("diff : " . $rank);
-            var_dump("calc : " . $calc);
-            var_dump($e->getMessage());
-        }
-    }
 
     private function calculate($diffFile, $infoFile)
     {
@@ -264,6 +169,33 @@ class ScoreService
             ];
         }
         return $calc;
+    }
+
+
+    public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty)
+    {
+        $mine = $this->em->getRepository(Score::class)->findOneBy([
+            'user' => $user,
+            'songDifficulty' => $songDifficulty,
+            'hash' => $songDifficulty->getSong()->getNewGuid()
+        ],["score"=>"Desc"]);
+        if ($mine == null) {
+            return "-";
+        }
+        return count($this->em->getRepository(Score::class)->createQueryBuilder("s")
+                ->select('s.id')
+                ->where('s.score > :my_score')
+                ->andWhere('s.songDifficulty = :difficulty')
+                ->andWhere('s.user != :me')
+                ->andWhere('s.hash = :hash')
+                ->setParameter('my_score', $mine->getScore())
+                ->setParameter('difficulty', $songDifficulty)
+                ->setParameter('hash', $songDifficulty->getSong()->getNewGuid())
+                ->setParameter('me', $user)
+                ->groupBy('s.user')
+                ->getQuery()->getResult()) + 1;
+
+
     }
 }
 

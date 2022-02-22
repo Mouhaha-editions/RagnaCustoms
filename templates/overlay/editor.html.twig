@@ -13,7 +13,6 @@
 </head>
 <body class="{{ app.request.cookies.get('light-mode','light') }}">
 <div class="container-fluid">
-    {% set currentSeason = songService.currentSeason %}
     <div class="top-bar d-flex">
         <a class="navbar-brand" href="/"><img src="/apps/logo.png" style="max-width:50px" class="img-fluid" alt="logo"/>
             RagnaCustoms</a>

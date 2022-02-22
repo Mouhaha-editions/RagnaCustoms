@@ -52,21 +52,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('song_library') }}">{{ "Song library"|trans }}</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ "Leaderboards"|trans }}
+                <li class="nav-item ">
+                    <a class="nav-link " href="{{ url('score_global_ranking') }}">
+                        {{ "Leaderboard"|trans }}
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{{ url('score') }}">{{ "Leaderboards by song"|trans }}</a>
-                        <hr class="m-1"/>
-                        <a class="dropdown-item"
-                           href="{{ url('score_season_ranking') }}">{{ "Season ranking"|trans }}</a>
-                        <hr class="m-1"/>
-                        <a class="dropdown-item"
-                           href="{{ url('score_global_ranking') }}">{{ "Global ranking"|trans }}</a>
-
-                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('mappers') }}">Mappers</a>

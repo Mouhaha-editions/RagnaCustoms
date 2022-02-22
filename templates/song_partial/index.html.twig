@@ -30,7 +30,7 @@
                 <div class="level-list">
                     {% for diff in song.songDifficulties %}
                         <div class='level' style="background-color:#{{ diff.difficultyRank.color }};"
-                             title="{{ app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "already played" :"never played" }}"
+                             title=""
                              data-toggle="tooltip">
                             {{ diff.difficultyRank.level }}
                         </div>

@@ -107,7 +107,6 @@ class UploadSongController extends AbstractController
                         }
                         $this->getDoctrine()->getManager()->flush();
                     }
-                    $scoreService->ClawwMethod($song);
 
                     $this->addFlash('success', str_replace([
                         "%song%",

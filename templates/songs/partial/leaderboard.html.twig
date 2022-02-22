@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-12">
         {% if is_granted('ROLE_USER') %}
-            <span class="text-danger">{{ "Your position: #%position%"|trans|replace({"%position%":songService.leaderboardPosition(app.user,level['difficulty'])}) }}</span>
+            <span class="text-danger">{{ "Your position: #%position%"|trans|replace({"%position%":scoreService.leaderboardPosition(app.user,level['difficulty'])}) }}</span>
 {% endif %}
         <table class="table table-sm">
             <tr>
