@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 
@@ -164,7 +163,6 @@ class SongsController extends AbstractController
             $qb->andWhere("s.wip = true");
         }
         $qb->leftJoin('s.songDifficulties', 'song_difficulties');
-        VarDumper::dump($request->get('ranked_only', null));
 
         if ($request->get('only_ranked', null) != null) {
             $qb->andWhere("song_difficulties.isRanked = true");

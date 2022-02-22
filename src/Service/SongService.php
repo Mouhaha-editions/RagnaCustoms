@@ -619,5 +619,28 @@ class SongService
     }
 
 
+
+    public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty)
+    {
+        $mine = $this->em->getRepository(Score::class)->findOneBy([
+            'user' => $user,
+            'songDifficulty' => $songDifficulty
+        ]);
+        if ($mine == null) {
+            return "-";
+        }
+        return count($this->em->getRepository(Score::class)->createQueryBuilder("s")
+                ->select('s.id')
+                ->where('s.rawPP > :my_score')
+                ->andWhere('s.songDifficulty = :difficulty')
+                ->andWhere('s.user != :me')
+                ->setParameter('my_score', $mine->getRawPP())
+                ->setParameter('difficulty', $songDifficulty)
+                ->setParameter('me', $user)
+                ->groupBy('s.user')
+                ->getQuery()->getResult()) + 1;
+
+
+    }
 }
 
