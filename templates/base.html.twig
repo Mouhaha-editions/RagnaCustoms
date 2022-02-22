@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_link_tags('v2') }}
     {% endblock %}
 
     <link id="favicon" rel="icon" href="/apps/favicon.ico">
@@ -24,188 +24,163 @@
     {% endblock %}
 
 </head>
-<body class="{{ app.request.cookies.get('light-mode','dark') }}">
+<body {{ stimulus_controller('symfony/ux-swup/swup', {
+    containers: ['#swup', '#nav']
+}) }}>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand viking-text-bold" href="/"><img width="45" height="45" src="/apps/logo.png" class="img-fluid" alt="logo"/>
-        RagnaCustoms</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse d-flex" id="navbarNav">
-        <ul class="navbar-nav flex-grow-1">
-            <li class="nav-item">
-                <a class="nav-link" href="/">{{ "Custom Songs"|trans }}</a>
-            </li>
-
-            {# <li class="nav-item"> #}
-            {# {% set count = twitchService.countStreamers() %} #}
-            {# <a class="nav-link text-twitch" target="_blank" rel="nofollow" #}
-            {# href="https://www.twitch.tv/directory/game/Ragnaröck">Live #}
-            {# ({{ count }}{% if count == 100 %}+{% endif %})</a> #}
-            {# </li> #}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('song_request_index') }}">{{ "Song requests"|trans }}</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ "Leaderboards"|trans }}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{{ url('score') }}">{{ "Leaderboards by song"|trans }}</a>
-                    <hr class="m-1"/>
-                    <a class="dropdown-item" href="{{ url('score_season_ranking') }}">{{ "Season ranking"|trans }}</a>
-                    <hr class="m-1"/>
-                    <a class="dropdown-item" href="{{ url('score_global_ranking') }}">{{ "Global ranking"|trans }}</a>
-
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link text-level-9" href="{{ url("applications") }}">{{ "Software"|trans }}</a>
-            </li>
-            <li class="nav-item viking-text-bold">
-                <a class="nav-link text-info" target="_blank" rel="noopener"
-                   href="https://pkbeam.github.io/Edda/">EDDA</a>
-            </li>
-
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('mappers') }}">Mappers</a>
-            </li>
-
-            {% if is_granted('ROLE_MODERATOR') %}
+<nav id="nav" class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand viking-text-bold" href="/">
+            <img width="30" height="30" src="/apps/logo.png" class="img-fluid" alt="logo"/>
+            <img height="30" src="/apps/ragnacustoms_logo.png" alt="Ragnacustoms"/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-flex" id="navbarNav">
+            <ul class="navbar-nav flex-grow-1">
+                {% if is_granted('ROLE_MODERATOR') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin</a>
+                    </li>
+                {% endif %}  </ul>
+            <ul class="navbar-nav">
+                {# <li class="nav-item"> #}
+                {# <a class="nav-link" href="#">{{ "Getting started"|trans }}</a> #}
+                {# </li> #}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin dashboard</a>
+                    <a class="nav-link" href="{{ url('song_library') }}">{{ "Song library"|trans }}</a>
                 </li>
-            {% endif %}
-        </ul>
-        <ul class="navbar-nav">
-
-            {% if not is_granted("ROLE_USER") %}
-                <li class="nav-item">
-                    <a href="{{ url('app_login') }}" class="nav-link">{{ "Login"|trans }}</a>
-                </li>
-            {% else %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ "My account"|trans }}
+                        {{ "Leaderboards"|trans }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "Upload Song"|trans }}</a>
-                        <hr class="m-1"/>
-                        <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
+                        <a class="dropdown-item" href="{{ url('score') }}">{{ "Leaderboards by song"|trans }}</a>
                         <hr class="m-1"/>
                         <a class="dropdown-item"
-                           href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a>
-
+                           href="{{ url('score_season_ranking') }}">{{ "Season ranking"|trans }}</a>
                         <hr class="m-1"/>
-                        <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
+                        <a class="dropdown-item"
+                           href="{{ url('score_global_ranking') }}">{{ "Global ranking"|trans }}</a>
+
                     </div>
                 </li>
-            {% endif %}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {% if app.request.locale == 'en' %}
-                        <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ec-1f1e7.svg" alt="fr"/>
-                    {% endif %}
-                    {% if app.request.locale == 'es' %}
-                        <img alt="es" height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ea-1f1f8.svg"/>
-                    {% endif %}
-                    {% if app.request.locale == 'fr' %}
-                        <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1eb-1f1f7.svg" alt="fr"/>
-                    {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('mappers') }}">Mappers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-level-9" href="{{ url("applications") }}">{{ "Apps"|trans }}</a>
+                </li>
+                {# <li class="nav-item"> #}
+                {# <a href="#" class="btn btn-sm btn-blue mt-2 ">{{ "Submit"|trans }}</a> #}
+                {# </li> #}
 
-                    {% if app.request.locale == 'hu' %}
-                        <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ed-1f1fa.svg" alt="fr"/>
-                    {% endif %}
-                    {% if app.request.locale == 'de' %}
-                        <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1e9-1f1ea.svg" alt="de"/>
-                    {% endif %}
-                    {% if app.request.locale == 'pl' %}
-                        <img alt="pl" height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1f5-1f1f1.svg"/>
-                    {% endif %}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    {% if app.request.locale != 'en' %}
-                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"en"}) }}">
-                            <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ec-1f1e7.svg" alt="fr"/> English
+                {% if not is_granted("ROLE_USER") %}
+                    <li class="nav-item">
+                        <a href="{{ url('app_login') }}" class="nav-link">{{ "Login"|trans }}</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{{ app.user.gravatar }}" alt="" class="avatar-mini" width="30px" height="30px"/>
+                            {{ app.user.username }}
                         </a>
-                    {% endif %}
-                    {% if app.request.locale != 'es' %}
-                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"es"}) }}">
-                            <img alt="es" height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ea-1f1f8.svg"/> Español
-                        </a>
-                    {% endif %}
-                    {% if app.request.locale != 'fr' %}
-                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"fr"}) }}">
-                            <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1eb-1f1f7.svg" alt="fr"/> Français
-                        </a>
-                    {% endif %}
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "Upload Song"|trans }}</a>
+                            <hr class="m-1"/>
+                            <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
+                            <hr class="m-1"/>
+                            <a class="dropdown-item"
+                               href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a>
 
-                    {% if app.request.locale != 'hu' %}
-                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"hu"}) }}">
-                            <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1ed-1f1fa.svg" alt="fr"/> Hungarian
-                        </a>
-                    {% endif %}
-                    {% if app.request.locale != 'de' %}
-                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"de"}) }}">
-                            <img height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1e9-1f1ea.svg" alt="de"/> Deutsch
-                        </a>
-                    {% endif %}
-                    {% if app.request.locale != 'pl' %}
-                        <a class="dropdown-item" href="{{ url("change_locale",{locale:"pl"}) }}">
-                            <img alt="pl" height="20px" src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f1f5-1f1f1.svg"/> Polski
-                        </a>
-                    {% endif %}
+                            <hr class="m-1"/>
+                            <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
+                        </div>
+                    </li>
+                {% endif %}
 
 
-                </div>
-            </li>
-                        <li class="nav-item">
-                <a class="nav-link text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="norenoopenerferrer" target="_blank"><i class="fab fa-patreon"></i> Patreon</a>
-            </li>
-
-{#            <li class="nav-item pt-1">#}
-{#                <input id="chkSwitch" type="checkbox"#}
-{#                       data-toggle="switchbutton"#}
-{#                       data-size="sm"#}
-{#                       data-onlabel="Dark mode"#}
-{#                       data-offlabel="Light "#}
-{#                       data-onstyle="dark"#}
-{#                       data-offstyle="light"#}
-{#                        {{ app.request.cookies.get('light-mode') == "dark" ?"checked='checked'":'' }}#}
-{#                />#}
-{#            </li>#}
-
-        </ul>
+            </ul>
+        </div>
     </div>
-
 </nav>
-
-<div class="container">
-    <div class="runes"><img width="512" height="512" src="/apps/runes.png" alt="runes"/></div>
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-dismissible alert-{{ label }}">
-                {{ message|trans }}
-            </div>
-        {% endfor %}
+{# <div class="runes"><img width="512" height="512" src="/apps/runes.png" alt="runes"/></div> #}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-dismissible alert-{{ label }}">
+            {{ message|trans }}
+        </div>
     {% endfor %}
+{% endfor %}
+<main id="swup">
     {% block body %}
 
     {% endblock %}
-</div>
+</main>
+
 {% block endBody %}
+
+    <div class="modal fade" id="previewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song preview"|trans }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="form-review">
+                    ...
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song Review"|trans }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="form-review">
+                    ...
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="songPlaylists" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel3" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel3">{{ "Add song to playlist"|trans }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="form-playlist">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 <hr/>
 <div class="p-3 text-center">
-    <a class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer" target="_blank"><i class="fab fa-patreon"></i>
-     Patreon</a>&nbsp;
+    <a class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer" target="_blank"><i
+                class="fab fa-patreon"></i>
+        Patreon</a>&nbsp;
     <a class="text" href="https://discord.gg/nRnsgCCBvq" rel="noreferrer" target="_blank"><i class="fab fa-discord"></i>
     </a>&nbsp;
     <a class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank"><i
@@ -222,7 +197,7 @@
 
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('v2') }}
 {% endblock %}
 
 
@@ -265,26 +240,17 @@
         "mandatory": true /* Show a message about mandatory cookies */
     });
 
-    tarteaucitron.user.gtagUa = 'G-0JR780RBXK';
-    tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */
-    };
-    (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
-
-    tarteaucitron.user.googletagmanagerId = 'GTM-T8ZFK2C';
-    (tarteaucitron.job = tarteaucitron.job || []).push('googletagmanager');
     tarteaucitron.user.matomoId = 1;
     (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
     tarteaucitron.user.matomoHost = '//matomo.ragnacustoms.com/';
-
-</script>
-<!-- Matomo Tag Manager -->
-<script>
     var _mtm = window._mtm = window._mtm || [];
     _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src='https://matomo.ragnacustoms.com/js/container_4wEYbYum.js'; s.parentNode.insertBefore(g,s);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true;
+    g.src = 'https://matomo.ragnacustoms.com/js/container_4wEYbYum.js';
+    s.parentNode.insertBefore(g, s);
 </script>
-<!-- End Matomo Tag Manager -->
+
 
 </body>
 </html>
