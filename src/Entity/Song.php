@@ -197,12 +197,12 @@ class Song
     private $categoryTags;
 
     /**
-     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="Song")
+     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="song")
      */
     private $scores;
 
     /**
-     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="Song")
+     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="song")
      */
     private $scoreHistories;
 

@@ -68,12 +68,12 @@ class SongDifficulty
     private $isRanked;
 
     /**
-     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="SongDifficulty")
+     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="songDifficulty")
      */
     private $scores;
 
     /**
-     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="SongDifficulty")
+     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="songDifficulty")
      */
     private $scoreHistories;
 
