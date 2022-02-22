@@ -19,7 +19,7 @@ $danger: #F4505D;
 $active: #E4AE09;
 $link-green: #2dcc2a;
 $purple: #bc3ee3;
-$youtube: #ff0000;
+$youtube: #ff3131;
 $twitch: #6f42c1;
 $twitch-hover: #673eb1;
 $twitter: #1da1f2;
@@ -52,15 +52,18 @@ body {
   font-weight: 400;
   color: #fff;
 }
+
 .up_down_vote {
   a {
     color: #fff;
-    .disabled{
-      color:#868686;
+
+    .disabled {
+      color: #868686;
     }
   }
 
 }
+
 .navbar {
   padding: 0;
   background: linear-gradient($bg-darker, $bg);
@@ -640,13 +643,19 @@ a.back-button {
 #song-detail {
   .darker {
     background: url('../img/pixel_21.png');
-    .up_down_vote{
-      font-size:24px;
+
+    .up_down_vote {
+      font-size: 24px;
     }
   }
 
   .figure {
     position: relative;
+
+    img {
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgb(0 0 0 / 50%);
+    }
 
     .level-list {
       position: absolute;
@@ -714,9 +723,10 @@ a.back-button {
   .btn.song-review {
 
   }
-.btn.song-feedback {
-  border: 2px solid $warning;
-  color: $warning;
+
+  .btn.song-feedback {
+    border: 2px solid $warning;
+    color: $warning;
   }
 
   .label {
@@ -752,29 +762,33 @@ a.back-button {
         padding: 1px 15px;
         color: #fff;
         filter: grayscale(1);
-        &.active{
+
+        &.active {
           filter: grayscale(0);
         }
       }
     }
   }
-  .leaderboards{
-    table{
-      color:#fff;
-      border:none;
-      font-size:14px;
-      tr{
-        th{
-          color:#868686;
-          border-top:none;
-          font-weight:normal;
+
+  .leaderboards {
+    table {
+      color: #fff;
+      border: none;
+      font-size: 18px;
+
+      tr {
+        th {
+          color: #868686;
+          border-top: none;
+          font-weight: normal;
         }
+
         border-bottom: 1px solid #868686;
-        &:last-child{
+
+        &:last-child {
           border: none;
         }
       }
     }
   }
-
 }
