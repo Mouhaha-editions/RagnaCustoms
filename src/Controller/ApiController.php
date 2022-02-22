@@ -137,20 +137,11 @@ class ApiController extends AbstractController
             $logger->error("API : " . $apiKey . " USER NOT FOUND");
             return new JsonResponse($results, 400);
         }
+
         configureScope(function (Scope $scope) use ($user): void {
             $scope->setUser(['username' => $user->getUsername()]);
         });
 
-        $gamificationService->unlock(EGamification::ACHIEVEMENT_USE_API, $user);
-
-        $season = $seasonRepository->createQueryBuilder('s')
-            ->where('s.startDate <= :now')
-            ->andWhere('s.endDate >= :now')
-            ->setParameter('now', new DateTime())
-            ->setFirstResult(0)->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
-
-        $isSongRanked = false;
         if ($data["AppVersion"] < self::CurrentVersion) {
             $results[] = [
                 "user" => $apiKey,
@@ -164,6 +155,7 @@ class ApiController extends AbstractController
         }
         $hash = $data["HashInfo"];
         $level = $data["Level"];
+
         try {
             $song = $songRepository->findOneBy(['newGuid' => $hash]);
             if ($song == null) {
@@ -178,7 +170,6 @@ class ApiController extends AbstractController
                 $logger->error("API : " . $apiKey . " " . $hash . " 1_SONG_NOT_FOUND");
                 return new JsonResponse($results, 400);
             }
-            $rank = $difficultyRankRepository->findOneBy(['level' => $level]);
             $rank = $difficultyRankRepository->findOneBy(['level' => $level]);
             $songDiff = $songDifficultyRepository->findOneBy([
                 'song' => $song,
@@ -201,28 +192,12 @@ class ApiController extends AbstractController
                 $songDiff->setTheoricalMaxScore($songService->calculateTheoricalMaxScore($songDiff));
             }
 
-            if ($songDiff->isRanked()) {
-                $isSongRanked = true;
-            }
-
-            if ($season != null && $songDiff->isSeasonRanked()) {
-                $score = $scoreRepository->findOneBy([
-                    'user' => $user,
-                    'difficulty' => $level,
-                    'hash' => $hash,
-                    'season' => $season
-                ]);
-                if ($score != null) {
-                    $ranked = true;
-                }
-            } else {
-                $score = $scoreRepository->findOneBy([
-                    'user' => $user,
-                    'difficulty' => $level,
-                    'hash' => $hash,
-                    'season' => null
-                ]);
-            }
+            $score = $scoreRepository->findOneBy([
+                'user' => $user,
+                'difficulty' => $level,
+                'hash' => $hash,
+                'season' => null
+            ]);
             $scoreData = round(floatval($data['Score']) / 100, 2);
 
             if ($score == null) {
@@ -241,18 +216,11 @@ class ApiController extends AbstractController
                 $score->setNotesNotProcessed($data["NotesNotProcessed"] ?? null);
                 $score->setHitAccuracy($data["HitAccuracy"] ?? null);
                 $score->setHitSpeed($data["HitSpeed"] ?? null);
-                if ($season != null && $songDiff->isSeasonRanked()) {
-                    $score->setSeason($season);
-                    $ranked = true;
-                }
-
                 if ($songDiff->isRanked()) {
                     $rawPP = $this->calculateRawPP($score, $songDiff);
                     $score->setRawPP($rawPP);
                 }
-
                 $em->persist($score);
-
             }
 
             $scoreHistory = $scoreHistoryRepository->findOneBy([
@@ -270,7 +238,6 @@ class ApiController extends AbstractController
                 $scoreHistory->setSongDifficulty($songDiff);
                 $scoreHistory->setHash($hash);
                 $scoreHistory->setScore($scoreData);
-
                 $em->persist($scoreHistory);
             }
             $scoreHistory->setPercentage($data["Percentage"] ?? null);
@@ -322,13 +289,6 @@ class ApiController extends AbstractController
                 ];
             }
 
-
-            if ($song->getWip()) {
-                $gamificationService->unlock(EGamification::ACHIEVEMENT_HELPER_LVL_1, $user);
-                $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_2, $user, 1, 10, $song->getId());
-                $gamificationService->add(EGamification::ACHIEVEMENT_HELPER_LVL_3, $user, 1, 50, $song->getId());
-            }
-
             $results[] = [
                 "hash" => $hash,
                 "level" => $level,
@@ -346,15 +306,12 @@ class ApiController extends AbstractController
                 'detail' => $e->getMessage()
             ];
             $logger->error("API : " . $apiKey . " " . $hash . " " . $data["Level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage() . " ");
-
-//                return new JsonResponse($results,400);
-
+            return new JsonResponse($results,400);
         }
 
-
         //calculation of the ponderate PP scores
-        if ($isSongRanked) {
-            $totalPondPPScore = $this->calculateTotalPondPPScore($scoreRepository, $user, $logger);
+        if ($songDiff->isRanked()) {
+            $totalPondPPScore = $this->calculateTotalPondPPScore($scoreRepository, $user);
 
             //insert/update of the score into ranked_scores
             $rankedScore = $rankedScoresRepository->findOneBy([
@@ -396,7 +353,6 @@ class ApiController extends AbstractController
     private function calculateTotalPondPPScore(ScoreRepository $scoreRepository, Utilisateur $user)
     {
         $totalPP = 0;
-
         $scores = $scoreRepository->createQueryBuilder('score')
             ->leftJoin('score.SongDifficulty', 'diff')
             ->where('score.user = :user')
