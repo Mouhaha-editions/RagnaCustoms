@@ -58,6 +58,16 @@ class SongDifficulty
     private $claw_difficulty;
 
     /**
+     * @ORM\Column(type="float", nullable=false)
+     */
+    private $theoricalMaxScore;
+
+    /**
+    * @ORM\Column(type="boolean", nullable=false)
+    */
+    private $isRanked;
+
+    /**
      * @ORM\OneToMany(targetEntity=Score::class, mappedBy="SongDifficulty")
      */
     private $scores;
@@ -194,7 +204,7 @@ class SongDifficulty
      */
     public function isPlayedBy(Utilisateur $user, Season $season = null)
     {
-        if ($this->isRanked() && $season != null) {
+        if ($this->isSeasonRanked() && $season != null) {
             foreach ($user->getScores() as $score) {
                 if ($score->getSeason() != null && in_array($score->getHash(), $this->getSong()->getHashes()) && $score->getDifficulty() == $this->getDifficultyRank()->getLevel() && $score->getSeason()->getId() === $season->getId() && $score->getUser() === $user) {
                     return true;
@@ -214,7 +224,7 @@ class SongDifficulty
         return false;
     }
 
-    public function isRanked()
+    public function isSeasonRanked()
     {
         foreach ($this->getSeasons() as $season) {
             if ($season->isActive()) {
@@ -240,6 +250,18 @@ class SongDifficulty
     public function setClawDifficulty($claw_difficulty): self
     {
         $this->claw_difficulty = $claw_difficulty;
+
+        return $this;
+    }
+
+    public function getTheoricalMaxScore(): ?float
+    {
+        return $this->theoricalMaxScore;
+    }
+
+    public function setTheoricalMaxScore($theoricalMaxScore): self
+    {
+        $this->theoricalMaxScore = $theoricalMaxScore;
 
         return $this;
     }
@@ -300,6 +322,19 @@ class SongDifficulty
                 $scoreHistory->setSongDifficulty(null);
             }
         }
+
+        return $this;
+    }
+
+
+    public function isRanked(): ?bool
+    {
+        return $this->isRanked;
+    }
+
+    public function setIsRanked(?bool $isRanked): self
+    {
+        $this->isRanked = $isRanked;
 
         return $this;
     }

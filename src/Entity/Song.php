@@ -232,7 +232,7 @@ class Song
         return count($votes)>0;
     }
 
-    public function isRanked()
+    public function isSeasonRanked()
     {
         foreach ($this->getSongDifficulties() as $difficulty) {
             foreach ($difficulty->getSeasons() as $season) {

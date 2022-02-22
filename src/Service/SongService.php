@@ -260,7 +260,6 @@ class SongService
         $song->setEnvironmentName($json->_environmentName);
         $song->setModerated(true);
 
-
         $this->em->persist($song);
 
         foreach ($song->getSongDifficulties() as $difficulty) {
@@ -289,6 +288,9 @@ class SongService
             $json2 = json_decode(file_get_contents($file));
             $diff->setNotesCount(count($json2->_notes));
             $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
+
+            $theoricalMaxScore = $this->calculateTheoricalMaxScore($song, $diff);
+            $diff->setTheoricalMaxScore($theoricalMaxScore);
 
         }
         if ($isWip != $song->getWip()) {
@@ -583,6 +585,44 @@ class SongService
             ->setMaxResults(1)
             ->getQuery()->getOneOrNullResult();
         return $songs['count'];
+    }
+
+    //get the theorical max score for the calculation of the PP ranking score
+    private function calculateTheoricalMaxScore($song, $diff) {
+        // we consider that no note were missed
+        $miss = 0;
+        // We consider that none blue combo is used
+        $maxBlueCombo = 0;
+        // base speed of the boat given by Wanadev
+        $baseSpeed = 17.18;
+        $duration = $song->getApproximativeDuration();
+        $noteCount = $diff->getNotesCount();
+        
+        //calculation of the theorical number of yellow combos
+        $consumedNotes = 0;
+        $combo = 0;
+
+        while ($consumedNotes <= $noteCount) {
+            $combo = $combo + 1;
+            $consumedNotes = $consumedNotes + (2 * (15 + 10 * $combo));
+
+            $maxYellowCombo = $combo - 1;
+        }
+
+        // Score calculation based on Wanadev public formula (unit is the distance traveled by the boat):
+        //   base speed * duration of the song
+        // + 1/4 of the base speed for each note for 0.3 second
+        // - 1/4 of the base speed for each miss note for 0.3 second
+        // + Number of blue combos * base speed for 0.75 second
+        // + Number of yellow combos * base speed for 3 second
+
+        $theoricalMaxScore = ($baseSpeed * $duration) 
+        + ($noteCount * 0.3 * $baseSpeed / 4) 
+        - ($miss * 0.3 * $baseSpeed / 4) 
+        + ($maxBlueCombo * 3 / 4 * $baseSpeed) 
+        + ($maxYellowCombo * 3 * $baseSpeed);
+
+        return round($theoricalMaxScore,2);
     }
 
     public function getSimilarSongs(Song $song, $max = 10)
