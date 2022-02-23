@@ -158,10 +158,16 @@ class SongsController extends AbstractController
 //        $qb->leftJoin('s.songDifficulties', 'song_difficulties')
 //            ->leftJoin('song_difficulties.difficultyRank', 'rank');
 //        $qb->addSelect('s,song_difficulties');
-        $wip = false;
 
+        if (!$request->get('display_wip', null)) {
+            $qb->andWhere("s.wip != true");
+        }
+        $qb->leftJoin('s.songDifficulties', 'song_difficulties');
+        if (!$request->get('ranked_only', null)) {
+            $qb->andWhere("song_difficulties.isRanked = true");
+        }
         if ($request->get('downloads_filter_difficulties', null)) {
-            $qb->leftJoin('s.songDifficulties', 'song_difficulties')
+            $qb
                 ->leftJoin('song_difficulties.difficultyRank', 'rank');
             switch ($request->get('downloads_filter_difficulties')) {
                 case 1:
@@ -187,8 +193,8 @@ class SongsController extends AbstractController
                     break;
             }
         }
-        $qb->andWhere("s.wip = :wip")
-            ->setParameter("wip", $wip);
+
+
         $categories = $request->get('downloads_filter_categories', null);
         if ($categories != null) {
             $qb->leftJoin('s.categoryTags', 't');

@@ -169,9 +169,9 @@
                 </a>
                 <div class="level-list">
                     {% for diff in song.songDifficulties %}
-                        <div class='level' style="background-color:#{{ diff.difficultyRank.color }};"
-                             data-toggle="tooltip">
-                            {{ diff.difficultyRank.level }}
+                        <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">
+                            {% if diff.isRanked %}<i class="fas fa-star" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                            <span>{{ diff.difficultyRank.level }}</span>
                         </div>
                     {% endfor %}
                 </div>

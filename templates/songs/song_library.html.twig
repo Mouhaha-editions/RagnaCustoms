@@ -116,10 +116,7 @@
                                     value="3">{{ "8-10"|trans }}</option>
                             <option {% if app.request.get('downloads_filter_difficulties') == 6 %}selected="selected"{% endif %}
                                     value="6">{{ "10+"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_difficulties') == 4 %}selected="selected"{% endif %}
-                                    value="4">{{ "Ranked only"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_difficulties') == 5 %}selected="selected"{% endif %}
-                                    value="5">{{ "WIP only"|trans }}</option>
+
 
                         </select>
                     </div>
@@ -155,6 +152,20 @@
                             </label>
                         </div>
                         {% endif %}
+                        <div class="form-check">
+                            <input class="form-check-input" {% if app.request.get("only_ranked") == 1%}checked="checked"{% endif%} type="checkbox" value="1" name="only_ranked" id="only_ranked">
+                            <label class="form-check-label" for="only_ranked">
+                                {{ "Only ranked"|trans }}
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" {% if app.request.get("display_wip") == 1%}checked="checked"{% endif%} type="checkbox" value="1" name="display_wip" id="display_wip">
+                            <label class="form-check-label" for="display_wip">
+                                {{ "Display WIP"|trans }}
+                            </label>
+                        </div>
+
                     </div>
                     <button type="submit" name="search_btn" value="1"
                             class="btn btn-sm btn-block btn-info">{{ "Apply filters"|trans }}</button>

@@ -1,8 +1,10 @@
 {% import "songs/macros/song.html.twig" as macro_song %}
 
 {% for song in songs %}
-    {% if loop.index == 1 %}
+    {% if loop.index == 1 and bigOneDisabled is not defined %}
         {{ macro_song.featuredBox(song) }}
+    {% endif %}
+    {% if loop.index == 1%}
 <table class="featured-table table table-sm">
     <tr>
         <th>{{ "Song"|trans }}</th>
@@ -10,7 +12,8 @@
         <th>{{ "Rating"|trans }}</th>
         <th></th>
     </tr>
-    {% else %}
+    {% endif %}
+    {% if loop.index != 1 or bigOneDisabled is defined %}
         <tr>
             <td>
                 <div class="d-flex ">
@@ -29,10 +32,9 @@
                 </div>
                 <div class="level-list">
                     {% for diff in song.songDifficulties %}
-                        <div class='level' style="background-color:#{{ diff.difficultyRank.color }};"
-                             title=""
-                             data-toggle="tooltip">
-                            {{ diff.difficultyRank.level }}
+                        <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">
+                            {% if diff.isRanked %}<i class="fas fa-star" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                            <span>{{ diff.difficultyRank.level }}</span>
                         </div>
                     {% endfor %}
                 </div>

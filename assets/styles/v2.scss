@@ -229,7 +229,76 @@ header {
 
 
 }
-
+.level-list {
+  .level.is-ranked{
+    position:relative;
+    background:transparent!important;
+    width:24px!important;
+    i{
+      position:absolute;
+      font-size:20px;
+      left:2px;
+      top:-2px;
+    }
+    span{
+      z-index:200; position:relative;padding-left:2px;
+    }
+  }
+}
+.featured-box{
+  .level-list {
+    .level.is-ranked{
+      position:relative;
+      background:transparent!important;
+      width:24px!important;
+      i{
+        position:absolute;
+        font-size:24px;
+        left:0px;
+        top:-2px;
+      }
+      span{
+        z-index:200; position:relative;text-align:center;
+      }
+    }
+  }
+}
+.featured-table{
+  .level-list {
+    .level.is-ranked{
+      position:relative;
+      background:transparent!important;
+      width:16px!important;
+      i{
+        position:absolute;
+        font-size:16px;
+        left:0;
+        top:-2px;
+      }
+      span{
+        z-index:200; position:relative;text-align:center;
+      }
+    }
+  }
+}
+#song-detail .figure{
+  .level-list {
+    .level.is-ranked{
+      position:relative;
+      background:transparent!important;
+      width:24px!important;
+      line-height:24px;
+      i{
+        position:absolute;
+        font-size:24px;
+        left:0px;
+      }
+      span{
+        z-index:200; position:relative;text-align:center;
+      }
+    }
+  }
+}
 .featured-table {
   th {
     font-size: 12px;
@@ -380,6 +449,7 @@ header {
     }
 
     .up_down_vote {
+      color: #868686;
       a {
         color: #fff;
       }
