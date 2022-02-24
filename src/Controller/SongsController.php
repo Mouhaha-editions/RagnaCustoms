@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 
@@ -159,16 +160,17 @@ class SongsController extends AbstractController
 //            ->leftJoin('song_difficulties.difficultyRank', 'rank');
 //        $qb->addSelect('s,song_difficulties');
 
-        if (!$request->get('display_wip', null)) {
-            $qb->andWhere("s.wip != true");
+        if ($request->get('display_wip', null) != null) {
+            $qb->andWhere("s.wip = true");
         }
         $qb->leftJoin('s.songDifficulties', 'song_difficulties');
-        if (!$request->get('ranked_only', null)) {
+        VarDumper::dump($request->get('ranked_only', null));
+
+        if ($request->get('only_ranked', null) != null) {
             $qb->andWhere("song_difficulties.isRanked = true");
         }
         if ($request->get('downloads_filter_difficulties', null)) {
-            $qb
-                ->leftJoin('song_difficulties.difficultyRank', 'rank');
+            $qb->leftJoin('song_difficulties.difficultyRank', 'rank');
             switch ($request->get('downloads_filter_difficulties')) {
                 case 1:
                     $qb->andWhere('rank.level BETWEEN 1 and 3');

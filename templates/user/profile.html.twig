@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
     {% block title %}{{ "%username%'s profile"|trans|replace({"%username%":user.username})}}{% endblock %}
     {% block body %}
+        <div class="container">
         <div class="row">
             <div class="col-12">
                 <h1>{{ "%username%'s profile"|trans|replace({"%username%":user.username})}}</h1>
@@ -21,8 +22,8 @@
                     </div>
                     {% set totalDistance = statisticService.getTotalDistance(user) %}
                     <div class="col-md-3 ">
-                        {{ "Global ranking:"|trans }} #{{ scoreService.getRanking(user, "global") }}<br/>
-                        {{ "Season Ranking:"|trans }} #{{ scoreService.getRanking(user, "season") }}<br/>
+{#                        {{ "Global ranking:"|trans }} #{{ scoreService.s(user, "global") }}<br/>#}
+{#                        {{ "Season Ranking:"|trans }} #{{ scoreService.getRanking(user, "season") }}<br/>#}
                         {{ "Song played:"|trans }} {{ user.scoreHistories|length }} <a
                                 href="{{ url('user_profile',{id:user.id}) }}" class="text-level-5"><i
                                     class="fas fa-eye"></i></a><br/>
@@ -68,6 +69,7 @@
             </div>
 
             {% block detailed_content %}{% endblock %}
+        </div>
         </div>
     {% endblock %}
 
