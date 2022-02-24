@@ -1,70 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{"Be a virtual Viking!"|trans}}{% endblock %}
+{% block title %}{{ "Be a virtual Viking!"|trans }}{% endblock %}
 
 {% block body %}
-    <div class="widget-box">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6 offset-md-3">
+            <div class="col-md-6 background-login"></div>
+            <div class="col-md-4 text-center">
+                <h1 class="mt-5">{{ "Sign Into"|trans }}</h1>
+                <img src="{{ asset('apps/RC.png') }}" alt="Ragnacustoms.com"/>
+                <div class="widget-box text-left">
+                    <div class="row">
+                        <div class="col-md-6 offset-md-3">
+                            <form method="post" class="form">
+                                {% if error %}
+                                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                {% endif %}
+
+                                {% if app.user %}
+                                    <div class="mb-3">
+                                        You are logged in as {{ app.user.username }},
+                                        <a href="{{ path('app_logout') }}">Logout</a>
+                                    </div>
+                                {% endif %}
+
+                                <div class="form-group">
+                                    <label for="inputUsername">{{ "Username"|trans }}</label>
+                                    <input type="text" class="form-control" value="{{ last_username }}" name="_username" id="inputUsername" required autofocus>
+                                </div>
 
 
-                <form method="post" class="form text-center">
-                    {% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                    {% endif %}
+                                <div class="form-group">
+                                    <label for="inputPassword">{{ "Password"|trans }}</label>
+                                    <input class="form-control" type="password" name="_password" id="inputPassword" required>
+                                </div>
 
-                    {% if app.user %}
-                        <div class="mb-3">
-                            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="_remember_me" id="login-remember" checked>
+                                    <label for="login-remember">{{ "Remember Me"|trans }}</label>
+                                </div>
+
+                                <button class="btn btn-success">{{ "Sign in"|trans }}</button>
+
+                                <div class="form-item">
+                                    <a class="form-link" href="{{ url("app_forgot_password_request") }}">
+                                        {{ "Forgot Password?"|trans }}
+                                    </a>
+                                    <span class="white">/</span>
+                                    <a class="form-link" href="{{ url('app_register') }}">
+                                        {{ "Register"|trans }}
+                                    </a>
+                                </div>
+
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            </form>
                         </div>
-                    {% endif %}
-
-                    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-
-                    <div class="form-group">
-                        <label for="inputUsername">{{ "Username"|trans }}</label>
-                        <input type="text" class="form-control" value="{{ last_username }}" name="_username"
-                               id="inputUsername" required autofocus>
                     </div>
-
-
-                    <div class="form-group">
-                        <label for="inputPassword">{{ "Password"|trans }}</label>
-                        <input class="form-control" type="password" name="_password" id="inputPassword" required>
-                    </div>
-
-                    <div class="checkbox">
-                        <input type="checkbox" name="_remember_me" id="login-remember" checked>
-                        <label for="login-remember">{{ "Remember Me"|trans }}</label>
-                    </div>
-
-                            <button class="btn btn-success">{{ "Login to your Account"|trans }}</button>
-
-
-                    <div class="form-item">
-                        <a class="form-link"
-                           href="{{ url("app_forgot_password_request") }}">{{ "Forgot Password?"|trans }}</a> <span
-                                class="white">/</span> <a class="form-link"
-                                                          href="{{ url('app_register') }}">{{ "Register"|trans }}</a>
-                    </div>
-
-                    <input type="hidden" name="_csrf_token"
-                           value="{{ csrf_token('authenticate') }}">
-
-                    {#
-                    Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                    See https://symfony.com/doc/current/security/remember_me.html
-
-                    <div class="checkbox mb-3">
-                        <label>
-                            <input type="checkbox" name="_remember_me"> Remember me
-                        </label>
-                    </div>
-                    #}
-
-
-                </form>
+                </div>
             </div>
         </div>
     </div>
+
 {% endblock %}
