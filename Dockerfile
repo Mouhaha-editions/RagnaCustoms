@@ -1,5 +1,4 @@
 FROM php:7.4-fpm-alpine
-
 # Apk install
 RUN apk --no-cache update && \
 apk --no-cache add bash git && \
@@ -16,12 +15,14 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 WORKDIR /var/www/html
 
 COPY . /var/www/html/
+VOLUME /var/www/html/vendor
+#VOLUME /var/www/html/var/cache
+
 
 RUN php composer.phar install --ignore-platform-req=ext-zip
 
+#RUN php bin/console doctrine:migrations:migrate --no-interaction
+
 RUN yarn install --dev
-
-RUN symfony server:start -d
-
-ENTRYPOINT yarn watch
-
+CMD ["yarn", "watch"]
+ENTRYPOINT symfony serv

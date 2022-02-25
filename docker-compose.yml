@@ -3,19 +3,30 @@ version: '3'
 services:
   mysql:
     image: mariadb:latest
-    container_name: ragnaDb
+    container_name: Database
     volumes:
-      - ./dump.ragnacustoms.sql/dump.ragnacustoms.sql:/docker-entrypoint-initdb.d/dump.ragnacustoms.sql
+      - ./ragnacustoms.sql:/docker-entrypoint-initdb.d/ragnacustoms.sql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ragna
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
+      MYSQL_DATABASE: ragnacustoms
     ports:
       - "3306:3306"
-  php:
+  ragnacustoms:
+    depends_on:
+      - mysql
     image: ragnacustoms
+    container_name: Website
+    environment:
+      DATABASE_URL: mysql://root@Database:3306/ragnacustoms?serverVersion=5.7
+
     build:
       context: .\
     ports:
-      - "80:8000"
+      - "8000:8000"
     volumes:
       - ./:/var/www/html
+      #- "var:/var/www/html/var/"
+      - "vendor:/var/www/html/vendor/:cache"
+volumes:
+  #var:
+  vendor:
