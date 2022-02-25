@@ -102,6 +102,7 @@ class Score
 
     /**
      * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scores")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $songDifficulty;
 
