@@ -3,8 +3,7 @@ FROM php:7.4-fpm-alpine
 RUN apk --no-cache update && \
 apk --no-cache add bash git && \
 apk add --update --no-cache yarn curl zlib-dev libzip-dev zip libpng-dev icu-dev
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
+
 # Install pdo
 RUN docker-php-ext-install pdo_mysql gd intl zip
 
@@ -18,6 +17,7 @@ WORKDIR /var/www/html
 COPY . /var/www/html/
 VOLUME /var/www/html/vendor
 VOLUME /var/www/html/var
+VOLUME /var/www/html/node_modules
 
 USER root
 

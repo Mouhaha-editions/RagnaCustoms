@@ -5,7 +5,7 @@ services:
     image: mariadb:latest
     container_name: Database
     volumes:
-      - ./ragnacustoms.sql:/docker-entrypoint-initdb.d/ragnacustoms.sql
+      - "./ragnacustoms.sql:/docker-entrypoint-initdb.d/ragnacustoms.sql"
     environment:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
       MYSQL_DATABASE: ragnacustoms
@@ -24,9 +24,11 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./:/var/www/html
+      - "./:/var/www/html"
+      - "node_modules:/var/www/html/node_modules/"
       - "var:/var/www/html/var/"
-      - "vendor:/var/www/html/vendor/:cache"
+      - "vendor:/var/www/html/vendor/"
 volumes:
+  node_modules:
   var:
   vendor:
