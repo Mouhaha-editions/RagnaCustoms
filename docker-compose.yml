@@ -25,8 +25,8 @@ services:
       - "8000:8000"
     volumes:
       - ./:/var/www/html
-      #- "var:/var/www/html/var/"
+      - "var:/var/www/html/var/"
       - "vendor:/var/www/html/vendor/:cache"
 volumes:
-  #var:
+  var:
   vendor:
