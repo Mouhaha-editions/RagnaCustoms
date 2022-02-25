@@ -127,6 +127,9 @@
     "evenement/evenement": {
         "version": "v3.0.1"
     },
+    "fig/http-message-util": {
+        "version": "1.1.5"
+    },
     "firebase/php-jwt": {
         "version": "v5.5.1"
     },
