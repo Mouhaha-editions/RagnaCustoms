@@ -20,8 +20,6 @@ final class Version20220225112406 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP TABLE ranked_scores');
-        $this->addSql('DROP TABLE score_historyty');
         $this->addSql('ALTER TABLE score DROP FOREIGN KEY FK_32993751B37F772E');
         $this->addSql('ALTER TABLE score ADD CONSTRAINT FK_32993751B37F772E FOREIGN KEY (song_difficulty_id) REFERENCES song_difficulty (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE score_history DROP FOREIGN KEY FK_463255DFB37F772E');
