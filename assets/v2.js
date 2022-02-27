@@ -1,21 +1,9 @@
-import './styles/v2.scss';
-import './bootstrap';
-import 'bootstrap';
+import './styles/common.scss';
 
-window.$ = window.jQuery = $;
 
-import '../assets/js/plugins/rating';
-import '../assets/js/plugins/form_widgets';
-import '../assets/js/plugins/ajax_link';
-import '../assets/js/plugins/copy_to_clipboard';
-import '../assets/js/plugins/modal_ajax';
-import '../assets/js/plugins/playlist';
-import 'select2/dist/js/select2.full.min';
-require('../public/bundles/tetranzselect2entity/js/select2entity');
 
 $(function () {
-    $('.select2entity[data-autostart="true"]').select2entity();
-    $('.select2').select2();
+
 
     $(document).on('click', '.open-download-buttons', function () {
         let t = $(this).closest('.on-hover').find('.big-buttons')

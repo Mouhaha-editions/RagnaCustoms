@@ -1,45 +1,8 @@
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css');
-@import url('https://fonts.googleapis.com/css2?family=Catamaran:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import "~select2/dist/css/select2.min.css";
 
-
-$font-family-base: 'Catamaran', sans-serif;
-$font-family-h: 'Catamaran', sans-serif;
-$font-weight-base: 500;
-$hover-link: #E4AE09;
-
-
-$song-title-color: #E4AE09;
-$song-author-color: #FFF;
-$song-mapper-color: #F4505D;
-
-$success: #32B027;
-$info: #235886;
-$danger: #F4505D;
-$active: #E4AE09;
-$link-green: #2dcc2a;
-$purple: #bc3ee3;
-$youtube: #ff3131;
-$twitch: #6f42c1;
-$twitch-hover: #673eb1;
-$twitter: #1da1f2;
-$playlist: #1da1f2;
-$facebook: #1877f2;
-$reddit: #ff4500;
-$patreon: #f96854;
-$discord: #7289da;
-
-$modal-content-bg: #2c2b2c;
-$popover-bg: #414141;
-$popover-body-color: #fff;
-$popover-header-bg: #414141;
-
+@import 'variables';
 @import "~bootstrap";
 
-/** Colors */
-$bg: #2c2b2c;
-$bg-lighter: #414141;
-$bg-darker: #181718;
+
 @media (min-width: 1200px) {
   .container-xl, .container-lg, .container-md, .container-sm, .container {
     max-width: 1440px;
@@ -56,7 +19,6 @@ body {
 .up_down_vote {
   a {
     color: #fff;
-
     .disabled {
       color: #868686;
     }
@@ -116,73 +78,6 @@ h1 {
   }
 }
 
-header {
-  padding: 50px 0;
-  position: relative;
-  background: url("../img/env.jpg") no-repeat center center;
-  max-height: 315px;
-
-  h1 {
-    font-size: 40px;
-    color: #fff;
-    font-weight: 700;
-
-    span {
-      color: #ffd004;
-      font-size: 42px;
-    }
-  }
-
-
-  form {
-    input::placeholder {
-      font-weight: 400;
-      color: #aaaaaa;
-      font-size: 24px;
-    }
-
-    button {
-      &.btn {
-
-        box-shadow: inset 0 0 17px rgba(0, 0, 0, 0.19);
-        border-radius: 0 6px 6px 0 !important;
-        font-size: 24px;
-        font-weight: 700;
-        color: #fff;
-        background: #235886;
-        border: none;
-        padding-right: 25px;
-        padding-left: 25px;
-
-        &:hover, &:focus, &:active {
-          color: #fff;
-          background: #235886;
-          box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05);
-          border-radius: 2px;
-        }
-      }
-    }
-  }
-
-  .header-link {
-    color: #fff;
-    text-decoration: underline;
-    font-size: 18px;
-    padding: 15px 0;
-  }
-}
-
-.homepage {
-  padding-top: 20px;
-
-  h2 {
-    font-size: 48px;
-    font-weight: 900;
-    color: #fff;
-    font-family: $font-family-h;
-  }
-}
-
 .featured-box {
   img {
     border-radius: 9px;
@@ -203,7 +98,22 @@ header {
     position: absolute;
     bottom: 7px;
     right: 9px;
+    .level.is-ranked{
+      position:relative;
+      background:transparent!important;
+      width:24px!important;
+      i{
+        position:absolute;
+        font-size:24px;
+        left:0px;
+        top:-2px;
+      }
+      span{
+        z-index:200; position:relative;text-align:center;
+      }
+    }
   }
+
 
   .title a {
     color: $song-title-color;
@@ -229,6 +139,7 @@ header {
 
 
 }
+
 .level-list {
   .level.is-ranked{
     position:relative;
@@ -245,24 +156,7 @@ header {
     }
   }
 }
-.featured-box{
-  .level-list {
-    .level.is-ranked{
-      position:relative;
-      background:transparent!important;
-      width:24px!important;
-      i{
-        position:absolute;
-        font-size:24px;
-        left:0px;
-        top:-2px;
-      }
-      span{
-        z-index:200; position:relative;text-align:center;
-      }
-    }
-  }
-}
+
 .featured-table{
   .level-list {
     .level.is-ranked{
@@ -281,24 +175,8 @@ header {
     }
   }
 }
-#song-detail .figure{
-  .level-list {
-    .level.is-ranked{
-      position:relative;
-      background:transparent!important;
-      width:24px!important;
-      line-height:24px;
-      i{
-        position:absolute;
-        font-size:24px;
-        left:0px;
-      }
-      span{
-        z-index:200; position:relative;text-align:center;
-      }
-    }
-  }
-}
+
+
 .featured-table {
   th {
     font-size: 12px;
@@ -664,12 +542,6 @@ section {
   color: $active;
 }
 
-.search-and-filter {
-  label {
-    color: #fff;
-    font-weight: 400;
-  }
-}
 
 .pagination {
   a {
@@ -709,157 +581,4 @@ a.back-button {
     text-decoration: none;
   }
 
-}
-
-#song-detail {
-  .darker {
-    background: url('../img/pixel_21.png');
-
-    .up_down_vote {
-      font-size: 24px;
-    }
-  }
-
-  .figure {
-    position: relative;
-
-    img {
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgb(0 0 0 / 50%);
-    }
-
-    .level-list {
-      position: absolute;
-      bottom: 0;
-      right: 5px;
-      //display:none;
-      .level {
-        display: block;
-        width: 30px;
-        line-height: 18px;
-        border-radius: 4px;
-        font-size: 16px;
-        text-align: center;
-        color: #fff;
-        margin-left: 2px;
-        margin-bottom: 5px;
-        //float: left;
-      }
-    }
-  }
-
-  .download-buttons {
-    margin-top: 8px;
-
-    a {
-      font-size: 20px;
-      font-weight: 400;
-      padding: 2px 25px;
-    }
-  }
-
-  .tags {
-    span {
-      font-size: 12px;
-      margin-right: 4px;
-      padding: 2px 5px;
-      background: $bg;
-    }
-  }
-
-  .buttons-middle {
-    .btn {
-      font-size: 14px;
-      padding: 4px 16px;
-      line-height: 10px;
-      margin-right: 5px;
-    }
-
-    .btn-twitch {
-      border: 2px solid $twitch;
-      color: $twitch;
-    }
-
-    .btn-youtube {
-      border: 2px solid $youtube;
-      color: $youtube;
-    }
-
-    .btn-playlist {
-      border: 2px solid $playlist;
-      color: $playlist;
-    }
-  }
-
-  .btn.song-review {
-
-  }
-
-  .btn.song-feedback {
-    border: 2px solid $warning;
-    color: $warning;
-  }
-
-  .label {
-    color: #868686;
-    font-size: 14px;
-  }
-
-  .mapper {
-    font-size: 20px;
-    color: $danger;
-  }
-
-  .description {
-    font-size: 14px;
-  }
-
-  .rating-up {
-    font-size: 20px;
-
-  }
-
-  .rating-wrap label {
-    display: inline-block;
-    width: 60%;
-  }
-
-  .nav-pills {
-    li {
-      color: #fff;
-      margin-right: 12px;
-
-      .nav-link {
-        padding: 1px 15px;
-        color: #fff;
-        filter: grayscale(1);
-
-        &.active {
-          filter: grayscale(0);
-        }
-      }
-    }
-  }
-
-  .leaderboards {
-    table {
-      color: #fff;
-      border: none;
-      font-size: 18px;
-
-      tr {
-        th {
-          color: #868686;
-          border-top: none;
-          font-weight: normal;
-        }
-
-        border-bottom: 1px solid #868686;
-
-        &:last-child {
-          border: none;
-        }
-      }
-    }
-  }
 }

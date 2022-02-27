@@ -3,15 +3,14 @@
 {% block title %}{{ "Be a virtual Viking!"|trans }}{% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
+    <div class="container-fluid" id="login-page">
         <div class="row">
-            <div class="col-md-6 background-login"></div>
-            <div class="col-md-4 text-center">
+            <div class="col-lg-6 background-login"></div>
+            <div class="col-lg-3 text-center">
                 <h1 class="mt-5">{{ "Sign Into"|trans }}</h1>
                 <img src="{{ asset('apps/RC.png') }}" alt="Ragnacustoms.com"/>
                 <div class="widget-box text-left">
-                    <div class="row">
-                        <div class="col-md-6 offset-md-3">
+
                             <form method="post" class="form">
                                 {% if error %}
                                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -58,7 +57,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+
 
 {% endblock %}

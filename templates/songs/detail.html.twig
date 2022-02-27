@@ -13,7 +13,7 @@
  {% endblock %}
 
 {% block body %}
-    <div {{ stimulus_controller('song-detail') }} {{ stimulus_target('song-detail', 'background') }}id="song-detail">
+    <div {{ stimulus_controller('song-detail') }} {{ stimulus_target('song-detail', 'background') }} id="song-detail">
         <div class="darker pt-3">
             <div class="container">
                 <div class="row pt-3">
@@ -229,14 +229,13 @@
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
+    {{ encore_entry_link_tags('song_detail') }}
     {{ encore_entry_link_tags('ragnabeat') }}
-
 {% endblock %}
 
 
 {% block javascripts %}
-    {{ parent() }}
+    {{ encore_entry_script_tags('song_detail') }}
 {% endblock %}
 
 

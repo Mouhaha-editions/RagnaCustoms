@@ -1,0 +1,171 @@
+@import '../common';
+
+#song-detail {
+  .figure {
+    position: relative;
+
+    img {
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgb(0 0 0 / 50%);
+    }
+
+    .level-list {
+
+      position: absolute;
+      bottom: 0;
+      right: 5px;
+      //display:none;
+
+      .level {
+        display: block;
+        width: 30px;
+        line-height: 18px;
+        border-radius: 4px;
+        font-size: 16px;
+        text-align: center;
+        color: #fff;
+        margin-left: 2px;
+        margin-bottom: 5px;
+        //float: left;
+        &.is-ranked {
+          position: relative;
+          background: transparent !important;
+          width: 24px !important;
+          line-height: 24px;
+
+          i {
+            position: absolute;
+            font-size: 24px;
+            left: 0px;
+          }
+
+          span {
+            z-index: 200;
+            position: relative;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+
+  .darker {
+    background: url('../../img/pixel_21.png');
+
+    .up_down_vote {
+      font-size: 24px;
+    }
+  }
+
+  .download-buttons {
+    margin-top: 8px;
+
+    a {
+      font-size: 20px;
+      font-weight: 400;
+      padding: 2px 25px;
+    }
+  }
+
+  .tags {
+    span {
+      font-size: 12px;
+      margin-right: 4px;
+      padding: 2px 5px;
+      background: $bg;
+    }
+  }
+
+  .buttons-middle {
+    .btn {
+      font-size: 14px;
+      padding: 4px 16px;
+      line-height: 10px;
+      margin-right: 5px;
+    }
+
+    .btn-twitch {
+      border: 2px solid $twitch;
+      color: $twitch;
+    }
+
+    .btn-youtube {
+      border: 2px solid $youtube;
+      color: $youtube;
+    }
+
+    .btn-playlist {
+      border: 2px solid $playlist;
+      color: $playlist;
+    }
+  }
+
+  .btn.song-feedback {
+    border: 2px solid $warning;
+    color: $warning;
+  }
+
+  .label {
+    color: #868686;
+    font-size: 14px;
+  }
+
+  .mapper {
+    font-size: 20px;
+    color: $danger;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .rating-up {
+    font-size: 20px;
+
+  }
+
+  .rating-wrap label {
+    display: inline-block;
+    width: 60%;
+  }
+
+  .nav-pills {
+    li {
+      color: #fff;
+      margin-right: 12px;
+
+      .nav-link {
+        padding: 1px 15px;
+        color: #fff;
+        filter: grayscale(1);
+
+        &.active {
+          filter: grayscale(0);
+        }
+      }
+    }
+  }
+
+  .leaderboards {
+    table {
+      color: #fff;
+      border: none;
+      font-size: 18px;
+
+      tr {
+        th {
+          color: #868686;
+          border-top: none;
+          font-weight: normal;
+        }
+
+        border-bottom: 1px solid #868686;
+
+        &:last-child {
+          border: none;
+        }
+      }
+    }
+  }
+
+}

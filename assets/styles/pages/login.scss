@@ -1,0 +1,13 @@
+@import '../common.scss';
+
+input[type=text],input[type=password]{
+  background:  $bg-lighter;
+  &:focus{
+    background:  $bg-lighter;
+  }
+  border:none;
+}
+label{
+  font-size:12px;
+  color:$label-color;
+}

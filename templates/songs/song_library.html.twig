@@ -3,7 +3,7 @@
 {% block title %}RagnaCustoms.com, Custom song library{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div {{ stimulus_controller('song-library') }}  class="container">
         <div class="row pt-5">
             <div class="col-md-10 text-left">
                 <h1 class="">
@@ -177,11 +177,12 @@
 {% endblock %}
 
    {% block stylesheets %}
-       {{ parent() }}
+
+       {{ encore_entry_link_tags('song_library') }}
        {{ encore_entry_link_tags('ragnabeat') }}
    {% endblock %}
     {% block javascripts %}
-        {{ parent() }}
+        {{ encore_entry_script_tags('song_library') }}
         {{ encore_entry_script_tags('ragnabeat') }}
         {{ encore_entry_script_tags('ajax-search') }}
     {% endblock %}
