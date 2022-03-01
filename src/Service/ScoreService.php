@@ -145,7 +145,8 @@ class ScoreService
             case 'season':
                 $season = $this->em->getRepository(Season::class)->getCurrent();
                 $conn = $this->em->getConnection();
-                $sql = '
+                if($season != null) {
+                    $sql = '
            SELECT SUM(max_score)/1000 AS score, 
                   username,
                   user_id,
@@ -162,22 +163,23 @@ class ScoreService
                 WHERE sg.id IS NOT null AND s.season_id = :season AND sg.wip != true
                 GROUP BY s.hash,s.difficulty,s.user_id
             ) AS ms GROUP BY user_id ORDER BY score DESC';
-                $stmt = $conn->prepare($sql);
-                $result = $stmt->executeQuery(['season' => $season->getId()]);
-                $scores = $result->fetchAllAssociative();
+                    $stmt = $conn->prepare($sql);
+                    $result = $stmt->executeQuery(['season' => $season->getId()]);
+                    $scores = $result->fetchAllAssociative();
 
-                $i = 1;
-                foreach ($scores as $score) {
-                    if ($score['user_id'] == $user->getId()) {
-                        return $i;
+                    $i = 1;
+                    foreach ($scores as $score) {
+                        if ($score['user_id'] == $user->getId()) {
+                            return $i;
+                        }
+                        $i++;
                     }
-                    $i++;
                 }
-                return 'unknown';
+                return 'no season';
 
                 break;
         }
-
+return "unknow";
     }
 
     public function ClawwMethod(Song $song)
