@@ -12,6 +12,7 @@
             {{ "No current season"|trans }}
         </div>
     {% endif %}
+    {% if season is not null %}
 <div class="row mt-5">
     <div class="col-12">
         <h1>Ranking "{{ season.label }}" <small>From {{ season.startDate.format('Y-m-d') }}
@@ -40,17 +41,17 @@
         </table>
     </div>
 </div>
-
+{% endif %}
 
 <div class="row mt-5">
     <div class="col-12">
         <h2>Archive</h2>
     </div>
 
-    {% for season in oldSeasons %}
+    {% for season_ in oldSeasons %}
         <div class="col-md-3">
-            <a href="{{ url("score_season_ranking",{slug:season.slug}) }}"
-               class="btn btn-block text-center btn-default">{{ season.label }}</a>
+            <a href="{{ url("score_season_ranking",{slug:season_.slug}) }}"
+               class="btn btn-block text-center btn-default">{{ season_.label }}</a>
         </div>
     {% else %}
         <p>{{ "No archive for now"|trans }}</p>
