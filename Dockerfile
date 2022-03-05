@@ -19,6 +19,8 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html/
 VOLUME /var/www/html/vendor
+VOLUME /var/www/html/public/build
+VOLUME /var/www/html/node_modules
 VOLUME /var/www/html/var
 RUN chown -R www-data:www-data /var/www/html
 

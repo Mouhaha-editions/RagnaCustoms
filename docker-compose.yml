@@ -28,8 +28,10 @@ services:
       - "8000:8000"
     volumes:
       - "./:/var/www/html"
+      - "node_modules:/var/www/html/node_modules/"
       - "var:/var/www/html/var/"
       - "vendor:/var/www/html/vendor/"
+      - "build:/var/www/html/public/build"
 volumes:
   node_modules:
   var:
