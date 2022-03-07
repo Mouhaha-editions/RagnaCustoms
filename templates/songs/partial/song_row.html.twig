@@ -40,7 +40,9 @@
 <td class="text-right   pt-2 pb-2">
     {{ song.downloads|number_format(0) }}
 </td>
-
+    {% if seePlayed is defined %}
+        <td class="text-right">{{ song.scores|length }}</td>
+    {% endif %}
     <td class="download">
         {% set downloaded = downloadsService.alreadyDownloaded(song) %}
         <div class="on-hover">
@@ -64,6 +66,7 @@
                 <i class="fas fa-download"></i>
             </a>
         </div>
+
         <div class="non-hover">
             {% if downloaded %}
                 <i class="fas fa-check"></i>

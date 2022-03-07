@@ -191,12 +191,55 @@ class UploadSongController extends AbstractController
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
 
-        $qb = $songRepository->createQueryBuilder('song')
-            ->where('song.user = :user')
-            ->andWhere("song.isDeleted != true")
+        $qb = $songRepository->createQueryBuilder('s')
+            ->select('s')
+            ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
+            ->where('s.user = :user')
+            ->andWhere("s.isDeleted != true")
             ->setParameter('user', $this->getUser())
-            ->orderBy('song.lastDateUpload', 'DESC');
+            ->orderBy('s.name', 'DESC');
 
+        if ($request->get('search', null)) {
+            $exp = explode(':', $request->get('search'));
+            switch ($exp[0]) {
+                case 'mapper':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+//                case 'category':
+//                    if (count($exp) >= 1) {
+//                        $qb->andWhere('(s.songCategory = :category)')
+//                            ->setParameter('category', $exp[1] == "" ? null : $exp[1]);
+//                    }
+//                    break;
+                case 'artist':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.authorName LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'title':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.name LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'desc':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.description LIKE :search_string)')
+                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                default:
+                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
+                        ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+            }
+        }
+        if ($request->get('order_by')) {
+            $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
+        }
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
         if ($pagination->isPartial()) {
             return $this->render('upload_song/partial/uploaded_song_row.html.twig', [

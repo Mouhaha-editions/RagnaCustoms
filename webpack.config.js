@@ -27,6 +27,7 @@ Encore
 
     .addStyleEntry('homepage', './assets/styles/pages/homepage.scss')
     .addStyleEntry('login', './assets/styles/pages/login.scss')
+    .addStyleEntry('leaderboard', './assets/styles/pages/leaderboard.scss')
     .addStyleEntry('register', './assets/styles/pages/register.scss')
     .addStyleEntry('song_detail', './assets/styles/pages/song_detail.scss')
     .addStyleEntry('song_upload', './assets/styles/pages/song_upload.scss')

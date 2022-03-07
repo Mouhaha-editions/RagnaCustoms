@@ -23,10 +23,10 @@
     {% endblock %}
 
 </head>
-<body >
-{#{{ stimulus_controller('symfony/ux-swup/swup', {#}
-{#    containers: ['#swup', '#nav']#}
-{#}) }}#}
+<body>
+{# {{ stimulus_controller('symfony/ux-swup/swup', { #}
+{#    containers: ['#swup', '#nav'] #}
+{# }) }} #}
 <nav id="nav" class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand viking-text-bold" href="/">
@@ -62,9 +62,18 @@
                 <li class="nav-item">
                     <a class="nav-link text-level-9" href="{{ url("applications") }}">{{ "Apps"|trans }}</a>
                 </li>
-                {# <li class="nav-item"> #}
-                {# <a href="#" class="btn btn-sm btn-blue mt-2 ">{{ "Submit"|trans }}</a> #}
-                {# </li> #}
+                <li class="nav-item">
+                    <a href="#"
+                       data-toggle="modal"
+                       data-target="#editSong"
+                       data-refresh="true"
+                       data-url="{{ url('new_song') }}"
+                       class="btn btn-blue float-right mt-2 ajax-load preview-popup">
+                        {{ "Submit"|trans }}
+                    </a>
+
+
+                </li>
 
                 {% if not is_granted("ROLE_USER") %}
                     <li class="nav-item">
@@ -82,8 +91,8 @@
                             <hr class="m-1"/>
                             <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
                             <hr class="m-1"/>
-{#                            <a class="dropdown-item"#}
-{#                               href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a>#}
+                            {#                            <a class="dropdown-item" #}
+                            {#                               href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a> #}
 
                             <hr class="m-1"/>
                             <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
@@ -111,7 +120,23 @@
 </main>
 
 {% block endBody %}
+    <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel2">Custom Song</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="form-edit">
+                    ...
+                </div>
 
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="previewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
          aria-labelledby="staticBackdropLabel2" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -239,7 +264,6 @@
     g.src = 'https://matomo.ragnacustoms.com/js/container_4wEYbYum.js';
     s.parentNode.insertBefore(g, s);
 </script>
-
 
 
 </body>

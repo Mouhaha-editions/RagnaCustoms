@@ -7,6 +7,9 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './bootstrap';
+import './js/plugins/form_widgets';
+import './js/plugins/modal_ajax';
+
 // window.$ = window.jQuery = $;
 // import 'select2/dist/js/select2.full.min';
 // require('../public/bundles/tetranzselect2entity/js/select2entity');
