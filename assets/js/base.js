@@ -56,6 +56,5 @@ $(document).on('preview-ready', function (evt,p) {
 
     $("#previewSong").on("hide.bs.modal", function () {
         ragnabeat.stopSong();
-        ragnabeat = null;
     });
 });

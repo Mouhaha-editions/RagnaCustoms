@@ -151,9 +151,13 @@ export class RagnaBeat {
         this.isModal = true;
     }
 
-    startInit(divId,file) {
+    startInit(divId, file) {
         let t = this;
-        t.uid = "#"+divId;
+        let randUid = "ragna" + (Math.random().toString(36).slice(-6));
+        $("#" + divId).each(function () {
+            $(this).addClass(randUid);
+        });
+        t.uid = "#" + divId + "." + randUid;
         t.file = file;
         t.init();
         $(document).on('click', t.uid + ' #ragna-beat-buttons #ragna-beat-play', function () {
@@ -201,11 +205,11 @@ export class RagnaBeat {
             t.stopSong();
         });
 
-        $(document).on('change', '#vol-control', function () {
+        $(document).on('change', this.uid + ' #vol-control', function () {
             t.audio.volume = parseInt($(this).val()) / 100;
         });
 
-        $(document).on('change', '#drum-vol-control', function () {
+        $(document).on('change', this.uid + ' #drum-vol-control', function () {
             let value = parseInt($(this).val()) / 100;
             for (let index in t.audio_drums) {
                 t.audio_drums[index].volume = value;
