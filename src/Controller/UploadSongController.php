@@ -87,6 +87,7 @@ class UploadSongController extends AbstractController
                     $em->flush();
                     return new JsonResponse([
                         'error' => false,
+                        'goto' => $this->generateUrl('song_detail',['slug'=>$song->getSlug()]),
                         'reload' => true,
                         'errorMessage' => null,
                         'response' => $this->renderView('upload_song/partial/edit.html.twig', [
@@ -117,6 +118,7 @@ class UploadSongController extends AbstractController
                     ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
                     return new JsonResponse([
                         'error' => false,
+                        'goto' => $this->generateUrl('song_detail',['slug'=>$song->getSlug()]),
                         'reload' => true,
                         'errorMessage' => null,
                         'response' => $this->renderView('upload_song/partial/edit.html.twig', [

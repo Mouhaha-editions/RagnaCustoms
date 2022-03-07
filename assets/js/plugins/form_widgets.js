@@ -44,6 +44,9 @@ function loadForm(content) {
             processData: false,
             contentType: false,
             success: function (data) {
+                if (data.goto !== false) {
+                    window.location.href = data.goto;
+                }
                 if (data.reload) {
                     window.location.reload();
                 }
