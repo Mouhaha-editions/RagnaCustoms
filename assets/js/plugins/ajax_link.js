@@ -1,5 +1,6 @@
 $(document).on("click", ".ajax-link", function () {
     let t = $(this);
+    $(this).tooltip("hide")
     let action = t.data('success-action');
     $.ajax({
         url: t.data('url'),
@@ -12,6 +13,7 @@ $(document).on("click", ".ajax-link", function () {
             switch (action) {
                 case "replace":
                     $(t.data('replace-selector')).replaceWith(data.result);
+                    $(t.data('replace-selector')+" [data-toggle=\"tooltip\"]").tooltip();
                     break;
                 case "remove":
                     $(t.data('remove-selector')).remove();

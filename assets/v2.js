@@ -1,15 +1,12 @@
 import './styles/common.scss';
-
-
+import './bootstrap'
 
 $(function () {
 
-
-    $(document).on('click', '.open-download-buttons', function () {
-        let t = $(this).closest('.on-hover').find('.big-buttons')
-        t.toggleClass('d-none');
-        return false;
+    $(document).on('click', '[data-confirm]', function () {
+        return confirm($(this).data('confirm'));
     });
+
     // $(document).on('focusout', 'tr', function () {
     //     let t = $(this).find('.on-hover').find('.big-buttons')
     //     t.addClass('d-none');

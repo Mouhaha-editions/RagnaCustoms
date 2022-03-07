@@ -70,7 +70,7 @@
                 {% for score in pagination.entities %}
                     <tr>
                         <td class="song-preview tiny">
-                            {% set song = songService.getByhash(score.hash) %}
+                            {% set song = score.song %}
                             {{ macro_song.description(song) }}
                         </td>
                         <td class="text-right">{{ score.difficulty }}</td>

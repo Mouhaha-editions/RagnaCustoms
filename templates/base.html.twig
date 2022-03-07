@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% block stylesheets %}
-        {{ encore_entry_link_tags('homepage') }}
     {% endblock %}
 
     <link id="favicon" rel="icon" href="/apps/favicon.ico">
@@ -83,8 +82,8 @@
                             <hr class="m-1"/>
                             <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
                             <hr class="m-1"/>
-                            <a class="dropdown-item"
-                               href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a>
+{#                            <a class="dropdown-item"#}
+{#                               href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a>#}
 
                             <hr class="m-1"/>
                             <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
@@ -165,31 +164,33 @@
         </div>
     </div>
 {% endblock %}
-<hr/>
-<div class="p-3 text-center">
-    <a class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer" target="_blank"><i
-                class="fab fa-patreon"></i>
-        Patreon</a>&nbsp;
-    <a class="text" href="https://discord.gg/nRnsgCCBvq" rel="noreferrer" target="_blank"><i class="fab fa-discord"></i>
+<div class="p-3 text-center footer">
+    <span>{{ "RagnaCustoms is not associated with <b>Ragnaröck VR</b>, <b>WanadevStudio</b>, <b>Steam</b> or <b>Meta</b>"|trans|raw }}</span>
+    <a class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer" target="_blank">
+        <i class="fab fa-patreon"></i>
     </a>&nbsp;
-    <a class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank"><i
-                class="fab fa-facebook"></i></a>&nbsp;
-    <a class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer" target="_blank"><i
-                class="fab fa-twitter"></i></a>&nbsp;
-    <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer" target="_blank"><i
-                class="fab fa-reddit"></i></a>
-    <br/>
-    {{ "RagnaCustoms is not associated with <b>Ragnaröck VR</b> or <b>WanadevStudio</b>"|trans|raw }}
-
+    <a class="text" href="https://discord.gg/nRnsgCCBvq" rel="noreferrer" target="_blank">
+        <i class="fab fa-discord"></i>
+    </a>&nbsp;
+    <a class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank">
+        <i class="fab fa-facebook"></i>
+    </a>&nbsp;
+    <a class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer" target="_blank">
+        <i class="fab fa-twitter"></i>
+    </a>&nbsp;
+    <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer" target="_blank">
+        <i class="fab fa-reddit"></i>
+    </a>
 
 </div>
 
 
 {% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
-
-<script src="https://tarteaucitron.io/load.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@1.9.5/tarteaucitron.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@1.9.5/tarteaucitron.services.min.js"></script>
 
 <script>
     tarteaucitron.init({
@@ -238,6 +239,7 @@
     g.src = 'https://matomo.ragnacustoms.com/js/container_4wEYbYum.js';
     s.parentNode.insertBefore(g, s);
 </script>
+
 
 
 </body>

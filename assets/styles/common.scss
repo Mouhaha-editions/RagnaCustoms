@@ -26,6 +26,8 @@ body {
 
 .navbar {
   padding: 0;
+  position:relative;
+  z-index:1000;
   background: linear-gradient($bg-darker, $bg);
   box-shadow: 0 0 10px $bg-darker;
   color: #fff;
@@ -500,7 +502,32 @@ h1 {
     }
   }
 }
-
+.btn{
+  &.btn-big {
+    line-height: 24px;
+    font-size: 22px;
+    padding: 8px;
+    border-width: 2px;
+  }
+  &.btn-bg-empty{
+    background-color:transparent;
+    &.btn-warning{
+      color: $warning;
+    }
+    &.btn-success{
+      color: $success;
+    }
+    &.btn-danger{
+      color: $danger;
+    }
+    &.btn-info{
+      color: $info;
+    }
+  }
+  &.btn-warning{
+    color: #fff;
+  }
+}
 
 .btn.btn-ragnacustoms {
   padding: 0 25px;
@@ -579,4 +606,25 @@ a.back-button {
     text-decoration: none;
   }
 
+}
+
+.footer{
+  background:#232323;
+  font-size:14px;
+  a{
+    &:first-child{
+      margin-left:150px;
+    }
+    margin-left:15px;
+    font-size:18px;
+    color:$danger;
+    &:hover{
+      text-decoration: none;
+      color:$danger;
+    }
+  }
+}
+.help-text{
+  font-size:12px;
+  color:#868686;
 }

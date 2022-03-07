@@ -41,7 +41,8 @@
         "object-path": "^0.11.8",
         "popper.js": "^1.16.1",
         "postcss": "^8.2.15",
-        "select2": "^4.1.0-rc.0"
+        "select2": "^4.1.0-rc.0",
+        "tarteaucitronjs": "^1.9.5"
     },
     "license": "UNLICENSED",
     "private": true,

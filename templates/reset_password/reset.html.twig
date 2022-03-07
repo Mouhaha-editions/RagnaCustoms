@@ -1,12 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Reset your password{% endblock %}
-
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('login') }}
+    {% endblock %}
 {% block body %}
-    <h1>Reset your password</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Reset your password</h1>
+            </div>
+            <div class="col-md-6">
+                {{ form_start(resetForm) }}
+                {{ form_row(resetForm.plainPassword) }}
+                <button class="btn btn-primary">Reset password</button>
+                {{ form_end(resetForm) }}
+            </div>
+        </div>
+    </div>
 
-    {{ form_start(resetForm) }}
-        {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Reset password</button>
-    {{ form_end(resetForm) }}
+
 {% endblock %}

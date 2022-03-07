@@ -17,9 +17,9 @@
         <div class="darker pt-3">
             <div class="container">
                 <div class="row pt-3">
-{#                    <div class="col-12 pt-2 pb-2"><a href="#" {{ stimulus_action('song-detail', 'back') }}#}
-{#                                                     class="back-button "><i#}
-{#                                    class="fas fa-arrow-left"></i> {{ "Back"|trans }}</a></div>#}
+                    {#                    <div class="col-12 pt-2 pb-2"><a href="#" {{ stimulus_action('song-detail', 'back') }} #}
+                    {#                                                     class="back-button "><i #}
+                    {#                                    class="fas fa-arrow-left"></i> {{ "Back"|trans }}</a></div> #}
                     <div class="col-md-3">
                         <div class="figure">
                             <img {{ stimulus_target('song-detail', 'img') }} src="{{ song.cover }}"
@@ -28,8 +28,10 @@
 
                             <div class="level-list">
                                 {% for diff in song.songDifficulties %}
-                                    <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">
-                                        {% if diff.isRanked %}<i class="fas fa-star" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                                    <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                                         style="background-color:#{{ diff.difficultyRank.color }};">
+                                        {% if diff.isRanked %}<i class="fas fa-star"
+                                                                 style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
                                         <span>{{ diff.difficultyRank.level }}</span>
                                     </div>
                                 {% endfor %}
@@ -152,7 +154,7 @@
         </div>
         <div class="container">
             <div class="row pt-2">
-                <div class="col-md-3">
+                <div class="col-md-3" id="ragna_{{ song.id }}_detail" data-file="{{ song.infoDatFile }}" {{ stimulus_target('song-detail', 'info') }}>
                     <h3>{{ "Preview"|trans }}</h3>
                     <div id="ragna-beat-diffs"></div>
                     <div id="ragna-beat-buttons"></div>
@@ -167,7 +169,6 @@
                     </div>
 
                     <div class="text-center">New player by <b>Ratzee</b></div>
-                    <div id="info-dat" data-file="{{ song.infoDatFile }}"></div>
 
                 </div>
                 <div class="col-md-5">
@@ -223,19 +224,20 @@
                             "ratingValue": "{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}"
                         }
                     }
+
     </script>
 
 
 {% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
     {{ encore_entry_link_tags('song_detail') }}
-    {{ encore_entry_link_tags('ragnabeat') }}
 {% endblock %}
 
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('song_detail') }}
+    {{ parent() }}
 {% endblock %}
 
 

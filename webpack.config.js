@@ -20,19 +20,19 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('song_library', './assets/js/pages/song_library.js')
-    .addEntry('login', './assets/js/pages/login.js')
-    .addEntry('song_detail', './assets/js/pages/song_detail.js')
-    .addEntry('homepage', './assets/js/pages/homepage.js')
-    .addEntry('application', './assets/js/pages/applications.js')
-    .addEntry('user', './assets/js/pages/user.js')
+    .addEntry('app', './assets/app.js')
     .addEntry('overlay_editor', './assets/js/pages/overlay_editor.js')
 
     // .addEntry('app', './assets/app.js')
-    .addEntry('bootstrap', './assets/bootstrap.js')
-    .addEntry('ragnabeat', './assets/ragna-beat.js')
-    .addEntry('ajax-search', './assets/js/ajax-search.js')
 
+    .addStyleEntry('homepage', './assets/styles/pages/homepage.scss')
+    .addStyleEntry('login', './assets/styles/pages/login.scss')
+    .addStyleEntry('register', './assets/styles/pages/register.scss')
+    .addStyleEntry('song_detail', './assets/styles/pages/song_detail.scss')
+    .addStyleEntry('song_upload', './assets/styles/pages/song_upload.scss')
+    .addStyleEntry('user', './assets/styles/pages/user.scss')
+    .addStyleEntry('mapper_profile', './assets/styles/pages/mapper_profile.scss')
+    .addStyleEntry('song_library', './assets/styles/pages/song_library.scss')
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 

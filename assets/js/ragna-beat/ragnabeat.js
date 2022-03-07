@@ -1,6 +1,8 @@
 export class RagnaBeat {
+    uid;
     c;
     ctx;
+    file;
     levelDetail;
     audio;
     infoDat;
@@ -43,13 +45,13 @@ export class RagnaBeat {
     delta;
 
     init() {
-        let diffsWrapper = $("#ragna-beat-diffs");
-        let buttonsWrapper = $("#ragna-beat-buttons");
-        let volumesWrapper = $("#ragna-beat-volumes");
-        let soundsWrapper = $("#ragna-beat-sounds");
+        let diffsWrapper = $(this.uid + " #ragna-beat-diffs");
+        let buttonsWrapper = $(this.uid + " #ragna-beat-buttons");
+        let volumesWrapper = $(this.uid + " #ragna-beat-volumes");
+        let soundsWrapper = $(this.uid + " #ragna-beat-sounds");
         let t = this;
         $.ajax({
-            url: $("#info-dat").data('file'),
+            url: t.file,
             type: 'GET',
             dataType: 'JSON',
             success: function (result) {
@@ -58,9 +60,9 @@ export class RagnaBeat {
                 t.moveSpeed = t.infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[0]._noteJumpMovementSpeed / 3 * t.ratio;
                 t.setDelay();
                 let song = t.infoDat._songFilename;
-                let fileSong = $("#info-dat").data('file').replace('Info.dat', song).replace('info.dat', song);
+                let fileSong = t.file.replace('Info.dat', song).replace('info.dat', song);
 
-                $('#ragna-beat-duration .max').text(new Date(t.infoDat._songApproximativeDuration * 1000).toISOString().substr(14, 5));
+                $(t.uid + ' #ragna-beat-duration .max').text(new Date(t.infoDat._songApproximativeDuration * 1000).toISOString().substr(14, 5));
 
                 buttonsWrapper.append("<button id='ragna-beat-play' data-level='play' class='btn-warning btn btn-sm test-map mr-2 mb-2'><i class='fas fa-play'></i></button>");
                 buttonsWrapper.append("<button id='ragna-beat-stop' data-level='stop' class='btn-danger btn btn-sm test-map mr-2 mb-2'><i class='fas fa-stop'></i></button>");
@@ -109,7 +111,7 @@ export class RagnaBeat {
                     t.audio_drums[i].volume = $("#drum-vol-control").val() / 100;
                 }
 
-                t.c = document.getElementById("ragna-canvas");
+                t.c = $(t.uid + " #ragna-canvas")[0];
                 t.ctx = t.c.getContext("2d");
                 t.checkTop = t.c.height - t.circleRadius - t.margin - t.spawnDistance;
 
@@ -126,7 +128,7 @@ export class RagnaBeat {
                 for (let i = 0; i < t.infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps.length; i++) {
                     let niveau = t.infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[i];
                     let level = niveau._beatmapFilename;
-                    let fileLevel = $("#info-dat").data('file').replace('Info.dat', level).replace('info.dat', level);
+                    let fileLevel = t.file.replace('Info.dat', level).replace('info.dat', level);
                     diffsWrapper.append("<button data-level='" + niveau._difficulty + "' class='ragna-beat-diff btn-info btn btn-sm test-map mr-2 mb-2'>level " + niveau._difficultyRank + "</button>");
 
                     $.ajax({
@@ -145,10 +147,16 @@ export class RagnaBeat {
         });
     }
 
-    startInit() {
-        this.init();
+    enableModal() {
+        this.isModal = true;
+    }
+
+    startInit(divId,file) {
         let t = this;
-        $(document).on('click', '#ragna-beat-play', function () {
+        t.uid = "#"+divId;
+        t.file = file;
+        t.init();
+        $(document).on('click', t.uid + ' #ragna-beat-buttons #ragna-beat-play', function () {
             let level = $(this).attr('data-level');
             if (level === 'play') {
                 if ($(this).hasClass('playing')) {
@@ -167,7 +175,9 @@ export class RagnaBeat {
                 $(this).attr('data-level', 'pause');
                 $(this).html('<i class="fas fa-pause"></i>');
                 t.isPlaying = true;
-                t.animationFrame = requestAnimationFrame(function(){t.animate()});
+                t.animationFrame = requestAnimationFrame(function () {
+                    t.animate()
+                });
             } else if (level === "pause") {
                 $(this).attr('data-level', 'play');
                 $(this).html('<i class="fas fa-play"></i>');
@@ -177,7 +187,7 @@ export class RagnaBeat {
             }
         });
 
-        $(document).on('click', '.ragna-beat-diff', function () {
+        $(document).on('click', t.uid + ' #ragna-beat-diffs .ragna-beat-diff', function () {
             t.stopSong();
             $('.ragna-beat-diff.btn-dark').removeClass('btn-dark');
             let index = $(this).index('.ragna-beat-diff');
@@ -187,7 +197,7 @@ export class RagnaBeat {
             t.setDelay();
         });
 
-        $(document).on('click', '#ragna-beat-stop', function () {
+        $(document).on('click', t.uid + ' #ragna-beat-buttons #ragna-beat-stop', function () {
             t.stopSong();
         });
 
@@ -218,7 +228,7 @@ export class RagnaBeat {
             }
         });
 
-        $(document).on('mousedown', '#ragna-beat-duration input', function () {
+        $(document).on('mousedown', t.uid + ' #ragna-beat-duration input', function () {
             t.audio.pause();
             t.isPlaying = false;
             for (let index in t.runes) delete t.runes[index];
@@ -226,27 +236,29 @@ export class RagnaBeat {
             cancelAnimationFrame(t.animationFrame);
         });
 
-        $(document).on('mouseup', '#ragna-beat-duration input', function () {
+        $(document).on('mouseup', t.uid + ' #ragna-beat-duration input', function () {
             let value = $(this).val() / 100 * t.infoDat._songApproximativeDuration;
             t.audio.currentTime = value;
             t.startTime = Date.now() - value * 1000 - t.delay - 1000 / t.fps * 2;
             t.isPlaying = true;
             t.rings = [];
-            t.animationFrame = requestAnimationFrame(function(){t.animate()});
+            t.animationFrame = requestAnimationFrame(function () {
+                t.animate()
+            });
             t.audio.play();
             t.jsonIterationToCurrentTime(value);
-            $('#ragna-beat-play').attr('data-level', 'pause');
-            $('#ragna-beat-play').html('<i class="fas fa-pause"></i>');
-            $('#ragna-beat-play').addClass('playing');
+            $(t.uid + ' #ragna-beat-play').attr('data-level', 'pause');
+            $(t.uid + ' #ragna-beat-play').html('<i class="fas fa-pause"></i>');
+            $(t.uid + ' #ragna-beat-play').addClass('playing');
         });
 
-        $(document).on('input', '#ragna-beat-duration input', function () {
+        $(document).on('input', t.uid + ' #ragna-beat-duration input', function () {
             let value = $(this).val() / 100 * t.infoDat._songApproximativeDuration;
-            $('#ragna-beat-duration .current').text(new Date(value * 1000).toISOString().substr(14, 5));
+            $(t.uid + ' #ragna-beat-duration .current').text(new Date(value * 1000).toISOString().substr(14, 5));
         });
 
-        $(document).on('click', '#ragna-beat-sounds button', function () {
-            let index = $(this).index('#ragna-beat-sounds button');
+        $(document).on('click', t.uid + ' #ragna-beat-sounds button', function () {
+            let index = $(this).index(t.uid + ' #ragna-beat-sounds button');
 
             $('#ragna-beat-sounds button').removeClass('btn-dark');
             $(this).addClass('btn-dark');
@@ -262,7 +274,7 @@ export class RagnaBeat {
         let timeStamp = 0;
         for (let i = 0; i < this.levelDetail._notes.length; i++) {
             timeStamp = this.levelDetail._notes[i]._time / this.songBPS;
-            if (timeStamp <= elapsedTime + delay / 1000 && i !== this.levelDetail._notes.length) {
+            if (timeStamp <= elapsedTime + this.delay / 1000 && i !== this.levelDetail._notes.length) {
                 this.jsonIteration = i + 1;
             }
         }
@@ -274,9 +286,9 @@ export class RagnaBeat {
         this.audio.pause();
         this.audio.currentTime = 0;
         this.jsonIteration = 0;
-        $('#ragna-beat-play').removeClass('playing');
-        $('#ragna-beat-play').html('<i class="fas fa-play"></i>');
-        $('#ragna-beat-play').attr('data-level', 'play');
+        $(this.uid + ' #ragna-beat-play').removeClass('playing');
+        $(this.uid + ' #ragna-beat-play').html('<i class="fas fa-play"></i>');
+        $(this.uid + ' #ragna-beat-play').attr('data-level', 'play');
         for (let index in this.runes) delete this.runes[index];
         this.drawDrums();
         cancelAnimationFrame(this.animationFrame);
@@ -296,7 +308,9 @@ export class RagnaBeat {
 
     animate() {
         let t = this;
-        this.animationFrame = requestAnimationFrame(function(){t.animate()});
+        this.animationFrame = requestAnimationFrame(function () {
+            t.animate()
+        });
         this.now = Date.now();
         this.delta = this.now - this.then;
 

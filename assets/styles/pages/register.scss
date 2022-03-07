@@ -1,11 +1,11 @@
 @import '../common.scss';
 
-.background-login{
+.background-register{
   position: relative;
-  background: url("../../img/login.jpg") no-repeat center center;
+  background: url("../../img/register.jpg") no-repeat center center;
   z-index:0;
 }
-.login{
+.register{
   padding-bottom:150px;
 }
 input[type=text],input[type=password]{
