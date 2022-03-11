@@ -1,9 +1,14 @@
 {% extends 'base.html.twig' %}
-
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('homepage') }}
+{% endblock %}
 {% block body %}
+    <div class="container">
     <div class="text-center">
         <h1>{{ "An error occurs"|trans }}</h1>
         <p class="white">Please report it on <a target="_blank" href="https://discord.gg/nRnsgCCBvq">our discord</a></p>
     <img src="/errors/{{ random(['1','2','3','4']) }}.gif" alt="crash sorry"/>
+    </div>
     </div>
 {% endblock %}
