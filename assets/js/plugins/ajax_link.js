@@ -15,12 +15,17 @@ $(document).on("click", ".ajax-link", function () {
                     $(t.data('replace-selector')).replaceWith(data.result);
                     $(t.data('replace-selector')+" [data-toggle=\"tooltip\"]").tooltip();
                     break;
+                case "replace-html":
+                    $(t.data('replace-selector')).html(data.result);
+                    $(t.data('replace-selector')+" [data-toggle=\"tooltip\"]").tooltip();
+                    break;
                 case "remove":
                     $(t.data('remove-selector')).remove();
                     break;
             }
         },
         error: function (data) {
+            console.log(data);
             alert('Erreur lors de la requete');
         }
     });

@@ -7,7 +7,9 @@
     <div {{ stimulus_controller('leaderboard') }} id="leaderboard" class="container">
         <div class="row mt-5">
             <div class="col-12">
-                <a href="?findme=true" class="float-right btn btn-success btn-bg-empty mt-2">{{ "Find me"|trans }}</a>
+                {% if is_granted('ROLE_USER') %}
+                    <a href="?findme=true" class="float-right btn btn-success btn-bg-empty mt-2">{{ "Find me"|trans }}</a>
+                {% endif %}
                 <h1>{{ "Leaderboard"|trans }}</h1>
                 <table class="table table-sm">
                     <tr>

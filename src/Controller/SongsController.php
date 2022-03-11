@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\DifficultyRank;
 use App\Entity\Playlist;
 use App\Entity\Score;
 use App\Entity\Song;
+use App\Entity\SongDifficulty;
 use App\Entity\Vote;
 use App\Form\AddPlaylistFormType;
 use App\Form\VoteType;
@@ -455,6 +457,17 @@ class SongsController extends AbstractController
         return preg_replace('/[^a-zA-Z]/i', '', $getName);
     }
     /**
+     * @Route("/toggle/{id}", name="diff_toggle_ranked", defaults={"slug"=null})
+     */
+    public function toggleRanked(Request $request, SongDifficulty $songDifficulty){
+        if($this->isGranted('ROLE_MODERATOR')){
+            $songDifficulty->setIsRanked(!$songDifficulty->isRanked());
+            $this->getDoctrine()->getManager()->flush();
+            return new JsonResponse(['result'=>$songDifficulty->isRanked() ? '<i class="fas fa-star"></i> ranked':'<i class="far fa-star"></i> not r.']);
+        }
+        return new Response('');
+    }
+      /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
     public function songDetail(Request     $request, Song $song, TranslatorInterface $translator,

@@ -185,7 +185,20 @@
                                    role="tab"
                                    aria-controls="pills-leaderboard-{{ level['level'] }}"
                                    style="background-color:#{{ level['color'] }};"
-                                >level {{ level['level'] }}</a>
+                                >level {{ level['level'] }} </a>
+                                {% if is_granted('ROLE_MODERATOR') %}<a class="ajax-link"
+                                   id="ranked-{{ level['difficulty'].id }}"
+                                   data-replace-selector="#ranked-{{ level['difficulty'].id }}"
+                                        data-success-action="replace-html"
+                                        data-url="{{ url("diff_toggle_ranked",{id: level['difficulty'].id })  }}"
+                                        href="#">
+                                    {% if level['difficulty'].isRanked %}
+                                        <i class="fas fa-star"></i> ranked
+                                    {% else %}
+                                        <i class="far fa-star"></i> not r.
+                                    {% endif %}
+                                </a>
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
