@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\RankedScores;
 use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\Season;
@@ -191,6 +192,26 @@ class ScoreService
                 ->setParameter('my_score', $mine->getScore())
                 ->setParameter('difficulty', $songDifficulty)
                 ->setParameter('hash', $songDifficulty->getSong()->getNewGuid())
+                ->setParameter('me', $user)
+                ->groupBy('s.user')
+                ->getQuery()->getResult()) + 1;
+
+
+    }
+
+    public function getGeneralLeaderboardPosition(UserInterface $user)
+    {
+        $mine = $this->em->getRepository(RankedScores::class)->findOneBy([
+            'user' => $user
+        ],["totalPPScore"=>"Desc"]);
+        if ($mine == null) {
+            return null;
+        }
+        return count($this->em->getRepository(RankedScores::class)->createQueryBuilder("s")
+                ->select('s.id')
+                ->where('s.totalPPScore > :my_score')
+                ->andWhere('s.user != :me')
+                ->setParameter('my_score', $mine->getTotalPPScore())
                 ->setParameter('me', $user)
                 ->groupBy('s.user')
                 ->getQuery()->getResult()) + 1;

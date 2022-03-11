@@ -1,35 +1,46 @@
 {% extends 'base.html.twig' %}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('leaderboard') }}
+    {% endblock %}
 
 {% block body %}
-    <div class="row mt-5">
-        <div class="col-12">
-            <h1>{{ "Global ranking"|trans }}</h1>
-            <table class="table">
-                <tr>
-                    <th>{{ "Rank"|trans }}</th>
-                    <th>{{ "User"|trans }}</th>
-                    <th class="text-right">{{ "Score"|trans }}</th>
-                    <th class="text-right">{{ "Songs played"|trans }}</th>
-                </tr>
-                {% for score in scores %}
-                    <tr {% if is_granted('ROLE_USER') and score["username"] == app.user.username %}class="text-success"{% endif %}>
-                        <td>#{{ loop.index }}</td>
-                        <td>
-                            <a href="{{ url("user_profile",{id:score["user_id"]}) }}">
-                            <img style="border-radius:15px;width:30px;margin-right:10px;" src="https://www.gravatar.com/avatar/{{ score["gravatar"] }}?d={{ "https://ragnacustoms.com/apps/runes.png"|url_encode }}"
-                                 class="" alt="{{ score["username"] }}"/></a>
-                            <a href="{{ url("user_profile",{id:score["user_id"]}) }}" class="text-level-9">{{ score["username"] }}</a></td>
-                        <td class="text-right">{{ score["score"]|round(2) }} pts</td>
-                        <td class="text-right">{{ score["count_song"] }}</td>
+    <div {{ stimulus_controller('leaderboard') }} id="leaderboard" class="container">
+        <div class="row mt-5">
+            <div class="col-12">
+                <a href="?findme=true" class="float-right btn btn-success btn-bg-empty mt-2">{{ "Find me"|trans }}</a>
+                <h1>{{ "Leaderboard"|trans }}</h1>
+                <table class="table table-sm">
+                    <tr>
+                        <th>{{ "#" }}</th>
+                        <th>{{ "User"|trans }}</th>
+                        <th class="text-right">{{ "Score"|trans }}</th>
+{#                        <th class="text-right">{{ "Songs played"|trans }}</th>#}
                     </tr>
-                {% endfor %}
-            </table>
+                    {% for score in scores.entities %}
+                        <tr {% if is_granted('ROLE_USER') and score.user.username == app.user.username %}class="text-success" id="{{ score.user.username }}"{% else %}id="{{ score.user.username }}"{% endif %}>
+                            <td>{{ loop.index+((scores.current-1)*25) }}</td>
+                            <td>
+{#                                <a href="{{ url("user_profile",{username:score.user.username}) }}">#}
+{#                                    <img style="border-radius:15px;width:30px;margin-right:10px;"#}
+{#                                         src="https://www.gravatar.com/avatar/{{ score.user.gravatar }}?d={{ "https://ragnacustoms.com/apps/runes.png"|url_encode }}"#}
+{#                                         class="" alt="{{ score.user.username }}"/></a>#}
+                                <a href="{{ url("user_profile",{username:score.user.username}) }}"
+                                   class="text-level-9">{{ score.user.username }}</a></td>
+                            <td class="text-right">{{ score.totalPPScore|round(2) }} pts</td>
+{#                            <td class="text-right">{{ score["count_song"] }}</td>#}
+                        </tr>
+                    {% endfor %}
+                </table>
+                {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+                <div class="text-left pagination">
+                    {{ "Pages:"|trans }} {{ macro_pagination.paginate(scores) }}
+                </div>
+            </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block title %}
-{{ "Global ranking"|trans }}
+    {{ "Leaderboard"|trans }}
 {% endblock %}
 

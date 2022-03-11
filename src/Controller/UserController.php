@@ -26,7 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/user/{id}", name="user_profile")
+     * @Route("/user/{username}", name="user_profile")
      * @param Request $request
      * @param Utilisateur $utilisateur
      * @param PaginationService $paginationService
