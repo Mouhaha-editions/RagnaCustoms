@@ -1,0 +1,21 @@
+@import '../common.scss';
+
+#mappers {
+  table{
+    th:first-child{
+      width:50px;
+    }
+    a{
+      color:#fff;
+      &:hover{
+        text-decoration:underline;
+        color:#fff;
+      }
+    }
+    .text-success{
+      a{
+        color:$success!important;
+      }
+    }
+  }
+}

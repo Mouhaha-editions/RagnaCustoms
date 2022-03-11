@@ -25,7 +25,7 @@
 {#                        {{ "Global ranking:"|trans }} #{{ scoreService.s(user, "global") }}<br/>#}
 {#                        {{ "Season Ranking:"|trans }} #{{ scoreService.getRanking(user, "season") }}<br/>#}
                         {{ "Song played:"|trans }} {{ user.scoreHistories|length }} <a
-                                href="{{ url('user_profile',{id:user.id}) }}" class="text-level-5"><i
+                                href="{{ url('user_profile',{username:user.username}) }}" class="text-level-5"><i
                                     class="fas fa-eye"></i></a><br/>
 
                         {{ "Song mapped:"|trans }} {{ user.songs|length }} <a

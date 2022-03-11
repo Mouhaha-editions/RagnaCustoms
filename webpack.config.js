@@ -32,6 +32,7 @@ Encore
     .addStyleEntry('song_detail', './assets/styles/pages/song_detail.scss')
     .addStyleEntry('song_upload', './assets/styles/pages/song_upload.scss')
     .addStyleEntry('user', './assets/styles/pages/user.scss')
+    .addStyleEntry('mappers', './assets/styles/pages/mappers.scss')
     .addStyleEntry('mapper_profile', './assets/styles/pages/mapper_profile.scss')
     .addStyleEntry('song_library', './assets/styles/pages/song_library.scss')
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)

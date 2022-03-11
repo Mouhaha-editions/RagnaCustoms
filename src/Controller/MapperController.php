@@ -14,7 +14,6 @@ class MapperController extends AbstractController
 {
 
 
-
     /**
      * @Route("/mappers", name="mappers")
      */
@@ -22,13 +21,13 @@ class MapperController extends AbstractController
     {
         /** @var Utilisateur[] $mappers */
         $mappers = $utilisateurRepository->createQueryBuilder("u")
-            ->leftJoin('u.songs','s')
+            ->leftJoin('u.songs', 's')
             ->select('u,COUNT(s) AS HIDDEN count_song')
             ->where('u.isMapper = 1')
             ->andWhere('s.id IS NOT NULL')
             ->where('s.isDeleted = 0')
-            ->orderBy('count_song','desc')
-->groupBy("u.id")
+            ->orderBy('count_song', 'desc')
+            ->groupBy("u.id")
             ->getQuery()->getResult();
 
         return $this->render('mapper/index.html.twig', [
@@ -45,15 +44,16 @@ class MapperController extends AbstractController
             'controller_name' => 'ApplicationController',
         ]);
     }
+
     /**
      * @Route("/locale/{locale}", name="change_locale")
      */
-    public function changeLocale(Request $request, string $locale,SessionInterface $session)
+    public function changeLocale(Request $request, string $locale, SessionInterface $session)
     {
         $session->set('_locale', $locale);
-        if($request->headers->get('referer') == null){
+        if ($request->headers->get('referer') == null) {
             return $this->redirectToRoute('home');
         }
-        return $this->redirect($request->headers->get('referer') );
+        return $this->redirect($request->headers->get('referer'));
     }
 }

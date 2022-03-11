@@ -138,16 +138,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="user", orphanRemoval=true)
-     */
-    private $votes;
-
     /**
      * @ORM\OneToMany(targetEntity=VoteCounter::class, mappedBy="user", orphanRemoval=true)
      */
     private $voteCounter;
+    /**
+     * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $votes;
 
     public function __construct()
     {
@@ -259,7 +257,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getGravatar(): ?string
     {
-        return  "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=300";
+        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=300";
     }
 
     public function isVerified(): bool
@@ -272,14 +270,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
-    }
-
-    /**
-     * @return Collection|Song[]
-     */
-    public function getSongs(): Collection
-    {
-        return $this->songs->filter(function(Song $s){return !$s->getIsDeleted();});
     }
 
     public function addSong(Song $song): self
@@ -664,7 +654,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->songRequests;
     }
 
-
     /**
      * @return ?SongRequest
      */
@@ -777,5 +766,44 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getSongRequestVotes(): Collection
     {
         return $this->songRequestVotes;
+    }
+
+    public function getAvgRating()
+    {
+        $songsRating = [];
+        foreach ($this->getSongs() as $song) {
+            if (!$song->getWip() && $song->getVoteAverage() > 0) {
+                $songsRating[] = $song->getVoteAverage();
+            }
+        }
+        return count($songsRating) > 0 ? number_format(array_sum($songsRating) / count($songsRating), 2) : "No rating!";
+    }
+
+    /**
+     * @return Collection|Song[]
+     */
+    public function getSongs(): Collection
+    {
+        return $this->songs->filter(function (Song $s) {
+            return !$s->getIsDeleted();
+        });
+    }
+
+    public function getPreferedGenre($top = 3)
+    {
+        $genres = [];
+        foreach ($this->getSongs() as $song) {
+            foreach ($song->getCategoryTags() as $categoryTag) {
+                if (isset($genres[$categoryTag->getLabel()])) {
+                    $genres[$categoryTag->getLabel()] += 1;
+                } else {
+                    $genres[$categoryTag->getLabel()] = 1;
+                }
+            }
+        }
+        arsort($genres);
+        $real_genres = array_keys($genres);
+        $real_genres = array_slice($real_genres, 0, $top);
+        return implode(", ", $real_genres);
     }
 }
