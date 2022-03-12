@@ -163,7 +163,9 @@ class SongsController extends AbstractController
 //        $qb->addSelect('s,song_difficulties');
 
         if ($request->get('display_wip', null) != null) {
-            $qb->andWhere("s.wip = true");
+            //$qb->andWhere("s.wip = true AND s.wip != true ");
+        }else{
+            $qb->andWhere("s.wip != true");
         }
         $qb->leftJoin('s.songDifficulties', 'song_difficulties');
 

@@ -68,20 +68,8 @@
                     {% endfor %}
                 </table>
 
-                <div class="row">
-                    {% if songs is not null %}
-                        {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-                        <div class="text-center col-md-6">
-                            {{ "Showing %SongCount% on %SongTotal%"|trans|replace({"%SongCount%":songs.entities|length,"%SongTotal%":songs.count}) }}
-                        </div>
+                {% include 'widget/paginate.html.twig' with {pagination:songs} %}
 
-                        <div class="text-center  col-md-6 pagination">
-                            {{ "Pages:"|trans }}&nbsp;{{ macro_pagination.paginate(songs) }}
-                            <a class="no-decoration ml-3" href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({("ppage"~songs.identifier):songs.current+1})) }}">{{ "Next page"|trans }}</a>
-                        </div>
-                    {% endif %}
-                    {# {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }} #}
-                </div>
 
             </div>
             <div class="col-md-2">

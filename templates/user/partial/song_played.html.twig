@@ -1,6 +1,5 @@
 {% extends "user/profile.html.twig" %}
 {% import "songs/macros/song.html.twig" as macro_song %}
-{% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
 {% block header_content %}
     <div class="row">
         <div class="col-12">
@@ -13,8 +12,8 @@
                 <img {{ stimulus_target('mapper-profile', 'img') }} src="{{ user.gravatar }}"
                                                                     class="avatar mb-4 img-fluid"
                                                                     alt="{{ user.username }}"/>
-                <a class="btn btn-lg btn-warning btn-block"
-                   href="{{ url('mapper_profile', {username:user.username}) }}">{{ "View mapper profile"|trans }}</a>
+                {% if user.songs|length > 0 %}<a class="btn btn-lg btn-warning btn-block"
+                   href="{{ url('mapper_profile', {username:user.username}) }}">{{ "View mapper profile"|trans }}</a>{% endif %}
             </div>
         </div>
         <div class="col-md-5 ">
@@ -101,9 +100,7 @@
                 {% include 'songs/partial/song_row_recently_played.html.twig' with {score:score} %}
             {% endfor %}
         </table>
-        <div class="text-left pagination">
-            {{ "Pages:"|trans }} {{ macro_pagination.paginate(pagination) }}
-        </div>
+        {% include 'widget/paginate.html.twig' with {pagination:pagination} %}
 
     </div>
     <div class="col-md-6">

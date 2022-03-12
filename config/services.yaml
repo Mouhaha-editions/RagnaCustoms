@@ -50,6 +50,8 @@ services:
 
     App\Service\DownloadService:
         arguments: [ '@security.helper','@request_stack','@doctrine.orm.entity_manager' ]
+    App\Service\MapperService:
+        arguments: [ '@doctrine.orm.entity_manager' ]
 
     App\Service\SongService:
         arguments:

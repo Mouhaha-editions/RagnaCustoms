@@ -111,16 +111,12 @@
         {% else %}
             <p>{{ "No song request"|trans }}</p>
         {% endfor %}
+    </div>
+<div class="row">
+    <div class="col-12">
+        {% include 'widget/paginate.html.twig' with {pagination:songRequests} %}
 
-        <div class="col-12 d-flex justify-content-between">
-            {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-            <div class="text-left pagination">
-                {{ "Pages:"|trans }} {{ macro_pagination.paginate(songRequests) }}
-            </div>
-            <div class="text-right">{{ songRequests.entities|length }} {{ "songs displayed on"|trans }} {{ songRequests.count }}</div>
-            {# {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }} #}
-        </div>
-
+    </div>
         <div class="col-12">
             {% if form is not null %}
                 <hr/>

@@ -1,0 +1,14 @@
+<div class="row mb-4">
+    {% if pagination is not null %}
+        {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+        <div class="text-center col-md-6">
+            {{ "Showing %SongCount% on %SongTotal%"|trans|replace({"%SongCount%":pagination.entities|length,"%SongTotal%":pagination.count}) }}
+        </div>
+
+        <div class="text-center  col-md-6 pagination">
+            {{ "Pages:"|trans }}&nbsp;{{ macro_pagination.paginate(pagination) }}
+            <a class="no-decoration ml-3" href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({("ppage"~pagination.identifier):pagination.current+1})) }}">{{ "Next page"|trans }}</a>
+        </div>
+    {% endif %}
+    {# {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }} #}
+</div>

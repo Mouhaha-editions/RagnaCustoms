@@ -81,9 +81,8 @@
                     </tr>
                 {% endfor %}
             </table>
-            <div class="text-left pagination">
-                Pages : {{ macro_pagination.paginate(pagination) }}
-            </div>
+            {% include 'widget/paginate.html.twig' with {pagination:pagination} %}
+
         </div>
     </div>
 {% endblock %}
