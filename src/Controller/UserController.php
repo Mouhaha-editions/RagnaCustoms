@@ -26,7 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/user/{username}", name="user_profile")
+     * @Route("/user-profile/{username}", name="user_profile")
      * @param Request $request
      * @param Utilisateur $utilisateur
      * @param PaginationService $paginationService
@@ -46,19 +46,19 @@ class UserController extends AbstractController
                             GamificationService $gamificationService
     ): Response
     {
-        $this->gamification($utilisateur,$statisticService,$gamificationService, $scoreRepository);
 
 
         $qb =  $scoreHistoryRepository->createQueryBuilder('s')
             ->where('s.user = :user')
             ->setParameter('user', $utilisateur)
             ->orderBy('s.updatedAt', "desc");
-        $pagination =  $paginationService->setDefaults(25)->process($qb, $request);
+        $pagination =  $paginationService->setDefaults(15)->process($qb, $request);
 
         return $this->render('user/partial/song_played.html.twig', [
             'controller_name' => 'UserController',
             'pagination' => $pagination,
             'user' => $utilisateur,
+            'mapperProfile'=>false,
         ]);
     }
 
@@ -102,7 +102,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/mapped/{id}", name="user_mapped_profile")
+     * @Route("/mapper-profile/{username}", name="mapper_profile")
      */
     public function mappedProfile(Request $request, Utilisateur $utilisateur,
                                   GamificationService $gamificationService, StatisticService $statisticService,ScoreRepository $scoreRepository): Response

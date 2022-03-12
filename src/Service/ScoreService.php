@@ -6,19 +6,11 @@ use App\Entity\RankedScores;
 use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\Season;
-use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
-use App\Repository\ScoreRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Pkshetlie\PaginationBundle\Service\PaginationService;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use ZipArchive;
 
 class ScoreService
 {
@@ -109,6 +101,20 @@ class ScoreService
         });
     }
 
+    public function calculateDifficulties(string $infoDat)
+    {
+        $calc = [];
+        $infoFile = json_decode(file_get_contents($infoDat));
+        foreach ($infoFile->_difficultyBeatmapSets[0]->_difficultyBeatmaps as $diff) {
+            $diffFile = json_decode(file_get_contents(str_replace('info.dat', $diff->_beatmapFilename, $infoDat)));
+            $calc[] = [
+                "rank" => $diff->_difficultyRank,
+                "fileName" => $diff->_beatmapFilename,
+                "algo" => round($this->calculate($diffFile, $infoFile), 4)
+            ];
+        }
+        return $calc;
+    }
 
     private function calculate($diffFile, $infoFile)
     {
@@ -157,29 +163,13 @@ class ScoreService
         return (float)sqrt($variance / $num_of_elements);
     }
 
-    public function calculateDifficulties(string $infoDat)
-    {
-        $calc = [];
-        $infoFile = json_decode(file_get_contents($infoDat));
-        foreach ($infoFile->_difficultyBeatmapSets[0]->_difficultyBeatmaps as $diff) {
-            $diffFile = json_decode(file_get_contents(str_replace('info.dat', $diff->_beatmapFilename, $infoDat)));
-            $calc[] = [
-                "rank" => $diff->_difficultyRank,
-                "fileName" => $diff->_beatmapFilename,
-                "algo" => round($this->calculate($diffFile, $infoFile), 4)
-            ];
-        }
-        return $calc;
-    }
-
-
     public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty)
     {
         $mine = $this->em->getRepository(Score::class)->findOneBy([
             'user' => $user,
             'songDifficulty' => $songDifficulty,
             'hash' => $songDifficulty->getSong()->getNewGuid()
-        ],["score"=>"Desc"]);
+        ], ["score" => "Desc"]);
         if ($mine == null) {
             return "-";
         }
@@ -203,7 +193,7 @@ class ScoreService
     {
         $mine = $this->em->getRepository(RankedScores::class)->findOneBy([
             'user' => $user
-        ],["totalPPScore"=>"Desc"]);
+        ], ["totalPPScore" => "Desc"]);
         if ($mine == null) {
             return null;
         }
@@ -217,6 +207,36 @@ class ScoreService
                 ->getQuery()->getResult()) + 1;
 
 
+    }
+
+    public function archive(?Score $score)
+    {
+        $scoreHistory = $this->em->getRepository(ScoreHistory::class)->findOneBy([
+            'user' => $score->getUser(),
+            'difficulty' => $score->getDifficulty(),
+            'hash' => $score->getHash(),
+            "score" => $score->getScore()
+        ]);
+        if ($scoreHistory == null) {
+            $scoreHistory = new ScoreHistory();
+            $scoreHistory->setUser($score->getUser());
+            $scoreHistory->setDifficulty($score->getDifficulty());
+            $scoreHistory->setSong($score->getSong());
+            $scoreHistory->setSongDifficulty($score->getSongDifficulty());
+            $scoreHistory->setHash($score->getHash());
+            $scoreHistory->setScore($score->getScore());
+            $this->em->persist($scoreHistory);
+            $scoreHistory->setPercentage($score->getPercentage());
+            $scoreHistory->setPercentage2($score->getPercentage2());
+            $scoreHistory->setCombos($score->getCombos());
+            $scoreHistory->setNotesHit($score->getNotesHit());
+            $scoreHistory->setNotesMissed($score->getNotesMissed());
+            $scoreHistory->setNotesNotProcessed($score->getNotesNotProcessed());
+            $scoreHistory->setHitAccuracy($score->getHitAccuracy());
+            $scoreHistory->setHitSpeed($score->getHitSpeed());
+            $scoreHistory->setRawPP($score->getRawPP());
+            $this->em->flush();
+        }
     }
 }
 

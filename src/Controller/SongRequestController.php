@@ -25,6 +25,8 @@ class SongRequestController extends AbstractController
      * @Route("/", name="_index")
      * @param Request $request
      * @param SongRequestRepository $songRequestRepository
+     * @param PaginationService $pagination
+     * @param DiscordService $discordService
      * @return Response
      */
     public function index(Request $request, SongRequestRepository $songRequestRepository, PaginationService $pagination, DiscordService $discordService): Response

@@ -18,6 +18,7 @@ use App\Repository\SongCategoryRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
+use App\Service\ScoreService;
 use App\Service\SongService;
 use DateTime;
 use Exception;
@@ -86,6 +87,7 @@ class ApiController extends AbstractController
                             UtilisateurRepository    $utilisateurRepository,
                             SongRepository           $songRepository,
                             SongService              $songService,
+                            ScoreService             $scoreService,
                             RankedScoresRepository   $rankedScoresRepository,
                             LoggerInterface          $logger): Response
     {
@@ -211,32 +213,7 @@ class ApiController extends AbstractController
                 $em->persist($score);
             }
 
-            $scoreHistory = $scoreHistoryRepository->findOneBy([
-                'user' => $user,
-                'difficulty' => $level,
-                'hash' => $hash,
-                "score" => $scoreData
-            ]);
             $oldscore = $score->getScore();
-            if ($scoreHistory == null) {
-                $scoreHistory = new ScoreHistory();
-                $scoreHistory->setUser($user);
-                $scoreHistory->setDifficulty($level);
-                $scoreHistory->setSong($song);
-                $scoreHistory->setSongDifficulty($songDiff);
-                $scoreHistory->setHash($hash);
-                $scoreHistory->setScore($scoreData);
-                $em->persist($scoreHistory);
-            }
-            $scoreHistory->setPercentage($data["Percentage"] ?? null);
-            $scoreHistory->setPercentage2($data["Percentage2"] ?? null);
-            $scoreHistory->setCombos($data["Combos"] ?? null);
-            $scoreHistory->setNotesHit($data["NotesHit"] ?? null);
-            $scoreHistory->setNotesMissed($data["NotesMissed"] ?? null);
-            $scoreHistory->setNotesNotProcessed($data["NotesNotProcessed"] ?? null);
-            $scoreHistory->setHitAccuracy($data["HitAccuracy"] ?? null);
-            $scoreHistory->setHitSpeed($data["HitSpeed"] ?? null);
-            $em->flush();
             if ($score->getScore() <= $scoreData) {
                 $score->setScore($scoreData);
                 $score->setPercentage($data["Percentage"] ?? null);
@@ -276,6 +253,7 @@ class ApiController extends AbstractController
                     "error" => "SUCCESS"
                 ];
             }
+            $scoreService->archive($score);
 
             $results[] = [
                 "hash" => $hash,

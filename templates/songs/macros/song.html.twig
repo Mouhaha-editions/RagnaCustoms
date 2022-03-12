@@ -42,7 +42,7 @@
                 <div class="category"><a
                             href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
                 </div>
-                <p class="creator mb-1">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('user_mapped_profile', {id:song.user.id}) ~'">'~song.levelAuthorName~'</a>'})|raw }}</p>
+                <p class="creator mb-1">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('mapper_profile', {username:song.user.username}) ~'">'~song.mapper~'</a>'})|raw }}</p>
                 <p>{{ song.songCategoryTags|join(', ') }}&nbsp;</p>
                 {% set diffs = '<br/>' %}
                 {% set adiffs = '<br/>' %}
@@ -149,7 +149,7 @@
         <div class="category"><a
                     href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
         </div>
-        <p class="creator mb-1">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('user_mapped_profile', {id:song.user.id}) ~'">'~song.levelAuthorName~'</a>'})|raw }}</p>
+        <p class="creator mb-1">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('mapper_profile', {username:song.user.username}) ~'">'~song.mapper~'</a>'})|raw }}</p>
         {{ song.songCategoryTags|join(', ') }}&nbsp;</p>
 
 
@@ -186,8 +186,8 @@
                 <a href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
             </div>
             <div class="mapper pb-3">
-                <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}"><i
-                            class="fas fa-pen"></i> {{ song.levelAuthorName }}</a>
+                <a href="{{ url('mapper_profile', {username:song.user.username}) }}"><i
+                            class="fas fa-pen"></i> {{ song.mapper }}</a>
             </div>
             {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
 

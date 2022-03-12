@@ -92,6 +92,11 @@ class ScoreHistory
      */
     private $songDifficulty;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $rawPP;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -265,4 +270,17 @@ class ScoreHistory
 
         return $this;
     }
+
+    public function getRawPP(): ?float
+    {
+        return $this->rawPP;
+    }
+
+    public function setRawPP(?float $rawPP): self
+    {
+        $this->rawPP = $rawPP;
+
+        return $this;
+    }
+
 }

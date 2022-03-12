@@ -11,9 +11,11 @@
      <meta property="og:type" content="website"/>
      <meta property="og:title" content="Song requests | RagnaCustoms.com"/>
  {% endblock %}
-
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('homepage') }}
+    {% endblock %}
 {% block body %}
-
+<div class="container">
     <div class="row mt-3">
         <div class="col-12">
             <h1>Song requests for Ragnaröck VR</h1>
@@ -127,4 +129,5 @@
             {% endif %}
         </div>
     </div>
+</div>
 {% endblock %}

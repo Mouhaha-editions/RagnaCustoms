@@ -19,6 +19,7 @@ use App\Repository\VoteCounterRepository;
 use App\Service\DiscordService;
 use App\Service\DownloadService;
 use App\Service\GoogleAnalyticsService;
+use App\Service\ScoreService;
 use App\Service\SongService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -459,10 +460,18 @@ class SongsController extends AbstractController
     /**
      * @Route("/toggle/{id}", name="diff_toggle_ranked", defaults={"slug"=null})
      */
-    public function toggleRanked(Request $request, SongDifficulty $songDifficulty){
+    public function toggleRanked(Request $request, SongDifficulty $songDifficulty, ScoreService $scoreService){
         if($this->isGranted('ROLE_MODERATOR')){
+         $em = $this->getDoctrine()->getManager();
             $songDifficulty->setIsRanked(!$songDifficulty->isRanked());
-            $this->getDoctrine()->getManager()->flush();
+            /** @var Score $score */
+            foreach($songDifficulty->getScores() AS $score){
+                if(!$score->getRawPP() || $score->getRawPP() <= 0){
+                    $scoreService->archive($score);
+                    $em->remove($score);
+                }
+            }
+            $em->flush();
             return new JsonResponse(['result'=>$songDifficulty->isRanked() ? '<i class="fas fa-star"></i> ranked':'<i class="far fa-star"></i> not r.']);
         }
         return new Response('');

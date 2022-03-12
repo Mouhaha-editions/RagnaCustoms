@@ -42,6 +42,10 @@ class Song
      */
     private $beatsPerMinute;
     /**
+     * @ORM\ManyToMany(targetEntity=SongCategory::class, inversedBy="songs")
+     */
+    private $categoryTags;
+    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $converted;
@@ -118,6 +122,14 @@ class Song
      */
     private $previewStartTime;
     /**
+     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="song")
+     */
+    private $scoreHistories;
+    /**
+     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="song")
+     */
+    private $scores;
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $shuffle;
@@ -130,12 +142,10 @@ class Song
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $slug;
-
     /**
      * @ORM\OneToMany(targetEntity=SongDifficulty::class, mappedBy="song")
      */
     private $songDifficulties;
-
     /**
      * @ORM\OneToMany(targetEntity=SongHash::class, mappedBy="Song")
      */
@@ -160,11 +170,14 @@ class Song
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $version;
-
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $views;
+    /**
+     * @ORM\OneToMany(targetEntity=VoteCounter::class, mappedBy="song")
+     */
+    private $voteCounters;
     /**
      * @ORM\Column(type="integer")
      */
@@ -186,26 +199,6 @@ class Song
      */
     private $youtubeLink;
 
-    /**
-     * @ORM\OneToMany(targetEntity=VoteCounter::class, mappedBy="song")
-     */
-    private $voteCounters;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=SongCategory::class, inversedBy="songs")
-     */
-    private $categoryTags;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="song")
-     */
-    private $scores;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="song")
-     */
-    private $scoreHistories;
-
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -219,17 +212,20 @@ class Song
         $this->scoreHistories = new ArrayCollection();
     }
 
-    public function isVoteCounterBy(?UserInterface $user) {
-        $votes = $this->voteCounters->filter(function(VoteCounter $voteCounter)use($user){
+    public function isVoteCounterBy(?UserInterface $user)
+    {
+        $votes = $this->voteCounters->filter(function (VoteCounter $voteCounter) use ($user) {
             return $voteCounter->getUser() === $user;
         });
         return $votes->isEmpty() ? null : $votes->first();
     }
-    public function isReviewedBy(?UserInterface $user) {
-        $votes = $this->votes->filter(function(Vote $vote)use($user){
+
+    public function isReviewedBy(?UserInterface $user)
+    {
+        $votes = $this->votes->filter(function (Vote $vote) use ($user) {
             return $vote->getUser() === $user;
         });
-        return count($votes)>0;
+        return count($votes) > 0;
     }
 
     public function isSeasonRanked()
@@ -291,6 +287,11 @@ class Song
         $this->authorName = $authorName;
 
         return $this;
+    }
+
+    public function getMapper()
+    {
+        return $this->user->getUsername();
     }
 
     public function getLevelAuthorName(): ?string
@@ -950,21 +951,14 @@ class Song
 
         return $this;
     }
-    public function hasCover():bool
+
+    public function hasCover(): bool
     {
         $cover = "/covers/" . $this->getId() . $this->getCoverImageExtension();
         if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
-           return false;
+            return false;
         }
         return true;
-    }
-    public function getCover()
-    {
-        $cover = "/covers/" . $this->getId() . $this->getCoverImageExtension();
-        if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
-            $cover = $this->getPlaceholder();
-        }
-        return $cover."?t=".date('dmYH');
     }
 
     public function getId(): ?int
@@ -978,10 +972,20 @@ class Song
         return "." . end($file);
     }
 
+    public function getCover()
+    {
+        $cover = "/covers/" . $this->getId() . $this->getCoverImageExtension();
+        if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
+            $cover = $this->getPlaceholder();
+        }
+        return $cover . "?t=" . date('dmYH');
+    }
+
     public function getPlaceholder()
     {
         return "/apps/logo.png";
     }
+
     /**
      * @return Collection|VoteCounter[]
      */
@@ -1027,11 +1031,11 @@ class Song
     {
         $result = [];
         /** @var SongCategory $cat */
-        foreach($this->categoryTags AS $cat){
-             $result[] = $cat->getLabel();
-         }
+        foreach ($this->categoryTags as $cat) {
+            $result[] = $cat->getLabel();
+        }
 
-         return count($result)>0 ? $result: ["none"];
+        return count($result) > 0 ? $result : ["none"];
     }
 
     public function addCategoryTag(SongCategory $categoryTag): self

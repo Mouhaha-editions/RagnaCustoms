@@ -25,7 +25,7 @@
     </td>
     <td>
         <div class="mapper">
-            <a href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
+            <a href="{{ url('mapper_profile', {username:song.user.username}) }}">{{ song.mapper }}</a>
         </div>
     </td>
     <td class="small-col  pt-2 pb-2">{% include 'songs/partial/downupvote.html.twig' with {song:song} %}</td>

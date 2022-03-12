@@ -50,8 +50,9 @@
   }
 
   .darker {
-    background: url('../../img/pixel_21.png');
-
+    background: rgba(0, 0, 0, 0.21);
+    background-blend-mode: soft-light;
+    box-shadow: 0px 6px 27px rgba(0, 0, 0, 0.15);
     .up_down_vote {
       font-size: 24px;
     }

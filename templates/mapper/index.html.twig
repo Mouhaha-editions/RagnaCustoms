@@ -3,18 +3,12 @@
         {{ encore_entry_link_tags('mappers') }}
     {% endblock %}
 
- {% block metas %}
-{#     <meta name="description" value="{{ playlist.description}}">#}
-{#     <meta property="og:description" value="{{ playlist.description}}">#}
-{#     <meta property="og:url" content="{{ url('playlist_show',{id:playlist.id}) }}"/>#}
-     <meta property="og:type" content="website"/>
-     <meta property="og:title" content="Mappers on RagnaCustoms.com"/>
- {% endblock %}
-
 {% block body %}
     <div {{ stimulus_controller('mappers') }} class="container" id="mappers">
     <div class="row mt-5">
         <div class="col-12">
+            <a href="{{ url("song_request_index") }}" class="btn btn-warning btn-lg float-right ml-2">{{ "Open song requests"|trans }}</a>
+            <a href="{{ url("home") }}" class="btn btn-warning btn-bg-empty btn-lg float-right">{{ "Learn how to map"|trans }}</a>
             <h1>{{ "Mappers"|trans }}</h1>
             <table class="table table-sm">
                 <tr>
@@ -28,7 +22,7 @@
                 {% for mapper in mappers %}
                     <tr>
                         <td>
-                            <a href="{{ url("user_mapped_profile",{id:mapper.id}) }}">{{ mapper.username }}</a>
+                            <a href="{{ url("mapper_profile",{username:mapper.username}) }}">{{ mapper.username }}</a>
                         </td>
                         <td class="">{{ mapper.songs|length }}</td>
                         <td class=""><small>{{ "soon" }}</small></td>
@@ -42,7 +36,13 @@
     </div>
     </div>
 {% endblock %}
-
+ {% block metas %}
+     {#     <meta name="description" value="{{ playlist.description}}">#}
+     {#     <meta property="og:description" value="{{ playlist.description}}">#}
+     {#     <meta property="og:url" content="{{ url('playlist_show',{id:playlist.id}) }}"/>#}
+     <meta property="og:type" content="website"/>
+     <meta property="og:title" content="Mappers on RagnaCustoms.com"/>
+ {% endblock %}
 {% block title %}
     {{ "Mappers using RagnaCustoms"|trans }}
 {% endblock %}

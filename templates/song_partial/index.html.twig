@@ -28,7 +28,7 @@
             </td>
             <td>
                 <div class="mapper"><a
-                            href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
+                            href="{{ url('mapper_profile', {username:song.user.username}) }}">{{ song.mapper }}</a>
                 </div>
                 <div class="level-list">
                     {% for diff in song.songDifficulties %}

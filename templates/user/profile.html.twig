@@ -1,76 +1,25 @@
 {% extends 'base.html.twig' %}
-    {% block title %}{{ "%username%'s profile"|trans|replace({"%username%":user.username})}}{% endblock %}
-    {% block body %}
-        <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h1>{{ "%username%'s profile"|trans|replace({"%username%":user.username})}}</h1>
-                <div class=row>
-                    <div class="col-md-2">
-                        <div class="user-picture" style="max-width:100px;">
-                            {% if user.certified %}
-                                <img src="/apps/CertifiedViking.svg" title="{{ "this account is certified"|trans }}"
-                                     class="certified" alt="certified"/>
-                            {% endif %}
-                            {% if user.songs|length > 0 %}
-                                <img src="/apps/Mapper.svg" title="{{ "Is a mapper"|trans }}"
-                                     class="mapper" alt="mapper"/>
-                            {% endif %}
-                            <img src="{{ user.gravatar }}" class="avatar" style="max-width:100px;"
-                                 alt="{{ user.username }}"/><br/>
-                        </div>
-                    </div>
-                    {% set totalDistance = statisticService.getTotalDistance(user) %}
-                    <div class="col-md-3 ">
-{#                        {{ "Global ranking:"|trans }} #{{ scoreService.s(user, "global") }}<br/>#}
-{#                        {{ "Season Ranking:"|trans }} #{{ scoreService.getRanking(user, "season") }}<br/>#}
-                        {{ "Song played:"|trans }} {{ user.scoreHistories|length }} <a
-                                href="{{ url('user_profile',{username:user.username}) }}" class="text-level-5"><i
-                                    class="fas fa-eye"></i></a><br/>
+{% block title %}{{ "%username%'s profile"|trans|replace({"%username%":user.username}) }}{% endblock %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('mapper_profile') }}
+{% endblock %}
 
-                        {{ "Song mapped:"|trans }} {{ user.songs|length }} <a
-                                href="{{ url('user_mapped_profile',{id:user.id}) }}" class="text-level-5"><i
-                                    class="fas fa-eye"></i></a><br/>
-                    </div>
-                    <div class="col-md-3 ">
-                        {{ "Distance:"|trans }} {{ totalDistance|number_format(2,'.',' ') }}m<br/>
-                        {{ "Notes hit:"|trans }} {{ statisticService.totalNotesHit(user)|number_format(0,'.',' ') }}<br/>
-                        {{ "Notes missed:"|trans }} {{ statisticService.totalNotesMissed(user)|number_format(0,'.',' ') }}<br/>
-                        {{ "Notes not processed:"|trans }} {{ statisticService.totalNotesNotProcessed(user)|number_format(0,'.',' ') }}<br/>
+{% block body %}
+    <div class="profile pb-3">
+    <div {{ stimulus_controller('mapper-profile') }} {{ stimulus_target('mapper-profile', 'background') }}
+            id="mapper-profile">
+        <div class="darker pb-4" id="profile-header">
+            <div class="container">
+                {% block header_content %}{% endblock %}
 
-                    </div>
-                    <div class="col-md-5">
-                        {% if user.isMapper and user.isPublic %}
-                            Mapper information : <br/>
-                            {% if user.mapperDiscord is not null %}<i
-                                    class="fab fa-discord"></i> {{ user.mapperDiscord }}<br/>{% endif %}
-                            {{ user.mapperDescription }}
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 user-statitics">
-                        <h2>
-                            {{ "Achievements:" }} {{ gamificationService.count(user)}}/{{ constant("\\App\\Enum\\EGamification::TEXTS")|length}}</h2>
-                        {% for key,text in constant("\\App\\Enum\\EGamification::TEXTS") %}
-                            {% if  gamificationService.get(key,user) %}
-                                {% set icon = constant("\\App\\Enum\\EGamification::ICONS")[key] %}
-                                <i class="{{ icon }} p-2 fa-3x" title="{{ text|trans }}"></i>
-                            {% else %}
-                                {% set icon = constant("\\App\\Enum\\EGamification::ICONS")[key] %}
-                                {% set indice = constant("\\App\\Enum\\EGamification::INDICES")[key] %}
-                                <i class="{{ icon }} text-white-50 disabled p-2 fa-3x" data-toggle="tooltip" title="{{ indice|trans }}"></i>
-                            {% endif %}
-                        {% endfor %}
-
-
-                    </div>
-                </div>
             </div>
+        </div>
 
-            {% block detailed_content %}{% endblock %}
-        </div>
-        </div>
-    {% endblock %}
+    </div>
+    <div class="container pt-4">
+        {% block detailed_content %}{% endblock %}
+    </div>
+    </div>
+{% endblock %}
 
 
