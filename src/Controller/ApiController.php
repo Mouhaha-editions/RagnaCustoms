@@ -66,7 +66,7 @@ class ApiController extends AbstractController
 
 
     /**
-     * @Route("/api/score/", name="api_score")
+     * @Route("/api/score/v2", name="api_score")
      * @param Request $request
      * @param DifficultyRankRepository $difficultyRankRepository
      * @param SongDifficultyRepository $songDifficultyRepository
