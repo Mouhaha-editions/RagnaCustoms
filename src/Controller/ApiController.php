@@ -52,14 +52,7 @@ class ApiController extends AbstractController
          * "Mapper" => $song->getLevelAuthorName(),
          * "Difficulties" => $song->getSongDifficultiesStr(),
          */
-        $songs = $songRepository->createQueryBuilder('s')
-            ->select('s.id, s.name, s.authorName AS author, s.levelAuthorName AS mapper, s.newGuid AS hash, GROUP_CONCAT(r.level) AS Difficulties')
-            ->leftJoin("s.songDifficulties", 'sd')
-            ->leftJoin('sd.difficultyRank', 'r')
-            ->where("s.isDeleted != 1")
-            ->groupBy('s.id')
-            ->getQuery()
-            ->getArrayResult();
+        $songs = $songRepository->createQueryBuilder('s')->select('s.id, s.name, s.authorName AS author, s.levelAuthorName AS mapper, s.newGuid AS hash, GROUP_CONCAT(r.level) AS Difficulties')->leftJoin("s.songDifficulties", 'sd')->leftJoin('sd.difficultyRank', 'r')->where("s.isDeleted != 1")->groupBy('s.id')->getQuery()->getArrayResult();
 
         return new JsonResponse($songs);
     }
@@ -79,17 +72,7 @@ class ApiController extends AbstractController
      * @param LoggerInterface $logger
      * @return Response
      */
-    public function scoreV2(Request                  $request,
-                            DifficultyRankRepository $difficultyRankRepository,
-                            SongDifficultyRepository $songDifficultyRepository,
-                            ScoreRepository          $scoreRepository,
-                            ScoreHistoryRepository   $scoreHistoryRepository,
-                            UtilisateurRepository    $utilisateurRepository,
-                            SongRepository           $songRepository,
-                            SongService              $songService,
-                            ScoreService             $scoreService,
-                            RankedScoresRepository   $rankedScoresRepository,
-                            LoggerInterface          $logger): Response
+    public function scoreV2(Request $request, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository, SongService $songService, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger): Response
     {
         $em = $this->getDoctrine()->getManager();
         $results = [];
@@ -97,7 +80,7 @@ class ApiController extends AbstractController
         $ranked = false;
 
         $data = json_decode($request->getContent(), true);
-
+        $data = $data[0];
         if ($data == null) {
             $logger->error("no data");
             $results[] = [
@@ -303,17 +286,40 @@ class ApiController extends AbstractController
         return new JsonResponse($results, 200);
     }
 
+    private function calculateRawPP(Score $score, SongDifficulty $songDiff)
+    {
+        $userScore = $score->getScore();
+        $songLevel = $score->getDifficulty();
+        $maxSongScore = $songDiff->getTheoricalMaxScore();
+        // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
+        // it is ponderated by the song level
+        $rawPP = (($userScore / $maxSongScore) * (0.4 + 0.1 * $songLevel)) * 100;
+
+        return round($rawPP, 2);
+    }
+
+    private function calculateTotalPondPPScore(ScoreRepository $scoreRepository, Utilisateur $user)
+    {
+        $totalPP = 0;
+        $scores = $scoreRepository->createQueryBuilder('score')->leftJoin('score.songDifficulty', 'diff')->where('score.user = :user')->andWhere('diff.isRanked = true')->setParameter('user', $user)->addOrderBy('score.rawPP', 'desc')->getQuery()->getResult();
+
+        $index = 0;
+        foreach ($scores as $score) {
+            $rawPPScore = $score->getRawPP();
+            $pondPPScore = $rawPPScore * pow(0.965, $index);
+            $totalPP = $totalPP + $pondPPScore;
+            $index++;
+        }
+
+        return round($totalPP, 2);
+    }
+
     /**
      * @Route("/api/search/{term}", name="api_search")
      */
     public function index(Request $request, string $term = null, SongRepository $songRepository): Response
     {
-        $songsEntities = $songRepository->createQueryBuilder('s')
-            ->where('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-            ->andWhere('s.moderated = true')
-            ->andWhere('s.isDeleted != true')
-            ->setParameter('search_string', '%' . $term . '%')
-            ->getQuery()->getResult();
+        $songsEntities = $songRepository->createQueryBuilder('s')->where('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')->andWhere('s.moderated = true')->andWhere('s.isDeleted != true')->setParameter('search_string', '%' . $term . '%')->getQuery()->getResult();
         $songs = [];
 
         /** @var Song $song */
@@ -333,8 +339,7 @@ class ApiController extends AbstractController
         return new JsonResponse([
                 "Results" => $songs,
                 "Count" => count($songs)
-            ]
-        );
+            ]);
     }
 
     /**
@@ -351,8 +356,7 @@ class ApiController extends AbstractController
                 "Mapper" => $song->getLevelAuthorName(),
                 "Difficulties" => $song->getSongDifficultiesStr(),
                 "CoverImageExtension" => $song->getCoverImageExtension(),
-            ]
-        );
+            ]);
     }
 
     /**
@@ -360,11 +364,7 @@ class ApiController extends AbstractController
      */
     public function hash(Request $request, string $hash, SongRepository $songRepository): Response
     {
-        $song = $songRepository->createQueryBuilder('s')
-            ->where('s.newGuid LIKE :search_string)')
-            ->andWhere('s.moderated = true')
-            ->setParameter('search_string', $hash)
-            ->getQuery()->setFirstResult(0)->setMaxResults(1)->getOneOrNullResult();
+        $song = $songRepository->createQueryBuilder('s')->where('s.newGuid LIKE :search_string)')->andWhere('s.moderated = true')->setParameter('search_string', $hash)->getQuery()->setFirstResult(0)->setMaxResults(1)->getOneOrNullResult();
         if (!$song) {
             return new Response("NOK", 400);
         }
@@ -377,8 +377,7 @@ class ApiController extends AbstractController
                 "Mapper" => $song->getLevelAuthorName(),
                 "Difficulties" => $song->getSongDifficultiesStr(),
                 "CoverImageExtension" => $song->getCoverImageExtension(),
-            ]
-        );
+            ]);
     }
 
     /**
@@ -476,50 +475,11 @@ class ApiController extends AbstractController
      */
     public function songCategories(Request $request, SongCategoryRepository $categoryRepository)
     {
-        $data = $categoryRepository->createQueryBuilder("sc")
-            ->select("sc.id AS id, sc.label AS text")->where('sc.label LIKE :search')
-            ->setParameter('search', '%' . $request->get('q') . '%')
-            ->andWhere('sc.isOnlyForAdmin = false')
-            ->orderBy('sc.label')
-            ->getQuery()->getArrayResult();
+        $data = $categoryRepository->createQueryBuilder("sc")->select("sc.id AS id, sc.label AS text")->where('sc.label LIKE :search')->setParameter('search', '%' . $request->get('q') . '%')->andWhere('sc.isOnlyForAdmin = false')->orderBy('sc.label')->getQuery()->getArrayResult();
 
         return new JsonResponse([
             'results' => $data
         ]);
-    }
-
-    private function calculateRawPP(Score $score, SongDifficulty $songDiff)
-    {
-        $userScore = $score->getScore();
-        $songLevel = $score->getDifficulty();
-        $maxSongScore = $songDiff->getTheoricalMaxScore();
-        // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
-        // it is ponderated by the song level
-        $rawPP = (($userScore / $maxSongScore) * (0.4 + 0.1 * $songLevel)) * 100;
-
-        return round($rawPP, 2);
-    }
-
-    private function calculateTotalPondPPScore(ScoreRepository $scoreRepository, Utilisateur $user)
-    {
-        $totalPP = 0;
-        $scores = $scoreRepository->createQueryBuilder('score')
-            ->leftJoin('score.songDifficulty', 'diff')
-            ->where('score.user = :user')
-            ->andWhere('diff.isRanked = true')
-            ->setParameter('user', $user)
-            ->addOrderBy('score.rawPP', 'desc')
-            ->getQuery()->getResult();
-
-        $index = 0;
-        foreach ($scores as $score) {
-            $rawPPScore = $score->getRawPP();
-            $pondPPScore = $rawPPScore * pow(0.965, $index);
-            $totalPP = $totalPP + $pondPPScore;
-            $index++;
-        }
-
-        return round($totalPP, 2);
     }
 
 }
