@@ -19,7 +19,7 @@ class SongPartialController extends AbstractController
             ->orderBy("s.createdAt", 'DESC')
             ->where('s.isDeleted != true')
             ->where('s.wip != true')
-            ->setMaxResults(5)
+            ->setMaxResults(10)
             ->setFirstResult(0)
             ->getQuery()->getResult();
 
@@ -40,7 +40,7 @@ class SongPartialController extends AbstractController
             ->orderBy('score.updatedAt', 'DESC')
             ->where('s.isDeleted != true')
             ->where('s.wip != true')
-            ->setFirstResult(0)->setMaxResults(5)
+            ->setFirstResult(0)->setMaxResults(10)
             ->getQuery()->getResult();
 
         return $this->render('song_partial/index.html.twig', [
@@ -54,7 +54,7 @@ class SongPartialController extends AbstractController
             ->orderBy("s.voteUp - s.voteDown", 'DESC')
             ->where('s.isDeleted != true')
             ->where('s.wip != true')
-            ->setMaxResults(5)
+            ->setMaxResults(10)
             ->setFirstResult(0)
             ->getQuery()->getResult();
 
