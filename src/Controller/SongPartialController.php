@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Score;
 use App\Entity\Song;
+use App\Repository\ScoreRepository;
 use App\Repository\SongRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,19 +29,18 @@ class SongPartialController extends AbstractController
         ]);
     }
 
-    public function lastPlayed(SongRepository $songRepository): Response
+    public function lastPlayed(ScoreRepository $scoreRepository,SongRepository $songRepository): Response
     {
-        $songs = $songRepository->createQueryBuilder("s")
-            ->leftJoin(
-                "s.scores",
-                'score'
-            )
+        $scores = $scoreRepository->createQueryBuilder("score")
+            ->leftJoin("score.song",'s')
             ->orderBy('score.updatedAt', 'DESC')
             ->where('s.isDeleted != true')
             ->where('s.wip != true')
             ->setFirstResult(0)
             ->setMaxResults(10)
             ->getQuery()->getResult();
+        $songs = array_map(function(Score $score){return $score->getSong();}, $scores);
+
 
         return $this->render('song_partial/index.html.twig', [
             'songs' => $songs
