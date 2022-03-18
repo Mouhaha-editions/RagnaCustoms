@@ -32,15 +32,14 @@ class SongPartialController extends AbstractController
     {
         $songs = $songRepository->createQueryBuilder("s")
             ->leftJoin(
-                Score::class,
-                'score',
-                Join::WITH,
-                'score.hash = s.newGuid'
+                "s.scores",
+                'score'
             )
             ->orderBy('score.updatedAt', 'DESC')
             ->where('s.isDeleted != true')
             ->where('s.wip != true')
-            ->setFirstResult(0)->setMaxResults(10)
+            ->setFirstResult(0)
+            ->setMaxResults(10)
             ->getQuery()->getResult();
 
         return $this->render('song_partial/index.html.twig', [

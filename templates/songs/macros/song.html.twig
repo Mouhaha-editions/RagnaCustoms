@@ -186,8 +186,9 @@
                 <a href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
             </div>
             <div class="mapper pb-3">
-                <a href="{{ url('mapper_profile', {username:song.user.username}) }}"><i
-                            class="fas fa-pen"></i> {{ song.mapper }}</a>
+                <a href="{{ url('mapper_profile', {username:song.user.username}) }}">
+{#                    <i class="fas fa-pen"></i> #}
+                    {{ song.mapper }}</a>
             </div>
             {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
 
