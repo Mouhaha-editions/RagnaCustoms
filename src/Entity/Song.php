@@ -291,7 +291,7 @@ class Song
 
     public function getMapper()
     {
-        return $this->user->getUsername();
+        return $this->user->getMapperName()??$this->user->getUsername();
     }
 
     public function getLevelAuthorName(): ?string

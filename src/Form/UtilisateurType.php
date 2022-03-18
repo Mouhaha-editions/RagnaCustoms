@@ -50,7 +50,7 @@ class UtilisateurType extends AbstractType
                 'help_html'=>true,
                 "attr"=>["class"=>"form-control form-control-sm"]
             ])
-            ->add('Save', SubmitType::class,['attr'=>["class"=>"btn btn-primary"]])
+
         ;
     }
 

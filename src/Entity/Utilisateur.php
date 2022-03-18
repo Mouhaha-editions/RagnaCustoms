@@ -147,6 +147,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $votes;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $credits;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -655,6 +660,19 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->songRequests;
     }
 
+  /**
+     * @return Collection|SongRequest[]
+     */
+    public function getOpenSongRequests(): Collection
+    {
+        return $this->songRequests->filter(function(Songrequest $songrequest){
+            return $songrequest->getState() == SongRequest::STATE_ASKED;
+        });
+    }
+
+
+
+
     /**
      * @return ?SongRequest
      */
@@ -769,6 +787,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->songRequestVotes;
     }
 
+
     public function getAvgRating()
     {
         $songsRating = [];
@@ -806,5 +825,17 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $real_genres = array_keys($genres);
         $real_genres = array_slice($real_genres, 0, $top);
         return implode(", ", $real_genres);
+    }
+
+    public function getCredits(): ?int
+    {
+        return $this->credits;
+    }
+
+    public function setCredits(?int $credits): self
+    {
+        $this->credits = $credits;
+
+        return $this;
     }
 }

@@ -9,3 +9,50 @@
     font-size: 24px;
   }
 }
+
+
+.username{
+ color:$warning;
+}
+form{width:100%;}
+#utilisateur_mapperDescription{
+  min-height:130px;
+}
+.encart {
+ background:$bg-lighter;
+  border-radius: 4px;
+  text-align: center;
+  .flex-fill:first-child{
+    border-right:0.5px solid #fff;
+  }
+  .flex-fill:last-child{
+    border-left:0.5px solid #fff;
+  }
+  .count{
+    font-size:24px;
+    font-weight:bold;
+  }
+  .credits{
+    font-size:24px;
+    font-weight:bold;
+  }
+  table.table-sm {
+    margin-right:15px;
+    text-align: left;
+    padding-left:30px;
+    tr, td {
+      padding: 0;
+      padding-right: 5px;
+      margin: 0 !important;
+      font-size:14px;
+    }
+    td:first-child {
+      font-weight: bold;
+      font-size:16px;
+    }
+    td:last-child {
+
+    }
+  }
+
+}

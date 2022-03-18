@@ -5,67 +5,111 @@
 {% endblock %}
 {% block title %}{{ "My Profile"|trans }}{% endblock %}
 {% block body %}
-    <div  {{ stimulus_controller('user') }} {{ stimulus_target('user', 'background') }}>
+<div {{ stimulus_controller('user') }} {{ stimulus_target('user', 'background') }}>
     <div class="darker">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h1>{{ "My profile"|trans }}</h1>
-            </div>
-            <div class="col-md-3">
-                <div class="">
-                    <img src="{{ app.user.gravatar }}" {{ stimulus_target('user', 'img') }} class="img-fluid big-rounded" alt="Your profile picture"/>
-                    <br/>
-                    <div class="text-right">
-                        <small>We use <a href="https://gravatar.com/" target="_blank">Gravatar</a> for your
-                            avatar</small>
-                    </div>
+        <div class="container">
+            {{ form_start(form) }}
+
+            <div class="row">
+                <div class="col-12">
+                    <h1>{{ "My profile"|trans }}</h1>
+                    {{ form_errors(form) }}
                 </div>
-            </div>
-            <div class="col-md-4">
-                <h2 class="username">{{ app.user.username }}</h2>
-                <div class="form-group row pt-5">
-                    <label for="ApiKey" class="col-sm-2 col-form-label">{{ "Your API key"|trans }} : </label>
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <input id="ApiKey" class="form-control" value="{{ app.user.apiKey }}" readonly/>
-                            <div class="input-group-append">
-                                <div class="input-group-text copy-clipboard" title="{{ "copied !"|trans }}"
-                                     data-to-copy="{{ app.user.apiKey }}"><i class="fa fa-copy"></i></div>
-                            </div>
+
+                <div class="col-md-3">
+                    <div class="">
+                        <img src="{{ app.user.gravatar }}" {{ stimulus_target('user', 'img') }}
+                             class="img-fluid big-rounded" alt="Your profile picture"/>
+                        <br/>
+                        <div class="text-right">
+                            <small>We use <a href="https://gravatar.com/" target="_blank">Gravatar</a> for your
+                                avatar</small>
                         </div>
                     </div>
                 </div>
 
-                <div class="pt-2 pb-5">
-                    If you already get the application <a href="ragnac://api/{{ app.user.apiKey }}">click here</a>
-                    to auto-set your API key
+                <div class="col-md-4">
+                    <h2 class="username">{{ app.user.username }}</h2>
+                    <div class="encart p-2 d-flex justify-content-center align-self-center">
+                        <div class="big flex-fill">
+                            <div class="credits">{{ app.user.credits??0 }}</div>
+                            {{ "credits"|trans }}
+
+                        </div>
+                        <div class="info flex-fill pl-5">
+                            <table class="table-sm">
+                                <tr>
+                                    <td>{{ app.user.scores|length }}</td> <td>Scores uploaded</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ app.user.votes|length }}</td> <td>Songs rated</td>
+
+                                </tr>
+                                <tr>
+                                    <td>{{ app.user.songs|length }}</td> <td>Songs mapped</td>
+
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div class="flex-fill">
+                            <div class="count">{{ app.user.openSongRequests|length }} of 3</div>
+                            <div>Open requests</div>
+                        </div>
+                    </div>
+
+                    <label for="ApiKey" class="col-form-label">{{ "Your API key"|trans }} </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text copy-clipboard" title="{{ "copied !"|trans }}"
+                                 data-to-copy="{{ app.user.apiKey }}"><i class="fa fa-copy"></i></div>
+                        </div>
+                        <input id="ApiKey" class="form-control " value="{{ app.user.apiKey }}" readonly/>
+                    </div>
+                    <div class="mb-3">
+                        <small>
+                            If you already get the application <a href="ragnac://api/{{ app.user.apiKey }}">click
+                                here</a> to auto-set your API key
+                        </small>
+                    </div>
+
+                    {{ form_row(form.email) }}
+
+                    <div class="mt-2">
+                        <div class="float-right">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            {{ form_widget(form.isMapper,{"attr":{"class":"form-check-input"}}) }}
+                            {{ form_label(form.isMapper,null,{"label_attr":{"class":"form-check-label"}}) }}
+                        </div>
+                        <div class="form-check form-check-inline">
+                            {{ form_widget(form.isPublic,{"attr":{"class":"form-check-input"}}) }}
+                            {{ form_label(form.isPublic,null,{"label_attr":{"class":"form-check-label"}}) }}
+                        </div>
+                        <div class="form-check form-check-inline">
+                            {{ form_widget(form.enableEmailNotification,{"attr":{"class":"form-check-input"}}) }}
+                            {{ form_label(form.enableEmailNotification,null,{"label_attr":{"class":"form-check-label"}}) }}
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="public_informations">
+                        {{ form_row(form.mapperName) }}
+                        {{ form_row(form.mapperDiscord) }}
+                        {{ form_row(form.mapperDescription) }}
+                        <div class="float-right">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
                 </div>
 
-                {{ form_start(form) }}
-                {{ form_errors(form) }}
-                {{ form_row(form.email) }}
-                <div class="form-check form-check-inline">
-                    {{ form_widget(form.isMapper,{"attr":{"class":"form-check-input"}}) }}
-                    {{ form_label(form.isMapper,null,{"label_attr":{"class":"form-check-label"}}) }}
-                </div>
-                <div class="form-check form-check-inline">
-                    {{ form_widget(form.isPublic,{"attr":{"class":"form-check-input"}}) }}
-                    {{ form_label(form.isPublic,null,{"label_attr":{"class":"form-check-label"}}) }}
-                </div>
-                <div class="form-check form-check-inline">
-                    {{ form_widget(form.enableEmailNotification,{"attr":{"class":"form-check-input"}}) }}
-                    {{ form_label(form.enableEmailNotification,null,{"label_attr":{"class":"form-check-label"}}) }}
-                </div>
-                <div id="public_informations" style="display: none">
-                    {{ form_row(form.mapperName) }}
-                    {{ form_row(form.mapperDiscord) }}
-                    {{ form_row(form.mapperDescription) }}
-                </div>
-                {{ form_end(form) }}
+
             </div>
+            {{ form_end(form) }}
         </div>
-    </div>
+
     </div>
     <div class="container">
         <h2>Last songs played</h2>

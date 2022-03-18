@@ -1,4 +1,4 @@
-const copyToClipboard = str => {
+function copyToClipboard(str) {
     const el = document.createElement('textarea');
     el.value = str;
     el.setAttribute('readonly', '');
@@ -8,7 +8,7 @@ const copyToClipboard = str => {
     el.select();
     document.execCommand('copy');
     document.body.removeChild(el);
-};
+}
 
 $(document).on('click', ".copy-clipboard", function () {
     let t = $(this);

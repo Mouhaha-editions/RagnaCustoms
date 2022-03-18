@@ -22,23 +22,6 @@ $('[data-load]').each( function(){
     })
 });
 
-$(document).on('click', ".copy-clipboard", function () {
-    let t = $(this);
-    let title = t.attr('original-title');
-    copyToClipboard($(this).data('to-copy'));
-    t.tooltip('hide')
-        .attr('data-original-title', "copied !")
-        .tooltip('show')
-    setTimeout(function () {
-        // t.tooltip('toggleEnabled');
-        t.tooltip('hide')
-            .attr('data-original-title', title)
-            .tooltip('show')
-    }, 1000);
-
-    return false;
-});
-
 $("[data-toggle=\"tooltip\"]").tooltip({delay:100});
 
 $(document).on('click', '.open-download-buttons', function () {
