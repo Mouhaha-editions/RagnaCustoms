@@ -13,12 +13,13 @@ require('../js/plugins/ajax_link');
 require('../js/plugins/rating');
 
 export default class extends Controller {
-    static targets = ['img', 'background']
+    static targets = ['img', 'background', 'info']
     ragna = null;
 
     connect() {
-        $('.select2entity[data-autostart="true"]').select2entity();
-        $('.select2').select2();
+        average(this.imgTarget.src, {amount: 1}).then(color => {
+            $("body").attr('style', " background: radial-gradient(100% 100% at 0% 0%, rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.2) 0%, rgba(0, 0, 0, 0) 100%), #2B2B2B;");
+        });
     }
 
     disconnect() {

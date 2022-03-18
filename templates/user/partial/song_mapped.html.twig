@@ -10,7 +10,7 @@
         <div class="col-md-3">
             <div class="user-picture">
                 <img {{ stimulus_target('mapper-profile', 'img') }} src="{{ user.gravatar }}"
-                                                                    class="avatar mb-4 img-fluid"
+                                                                    class="avatar big-rounded mb-4 img-fluid"
                                                                     alt="{{ user.username }}"/>
                 <div class="stats d-flex justify-content-between small">
                     <span>{{ "%songs_length% songs mapped"|trans|replace({"%songs_length%":user.songs|length}) }}</span>

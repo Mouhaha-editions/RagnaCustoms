@@ -10,7 +10,7 @@
         <div class="col-md-3">
             <div class="user-picture">
                 <img {{ stimulus_target('mapper-profile', 'img') }} src="{{ user.gravatar }}"
-                                                                    class="avatar mb-4 img-fluid"
+                                                                    class="avatar big-rounded mb-4 img-fluid"
                                                                     alt="{{ user.username }}"/>
                 {% if user.songs|length > 0 %}<a class="btn btn-lg btn-warning btn-block"
                    href="{{ url('mapper_profile', {username:user.username}) }}">{{ "View mapper profile"|trans }}</a>{% endif %}

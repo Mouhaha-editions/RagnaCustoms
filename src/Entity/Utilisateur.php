@@ -257,7 +257,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getGravatar(): ?string
     {
-        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=300";
+         $size=600;
+        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=".$size;
     }
 
     public function isVerified(): bool
