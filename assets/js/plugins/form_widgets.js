@@ -3,9 +3,6 @@ $(document).on('change','input[type="file"]', function (e) {
     $('.custom-file-label').html(fileName);
 });
 
-$(document).on('click', '[data-confirm]', function () {
-    return confirm($(this).data('confirm'));
-});
 
 function loadForm(content) {
     $("#form-edit").html(content);

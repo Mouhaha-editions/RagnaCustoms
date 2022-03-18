@@ -3,9 +3,6 @@ import './bootstrap'
 
 $(function () {
 
-    $(document).on('click', '[data-confirm]', function () {
-        return confirm($(this).data('confirm'));
-    });
 
     // $(document).on('focusout', 'tr', function () {
     //     let t = $(this).find('.on-hover').find('.big-buttons')
