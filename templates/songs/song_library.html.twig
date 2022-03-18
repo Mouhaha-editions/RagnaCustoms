@@ -14,10 +14,7 @@
         </div>
         <div id="song-list" class="row">
             <div class="col-md-10">
-                <button data-toggle="tooltips" title="{{ "Download this selection"|trans }}"
-                        type="submit" name="onclick_dl" value="42" class="btn btn-sm btn-success float-right mb-2"
-                        data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}">
-                    <i class="fas fa-download"></i> {{ '1 click'|trans }}</button>
+
 
                 <table class="featured-table-lg table table-sm">
                     <tr>
@@ -154,7 +151,10 @@
                     </div>
                     <button type="submit" name="search_btn" value="1"
                             class="btn btn-sm btn-block btn-info">{{ "Apply filters"|trans }}</button>
-
+                    <button data-toggle="tooltips" title="{{ "Download this selection"|trans }}"
+                            type="submit" name="onclick_dl" value="42" class="btn btn-sm btn-success btn-block float-right mb-2"
+                            data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}">
+                        <i class="fas fa-download"></i> {{ '1 click'|trans }}</button>
                 </form>
             </div>
         </div>
