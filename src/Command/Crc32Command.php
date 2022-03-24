@@ -50,7 +50,7 @@ class Crc32Command extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var SongDifficulty $song */
-        foreach($this->songRepository->findBy(["isDeleted"=>false]) AS $song) {
+        foreach($this->songRepository->findBy(["isDeleted"=>false],['name'=>'DESC']) AS $song) {
             $this->songService->processExistingFile($song);
             echo $song->getName()."\r\n";
         }

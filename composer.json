@@ -23,6 +23,7 @@
         "nicklaw5/twitch-api-php": "^4.2",
         "php-ffmpeg/php-ffmpeg": "^0.18.0",
         "pkshetlie/pagination-bundle": "^2.0",
+        "pkshetlie/phpfcrc": "dev-main",
         "sensio/framework-extra-bundle": "^6.1",
         "sentry/sentry-symfony": "^4.0",
         "stof/doctrine-extensions-bundle": "^1.6",

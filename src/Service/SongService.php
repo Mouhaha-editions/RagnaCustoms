@@ -20,6 +20,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Exception;
 use FFMpeg\FFProbe;
 use Intervention\Image\ImageManagerStatic as Image;
+use Pkshetlie\PhpUE\FCrc;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -252,8 +253,7 @@ class SongService
             $song->addSongDifficulty($diff);
             $this->em->persist($diff);
             $allowedFiles[] = $difficulty->_beatmapFilename;
-
-            $diff->setWanadevHash($this->wannadev_crc32($jsonContent));
+            $diff->setWanadevHash(Fcrc::StrCrc32($jsonContent));
 
         }
         if ($isWip != $song->getWip()) {
@@ -803,8 +803,9 @@ class SongService
             $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
             $jsonContent = file_get_contents($unzipFolder . "/" . $difficulty->_beatmapFilename);
             $diff->setTheoricalMaxScore($this->calculateTheoricalMaxScore($diff));
-            $diff->setWanadevHash($this->wannadev_crc32($jsonContent));
+            $diff->setWanadevHash(Fcrc::StrCrc32($jsonContent));
             $this->em->flush();
+            exit;
         }
 
         $this->em->flush();
