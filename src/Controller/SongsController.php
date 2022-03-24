@@ -519,9 +519,8 @@ class SongsController extends AbstractController
             $scores = $this->getDoctrine()->getRepository(Score::class)->createQueryBuilder('s')
                 ->select('s, MAX(s.score) AS HIDDEN max_score')
                 ->where('s.songDifficulty = :diff')
-                ->andWhere('s.hash = :hash')
                 ->setParameter('diff', $difficulty)
-                ->setParameter('hash', $difficulty->getSong()->getNewGuid())
+//                ->setParameter('hash', $difficulty->getSong()->getNewGuid())
                 ->groupBy('s.user')
                 ->addOrderBy('max_score', 'DESC')
             ;

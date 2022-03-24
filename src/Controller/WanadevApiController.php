@@ -37,228 +37,97 @@ class WanadevApiController extends AbstractController
 
 
     /**
-     * @Route("/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}", name="wd_api_score_get",methods={"GET"})
+     * @Route("/wanapi/score/{apiKey}/{osef}-{hash}", name="wd_api_score_simple_get",methods={"GET","POST"})
      */
-    public function score(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository,  ScoreService $scoreService, LoggerInterface $logger, $onlyMe = true): Response
+    public function scoreSimple(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger, ScoreRepository $scoreRepository, $onlyMe = true): Response
+    {
+
+        return $this->score($request, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository, $logger, $scoreRepository, false);
+    }
+
+    /**
+     * @Route("/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}", name="wd_api_score_get",methods={"GET","POST"})
+     */
+    public function score(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger, ScoreRepository $scoreRepository, $onlyMe = true): Response
     {
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
         if ($user == null) {
-
             $logger->error("API : " . $apiKey . " USER NOT FOUND");
             return new JsonResponse("NOK USER", 400);
         }
-
         configureScope(function (Scope $scope) use ($user): void {
             $scope->setUser(['username' => $user->getUsername()]);
         });
         /** @var SongDifficulty $songDiff */
         $songDiff = $songDifficultyRepository->findOneBy(['wanadevHash' => $hash]);
-        if($songDiff == null){
+        if ($songDiff == null) {
             return new JsonResponse("NOK DIFF", 400);
         }
-//if(!$onlyMe) {
-    return new JsonResponse($scoreService->getTop5Wanadev($songDiff,$user), 200);
-//}else{
-//    return new JsonResponse([$scoreService->getMyScoreWanadev($songDiff, $user)], 200);
-//}
-        //        [
-//            "rank" => $scoreService->getLeaderboardPosition($user, $songDiff,'0'),
-//            "ranking" => $scoreService->getTop5Wanadev($songDiff)
-//        ]
-    }
-    /**
-     * @Route("/wanapi/score/{apiKey}/{osef}-{hash}", name="wd_api_score_simple_get",methods={"GET"})
-     */
-    public function scoreSimple(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, LoggerInterface $logger): Response
-    {
-        return $this->score($request, $apiKey,$hash,$songDifficultyRepository,$utilisateurRepository,$scoreService, $logger, false);
-    }
+        if ($request->isMethod("post")) {
+            $data = json_decode($request->getContent(), true);
+            $em = $this->getDoctrine()->getManager();
 
-//    /**
-//     * @Route("/wd-api/score/{apiKey}", name="wd_api_score_post",methods={"POST"})
-//     */
-//    public function scorePost(Request $request, string $apiKey, DifficultyRankRepository $difficultyRankRepository, SongDifficultyRepository $songDifficultyRepository, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, UtilisateurRepository $utilisateurRepository, SongRepository $songRepository, SongService $songService, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger): Response
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $results = [];
-//        $ranked = false;
-//        $data = json_decode($request->getContent(), true);
-//
-//        /** @var Utilisateur $user */
-//        $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
-//        if ($user == null) {
-//
-//            $logger->error("API : " . $apiKey . " USER NOT FOUND");
-//            return new JsonResponse("NOK USER", 400);
-//        }
-//
-//        configureScope(function (Scope $scope) use ($user): void {
-//            $scope->setUser(['username' => $user->getUsername()]);
-//        });
-//
-//
-//        try {
-//            $song = $songRepository->findOneBy(['newGuid' => $hash]);
-//            if ($song == null) {
-//                $results[] = [
-//                    "hash" => $hash,
-//                    "level" => $level,
-//                    "message" => "Score not saved (song not found) ",
-//                    "ranked" => $ranked,
-//                    "success" => false,
-//                    "error" => "1_SONG_NOT_FOUND"
-//                ];
-//                $logger->error("API : " . $apiKey . " " . $hash . " 1_SONG_NOT_FOUND");
-//                return new JsonResponse($results, 400);
-//            }
-//            $rank = $difficultyRankRepository->findOneBy(['level' => $level]);
-//            $songDiff = $songDifficultyRepository->findOneBy([
-//                'song' => $song,
-//                "difficultyRank" => $rank
-//            ]);
-//
-//            if ($songDiff == null) {
-//                $results[] = [
-//                    "hash" => $hash,
-//                    "level" => $level,
-//                    "ranked" => $ranked,
-//                    "message" => "Score not saved (level not found) ",
-//                    "success" => false,
-//                    "error" => "2_LEVEL_NOT_FOUND"
-//                ];
-//                $logger->error("API : " . $apiKey . " " . $hash . " " . $level . " 2_LEVEL_NOT_FOUND");
-//                return new JsonResponse($results, 400);
-//            }
-//            if ($songDiff->getTheoricalMaxScore() <= 0) {
-//                $songDiff->setTheoricalMaxScore($songService->calculateTheoricalMaxScore($songDiff));
-//            }
-//
-//            $score = $scoreRepository->findOneBy([
-//                'user' => $user,
-//                'difficulty' => $level,
-//                'hash' => $hash,
-//                'season' => null
-//            ]);
-//            $scoreData = round(floatval($data['Score']) / 100, 2);
-//
-//            if ($score == null) {
-//                $score = new Score();
-//                $score->setUser($user);
-//                $score->setScore($scoreData);
-//                $score->setDifficulty($level);
-//                $score->setSong($song);
-//                $score->setSongDifficulty($songDiff);
-//                $score->setHash($hash);
-//                $score->setPercentage($data["Percentage"] ?? null);
-//                $score->setPercentage2($data["Percentage2"] ?? null);
-//                $score->setCombos($data["Combos"] ?? null);
-//                $score->setNotesHit($data["NotesHit"] ?? null);
-//                $score->setNotesMissed($data["NotesMissed"] ?? null);
-//                $score->setNotesNotProcessed($data["NotesNotProcessed"] ?? null);
-//                $score->setHitAccuracy($data["HitAccuracy"] ?? null);
-//                $score->setHitSpeed($data["HitSpeed"] ?? null);
-//                if ($songDiff->isRanked()) {
-//                    $rawPP = $this->calculateRawPP($score, $songDiff);
-//                    $score->setRawPP($rawPP);
-//                }
-//                $em->persist($score);
-//            }
-//
-//            $oldscore = $score->getScore();
-//            if ($score->getScore() <= $scoreData) {
-//                $score->setScore($scoreData);
-//                $score->setPercentage($data["Percentage"] ?? null);
-//                $score->setPercentage2($data["Percentage2"] ?? null);
-//                $score->setCombos($data["Combos"] ?? null);
-//                $score->setNotesHit($data["NotesHit"] ?? null);
-//                $score->setNotesMissed($data["NotesMissed"] ?? null);
-//                $score->setNotesNotProcessed($data["NotesNotProcessed"] ?? null);
-//                $score->setHitAccuracy($data["HitAccuracy"] ?? null);
-//                $score->setHitSpeed($data["HitSpeed"] ?? null);
-//                if ($score->getScore() >= 99000) {
-//                    $score->setScore($score->getScore() / 1000000);
-//                }
-//                if ($songDiff->isRanked()) {
-//                    $rawPP = $this->calculateRawPP($score, $songDiff);
-//                    $score->setRawPP($rawPP);
-//                }
-//
-//                $em->flush();
-//
-//                $results[] = [
-//                    "hash" => $hash,
-//                    "level" => $level,
-//                    "success" => true,
-//                    "ranked" => $ranked,
-//                    "message" => "Score saved (old score : " . $oldscore . " < new score : " . $scoreData . ") ",
-//                    "error" => "SUCCESS"
-//                ];
-//            } else {
-//                $em->flush();
-//                $results[] = [
-//                    "hash" => $hash,
-//                    "level" => $level,
-//                    "success" => true,
-//                    "ranked" => $ranked,
-//                    "message" => "Score not saved (old score : " . $oldscore . " >= new score : " . $scoreData . ")",
-//                    "error" => "SUCCESS"
-//                ];
-//            }
-//            $scoreService->archive($score);
-//
-//            $results[] = [
-//                "hash" => $hash,
-//                "level" => $level,
-//                "success" => true,
-//                "message" => "Score saved",
-//                "error" => "SUCCESS"
-//            ];
-//        } catch (Exception $e) {
-//            $results[] = [
-//                "hash" => $hash,
-//                "level" => $level,
-//                "success" => false,
-//                "error" => "3_SCORE_NOT_SAVED",
-//                "message" => "Score not saved because of an unexpected error",
-//                'detail' => $e->getMessage()
-//            ];
-//            $logger->error("API : " . $apiKey . " " . $hash . " " . $data["Level"] . " 3_SCORE_NOT_SAVED : " . $e->getMessage() . " ");
-//            return new JsonResponse($results, 400);
-//        }
-//
-//        //calculation of the ponderate PP scores
-//        if ($songDiff->isRanked()) {
-//            $totalPondPPScore = $this->calculateTotalPondPPScore($scoreRepository, $user);
-//
-//            //insert/update of the score into ranked_scores
-//            $rankedScore = $rankedScoresRepository->findOneBy([
-//                'user' => $user
-//            ]);
-//
-//            if ($rankedScore == null) {
-//                $logger->error("null");
-//            } else {
-//                $logger->error("ID : " . $rankedScore->getId() . " / USER : " . $rankedScore->getUser()->getId());
-//            }
-//
-//            if ($rankedScore == null) {
-//                $rankedScore = new RankedScores();
-//                $rankedScore->setUser($user);
-//                $rankedScore->setTotalPPScore($totalPondPPScore);
-//                $em->persist($rankedScore);
-//            }
-//            $rankedScore->setTotalPPScore($totalPondPPScore);
-//            $em->flush();
-//        }
-//
-//        return new JsonResponse($results, 200);
-//    }
+            $newScore = new Score();
+            $newScore->setUser($user);
+            $newScore->setSongDifficulty($songDiff);
+            $newScore->setScore($data['score']);
+            $newScore->setComboBlue($data['stats']['ComboBlue']);
+            $newScore->setComboYellow($data['stats']['ComboYellow']);
+            $newScore->setHit($data['stats']['Hit']);
+            $newScore->setHitDeltaAverage($data['stats']['HitDeltaAverage']);
+            $newScore->setHitPercentage($data['stats']['HitPercentage']);
+            $newScore->setMissed($data['stats']['Missed']);
+            $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
+            if ($songDiff->isRanked()) {
+                $rawPP = $this->calculateRawPP($newScore, $songDiff);
+                $newScore->setRawPP($rawPP);
+            }
+
+            $score = $scoreRepository->findOneBy([
+                'user' => $user,
+                'songDifficulty' => $songDiff
+            ]);
+
+            if ($score == null || $score->getScore() <= $newScore->getScore()) {
+                //le nouveau score est meilleur
+                if ($score != null) {
+                    $scoreService->archive($score);
+                    $em->remove($score);
+                }
+                $em->persist($newScore);
+            } else {
+                //l'ancien score est meilleur
+                $scoreService->archive($newScore);
+            }
+
+            //calculation of the ponderate PP scores
+            if ($songDiff->isRanked()) {
+                $totalPondPPScore = $this->calculateTotalPondPPScore($scoreRepository, $user);
+                //insert/update of the score into ranked_scores
+                $rankedScore = $rankedScoresRepository->findOneBy([
+                    'user' => $user
+                ]);
+
+                if ($rankedScore == null) {
+                    $rankedScore = new RankedScores();
+                    $rankedScore->setUser($user);
+                    $rankedScore->setTotalPPScore($totalPondPPScore);
+                    $em->persist($rankedScore);
+                }
+                $rankedScore->setTotalPPScore($totalPondPPScore);
+            }
+            $em->flush();
+
+        }
+
+        return new JsonResponse($scoreService->getTop5Wanadev($songDiff, $user), 200);
+    }
 
     private function calculateRawPP(Score $score, SongDifficulty $songDiff)
     {
-        $userScore = $score->getScore();
-        $songLevel = $score->getDifficulty();
+        $userScore = $score->getScore() / 100;
+        $songLevel = $score->getSongDifficulty()->getDifficultyRank()->getLevel();
         $maxSongScore = $songDiff->getTheoricalMaxScore();
         // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
         // it is ponderated by the song level

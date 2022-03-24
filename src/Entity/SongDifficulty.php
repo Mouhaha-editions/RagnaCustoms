@@ -49,8 +49,11 @@ class SongDifficulty
     private $seasons;
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songDifficulties",cascade={"persist", "remove"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $song;
+
+
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)

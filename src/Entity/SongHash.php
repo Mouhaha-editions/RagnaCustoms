@@ -21,6 +21,7 @@ class SongHash
 
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songHashes")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $Song;
 
