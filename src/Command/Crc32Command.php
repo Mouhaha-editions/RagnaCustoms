@@ -51,7 +51,7 @@ class Crc32Command extends Command
     {
         /** @var SongDifficulty $song */
         foreach($this->songRepository->findBy(["isDeleted"=>false]) AS $song) {
-            $this->songService->processFile(null, $song);
+            $this->songService->processExistingFile($song);
             echo $song->getName()."\r\n";
         }
 

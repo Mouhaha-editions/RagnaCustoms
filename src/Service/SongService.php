@@ -746,6 +746,72 @@ class SongService
         return md5($str);
     }
 
+    public function processExistingFile(Song $song)
+    {
+
+        $finalFolder = $this->kernel->getProjectDir() . "/public/songs-files/";
+        $folder = $this->kernel->getProjectDir() . "/public/tmp-song/";
+        $unzipFolder = $folder . uniqid();
+        @mkdir($unzipFolder);
+        $unzippableFile = $finalFolder . $song->getId() . ".zip";
+        $zip = new ZipArchive();
+        /** @var UploadedFile $file */
+        if ($zip->open($unzippableFile) === TRUE) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $elt = $this->remove_utf8_bom($zip->getFromIndex($i));
+                $exp = explode("/", $filename);
+                if (end($exp) != "") {
+                    $fileinfo = pathinfo($filename);
+                    if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
+                        file_put_contents($unzipFolder . "/" . strtolower($fileinfo['basename']), $elt);
+                    } else {
+                        file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
+                    }
+                }
+            }
+            $zip->close();
+        }
+        $file = $unzipFolder . "/info.dat";
+        if (!file_exists($file)) {
+            $file = $unzipFolder . "/Info.dat";
+            if (!file_exists($file)) {
+                $this->rrmdir($unzipFolder);
+                throw new Exception("The file seems to not be valid, at least info.dat is missing.");
+            }
+        }
+        $content = file_get_contents($file);
+        $json = json_decode($content);
+        if ($json == null) {
+            $this->rrmdir($unzipFolder);
+            throw new Exception("WTF? I can't read your info.dat please check the file encoding.");
+        }
+        $allowedFiles[] = $json->_coverImageFilename;
+        $allowedFiles[] = $json->_songFilename;
+
+        foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
+            $rank = $this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]);
+            $diff = $this->em->getRepository(SongDifficulty::class)->findOneBy([
+                'song' => $song,
+                'difficultyRank' => $rank
+            ]);
+            if ($diff == null) {
+                echo $song->getName() . " " . $rank->getLevel() . " non trouvée\r\n";
+            }
+            $diff->setIsRanked((bool)$diff->isRanked());
+            $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
+            $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
+            $jsonContent = file_get_contents($unzipFolder . "/" . $difficulty->_beatmapFilename);
+            $diff->setTheoricalMaxScore($this->calculateTheoricalMaxScore($diff));
+            $diff->setWanadevHash($this->wannadev_crc32($jsonContent));
+            $this->em->flush();
+        }
+
+        $this->em->flush();
+        $this->rrmdir($unzipFolder);
+        return true;
+    }
+
     public function getLastSongsPlayed($count)
     {
         return $this->em->getRepository(Song::class)->createQueryBuilder('s')->leftJoin('s.songHashes', 'song_hashes')->leftJoin(Score::class, 'score', Join::WITH, 'score.hash = song_hashes.hash')->orderBy('score.updatedAt', 'DESC')->setFirstResult(0)->setMaxResults($count)->getQuery()->getResult();
