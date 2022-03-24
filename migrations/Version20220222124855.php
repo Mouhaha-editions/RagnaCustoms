@@ -22,7 +22,7 @@ final class Version20220222124855 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('DROP TABLE IF EXISTS score_historyty');
         $this->addSql('UPDATE score SET song_difficulty_id = (SELECT sd.id FROM song_difficulty sd LEFT JOIn difficulty_rank r ON sd.difficulty_rank_id = r.id WHERE r.level = score.difficulty AND sd.song_id = score.song_id LIMIT 0,1);');
-        $this->addSql('UPDATE score_history SET song_difficulty_id = (SELECT sd.id FROM song_difficulty sd LEFT JOIn difficulty_rank r ON sd.difficulty_rank_id = r.id WHERE r.level = score_history.difficulty AND sd.song_id = score_history.song_id LIMIT 0,1);');
+//        $this->addSql('UPDATE score_history SET song_difficulty_id = (SELECT sd.id FROM song_difficulty sd LEFT JOIn difficulty_rank r ON sd.difficulty_rank_id = r.id WHERE r.level = score_history.difficulty AND sd.song_id = score_history.song_id LIMIT 0,1);');
 
     }
 

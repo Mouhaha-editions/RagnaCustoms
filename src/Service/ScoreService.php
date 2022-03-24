@@ -33,38 +33,20 @@ class ScoreService
         $hash = $songDifficulty->getSong()->getNewGuid();
 
         /** @var Score $score */
-        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")
-            ->where('s.user = :user')
-            ->andWhere('s.difficulty = :difficulty')
-            ->andWhere('s.hash = :hash')
-            ->setParameter('user', $user)
-            ->setParameter('hash', $hash)
-            ->setParameter('difficulty', $level);
+        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")->where('s.user = :user')->andWhere('s.difficulty = :difficulty')->andWhere('s.hash = :hash')->setParameter('user', $user)->setParameter('hash', $hash)->setParameter('difficulty', $level);
         if ($season) {
-            $qb->andWhere('s.season = :season')
-                ->setParameter('season', $season);
+            $qb->andWhere('s.season = :season')->setParameter('season', $season);
         }
         $qb->orderBy("s.score", 'DESC');
-        $score = $qb->setFirstResult(0)
-            ->setMaxResults(1)->getQuery()->getOneOrNullResult();
+        $score = $qb->setFirstResult(0)->setMaxResults(1)->getQuery()->getOneOrNullResult();
         if ($score == null) {
             return null;
         }
         $return['score'] = $score;
 
-        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")
-            ->select("MAX(s.score)")
-            ->where('s.difficulty = :difficulty')
-            ->andWhere("s.hash = :hash")
-            ->having("MAX(s.score) >= :score")
-            ->andWhere("s.user != :user")
-            ->setParameter('score', $score->getScore())
-            ->setParameter('user', $user)
-            ->setParameter('hash', $hash)
-            ->setParameter('difficulty', $level);
+        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")->select("MAX(s.score)")->where('s.difficulty = :difficulty')->andWhere("s.hash = :hash")->having("MAX(s.score) >= :score")->andWhere("s.user != :user")->setParameter('score', $score->getScore())->setParameter('user', $user)->setParameter('hash', $hash)->setParameter('difficulty', $level);
         if ($season) {
-            $qb->andWhere('s.season = :season')
-                ->setParameter('season', $season);
+            $qb->andWhere('s.season = :season')->setParameter('season', $season);
         }
         $qb->groupBy('s.user');
 
@@ -163,28 +145,16 @@ class ScoreService
         return (float)sqrt($variance / $num_of_elements);
     }
 
-    public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty)
+    public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty, $default = '-')
     {
         $mine = $this->em->getRepository(Score::class)->findOneBy([
             'user' => $user,
-            'songDifficulty' => $songDifficulty,
-            'hash' => $songDifficulty->getSong()->getNewGuid()
+            'songDifficulty' => $songDifficulty
         ], ["score" => "Desc"]);
         if ($mine == null) {
-            return "-";
+            return $default;
         }
-        return count($this->em->getRepository(Score::class)->createQueryBuilder("s")
-                ->select('s.id')
-                ->where('s.score > :my_score')
-                ->andWhere('s.songDifficulty = :difficulty')
-                ->andWhere('s.user != :me')
-                ->andWhere('s.hash = :hash')
-                ->setParameter('my_score', $mine->getScore())
-                ->setParameter('difficulty', $songDifficulty)
-                ->setParameter('hash', $songDifficulty->getSong()->getNewGuid())
-                ->setParameter('me', $user)
-                ->groupBy('s.user')
-                ->getQuery()->getResult()) + 1;
+        return count($this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where('s.score > :my_score')->andWhere('s.songDifficulty = :difficulty')->andWhere('s.user != :me')->andWhere('s.hash = :hash')->setParameter('my_score', $mine->getScore())->setParameter('difficulty', $songDifficulty)->setParameter('hash', $songDifficulty->getSong()->getNewGuid())->setParameter('me', $user)->groupBy('s.user')->getQuery()->getResult()) + 1;
 
 
     }
@@ -197,14 +167,7 @@ class ScoreService
         if ($mine == null) {
             return null;
         }
-        return count($this->em->getRepository(RankedScores::class)->createQueryBuilder("s")
-                ->select('s.id')
-                ->where('s.totalPPScore > :my_score')
-                ->andWhere('s.user != :me')
-                ->setParameter('my_score', $mine->getTotalPPScore())
-                ->setParameter('me', $user)
-                ->groupBy('s.user')
-                ->getQuery()->getResult()) + 1;
+        return count($this->em->getRepository(RankedScores::class)->createQueryBuilder("s")->select('s.id')->where('s.totalPPScore > :my_score')->andWhere('s.user != :me')->setParameter('my_score', $mine->getTotalPPScore())->setParameter('me', $user)->groupBy('s.user')->getQuery()->getResult()) + 1;
 
 
     }
@@ -237,6 +200,52 @@ class ScoreService
             $scoreHistory->setRawPP($score->getRawPP());
             $this->em->flush();
         }
+    }
+
+    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user)
+    {
+        $scores = $this->em->getRepository(Score::class)->createQueryBuilder("s")->where("s.songDifficulty = :diff ")->setParameter('diff', $songDiff)->orderBy('s.score', "DESC")->setMaxResults(5)->setFirstResult(0)->getQuery()->getResult();
+        $results = [];
+        foreach ($scores as $k => $score) {
+            $results[] = $this->getFormattedRank($score, $k + 1);
+        }
+        $place = $this->getLeaderboardPosition($user,$songDiff);
+        $score = null;
+        if($place>5) {
+            $score = $this->em->getRepository(Score::class)
+                ->createQueryBuilder("s")
+                ->where("s.songDifficulty = :diff ")
+                ->andWhere("s.user = :user ")
+                ->setParameter('diff', $songDiff)
+                ->setParameter('user', $user)
+                ->orderBy('s.score', "DESC")->setMaxResults(1)->setFirstResult(0)->getQuery()->getOneOrNullResult();
+            $results[] = $this->getFormattedRank($score,$place);
+
+        }
+
+        return $results;
+    }
+
+    public function getFormattedRank(Score $score, int $rank)
+    {
+        return [
+            "platform" => "Ragnacustoms.com",
+            "user" => $score->getUser()->getId(),
+            "score" => $score->getScore()*100,
+            "created_at" => "2022-01-26T10:31:30.658535Z",
+            "pseudo" => $score->getUser()->getUsername(),
+            "country" => "fr",
+            "stats" => [
+                "ComboBlue" => 0,
+                "ComboYellow" => 0,
+                "Hit" => 0,
+                "HitDeltaAverage" => 0,
+                "HitPercentage" => 0,
+                "Missed" => 0,
+                "PercentageOfPerfects" => 0
+            ],
+            "rank" => $rank
+        ];
     }
 }
 

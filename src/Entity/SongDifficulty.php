@@ -77,6 +77,11 @@ class SongDifficulty
      */
     private $scoreHistories;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $wanadevHash;
+
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
@@ -335,6 +340,18 @@ class SongDifficulty
     public function setIsRanked(?bool $isRanked): self
     {
         $this->isRanked = $isRanked;
+
+        return $this;
+    }
+
+    public function getWanadevHash(): ?string
+    {
+        return $this->wanadevHash;
+    }
+
+    public function setWanadevHash(?string $wanadevHash): self
+    {
+        $this->wanadevHash = $wanadevHash;
 
         return $this;
     }
