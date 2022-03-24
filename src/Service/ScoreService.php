@@ -236,7 +236,7 @@ class ScoreService
     {
         return [
             "platform" => "Ragnacustoms.com",
-            "user" => $score->getUser()->getId(),
+            "user" => '"'.$score->getUser()->getId().'"',
             "score" => $score->getScore(),
             "created_at" => "2022-01-26T10:31:30.658535Z",
             "pseudo" => $score->getUser()->getUsername(),
