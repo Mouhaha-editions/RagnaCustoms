@@ -154,10 +154,16 @@ class ScoreService
         if ($mine == null) {
             return $default;
         }
-        return count($this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where('s.score > :my_score')->andWhere('s.songDifficulty = :difficulty')->andWhere('s.user != :me')->andWhere('s.hash = :hash')->setParameter('my_score', $mine->getScore())->setParameter('difficulty', $songDifficulty)->setParameter('hash', $songDifficulty->getSong()->getNewGuid())->setParameter('me', $user)->groupBy('s.user')->getQuery()->getResult()) + 1;
-
-
+        return count($this->em->getRepository(Score::class)
+                ->createQueryBuilder("s")
+                ->select('s.id')->where('s.score > :my_score')
+                ->andWhere('s.songDifficulty = :difficulty')
+                ->andWhere('s.user != :me')
+                ->setParameter('my_score', $mine->getScore())->setParameter('difficulty', $songDifficulty)
+                ->setParameter('me', $user)
+                ->groupBy('s.user')->getQuery()->getResult()) + 1;
     }
+
 
     public function getGeneralLeaderboardPosition(UserInterface $user)
     {
@@ -231,21 +237,32 @@ class ScoreService
         return [
             "platform" => "Ragnacustoms.com",
             "user" => $score->getUser()->getId(),
-            "score" => $score->getScore()*100,
+            "score" => $score->getScore(),
             "created_at" => "2022-01-26T10:31:30.658535Z",
             "pseudo" => $score->getUser()->getUsername(),
             "country" => "fr",
             "stats" => [
-                "ComboBlue" => 0,
-                "ComboYellow" => 0,
-                "Hit" => 0,
-                "HitDeltaAverage" => 0,
-                "HitPercentage" => 0,
-                "Missed" => 0,
-                "PercentageOfPerfects" => 0
+                "ComboBlue" => $score->getComboBlue(),
+                "ComboYellow" => $score->getComboYellow(),
+                "Hit" => $score->getHit(),
+                "HitDeltaAverage" =>  $score->getHitDeltaAverage(),
+                "HitPercentage" =>  $score->getHitPercentage(),
+                "Missed" => $score->getMissed(),
+                "PercentageOfPerfects" => $score->getPercentageOfPerfects()
             ],
             "rank" => $rank
         ];
+    }
+
+    public function getTheoricalRank(SongDifficulty $songDifficulty, ?float $getScore )
+    {
+        return count($this->em->getRepository(Score::class)
+                ->createQueryBuilder("s")->select('s.id')
+                ->where('s.score > :my_score')
+                ->andWhere('s.songDifficulty = :difficulty')
+                ->setParameter('my_score', $getScore)
+                ->setParameter('difficulty', $songDifficulty)
+                ->groupBy('s.user')->getQuery()->getResult()) + 1;
     }
 }
 

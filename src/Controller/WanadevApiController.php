@@ -117,7 +117,12 @@ class WanadevApiController extends AbstractController
                 }
                 $rankedScore->setTotalPPScore($totalPondPPScore);
             }
+
             $em->flush();
+            return new JsonResponse([
+                "rank"=>$scoreService->getTheoricalRank($songDiff,$newScore->getScore()),
+                "ranking"=>$scoreService->getTop5Wanadev($songDiff, $user)
+            ], 200);
 
         }
 
