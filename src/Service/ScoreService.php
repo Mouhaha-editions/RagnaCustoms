@@ -198,6 +198,11 @@ class ScoreService
             $scoreHistory->setMissed($score->getMissed());
             $scoreHistory->setExtra($score->getExtra());
             $scoreHistory->setPercentageOfPerfects($score->getPercentageOfPerfects());
+            $scoreHistory->setSession($score->getSession());
+            $scoreHistory->setCountry($score->getCountry());
+            $scoreHistory->setUserRagnarock($score->getUserRagnarock());
+            $scoreHistory->setPlateform($score->getPlateform());
+
             $this->em->persist($scoreHistory);
             if($delete){
                 if($score->getId() != null){

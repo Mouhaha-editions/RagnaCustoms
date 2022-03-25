@@ -72,6 +72,10 @@ class WanadevApiController extends AbstractController
             $newScore->setUser($user);
             $newScore->setSongDifficulty($songDiff);
             $newScore->setScore($data['score']);
+            $newScore->setSession($data['session']);
+            $newScore->setCountry($data['country']);
+            $newScore->setUserRagnarock($data['user']);
+            $newScore->setPlateform($data['plateform']);
             $newScore->setComboBlue($data['stats']['ComboBlue']);
             $newScore->setComboYellow($data['stats']['ComboYellow']);
             $newScore->setHit($data['stats']['Hit']);
