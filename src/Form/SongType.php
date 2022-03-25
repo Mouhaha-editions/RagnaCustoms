@@ -39,12 +39,18 @@ class SongType extends AbstractType
                 "attr" => ["placeholder " => "https://youtu..."],
                 'required' => false
             ])
-            ->add('categoryTags', EntityType::class, [
+            ->add('categoryTags', Select2EntityType::class, [
                 "class" => SongCategory::class,
+                'remote_route' => 'api_song_categories',
                 'multiple' => true,
-                'choice_label'=>"label",
                 "label" => "Categories",
+                'primary_key' => 'id',
+                'text_property' => 'label',
+                'minimum_input_length' => 0,
+                'allow_clear' => true,
+                'delay' => 250,
                 'placeholder' => 'Select a category, or more ..',
+
                 'required' => true
             ])
             ->add('approximativeDuration', HiddenType::class, [

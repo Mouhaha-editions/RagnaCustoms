@@ -69,11 +69,10 @@
                 {% if is_granted('ROLE_USER') %}
                 <li class="nav-item">
                     <a href="#"
-                       data-toggle="modal"
-                       data-target="#editSong"
+                       data-modal="#editSong"
                        data-refresh="true"
                        data-url="{{ url('new_song') }}"
-                       class="btn btn-blue float-right mt-2 ml-4 mr-4 ajax-load preview-popup">
+                       class="btn btn-blue float-right mt-2 ml-4 mr-4 ajax-modal-form">
                         {{ "Submit a map"|trans }}
                     </a>
                 </li>

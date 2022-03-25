@@ -6,7 +6,6 @@ import {RagnaBeat} from "../js/ragna-beat/ragnabeat";
 import 'select2/dist/js/select2.full.min';
 
 require('../../public/bundles/tetranzselect2entity/js/select2entity');
-import '../js/plugins/modal_ajax';
 require('../js/base');
 require('../js/plugins/modal_ajax');
 require('../js/plugins/ajax_link');

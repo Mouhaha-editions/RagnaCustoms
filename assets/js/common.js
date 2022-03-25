@@ -10,6 +10,3 @@ import '../../assets/js/plugins/copy_to_clipboard';
 import '../../assets/js/plugins/modal_ajax';
 import '../../assets/js/plugins/playlist';
 
-
-
-

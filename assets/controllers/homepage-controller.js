@@ -12,9 +12,6 @@ window.$ = window.jQuery = $;
 
 export default class extends Controller {
     connect() {
-        // const swup = new Swup();
-
-
 
     }
 

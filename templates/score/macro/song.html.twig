@@ -10,7 +10,9 @@
                 </a>
                 <a class="edit-btn btn btn-sm btn-info ajax-modal-form"
                    data-modal="#editSong" title="{{ "edit"|trans }}"
-                   href="{{ url('edit_song',{id:song.id}) }}">
+                   data-url="{{ url('edit_song',{id:song.id}) }}"
+                   href="{{ url('edit_song',{id:song.id}) }}"
+                >
                     <i class="fas fa-edit"></i>
                 </a>
                 <a title="see statistics" class="img" href="{{ url('song_detail',{slug:song.slug}) }}#statistics">

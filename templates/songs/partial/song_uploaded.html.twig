@@ -49,11 +49,10 @@
     <td class="download">
         {% if not song.isRanked() %}
         <a href="#"
-           data-toggle="modal"
-           data-target="#editSong"
-           data-refresh="true"
-           data-url="{{ url('edit_song',{id:song.id}) }}"
-           class="btn btn-info btn-sm float-right ajax-load preview-popup">
+               data-modal="#editSong"
+               data-refresh="true"
+               data-url="{{ url('edit_song',{id:song.id}) }}"
+               class="btn btn-blue float-right mt-2 ml-4 mr-4 ajax-modal-form">
             <i class="fas fa-edit"></i>
         </a>
         {% else %}

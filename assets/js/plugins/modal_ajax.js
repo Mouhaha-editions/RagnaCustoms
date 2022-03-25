@@ -52,17 +52,3 @@ $(document).on('click', ".ajax-load", function () {
     return false;
 
 });
-
-$(document).on('click', ".ajax-modal-form", function () {
-    let t = $(this);
-    $(t.data('modal')).modal('show');
-    $.ajax({
-        url: t.attr('href'),
-        success: function (data) {
-            loadForm(data.response);
-            $('.select2entity').select2entity();
-        }
-    });
-    return false;
-
-});

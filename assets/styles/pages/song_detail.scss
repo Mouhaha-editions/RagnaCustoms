@@ -114,6 +114,9 @@
   .mapper {
     font-size: 20px;
     color: $danger;
+    a{
+      color: $danger;
+    }
   }
 
   .description {
