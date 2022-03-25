@@ -178,32 +178,32 @@ class ScoreService
 
     }
 
-    public function archive(?Score $score)
+    public function archive(?Score $score, $delete = false)
     {
         $scoreHistory = $this->em->getRepository(ScoreHistory::class)->findOneBy([
             'user' => $score->getUser(),
-            'difficulty' => $score->getDifficulty(),
-            'hash' => $score->getHash(),
-            "score" => $score->getScore()
+            'songDifficulty' => $score->getSongDifficulty()
         ]);
         if ($scoreHistory == null) {
             $scoreHistory = new ScoreHistory();
             $scoreHistory->setUser($score->getUser());
-            $scoreHistory->setDifficulty($score->getDifficulty());
-            $scoreHistory->setSong($score->getSong());
             $scoreHistory->setSongDifficulty($score->getSongDifficulty());
-            $scoreHistory->setHash($score->getHash());
             $scoreHistory->setScore($score->getScore());
-            $this->em->persist($scoreHistory);
-            $scoreHistory->setPercentage($score->getPercentage());
-            $scoreHistory->setPercentage2($score->getPercentage2());
-            $scoreHistory->setCombos($score->getCombos());
-            $scoreHistory->setNotesHit($score->getNotesHit());
-            $scoreHistory->setNotesMissed($score->getNotesMissed());
-            $scoreHistory->setNotesNotProcessed($score->getNotesNotProcessed());
-            $scoreHistory->setHitAccuracy($score->getHitAccuracy());
-            $scoreHistory->setHitSpeed($score->getHitSpeed());
             $scoreHistory->setRawPP($score->getRawPP());
+            $scoreHistory->setComboBlue($score->getComboBlue());
+            $scoreHistory->setComboYellow($score->getComboYellow());
+            $scoreHistory->setHit($score->getHit());
+            $scoreHistory->setHitDeltaAverage($score->getHitDeltaAverage());
+            $scoreHistory->setHitPercentage($score->getHitPercentage());
+            $scoreHistory->setMissed($score->getMissed());
+            $scoreHistory->setExtra($score->getExtra());
+            $scoreHistory->setPercentageOfPerfects($score->getPercentageOfPerfects());
+            $this->em->persist($scoreHistory);
+            if($delete){
+                if($score->getId() != null){
+                    $this->em->remove($score);
+                }
+            }
             $this->em->flush();
         }
     }

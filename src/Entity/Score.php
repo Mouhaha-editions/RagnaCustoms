@@ -52,6 +52,10 @@ class Score
      */
     private $percentageOfPerfects;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $extra;
 
     /**
      * @deprecated
@@ -559,4 +563,21 @@ class Score
     {
         $this->hitDeltaAverage = $hitDeltaAverage;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getExtra()
+    {
+        return $this->extra;
+    }
+
+    /**
+     * @param mixed $extra
+     */
+    public function setExtra($extra): void
+    {
+        $this->extra = $extra;
+    }
+
 }

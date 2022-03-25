@@ -19,6 +19,39 @@ class ScoreHistory
     private $id;
 
     use TimestampableEntity;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $comboBlue;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $comboYellow;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $hit;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $hitDeltaAverage;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $hitPercentage;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $missed;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $percentageOfPerfects;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $extra;
 
     /**
      * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="scoreHistories")
@@ -281,6 +314,134 @@ class ScoreHistory
         $this->rawPP = $rawPP;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComboBlue()
+    {
+        return $this->comboBlue;
+    }
+
+    /**
+     * @param mixed $comboBlue
+     */
+    public function setComboBlue($comboBlue): void
+    {
+        $this->comboBlue = $comboBlue;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComboYellow()
+    {
+        return $this->comboYellow;
+    }
+
+    /**
+     * @param mixed $comboYellow
+     */
+    public function setComboYellow($comboYellow): void
+    {
+        $this->comboYellow = $comboYellow;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHit()
+    {
+        return $this->hit;
+    }
+
+    /**
+     * @param mixed $hit
+     */
+    public function setHit($hit): void
+    {
+        $this->hit = $hit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHitDeltaAverage()
+    {
+        return $this->hitDeltaAverage;
+    }
+
+    /**
+     * @param mixed $hitDeltaAverage
+     */
+    public function setHitDeltaAverage($hitDeltaAverage): void
+    {
+        $this->hitDeltaAverage = $hitDeltaAverage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHitPercentage()
+    {
+        return $this->hitPercentage;
+    }
+
+    /**
+     * @param mixed $hitPercentage
+     */
+    public function setHitPercentage($hitPercentage): void
+    {
+        $this->hitPercentage = $hitPercentage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMissed()
+    {
+        return $this->missed;
+    }
+
+    /**
+     * @param mixed $missed
+     */
+    public function setMissed($missed): void
+    {
+        $this->missed = $missed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPercentageOfPerfects()
+    {
+        return $this->percentageOfPerfects;
+    }
+
+    /**
+     * @param mixed $percentageOfPerfects
+     */
+    public function setPercentageOfPerfects($percentageOfPerfects): void
+    {
+        $this->percentageOfPerfects = $percentageOfPerfects;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExtra()
+    {
+        return $this->extra;
+    }
+
+    /**
+     * @param mixed $extra
+     */
+    public function setExtra($extra): void
+    {
+        $this->extra = $extra;
     }
 
 }

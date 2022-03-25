@@ -78,6 +78,7 @@ class WanadevApiController extends AbstractController
             $newScore->setHitDeltaAverage($data['stats']['HitDeltaAverage']);
             $newScore->setHitPercentage($data['stats']['HitPercentage']);
             $newScore->setMissed($data['stats']['Missed']);
+            $newScore->setExtra(json_encode($data['extra']));
             $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
             if ($songDiff->isRanked()) {
                 $rawPP = $this->calculateRawPP($newScore, $songDiff);
@@ -112,7 +113,6 @@ class WanadevApiController extends AbstractController
                 if ($rankedScore == null) {
                     $rankedScore = new RankedScores();
                     $rankedScore->setUser($user);
-                    $rankedScore->setTotalPPScore($totalPondPPScore);
                     $em->persist($rankedScore);
                 }
                 $rankedScore->setTotalPPScore($totalPondPPScore);
