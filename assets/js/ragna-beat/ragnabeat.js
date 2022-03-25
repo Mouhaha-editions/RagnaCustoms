@@ -87,7 +87,7 @@ export class RagnaBeat {
 
                 for (let i in t.audio_drums) {
                     t.audio_drums[i].src = t.drumSounds[0].url;
-                    t.audio_drums[i].volume = $("#drum-vol-control").val() / 100;
+                    t.audio_drums[i].volume = $(t.uid + " #drum-vol-control").val() / 100;
                 }
 
                 t.c = $(t.uid + " #ragna-canvas")[0];

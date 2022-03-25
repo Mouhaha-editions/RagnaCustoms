@@ -1,7 +1,6 @@
 import {Controller} from '@hotwired/stimulus';
 import 'jquery'
 import Swup from 'swup';
-import {RagnaBeat} from "../js/ragna-beat/ragnabeat";
 import 'bootstrap';
 
 require('../js/base');

@@ -1,6 +1,5 @@
 import {Controller} from '@hotwired/stimulus';
 import 'jquery'
-import {RagnaBeat} from "../js/ragna-beat/ragnabeat";
 
 import 'select2/dist/js/select2.full.min';
 require('../../public/bundles/tetranzselect2entity/js/select2entity');
