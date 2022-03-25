@@ -66,6 +66,9 @@ body {
 #swup .container{
   padding-bottom:100px;
 }
+#swup .darker .container{
+  padding-bottom:0;
+}
 .navbar {
   position: relative;
   z-index: 1000;
