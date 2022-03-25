@@ -10,8 +10,8 @@ $(document).on('click', ".ajax-load", function () {
         },
         success: function (data) {
             body.html(data.response);
-            $('.select2entity[data-autostart="true"]').select2entity();
-            $('.select2').select2();
+            $('#editSong .select2entity[data-autostart="true"]').select2entity({dropdownParent: "#editSong"});
+            $('#editSong .select2').select2({dropdownParent: "#editSong"});
 
             $(".rating-list").on('change', function () {
                 let t = $(this);

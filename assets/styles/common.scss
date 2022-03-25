@@ -1,6 +1,14 @@
 @import 'variables';
 @import "~bootstrap";
+@import "~select2/dist/css/select2.min.css";
+.select2-results {
+  color: $bg;
+}
 
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background: $bg-lighter;
+  border-color: $bg;
+}
 @media (min-width: 1200px) {
   .container-xl, .container-lg, .container-md, .container-sm, .container {
     max-width: 1440px;

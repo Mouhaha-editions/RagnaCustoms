@@ -20,6 +20,7 @@ class ScoreHistory
     private $id;
 
     use TimestampableEntity;
+
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -31,7 +32,27 @@ class ScoreHistory
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
+    private $combos;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $difficulty;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $extra;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $hash;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
     private $hit;
+    /**
+     * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
+     */
+    private $hitAccuracy;
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -41,40 +62,13 @@ class ScoreHistory
      */
     private $hitPercentage;
     /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $hitSpeed;
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $missed;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $percentageOfPerfects;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $extra;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="scoreHistories")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $score;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $difficulty;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $hash;
-
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -89,48 +83,49 @@ class ScoreHistory
      * @ORM\Column(type="integer", nullable=true)
      */
     private $notesNotProcessed;
-
-    /**
-     * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
-     */
-    private $hitAccuracy;
-
     /**
      * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
      */
     private $percentage;
-
     /**
      * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
      */
     private $percentage2;
-
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
-     */
-    private $hitSpeed;
-
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $combos;
-
+    private $percentageOfPerfects;
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $rawPP;
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $score;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $session;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $dateRagnarock;
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="scoreHistories")
      * @ORM\Column(nullable=true)
      */
     private $song;
-
     /**
      * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scoreHistories")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $songDifficulty;
-
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="scoreHistories")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $rawPP;
+    private $user;
 
     public function getId(): ?int
     {
@@ -184,7 +179,6 @@ class ScoreHistory
 
         return $this;
     }
-
 
     public function getNotesHit(): ?int
     {
@@ -445,12 +439,108 @@ class ScoreHistory
     {
         $this->extra = $extra;
     }
+
     public function getScoreDisplay(): ?string
     {
-        return $this->score/100;
+        return $this->score / 100;
     }
+
     public function getHumanUpdatedAt(): ?string
     {
         return StatisticService::dateDiplayer($this->updatedAt);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * @param mixed $session
+     */
+    public function setSession($session): void
+    {
+        $this->session = $session;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateRagnarock()
+    {
+        return $this->dateRagnarock;
+    }
+
+    /**
+     * @param mixed $dateRagnarock
+     */
+    public function setDateRagnarock($dateRagnarock): void
+    {
+        $this->dateRagnarock = $dateRagnarock;
+    }
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $userRagnarock;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $country;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $plateform;
+
+    /**
+     * @return mixed
+     */
+    public function getUserRagnarock()
+    {
+        return $this->userRagnarock;
+    }
+
+    /**
+     * @param mixed $userRagnarock
+     */
+    public function setUserRagnarock($userRagnarock): void
+    {
+        $this->userRagnarock = $userRagnarock;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param mixed $country
+     */
+    public function setCountry($country): void
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlateform()
+    {
+        return $this->plateform;
+    }
+
+    /**
+     * @param mixed $plateform
+     */
+    public function setPlateform($plateform): void
+    {
+        $this->plateform = $plateform;
+    }
+
 }

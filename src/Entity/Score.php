@@ -29,6 +29,22 @@ class Score
      */
     private $comboBlue;
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $session;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $userRagnarock;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $country;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $plateform;
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $comboYellow;
@@ -584,5 +600,90 @@ class Score
     {
         $this->extra = $extra;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * @param mixed $session
+     */
+    public function setSession($session): void
+    {
+        $this->session = $session;
+    }
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $dateRagnarock;
+
+    /**
+     * @return mixed
+     */
+    public function getDateRagnarock()
+    {
+        return $this->dateRagnarock;
+    }
+
+    /**
+     * @param mixed $dateRagnarock
+     */
+    public function setDateRagnarock($dateRagnarock): void
+    {
+        $this->dateRagnarock = $dateRagnarock;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserRagnarock()
+    {
+        return $this->userRagnarock;
+    }
+
+    /**
+     * @param mixed $userRagnarock
+     */
+    public function setUserRagnarock($userRagnarock): void
+    {
+        $this->userRagnarock = $userRagnarock;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param mixed $country
+     */
+    public function setCountry($country): void
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlateform()
+    {
+        return $this->plateform;
+    }
+
+    /**
+     * @param mixed $plateform
+     */
+    public function setPlateform($plateform): void
+    {
+        $this->plateform = $plateform;
+    }
+
 
 }

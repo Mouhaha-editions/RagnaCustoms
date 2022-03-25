@@ -235,12 +235,13 @@ class ScoreService
     public function getFormattedRank(Score $score, int $rank)
     {
         return [
-            "platform" => "Ragnacustoms.com",
-            "user" => 'user'.$score->getUser()->getId(),
+            "platform" => $score->getPlateform(),
+            "user" => $score->getUserRagnarock(),
             "score" => $score->getScore(),
-            "created_at" => "2022-01-26T10:31:30.658535Z",
+            "created_at" => $score->getDateRagnarock(),
+            "session" => $score->getSession(),
             "pseudo" => $score->getUser()->getUsername(),
-            "country" => "fr",
+            "country" => $score->getCountry(),
             "stats" => [
                 "ComboBlue" => $score->getComboBlue(),
                 "ComboYellow" => $score->getComboYellow(),
