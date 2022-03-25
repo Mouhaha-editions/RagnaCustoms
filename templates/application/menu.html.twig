@@ -9,6 +9,50 @@
         <div class="col-12 mt-4">
             <h1>All Our Softwares</h1>
         </div>
+
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="overlay"></div>
+                    <img src="{{ asset('apps/ragna.jpg') }}" >
+                    <h2>{{ "RagnaCustoms.exe"|trans }}</h2>
+                </div>
+                <div class="card-body">
+                    <p>by installing this application you enable the one click download, then you also can use it for twitch requests and streaming overlay.</p>
+                    <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases" target ="_blank" class="btn btn-block btn-lg btn-primary">Go to download page <i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="overlay"></div>
+                    <img src="{{ asset('apps/overlay.jpg') }}">
+                    <h2>{{ "Overlay editor"|trans }}</h2>
+                </div>
+                <div class="card-body">
+                    <p>An online tool to edit your streaming overlay. It's not a perfect but it works, you need an account on the website and the application ragnacustoms.exe</p>
+                    <a href="{{ path('overlay_editor') }}" class="btn btn-block btn-lg btn-primary">Edit my overlay</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="overlay"></div>
+                    <img src="{{ asset('apps/mapevaluator.jpg') }}">
+                    <h2>{{ "Map evaluator"|trans }} <span class="badge badge-info">beta</span></h2>
+                </div>
+                <div class="card-body">
+                    <p>Online tool to check level of the custom song you made. It's a beta test for mapper who really don't know how to define the level of a song. It can be wrong, it don't have feelings.</p>
+                    <a href="{{ path('map_evaluator') }}" class="btn btn-block btn-lg btn-primary">Try my map</a>
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-3">
             <div class="card">
                 <div class="card-header">
@@ -23,48 +67,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <div class="overlay"></div>
-                    <img src="{{ asset('apps/ragna.jpg') }}" >
-                    <h2>{{ "RagnaCustoms.exe"|trans }}</h2>
-                </div>
-                <div class="card-body">
-                    <p>Application to download, requests and overlay for streaming.</p>
-                    <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases" target ="_blank" class="btn btn-block btn-lg btn-primary">Go to download page <i class="fas fa-external-link-alt"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <div class="overlay"></div>
-                    <img src="{{ asset('apps/overlay.jpg') }}">
-                    <h2>{{ "Overlay editor"|trans }}</h2>
-                </div>
-                <div class="card-body">
-                    <p>Online tool to edit your streaming overlay, need ragnacustoms.exe</p>
-                    <a href="{{ path('overlay_editor') }}" class="btn btn-block btn-lg btn-primary">Edit my overlay</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <div class="overlay"></div>
-                    <img src="{{ asset('apps/mapevaluator.jpg') }}">
-                    <h2>{{ "Map evaluator"|trans }} <span class="badge badge-info">beta</span></h2>
-                </div>
-                <div class="card-body">
-                    <p>Online tool to check level of the custom song you made.</p>
-                    <a href="{{ path('map_evaluator') }}" class="btn btn-block btn-lg btn-primary">Try my map</a>
-                </div>
-            </div>
-        </div>
-
     </div>
     </div>
 {% endblock %}
