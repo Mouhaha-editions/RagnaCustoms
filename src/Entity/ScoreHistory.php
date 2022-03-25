@@ -65,12 +65,12 @@ class ScoreHistory
     private $score;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $difficulty;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $hash;
 
@@ -116,6 +116,7 @@ class ScoreHistory
 
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="scoreHistories")
+     * @ORM\Column(nullable=true)
      */
     private $song;
 
