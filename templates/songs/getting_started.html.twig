@@ -49,10 +49,12 @@
                         </div>
                         <br/>
                         <span>Step 2:</span> Edit this file to add following :<br/>
-                        <div class="code">
-                            [/Script/Ragnarock.RagnarockSettings]<br/>
-                            CustomApiURLs="https://v2.ragnacustoms.com/wanapi/score/{% if is_granted("ROLE_USER") %}{{ app.user.apiKey }}{% else %}
-                            <a href="{{ url('user') }}">your api key</a><br/>{% endif %}"
+                        <div>
+                            <div class="code">
+                                [/Script/Ragnarock.RagnarockSettings]<br/>
+                                CustomApiURLs="https://v2.ragnacustoms.com/wanapi/score/{% if is_granted("ROLE_USER") %}{{ app.user.apiKey }}{% else %}
+                                <a href="{{ url('user') }}">your api key</a>{% endif %}"
+                            </div>
                         </div>
                         <span>Step 3:</span> Save the file and start the game<br/>
                         <span>Step 4:</span> In advanced menu you have to check "Allow Sending Custom Songs Scores"<br/>
