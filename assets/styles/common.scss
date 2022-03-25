@@ -63,7 +63,9 @@ body {
 .copy-clipboard {
   cursor: pointer;
 }
-
+#swup .container{
+  padding-bottom:100px;
+}
 .navbar {
   position: relative;
   z-index: 1000;
