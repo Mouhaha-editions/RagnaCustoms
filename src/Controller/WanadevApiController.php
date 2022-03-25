@@ -101,6 +101,7 @@ class WanadevApiController extends AbstractController
                 //l'ancien score est meilleur
                 $scoreService->archive($newScore);
             }
+            $em->flush();
 
             //calculation of the ponderate PP scores
             if ($songDiff->isRanked()) {
