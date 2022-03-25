@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SongRepository;
+use App\Service\StatisticService;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -1060,7 +1061,7 @@ class Song
      */
     public function getTimeAgo()
     {
-        return $this->getLastDateUpload()->format('Y-m-d');
+        return StatisticService::dateDiplayer($this->getLastDateUpload());
     }
 
     /**

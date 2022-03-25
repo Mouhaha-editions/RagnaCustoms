@@ -37,7 +37,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SongsController extends AbstractController
 {
-    private $paginate = 51;
+    private $paginate = 30;
 
 
     /**
@@ -152,6 +152,7 @@ class SongsController extends AbstractController
      */
     public function library(Request $request, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
     {
+        $filters = [];
         $qb = $this->getDoctrine()
             ->getRepository(Song::class)
             ->createQueryBuilder("s")
@@ -164,6 +165,7 @@ class SongsController extends AbstractController
 
         if ($request->get('display_wip', null) != null) {
             //$qb->andWhere("s.wip = true AND s.wip != true ");
+            $filters[] = "display wip";
         }else{
             $qb->andWhere("s.wip != true");
         }
@@ -171,31 +173,30 @@ class SongsController extends AbstractController
 
         if ($request->get('only_ranked', null) != null) {
             $qb->andWhere("song_difficulties.isRanked = true");
+            $filters[] = "only ranked";
+
         }
         if ($request->get('downloads_filter_difficulties', null)) {
             $qb->leftJoin('song_difficulties.difficultyRank', 'rank');
             switch ($request->get('downloads_filter_difficulties')) {
                 case 1:
                     $qb->andWhere('rank.level BETWEEN 1 and 3');
+                    $filters[] = "lvl 1 to 3";
+
                     break;
                 case 2 :
                     $qb->andWhere('rank.level BETWEEN 4 and 7');
+                    $filters[] = "lvl 4 to 7";
                     break;
                 case 3 :
                     $qb->andWhere('rank.level BETWEEN 8 and 10');
+                    $filters[] = "lvl 8 to 10";
                     break;
                 case 6 :
                     $qb->andWhere('rank.level > 10');
+                    $filters[] = "lvl over 10";
                     break;
-                case 4 :
-                    $qb->leftJoin('song_difficulties.seasons', 'season');
-                    $qb->andWhere('season.startDate <= :now ')
-                        ->andWhere('season.endDate >= :now')
-                        ->setParameter('now', new DateTime());
-                    break;
-                case 5 :
-                    $wip = true;
-                    break;
+
             }
         }
 
@@ -203,10 +204,14 @@ class SongsController extends AbstractController
         $categories = $request->get('downloads_filter_categories', null);
         if ($categories != null) {
             $qb->leftJoin('s.categoryTags', 't');
-            foreach ($categories as $k => $v) {
+
+           $cats = [];
+           foreach ($categories as $k => $v) {
                 $qb->andWhere("t.id = :tag$k")
                     ->setParameter("tag$k", $v);
+                $cats[] = $v;
             }
+            $filters[] = "categories spécifiques";
         }
 
         if ($request->get('downloads_filter_order', null)) {
@@ -244,9 +249,12 @@ class SongsController extends AbstractController
             switch ($request->get('converted_maps')) {
                 case 1:
                     $qb->andWhere('(s.converted = false OR s.converted IS NULL)');
+                    $filters[] = "hide converted";
                     break;
                 case 2 :
                     $qb->andWhere('s.converted = true');
+                    $filters[] = "only converted";
+
                     break;
             }
         }
@@ -257,14 +265,17 @@ class SongsController extends AbstractController
                 case 1:
                     $qb->andWhere('(s.lastDateUpload >= :last7days)')
                         ->setParameter('last7days', (new DateTime())->modify('-7 days'));
+                    $filters[] = "last 7 days";
                     break;
                 case 2 :
                     $qb->andWhere('(s.lastDateUpload >= :last15days)')
                         ->setParameter('last15days', (new DateTime())->modify('-15 days'));
+                    $filters[] = "last 15 days";
                     break;
                 case 3 :
                     $qb->andWhere('(s.lastDateUpload >= :last45days)')
                         ->setParameter('last45days', (new DateTime())->modify('-45 days'));
+                    $filters[] = "last 45 days";
                     break;
             }
         }
@@ -274,6 +285,7 @@ class SongsController extends AbstractController
                 ->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")
                 ->andHaving("count_download_user = 0")
                 ->setParameter('user', $this->getuser());
+            $filters[] = "not downloaded";
         }
         $qb->andWhere('s.moderated = true');
 
@@ -288,6 +300,8 @@ class SongsController extends AbstractController
 
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
+            $filters[] = "search: \"".$request->get('search')."\"";
+
             switch ($exp[0]) {
                 case 'mapper':
                     if (count($exp) >= 2) {
@@ -359,13 +373,16 @@ class SongsController extends AbstractController
         }
 
         $categories = $categoryRepository->createQueryBuilder("c")
+            ->leftJoin("c.songs",'s')
             ->where('c.isOnlyForAdmin != true')
+            ->andWhere("s.id is not null")
             ->orderBy('c.label')
             ->getQuery()->getResult();
 
         return $this->render('songs/song_library.html.twig', [
             'controller_name' => 'SongsController',
             'songs' => $pagination,
+            'filters' => $filters,
             'categories' => $categories
         ]);
     }

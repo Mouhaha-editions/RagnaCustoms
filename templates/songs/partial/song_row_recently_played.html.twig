@@ -1,5 +1,5 @@
 
-{% set song = score.song %}
+{% set song = score.songDifficulty.song %}
 <tr>
     <td>
         <div class="d-flex ">
@@ -23,13 +23,13 @@
         </div>
     </td>
     <td>
-            {{ score.score }}
+            {{ score.scoreDisplay }}
     </td>
     <td>
         {{ score.rawPP }}
     </td>
     <td class="text-grey">
-        {{ score.updatedAt.format('Y-m-d') }}&nbsp;
+        {{ score.humanUpdatedAt}}&nbsp;
     </td>
 </tr>
 

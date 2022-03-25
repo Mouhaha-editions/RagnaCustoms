@@ -15,7 +15,9 @@
         <div id="song-list" class="row">
             <div class="col-md-10">
 
-
+<div>
+    Filters : {% for filter in filters %}<span class="tag-filter">{{ filter|trans|capitalize }}</span>{% else %} {{ "no filter"|trans }}{% endfor %}
+</div>
                 <table class="featured-table-lg table table-sm">
                     <tr>
                         <th><a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.name", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"

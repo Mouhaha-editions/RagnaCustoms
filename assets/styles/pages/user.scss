@@ -9,7 +9,103 @@
     font-size: 24px;
   }
 }
+.table {
+  tr {
+    &:nth-child(2n) {
+      background: $bg-tr-pair;
 
+      &:hover {
+        background: $bg-lighter;
+      }
+    }
+  }
+
+  th {
+    font-size: 14px;
+
+    .fa {
+      font-size: 12px;
+    }
+  }
+
+  td {
+    border: none;
+  }
+}
+
+.recently-played {
+  font-size: 12px;
+
+  th {
+    text-align: left;
+    border-top: none !important;
+    padding: 3px;
+  }
+
+  tr:nth-child(2n) {
+    background: $bg-lighter;
+  }
+
+  td {
+    position: relative;
+    vertical-align: middle;
+    border: none;
+    padding: 3px;
+  }
+
+  img {
+    max-height: 35px;
+    border-radius: 9px;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
+  }
+
+  .level {
+    width: 24px;
+    line-height: 24px;
+    border-radius: 12px;
+    text-align: center;
+    color: #fff;
+    margin-left: 5px;
+
+  }
+
+
+  .level-list {
+
+
+    .level.is-ranked {
+      position: relative;
+      background: transparent !important;
+      width: 24px !important;
+
+      i {
+        position: absolute;
+        font-size: 24px;
+        left: 0px;
+        top: -2px;
+      }
+
+      span {
+        z-index: 200;
+        position: relative;
+        text-align: center;
+      }
+    }
+  }
+
+
+  .title a {
+    color: $song-title-color;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .author a {
+    color: $song-author-color;
+    font-size: 11px;
+    font-weight: 400;
+  }
+}
 
 .username{
  color:$warning;

@@ -1,4 +1,46 @@
 @import '../common.scss';
+@import "~select2/dist/css/select2.min.css";
+
+.search-and-filter {
+  label {
+    color: #fff;
+    font-weight: 400;
+  }
+}
+
+.select2-results {
+  color: $bg;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background: $bg-lighter;
+  border-color: $bg;
+}
+
+.table {
+  tr {
+    &:nth-child(2n) {
+      background: $bg-tr-pair;
+
+      &:hover {
+        background: $bg-lighter;
+      }
+    }
+  }
+
+  th {
+    font-size: 14px;
+
+    .fa {
+      font-size: 12px;
+    }
+  }
+
+  td {
+    border: none;
+  }
+}
+
 
 #mapper-profile {
   #profile-header {

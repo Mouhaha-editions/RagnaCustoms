@@ -319,7 +319,10 @@ class UserController extends AbstractController
             }
         }
 
-        $qb = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $user)->orderBy('s.updatedAt', "desc");
+        $qb = $scoreHistoryRepository->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('s.updatedAt', "desc");
         $pagination = $paginationService->setDefaults(25)->process($qb, $request);
 
 

@@ -27,6 +27,7 @@
 {# {{ stimulus_controller('symfony/ux-swup/swup', { #}
 {#    containers: ['#swup', '#nav'] #}
 {# }) }} #}
+<div id="main">
 <nav id="nav" class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand viking-text-bold" href="/">
@@ -208,6 +209,7 @@
     </a>
 
 </div>
+</div>
 
 
 {% block javascripts %}
@@ -228,7 +230,7 @@
 
         "groupServices": true, /* Group services by category */
 
-        "showAlertSmall": true, /* Show the small banner on bottom right */
+        "showAlertSmall": false, /* Show the small banner on bottom right */
         "cookieslist": true, /* Show the cookie list */
 
         "showIcon": true, /* Show cookie icon to manage cookies */

@@ -1,26 +1,47 @@
 {% extends 'base.html.twig' %}
-
+ {% block stylesheets %}
+     {{ parent()}}
+     {{ encore_entry_link_tags('application') }}
+ {% endblock %}
 {% block body %}
+    <div class="container pb-5">
     <div class="row">
         <div class="col-12 mt-4">
-            <h1>All our softwares</h1>
+            <h1>All Our Softwares</h1>
         </div>
-
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-header">
+                    <div class="overlay"></div>
+                    <img src="{{ asset('apps/edda.jpg') }}">
+                    <h2>{{ "Edda"|trans }}</h2>
+                </div>
+                <div class="card-body">
+                    <p>The defacto editor for Ragnarock. Created by PkBeam, Edda is a user-friendly program that allows you to map custom songs for
+                        Ragnarock VR on Steam and Quest.</p>
+                    <a href="https://pkbeam.github.io/Edda/" target ="_blank" class="btn btn-block btn-lg btn-primary">Official website <i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="overlay"></div>
+                    <img src="{{ asset('apps/ragna.jpg') }}" >
                     <h2>{{ "RagnaCustoms.exe"|trans }}</h2>
                 </div>
                 <div class="card-body">
-                    <p>Application to download, send score, requests and overlay for streaming.</p>
-                    <a href="{{ path('application') }}" class="btn btn-block btn-lg btn-primary">More information</a>
+                    <p>Application to download, requests and overlay for streaming.</p>
+                    <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases" target ="_blank" class="btn btn-block btn-lg btn-primary">Go to download page <i class="fas fa-external-link-alt"></i></a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-header">
+                    <div class="overlay"></div>
+                    <img src="{{ asset('apps/overlay.jpg') }}">
                     <h2>{{ "Overlay editor"|trans }}</h2>
                 </div>
                 <div class="card-body">
@@ -30,9 +51,11 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-header">
+                    <div class="overlay"></div>
+                    <img src="{{ asset('apps/mapevaluator.jpg') }}">
                     <h2>{{ "Map evaluator"|trans }} <span class="badge badge-info">beta</span></h2>
                 </div>
                 <div class="card-body">
@@ -41,10 +64,12 @@
                 </div>
             </div>
         </div>
+
+    </div>
     </div>
 {% endblock %}
 
 {% block title %}
-    Softwares
+    Apps
 {% endblock %}
 

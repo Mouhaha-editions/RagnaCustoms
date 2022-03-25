@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ScoreHistoryRepository;
+use App\Service\StatisticService;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -444,5 +445,12 @@ class ScoreHistory
     {
         $this->extra = $extra;
     }
-
+    public function getScoreDisplay(): ?string
+    {
+        return $this->score/100;
+    }
+    public function getHumanUpdatedAt(): ?string
+    {
+        return StatisticService::dateDiplayer($this->updatedAt);
+    }
 }

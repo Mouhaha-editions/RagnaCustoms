@@ -89,18 +89,15 @@ class WanadevApiController extends AbstractController
                 'user' => $user,
                 'songDifficulty' => $songDiff
             ]);
-
+            $scoreService->archive($newScore);
             if ($score == null || $score->getScore() <= $newScore->getScore()) {
                 //le nouveau score est meilleur
                 if ($score != null) {
-                    $scoreService->archive($score);
                     $em->remove($score);
                 }
                 $em->persist($newScore);
-            } else {
-                //l'ancien score est meilleur
-                $scoreService->archive($newScore);
             }
+            $user->setCredits($user->getCredits()+1);
             $em->flush();
 
             //calculation of the ponderate PP scores

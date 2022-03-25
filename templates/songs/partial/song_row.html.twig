@@ -35,7 +35,7 @@
     </td>
 
     <td class="text-right text-grey">
-        {{ song.lastDateUpload.format('Y-m-d') }}&nbsp;
+        {{ song.getTimeAgo }}&nbsp;
     </td>
 <td class="text-right   pt-2 pb-2">
     {{ song.downloads|number_format(0) }}

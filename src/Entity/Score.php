@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ScoreRepository;
+use App\Service\StatisticService;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -170,6 +171,10 @@ class Score
         return $this;
     }
 
+    public function getHumanUpdatedAt(): ?string
+    {
+        return StatisticService::dateDiplayer($this->updatedAt);
+    }
     /**
      * @return Season|null
      * @deprecated
