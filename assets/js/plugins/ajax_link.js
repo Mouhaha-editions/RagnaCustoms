@@ -25,7 +25,6 @@ $(document).on("click", ".ajax-link", function () {
             }
         },
         error: function (data) {
-            console.log(data);
             alert('Erreur lors de la requete');
         }
     });
