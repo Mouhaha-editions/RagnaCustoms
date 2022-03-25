@@ -10,6 +10,9 @@ $(document).on('click', ".ajax-load", function () {
         },
         success: function (data) {
             body.html(data.response);
+            $('.select2entity[data-autostart="true"]').select2entity();
+            $('.select2').select2();
+
             $(".rating-list").on('change', function () {
                 let t = $(this);
                 $('input[name="' + t.data('input-selector') + '"]').val(t.data('rating'));
@@ -38,6 +41,7 @@ $(document).on('click', ".ajax-load", function () {
                         t.closest(t.data('replace-closest-selector')).html(data.response);
                         $(t.data('replace-selector')).html(data.response);
                         $(".modal:visible").modal('hide');
+
                     }
                 });
                 body.html("<div class=\"popup-box-actions white full void\">Sending your form</div>");
