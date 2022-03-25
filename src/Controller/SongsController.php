@@ -39,6 +39,14 @@ class SongsController extends AbstractController
 {
     private $paginate = 30;
 
+    /**
+     * @Route("/getting-started", name="getting_started")
+     * @return Response
+     */
+    public function gettingStarted(): Response
+    {
+        return $this->render('songs/getting_started.html.twig');
+    }
 
     /**
      * @Route("/", name="home")

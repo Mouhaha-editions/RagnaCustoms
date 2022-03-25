@@ -1,11 +1,12 @@
-
-
 <tr>
     <td>
         <div class="d-flex ">
-            <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" class="small-cover" alt="cover"/></a>
+            <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" class="small-cover"
+                                                                     alt="cover"/></a>
             <div class="song pl-1">
-                <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.wip ? "[WIP] ":"" }}{{ song.name }}</a></div>
+                <div class="title"><a
+                            href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.wip ? "[WIP] ":"" }}{{ song.name }}</a>
+                </div>
                 <div class="author"><a
                             href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
                 </div>
@@ -16,9 +17,11 @@
     <td>
         <div class="level-list">
             {% for diff in song.songDifficulties %}
-                <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">
-                    {% if diff.isRanked %}<i class="fas fa-star" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
-                    <span >{{ diff.difficultyRank.level }}</span>
+                <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                     style="background-color:#{{ diff.difficultyRank.color }};">
+                    {% if diff.isRanked %}<i class="fas fa-star"
+                                             style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                    <span>{{ diff.difficultyRank.level }}</span>
                 </div>
             {% endfor %}
         </div>
@@ -37,9 +40,9 @@
     <td class="text-right text-grey">
         {{ song.getTimeAgo }}&nbsp;
     </td>
-<td class="text-right   pt-2 pb-2">
-    {{ song.downloads|number_format(0) }}
-</td>
+    <td class="text-right   pt-2 pb-2">
+        {{ song.downloads|number_format(0) }}
+    </td>
     {% if seePlayed is defined %}
         <td class="text-right">{{ song.scores|length }}</td>
     {% endif %}

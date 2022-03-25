@@ -16,7 +16,7 @@ export default class extends Controller {
         let file= $(this.infoTarget).data('file');
         let divId= $(this.infoTarget).attr('id');
         average(this.imgTarget.src, {amount: 1}).then(color => {
-            $("#main").attr('style', " background: radial-gradient(100% 100% at 0% 0%, rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.2) 0%, rgba(0, 0, 0, 0) 100%), #2B2B2B;");
+            $("#main").attr('style', " background: radial-gradient(100% 100% at 0% 0%, rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.7) 0%, rgba(0, 0, 0, 0) 100%), #2B2B2B;");
         });
         $(".back-button").attr('href', document.referrer !== undefined ? document.referrer : "#");
         // const swup = new Swup();

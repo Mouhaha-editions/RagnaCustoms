@@ -31,8 +31,8 @@
 <nav id="nav" class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand viking-text-bold" href="/">
-            <img width="30" height="30" src="/apps/logo.png" class="img-fluid" alt="logo"/>
-            <img height="30" src="/apps/ragnacustoms_logo.png" alt="Ragnacustoms"/>
+            <img width="40" height="40" src="/apps/logo.png" class="img-fluid" alt="logo"/>
+            <img height="40" src="/apps/ragnacustoms_logo.png" alt="Ragnacustoms"/>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,6 +49,9 @@
                 {# <li class="nav-item"> #}
                 {# <a class="nav-link" href="#">{{ "Getting started"|trans }}</a> #}
                 {# </li> #}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('getting_started') }}">{{ "getting started"|trans }}</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('song_library') }}">{{ "Song library"|trans }}</a>
                 </li>
@@ -70,7 +73,7 @@
                        data-target="#editSong"
                        data-refresh="true"
                        data-url="{{ url('new_song') }}"
-                       class="btn btn-blue float-right mt-2 ajax-load preview-popup">
+                       class="btn btn-blue float-right mt-2 ml-4 mr-4 ajax-load preview-popup">
                         {{ "Submit"|trans }}
                     </a>
                 </li>

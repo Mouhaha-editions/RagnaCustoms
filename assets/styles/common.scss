@@ -6,9 +6,20 @@
     max-width: 1440px;
   }
 }
-h1,h2,h3,h4{text-transform: capitalize;}
+
+h1, h2, h3, h4, .navbar {
+  text-transform: capitalize;
+}
+
 .light-grey {
   color: $light-grey;
+}
+
+.code {
+  background-color: #131313;
+  display: inline-block;
+  padding: 8px;
+  border-radius: 5px;
 }
 
 body, html {
@@ -56,7 +67,7 @@ body {
   //background: linear-gradient(180deg, rgba(28,28,28,1) 20%,rgba(36,36,36,1) 100%);
   //box-shadow: 0 0 10px $bg-darker;
   color: #fff;
-  padding: .8em 0;
+  padding: 5px 0;
   border-bottom: solid 1px;
   border-color: #141414;
   box-shadow: inset 0 0 7px 0 rgba(66, 66, 66, .25), 0 4px 9px 0 rgba(0, 0, 0, 0.25);

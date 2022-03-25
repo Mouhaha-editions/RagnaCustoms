@@ -117,10 +117,12 @@ class WanadevApiController extends AbstractController
             }
 
             $em->flush();
-            return new JsonResponse([
-                "rank"=>$scoreService->getTheoricalRank($songDiff,$newScore->getScore()),
-                "ranking"=>$scoreService->getTop5Wanadev($songDiff, $user)
-            ], 200);
+            return new JsonResponse([],200);
+
+//                [
+//                "rank"=>$scoreService->getTheoricalRank($songDiff,$newScore->getScore()),
+//                "ranking"=>$scoreService->getTop5Wanadev($songDiff, $user)
+//            ], 200);
 
         }
 
