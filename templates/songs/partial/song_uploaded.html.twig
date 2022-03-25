@@ -43,38 +43,22 @@
     <td class="text-right   pt-2 pb-2">
         {{ song.downloads|number_format(0) }}
     </td>
-{#    {% if seePlayed is defined %}#}
-{#        <td class="text-right">{{ song.scores|length }}</td>#}
-{#    {% endif %}#}
+    {#    {% if seePlayed is defined %}#}
+    {#        <td class="text-right">{{ song.scores|length }}</td>#}
+    {#    {% endif %}#}
     <td class="download">
-        {% set downloaded = downloadsService.alreadyDownloaded(song) %}
-        <div class="on-hover">
-            <div class="big-buttons d-none">
-                <a href="ragnac://install/{{ song.id }}" class="one-click"><i class="fas fa-download"></i><br/>1
-                    click</a>
-                <a href="{{ url("song_direct_download",{id:song.id}) }}" class="ddl"><i
-                            class="fas fa-download"></i><br/>ZIP</a>
-            </div>
-            <a href="#"
-               data-toggle="modal"
-               data-target="#previewSong"
-               data-refresh="true"
-               data-url="{{ url("partial_preview_song",{id:song.id}) }}"
-               class="ajax-load preview-popup">
-                <i class="fas fa-play-circle"></i>
-            </a>
-
-            <a href="#"
-               class="open-download-buttons text-success ml-1">
-                <i class="fas fa-download"></i>
-            </a>
-        </div>
-
-        <div class="non-hover">
-            {% if downloaded %}
-                <i class="fas fa-check"></i>
-            {% endif %}
-        </div>
+        {% if not song.isRanked() %}
+        <a href="#"
+           data-toggle="modal"
+           data-target="#editSong"
+           data-refresh="true"
+           data-url="{{ url('edit_song',{id:song.id}) }}"
+           class="btn btn-info btn-sm float-right ajax-load preview-popup">
+            <i class="fas fa-edit"></i>
+        </a>
+        {% else %}
+            <small>{{ "Ranked"|trans }}</small>
+        {% endif %}
     </td>
 
 

@@ -8,6 +8,7 @@ use App\Entity\SongRequest;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -38,18 +39,12 @@ class SongType extends AbstractType
                 "attr" => ["placeholder " => "https://youtu..."],
                 'required' => false
             ])
-            ->add('categoryTags', Select2EntityType::class, [
+            ->add('categoryTags', EntityType::class, [
                 "class" => SongCategory::class,
-                'remote_route' => 'api_song_categories',
                 'multiple' => true,
+                'choice_label'=>"label",
                 "label" => "Categories",
-                'primary_key' => 'id',
-                'text_property' => 'label',
-                'minimum_input_length' => 0,
-                'allow_clear' => true,
-                'delay' => 250,
                 'placeholder' => 'Select a category, or more ..',
-
                 'required' => true
             ])
             ->add('approximativeDuration', HiddenType::class, [

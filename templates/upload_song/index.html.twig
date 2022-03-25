@@ -14,14 +14,13 @@
         <div class="row pt-5">
             <div class="col-md-10 text-left">
                 <h1 class="">
-                    {{ "Your uploads"|trans }}
+                    {{ "My uploads"|trans }}
                 </h1>
 
             </div>
         </div>
         <div id="song-list" class="row">
             <div class="col-md-10">
-
                 <table class="featured-table-lg table table-sm">
                     <tr>
                         <th><a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.name", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
@@ -48,18 +47,17 @@
                                 {{ "Downloads"|trans }}
                             </a>
                         </th>
-                        <th class="text-right">
+{#                        <th class="text-right">#}
 {#                            <a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.downloads", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"#}
 {#                               class="{% if app.request.get('order_by') == "s.downloads" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">#}
-                                {{ "Played"|trans }}
+{#                                {{ "Played"|trans }}#}
 {#                            </a>#}
-                        </th>
+{#                        </th>#}
                         <th></th>
                     </tr>
                     {% for song in songs.entities %}
-                        {% include 'songs/partial/song_row.html.twig' with {songs:songs, seePlayed:true} %}
+                        {% include 'songs/partial/song_uploaded.html.twig' with {songs:songs, seePlayed:true} %}
                     {% else %}
-
                         <tr>
                             <td colspan="8">
                                 {{ "No song for now"|trans }}

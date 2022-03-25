@@ -292,7 +292,7 @@ class Song
 
     public function getMapper()
     {
-        return $this->user->getMapperName()??$this->user->getUsername();
+        return $this->user->getMapperName() ?? $this->user->getUsername();
     }
 
     public function getLevelAuthorName(): ?string
@@ -653,6 +653,16 @@ class Song
         $this->converted = $converted;
 
         return $this;
+    }
+
+    public function isRanked()
+    {
+        foreach ($this->getSongDifficulties() as $diff) {
+            if ($diff->isRanked()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getFunFactorAverage(): ?float
@@ -1064,13 +1074,6 @@ class Song
         return StatisticService::dateDiplayer($this->getLastDateUpload());
     }
 
-    /**
-     * @return Collection|Score[]
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
-    }
 
     public function addScore(Score $score): self
     {
