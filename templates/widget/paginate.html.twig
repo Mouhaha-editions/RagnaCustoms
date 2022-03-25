@@ -1,7 +1,7 @@
 <div class="row mb-4">
     {% if pagination is not null %}
         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-        <div class="text-center col-md-6">
+        <div class="text-left col-md-6">
             {{ "Showing %SongCount% on %SongTotal%"|trans|replace({"%SongCount%":pagination.entities|length,"%SongTotal%":pagination.count}) }}
         </div>
 

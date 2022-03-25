@@ -14,13 +14,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class SongPartialController extends AbstractController
 {
 
+    private $count = 8;
+
     public function latestSongs(SongRepository $songRepository): Response
     {
         $songs = $songRepository->createQueryBuilder("s")
             ->orderBy("s.createdAt", 'DESC')
             ->where('s.isDeleted != true')
             ->where('s.wip != true')
-            ->setMaxResults(10)
+            ->setMaxResults($this->count)
             ->setFirstResult(0)
             ->getQuery()->getResult();
 
@@ -38,7 +40,7 @@ class SongPartialController extends AbstractController
             ->where('s.isDeleted != true')
             ->where('s.wip != true')
             ->setFirstResult(0)
-            ->setMaxResults(10)
+            ->setMaxResults($this->count)
             ->getQuery()->getResult();
         $songs = array_map(function(Score $score){return $score->getSongDifficulty()->getSong();}, $scores);
 
@@ -54,7 +56,7 @@ class SongPartialController extends AbstractController
             ->orderBy("s.voteUp - s.voteDown", 'DESC')
             ->where('s.isDeleted != true')
             ->where('s.wip != true')
-            ->setMaxResults(10)
+            ->setMaxResults($this->count)
             ->setFirstResult(0)
             ->getQuery()->getResult();
 

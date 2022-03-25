@@ -12,3 +12,17 @@
   background:$bg-lighter;
   border-color:$bg;
 }
+.table{
+  tr{
+    &:nth-child(2n){
+      background: #383737;
+    }
+  }
+  th{font-size:14px;
+  .fa{
+    font-size:12px;
+  }}
+  td{
+    border:none;
+  }
+}

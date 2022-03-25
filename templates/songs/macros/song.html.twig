@@ -1,164 +1,3 @@
-{% macro description(song) %}
-    {% if song is null %}
-        deleted
-    {% else %}
-        <div class="d-flex flex-row">
-            <figure class="product-preview-image short liquid" style="position: relative">
-
-                {% if song.isNew %}
-                    <span class="badge new badge-primary">new</span>
-                {% endif %}
-                {% if song.converted %}
-                    <div class="white bold text-center bg-danger"
-                         style="font-size: 12px;bottom: 0;position: absolute;width: 100%;border-radius: 0 0 5px 5px;">
-                        converted
-                    </div>
-                {% endif %}
-                <div class="bookmark">
-                    <a href="#"
-                       class="text-level-10 ajax-load popover-trigger song-bookmark"
-                       data-trigger="hover"
-                       data-placement="top"
-                       data-content="{{ "Add to playlist"|trans }}"
-                       data-replace-selector="#songPlaylists .modal-body"
-                       data-toggle='modal' data-target='#songPlaylists'
-                       data-url='{{ url('song_playlist',{id:song.id}) }}'
-                       data-song-id='{{ song.id }}'>
-                        <i class="far fa-bookmark"></i>
-                    </a>
-                </div>
-
-                <a href="{{ url('song_detail',{slug:song.slug}) }}">
-                    <img src="{{ song.cover }}"
-                         class="img-fluid rounded thumbnail" width="150px" height="150px"
-                         alt="cover"/>
-                </a>
-            </figure>
-
-
-            <div class="song-preview pl-2">
-                <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}"
-                                      itemprop="name">{{ song.name }}</a></div>
-                <div class="category"><a
-                            href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
-                </div>
-                <p class="creator mb-1">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('mapper_profile', {username:song.user.username}) ~'">'~song.mapper~'</a>'})|raw }}</p>
-                <p>{{ song.songCategoryTags|join(', ') }}&nbsp;</p>
-                {% set diffs = '<br/>' %}
-                {% set adiffs = '<br/>' %}
-                {% for diff in song.songDifficulties %}
-                    {# {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %} #}
-                    {% set diffs = diffs~'<span style="padding:3px 6px;font-size:16px;background-color:#'~diff.difficultyRank.color~';" data-toggle="tooltip" >'~diff.difficultyRank.level~'</span> ' %}
-
-                {% endfor %}
-                <p class="difficulties">
-                    {{ "Difficulties: %difficultiesList%"|trans|replace({"%difficultiesList%":diffs})|raw }} {% set diffs = "" %}
-                </p>
-                {# {% if is_granted('ROLE_MODERATOR') %} #}
-                {# {% for diff in song.songDifficulties %} #}
-                {# #}{# {% if loop.index != 1 %}{% set diffs = diffs~', '%}{% endif %} #}
-                {# {% set adiffs = adiffs~'<span style="padding:3px 6px;font-size:16px;background-color:#'~diff.difficultyRank.color~";color:"~(app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "#000" :"#fff" )~'" title="'~diff.clawDifficulty~'" data-toggle="tooltip" >'~ (diff.clawDifficulty|round(1)) ~'</span> ' %} #}
-
-                {# {% endfor %} #}
-                {# <p class="difficulties"> #}
-                {# {{ "Algo Difficulties: %difficultiesList%"|trans|replace({"%difficultiesList%":adiffs})|raw }} {% set diffs = "" %} #}
-                {# </p> #}
-                {# {% endif %} #}
-            </div>
-        </div>
-    {% endif %}
-{% endmacro %}
-
-{% macro smallbox(song) %}
-    <div class="d-flex flex-row mb-2">
-        <a href="{{ url('song_detail',{slug:song.slug}) }}">
-            <img src="{{ song.cover }}"
-
-                 class=" img-fluid rounded thumbnail" width="50px" height="50px"
-                 alt="cover"/>
-        </a>
-
-        <div class="song-preview pl-2">
-            <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song.name }}</a>
-            </div>
-            <div class="category"><a
-                        href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
-            </div>
-
-        </div>
-    </div>
-{% endmacro %}
-
-{% macro song_card(song) %}
-    <div class="card p-2">
-        <div class="d-flex flex-row justify-content-between">
-            <figure class="product-preview-image short liquid" style="position: relative">
-                <a href="{{ url('song_detail',{slug:song.slug}) }}">
-                    <img src="{{ song.cover }}"
-                         class=" img-fluid rounded thumbnail" width="150px" height="150px"
-                         alt="cover"/>
-                </a>
-            </figure>
-            <div class="">
-                {% for diff in song.songDifficulties %}
-                <div style="padding:3px 6px;font-size:16px;background-color:#{{ diff.difficultyRank.color }};"
-                data-toggle="tooltip" >
-                {{ diff.difficultyRank.level }} </div>
-            {% endfor %}
-        </div>
-        <div style="font-size:25px;" class="text-right">
-            <div>
-                <a href="{{ url('song_detail',{slug:song.slug}) }}#preview"
-                   data-toggle="tooltip"
-                   title="{{ "Preview"|trans }}"
-                   class="text-level-9"
-                ><i class="fas fa-play"></i></a>
-            </div>
-
-            <div>
-                <a href="#" data-to-copy="!rc {{ song.id }}"
-                   data-original-title="{{ "copied"|trans }}"
-                   data-toggle="tooltip"
-                   title="{{ "Copy code for Twitch"|trans }}"
-
-                   class="copy-clipboard text-twitch">
-                    <i class="fab fa-twitch"></i>
-                </a>
-            </div>
-            <div>    {% set downloaded = downloadsService.alreadyDownloaded(song) %}
-                <a href="ragnac://install/{{ song.id }}" data-toggle="tooltip"
-                   title="{% if downloaded %}{{ "Already downloaded"|trans }}{% else %}{{ "One click download"|trans }}{% endif %}"
-                   class="{% if downloaded %}downloaded{% endif %} text-danger ml-1">
-                    <i class="fas fa-download"></i>
-                </a>
-            </div>
-            <div>
-                <a href="{{ url("song_direct_download",{id:song.id}) }}" data-toggle="tooltip"
-                   title="{% if downloaded %}{{ "Already downloaded"|trans }}{% else %}{{ "Download"|trans }}{% endif %}"
-                   class="{% if downloaded %}downloaded{% endif %} text-success ml-1">
-                    <i class="fas fa-file-archive"></i>
-                </a>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="song-preview">
-        <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}"
-                              itemprop="name">{{ song.name }}</a></div>
-        <div class="category"><a
-                    href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
-        </div>
-        <p class="creator mb-1">{{ "Mapped by %mapper%"|trans|replace({"%mapper%": '<a href="'~ url('mapper_profile', {username:song.user.username}) ~'">'~song.mapper~'</a>'})|raw }}</p>
-        {{ song.songCategoryTags|join(', ') }}&nbsp;</p>
-
-
-    </div>
-    </div>
-{% endmacro %}
-
-{# ################################################################ #}
-
 {% macro featuredBox(song) %}
     <div class="featured-box row">
         <div class="col-6 pr-0">
@@ -195,17 +34,17 @@
 {#            <div class="buttons pt-3 pb-3">#}
 {#                <a href="#"><i class="fas fa-list-ol"></i> {{ "Leaderboards"|trans }}</a>#}
 {#            </div>#}
+            <div class="pt-3">
+                <a href="#"
+                   data-toggle="modal"
+                   data-target="#previewSong"
+                   data-refresh="true"
+                   data-url="{{url("partial_preview_song",{id:song.id})}}"
+                   class="ajax-load btn btn-sm btn-bg-empty btn-warning">
+                    <i class="fas fa-play-circle"></i> Preview
+                </a>
+            </div>
             <div class="pt-3 d-flex buttons">
-                <div class="pr-2 pt-1">
-                    <a href="#"
-                        data-toggle="modal"
-                        data-target="#previewSong"
-                        data-refresh="true"
-                        data-url="{{url("partial_preview_song",{id:song.id})}}"
-                        class="ajax-load">
-                        <i class="fas fa-play-circle"></i>
-                    </a>
-                </div>
 
                 <div><a href="{{ url("song_direct_download",{id:song.id}) }}"
                         class="btn btn-info btn-sm btn-download-zip"><i class="fas fa-download"></i> {{ "Zip"|trans }}</a></div>
