@@ -14,6 +14,9 @@ final class Version20210326123427 extends AbstractMigration
 {
     public function getDescription() : string
     {
+
+//        UPDATE score SET raw_PP = FLOOR(RAND()*(10000+1))/100;
+//INSERT INTO ranked_scores (SELECT null,s.user_id,(FLOOR(RAND()*(25000-1000+1))+1000)/100, NOW(),NOW() FROM score s GROUP BY s.user_id);
         return '';
     }
 

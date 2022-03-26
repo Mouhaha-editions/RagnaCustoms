@@ -1,30 +1,111 @@
 {% extends "user/profile.html.twig" %}
 {% import "songs/macros/song.html.twig" as macro_song %}
-{% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+{% block header_content %}
+    <div class="row">
+        <div class="col-12">
+            <h1>{{ "User profile"|trans }}</h1>
+        </div>
+    </div>
+    <div class=row>
+        <div class="col-md-3">
+            <div class="user-picture">
+                <img {{ stimulus_target('mapper-profile', 'img') }} src="{{ user.gravatar }}"
+                                                                    class="avatar big-rounded mb-4 img-fluid"
+                                                                    alt="{{ user.username }}"/>
+                {% if user.songs|length > 0 %}<a class="btn btn-lg btn-warning btn-block"
+                   href="{{ url('mapper_profile', {username:user.username}) }}">{{ "View mapper profile"|trans }}</a>{% endif %}
+            </div>
+        </div>
+        <div class="col-md-5 ">
+            <div class="username"><h2>{{ user.username }}</h2></div>
+            <div class="tags">
+                {% if user.songs|length > 0 %}<span>{{ "Mapper"|trans }}</span>{% endif %}
+                {% if user.certified|length > 0 %}<span>{{ "Certified"|trans }}</span>{% endif %}
+                {% if user.scores|length > 0 %}<span>{{ "Ranked"|trans }}</span>{% endif %}
+                {% if user.roles|length > 1 %}<span>{{ "Staff"|trans }}</span>{% endif %}
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <div class="mini-box">
+                        <div class="numeric">
+                            #{{ scoreService.generalLeaderboardPosition(user)??" -" }}</div>
+                        <div class="text">{{ "Global rank"|trans }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mini-box">
+                        <div class="numeric">{{ user.scoreHistories|length }}</div>
+                        <div class="text">{{ "Songs played"|trans }}</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mini-box">
+                        <div class="numeric">{{ user.songs|length }}</div>
+                        <div class="text">{{ "Songs mapped"|trans }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mini-box">
+                        <div class="numeric">{{ user.votes|length }}</div>
+                        <div class="text">{{ "Reviews send" }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="graph mt-4">
+                <div>
+                    {% set totalDistance = statisticService.getTotalDistance(user) %}
+                    <div class="label">{{ "Distance"|trans }}</div>
+                    <div class="total-bar">{{ totalDistance|number_format(2,'.',',') }}m</div>
+                    <div class="avg">
+                        <div class="avg-bar" style="width:50%">{{ (totalDistance/user.scores|length)|number_format(2,'.',',') }}
+                            m
+                        </div>
+                        <div class="avg-text">avg. per song</div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="label">{{ "Notes hit"|trans }}</div>
+                    <div class="total-bar">{{ statisticService.totalNotesHit(user)|number_format(0,'.',',') }}</div>
+                    <div class="avg">
+                        {% set avg2 = (statisticService.totalNotesHit(user)/user.scores|length) %}
+                        <div class="avg-bar"
+                             style="width:50%;">{{ avg2|number_format(0,'.',',') }}</div>
+                        <div class="avg-text">avg. per song</div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
 
 {% block detailed_content %}
-    <div class="col-12">
-        <h2>{{ "Last songs played"|trans }}</h2>
-        <table class="table songs">
+    <div class="row">
+    <div class="col-md-6">
+        <h2>{{ "Recently played"|trans }}</h2>
+        <table class="table songs recently-played">
             <tr>
-                <th>{{ "Song"|trans }}</th>
-                <th class="text-right">{{ "Level played"|trans }}</th>
-                <th class="text-right">{{ "Score"|trans }}</th>
+                <th>{{ "Song title"|trans }}</th>
+                <th class="">{{ "Difficulty"|trans }}</th>
+                <th class="">{{ "Distance"|trans }}</th>
+                <th class="">{{ "Score"|trans }}</th>
+                <th class="">{{ "Date"|trans }}</th>
             </tr>
+
             {% for score in pagination.entities %}
-                {% set song = songService.getByhash(score.hash) %}
-                <tr>
-                    <td class="song-preview tiny">
-                        {{ macro_song.description(song) }}
-                    </td>
-                    <td class="text-right">{{ score.difficulty }}</td>
-                    <td class="text-right">{{ score.score }}</td>
-                </tr>
+                {% include 'songs/partial/song_row_recently_played.html.twig' with {score:score} %}
             {% endfor %}
         </table>
-        <div class="text-left pagination">
-            {{ "Pages:"|trans }} {{ macro_pagination.paginate(pagination) }}
-        </div>
+        {% include 'widget/paginate.html.twig' with {pagination:pagination} %}
 
+    </div>
+    <div class="col-md-6">
+        <h2>{{ "Public playlist"|trans }}</h2>
+        <p>soon</p>
+    </div>
     </div>
 {% endblock %}

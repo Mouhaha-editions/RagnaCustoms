@@ -1,3 +1,4 @@
+<div id="ragna_{{ song.id }}_modal">
 <div id="ragna-beat-diffs"></div>
 <div id="ragna-beat-buttons"></div>
 <div id="ragna-beat-sounds" class="text-center"></div>
@@ -11,10 +12,9 @@
 </div>
 
 <div class="text-center">New player by <b>Ratzee</b></div>
-
-<div id="info-dat" data-file="{{ song.infoDatFile }}"></div>
+</div>
 <script>
-    $(document).trigger("preview-ready");
+    $(document).trigger("preview-ready",{type:"modal", file:"{{ song.infoDatFile }}", uid: "ragna_{{ song.id }}_modal" });
 </script>
 {#{{ encore_entry_link_tags('ragnabeat') }}#}
 {#{{ encore_entry_script_tags('ragnabeat') }}#}

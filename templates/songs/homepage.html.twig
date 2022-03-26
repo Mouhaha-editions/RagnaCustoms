@@ -1,4 +1,4 @@
-{% extends 'base_v2.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}RagnaCustoms.com, Your favorites custom songs for Ragnarock VR{% endblock %}
 
@@ -6,7 +6,7 @@
     <header>
         <div class="container">
             <div class="row">
-                <div class="col-8">
+                <div class="col-lg-8">
                     <h1>Search over <span class="song-counter">{{ songService.count() }}</span> custom songs for<br/>
                         Ragnarock VR on Steam and Meta Quest
                     </h1>
@@ -25,18 +25,18 @@
             </div>
         </div>
     </header>
-<div class="container homepage">
+<div class="container homepage" {{ stimulus_controller('homepage') }}>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-4">
             <h2>{{ "Top Rated"|trans }}</h2>
             {{ render(controller("\\App\\Controller\\SongPartialController::topRated")) }}
         </div>
-        <div class="col-md-4">
-            <h2>{{ "Latest songs"|trans }}</h2>
+        <div class="col-lg-4">
+            <h2>{{ "Latest Songs"|trans }}</h2>
             {{ render(controller("\\App\\Controller\\SongPartialController::latestSongs")) }}
         </div>
-        <div class="col-md-4">
-            <h2>{{ "Last played"|trans }}</h2>
+        <div class="col-lg-4">
+            <h2>{{ "Last Played"|trans }}</h2>
             {{ render(controller("\\App\\Controller\\SongPartialController::lastPlayed")) }}
         </div>
     </div>
@@ -68,27 +68,26 @@
         <div class="row">
            <div class="col-12">
                <h2>Frequently Asked Questions</h2>
+               <div class="pl-5">
                <p>Q: Can I play custom songs on the Quest 2 version?<br/>
-                   A: Yes! Read our Getting Started Guide to learn more.</p>
+                   A: Yes! Read our <a href="{{ url('getting_started') }}">Getting Started Guide</a> to learn more.</p>
                <p>Q: How do I upload my scores for custom songs?<br/>
-                   A: You must have the official RagnaCustoms app running before you launch Ragnarock. Download it from our <a href="{{ url('applications') }}">Apps page</a>.</p>
-{#               <p>Q: What are credits and how do they work?<br/>#}
-{#                   A: Credits are used to request custom songs from our mapping community. Read more here.</p>#}
+                   A: You must have to edit a Ragnarock VR file. More informations on our <a href="{{ url('getting_started') }}">Getting Started Guide</a>.</p>
+               <p>Q: What are credits and how do they work?<br/>
+                   A: Credits are used to request custom songs from our mapping community. Read more here.</p>
                <p>Q: How do I map custom songs in Ragnarock VR?<br/>
                    A: You can download Edda by PKBeam <a href="https://pkbeam.github.io/Edda/" rel="noreferrer">here</a> to learn how to map customs songs.</p>
+               </div>
            </div>
         </div>
     </div>
 </section>
 {% endblock %}
 
-
-
    {% block stylesheets %}
        {{ parent() }}
-       {{ encore_entry_link_tags('ragnabeat') }}
+       {{ encore_entry_link_tags('homepage') }}
    {% endblock %}
     {% block javascripts %}
         {{ parent() }}
-        {{ encore_entry_script_tags('ragnabeat') }}
     {% endblock %}

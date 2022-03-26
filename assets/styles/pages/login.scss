@@ -1,0 +1,29 @@
+@import '../common.scss';
+
+.background-login{
+  position: relative;
+  background: url("../../img/login.jpg") no-repeat center center;
+  z-index:0;
+}
+.login{
+  padding-bottom:150px;
+}
+input[type=text],input[type=password]{
+  background:  $bg-lighter;
+  color:#fff;
+  &:focus{
+    background:  $bg-lighter;
+    color:#fff;
+  }
+  border:none;
+}
+label{
+  font-size:14px;
+  color:#fff;
+}
+.forgot-password{
+  color:$danger;
+  &:hover{
+    color:$danger;
+  }
+}

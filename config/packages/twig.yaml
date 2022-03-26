@@ -3,6 +3,7 @@ twig:
 #    form_themes: ['bootstrap_4_layout.html.twig']
     globals:
         downloadsService: '@App\Service\DownloadService'
+        mapperService: '@App\Service\MapperService'
         scoreService: '@App\Service\ScoreService'
         songService: '@App\Service\SongService'
         statisticService: '@App\Service\StatisticService'

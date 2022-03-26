@@ -1,64 +1,94 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Song upload{% endblock %}
+  {% block stylesheets %}
+      {{ parent()}}
+      {{ encore_entry_link_tags('song_upload') }}
+  {% endblock %}
+    {% block javascripts %}
+        {{ parent()}}
+    {% endblock %}
 
 {% block body %}
-{#<div class="row">#}
-{#    <div class="col-md-6 offset-md-3  mb-5">#}
-{#        <div class="card mt-4">#}
-{#            <div class="card-title text-center"><h2>Upload new song</h2></div>#}
-{#            <div class="card-body">#}
-{#                <div class="alert alert-warning">#}
-{#                    <small>{{"New ! to update a map please use the \"edit\" button on your song bellow."|trans}}</small>#}
-{#                </div>#}
+    <div {{ stimulus_controller('song-upload') }}  class="container">
+        <div class="row pt-5">
+            <div class="col-md-10 text-left">
+                <h1 class="">
+                    {{ "My uploads"|trans }}
+                </h1>
 
-{#                {{ form_start(form) }}#}
-{#                {{ form_end(form) }}#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#</div>#}
-    <div class="row mt-5">
+            </div>
+        </div>
+        <div id="song-list" class="row">
+            <div class="col-md-10">
+                <table class="featured-table-lg table table-sm">
+                    <tr>
+                        <th><a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.name", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
+                               class="{% if app.request.get('order_by') == "s.name" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">
+                                {{ "Title"|trans }}
+                            </a>
+                        </th>
+                        <th>{{ "Difficulties"|trans }}</th>
+                        <th>{{ "Mapper"|trans }}</th>
+                        <th><a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"rating", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
+                               class="{% if app.request.get('order_by') == "rating" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">
+                                {{ "Votes"|trans }}</a></th>
+                        <th>{{ "Rating"|trans }}</th>
+                        <th class="text-right">
+                            <a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.lastDateUpload", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
+                               class="{% if app.request.get('order_by') == "s.lastDateUpload" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">
+                                {{ "Upload Date"|trans }}
+                            </a>
+                        </th>
+                        <th class="text-right">
+                            <a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.downloads", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
+                               class="{% if app.request.get('order_by') == "s.downloads" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">
 
-            {% include 'upload_song/partial/uploaded_song_row.html.twig' with {songs:songs} %}
+                                {{ "Downloads"|trans }}
+                            </a>
+                        </th>
+{#                        <th class="text-right">#}
+{#                            <a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.downloads", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"#}
+{#                               class="{% if app.request.get('order_by') == "s.downloads" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">#}
+{#                                {{ "Played"|trans }}#}
+{#                            </a>#}
+{#                        </th>#}
+                        <th></th>
+                    </tr>
+                    {% for song in songs.entities %}
+                        {% include 'songs/partial/song_uploaded.html.twig' with {songs:songs, seePlayed:true} %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8">
+                                {{ "No song for now"|trans }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                {% include 'widget/paginate.html.twig' with {pagination:songs} %}
+
+
+            </div>
+            <div class="col-md-2">
+                <h2 class="active">{{ "Filter"|trans }}</h2>
+                <form class="search-and-filter">
+
+                    <div class="form-group">
+                        <label for="search">{{ "Title, artist or mapper"|trans }}</label>
+                        <input type="text" value="{{ app.request.get('search') }}"
+                               class="form-control form-control-sm"
+                               placeholder="" name="search"
+                               id="search">
+                    </div>
+
+                    <button type="submit" name="search_btn" value="1"
+                            class="btn btn-sm btn-block btn-info">{{ "Apply filters"|trans }}</button>
+
+                </form>
+            </div>
+        </div>
     </div>
+{% endblock %}
 
 
-    {% endblock %}
-    {% block endBody %}
-
-        <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
-             aria-labelledby="staticBackdropLabel1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel1">Song Review</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="form-review">
-                        ...
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
-             aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel2">Custom Song</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="form-edit">
-                        ...
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    {% endblock %}

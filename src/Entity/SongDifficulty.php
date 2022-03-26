@@ -49,8 +49,11 @@ class SongDifficulty
     private $seasons;
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songDifficulties",cascade={"persist", "remove"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $song;
+
+
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
@@ -58,14 +61,29 @@ class SongDifficulty
     private $claw_difficulty;
 
     /**
-     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="SongDifficulty")
+     * @ORM\Column(type="float", nullable=false)
+     */
+    private $theoricalMaxScore;
+
+    /**
+    * @ORM\Column(type="boolean", nullable=false)
+    */
+    private $isRanked;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="songDifficulty")
      */
     private $scores;
 
     /**
-     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="SongDifficulty")
+     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="songDifficulty")
      */
     private $scoreHistories;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $wanadevHash;
 
     public function __construct()
     {
@@ -194,7 +212,7 @@ class SongDifficulty
      */
     public function isPlayedBy(Utilisateur $user, Season $season = null)
     {
-        if ($this->isRanked() && $season != null) {
+        if ($this->isSeasonRanked() && $season != null) {
             foreach ($user->getScores() as $score) {
                 if ($score->getSeason() != null && in_array($score->getHash(), $this->getSong()->getHashes()) && $score->getDifficulty() == $this->getDifficultyRank()->getLevel() && $score->getSeason()->getId() === $season->getId() && $score->getUser() === $user) {
                     return true;
@@ -214,7 +232,7 @@ class SongDifficulty
         return false;
     }
 
-    public function isRanked()
+    public function isSeasonRanked()
     {
         foreach ($this->getSeasons() as $season) {
             if ($season->isActive()) {
@@ -240,6 +258,18 @@ class SongDifficulty
     public function setClawDifficulty($claw_difficulty): self
     {
         $this->claw_difficulty = $claw_difficulty;
+
+        return $this;
+    }
+
+    public function getTheoricalMaxScore(): ?float
+    {
+        return $this->theoricalMaxScore;
+    }
+
+    public function setTheoricalMaxScore($theoricalMaxScore): self
+    {
+        $this->theoricalMaxScore = $theoricalMaxScore;
 
         return $this;
     }
@@ -300,6 +330,31 @@ class SongDifficulty
                 $scoreHistory->setSongDifficulty(null);
             }
         }
+
+        return $this;
+    }
+
+
+    public function isRanked(): ?bool
+    {
+        return $this->isRanked;
+    }
+
+    public function setIsRanked(?bool $isRanked): self
+    {
+        $this->isRanked = $isRanked;
+
+        return $this;
+    }
+
+    public function getWanadevHash(): ?string
+    {
+        return $this->wanadevHash;
+    }
+
+    public function setWanadevHash(?string $wanadevHash): self
+    {
+        $this->wanadevHash = $wanadevHash;
 
         return $this;
     }

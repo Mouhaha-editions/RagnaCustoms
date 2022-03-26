@@ -1,0 +1,291 @@
+@import '../common.scss';
+@import "~select2/dist/css/select2.min.css";
+
+.search-and-filter {
+  label {
+    color: #fff;
+    font-weight: 400;
+  }
+}
+
+.select2-results {
+  color: $bg;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background: $bg-lighter;
+  border-color: $bg;
+}
+
+.table {
+  tr {
+    &:nth-child(2n) {
+      background: $bg-tr-pair;
+
+      &:hover {
+        background: $bg-lighter;
+      }
+    }
+  }
+
+  th {
+    font-size: 14px;
+
+    .fa {
+      font-size: 12px;
+    }
+  }
+
+  td {
+    border: none;
+  }
+}
+
+
+#mapper-profile {
+  #profile-header {
+    background: rgba(0, 0, 0, 0.21);
+    background-blend-mode: soft-light;
+    box-shadow: 0 6px 27px rgba(0, 0, 0, 0.15);
+  }
+
+  h1 {
+    margin-top: 25px;
+    margin-bottom: 20px;
+  }
+
+  .stats {
+    color: $light-grey;
+  }
+
+  .username {
+    h2 {
+      text-transform: capitalize;
+      font-size: 30px;
+      color: $warning;
+    }
+
+    &.mapper {
+      h2 {
+        color: $danger;
+      }
+    }
+  }
+
+  .tags {
+    span {
+      font-size: 12px;
+      margin-right: 4px;
+      padding: 2px 5px;
+      background: #1f1f1f;
+    }
+  }
+
+  .mini-box {
+    .numeric {
+      font-size: 30px;
+      text-align: left;
+    }
+
+    .text {
+      font-size: 16px;
+      text-align: left;
+      color: $light-grey;
+    }
+  }
+
+  .graph {
+    width: 50%;
+
+    .label {
+      margin-top: 4px;
+      color: $light-grey;
+      font-size: 12px;
+    }
+
+    .total-bar {
+      text-align: right;
+      margin-top: 4px;
+      width: 100%;
+      background: #235886;
+      border: 1px solid $info;
+      color: $light-grey;
+      font-size: 12px;
+      padding-right: 3px;
+    }
+
+    .avg-bar {
+      margin-top: 4px;
+      text-align: right;
+      background: #1f1f1f;
+      border: 1px solid #424242;
+      color: $light-grey;
+      font-size: 12px;
+      padding-right: 3px;
+      float: left;
+
+    }
+
+    .avg-text {
+      color: $light-grey;
+      font-size: 12px;
+      float: left;
+      padding-top: 4px;
+      padding-left: 4px;
+    }
+  }
+}
+.song-votes {
+  font-size: 24px;
+}
+.rating-up{
+  font-size: 24px;
+
+}
+.recently-played {
+  font-size: 12px;
+
+  th {
+    text-align: left;
+    border-top: none !important;
+    padding: 3px;
+  }
+
+  tr:nth-child(2n) {
+    background: $bg-lighter;
+  }
+
+  td {
+    position: relative;
+    vertical-align: middle;
+    border: none;
+    padding: 3px;
+  }
+
+  img {
+    max-height: 35px;
+    border-radius: 9px;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
+  }
+
+  .level {
+    width: 24px;
+    line-height: 24px;
+    border-radius: 12px;
+    text-align: center;
+    color: #fff;
+    margin-left: 5px;
+
+  }
+
+
+  .level-list {
+
+
+    .level.is-ranked {
+      position: relative;
+      background: transparent !important;
+      width: 24px !important;
+
+      i {
+        position: absolute;
+        font-size: 24px;
+        left: 0px;
+        top: -2px;
+      }
+
+      span {
+        z-index: 200;
+        position: relative;
+        text-align: center;
+      }
+    }
+  }
+
+
+  .title a {
+    color: $song-title-color;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .author a {
+    color: $song-author-color;
+    font-size: 11px;
+    font-weight: 400;
+  }
+}
+
+.songs-mapped {
+  font-size: 12px;
+
+  th {
+    text-align: left;
+    border-top: none !important;
+    padding: 3px;
+  }
+
+  tr:nth-child(2n) {
+    background: $bg-lighter;
+  }
+
+  td {
+    position: relative;
+    vertical-align: middle;
+    border: none;
+    padding: 3px;
+  }
+
+  img {
+    max-height: 35px;
+    border-radius: 9px;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
+  }
+
+  .level {
+    width: 24px;
+    line-height: 24px;
+    border-radius: 12px;
+    text-align: center;
+    color: #fff;
+    margin-left: 5px;
+
+  }
+
+
+  .level-list {
+
+
+    .level.is-ranked {
+      position: relative;
+      background: transparent !important;
+      width: 24px !important;
+
+      i {
+        position: absolute;
+        font-size: 24px;
+        left: 0px;
+        top: -2px;
+      }
+
+      span {
+        z-index: 200;
+        position: relative;
+        text-align: center;
+      }
+    }
+  }
+
+
+  .title a {
+    color: $song-title-color;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .author a {
+    color: $song-author-color;
+    font-size: 11px;
+    font-weight: 400;
+  }
+}

@@ -3,16 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Season;
-use App\Entity\Song;
+use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SeasonRepository;
 use App\Repository\SongRepository;
+use App\Service\ScoreService;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\VarDumper\VarDumper;
 
 class ScoreController extends AbstractController
 {
@@ -34,18 +34,18 @@ class ScoreController extends AbstractController
             ->distinct()
             ->orderBy('s.name', 'ASC');
 
-        if ($request->get('season',null) !== null) {
-            if($request->get('season') ==0){
+        if ($request->get('season', null) !== null) {
+            if ($request->get('season') == 0) {
                 return $this->redirectToRoute('score');
             }
             $selectedSeason = $seasonRepository->find($request->get('season'));
-            return $this->redirectToRoute('score',['slug'=>$selectedSeason->getSlug()]);
+            return $this->redirectToRoute('score', ['slug' => $selectedSeason->getSlug()]);
         }
-        if($selectedSeason!= null) {
+        if ($selectedSeason != null) {
             $qb->leftJoin('s.songDifficulties', 'difficulties')
                 ->leftJoin('difficulties.seasons', 'season')
                 ->andWhere('season.id = :season')
-                ->setParameter('season',$selectedSeason);
+                ->setParameter('season', $selectedSeason);
         }
         $songs = $paginationService->setDefaults(50)->process($qb, $request);
 
@@ -68,33 +68,21 @@ class ScoreController extends AbstractController
      * @Route("/ranking/global", name="score_global_ranking")
      * @return Response
      */
-    public function globalRanking(): Response
+    public function globalRanking(Request $request, PaginationService $pagination, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository): Response
     {
+        if ($request->get('findme', null)) {
+            $score = $scoreService->getGeneralLeaderboardPosition($this->getUser());
+            if ($score == null) {
+                $this->addFlash("danger", "No score found");
+                return $this->redirectToRoute("score_global_ranking");
+            } else {
+                return $this->redirect($this->generateUrl("score_global_ranking") . "?ppage1=" . ceil($score / 25) . "#".$this->getUser()->getUsername());
+            }
+        }
 
-        $conn = $this->getDoctrine()->getConnection();
-
-        $sql = '
-           SELECT SUM(max_score)/1000 AS score, 
-                  username,
-                  user_id,
-                  MD5(LOWER(email)) as gravatar, 
-                  COUNT(*) AS count_song 
-           FROM (
-                SELECT u.username,
-                       u.email,
-                       s.user_id, 
-                       MAX(s.score) AS max_score 
-                FROM score s 
-                    LEFT JOIN song sg ON sg.new_guid = s.hash 
-                    LEFT JOIN utilisateur u on s.user_id = u.id        
-                WHERE sg.id IS NOT null and sg.wip != true
-                GROUP BY s.hash,s.difficulty,s.user_id
-            ) AS ms  GROUP BY user_id ORDER BY score DESC';
-        $stmt = $conn->prepare($sql);
-        $scores = $stmt->execute()->fetchAllAssociative();
-//        VarDumper::dump(
-//        $scores = $stmt->fetchAllAssociative();
-
+        $qb = $rankedScoresRepository->createQueryBuilder('rs')
+            ->orderBy("rs.totalPPScore", "DESC");
+        $scores = $pagination->setDefaults(25)->process($qb, $request);
         return $this->render('score/global_ranking.html.twig', [
             'scores' => $scores,
         ]);

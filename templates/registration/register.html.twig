@@ -2,26 +2,36 @@
 
 {% block title %}Register{% endblock %}
 
+  {% block stylesheets %}
+      {{ encore_entry_link_tags('register') }}
+  {% endblock %}
+
 {% block body %}
-    {% for flashError in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-    {% endfor %}
+    <div class="container-fluid" id="register-page">
+        <div class="row">
+            <div class="col-lg-6 background-register"></div>
+            <div class="col-lg-3 text-center register pl-5">
+                {% for flashError in app.flashes('verify_email_error') %}
+                    <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+                {% endfor %}
+                <img src="{{ asset('apps/RC.png') }}" alt="Ragnacustoms.com" class="mt-5"/>
+                <h1 class="">{{ "Create Account"|trans }}</h1>
+                <div class="widget-box text-left">
+                    {{ form_start(registrationForm) }}
 
-    <div class="row">
-        <div class="col-md-6">
-            <h1>Register</h1>
-            {{ form_start(registrationForm) }}
+                    {{ form_row(registrationForm.username,{"attr":{"class":"form-control form-control-sm"}}) }}
 
-            {{ form_row(registrationForm.username,{"attr":{"class":"form-control form-control-sm"}}) }}
+                    {{ form_row(registrationForm.email,{"attr":{"class":"form-control form-control-sm"}}) }}
 
-            {{ form_row(registrationForm.email,{"attr":{"class":"form-control form-control-sm"}}) }}
-
-            {{ form_row(registrationForm.plainPassword, {"attr":{"class":"form-control form-control-sm"},
-                label: 'Password'
-            }) }}
-            <small style="color:#3f485f">Registration confirmation will be emailed to you.</small>
-            <button type="submit" class="btn-sm btn btn-secondary">{{ "Register"|trans }}</button>
-            {{ form_end(registrationForm) }}
+                    {{ form_row(registrationForm.plainPassword, {"attr":{"class":"form-control form-control-sm pt-3"},
+                        label: 'Password'
+                    }) }}
+                    <button type="submit" class="btn-sm btn-big btn-block btn btn-warning mt-3">{{ "Register"|trans }}</button>
+                    <a href="{{ url('app_login') }}"
+                       class="btn-sm btn-block btn btn-big btn-info btn-bg-empty">{{ "Sign into"|trans }}</a>
+                    {{ form_end(registrationForm) }}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

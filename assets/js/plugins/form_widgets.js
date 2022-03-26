@@ -3,9 +3,6 @@ $(document).on('change','input[type="file"]', function (e) {
     $('.custom-file-label').html(fileName);
 });
 
-$(document).on('click', '[data-confirm]', function () {
-    return confirm($(this).data('confirm'));
-});
 
 function loadForm(content) {
     $("#form-edit").html(content);
@@ -44,6 +41,9 @@ function loadForm(content) {
             processData: false,
             contentType: false,
             success: function (data) {
+                if (data.goto !== false) {
+                    window.location.href = data.goto;
+                }
                 if (data.reload) {
                     window.location.reload();
                 }
@@ -64,3 +64,20 @@ function loadForm(content) {
         return false;
     });
 }
+
+
+$(document).on('click', ".ajax-modal-form", function () {
+    let t = $(this);
+    $(t.data('modal')).modal('show');
+    console.log('coucou');
+    $.ajax({
+        url: t.attr('href'),
+        success: function (data) {
+            loadForm(data.response);
+            $('.select2entity').select2entity();
+        }
+    });
+    return false;
+
+});
+

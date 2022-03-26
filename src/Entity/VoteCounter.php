@@ -29,7 +29,7 @@ class VoteCounter
 
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="voteCounters")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $song;
 

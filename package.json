@@ -32,7 +32,7 @@
         "webpack-notifier": "^1.6.0"
     },
     "dependencies": {
-        "bootstrap": "^4.6.0",
+        "bootstrap": "^4",
         "chart.js": "^3.5.0",
         "color.js": "^1.2.0",
         "jquery": "^3.6.0",
@@ -41,7 +41,8 @@
         "object-path": "^0.11.8",
         "popper.js": "^1.16.1",
         "postcss": "^8.2.15",
-        "select2": "^4.1.0-rc.0"
+        "select2": "^4.1.0-rc.0",
+        "tarteaucitronjs": "^1.9.5"
     },
     "license": "UNLICENSED",
     "private": true,

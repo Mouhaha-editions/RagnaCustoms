@@ -70,7 +70,7 @@ class Vote
     private $isPublic = true;
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="votes")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $song;
     /**

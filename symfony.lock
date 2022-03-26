@@ -11,9 +11,6 @@
     "clue/stream-filter": {
         "version": "v1.5.0"
     },
-    "composer/package-versions-deprecated": {
-        "version": "1.11.99.1"
-    },
     "dama/doctrine-test-bundle": {
         "version": "6.7",
         "recipe": {
@@ -193,12 +190,6 @@
     "laminas/laminas-code": {
         "version": "4.0.0"
     },
-    "laminas/laminas-eventmanager": {
-        "version": "3.3.1"
-    },
-    "laminas/laminas-zendframework-bridge": {
-        "version": "1.2.0"
-    },
     "league/oauth2-client": {
         "version": "2.6.0"
     },
@@ -312,6 +303,9 @@
     },
     "pkshetlie/pagination-bundle": {
         "version": "v2.0.2"
+    },
+    "pkshetlie/phpfcrc": {
+        "version": "1.x-dev"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -511,9 +505,6 @@
             "./config/packages/dev/debug.yaml"
         ]
     },
-    "symfony/debug-pack": {
-        "version": "v1.0.9"
-    },
     "symfony/dependency-injection": {
         "version": "v5.2.5"
     },
@@ -696,9 +687,6 @@
     "symfony/process": {
         "version": "v5.2.4"
     },
-    "symfony/profiler-pack": {
-        "version": "v1.0.5"
-    },
     "symfony/property-access": {
         "version": "v5.2.4"
     },
@@ -787,9 +775,6 @@
             "./config/packages/twig.yaml",
             "./templates/base.html.twig"
         ]
-    },
-    "symfony/twig-pack": {
-        "version": "v1.0.1"
     },
     "symfony/uid": {
         "version": "v5.2.4"

@@ -25,62 +25,78 @@ class SongRequestController extends AbstractController
      * @Route("/", name="_index")
      * @param Request $request
      * @param SongRequestRepository $songRequestRepository
+     * @param PaginationService $pagination
+     * @param DiscordService $discordService
      * @return Response
      */
     public function index(Request $request, SongRequestRepository $songRequestRepository, PaginationService $pagination, DiscordService $discordService): Response
     {
         $form = null;
         if ($this->isGranted('ROLE_USER')) {
+            $save = true;
             $songReq = new SongRequest();
+            /** @var Utilisateur $user */
             $user = $this->getUser();
+
             $songReq->setRequestedBy($user);
             $form = $this->createForm(SongRequestFormType::class, $songReq, ['attr' => ["class" => "form-horizontal"]]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($songReq);
-                $em->flush();
-                $discordService->sendRequestSongMessage($songReq);
-                return $this->redirectToRoute("song_request_index");
+                if ($user->getOpenSongRequests()->count() >= 3) {
+                    $this->addFlash('warning', 'You already have 3 or more requests, please wait before adding a new one.');
+                    $save = false;
+                } elseif ($user->getCredits() < 30) {
+                    $this->addFlash('warning', 'You need 30 credits to add a song request,play more songs to earn credits ;)');
+                    $save = false;
+                } else {
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($songReq);
+                    $em->flush();
+                    $discordService->sendRequestSongMessage($songReq);
+                    return $this->redirectToRoute("song_request_index");
+                }
             }
         }
-
         $qb = $songRequestRepository->createQueryBuilder('sr');
         $qb->select("sr");
         $qb->leftJoin("sr.requestedBy", 'u');
-        $qb->where('sr.state IN (:displayable)')
-            ->setParameter('displayable', [
-                SongRequest::STATE_ASKED,
-                SongRequest::STATE_IN_PROGRESS
-            ]);
+        $qb->where('sr.state IN (:displayable)')->setParameter('displayable', [
+            SongRequest::STATE_ASKED,
+            SongRequest::STATE_IN_PROGRESS
+        ]);
         switch ($request->get('order')) {
             case 1:
                 $qb->addSelect('COUNT(v.id) AS HIDDEN count_votes');
                 $qb->leftJoin('sr.songRequestVotes', 'v');
                 $qb->groupBy("sr.id");
-                $qb->orderBy("count_votes", "DESC")
-                    ->addOrderBy("IF(u.isPatreon = true,1,0)", "DESC")
-                    ->addOrderBy("sr.createdAt", 'DESC');
+                $qb->orderBy("count_votes", "DESC")->addOrderBy("IF(u.isPatreon = true,1,0)", "DESC")->addOrderBy("sr.createdAt", 'DESC');
                 break;
             default:
-                $qb->orderBy("IF(u.isPatreon = true,1,0)", "DESC")
-                    ->addOrderBy("sr.createdAt", 'DESC');
+                $qb->orderBy("IF(u.isPatreon = true,1,0)", "DESC")->addOrderBy("sr.createdAt", 'DESC');
         }
+
         $search = $request->get('search');
         if ($search != null) {
-            $qb->andWhere('(sr.title LIKE :search_string OR sr.author LIKE :search_string)')
-                ->setParameter('search_string', '%' . $search . '%');
-        }else{
+            $qb->andWhere('(sr.title LIKE :search_string OR sr.author LIKE :search_string)')->setParameter('search_string', '%' . $search . '%');
+        } else {
             $form = null;
         }
 
         $songRequests = $pagination->setDefaults(50)->process($qb, $request);
-
+       $reason = "";
+        if ($user->getOpenSongRequests()->count() >= 3) {
+            $reason = '<div class="alert alert-danger">You already have 3 or more requests, please wait before adding a new one.</div>';
+            $save = false;
+        } elseif ($user->getCredits() < 30) {
+            $reason = '<div class="alert alert-danger">You need 30 credits to add a song request,play more songs to earn credits ;)</div>';
+            $save = false;
+        }
 
         return $this->render('song_request/index.html.twig', [
             'songRequests' => $songRequests,
-            'form' => $form ? $form->createView() : null
+            'form' => $form && $save? $form->createView() : null,
+            "reason"=>$reason
         ]);
     }
 

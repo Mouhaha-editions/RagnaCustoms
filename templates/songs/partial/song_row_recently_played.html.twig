@@ -1,0 +1,36 @@
+
+{% set song = score.songDifficulty.song %}
+<tr>
+    <td>
+        <div class="d-flex ">
+            <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" alt="cover"/></a>
+            <div class="song pl-1">
+                <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.name }}</a></div>
+                <div class="author"><a
+                            href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
+                </div>
+            </div>
+        </div>
+    </td>
+
+    <td>
+        <div class="level-list">
+            {% set diff = score.songDifficulty %}
+                <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">
+                    {% if diff.isRanked %}<i class="fas fa-star" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                    <span >{{ diff.difficultyRank.level }}</span>
+                </div>
+        </div>
+    </td>
+    <td>
+            {{ score.scoreDisplay }}
+    </td>
+    <td>
+        {{ score.rawPP }}
+    </td>
+    <td class="text-grey">
+        {{ score.humanUpdatedAt}}&nbsp;
+    </td>
+</tr>
+
+

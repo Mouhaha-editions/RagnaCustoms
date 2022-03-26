@@ -1,0 +1,49 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Catamaran:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+$font-family-base: 'Catamaran', sans-serif;
+$font-family-h: 'Catamaran', sans-serif;
+$font-weight-base: 500;
+$hover-link: #E4AE09;
+
+
+$song-title-color: #E4AE09;
+$song-author-color: #FFF;
+$song-mapper-color: #F4505D;
+
+$success: #32B027;
+$info: #4B9CE2;
+$danger: #F4505D;
+$active: #E4AE09;
+$link-green: #2dcc2a;
+$purple: #bc3ee3;
+$youtube: #ff3131;
+$twitch: #6f42c1;
+$twitch-hover: #673eb1;
+$twitter: #1da1f2;
+$playlist: #1da1f2;
+$facebook: #1877f2;
+$reddit: #ff4500;
+$patreon: #f96854;
+$discord: #7289da;
+
+$modal-content-bg: #2c2b2c;
+$popover-bg: #414141;
+$popover-body-color: #fff;
+$popover-header-bg: #414141;
+
+/** Colors */
+$bg: #171717;
+$bg-tr-pair: #373737;
+$bg-lighter: #414141;
+$bg-darker: #181718;
+$label-color:#868686;
+$light-grey:#bababa;
+
+$grid-breakpoints: (
+        xs: 0,
+        sm: 576px,
+        md: 992px,
+        lg: 1200px,
+        xl: 1440px
+);

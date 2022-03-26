@@ -1,9 +1,9 @@
-{% extends 'base_v2.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}RagnaCustoms.com, Custom song library{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div {{ stimulus_controller('song-library') }}  class="container">
         <div class="row pt-5">
             <div class="col-md-10 text-left">
                 <h1 class="">
@@ -14,11 +14,10 @@
         </div>
         <div id="song-list" class="row">
             <div class="col-md-10">
-                <button data-toggle="tooltips" title="{{ "Download this selection"|trans }}"
-                        type="submit" name="onclick_dl" value="42" class="btn btn-sm btn-success float-right mb-2"
-                        data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}">
-                    <i class="fas fa-download"></i> {{ '1 click'|trans }}</button>
 
+<div>
+    Filters : {% for filter in filters %}<span class="tag-filter">{{ filter|trans|capitalize }}</span>{% else %} {{ "no filter"|trans }}{% endfor %}
+</div>
                 <table class="featured-table-lg table table-sm">
                     <tr>
                         <th><a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.name", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
@@ -58,22 +57,7 @@
                         </tr>
                     {% endfor %}
                 </table>
-
-                <div class="row">
-                    {% if songs is not null %}
-                        {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-                        <div class="text-center col-md-6">
-                            {{ "Showing %SongCount% on %SongTotal%"|trans|replace({"%SongCount%":songs.entities|length,"%SongTotal%":songs.count}) }}
-                        </div>
-
-                        <div class="text-center  col-md-6 pagination">
-                            {{ "Pages:"|trans }}&nbsp;{{ macro_pagination.paginate(songs) }}
-                            <a class="no-decoration ml-3" href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({("ppage"~songs.identifier):songs.current+1})) }}">{{ "Next page"|trans }}</a>
-                        </div>
-                    {% endif %}
-                    {# {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }} #}
-                </div>
-
+                {% include 'widget/paginate.html.twig' with {pagination:songs} %}
             </div>
             <div class="col-md-2">
                 <h2 class="active">{{ "Filter"|trans }}</h2>
@@ -116,10 +100,7 @@
                                     value="3">{{ "8-10"|trans }}</option>
                             <option {% if app.request.get('downloads_filter_difficulties') == 6 %}selected="selected"{% endif %}
                                     value="6">{{ "10+"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_difficulties') == 4 %}selected="selected"{% endif %}
-                                    value="4">{{ "Ranked only"|trans }}</option>
-                            <option {% if app.request.get('downloads_filter_difficulties') == 5 %}selected="selected"{% endif %}
-                                    value="5">{{ "WIP only"|trans }}</option>
+
 
                         </select>
                     </div>
@@ -155,10 +136,27 @@
                             </label>
                         </div>
                         {% endif %}
+                        <div class="form-check">
+                            <input class="form-check-input" {% if app.request.get("only_ranked") == 1%}checked="checked"{% endif%} type="checkbox" value="1" name="only_ranked" id="only_ranked">
+                            <label class="form-check-label" for="only_ranked">
+                                {{ "Only ranked"|trans }}
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" {% if app.request.get("display_wip") == 1%}checked="checked"{% endif%} type="checkbox" value="1" name="display_wip" id="display_wip">
+                            <label class="form-check-label" for="display_wip">
+                                {{ "Display WIP"|trans }}
+                            </label>
+                        </div>
+
                     </div>
                     <button type="submit" name="search_btn" value="1"
                             class="btn btn-sm btn-block btn-info">{{ "Apply filters"|trans }}</button>
-
+                    <button data-toggle="tooltips" title="{{ "Download this selection"|trans }}"
+                            type="submit" name="onclick_dl" value="42" class="btn btn-sm btn-success btn-block float-right mb-2"
+                            data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}">
+                        <i class="fas fa-download"></i> {{ '1 click'|trans }}</button>
                 </form>
             </div>
         </div>
@@ -166,11 +164,9 @@
 {% endblock %}
 
    {% block stylesheets %}
-       {{ parent() }}
-       {{ encore_entry_link_tags('ragnabeat') }}
+       {{ parent()}}
+       {{ encore_entry_link_tags('song_library') }}
    {% endblock %}
     {% block javascripts %}
-        {{ parent() }}
-        {{ encore_entry_script_tags('ragnabeat') }}
-        {{ encore_entry_script_tags('ajax-search') }}
+        {{ parent()}}
     {% endblock %}

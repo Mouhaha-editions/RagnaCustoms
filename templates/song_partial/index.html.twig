@@ -1,8 +1,10 @@
 {% import "songs/macros/song.html.twig" as macro_song %}
 
 {% for song in songs %}
-    {% if loop.index == 1 %}
+    {% if loop.index == 1 and bigOneDisabled is not defined %}
         {{ macro_song.featuredBox(song) }}
+    {% endif %}
+    {% if loop.index == 1%}
 <table class="featured-table table table-sm">
     <tr>
         <th>{{ "Song"|trans }}</th>
@@ -10,13 +12,14 @@
         <th>{{ "Rating"|trans }}</th>
         <th></th>
     </tr>
-    {% else %}
+    {% endif %}
+    {% if loop.index != 1 or bigOneDisabled is defined %}
         <tr>
             <td>
                 <div class="d-flex ">
-                    <a href="{{ url('song_detail_v2',{slug:song.slug}) }}"><img src="{{ song.cover }}" alt="cover"/></a>
+                    <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" class="small-cover" alt="cover"/></a>
                     <div class="song pl-1">
-                        <div class="title"><a href="{{ url('song_detail_v2',{slug:song.slug}) }}">{{ song.name }}</a></div>
+                        <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.name }}</a></div>
                         <div class="author"><a
                                     href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
                         </div>
@@ -25,14 +28,13 @@
             </td>
             <td>
                 <div class="mapper"><a
-                            href="{{ url('user_mapped_profile', {id:song.user.id}) }}">{{ song.levelAuthorName }}</a>
+                            href="{{ url('mapper_profile', {username:song.user.username}) }}">{{ song.mapper }}</a>
                 </div>
                 <div class="level-list">
                     {% for diff in song.songDifficulties %}
-                        <div class='level' style="background-color:#{{ diff.difficultyRank.color }};"
-                             title="{{ app.user is not null and diff.playedBy(app.user, songService.currentSeason ) ? "already played" :"never played" }}"
-                             data-toggle="tooltip">
-                            {{ diff.difficultyRank.level }}
+                        <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">
+                            {% if diff.isRanked %}<i class="fas fa-star" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                            <span>{{ diff.difficultyRank.level }}</span>
                         </div>
                     {% endfor %}
                 </div>

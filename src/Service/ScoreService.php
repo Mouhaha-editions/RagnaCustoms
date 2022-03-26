@@ -2,21 +2,15 @@
 
 namespace App\Service;
 
+use App\Entity\RankedScores;
 use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\Season;
-use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
-use App\Repository\ScoreRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Pkshetlie\PaginationBundle\Service\PaginationService;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
-use ZipArchive;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class ScoreService
 {
@@ -39,38 +33,20 @@ class ScoreService
         $hash = $songDifficulty->getSong()->getNewGuid();
 
         /** @var Score $score */
-        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")
-            ->where('s.user = :user')
-            ->andWhere('s.difficulty = :difficulty')
-            ->andWhere('s.hash = :hash')
-            ->setParameter('user', $user)
-            ->setParameter('hash', $hash)
-            ->setParameter('difficulty', $level);
+        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")->where('s.user = :user')->andWhere('s.difficulty = :difficulty')->andWhere('s.hash = :hash')->setParameter('user', $user)->setParameter('hash', $hash)->setParameter('difficulty', $level);
         if ($season) {
-            $qb->andWhere('s.season = :season')
-                ->setParameter('season', $season);
+            $qb->andWhere('s.season = :season')->setParameter('season', $season);
         }
         $qb->orderBy("s.score", 'DESC');
-        $score = $qb->setFirstResult(0)
-            ->setMaxResults(1)->getQuery()->getOneOrNullResult();
+        $score = $qb->setFirstResult(0)->setMaxResults(1)->getQuery()->getOneOrNullResult();
         if ($score == null) {
             return null;
         }
         $return['score'] = $score;
 
-        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")
-            ->select("MAX(s.score)")
-            ->where('s.difficulty = :difficulty')
-            ->andWhere("s.hash = :hash")
-            ->having("MAX(s.score) >= :score")
-            ->andWhere("s.user != :user")
-            ->setParameter('score', $score->getScore())
-            ->setParameter('user', $user)
-            ->setParameter('hash', $hash)
-            ->setParameter('difficulty', $level);
+        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")->select("MAX(s.score)")->where('s.difficulty = :difficulty')->andWhere("s.hash = :hash")->having("MAX(s.score) >= :score")->andWhere("s.user != :user")->setParameter('score', $score->getScore())->setParameter('user', $user)->setParameter('hash', $hash)->setParameter('difficulty', $level);
         if ($season) {
-            $qb->andWhere('s.season = :season')
-                ->setParameter('season', $season);
+            $qb->andWhere('s.season = :season')->setParameter('season', $season);
         }
         $qb->groupBy('s.user');
 
@@ -107,103 +83,19 @@ class ScoreService
         });
     }
 
-    public function getRanking(Utilisateur $user, $type)
+    public function calculateDifficulties(string $infoDat)
     {
-        switch ($type) {
-            case 'global':
-                $conn = $this->em->getConnection();
-
-                $sql = '
-           SELECT SUM(max_score)/1000 AS score, 
-                  username,
-                  user_id,
-                  MD5(LOWER(email)) as gravatar, 
-                  COUNT(*) AS count_song 
-           FROM (
-                SELECT u.username,
-                       u.email,
-                       s.user_id, 
-                       MAX(s.score) AS max_score 
-                FROM score s 
-                    LEFT JOIN song sg ON sg.new_guid = s.hash 
-                    LEFT JOIN utilisateur u on s.user_id = u.id        
-                WHERE sg.id IS NOT null AND sg.wip != true
-                GROUP BY s.hash,s.difficulty,s.user_id
-            ) AS ms GROUP BY user_id ORDER BY score DESC';
-                $stmt = $conn->prepare($sql);
-                $result = $stmt->executeQuery();
-                $scores = $result->fetchAllAssociative();
-                $i = 1;
-                foreach ($scores as $score) {
-                    if ($score['user_id'] == $user->getId()) {
-                        return $i;
-                    }
-                    $i++;
-                }
-                return 'unknown';
-                break;
-            case 'season':
-                $season = $this->em->getRepository(Season::class)->getCurrent();
-                $conn = $this->em->getConnection();
-                if($season != null) {
-                    $sql = '
-           SELECT SUM(max_score)/1000 AS score, 
-                  username,
-                  user_id,
-                  MD5(LOWER(email)) as gravatar, 
-                  COUNT(*) AS count_song 
-           FROM (
-                SELECT u.username,
-                       u.email,
-                       s.user_id, 
-                       MAX(s.score) AS max_score 
-                FROM score s 
-                    LEFT JOIN song sg ON sg.new_guid = s.hash 
-                    LEFT JOIN utilisateur u on s.user_id = u.id        
-                WHERE sg.id IS NOT null AND s.season_id = :season AND sg.wip != true
-                GROUP BY s.hash,s.difficulty,s.user_id
-            ) AS ms GROUP BY user_id ORDER BY score DESC';
-                    $stmt = $conn->prepare($sql);
-                    $result = $stmt->executeQuery(['season' => $season->getId()]);
-                    $scores = $result->fetchAllAssociative();
-
-                    $i = 1;
-                    foreach ($scores as $score) {
-                        if ($score['user_id'] == $user->getId()) {
-                            return $i;
-                        }
-                        $i++;
-                    }
-                }
-                return 'no season';
-
-                break;
-        }
-return "unknow";
-    }
-
-    public function ClawwMethod(Song $song)
-    {
-        $file = $this->kernel->getProjectDir() . '/public' . $song->getInfoDatFile();
-        $infoFile = json_decode(file_get_contents($file));
+        $calc = [];
+        $infoFile = json_decode(file_get_contents($infoDat));
         foreach ($infoFile->_difficultyBeatmapSets[0]->_difficultyBeatmaps as $diff) {
-            $diffFile = json_decode(file_get_contents(str_replace('info.dat', $diff->_beatmapFilename, $file)));
-            $rank = $diff->_difficultyRank;
-            /** @var SongDifficulty $diffEntity */
-            $diffEntity = $song->getSongDifficulties()->filter(function (SongDifficulty $sd) use ($rank) {
-                return $sd->getDifficultyRank()->getLevel() == $rank;
-            })->first();
-            $calc = round($this->calculate($diffFile, $infoFile), 4);
-            $diffEntity->setClawDifficulty($calc);
+            $diffFile = json_decode(file_get_contents(str_replace('info.dat', $diff->_beatmapFilename, $infoDat)));
+            $calc[] = [
+                "rank" => $diff->_difficultyRank,
+                "fileName" => $diff->_beatmapFilename,
+                "algo" => round($this->calculate($diffFile, $infoFile), 4)
+            ];
         }
-        try {
-            $this->em->flush();
-        } catch (Exception $e) {
-            var_dump("song : " . $infoFile->_songName);
-            var_dump("diff : " . $rank);
-            var_dump("calc : " . $calc);
-            var_dump($e->getMessage());
-        }
+        return $calc;
     }
 
     private function calculate($diffFile, $infoFile)
@@ -253,19 +145,130 @@ return "unknow";
         return (float)sqrt($variance / $num_of_elements);
     }
 
-    public function calculateDifficulties(string $infoDat)
+    public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty, $default = '-')
     {
-        $calc = [];
-        $infoFile = json_decode(file_get_contents($infoDat));
-        foreach ($infoFile->_difficultyBeatmapSets[0]->_difficultyBeatmaps as $diff) {
-            $diffFile = json_decode(file_get_contents(str_replace('info.dat', $diff->_beatmapFilename, $infoDat)));
-            $calc[] = [
-                "rank" => $diff->_difficultyRank,
-                "fileName" => $diff->_beatmapFilename,
-                "algo" => round($this->calculate($diffFile, $infoFile), 4)
-            ];
+        $mine = $this->em->getRepository(Score::class)->findOneBy([
+            'user' => $user,
+            'songDifficulty' => $songDifficulty
+        ], ["score" => "Desc"]);
+        if ($mine == null) {
+            return $default;
         }
-        return $calc;
+        return count($this->em->getRepository(Score::class)
+                ->createQueryBuilder("s")
+                ->select('s.id')->where('s.score > :my_score')
+                ->andWhere('s.songDifficulty = :difficulty')
+                ->andWhere('s.user != :me')
+                ->setParameter('my_score', $mine->getScore())->setParameter('difficulty', $songDifficulty)
+                ->setParameter('me', $user)
+                ->groupBy('s.user')->getQuery()->getResult()) + 1;
+    }
+
+
+    public function getGeneralLeaderboardPosition(UserInterface $user)
+    {
+        $mine = $this->em->getRepository(RankedScores::class)->findOneBy([
+            'user' => $user
+        ], ["totalPPScore" => "Desc"]);
+        if ($mine == null) {
+            return null;
+        }
+        return count($this->em->getRepository(RankedScores::class)->createQueryBuilder("s")->select('s.id')->where('s.totalPPScore > :my_score')->andWhere('s.user != :me')->setParameter('my_score', $mine->getTotalPPScore())->setParameter('me', $user)->groupBy('s.user')->getQuery()->getResult()) + 1;
+
+
+    }
+
+    public function archive(?Score $score, $delete = false)
+    {
+        $scoreHistory = $this->em->getRepository(ScoreHistory::class)->findOneBy([
+            'user' => $score->getUser(),
+            'songDifficulty' => $score->getSongDifficulty()
+        ]);
+        if ($scoreHistory == null) {
+            $scoreHistory = new ScoreHistory();
+            $scoreHistory->setUser($score->getUser());
+            $scoreHistory->setSongDifficulty($score->getSongDifficulty());
+            $scoreHistory->setScore($score->getScore());
+            $scoreHistory->setRawPP($score->getRawPP());
+            $scoreHistory->setComboBlue($score->getComboBlue());
+            $scoreHistory->setComboYellow($score->getComboYellow());
+            $scoreHistory->setHit($score->getHit());
+            $scoreHistory->setHitDeltaAverage($score->getHitDeltaAverage());
+            $scoreHistory->setHitPercentage($score->getHitPercentage());
+            $scoreHistory->setMissed($score->getMissed());
+            $scoreHistory->setExtra($score->getExtra());
+            $scoreHistory->setPercentageOfPerfects($score->getPercentageOfPerfects());
+            $scoreHistory->setSession($score->getSession());
+            $scoreHistory->setCountry($score->getCountry());
+            $scoreHistory->setUserRagnarock($score->getUserRagnarock());
+            $scoreHistory->setPlateform($score->getPlateform());
+
+            $this->em->persist($scoreHistory);
+            if($delete){
+                if($score->getId() != null){
+                    $this->em->remove($score);
+                }
+            }
+            $this->em->flush();
+        }
+    }
+
+    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user)
+    {
+        $scores = $this->em->getRepository(Score::class)->createQueryBuilder("s")->where("s.songDifficulty = :diff ")->setParameter('diff', $songDiff)->orderBy('s.score', "DESC")->setMaxResults(5)->setFirstResult(0)->getQuery()->getResult();
+        $results = [];
+        foreach ($scores as $k => $score) {
+            $results[] = $this->getFormattedRank($score, $k + 1);
+        }
+        $place = $this->getLeaderboardPosition($user,$songDiff);
+        $score = null;
+        if($place>5) {
+            $score = $this->em->getRepository(Score::class)
+                ->createQueryBuilder("s")
+                ->where("s.songDifficulty = :diff ")
+                ->andWhere("s.user = :user ")
+                ->setParameter('diff', $songDiff)
+                ->setParameter('user', $user)
+                ->orderBy('s.score', "DESC")->setMaxResults(1)->setFirstResult(0)->getQuery()->getOneOrNullResult();
+            $results[] = $this->getFormattedRank($score,$place);
+
+        }
+
+        return $results;
+    }
+
+    public function getFormattedRank(Score $score, int $rank)
+    {
+        return [
+            "platform" => $score->getPlateform(),
+            "user" => $score->getUserRagnarock(),
+            "score" => $score->getScore(),
+            "created_at" => $score->getDateRagnarock(),
+            "session" => $score->getSession(),
+            "pseudo" => $score->getUser()->getUsername(),
+            "country" => $score->getCountry(),
+            "stats" => [
+                "ComboBlue" => $score->getComboBlue(),
+                "ComboYellow" => $score->getComboYellow(),
+                "Hit" => $score->getHit(),
+                "HitDeltaAverage" =>  $score->getHitDeltaAverage(),
+                "HitPercentage" =>  $score->getHitPercentage(),
+                "Missed" => $score->getMissed(),
+                "PercentageOfPerfects" => $score->getPercentageOfPerfects()
+            ],
+            "rank" => $rank
+        ];
+    }
+
+    public function getTheoricalRank(SongDifficulty $songDifficulty, ?float $getScore )
+    {
+        return count($this->em->getRepository(Score::class)
+                ->createQueryBuilder("s")->select('s.id')
+                ->where('s.score > :my_score')
+                ->andWhere('s.songDifficulty = :difficulty')
+                ->setParameter('my_score', $getScore)
+                ->setParameter('difficulty', $songDifficulty)
+                ->groupBy('s.user')->getQuery()->getResult()) + 1;
     }
 }
 

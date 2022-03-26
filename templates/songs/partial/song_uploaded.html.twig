@@ -1,0 +1,66 @@
+<tr>
+    <td>
+        <div class="d-flex ">
+            <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" class="small-cover"
+                                                                     alt="cover"/></a>
+            <div class="song pl-1">
+                <div class="title"><a
+                            href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.wip ? "[WIP] ":"" }}{{ song.name }}</a>
+                </div>
+                <div class="author"><a
+                            href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
+                </div>
+            </div>
+        </div>
+    </td>
+
+    <td>
+        <div class="level-list">
+            {% for diff in song.songDifficulties %}
+                <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                     style="background-color:#{{ diff.difficultyRank.color }};">
+                    {% if diff.isRanked %}<i class="fas fa-star"
+                                             style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                    <span>{{ diff.difficultyRank.level }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </td>
+    <td>
+        <div class="mapper">
+            <a href="{{ url('mapper_profile', {username:song.user.username}) }}">{{ song.mapper }}</a>
+        </div>
+    </td>
+    <td class="small-col  pt-2 pb-2">{% include 'songs/partial/downupvote.html.twig' with {song:song} %}</td>
+
+    <td class="table-column padded text-center song-vote-content-{{ song.id }}">
+        {% include 'songs/partial/vote_small.html.twig' with {song:song} %}
+    </td>
+
+    <td class="text-right text-grey">
+        {{ song.getTimeAgo }}&nbsp;
+    </td>
+    <td class="text-right   pt-2 pb-2">
+        {{ song.downloads|number_format(0) }}
+    </td>
+    {#    {% if seePlayed is defined %}#}
+    {#        <td class="text-right">{{ song.scores|length }}</td>#}
+    {#    {% endif %}#}
+    <td class="download">
+        {% if not song.isRanked() %}
+        <a href="#"
+               data-modal="#editSong"
+               data-refresh="true"
+               data-url="{{ url('edit_song',{id:song.id}) }}"
+               class="btn btn-blue float-right mt-2 ml-4 mr-4 ajax-modal-form">
+            <i class="fas fa-edit"></i>
+        </a>
+        {% else %}
+            <small>{{ "Ranked"|trans }}</small>
+        {% endif %}
+    </td>
+
+
+</tr>
+
+

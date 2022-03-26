@@ -1,17 +1,17 @@
 {%  macro ratingDisplay(name, rating) %}
-    <div class="rating-wrap d-flex">
+    <div class="rating-wrap d-flex justify-content-between">
        <div class="label">{{ name }}</div>
         {{ _self.starsDisplay(rating) }}
     </div>
 {% endmacro %}
 {%  macro ratingDisplayLabel(name, rating) %}
-    <div class="rating-wrap d-flex">
+    <div class="rating-wrap d-flex justify-content-between">
         <label>{{ name }}</label>
         {{ _self.starsDisplay(rating) }}
     </div>
 {% endmacro %}
 {% macro starsDisplay(rating) %}
-    <div class="rating-list text-warning justify-content-center d-flex " data-input-selector="patternQuality" data-toggle="tooltip" title="{{ rating|round(2) }}">
+    <div class="rating-list text-warning  d-flex float-right" data-input-selector="patternQuality" data-toggle="tooltip" title="{{ rating|round(2) }}">
         {% for i in 0..4 %}
             <div data-id="{{ i }}" class="rating medium {% if rating|round(0) > i %}filled{% endif %}">
                 <i class="{% if rating|round(0) > i %}fas{% else %}far{% endif %} fa-star"></i>

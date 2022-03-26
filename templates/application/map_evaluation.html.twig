@@ -1,39 +1,42 @@
 {% extends 'base.html.twig' %}
-
+ {% block stylesheets %}
+     {{ parent() }}
+     {{ encore_entry_link_tags('application') }}
+ {% endblock %}
 {% block title %}
     Evaluate your map
 {% endblock %}
 
 {% block body %}
-<div class="row">
-    <div class="col-12">
-    <h1 class="mt-5">Evaluate your map <span class="badge-info badges">Beta</span></h1>
-    {{ form(form) }}
-    </div>
-    {% if results|length >= 1 %}
-     <div class="col-12">
-       <hr/>
-        <h2 class="mt-5">Difficulties evaluation</h2>
-     </div>
-        <div class="col-md-6">
-        <table class="table">
-            <tr>
-                <th>File Name</th>
-                <th class="text-right">Rank defined</th>
-                <th class="text-right">Our estimation</th>
-            </tr>
-        {% for file,result in results %}
-            <tr>
-                <td>{{ result["fileName"] }}</td>
-                <td class="text-right">{{ result["rank"] }}</td>
-                <td class="text-right">{{ result["algo"] }}</td>
-            </tr>
-        {% endfor %}
-        </table>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mt-5">Evaluate your map <span class="badge-info badges">Beta</span></h1>
+                {{ form(form) }}
+            </div>
+            {% if results|length >= 1 %}
+                <div class="col-12">
+                    <hr/>
+                    <h2 class="mt-5">Difficulties evaluation</h2>
+                </div>
+                <div class="col-md-6">
+                    <table class="table">
+                        <tr>
+                            <th>File Name</th>
+                            <th class="text-right">Rank defined</th>
+                            <th class="text-right">Our estimation</th>
+                        </tr>
+                        {% for file,result in results %}
+                            <tr>
+                                <td>{{ result["fileName"] }}</td>
+                                <td class="text-right">{{ result["rank"] }}</td>
+                                <td class="text-right">{{ result["algo"] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
-
-
-</div>
+    </div>
 {% endblock %}
 
