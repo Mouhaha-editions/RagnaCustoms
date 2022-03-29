@@ -152,6 +152,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $credits;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Country::class, inversedBy="utilisateurs")
+     */
+    private $country;
+
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -838,4 +844,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+
 }
