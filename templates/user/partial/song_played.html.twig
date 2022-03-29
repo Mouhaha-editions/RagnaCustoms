@@ -17,7 +17,8 @@
             </div>
         </div>
         <div class="col-md-5 ">
-            <div class="username"><h2>{{ user.username }}</h2></div>
+            <div class="username"><h2>{% if user.country is not null %}<img src="https://flagcdn.com/24x18/{{ user.country.twoLetters|lower }}.png" alt="{{ user.country }}" title="{{ user.country }}">
+                {% endif %}{{ user.username }}</h2></div>
             <div class="tags">
                 {% if user.songs|length > 0 %}<span>{{ "Mapper"|trans }}</span>{% endif %}
                 {% if user.certified|length > 0 %}<span>{{ "Certified"|trans }}</span>{% endif %}
