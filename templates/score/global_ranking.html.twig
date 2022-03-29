@@ -27,9 +27,9 @@
 {#                                         src="https://www.gravatar.com/avatar/{{ score.user.gravatar }}?d={{ "https://ragnacustoms.com/apps/runes.png"|url_encode }}"#}
 {#                                         class="" alt="{{ score.user.username }}"/></a>#}
                                 {% if score.user.country != null %}
-                                    <a href="{{ url('leaderboard_country',{twoLetters:score.user.country.twoLetters|lower }) }}">
+{#                                    <a href="{{ url('leaderboard_country',{twoLetters:score.user.country.twoLetters|lower }) }}">#}
                                         <img src="https://flagcdn.com/16x12/{{ score.user.country.twoLetters|lower }}.png" alt="{{ score.user.country }}" title="{{ score.user.country }}">
-                                    </a>
+{#                                    </a>#}
                                 {% else %}
                                     <div style="width:16px; height:12px;display:inline-block;"></div>
                                 {% endif %}
