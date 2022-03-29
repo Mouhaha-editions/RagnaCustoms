@@ -54,7 +54,7 @@
             </div>
             <div class="graph mt-4">
                 <div>
-                    {% set totalDistance = statisticService.getTotalDistance(user) %}
+                    {% set totalDistance = statisticService.getTotalDistance(user)/100 %}
                     <div class="label">{{ "Distance"|trans }}</div>
                     <div class="total-bar">{{ totalDistance|number_format(2,'.',',') }}m</div>
                     <div class="avg">
