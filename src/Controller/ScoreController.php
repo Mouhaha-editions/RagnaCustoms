@@ -89,6 +89,7 @@ class ScoreController extends AbstractController
         $scores = $pagination->setDefaults(25)->process($qb, $request);
         return $this->render('score/global_ranking.html.twig', [
             'scores' => $scores,
+            'country'=>$country
         ]);
     }
 

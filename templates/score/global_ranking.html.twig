@@ -10,7 +10,7 @@
                 {% if is_granted('ROLE_USER') %}
                     <a href="?findme=true" class="float-right btn btn-success btn-bg-empty mt-2">{{ "Find me"|trans }}</a>
                 {% endif %}
-                <h1>{{ "Leaderboard"|trans }}</h1>
+                <h1>{{ "Leaderboard"|trans }} {% if country is defined %}{{ country.twoLetters }}{% endif %}</h1>
                 <table class="table table-sm">
                     <tr>
                         <th>{{ "#" }}</th>
