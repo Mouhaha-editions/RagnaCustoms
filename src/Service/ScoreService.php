@@ -148,12 +148,14 @@ class ScoreService
 
     public function getGeneralLeaderboardPosition(UserInterface $user, ?Country $country = null)
     {
-        $qb = $this->em->getRepository(RankedScores::class)->createQueryBuilder('r')->leftJoin('r.user', 'u')->where('u.id = :user')->setParameter('user', $user);
+        $qb = $this->em->getRepository(RankedScores::class)
+            ->createQueryBuilder('r')->leftJoin('r.user', 'u')->where('u.id = :user')->setParameter('user', $user);
         if ($country) {
             $qb->leftJoin('u.country', 'c')->andWhere('c.id = :country')->setParameter('country', $country);
         }
-        $qb->orderBy("totalPPScore", "Desc");
+        $qb->orderBy("r.totalPPScore", "Desc");
         $mine = $qb->getQuery()->setFirstResult(0)->setMaxResults(1)->getOneOrNullResult();
+
         if ($mine == null) {
             return null;
         }
