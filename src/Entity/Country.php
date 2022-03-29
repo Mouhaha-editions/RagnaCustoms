@@ -39,6 +39,10 @@ class Country
      */
     private $utilisateurs;
 
+    public function __toString()
+    {
+        return $this->getLabel();
+    }
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();

@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Country;
 use App\Entity\Utilisateur;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -11,6 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -18,8 +21,15 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('username')
-            ->add('email',null,[
-                'help'=>"Registration confirmation will be emailed to you."
+            ->add('country', EntityType::class, [
+                "class" => Country::class,
+                'multiple' => false,
+                "label" => "Country",
+                'placeholder' => '-- optional --',
+                'required' => false
+            ])
+            ->add('email', null, [
+                'help' => "Registration confirmation will be emailed to you."
             ])
 //            ->add('agreeTerms', CheckboxType::class, [
 //                'mapped' => false,
@@ -44,8 +54,7 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
