@@ -84,7 +84,9 @@ class SongRequestController extends AbstractController
         }
 
         $songRequests = $pagination->setDefaults(50)->process($qb, $request);
-       $reason = "";
+           $reason = "";
+       if($this->isGranted('ROLE_USER')){
+
         if ($user->getOpenSongRequests()->count() >= 3) {
             $reason = '<div class="alert alert-danger">You already have 3 or more requests, please wait before adding a new one.</div>';
             $save = false;
@@ -92,7 +94,7 @@ class SongRequestController extends AbstractController
             $reason = '<div class="alert alert-danger">You need 30 credits to add a song request,play more songs to earn credits ;)</div>';
             $save = false;
         }
-
+    }
         return $this->render('song_request/index.html.twig', [
             'songRequests' => $songRequests,
             'form' => $form && $save? $form->createView() : null,
