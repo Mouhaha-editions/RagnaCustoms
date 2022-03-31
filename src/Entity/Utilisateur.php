@@ -856,4 +856,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->scoreHistories;
     }
 
+    public function getScoresRanked()
+    {
+        foreach($this->getScores() AS $score){
+            if($score->getSongDifficulty()->isRanked()) {
+                yield $score;
+            }
+        }
+    }
 }
