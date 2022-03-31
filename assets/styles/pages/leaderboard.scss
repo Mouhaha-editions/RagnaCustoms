@@ -20,6 +20,7 @@
   }
 
   .table {
+    font-size: 14px;
     tr {
       &:nth-child(2n) {
         background: $bg-tr-pair;
