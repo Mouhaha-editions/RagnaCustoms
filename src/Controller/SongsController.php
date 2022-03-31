@@ -348,12 +348,13 @@ class SongsController extends AbstractController
         }
         $qb->andWhere("s.isDeleted != true");
 
-        if ($request->get('onclick_dl')) {
-            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
-            return $this->redirect("ragnac://install/" . implode('-', array_map(function ($id) {
-                    return array_pop($id);
-                }, $ids)));
-        }
+//            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
+//        if ($request->get('onclick_dl')) {
+//            if(count($ids)<=)
+//            return $this->redirect("ragnac://install/" . implode('-', array_map(function ($id) {
+//                    return array_pop($id);
+//                }, $ids)));
+//        }
 
         if ($request->get('order_by')) {
             $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));

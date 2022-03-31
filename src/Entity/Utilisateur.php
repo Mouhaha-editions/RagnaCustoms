@@ -35,6 +35,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $certified;
     /**
+     * @ORM\ManyToOne(targetEntity=Country::class, inversedBy="utilisateurs")
+     */
+    private $country;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $credits;
+    /**
      * @ORM\ManyToMany(targetEntity=SongRequest::class, mappedBy="mapperOnIt")
      */
     private $currentlyMapped;
@@ -110,13 +118,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private $roles = [];
     /**
      * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OrderBy({"updatedAt"="desc"})
      */
     private $scoreHistories;
+
     /**
      * @ORM\OneToMany(targetEntity=Score::class, mappedBy="user")
      */
     private $scores;
-
     /**
      * @ORM\OneToMany(targetEntity=SongRequestVote::class, mappedBy="user", orphanRemoval=true)
      */
@@ -146,17 +155,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="user", orphanRemoval=true)
      */
     private $votes;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $credits;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Country::class, inversedBy="utilisateurs")
-     */
-    private $country;
-
 
     public function __construct()
     {
@@ -268,8 +266,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getGravatar(): ?string
     {
-         $size=600;
-        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=".$size;
+        $size = 600;
+        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=" . $size;
     }
 
     public function isVerified(): bool
@@ -563,14 +561,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|ScoreHistory[]
-     */
-    public function getScoreHistories(): Collection
-    {
-        return $this->scoreHistories;
-    }
-
     public function addScoreHistory(ScoreHistory $scoreHistory): self
     {
         if (!$this->scoreHistories->contains($scoreHistory)) {
@@ -666,18 +656,15 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->songRequests;
     }
 
-  /**
+    /**
      * @return Collection|SongRequest[]
      */
     public function getOpenSongRequests(): Collection
     {
-        return $this->songRequests->filter(function(Songrequest $songrequest){
+        return $this->songRequests->filter(function (Songrequest $songrequest) {
             return $songrequest->getState() == SongRequest::STATE_ASKED;
         });
     }
-
-
-
 
     /**
      * @return ?SongRequest
@@ -793,7 +780,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->songRequestVotes;
     }
 
-
     public function getAvgRating()
     {
         $songsRating = [];
@@ -857,5 +843,17 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getLastScoreHistory()
+    {
+        return $this->getScoreHistories()->first();
+    }
+
+    /**
+     * @return Collection|ScoreHistory[]
+     */
+    public function getScoreHistories(): Collection
+    {
+        return $this->scoreHistories;
+    }
 
 }

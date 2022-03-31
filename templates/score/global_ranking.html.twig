@@ -16,6 +16,7 @@
                         <th>{{ "#" }}</th>
                         <th>{{ "User"|trans }}</th>
                         <th class="text-right">{{ "Score"|trans }}</th>
+                        <th class="text-right">{{ "Last Update"|trans }}</th>
 {#                        <th class="text-right">{{ "Songs played"|trans }}</th>#}
                     </tr>
                     {% for score in scores.entities %}
@@ -36,7 +37,7 @@
                                 <a href="{{ url("user_profile",{username:score.user.username}) }}"
                                    class="ml-1 text-level-9">{{ score.user.username }}</a></td>
                             <td class="text-right">{{ score.totalPPScore|round(2) }} pts</td>
-{#                            <td class="text-right">{{ score["count_song"] }}</td>#}
+                            <td class="text-right">{{ score.user.lastScoreHistory.timeAgo() }}</td>
                         </tr>
                     {% endfor %}
                 </table>
