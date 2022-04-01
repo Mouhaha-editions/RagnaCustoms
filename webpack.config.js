@@ -37,6 +37,8 @@ Encore
     .addStyleEntry('song_library', './assets/styles/pages/song_library.scss')
     .addStyleEntry('application', './assets/styles/pages/application.scss')
     .addStyleEntry('getting_started', './assets/styles/pages/getting_started.scss')
+    .addStyleEntry('ranking_system', './assets/styles/pages/ranking_system.scss')
+    .addStyleEntry('acceptance_criteria', './assets/styles/pages/acceptance_criteria.scss')
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 

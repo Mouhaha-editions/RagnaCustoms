@@ -6,24 +6,24 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1 class="pt-5 pb-5">{{ "Getting started - FAQ"|trans }}</h1>
-            <h5 class="pt-4">{{ "Q: How do I install custom songs on the <b>Steam</b> version of Ragnarock?"|trans|raw }}</h5>
+            <h1 class="pt-5 pb-5">Getting started - FAQ</h1>
+            <h5 class="pt-4">Q: How do I install custom songs on the <b>Steam</b> version of Ragnarock?</h5>
             <div class="indent">
                 There are two ways that you can install custom songs into Ragnarock.
                 <div class="indent">
-                    <div class="span">Option 1 - Extract Zip</div>
-                    The first is by simply downloading the zip from the song page and extacting it to the following
-                    folder
-                    <div class="code">C:\Users\<b>{USER}</b>\Documents\Ragnarock\CustomSongs\</div>
-                    .<br/>
-                    <div class="span">Option 2 - RagnaCustoms App (Preferred)</div>
+                    <div class="span">Option 1 - RagnaCustoms App (Preferred)</div>
                     You can also easily search and download songs usings the RagnaCustoms App. The app will allow
                     you to see new songs, download and install with a click of a button.<br/>
                     Learn more by checking out the <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases"
                                                       target="_blank">RagnaCustoms App</a>.
+                    <br/>
+                    <div class="span">Option 2 - Extract Zip</div>
+                    The first is by simply downloading the zip from the song page and extacting it to the following
+                    folder
+                    <div class="code">%USERPROFILE%\Documents\Ragnarock\CustomSongs\</div>.
                 </div>
             </div>
-            <h5 class="pt-4">Q: How do I install custom songs on the Oculus Quest version of Ragnarock?</h5>
+            <h5 class="pt-4">Q: How do I install custom songs on the <b>Oculus Quest</b> version of Ragnarock?</h5>
             <div class="indent">
                 The easiest way to install custom songs on the Quest version of RagnaRock is to install the
                 RagnaCustoms App on your Windows PC.
@@ -39,16 +39,16 @@
                     <img src="{{ asset('apps/oculus_sync.jpg') }}" alt="oculus sync"/>
                 </div>
             </div>
-            <h5 class="pt-4">Q: How do I upload scores to RagnaCustoms for custom songs?</h5>
+            <h5 class="pt-4">Q: How do I upload scores to RagnaCustoms?</h5>
             <div class="row">
                 <div class="col-md-6">
                     <div class="indent">
                         <h6>Steam</h6>
-                        <span>Step 1:</span> Locate the file Game.ini at
-                        <div class="code">C:\Users\<b>{USER}</b>\AppData\Local\Ragnarock\Saved\Config\WindowsNoEditor\
+                        <span>Step 1:</span> Open the file Game.ini located at:
+                        <div class="code">%LOCALAPPDATA%\Ragnarock\Saved\Config\WindowsNoEditor\
                         </div>
                         <br/>
-                        <span>Step 2:</span> Edit this file to add following :<br/>
+                        <span>Step 2:</span> Edit this file and add:<br/>
                         <div>
                             <div class="code">
                                 [/Script/Ragnarock.RagnarockSettings]<br/>
@@ -56,9 +56,9 @@
                                 <a href="{{ url('user') }}">your api key</a>{% endif %}"
                             </div>
                         </div>
-                        <span>Step 3:</span> Save the file and start the game<br/>
-                        <span>Step 4:</span> In advanced menu you have to check "Allow Sending Custom Songs Scores"<br/>
-                        <span>Step 5:</span> Play & enjoy
+                        <span>Step 3:</span> Save the file and start the game.<br/>
+                        <span>Step 4:</span> In advanced menu, check "Allow Sending Custom Songs Scores".<br/>
+                        <span>Step 5:</span> Play & enjoy.
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -72,7 +72,7 @@
             </div>
 
             <h5 class="pt-4">Q: Can I play custom songs against others in multiplayer?</h5>
-            <div class="indent">Yes ! in private PVP.</div>
+            <div class="indent">Yes! In private PVP.</div>
 
             <h5 class="pt-4">Q: What songs are allowed?</h5>
             <div class="indent">Generally speaking, any song is allowed as long as effort was put in to make it an
@@ -87,6 +87,14 @@
                         href="https://pkbeam.github.io/Edda/" target="_blank">official EDDA website</a>.
             </div>
 
+            <h5 class="pt-4">Q: How does the ranking system works?</h5>
+            <div class="indent">You can find the details of how the ranking system works on the <a
+                        href="{{ url('ranking_system') }}" target="_blank">Ranking system</a> page
+            </div>
+
+            <h5 class="pt-4">Q: Can I submit my own maps for ranking?</h5>
+            <div class="indent">Yes, on the condition it comply the following <a href="" target="_blank">acceptance criteria</a> (coming soon)
+            </div>
         </div>
     </div>
     {% endblock %}
