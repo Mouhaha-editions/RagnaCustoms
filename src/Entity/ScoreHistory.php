@@ -542,5 +542,8 @@ class ScoreHistory
     {
         $this->plateform = $plateform;
     }
-
+    public function getTimeAgo()
+    {
+        return StatisticService::dateDiplayer($this->getUpdatedAt());
+    }
 }

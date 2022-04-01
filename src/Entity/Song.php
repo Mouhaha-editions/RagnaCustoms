@@ -1067,7 +1067,6 @@ class Song
 
     /**
      * @return string
-     * @todo make tomething to write "XXX days/hours/min/sec ago"
      */
     public function getTimeAgo()
     {

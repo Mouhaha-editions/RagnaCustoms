@@ -8,6 +8,7 @@ use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
+use App\Entity\SongTemporaryList;
 use App\Entity\Utilisateur;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\OverlayRepository;
@@ -17,6 +18,7 @@ use App\Repository\ScoreRepository;
 use App\Repository\SongCategoryRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
+use App\Repository\SongTemporaryListRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\ScoreService;
 use App\Service\SongService;
@@ -102,6 +104,27 @@ class ApiController extends AbstractController
                 "Difficulties" => $song->getSongDifficultiesStr(),
                 "CoverImageExtension" => $song->getCoverImageExtension(),
             ]);
+    }
+    /**
+     * @param Request $request
+     * @Route("/api/song-list/{id}", name="api_song_list")
+     */
+    public function songList(Request $request, SongTemporaryList $songTemporaryList)
+    {
+        $data = [];
+        foreach($songTemporaryList->getSongs() AS $song){
+            $data[] = [
+                "Id" => $song->getId(),
+                "Name" => $song->getName(),
+                "Author" => $song->getAuthorName(),
+                "IsRanked" => $song->isSeasonRanked(),
+                "Hash" => $song->getNewGuid(),
+                "Mapper" => $song->getLevelAuthorName(),
+                "Difficulties" => $song->getSongDifficultiesStr(),
+                "CoverImageExtension" => $song->getCoverImageExtension(),
+            ];
+        }
+        return new JsonResponse($data);
     }
 
     /**
@@ -221,7 +244,6 @@ class ApiController extends AbstractController
     public function songCategories(Request $request, SongCategoryRepository $categoryRepository)
     {
         $data = $categoryRepository->createQueryBuilder("sc")->select("sc.id AS id, sc.label AS text")->where('sc.label LIKE :search')->setParameter('search', '%' . $request->get('q') . '%')->andWhere('sc.isOnlyForAdmin = false')->orderBy('sc.label')->getQuery()->getArrayResult();
-
         return new JsonResponse([
             'results' => $data
         ]);

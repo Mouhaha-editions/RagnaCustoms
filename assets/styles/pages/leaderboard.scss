@@ -18,4 +18,32 @@
       }
     }
   }
+
+  .table {
+    font-size: 14px;
+    tr {
+      &:nth-child(2n) {
+        background: $bg-tr-pair;
+
+        &:hover {
+          background: $bg-lighter;
+        }
+      }
+    }
+
+    th {
+      font-size: 14px;
+
+      .fa {
+        font-size: 12px;
+      }
+    }
+
+    td {
+      border: none;
+      span{
+        color:$light-grey;
+      }
+    }
+  }
 }

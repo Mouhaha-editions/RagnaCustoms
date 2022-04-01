@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Country;
 use App\Entity\RankedScores;
 use App\Entity\Score;
 use App\Entity\ScoreHistory;
@@ -145,37 +146,26 @@ class ScoreService
         return (float)sqrt($variance / $num_of_elements);
     }
 
-    public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty, $default = '-')
+    public function getGeneralLeaderboardPosition(UserInterface $user, ?Country $country = null)
     {
-        $mine = $this->em->getRepository(Score::class)->findOneBy([
-            'user' => $user,
-            'songDifficulty' => $songDifficulty
-        ], ["score" => "Desc"]);
-        if ($mine == null) {
-            return $default;
+        $qb = $this->em->getRepository(RankedScores::class)
+            ->createQueryBuilder('r')->leftJoin('r.user', 'u')->where('u.id = :user')->setParameter('user', $user);
+        if ($country) {
+            $qb->leftJoin('u.country', 'c')->andWhere('c.id = :country')->setParameter('country', $country);
         }
-        return count($this->em->getRepository(Score::class)
-                ->createQueryBuilder("s")
-                ->select('s.id')->where('s.score > :my_score')
-                ->andWhere('s.songDifficulty = :difficulty')
-                ->andWhere('s.user != :me')
-                ->setParameter('my_score', $mine->getScore())->setParameter('difficulty', $songDifficulty)
-                ->setParameter('me', $user)
-                ->groupBy('s.user')->getQuery()->getResult()) + 1;
-    }
+        $qb->orderBy("r.totalPPScore", "Desc");
+        $mine = $qb->getQuery()->setFirstResult(0)->setMaxResults(1)->getOneOrNullResult();
 
-
-    public function getGeneralLeaderboardPosition(UserInterface $user)
-    {
-        $mine = $this->em->getRepository(RankedScores::class)->findOneBy([
-            'user' => $user
-        ], ["totalPPScore" => "Desc"]);
         if ($mine == null) {
             return null;
         }
-        return count($this->em->getRepository(RankedScores::class)->createQueryBuilder("s")->select('s.id')->where('s.totalPPScore > :my_score')->andWhere('s.user != :me')->setParameter('my_score', $mine->getTotalPPScore())->setParameter('me', $user)->groupBy('s.user')->getQuery()->getResult()) + 1;
+        $qb2 =$this->em->getRepository(RankedScores::class)
+            ->createQueryBuilder("s")->select('s.id')->where('s.totalPPScore > :my_score')->andWhere('s.user != :me')->setParameter('my_score', $mine->getTotalPPScore())->setParameter('me', $user)->groupBy('s.user');
+        if ($country) {
+            $qb2->leftJoin('u.country', 'c')->andWhere('c.id = :country')->setParameter('country', $country);
+        }
 
-
+        return count($qb2->getQuery()->getResult()) + 1;
     }
 
     public function archive(?Score $score, $delete = false)
@@ -204,8 +194,8 @@ class ScoreService
             $scoreHistory->setPlateform($score->getPlateform());
 
             $this->em->persist($scoreHistory);
-            if($delete){
-                if($score->getId() != null){
+            if ($delete) {
+                if ($score->getId() != null) {
                     $this->em->remove($score);
                 }
             }
@@ -220,17 +210,11 @@ class ScoreService
         foreach ($scores as $k => $score) {
             $results[] = $this->getFormattedRank($score, $k + 1);
         }
-        $place = $this->getLeaderboardPosition($user,$songDiff);
+        $place = $this->getLeaderboardPosition($user, $songDiff);
         $score = null;
-        if($place>5) {
-            $score = $this->em->getRepository(Score::class)
-                ->createQueryBuilder("s")
-                ->where("s.songDifficulty = :diff ")
-                ->andWhere("s.user = :user ")
-                ->setParameter('diff', $songDiff)
-                ->setParameter('user', $user)
-                ->orderBy('s.score', "DESC")->setMaxResults(1)->setFirstResult(0)->getQuery()->getOneOrNullResult();
-            $results[] = $this->getFormattedRank($score,$place);
+        if ($place > 5) {
+            $score = $this->em->getRepository(Score::class)->createQueryBuilder("s")->where("s.songDifficulty = :diff ")->andWhere("s.user = :user ")->setParameter('diff', $songDiff)->setParameter('user', $user)->orderBy('s.score', "DESC")->setMaxResults(1)->setFirstResult(0)->getQuery()->getOneOrNullResult();
+            $results[] = $this->getFormattedRank($score, $place);
 
         }
 
@@ -251,8 +235,8 @@ class ScoreService
                 "ComboBlue" => $score->getComboBlue(),
                 "ComboYellow" => $score->getComboYellow(),
                 "Hit" => $score->getHit(),
-                "HitDeltaAverage" =>  $score->getHitDeltaAverage(),
-                "HitPercentage" =>  $score->getHitPercentage(),
+                "HitDeltaAverage" => $score->getHitDeltaAverage(),
+                "HitPercentage" => $score->getHitPercentage(),
                 "Missed" => $score->getMissed(),
                 "PercentageOfPerfects" => $score->getPercentageOfPerfects()
             ],
@@ -260,15 +244,21 @@ class ScoreService
         ];
     }
 
-    public function getTheoricalRank(SongDifficulty $songDifficulty, ?float $getScore )
+    public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty, $default = '-')
     {
-        return count($this->em->getRepository(Score::class)
-                ->createQueryBuilder("s")->select('s.id')
-                ->where('s.score > :my_score')
-                ->andWhere('s.songDifficulty = :difficulty')
-                ->setParameter('my_score', $getScore)
-                ->setParameter('difficulty', $songDifficulty)
-                ->groupBy('s.user')->getQuery()->getResult()) + 1;
+        $mine = $this->em->getRepository(Score::class)->findOneBy([
+            'user' => $user,
+            'songDifficulty' => $songDifficulty
+        ], ["score" => "Desc"]);
+        if ($mine == null) {
+            return $default;
+        }
+        return count($this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where('s.score > :my_score')->andWhere('s.songDifficulty = :difficulty')->andWhere('s.user != :me')->setParameter('my_score', $mine->getScore())->setParameter('difficulty', $songDifficulty)->setParameter('me', $user)->groupBy('s.user')->getQuery()->getResult()) + 1;
+    }
+
+    public function getTheoricalRank(SongDifficulty $songDifficulty, ?float $getScore)
+    {
+        return count($this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where('s.score > :my_score')->andWhere('s.songDifficulty = :difficulty')->setParameter('my_score', $getScore)->setParameter('difficulty', $songDifficulty)->groupBy('s.user')->getQuery()->getResult()) + 1;
     }
 }
 

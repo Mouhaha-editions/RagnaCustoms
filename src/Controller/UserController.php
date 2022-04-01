@@ -8,6 +8,7 @@ use App\Entity\SongHash;
 use App\Entity\Utilisateur;
 use App\Enum\EGamification;
 use App\Form\UtilisateurType;
+use App\Repository\CountryRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongHashRepository;
@@ -18,6 +19,7 @@ use App\Service\StatisticService;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,6 +56,21 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/ajax/countries", name="ajax_countries")
+     */
+    public function ajaxCountries(Request $request,CountryRepository $countryRepository): Response
+    {
+        $data = $countryRepository->createQueryBuilder("sc")
+            ->select("sc.id AS id, sc.label AS text")
+            ->where('sc.label LIKE :search')->setParameter('search', '%' . $request->get('q') . '%')
+            ->orderBy('sc.label')
+            ->getQuery()->getArrayResult();
+
+        return new JsonResponse([
+            'results' => $data
+        ]);
+    }
+        /**
      * @Route("/user/progess/{id}/{level}", name="user_progress_song")
      */
     public function progressSong(Request $request, Song $song, string $level, Utilisateur $utilisateur, ScoreHistoryRepository $scoreHistoryRepository): Response

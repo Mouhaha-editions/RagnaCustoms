@@ -8,14 +8,21 @@
 .register{
   padding-bottom:150px;
 }
-input[type=text],input[type=password]{
-  background:  $bg-lighter;
-  color:#fff;
+input[type=text],input[type=password],select, option{
+  background:  $bg-lighter!important;
+  color:#fff!important;
+  &:placeholder-shown{
+  color:white;
+  }
+
+  &::placeholder{
+    color:white;
+  }
   &:focus{
     background:  $bg-lighter;
     color:#fff;
   }
-  border:none;
+  border:none!important;
 }
 label{
   font-size:14px;

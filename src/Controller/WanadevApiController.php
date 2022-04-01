@@ -39,16 +39,16 @@ class WanadevApiController extends AbstractController
     /**
      * @Route("/wanapi/score/{apiKey}/{osef}-{hash}", name="wd_api_score_simple_get",methods={"GET","POST"})
      */
-    public function scoreSimple(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger, ScoreRepository $scoreRepository, $onlyMe = true): Response
+    public function scoreSimple(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger, ScoreRepository $scoreRepository,ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
     {
 
-        return $this->score($request, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository, $logger, $scoreRepository, false);
+        return $this->score($request, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository, $logger, $scoreRepository, $scoreHistoryRepository,false);
     }
 
     /**
      * @Route("/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}", name="wd_api_score_get",methods={"GET","POST"})
      */
-    public function score(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger, ScoreRepository $scoreRepository, $onlyMe = true): Response
+    public function score(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
     {
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
@@ -101,7 +101,7 @@ class WanadevApiController extends AbstractController
                 }
                 $em->persist($newScore);
             }
-            $user->setCredits($user->getCredits()+1);
+            $user->setCredits($user->getCredits() + 1);
             $em->flush();
 
             //calculation of the ponderate PP scores
@@ -119,12 +119,18 @@ class WanadevApiController extends AbstractController
                 }
                 $rankedScore->setTotalPPScore($totalPondPPScore);
             }
-
+            $histories = $scoreHistoryRepository->findBy([
+                'user' => $user,
+                'songDifficulty' => $songDiff
+            ]);
+            foreach ($histories as $history) {
+                $history->setSession($newScore->getSession());
+            }
             $em->flush();
             return new JsonResponse([
-                "rank"=>$scoreService->getTheoricalRank($songDiff,$newScore->getScore()),
-                "score"=>$newScore->getScore(),
-                "ranking"=>$scoreService->getTop5Wanadev($songDiff, $user)
+                "rank" => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
+                "score" => $newScore->getScore(),
+                "ranking" => $scoreService->getTop5Wanadev($songDiff, $user)
             ], 200);
 
         }
