@@ -102,9 +102,9 @@ class StatisticService
         if (self::$StatisticsOnScoreHistory == null || count(self::$StatisticsOnScoreHistory) == 0 ) {
             $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
                 ->select('SUM(d.score) AS distance')
-                ->addSelect('SUM(d.notesHit) AS count_notes_hit')
-                ->addSelect('SUM(d.notesMissed) AS count_notes_missed')
-                ->addSelect('SUM(d.notesNotProcessed) AS count_notes_not_processed')
+                ->addSelect('SUM(d.hit) AS count_notes_hit')
+                ->addSelect('SUM(d.missed) AS count_notes_missed')
+                ->addSelect('0 AS count_notes_not_processed')
                 ->where("d.user = :user")
                 ->setParameter('user', $user)
                 ->groupBy('d.user')
