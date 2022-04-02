@@ -72,11 +72,11 @@ class WanadevApiController extends AbstractController
             $newScore->setUser($user);
             $newScore->setSongDifficulty($songDiff);
             $newScore->setScore($data['score']);
-            $newScore->setDateRagnarock($data['created_at']);
+//            $newScore->setDateRagnarock($data['created_at']);
             $newScore->setSession($data['session']);
             $newScore->setCountry($data['country']);
             $newScore->setUserRagnarock($data['user']);
-            $newScore->setPlateform($data['plateform']);
+            $newScore->setPlateform($data['platform']??"");
             $newScore->setComboBlue($data['stats']['ComboBlue']);
             $newScore->setComboYellow($data['stats']['ComboYellow']);
             $newScore->setHit($data['stats']['Hit']);
@@ -89,10 +89,13 @@ class WanadevApiController extends AbstractController
                 $rawPP = $this->calculateRawPP($newScore, $songDiff);
                 $newScore->setRawPP($rawPP);
             }
-            $score = $scoreRepository->findOneBy([
-                'user' => $user,
-                'songDifficulty' => $songDiff
-            ]);
+            $score = $scoreRepository->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->setParameter('user', $user)
+                ->where('s.songDifficulty = :songDifficulty')
+                ->setParameter('songDifficulty', $songDiff)
+            ->getQuery()->getOneOrNullResult();
+
             $scoreService->archive($newScore);
             if ($score == null || $score->getScore() <= $newScore->getScore()) {
                 //le nouveau score est meilleur
@@ -119,10 +122,12 @@ class WanadevApiController extends AbstractController
                 }
                 $rankedScore->setTotalPPScore($totalPondPPScore);
             }
-            $histories = $scoreHistoryRepository->findBy([
-                'user' => $user,
-                'songDifficulty' => $songDiff
-            ]);
+            $histories = $scoreHistoryRepository->createQueryBuilder('s')
+                ->where('s.user = :user')
+                ->setParameter('user', $user)
+                ->where('s.songDifficulty = :songDifficulty')
+                ->setParameter('songDifficulty', $songDiff)
+                ->getQuery()->getResult();;
             foreach ($histories as $history) {
                 $history->setSession($newScore->getSession());
                 $em->flush();

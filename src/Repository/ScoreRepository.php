@@ -19,21 +19,4 @@ class ScoreRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Score::class);
     }
-    
-
-    public function findBySeasonDiffHash(?Season $season, $difficulty, $hash)
-    {
-        $qb = $this->createQueryBuilder("s")
-            ->where("s.difficulty = :difficulty")
-            ->andWhere("s.hash = :hash")
-            ->setParameter("difficulty", $difficulty)
-            ->setParameter("hash", $hash);
-        if ($season !== null) {
-            $qb->andWhere("s.season = :season")
-                ->setParameter("season", $season);
-        }
-        $qb->orderBy('s.score','desc');
-        return $qb->getQuery()->getResult();
-    }
-
 }

@@ -21,7 +21,6 @@ final class Version20220402203427 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE score_history DROP difficulty, DROP hash, DROP notes_hit, DROP notes_missed, DROP notes_not_processed, DROP percentage, DROP percentage2, DROP hit_speed, DROP combos, DROP song');
-        $this->addSql('ALTER TABLE score DROP difficulty, DROP hash, DROP notes_hit, DROP notes_missed, DROP notes_not_processed, DROP percentage, DROP percentage2, DROP hit_speed, DROP combos, DROP song');
     }
 
     public function down(Schema $schema): void

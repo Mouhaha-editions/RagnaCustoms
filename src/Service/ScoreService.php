@@ -56,33 +56,7 @@ class ScoreService
         return $return;
     }
 
-    /**
-     * @param Season|null $season
-     * @param SongDifficulty $difficulty
-     * @return Score[]
-     */
-    public function getScoresTop(?Season $season, SongDifficulty $difficulty)
-    {
-        return array_slice($this->getScoresFiltered($season, $difficulty), 0, 3);
-    }
 
-    /**
-     * @param Season|null $season
-     * @param SongDifficulty $songDifficulty
-     * @return mixed
-     */
-    public function getScoresFiltered(?Season $season, SongDifficulty $songDifficulty)
-    {
-        $set = [];
-        $scores = $this->em->getRepository(Score::class)->findBySeasonDiffHash($season, $songDifficulty->getDifficultyRank()->getLevel(), $songDifficulty->getSong()->getNewGuid());
-        return array_filter($scores, function (Score $score) use (&$set) {
-            if (in_array($score->getUser()->getId(), $set)) {
-                return false;
-            }
-            $set[] = $score->getUser()->getId();
-            return true;
-        });
-    }
 
     public function calculateDifficulties(string $infoDat)
     {
