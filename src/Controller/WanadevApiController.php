@@ -89,10 +89,11 @@ class WanadevApiController extends AbstractController
                 $rawPP = $this->calculateRawPP($newScore, $songDiff);
                 $newScore->setRawPP($rawPP);
             }
+            /** @var Score $score */
             $score = $scoreRepository->createQueryBuilder('s')
             ->where('s.user = :user')
             ->setParameter('user', $user)
-                ->where('s.songDifficulty = :songDifficulty')
+                ->andWhere('s.songDifficulty = :songDifficulty')
                 ->setParameter('songDifficulty', $songDiff)
             ->getQuery()->getOneOrNullResult();
 
@@ -101,8 +102,11 @@ class WanadevApiController extends AbstractController
                 //le nouveau score est meilleur
                 if ($score != null) {
                     $em->remove($score);
+                    $em->flush();
                 }
                 $em->persist($newScore);
+            }else{
+                $score->setSession($newScore->getSession());
             }
             $user->setCredits($user->getCredits() + 1);
             $em->flush();
@@ -125,13 +129,14 @@ class WanadevApiController extends AbstractController
             $histories = $scoreHistoryRepository->createQueryBuilder('s')
                 ->where('s.user = :user')
                 ->setParameter('user', $user)
-                ->where('s.songDifficulty = :songDifficulty')
+                ->andWhere('s.songDifficulty = :songDifficulty')
                 ->setParameter('songDifficulty', $songDiff)
                 ->getQuery()->getResult();;
             foreach ($histories as $history) {
                 $history->setSession($newScore->getSession());
                 $em->flush();
             }
+
             $em->flush();
             return new JsonResponse([
                 "rank" => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
