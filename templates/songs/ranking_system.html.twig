@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RagnaCustoms.com, Ranking system{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="pt-5 pb-5">Ranking system</h1>
+            <h5 class="pt-4">Ranked / Unranked</h5>
+            <div class="indent">
+                Before starting, it is important to understand that a map itself is not ranked. It is each level of difficulty of a map that can be ranked.<br>
+                Thus, a map with 3 levels can have only one which is ranked. That choice has been made to handle cases where a map has one bad level and one great.<br>
+                So, scores you make are level related and not map related.<br>
+                Scoring system (which we will explain later) is only used for the global leaderboard as the normal scoring (distance based) is already great for individual maps.
+            </div>
+
+            <h5 class="pt-4">Q: Can I propose a map I made to add to the ranked list ?</h5>
+            <div class="indent">
+                It is possible to propose one or several levels of a map you made. A private message to a staff member on the discord server is enough (this may be change in the future).<br>
+                The team will then study the map as long as the initial criteria are respected.<br>
+                Go to the <a href="" target="_blank">acceptance criteria</a> (coming soon) page to know which criteria are mandatory for a map to be accepted.
+            </div>
+
+            <h5 class="pt-4">Q: How to identify a ranked level ?</h5>
+            <div class="indent">  
+                Ranked levels are identified with a star symbol : <img src="{{ asset('apps/ranked_symbol.jpg') }}" alt="ranked map"/><br>
+                Non ranked levels are identified with a circle symbol : <img src="{{ asset('apps/unranked_symbol.jpg') }}" alt="unranked map"/>
+            </div>
+
+            <h5 class="pt-4">Q: How is the PP score calculated ?</h5>
+            <div class="indent">
+                Performance points (abbreviated as PP) are a ranking measure that aims to be more contextually relevant to a player's progression.<br>
+                This system seeks to emphasize a representation of the player's skills rather than a representation of their play time.<br>
+                It also prevents overly skilled players from grinding maps that are too easy for them.<br>
+                <br>
+                A number of raw PP is then calculated for each score.<br>
+                This number is determined via a formula taking into account, among other things, the difficulty of the beatmap and the raw score of the player (distance score).<br>
+                A curve is then applied to calculate the number of weighted PP obtained on each beatmap played. This curve is in the form of 0.965^(x-1) where x is the position of the map in your score list in descending order of raw PP.<br>
+                Your final score will be the sum of all your weighted PP.<br>
+                <br>
+                For instance :<br>
+                <table>
+                    <tr>
+                        <td>
+                        Beatmaps
+                        </td>
+                        <td>
+                        Raw Score
+                        </td>
+                        <td>
+                        Raw PP
+                        </td>
+                        <td>
+                        Weighted PP
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        Beatmap 1    
+                        </td>
+                        <td>
+                        4798    
+                        </td>
+                        <td>
+                        321    
+                        </td>
+                        <td>
+                        100 % of weighted PP = 321    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        Beatmap 2    
+                        </td>
+                        <td>
+                        3597    
+                        </td>
+                        <td>
+                        256    
+                        </td>
+                        <td>
+                        96.5% of weighted PP = 247    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        Beatmap 3    
+                        </td>
+                        <td>
+                        2456    
+                        </td>
+                        <td>
+                        155    
+                        </td>
+                        <td>
+                        93.1 % of weighted PP = 144.31   
+                        </td>
+                    </tr>
+                </table>
+
+                Final score  = 712.31
+            </div>
+
+        </div>
+    </div>
+    {% endblock %}
+
+
+    {% block stylesheets %}
+        {{ parent() }}
+        {{ encore_entry_link_tags('ranking_system') }}
+    {% endblock %}
+    {% block javascripts %}
+    {{ parent() }}
+{% endblock %}

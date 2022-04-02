@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RagnaCustoms.com, Acceptance criteria{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="pt-5 pb-5">Acceptance criteria for ranking songs</h1>
+            <div>
+                The purpose of the ranking criteria is to set an objective standard to follow that ensures that maps put into the rank pool are fair for players.<br>
+                The criteria is enforced in a way that does not take into account bias from any mapper, player, or team member. <br>
+                The criteria involves two sections: one for rules, and one for guidelines. <br>
+                Rules are criteria that must be followed for a map to be considered rankable. <br>
+                Guidelines are criteria that should be followed for a map to be considered rankable but can be broken under proper setup or justification.<br>
+                Further included in this document are a glossary and addendum. The glossary includes definitions for important terms in the criteria. <br>
+                The addendum includes suggestions that are not explicitly about rankability but can aid a map in getting through quality checks. <br>
+                Note that while sections in the addendum do not have to be followed explicitly, excessive abuse of the suggestions can be reason for a map to be denied. <br>
+
+                For any comments, questions, or concerns about material included or not included within the criteria, feel free to message a member of Ragnacustoms.
+            </div>
+            <h1 class="pt-5 pb-5">Rules</h1>
+            <u><h5 class="pt-4">1. Gameplay</h5></u>
+            <div>
+                <ul>
+                    <li>Maps must not require the use of any external mods or programs to play</li>
+                    <li>Maps must be designed to be played without any gameplay modifiers</li>
+                    <li>Maps must be "Standard" game mode maps</li>
+                <ul>
+            </div>
+
+            <u><h5 class="pt-4">2. Patterns</h5></u>
+            <div>  
+                <ul>
+                    <li>A map cannot have any runes that are clearly placed or positioned unintentionally by the mapper</li>
+                    <li>A pattern must not be at a significantly higher effective BPM than what is justified within the rest of the map</li>
+                </ul>
+            </div>
+
+            <u><h5 class="pt-4">3. Timings</h5></u>
+            <div>    
+                <ul>
+                    <li>The map's BPM must perfectly match one of the BPMs of the song or a multiple of one of the BPMs of the song</li>
+                    <li>Maps with variable BPM timing must be timed as accurately as possible</li>
+                    <li>All notes must be perfectly on time to a distinct sound in the music</li>
+                    <li>Undermapped sections must not have a single note off time, and each note in an undermapped section must have a corresponding sound in the music</li>
+                    <li>Rhythmic overmapping is not allowed. A single sound cannot be represented by multiple notes unless those notes fall into a single swing</li>
+                </ul>
+            </div>
+
+            <u><h5 class="pt-4">4. Miscellaneous</h5></u>
+            <div class="indent">
+                <h5>A. Audio</h5>
+                <div>
+                    <ul>
+                        <li>A map's audio must not be modified to add excessive amounts of silence anywhere in the song</li>
+                        <li>A map's audio must consist of musical elements set to an identifiable structure</li>
+                        <li>The length of the map's audio, ignoring any added silence, must be longer than 20 seconds</li>
+                        <li>A decent audio quality is a must. (saturation, volume, …)</li>
+                    </ul>
+                </div>
+                <h5>B. Accompanying text and images</h5>
+                <div>
+                    <ul>
+                        <li>There <u>must not</u> be:
+                            <ul>
+                                <li>nudity</li>
+                                <li>near-nudity</li>
+                                <li>sexual references</li>
+                                <li>extreme violence</li>
+                                <li>gore</li>
+                                <li>substance abuse</li>
+                                <li>political references</li>
+                                <li>religious references</li>
+                            </ul>
+                            or any other form of explicit content anywhere in the files contained in the map</li>
+                        <li>There must not be content that harasses or denigrates any individual or group anywhere in the files contained in the map</li>
+                    </ul>
+                <h5>C. DAT editing</h5>
+                <div>
+                    <ul>
+                        <li>All difficulties in a mapset that are going for rank must not contain any form of unfair modification via editing of the .dat file manually or through external mappers</li>
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+        <h1 class="pt-5 pb-5">Addendum</h1>
+            <u><h5 class="pt-4">1. Consistency</h5></u>
+            <div>
+                <ul>
+                    <li>Repeated sections of music should feel similar, and similar sections should not play excessively differently unless there is some change in the music</li>
+                    <li>Mapping decisions around consistent representation should be understandable</li>
+                <ul>
+            </div>
+
+            <u><h5 class="pt-4">2. Variety</h5></u>
+            <div>  
+                <ul>
+                    <li>Varying the mapping as the music changes is important to musical representation. Big changes in the music should correspond to a change in the mapping</li>
+                    <li>This does not require that patterns must change with every change in the music, nor does it disallow variation in sections where the music stays the same</li>
+                </ul>
+            </div>
+
+            <u><h5 class="pt-4">3. Emphasis</h5></u>
+            <div>    
+                <ul>
+                    <li>The patterns used must reflect as close as possible the intensity level of the music being mapped</li>
+                    <li>The intensity of the mapping in each section relative to other sections should be somewhat in line with the intensity of the music. Deviation is allowed as long as a section’s intensity is not excessively raised or lowered relative to the intensity of the rest of the song</li>
+                </ul>
+            </div>
+    </div>
+    {% endblock %}
+
+
+    {% block stylesheets %}
+        {{ parent() }}
+        {{ encore_entry_link_tags('acceptance_criteria') }}
+    {% endblock %}
+    {% block javascripts %}
+    {{ parent() }}
+{% endblock %}

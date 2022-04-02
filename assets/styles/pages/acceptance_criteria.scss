@@ -1,0 +1,26 @@
+@import '../common.scss';
+
+h5 {
+  font-size: 25px;
+}
+
+.indent {
+  padding-left: 50px;
+
+  span, .span {
+    padding-top: 15px;
+    color: $warning;
+  }
+
+  a {
+    color: $danger;
+  }
+  b{
+    color: $info;
+  }
+}
+#swup {
+  .container{
+    padding-bottom:100px;
+  }
+}

@@ -49,6 +49,24 @@ class SongsController extends AbstractController
     }
 
     /**
+     * @Route("/ranking-system", name="ranking_system")
+     * @return Response
+     */
+    public function rankingSystem(): Response
+    {
+        return $this->render('songs/ranking_system.html.twig');
+    }
+
+    /**
+     * @Route("/acceptance-criteria", name="acceptance_criteria")
+     * @return Response
+     */
+    public function acceptanceCriteria(): Response
+    {
+        return $this->render('songs/acceptance_criteria.html.twig');
+    }
+
+    /**
      * @Route("/", name="home")
      * @return Response
      */
