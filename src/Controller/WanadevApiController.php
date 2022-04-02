@@ -39,10 +39,10 @@ class WanadevApiController extends AbstractController
     /**
      * @Route("/wanapi/score/{apiKey}/{osef}-{hash}", name="wd_api_score_simple_get",methods={"GET","POST"})
      */
-    public function scoreSimple(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger, ScoreRepository $scoreRepository,ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
+    public function scoreSimple(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
     {
 
-        return $this->score($request, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository, $logger, $scoreRepository, $scoreHistoryRepository,false);
+        return $this->score($request, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository, $logger, $scoreRepository, $scoreHistoryRepository, false);
     }
 
     /**
@@ -89,7 +89,6 @@ class WanadevApiController extends AbstractController
                 $rawPP = $this->calculateRawPP($newScore, $songDiff);
                 $newScore->setRawPP($rawPP);
             }
-
             $score = $scoreRepository->findOneBy([
                 'user' => $user,
                 'songDifficulty' => $songDiff

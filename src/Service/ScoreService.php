@@ -170,11 +170,7 @@ class ScoreService
 
     public function archive(?Score $score, $delete = false)
     {
-        $scoreHistory = $this->em->getRepository(ScoreHistory::class)->findOneBy([
-            'user' => $score->getUser(),
-            'songDifficulty' => $score->getSongDifficulty()
-        ]);
-        if ($scoreHistory == null) {
+
             $scoreHistory = new ScoreHistory();
             $scoreHistory->setUser($score->getUser());
             $scoreHistory->setSongDifficulty($score->getSongDifficulty());
@@ -201,7 +197,7 @@ class ScoreService
                 }
             }
             $this->em->flush();
-        }
+
     }
 
     public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user)
