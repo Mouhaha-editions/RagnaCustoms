@@ -72,6 +72,7 @@ class WanadevApiController extends AbstractController
             $newScore->setUser($user);
             $newScore->setSongDifficulty($songDiff);
             $newScore->setScore($data['score']);
+            $newScore->setDateRagnarock($data['created_at']);
             $newScore->setSession($data['session']);
             $newScore->setCountry($data['country']);
             $newScore->setUserRagnarock($data['user']);
@@ -125,6 +126,7 @@ class WanadevApiController extends AbstractController
             ]);
             foreach ($histories as $history) {
                 $history->setSession($newScore->getSession());
+                $em->flush();
             }
             $em->flush();
             return new JsonResponse([

@@ -179,6 +179,7 @@ class ScoreService
             $scoreHistory->setUser($score->getUser());
             $scoreHistory->setSongDifficulty($score->getSongDifficulty());
             $scoreHistory->setScore($score->getScore());
+            $scoreHistory->setDateRagnarock($score->getDateRagnarock());
             $scoreHistory->setRawPP($score->getRawPP());
             $scoreHistory->setComboBlue($score->getComboBlue());
             $scoreHistory->setComboYellow($score->getComboYellow());

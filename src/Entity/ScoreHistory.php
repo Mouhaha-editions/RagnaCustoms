@@ -30,21 +30,17 @@ class ScoreHistory
      */
     private $comboYellow;
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $combos;
+    private $country;
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $difficulty;
+    private $dateRagnarock;
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $extra;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $hash;
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -62,39 +58,17 @@ class ScoreHistory
      */
     private $hitPercentage;
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
-     */
-    private $hitSpeed;
-    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $missed;
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $notesHit;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $notesMissed;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $notesNotProcessed;
-    /**
-     * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
-     */
-    private $percentage;
-    /**
-     * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
-     */
-    private $percentage2;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
     private $percentageOfPerfects;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $plateform;
     /**
      * @ORM\Column(type="float", nullable=true)
      */
@@ -108,15 +82,6 @@ class ScoreHistory
      */
     private $session;
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $dateRagnarock;
-    /**
-     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="scoreHistories")
-     * @ORM\Column(nullable=true)
-     */
-    private $song;
-    /**
      * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scoreHistories")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
@@ -126,6 +91,10 @@ class ScoreHistory
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $userRagnarock;
 
     public function getId(): ?int
     {
@@ -152,138 +121,6 @@ class ScoreHistory
     public function setScore(float $score): self
     {
         $this->score = $score;
-
-        return $this;
-    }
-
-    public function getDifficulty(): ?string
-    {
-        return $this->difficulty;
-    }
-
-    public function setDifficulty(string $difficulty): self
-    {
-        $this->difficulty = $difficulty;
-
-        return $this;
-    }
-
-    public function getHash(): ?string
-    {
-        return $this->hash;
-    }
-
-    public function setHash(string $hash): self
-    {
-        $this->hash = $hash;
-
-        return $this;
-    }
-
-    public function getNotesHit(): ?int
-    {
-        return $this->notesHit;
-    }
-
-    public function setNotesHit(?int $notesHit): self
-    {
-        $this->notesHit = $notesHit;
-
-        return $this;
-    }
-
-    public function getNotesMissed(): ?int
-    {
-        return $this->notesMissed;
-    }
-
-    public function setNotesMissed(?int $notesMissed): self
-    {
-        $this->notesMissed = $notesMissed;
-
-        return $this;
-    }
-
-    public function getNotesNotProcessed(): ?int
-    {
-        return $this->notesNotProcessed;
-    }
-
-    public function setNotesNotProcessed(?int $notesNotProcessed): self
-    {
-        $this->notesNotProcessed = $notesNotProcessed;
-
-        return $this;
-    }
-
-    public function getHitAccuracy(): ?string
-    {
-        return $this->hitAccuracy;
-    }
-
-    public function setHitAccuracy(?string $hitAccuracy): self
-    {
-        $this->hitAccuracy = $hitAccuracy;
-
-        return $this;
-    }
-
-    public function getPercentage(): ?string
-    {
-        return $this->percentage;
-    }
-
-    public function setPercentage(?string $percentage): self
-    {
-        $this->percentage = $percentage;
-
-        return $this;
-    }
-
-    public function getPercentage2(): ?string
-    {
-        return $this->percentage2;
-    }
-
-    public function setPercentage2(?string $percentage2): self
-    {
-        $this->percentage2 = $percentage2;
-
-        return $this;
-    }
-
-    public function getHitSpeed(): ?string
-    {
-        return $this->hitSpeed;
-    }
-
-    public function setHitSpeed(?string $hitSpeed): self
-    {
-        $this->hitSpeed = $hitSpeed;
-
-        return $this;
-    }
-
-    public function getCombos(): ?int
-    {
-        return $this->combos;
-    }
-
-    public function setCombos(?int $combos): self
-    {
-        $this->combos = $combos;
-
-        return $this;
-    }
-
-    public function getSong(): ?Song
-    {
-        return $this->song;
-    }
-
-    public function setSong(?Song $song): self
-    {
-        $this->song = $song;
 
         return $this;
     }
@@ -483,19 +320,6 @@ class ScoreHistory
     }
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $userRagnarock;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $country;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $plateform;
-
-    /**
      * @return mixed
      */
     public function getUserRagnarock()
@@ -542,6 +366,7 @@ class ScoreHistory
     {
         $this->plateform = $plateform;
     }
+
     public function getTimeAgo()
     {
         return StatisticService::dateDiplayer($this->getUpdatedAt());
