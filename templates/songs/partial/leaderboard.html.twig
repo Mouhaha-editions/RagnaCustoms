@@ -10,6 +10,9 @@
                 <th>{{ "player"|trans }}</th>
                 <th class="text-right">{{ "distance"|trans }}</th>
                 <th class="text-right">{{ "PP"|trans }}</th>
+                <th class="text-right">{{ "Perfects (%)" }}</th>
+                <th class="text-right">{{ "Combos" }}</th>
+                <th class="text-right">{{ "More Stats" }}</th>
             </tr>
             {% set imin = false %}
             {% for score in level['scores'].entities %}
@@ -19,6 +22,32 @@
                     <td>{{ score.user.username }}</td>
                     <td class="text-right">{{ score.scoreDisplay }}</td>
                     <td class="text-right">{{ score.rawPP }}</td>
+                    <td class="text-right">{{ score.percentageOfPerfects }}</td>
+                    <td class="text-right"><font color="#4b9ce2">{{ score.comboBlue }}</font> | <font color="#ffc107">{{ score.comboYellow }}</font></td>
+                    <td class="text-right">
+                    <div class="tooltip"><i class="fa-solid fa-chart-line"></i>
+                          <span class="tooltiptext">
+                                <table class="tooltiptable">
+                                    <tr>
+                                        <th>
+                                            Hit %
+                                        </th>
+                                        <th>
+                                            Missed
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            {{ score.hitPercentage }}
+                                        </td>
+                                        <td>
+                                            {{ score.missed }}
+                                        </td>
+                                    </tr>
+                                </table>
+                          </span>
+                        </div>
+                    </td>
                 </tr>
             {% else %}
                 <tr>
