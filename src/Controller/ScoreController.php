@@ -28,12 +28,7 @@ class ScoreController extends AbstractController
      */
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService, SeasonRepository $seasonRepository, Season $selectedSeason = null): Response
     {
-        $qb = $songRepository->createQueryBuilder('s')
-            ->where('s.moderated = true')
-            ->andWhere('s.wip != true')
-            ->andWhere("s.isDeleted != true")
-            ->distinct()
-            ->orderBy('s.name', 'ASC');
+        $qb = $songRepository->createQueryBuilder('s')->where('s.moderated = true')->andWhere('s.wip != true')->andWhere("s.isDeleted != true")->distinct()->orderBy('s.name', 'ASC');
 
         if ($request->get('season', null) !== null) {
             if ($request->get('season') == 0) {
@@ -43,10 +38,7 @@ class ScoreController extends AbstractController
             return $this->redirectToRoute('score', ['slug' => $selectedSeason->getSlug()]);
         }
         if ($selectedSeason != null) {
-            $qb->leftJoin('s.songDifficulties', 'difficulties')
-                ->leftJoin('difficulties.seasons', 'season')
-                ->andWhere('season.id = :season')
-                ->setParameter('season', $selectedSeason);
+            $qb->leftJoin('s.songDifficulties', 'difficulties')->leftJoin('difficulties.seasons', 'season')->andWhere('season.id = :season')->setParameter('season', $selectedSeason);
         }
         $songs = $paginationService->setDefaults(50)->process($qb, $request);
 
@@ -64,32 +56,34 @@ class ScoreController extends AbstractController
 
         ]);
     }
+
     /**
      * @Route("/ranking/country/{twoLetters}", name="score_global_country")
      * @return Response
      */
-    public function globalCountryRanking(Request $request,Country $country, PaginationService $pagination, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository): Response
+    public function globalCountryRanking(Request $request, Country $country, PaginationService $pagination, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository): Response
     {
         if ($request->get('findme', null)) {
-            $score = $scoreService->getGeneralLeaderboardPosition($this->getUser(), $country);
+            $score = null;
+            if ($this->isGranted('ROLE_USER') && $this->getUser()->getCountry()->getId() == $country->getId()) {
+                $score = $scoreService->getGeneralLeaderboardPosition($this->getUser(), $country);
+            }
             if ($score == null) {
                 $this->addFlash("danger", "No score found");
                 return $this->redirectToRoute("score_global_ranking");
             } else {
-                return $this->redirect($this->generateUrl("score_global_ranking") . "?ppage1=" . ceil($score / 25) . "#".$this->getUser()->getUsername());
+                return $this->redirect($this->generateUrl("score_global_ranking") . "?ppage1=" . ceil($score / 25) . "#" . $this->getUser()->getUsername());
             }
         }
 
-        $qb = $rankedScoresRepository->createQueryBuilder('rs')
-            ->leftJoin('rs.user','u')
-            ->leftJoin('u.country','c')
-            ->where('u.country = :country')
+        $qb = $rankedScoresRepository->createQueryBuilder('rs')->leftJoin('rs.user', 'u')
+            ->leftJoin('u.country', 'c')->where('u.country = :country')
             ->setParameter('country', $country)
             ->orderBy("rs.totalPPScore", "DESC");
         $scores = $pagination->setDefaults(25)->process($qb, $request);
         return $this->render('score/global_ranking.html.twig', [
             'scores' => $scores,
-            'country'=>$country
+            'country' => $country
         ]);
     }
 
@@ -105,12 +99,11 @@ class ScoreController extends AbstractController
                 $this->addFlash("danger", "No score found");
                 return $this->redirectToRoute("score_global_ranking");
             } else {
-                return $this->redirect($this->generateUrl("score_global_ranking") . "?ppage1=" . ceil($score / 25) . "#".$this->getUser()->getUsername());
+                return $this->redirect($this->generateUrl("score_global_ranking") . "?ppage1=" . ceil($score / 25) . "#" . $this->getUser()->getUsername());
             }
         }
 
-        $qb = $rankedScoresRepository->createQueryBuilder('rs')
-            ->orderBy("rs.totalPPScore", "DESC");
+        $qb = $rankedScoresRepository->createQueryBuilder('rs')->orderBy("rs.totalPPScore", "DESC");
         $scores = $pagination->setDefaults(25)->process($qb, $request);
         return $this->render('score/global_ranking.html.twig', [
             'scores' => $scores,
@@ -127,17 +120,11 @@ class ScoreController extends AbstractController
         if ($season === null) {
             $season = $seasonRepository->getCurrent();
         }
-        $qb = $scoreRepository->createQueryBuilder('s')
-            ->select('u.username AS username,
+        $qb = $scoreRepository->createQueryBuilder('s')->select('u.username AS username,
             u.id AS user_id, 
             MD5(LOWER(u.email)) as gravatar, 
             SUM(s.score)/1000 AS score, 
-            COUNT(s.hash) AS count_song')
-            ->leftJoin('s.user', 'u')
-            ->andWhere('s.season = :season')
-            ->setParameter('season', $season)
-            ->groupBy('s.user')
-            ->orderBy('SUM(s.score)', 'DESC');
+            COUNT(s.hash) AS count_song')->leftJoin('s.user', 'u')->andWhere('s.season = :season')->setParameter('season', $season)->groupBy('s.user')->orderBy('SUM(s.score)', 'DESC');
 //        $scores = $qb->getQuery()->getResult();
         $scores = $paginationService->setDefaults(200)->process($qb, $request);
 
