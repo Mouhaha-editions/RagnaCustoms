@@ -103,7 +103,9 @@ class UserController extends AbstractController
      */
     public function mappedProfile(Request $request, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
     {
-        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
+        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")
+            ->where('s.user = :user')
+            ->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
 //            ->leftJoin("s.downloadCounters",'dc')
             ->groupBy("s.id");
 //        $qb->leftJoin('s.songDifficulties', 'song_difficulties')
@@ -266,7 +268,7 @@ class UserController extends AbstractController
                 }, $ids)));
         }
 
-        if ($request->get('order_by')) {
+        if ($request->get('order_by') && in_array($request->get('order_by'),['s.lastDateUpload','rating','s.downloads','s.name'],true)) {
             $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
         }
         //$pagination = null;
