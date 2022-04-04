@@ -32,7 +32,7 @@ class MapperService
             ->setParameter('user', $user)
             ->groupBy("s.user")
             ->getQuery()->getOneOrNullResult();
-        return array_pop($res);
+        return $res != null ? array_pop($res):0;
     }
 
     public function getTotalUpperVotes(UserInterface $user)
@@ -44,7 +44,7 @@ class MapperService
             ->setParameter('user', $user)
             ->groupBy("s.user")
             ->getQuery()->getOneOrNullResult();
-        return array_pop($res);
+        return $res != null ? array_pop($res):0;
     }
 
     public function getTotalLowerVotes(UserInterface $user)
@@ -56,7 +56,7 @@ class MapperService
             ->setParameter('user', $user)
             ->groupBy("s.user")
             ->getQuery()->getOneOrNullResult();
-        return array_pop($res);
+        return $res != null ? array_pop($res):0;
     }
 
     public function getAvgReview(UserInterface $user)
@@ -69,7 +69,7 @@ class MapperService
             ->setParameter('user', $user)
             ->groupBy("s.user")
             ->getQuery()->getOneOrNullResult();
-        return array_pop($res);
+        return $res != null ? array_pop($res):0;
     }
 
     public function getTotalReview(UserInterface $user)
@@ -82,7 +82,7 @@ class MapperService
             ->setParameter('user', $user)
             ->groupBy("s.user")
             ->getQuery()->getOneOrNullResult();
-        return array_pop($res);
+        return $res != null ? array_pop($res):0;
     }
 
     public function getAvgFunFactor(UserInterface $user)
@@ -96,7 +96,7 @@ class MapperService
             ->setParameter('user', $user)
             ->groupBy("s.user")
             ->getQuery()->getOneOrNullResult();
-        return array_pop($res);
+        return $res != null ? array_pop($res):0;
     }
 
     public function getAvgRhythm(UserInterface $user)
@@ -110,7 +110,7 @@ class MapperService
             ->setParameter('user', $user)
             ->groupBy("s.user")
             ->getQuery()->getOneOrNullResult();
-        return array_pop($res);
+        return $res != null ? array_pop($res):0;
     }
     public function getAvgPatternQuality(UserInterface $user)
     {
@@ -123,7 +123,7 @@ class MapperService
             ->setParameter('user', $user)
             ->groupBy("s.user")
             ->getQuery()->getOneOrNullResult();
-        return array_pop($res);
+        return $res != null ? array_pop($res):0;
     }
     public function getAvgReadability(UserInterface $user)
     {
@@ -136,7 +136,7 @@ class MapperService
             ->setParameter('user', $user)
             ->groupBy("s.user")
             ->getQuery()->getOneOrNullResult();
-        return array_pop($res);
+        return $res != null ? array_pop($res):0;
     }
 }
 
