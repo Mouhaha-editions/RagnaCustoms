@@ -358,7 +358,7 @@ class SongsController extends AbstractController
                 }, $ids)));
         }
 
-        if ($request->get('order_by')) {
+        if ($request->get('order_by') && in_array($request->get('order_by'),['s.lastDateUpload','rating','s.downloads','s.name'],true)) {
             $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
         }
         //$pagination = null;
