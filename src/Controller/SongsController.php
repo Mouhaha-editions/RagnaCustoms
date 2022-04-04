@@ -498,10 +498,10 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
-    public function songDetail(Request $request, Song $song, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService)
+    public function songDetail(Request $request, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService,?Song $song = null)
     {
 
-        if ((!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
+        if ($song == null || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }

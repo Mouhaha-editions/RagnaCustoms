@@ -16,6 +16,7 @@ use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\GamificationService;
 use App\Service\StatisticService;
+use DateTime;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -44,10 +45,7 @@ class UserController extends AbstractController
     {
 
 
-        $qb = $scoreHistoryRepository->createQueryBuilder('s')
-            ->where('s.user = :user')
-            ->setParameter('user', $utilisateur)
-            ->orderBy('s.createdAt', "desc");
+        $qb = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $utilisateur)->orderBy('s.createdAt', "desc");
         $pagination = $paginationService->setDefaults(15)->process($qb, $request);
 
         return $this->render('user/partial/song_played.html.twig', [
@@ -61,19 +59,16 @@ class UserController extends AbstractController
     /**
      * @Route("/ajax/countries", name="ajax_countries")
      */
-    public function ajaxCountries(Request $request,CountryRepository $countryRepository): Response
+    public function ajaxCountries(Request $request, CountryRepository $countryRepository): Response
     {
-        $data = $countryRepository->createQueryBuilder("sc")
-            ->select("sc.id AS id, sc.label AS text")
-            ->where('sc.label LIKE :search')->setParameter('search', '%' . $request->get('q') . '%')
-            ->orderBy('sc.label')
-            ->getQuery()->getArrayResult();
+        $data = $countryRepository->createQueryBuilder("sc")->select("sc.id AS id, sc.label AS text")->where('sc.label LIKE :search')->setParameter('search', '%' . $request->get('q') . '%')->orderBy('sc.label')->getQuery()->getArrayResult();
 
         return new JsonResponse([
             'results' => $data
         ]);
     }
-        /**
+
+    /**
      * @Route("/user/progess/{id}/{level}", name="user_progress_song")
      */
     public function progressSong(Request $request, Song $song, string $level, Utilisateur $utilisateur, ScoreHistoryRepository $scoreHistoryRepository): Response
@@ -108,12 +103,7 @@ class UserController extends AbstractController
      */
     public function mappedProfile(Request $request, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
     {
-        $qb = $this->getDoctrine()
-            ->getRepository(Song::class)
-            ->createQueryBuilder("s")
-            ->where('s.user = :user')
-            ->setParameter('user', $utilisateur)
-            ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
+        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
 //            ->leftJoin("s.downloadCounters",'dc')
             ->groupBy("s.id");
 //        $qb->leftJoin('s.songDifficulties', 'song_difficulties')
@@ -122,7 +112,7 @@ class UserController extends AbstractController
 
         if ($request->get('display_wip', null) != null) {
             $qb->andWhere("s.wip = true");
-        }else{
+        } else {
             $qb->andWhere("s.wip != true");
         }
 
@@ -148,9 +138,7 @@ class UserController extends AbstractController
                     break;
                 case 4 :
                     $qb->leftJoin('song_difficulties.seasons', 'season');
-                    $qb->andWhere('season.startDate <= :now ')
-                        ->andWhere('season.endDate >= :now')
-                        ->setParameter('now', new DateTime());
+                    $qb->andWhere('season.startDate <= :now ')->andWhere('season.endDate >= :now')->setParameter('now', new DateTime());
                     break;
                 case 5 :
                     $wip = true;
@@ -163,8 +151,7 @@ class UserController extends AbstractController
         if ($categories != null) {
             $qb->leftJoin('s.categoryTags', 't');
             foreach ($categories as $k => $v) {
-                $qb->andWhere("t.id = :tag$k")
-                    ->setParameter("tag$k", $v);
+                $qb->andWhere("t.id = :tag$k")->setParameter("tag$k", $v);
             }
         }
 
@@ -176,9 +163,7 @@ class UserController extends AbstractController
                 case 2 :
                     $qb->orderBy('s.approximativeDuration', 'DESC');
                     break;
-                case 3 :
-                    $qb->orderBy('s.lastDateUpload', 'DESC');
-                    break;
+
                 case 4 :
                     $qb->orderBy('s.name', 'ASC');
                     break;
@@ -189,6 +174,7 @@ class UserController extends AbstractController
 //                    $qb->groupBy("s.id");
 //                    $qb->orderBy('count_dl', 'DESC');
                     break;
+                case 3:
                 default:
                     $qb->orderBy('s.lastDateUpload', 'DESC');
                     break;
@@ -214,25 +200,18 @@ class UserController extends AbstractController
 
             switch ($request->get('downloads_submitted_date')) {
                 case 1:
-                    $qb->andWhere('(s.lastDateUpload >= :last7days)')
-                        ->setParameter('last7days', (new DateTime())->modify('-7 days'));
+                    $qb->andWhere('(s.lastDateUpload >= :last7days)')->setParameter('last7days', (new DateTime())->modify('-7 days'));
                     break;
                 case 2 :
-                    $qb->andWhere('(s.lastDateUpload >= :last15days)')
-                        ->setParameter('last15days', (new DateTime())->modify('-15 days'));
+                    $qb->andWhere('(s.lastDateUpload >= :last15days)')->setParameter('last15days', (new DateTime())->modify('-15 days'));
                     break;
                 case 3 :
-                    $qb->andWhere('(s.lastDateUpload >= :last45days)')
-                        ->setParameter('last45days', (new DateTime())->modify('-45 days'));
+                    $qb->andWhere('(s.lastDateUpload >= :last45days)')->setParameter('last45days', (new DateTime())->modify('-45 days'));
                     break;
             }
         }
         if ($request->get('not_downloaded', 0) > 0 && $this->isGranted('ROLE_USER')) {
-            $qb
-                ->leftJoin("s.downloadCounters", 'download_counters')
-                ->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")
-                ->andHaving("count_download_user = 0")
-                ->setParameter('user', $this->getuser());
+            $qb->leftJoin("s.downloadCounters", 'download_counters')->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")->andHaving("count_download_user = 0")->setParameter('user', $this->getuser());
         }
         $qb->andWhere('s.moderated = true');
 
@@ -250,8 +229,7 @@ class UserController extends AbstractController
             switch ($exp[0]) {
                 case 'mapper':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
 //                case 'category':
@@ -262,25 +240,21 @@ class UserController extends AbstractController
 //                    break;
                 case 'artist':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.authorName LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
                 case 'title':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.name LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.name LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
                 case 'desc':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.description LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.description LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
                 default:
-                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-                        ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $request->get('search', null) . '%');
             }
         }
         $qb->andWhere("s.isDeleted != true");
@@ -339,10 +313,7 @@ class UserController extends AbstractController
             }
         }
 
-        $qb = $scoreHistoryRepository->createQueryBuilder('s')
-            ->where('s.user = :user')
-            ->setParameter('user', $user)
-            ->orderBy('s.updatedAt', "desc");
+        $qb = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $user)->orderBy('s.updatedAt', "desc");
         $pagination = $paginationService->setDefaults(25)->process($qb, $request);
 
 
