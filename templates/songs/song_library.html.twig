@@ -142,7 +142,14 @@
                                 {{ "Only ranked"|trans }}
                             </label>
                         </div>
-
+                        {% if is_granted('ROLE_USER') %}
+                            <div class="form-check">
+                                <input class="form-check-input" {% if app.request.get("alreadyplayed") == 1%}checked="checked"{% endif%} type="checkbox" value="1" name="alreadyplayed" id="alreadyplayed">
+                                <label class="form-check-label" for="alreadyplayed">
+                                    {{ "Disable played difficulties"|trans }}
+                                </label>
+                            </div>
+                        {% endif %}
                         <div class="form-check">
                             <input class="form-check-input" {% if app.request.get("display_wip") == 1%}checked="checked"{% endif%} type="checkbox" value="1" name="display_wip" id="display_wip">
                             <label class="form-check-label" for="display_wip">

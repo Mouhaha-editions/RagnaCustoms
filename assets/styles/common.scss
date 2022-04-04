@@ -158,7 +158,10 @@ h1 {
       position: relative;
       background: transparent !important;
       width: 24px !important;
-
+      &.disabled{
+        filter: grayscale(1)!important;
+        opacity:0.5!important;
+      }
       i {
         position: absolute;
         font-size: 24px;
@@ -480,6 +483,10 @@ h1 {
       color: #fff;
       margin-left: 2px;
       float: left;
+      &.disabled{
+        filter: grayscale(1)!important;
+        opacity:0.5!important;
+      }
     }
   }
 

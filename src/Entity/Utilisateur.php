@@ -864,4 +864,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             }
         }
     }
+
+    public function hasPlayed(SongDifficulty  $difficulty)
+    {
+        foreach ($this->getScoreHistories() AS $scoreHistory){
+            if($scoreHistory->getSongDifficulty() === $difficulty){return true;}
+        }
+        return false;
+    }
 }
