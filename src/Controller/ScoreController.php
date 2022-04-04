@@ -110,30 +110,5 @@ class ScoreController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/ranking/{slug}", name="score_season_ranking", defaults={"slug"=null})
-     */
-    public function seasonRanking(Request $request, ScoreRepository $scoreRepository, SeasonRepository $seasonRepository, PaginationService $paginationService, Season $season = null): Response
-    {
-        $oldSeason = $seasonRepository->getOld();
-
-        if ($season === null) {
-            $season = $seasonRepository->getCurrent();
-        }
-        $qb = $scoreRepository->createQueryBuilder('s')->select('u.username AS username,
-            u.id AS user_id, 
-            MD5(LOWER(u.email)) as gravatar, 
-            SUM(s.score)/1000 AS score, 
-            COUNT(s.hash) AS count_song')->leftJoin('s.user', 'u')->andWhere('s.season = :season')->setParameter('season', $season)->groupBy('s.user')->orderBy('SUM(s.score)', 'DESC');
-//        $scores = $qb->getQuery()->getResult();
-        $scores = $paginationService->setDefaults(200)->process($qb, $request);
-
-        return $this->render('score/season_ranking.html.twig', [
-            'scores' => $scores,
-            'season' => $season,
-            'oldSeasons' => $oldSeason,
-        ]);
-    }
-
 
 }
