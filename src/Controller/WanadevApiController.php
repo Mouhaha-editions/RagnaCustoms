@@ -138,7 +138,6 @@ class WanadevApiController extends AbstractController
 
         return new JsonResponse($scoreService->getTop5Wanadev($songDiff, $user), 200, [
             "content-type" => "application/json",
-            "content-length" => "1024",
             "my-custom-key"=>"abcdefghijklmnop"
         ]);
     }
