@@ -76,7 +76,7 @@ class WanadevApiController extends AbstractController
             $newScore->setSession($data['session']);
             $newScore->setCountry($data['country']);
             $newScore->setUserRagnarock($data['user']);
-            $newScore->setPlateform($data['platform']??"");
+            $newScore->setPlateform($data['platform'] ?? "");
             $newScore->setComboBlue($data['stats']['ComboBlue']);
             $newScore->setComboYellow($data['stats']['ComboYellow']);
             $newScore->setHit($data['stats']['Hit']);
@@ -90,12 +90,7 @@ class WanadevApiController extends AbstractController
                 $newScore->setRawPP($rawPP);
             }
             /** @var Score $score */
-            $score = $scoreRepository->createQueryBuilder('s')
-            ->where('s.user = :user')
-            ->setParameter('user', $user)
-                ->andWhere('s.songDifficulty = :songDifficulty')
-                ->setParameter('songDifficulty', $songDiff)
-            ->getQuery()->getOneOrNullResult();
+            $score = $scoreRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $user)->andWhere('s.songDifficulty = :songDifficulty')->setParameter('songDifficulty', $songDiff)->getQuery()->getOneOrNullResult();
 
             $scoreService->archive($newScore);
             if ($score == null || $score->getScore() <= $newScore->getScore()) {
@@ -105,7 +100,7 @@ class WanadevApiController extends AbstractController
                     $em->flush();
                 }
                 $em->persist($newScore);
-            }else{
+            } else {
                 $score->setSession($newScore->getSession());
             }
             $user->setCredits($user->getCredits() + 1);
@@ -126,12 +121,7 @@ class WanadevApiController extends AbstractController
                 }
                 $rankedScore->setTotalPPScore($totalPondPPScore);
             }
-            $histories = $scoreHistoryRepository->createQueryBuilder('s')
-                ->where('s.user = :user')
-                ->setParameter('user', $user)
-                ->andWhere('s.songDifficulty = :songDifficulty')
-                ->setParameter('songDifficulty', $songDiff)
-                ->getQuery()->getResult();;
+            $histories = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $user)->andWhere('s.songDifficulty = :songDifficulty')->setParameter('songDifficulty', $songDiff)->getQuery()->getResult();
             foreach ($histories as $history) {
                 $history->setSession($newScore->getSession());
                 $em->flush();
@@ -142,11 +132,15 @@ class WanadevApiController extends AbstractController
                 "rank" => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
                 "score" => $newScore->getScore(),
                 "ranking" => $scoreService->getTop5Wanadev($songDiff, $user)
-            ], 200,["content-type"=> "application/json"]);
+            ], 200, ["content-type" => "application/json"]);
 
         }
 
-        return new JsonResponse($scoreService->getTop5Wanadev($songDiff, $user), 200,["content-type"=> "application/json","content-length"=> "1024"]);
+        return new JsonResponse($scoreService->getTop5Wanadev($songDiff, $user), 200, [
+            "content-type" => "application/json",
+            "content-length" => "1024",
+            "my-custom-key"=>"abcdefghijklmnop"
+        ]);
     }
 
     private function calculateRawPP(Score $score, SongDifficulty $songDiff)
