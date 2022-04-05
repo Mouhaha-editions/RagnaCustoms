@@ -142,11 +142,11 @@ class WanadevApiController extends AbstractController
                 "rank" => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
                 "score" => $newScore->getScore(),
                 "ranking" => $scoreService->getTop5Wanadev($songDiff, $user)
-            ], 200);
+            ], 200,["content-type"=> "application/json"]);
 
         }
 
-        return new JsonResponse($scoreService->getTop5Wanadev($songDiff, $user), 200);
+        return new JsonResponse($scoreService->getTop5Wanadev($songDiff, $user), 200,["content-type"=> "application/json"]);
     }
 
     private function calculateRawPP(Score $score, SongDifficulty $songDiff)
