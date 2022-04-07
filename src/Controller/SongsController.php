@@ -7,6 +7,7 @@ use App\Entity\Playlist;
 use App\Entity\Score;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
+use App\Entity\SongTemporaryList;
 use App\Entity\Vote;
 use App\Form\AddPlaylistFormType;
 use App\Form\VoteType;
@@ -176,7 +177,7 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function library(Request $request, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
+    public function library(Request $request, SongCategoryRepository $categoryRepository, PaginationService $paginationService, SongRepository $songRepository): Response
     {
         $filters = [];
         $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
@@ -352,13 +353,24 @@ class SongsController extends AbstractController
 
         if ($request->get('oneclick_dl')) {
             $ids = $qb->select('s.id')->getQuery()->getArrayResult();
+            $list = new SongTemporaryList();
 
-            return $this->redirect("ragnac://install/" . implode('-', array_map(function ($id) {
-                    return array_pop($id);
-                }, $ids)));
+            $em = $this->getDoctrine()->getManager();
+            foreach ($ids as $id) {
+                $list->addSong($songRepository->find($id));
+            }
+            $em->persist($list);
+            $em->flush();
+
+            return $this->redirect("ragnac://list/" .$list->getId());
         }
 
-        if ($request->get('order_by') && in_array($request->get('order_by'),['s.lastDateUpload','rating','s.downloads','s.name'],true)) {
+        if ($request->get('order_by') && in_array($request->get('order_by'), [
+                's.lastDateUpload',
+                'rating',
+                's.downloads',
+                's.name'
+            ], true)) {
             $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
         }
         //$pagination = null;
@@ -499,7 +511,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
-    public function songDetail(Request $request, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService,?Song $song = null)
+    public function songDetail(Request $request, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService, ?Song $song = null)
     {
 
         if ($song == null || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
