@@ -6,8 +6,16 @@
         </div>
 
         <div class="text-center  col-md-6 pagination">
+
             {{ "Pages:"|trans }}&nbsp;{{ macro_pagination.paginate(pagination) }}
+
+{#            {% if pagination.current > 1 %}#}
+{#                <a class="no-decoration ml-3" href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({("ppage"~pagination.identifier):pagination.current-1})) }}">{{ "Previous page"|trans }}</a>#}
+{#            {% endif %}#}
+
+            {% if app.request.get("ppage"~pagination.identifier) < pagination.pages %}
             <a class="no-decoration ml-3" href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({("ppage"~pagination.identifier):pagination.current+1})) }}">{{ "Next page"|trans }}</a>
+            {% endif %}
         </div>
     {% endif %}
     {# {{ macro_pagination.seeMore(songs,"see more"|trans,'btn',{"parent":"#table-song","remove":"#see-more-place"}) }} #}
