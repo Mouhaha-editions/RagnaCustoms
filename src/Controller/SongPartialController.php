@@ -21,7 +21,7 @@ class SongPartialController extends AbstractController
         $songs = $songRepository->createQueryBuilder("s")
             ->orderBy("s.createdAt", 'DESC')
             ->where('s.isDeleted != true')
-            ->where('s.wip != true')
+            ->andWhere('s.wip != true')
             ->setMaxResults($this->count)
             ->setFirstResult(0)
             ->getQuery()->getResult();
@@ -38,7 +38,7 @@ class SongPartialController extends AbstractController
             ->leftJoin("diff.song",'s')
             ->orderBy('score.updatedAt', 'DESC')
             ->where('s.isDeleted != true')
-            ->where('s.wip != true')
+            ->andWhere('s.wip != true')
             ->setFirstResult(0)
             ->setMaxResults($this->count)
             ->getQuery()->getResult();
@@ -50,12 +50,17 @@ class SongPartialController extends AbstractController
         ]);
     }
 
-    public function topRated(SongRepository $songRepository): Response
+    public function topRated(SongRepository $songRepository, $lastXDays = 99999): Response
     {
         $songs = $songRepository->createQueryBuilder("s")
-            ->orderBy("s.voteUp - s.voteDown", 'DESC')
+            ->addSelect('s, SUM(IF(v.votes_indc IS NULL,0,IF(v.votes_indc = 0,-1,1))) AS HIDDEN sum_votes')
+            ->leftJoin("s.voteCounters",'v')
+            ->orderBy("sum_votes", 'DESC')
             ->where('s.isDeleted != true')
-            ->where('s.wip != true')
+            ->andWhere('s.wip != true')
+            ->andWhere('v.updatedAt >= :date')
+            ->setParameter('date',(new \DateTime())->modify('-'.$lastXDays." days"))
+            ->groupBy('s.id')
             ->setMaxResults($this->count)
             ->setFirstResult(0)
             ->getQuery()->getResult();

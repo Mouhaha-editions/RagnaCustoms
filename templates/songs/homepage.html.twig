@@ -28,8 +28,8 @@
 <div class="container homepage" {{ stimulus_controller('homepage') }}>
     <div class="row">
         <div class="col-lg-4">
-            <h2>{{ "Top Rated"|trans }}</h2>
-            {{ render(controller("\\App\\Controller\\SongPartialController::topRated")) }}
+            <h2>{{ "Top Rated"|trans }} <small>last 7 days</small></h2>
+            {{ render(controller("\\App\\Controller\\SongPartialController::topRated",{lastXDays:7})) }}
         </div>
         <div class="col-lg-4">
             <h2>{{ "Latest Songs"|trans }}</h2>

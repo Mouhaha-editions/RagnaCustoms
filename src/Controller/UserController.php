@@ -213,7 +213,10 @@ class UserController extends AbstractController
             }
         }
         if ($request->get('not_downloaded', 0) > 0 && $this->isGranted('ROLE_USER')) {
-            $qb->leftJoin("s.downloadCounters", 'download_counters')->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")->andHaving("count_download_user = 0")->setParameter('user', $this->getuser());
+            $qb->leftJoin("s.downloadCounters", 'download_counters')
+                ->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")
+                ->andHaving("count_download_user = 0")
+                ->setParameter('user', $this->getuser());
         }
         $qb->andWhere('s.moderated = true');
 
