@@ -58,10 +58,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="boolean")
      */
     private $enableEmailNotification = false;
-    /**
-     * @ORM\OneToMany(targetEntity=Gamification::class, mappedBy="user")
-     */
-    private $gamifications;
+
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
@@ -163,7 +160,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->downloadCounters = new ArrayCollection();
         $this->scores = new ArrayCollection();
         $this->scoreHistories = new ArrayCollection();
-        $this->gamifications = new ArrayCollection();
         $this->playlists = new ArrayCollection();
         $this->songRequests = new ArrayCollection();
         $this->currentlyMapped = new ArrayCollection();
@@ -560,36 +556,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($scoreHistory->getUser() === $this) {
                 $scoreHistory->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Gamification[]
-     */
-    public function getGamifications(): Collection
-    {
-        return $this->gamifications;
-    }
-
-    public function addGamification(Gamification $gamification): self
-    {
-        if (!$this->gamifications->contains($gamification)) {
-            $this->gamifications[] = $gamification;
-            $gamification->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGamification(Gamification $gamification): self
-    {
-        if ($this->gamifications->removeElement($gamification)) {
-            // set the owning side to null (unless already changed)
-            if ($gamification->getUser() === $this) {
-                $gamification->setUser(null);
             }
         }
 

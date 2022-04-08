@@ -7,7 +7,6 @@ twig:
         scoreService: '@App\Service\ScoreService'
         songService: '@App\Service\SongService'
         statisticService: '@App\Service\StatisticService'
-        gamificationService: '@App\Service\GamificationService'
     form_themes:
         - 'form/rating_type.html.twig'
         - '@TetranzSelect2Entity/Form/fields.html.twig'

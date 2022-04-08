@@ -4,17 +4,13 @@ namespace App\Controller;
 
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
-use App\Entity\SongHash;
 use App\Entity\Utilisateur;
-use App\Enum\EGamification;
 use App\Form\UtilisateurType;
 use App\Repository\CountryRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
-use App\Repository\SongHashRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
-use App\Service\GamificationService;
 use App\Service\StatisticService;
 use DateTime;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -24,7 +20,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
@@ -34,14 +29,10 @@ class UserController extends AbstractController
      * @param Request $request
      * @param Utilisateur $utilisateur
      * @param PaginationService $paginationService
-     * @param StatisticService $statisticService
-     * @param ScoreRepository $scoreRepository
      * @param ScoreHistoryRepository $scoreHistoryRepository
-     * @param UtilisateurRepository $utilisateurRepository
-     * @param GamificationService $gamificationService
      * @return Response
      */
-    public function profile(Request $request, Utilisateur $utilisateur, PaginationService $paginationService, StatisticService $statisticService, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, UtilisateurRepository $utilisateurRepository, GamificationService $gamificationService): Response
+    public function profile(Request $request, Utilisateur $utilisateur, PaginationService $paginationService, ScoreHistoryRepository $scoreHistoryRepository): Response
     {
 
         if ($this->getUser() !== $utilisateur && !$utilisateur->getIsPublic()) {

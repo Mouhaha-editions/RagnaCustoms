@@ -62,8 +62,6 @@ services:
             - '@App\Service\ScoreService'
     App\Service\ScoreService:
         arguments: [ '@doctrine.orm.entity_manager','@kernel' ]
-    App\Service\GamificationService:
-        arguments: [ '@doctrine.orm.entity_manager' ]
 
     App\EventListener\ExceptionListener:
         tags:
