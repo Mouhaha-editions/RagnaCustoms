@@ -318,9 +318,9 @@ class UserController extends AbstractController
             }
         }
 
-        $qb = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $user)->orderBy('s.updatedAt', "desc");
-        $pagination = $paginationService->setDefaults(25)->process($qb, $request);
-
+        $qb = $scoreHistoryRepository->createQueryBuilder('s')
+            ->where('s.user = :user')->setParameter('user', $user)->orderBy('s.createdAt', "desc");
+        $pagination = $paginationService->setDefaults(10)->process($qb, $request);
 
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',

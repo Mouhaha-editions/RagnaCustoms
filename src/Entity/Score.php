@@ -130,7 +130,12 @@ class Score
 
     public function getHumanUpdatedAt(): ?string
     {
-        return StatisticService::dateDiplayer($this->updatedAt);
+        return StatisticService::dateDiplayer($this->createdAt);
+    }
+
+    public function getTimeAgo(): string
+    {
+        return StatisticService::dateDiplayer($this->createdAt);
     }
 
     /**
@@ -383,11 +388,6 @@ class Score
     public function setPlateform($plateform): void
     {
         $this->plateform = $plateform;
-    }
-
-    public function getTimeAgo()
-    {
-        return StatisticService::dateDiplayer($this->getCreatedAt());
     }
 
 }

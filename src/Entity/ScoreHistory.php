@@ -284,7 +284,7 @@ class ScoreHistory
 
     public function getHumanUpdatedAt(): ?string
     {
-        return StatisticService::dateDiplayer($this->updatedAt);
+        return StatisticService::dateDiplayer($this->createdAt);
     }
 
     /**
