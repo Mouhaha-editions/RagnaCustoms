@@ -102,6 +102,12 @@
                             {{ form_row(form.mapperName) }}
                             {{ form_row(form.mapperDiscord) }}
                             {{ form_row(form.mapperDescription) }}
+                            {% if app.user.discordUsername is null %}
+                                <a href="{{ url('discord_link') }}" class="btn btn-sm btn-info btn-discord">link discord</a>
+                            {% else %}
+                                {{ app.user.discordUsername }}
+                            {% endif %}
+
                             <div class="float-right">
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>

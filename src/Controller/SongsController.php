@@ -8,6 +8,7 @@ use App\Entity\Score;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\SongTemporaryList;
+use App\Entity\Utilisateur;
 use App\Entity\Vote;
 use App\Form\AddPlaylistFormType;
 use App\Form\VoteType;
@@ -25,6 +26,7 @@ use App\Service\SongService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -33,12 +35,82 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Wohali\OAuth2\Client\Provider\Discord;
+use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 
 
 class SongsController extends AbstractController
 {
     private $paginate = 30;
+
+    /**
+     * @Route("/discord-link", name="discord_link")
+     * @return Response
+     */
+    public function Discord(): Response
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            $this->addFlash('danger', 'You need to be logged to link your discord account.');
+            return $this->redirectToRoute('home');
+        }
+
+
+        $provider = new Discord([
+            'clientId' => $this->getParameter('discord_client_id'),
+            'clientSecret' => $this->getParameter('discord_client_secret'),
+            'redirectUri' => $this->generateUrl("discord_link", [], UrlGenerator::ABSOLUTE_URL)
+        ]);
+        if (!isset($_GET['code'])) {
+
+            // Step 1. Get authorization code
+            $options = [
+                'scope' => [
+                    'identify',
+                    'email',
+                    'guilds'
+                ]
+            ];
+            $authUrl = $provider->getAuthorizationUrl($options);
+            $_SESSION['oauth2state'] = $provider->getState();
+            header('Location: ' . $authUrl);
+
+
+// Check given state against previously stored one to mitigate CSRF attack
+        } elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
+
+            unset($_SESSION['oauth2state']);
+            exit('Invalid state');
+
+        } else {
+
+            // Step 2. Get an access token using the provided authorization code
+            $token = $provider->getAccessToken('authorization_code', [
+                'code' => $_GET['code']
+            ]);
+
+            try {
+                /** @var DiscordResourceOwner $DiscordUser */
+                $DiscordUser = $provider->getResourceOwner($token);
+
+                /** @var Utilisateur $user */
+                $user = $this->getUser();
+                $user->setDiscordUsername($DiscordUser->getUsername()."#".$DiscordUser->getDiscriminator());
+                $user->setDiscordId($DiscordUser->getId());
+                $user->setDiscordEmail($DiscordUser->getEmail());
+
+                $this->getDoctrine()->getManager()->flush();
+                $this->addFlash('success', 'Account linked with Discord');
+            } catch (Exception $e) {
+
+                // Failed to get user details
+                $this->addFlash('danger', "Cannot link your account with discord");
+
+            }
+        }
+        return $this->redirectToRoute('user');
+    }
 
     /**
      * @Route("/getting-started", name="getting_started")
@@ -177,8 +249,7 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function library(Request $request, SongCategoryRepository $categoryRepository,
-                            PaginationService $paginationService): Response
+    public function library(Request $request, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
     {
         $filters = [];
         $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
@@ -363,7 +434,7 @@ class SongsController extends AbstractController
             $em->persist($list);
             $em->flush();
 
-            return $this->redirect("ragnac://list/" .$list->getId());
+            return $this->redirect("ragnac://list/" . $list->getId());
         }
 
         if ($request->get('order_by') && in_array($request->get('order_by'), [

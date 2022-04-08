@@ -821,4 +821,67 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         }
         return false;
     }
+
+    /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $discordUsername;
+    /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $discordId;
+    /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $discordEmail;
+
+    /**
+     * @return mixed
+     */
+    public function getDiscordUsername()
+    {
+        return $this->discordUsername;
+    }
+
+    /**
+     * @param mixed $discordUsername
+     */
+    public function setDiscordUsername($discordUsername): void
+    {
+        $this->discordUsername = $discordUsername;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiscordId()
+    {
+        return $this->discordId;
+    }
+
+    /**
+     * @param mixed $discordId
+     */
+    public function setDiscordId($discordId): void
+    {
+        $this->discordId = $discordId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiscordEmail()
+    {
+        return $this->discordEmail;
+    }
+
+    /**
+     * @param mixed $discordEmail
+     */
+    public function setDiscordEmail($discordEmail): void
+    {
+        $this->discordEmail = $discordEmail;
+    }
+
+
 }
