@@ -6,10 +6,10 @@
       width:50px;
     }
     a{
-      color:#fff;
+      color:$danger;
       &:hover{
         text-decoration:underline;
-        color:#fff;
+        color:$danger;
       }
     }
     .text-success{

@@ -1,9 +1,9 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
-<h4>{{ song.name is null ? "New custom song":song.name }}</h4>
+{#<h4>{{ song.name is null ? "New custom song":song.name }}</h4>#}
 {% if error is not null %}
 <div class="alert alert-danger">{{ error }}</div>
 {% endif %}
-<small class="text-danger">Do not delete song to edit one, please use the edit button</small>
+{#<small class="text-danger">Do not delete song to edit one, please use the edit button</small>#}
 {{ form_start(form) }}
 {{ form_end(form) }}
 {#<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>#}

@@ -156,7 +156,7 @@ function loadForm(content) {
 $(document).on('click', ".ajax-modal-form", function () {
     let t = $(this);
     $(t.data('modal')).modal('show');
-    console.log('furet')
+    $(t.data('modal')).find('.modal-title').html(t.data('title'));
     $.ajax({
         url: t.data('url'),
         success: function (data) {
