@@ -64,6 +64,7 @@ class WanadevApiController extends AbstractController
         if ($songDiff == null) {
             return new JsonResponse("NOK DIFF", 400);
         }
+
         if ($request->isMethod("post")) {
             $data = json_decode($request->getContent(), true);
             $em = $this->getDoctrine()->getManager();
@@ -121,13 +122,13 @@ class WanadevApiController extends AbstractController
                 }
                 $rankedScore->setTotalPPScore($totalPondPPScore);
             }
+            $em->flush();
             $histories = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $user)->andWhere('s.songDifficulty = :songDifficulty')->setParameter('songDifficulty', $songDiff)->getQuery()->getResult();
             foreach ($histories as $history) {
                 $history->setSession($newScore->getSession());
                 $em->flush();
             }
-
-            $em->flush();
+ 
             return new JsonResponse([
                 "rank" => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
                 "score" => $newScore->getScore(),
@@ -164,11 +165,12 @@ class WanadevApiController extends AbstractController
             $rawPPScore = $score->getRawPP();
             $pondPPScore = $rawPPScore * pow(0.965, $index);
             $totalPP = $totalPP + $pondPPScore;
+
+            //register the weighted PP score
+            $score->setWeightedPP(round($pondPPScore, 2));          
+
             $index++;
         }
-
         return round($totalPP, 2);
     }
-
-
 }
