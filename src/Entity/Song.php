@@ -122,14 +122,7 @@ class Song
      * @ORM\Column(type="float", nullable=true)
      */
     private $previewStartTime;
-    /**
-     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="song")
-     */
-    private $scoreHistories;
-    /**
-     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="song")
-     */
-    private $scores;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -209,8 +202,6 @@ class Song
         $this->playlists = new ArrayCollection();
         $this->voteCounters = new ArrayCollection();
         $this->categoryTags = new ArrayCollection();
-        $this->scores = new ArrayCollection();
-        $this->scoreHistories = new ArrayCollection();
     }
 
     public function isVoteCounterBy(?UserInterface $user)
@@ -221,7 +212,7 @@ class Song
         return $votes->isEmpty() ? null : $votes->first();
     }
 
-    public function isReviewedBy(?UserInterface $user)
+    public function isReviewedBy(?UserInterface $user): bool
     {
         $votes = $this->votes->filter(function (Vote $vote) use ($user) {
             return $vote->getUser() === $user;
@@ -229,17 +220,6 @@ class Song
         return count($votes) > 0;
     }
 
-    public function isSeasonRanked()
-    {
-        foreach ($this->getSongDifficulties() as $difficulty) {
-            foreach ($difficulty->getSeasons() as $season) {
-                if ($season->isActive()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * @return Collection|SongDifficulty[]
@@ -561,7 +541,7 @@ class Song
         return $this;
     }
 
-    public function getSongDifficultiesStr()
+    public function getSongDifficultiesStr(): string
     {
         $diff = [];
         foreach ($this->getSongDifficulties() as $difficulty) {
@@ -655,7 +635,7 @@ class Song
         return $this;
     }
 
-    public function isRanked()
+    public function isRanked(): bool
     {
         foreach ($this->getSongDifficulties() as $diff) {
             if ($diff->isRanked()) {
@@ -766,7 +746,7 @@ class Song
         return $this;
     }
 
-    public function getUniqDownloads()
+    public function getUniqDownloads(): int
     {
         return count($this->getDownloadCounters());
     }
@@ -885,7 +865,7 @@ class Song
         return $best;
     }
 
-    public function getHashes()
+    public function getHashes(): array
     {
         return array_map(function (SongHash $hash) {
             return $hash->getHash();
@@ -983,7 +963,7 @@ class Song
         return "." . end($file);
     }
 
-    public function getCover()
+    public function getCover(): string
     {
         $cover = "/covers/" . $this->getId() . $this->getCoverImageExtension();
         if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
@@ -992,7 +972,7 @@ class Song
         return $cover . "?t=" . date('dmYH');
     }
 
-    public function getPlaceholder()
+    public function getPlaceholder(): string
     {
         return "/apps/logo.png";
     }
@@ -1068,61 +1048,9 @@ class Song
     /**
      * @return string
      */
-    public function getTimeAgo()
+    public function getTimeAgo(): string
     {
         return StatisticService::dateDiplayer($this->getLastDateUpload());
     }
 
-
-    public function addScore(Score $score): self
-    {
-        if (!$this->scores->contains($score)) {
-            $this->scores[] = $score;
-            $score->setSong($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScore(Score $score): self
-    {
-        if ($this->scores->removeElement($score)) {
-            // set the owning side to null (unless already changed)
-            if ($score->getSong() === $this) {
-                $score->setSong(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|ScoreHistory[]
-     */
-    public function getScoreHistories(): Collection
-    {
-        return $this->scoreHistories;
-    }
-
-    public function addScoreHistory(ScoreHistory $scoreHistory): self
-    {
-        if (!$this->scoreHistories->contains($scoreHistory)) {
-            $this->scoreHistories[] = $scoreHistory;
-            $scoreHistory->setSong($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScoreHistory(ScoreHistory $scoreHistory): self
-    {
-        if ($this->scoreHistories->removeElement($scoreHistory)) {
-            // set the owning side to null (unless already changed)
-            if ($scoreHistory->getSong() === $this) {
-                $scoreHistory->setSong(null);
-            }
-        }
-
-        return $this;
-    }
 }

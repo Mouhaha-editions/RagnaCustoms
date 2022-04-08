@@ -177,7 +177,8 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function library(Request $request, SongCategoryRepository $categoryRepository, PaginationService $paginationService, SongRepository $songRepository): Response
+    public function library(Request $request, SongCategoryRepository $categoryRepository,
+                            PaginationService $paginationService): Response
     {
         $filters = [];
         $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
@@ -352,12 +353,12 @@ class SongsController extends AbstractController
         $qb->andWhere("s.isDeleted != true");
 
         if ($request->get('oneclick_dl')) {
-            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
+            $songs = $qb->getQuery()->getResult();
             $list = new SongTemporaryList();
 
             $em = $this->getDoctrine()->getManager();
-            foreach ($ids as $id) {
-                $list->addSong($songRepository->find($id));
+            foreach ($songs as $song) {
+                $list->addSong($song);
             }
             $em->persist($list);
             $em->flush();
