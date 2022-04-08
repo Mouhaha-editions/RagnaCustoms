@@ -44,7 +44,17 @@ class UserController extends AbstractController
             ->createQueryBuilder('s')
             ->where('s.user = :user')
             ->setParameter('user', $utilisateur)
-            ->orderBy('s.createdAt', "desc");
+            ;
+
+        if ($request->get('order_by') && in_array($request->get('order_by'), [
+                's.rawPP',
+                's.createdAt'
+
+            ], true)) {
+            $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
+        }else {
+            $qb->orderBy('s.createdAt', "desc");
+        }
         $pagination = $paginationService->setDefaults(15)->process($qb, $request);
 
         return $this->render('user/partial/song_played.html.twig', [

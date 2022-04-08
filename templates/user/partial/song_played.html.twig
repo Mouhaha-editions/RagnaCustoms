@@ -13,12 +13,14 @@
                                                                     class="avatar big-rounded mb-4 img-fluid"
                                                                     alt="{{ user.username }}"/>
                 {% if user.songs|length > 0 %}<a class="btn btn-lg btn-warning btn-block"
-                   href="{{ url('mapper_profile', {username:user.username}) }}">{{ "View mapper profile"|trans }}</a>{% endif %}
+                                                 href="{{ url('mapper_profile', {username:user.username}) }}">{{ "View mapper profile"|trans }}</a>{% endif %}
             </div>
         </div>
         <div class="col-md-5 ">
-            <div class="username"><h2>{% if user.country is not null %}<img src="https://flagcdn.com/24x18/{{ user.country.twoLetters|lower }}.png" alt="{{ user.country }}" title="{{ user.country }}">
-                {% endif %}{{ user.username }}</h2></div>
+            <div class="username"><h2>{% if user.country is not null %}<img
+                        src="https://flagcdn.com/24x18/{{ user.country.twoLetters|lower }}.png" alt="{{ user.country }}"
+                        title="{{ user.country }}">
+                    {% endif %}{{ user.username }}</h2></div>
             <div class="tags">
                 {% if user.songs|length > 0 %}<span>{{ "Mapper"|trans }}</span>{% endif %}
                 {% if user.certified|length > 0 %}<span>{{ "Certified"|trans }}</span>{% endif %}
@@ -59,7 +61,8 @@
                     <div class="label">{{ "Distance"|trans }}</div>
                     <div class="total-bar">{{ totalDistance|number_format(2,'.',',') }}m</div>
                     <div class="avg">
-                        <div class="avg-bar" style="width:50%">{{ (totalDistance/user.scores|length)|number_format(2,'.',',') }}
+                        <div class="avg-bar"
+                             style="width:50%">{{ (totalDistance/user.scores|length)|number_format(2,'.',',') }}
                             m
                         </div>
                         <div class="avg-text">avg. per song</div>
@@ -86,27 +89,33 @@
 
 {% block detailed_content %}
     <div class="row">
-    <div class="col-md-6">
-        <h2>{{ "Top Scores"|trans }}</h2>
-        <table class="table songs recently-played">
-            <tr>
-                <th>{{ "Song title"|trans }}</th>
-                <th class="">{{ "Difficulty"|trans }}</th>
-                <th class="">{{ "Distance"|trans }}</th>
-                <th class="">{{ "Raw PP"|trans }}</th>
-                <th class="">{{ "Date"|trans }}</th>
-            </tr>
+        <div class="col-md-6">
+            <h2>{{ "Top Scores"|trans }}</h2>
 
-            {% for score in pagination.entities %}
-                {% include 'songs/partial/song_row_recently_played.html.twig' with {score:score} %}
-            {% endfor %}
-        </table>
-        {% include 'widget/paginate.html.twig' with {pagination:pagination} %}
+            {% import "widget/order_link.html.twig" as macro_order %}
+            <table class="table songs recently-played">
+                <tr>
+                    <th>{{ "Song title"|trans }}</th>
+                    <th class="">{{ "Difficulty"|trans }}</th>
+                    <th class="">{{ "Distance"|trans }}</th>
+                    <th class="">
+                        {{ macro_order.order_link("Raw PP","s.rawPP") }}
+                    </th>
+                    <th class="">
+                        {{ macro_order.order_link("Date","s.createdAt") }}
+                    </th>
+                </tr>
 
-    </div>
-    <div class="col-md-6">
-        <h2>{{ "Public playlist"|trans }}</h2>
-        <p>soon</p>
-    </div>
+                {% for score in pagination.entities %}
+                    {% include 'songs/partial/song_row_recently_played.html.twig' with {score:score} %}
+                {% endfor %}
+            </table>
+            {% include 'widget/paginate.html.twig' with {pagination:pagination} %}
+
+        </div>
+        <div class="col-md-6">
+            <h2>{{ "Public playlist"|trans }}</h2>
+            <p>soon</p>
+        </div>
     </div>
 {% endblock %}

@@ -19,6 +19,25 @@
 
 .table {
   tr {
+    th {
+      font-size: 12px;
+      color: #8F8F8F;
+      font-weight: 400;
+      border-top: none;
+      border-bottom: 1px solid #8F8F8F;
+      .fa {
+        font-size: 10px;
+      }
+      a {
+
+        color: #fff;
+        text-decoration: none;
+
+        &:hover, &.active {
+          color: $active;
+        }
+      }
+    }
     &:nth-child(2n) {
       background: $bg-tr-pair;
 
@@ -28,13 +47,6 @@
     }
   }
 
-  th {
-    font-size: 14px;
-
-    .fa {
-      font-size: 12px;
-    }
-  }
 
   td {
     border: none;
