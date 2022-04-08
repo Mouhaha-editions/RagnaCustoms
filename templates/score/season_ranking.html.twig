@@ -21,7 +21,7 @@
                 <th>{{ "Rank"|trans }}</th>
                 <th>{{ "User"|trans }}</th>
                 <th class="text-right">{{ "Score"|trans }}</th>
-                <th class="text-right">{{ "Songs played"|trans }}</th>
+                <th class="text-right">{{ "Songs Played"|trans }}</th>
             </tr>
             {% for score in scores.entities %}
                 <tr {% if is_granted('ROLE_USER') and score["username"] == app.user.username %}class="text-success"{% endif %}>

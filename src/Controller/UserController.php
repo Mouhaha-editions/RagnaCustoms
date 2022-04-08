@@ -44,6 +44,10 @@ class UserController extends AbstractController
     public function profile(Request $request, Utilisateur $utilisateur, PaginationService $paginationService, StatisticService $statisticService, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, UtilisateurRepository $utilisateurRepository, GamificationService $gamificationService): Response
     {
 
+        if ($this->getUser() !== $utilisateur && !$utilisateur->getIsPublic()) {
+            $this->addFlash('warning', "This profile is not public.");
+            return $this->redirectToRoute('home');
+        }
 
         $qb = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $utilisateur)->orderBy('s.createdAt', "desc");
         $pagination = $paginationService->setDefaults(15)->process($qb, $request);
@@ -103,9 +107,7 @@ class UserController extends AbstractController
      */
     public function mappedProfile(Request $request, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
     {
-        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")
-            ->where('s.user = :user')
-            ->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
+        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
 //            ->leftJoin("s.downloadCounters",'dc')
             ->groupBy("s.id");
 //        $qb->leftJoin('s.songDifficulties', 'song_difficulties')
@@ -213,10 +215,7 @@ class UserController extends AbstractController
             }
         }
         if ($request->get('not_downloaded', 0) > 0 && $this->isGranted('ROLE_USER')) {
-            $qb->leftJoin("s.downloadCounters", 'download_counters')
-                ->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")
-                ->andHaving("count_download_user = 0")
-                ->setParameter('user', $this->getuser());
+            $qb->leftJoin("s.downloadCounters", 'download_counters')->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")->andHaving("count_download_user = 0")->setParameter('user', $this->getuser());
         }
         $qb->andWhere('s.moderated = true');
 
@@ -271,7 +270,12 @@ class UserController extends AbstractController
                 }, $ids)));
         }
 
-        if ($request->get('order_by') && in_array($request->get('order_by'),['s.lastDateUpload','rating','s.downloads','s.name'],true)) {
+        if ($request->get('order_by') && in_array($request->get('order_by'), [
+                's.lastDateUpload',
+                'rating',
+                's.downloads',
+                's.name'
+            ], true)) {
             $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
         }
         //$pagination = null;
@@ -318,8 +322,7 @@ class UserController extends AbstractController
             }
         }
 
-        $qb = $scoreHistoryRepository->createQueryBuilder('s')
-            ->where('s.user = :user')->setParameter('user', $user)->orderBy('s.createdAt', "desc");
+        $qb = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $user)->orderBy('s.createdAt', "desc");
         $pagination = $paginationService->setDefaults(10)->process($qb, $request);
 
         return $this->render('user/index.html.twig', [

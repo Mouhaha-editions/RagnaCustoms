@@ -8,7 +8,8 @@
         <div class="row mt-5">
             <div class="col-12">
                 {% if is_granted('ROLE_USER') %}
-                    <a href="?findme=true" class="float-right btn btn-success btn-bg-empty mt-2">{{ "Find me"|trans }}</a>
+                    <a href="?findme=true"
+                       class="float-right btn btn-success btn-bg-empty mt-2">{{ "Find me"|trans }}</a>
                 {% endif %}
                 <h1>{{ "Leaderboard"|trans }} {% if country is defined %}{{ country.twoLetters }}{% endif %}</h1>
                 <table class="table table-sm">
@@ -16,27 +17,36 @@
                         <th>{{ "#" }}</th>
                         <th>{{ "User"|trans }}</th>
                         <th class="text-right">{{ "Score"|trans }}</th>
-                        <th class="text-right">{{ "Songs"|trans }}</th>
+                        <th class="text-right">{{ "Songs Played"|trans }}</th>
                         <th class="text-right">{{ "Last Update"|trans }}</th>
-{#                        <th class="text-right">{{ "Songs played"|trans }}</th>#}
+                        {#                        <th class="text-right">{{ "Songs played"|trans }}</th> #}
                     </tr>
                     {% for score in scores.entities %}
-                        <tr {% if is_granted('ROLE_USER') and score.user.username == app.user.username %}class="text-success" id="{{ score.user.username }}"{% else %}id="{{ score.user.username }}"{% endif %}>
+                        <tr {% if is_granted('ROLE_USER') and score.user.username == app.user.username %}class="text-success"
+                            id="{{ score.user.username }}" {% else %}id="{{ score.user.username }}"{% endif %}>
                             <td>{{ loop.index+((scores.current-1)*25) }}</td>
                             <td>
-{#                                <a href="{{ url("user_profile",{username:score.user.username}) }}">#}
-{#                                    <img style="border-radius:15px;width:30px;margin-right:10px;"#}
-{#                                         src="https://www.gravatar.com/avatar/{{ score.user.gravatar }}?d={{ "https://ragnacustoms.com/apps/runes.png"|url_encode }}"#}
-{#                                         class="" alt="{{ score.user.username }}"/></a>#}
+                                {#                                <a href="{{ url("user_profile",{username:score.user.username}) }}"> #}
+                                {#                                    <img style="border-radius:15px;width:30px;margin-right:10px;" #}
+                                {#                                         src="https://www.gravatar.com/avatar/{{ score.user.gravatar }}?d={{ "https://ragnacustoms.com/apps/runes.png"|url_encode }}" #}
+                                {#                                         class="" alt="{{ score.user.username }}"/></a> #}
                                 {% if score.user.country != null %}
                                     <a href="{{ url('score_global_country',{twoLetters:score.user.country.twoLetters|lower }) }}">
-                                        <img src="https://flagcdn.com/16x12/{{ score.user.country.twoLetters|lower }}.png" alt="{{ score.user.country }}" title="{{ score.user.country }}">
+                                        <img src="https://flagcdn.com/16x12/{{ score.user.country.twoLetters|lower }}.png"
+                                             alt="{{ score.user.country }}" title="{{ score.user.country }}">
                                     </a>
+
                                 {% else %}
                                     <div style="width:16px; height:12px;display:inline-block;"></div>
                                 {% endif %}
-                                <a href="{{ url("user_profile",{username:score.user.username}) }}"
-                                   class="ml-1 text-level-9">{{ score.user.username }}</a></td>
+                                {% if score.user.isPublic %}
+                                    <a href="{{ url("user_profile",{username:score.user.username}) }}"
+                                       class="ml-1 text-level-9">{{ score.user.username }}</a>
+                                {% else %}
+                                    &nbsp;{{ score.user.username }}
+                                {% endif %}
+
+                            </td>
                             <td class="text-right">{{ score.totalPPScore|round(2) }} pts</td>
                             <td class="text-right"><span>{{ score.user.scoresRanked|length }}</span></td>
                             <td class="text-right"><span>{{ score.user.lastScoreHistory.timeAgo() }}</span></td>
