@@ -78,6 +78,12 @@ class Score
      * @ORM\Column(type="float", nullable=true)
      */
     private $rawPP;
+    
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $weightedPP;
+
     /**
      * @ORM\Column(type="float")
      */
@@ -153,6 +159,25 @@ class Score
     public function setRawPP(?float $rawPP): self
     {
         $this->rawPP = $rawPP;
+
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getWeightedPP(): ?float
+    {
+        return $this->weightedPP;
+    }
+
+    /**
+     * @param float|null $weightedPP
+     * @return $this
+     */
+    public function setWeightedPP(?float $weightedPP): self
+    {
+        $this->weightedPP = $weightedPP;
 
         return $this;
     }
