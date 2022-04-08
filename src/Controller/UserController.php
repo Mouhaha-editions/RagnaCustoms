@@ -32,7 +32,7 @@ class UserController extends AbstractController
      * @param ScoreHistoryRepository $scoreHistoryRepository
      * @return Response
      */
-    public function profile(Request $request, Utilisateur $utilisateur, PaginationService $paginationService, ScoreHistoryRepository $scoreHistoryRepository): Response
+    public function profile(Request $request, Utilisateur $utilisateur, PaginationService $paginationService, ScoreRepository $scoreRepository): Response
     {
 
         if ($this->getUser() !== $utilisateur && !$utilisateur->getIsPublic()) {
@@ -40,7 +40,11 @@ class UserController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        $qb = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $utilisateur)->orderBy('s.createdAt', "desc");
+        $qb = $scoreRepository
+            ->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->setParameter('user', $utilisateur)
+            ->orderBy('s.createdAt', "desc");
         $pagination = $paginationService->setDefaults(15)->process($qb, $request);
 
         return $this->render('user/partial/song_played.html.twig', [
