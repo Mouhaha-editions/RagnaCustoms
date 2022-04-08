@@ -49,7 +49,7 @@ class ApiController extends AbstractController
          *  "Id" => $song->getId(),
          * "Name" => $song->getName(),
          * "Author" => $song->getAuthorName(),
-         * "IsSeasonRanked" => $song->isSeasonRanked(),
+         * "IsRanked" => $song->isRanked(),
          * "Hash" => $song->getNewGuid(),
          * "Mapper" => $song->getLevelAuthorName(),
          * "Difficulties" => $song->getSongDifficultiesStr(),

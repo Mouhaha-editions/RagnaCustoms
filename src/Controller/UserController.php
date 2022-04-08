@@ -140,10 +140,7 @@ class UserController extends AbstractController
                 case 6 :
                     $qb->andWhere('rank.level > 10');
                     break;
-                case 4 :
-                    $qb->leftJoin('song_difficulties.seasons', 'season');
-                    $qb->andWhere('season.startDate <= :now ')->andWhere('season.endDate >= :now')->setParameter('now', new DateTime());
-                    break;
+
                 case 5 :
                     $wip = true;
                     break;

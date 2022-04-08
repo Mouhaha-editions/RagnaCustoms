@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Entity\DifficultyRank;
 use App\Entity\Overlay;
 use App\Entity\Score;
-use App\Entity\Season;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\SongHash;
@@ -173,11 +172,9 @@ class SongService
 
         $new = $song->getId() == null || $isWip != $song->getWip();
         foreach ($song->getSongDifficulties() as $difficulty) {
-            foreach ($difficulty->getSeasons() as $season) {
-                if ($season->isActive()) {
-                    $this->rrmdir($unzipFolder);
-                    throw new Exception("This song is used for this season ranking, you can't update it for now, come back a the end of the season..");
-                }
+            if ($difficulty->isRanked()) {
+                $this->rrmdir($unzipFolder);
+                throw new Exception("This song is ranked, you can't update it for now, please contact us.");
             }
         }
 

@@ -3,10 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Country;
-use App\Entity\Season;
 use App\Repository\RankedScoresRepository;
-use App\Repository\ScoreRepository;
-use App\Repository\SeasonRepository;
 use App\Repository\SongRepository;
 use App\Service\ScoreService;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -17,48 +14,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ScoreController extends AbstractController
 {
-    /**
-     * @Route("/leaderboard/{slug}", name="score", defaults={"slug"=null})
-     * @param Request $request
-     * @param SongRepository $songRepository
-     * @param PaginationService $paginationService
-     * @param SeasonRepository $seasonRepository
-     * @param Season|null $selectedSeason
-     * @return Response
-     */
-    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService, SeasonRepository $seasonRepository, Season $selectedSeason = null): Response
-    {
-        $qb = $songRepository->createQueryBuilder('s')->where('s.moderated = true')->andWhere('s.wip != true')->andWhere("s.isDeleted != true")->distinct()->orderBy('s.name', 'ASC');
-
-        if ($request->get('season', null) !== null) {
-            if ($request->get('season') == 0) {
-                return $this->redirectToRoute('score');
-            }
-            $selectedSeason = $seasonRepository->find($request->get('season'));
-            return $this->redirectToRoute('score', ['slug' => $selectedSeason->getSlug()]);
-        }
-        if ($selectedSeason != null) {
-            $qb->leftJoin('s.songDifficulties', 'difficulties')->leftJoin('difficulties.seasons', 'season')->andWhere('season.id = :season')->setParameter('season', $selectedSeason);
-        }
-        $songs = $paginationService->setDefaults(50)->process($qb, $request);
-
-        if ($songs->isPartial()) {
-            return $this->render('score/partial/songs_page.html.twig', [
-                'songs' => $songs,
-                'seasons' => $seasonRepository->createQueryBuilder('s')->orderBy('s.id', "desc")->getQuery()->getResult(),
-                'selected_season' => $selectedSeason,
-            ]);
-        }
-        return $this->render('score/index.html.twig', [
-            'songs' => $songs,
-            'seasons' => $seasonRepository->createQueryBuilder('s')->orderBy('s.id', "desc")->getQuery()->getResult(),
-            'selected_season' => $selectedSeason,
-
-        ]);
-    }
 
     /**
      * @Route("/ranking/country/{twoLetters}", name="score_global_country")
+     * @param Request $request
+     * @param Country $country
+     * @param PaginationService $pagination
+     * @param ScoreService $scoreService
+     * @param RankedScoresRepository $rankedScoresRepository
      * @return Response
      */
     public function globalCountryRanking(Request $request, Country $country, PaginationService $pagination, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository): Response
@@ -89,6 +52,10 @@ class ScoreController extends AbstractController
 
     /**
      * @Route("/ranking/global", name="score_global_ranking")
+     * @param Request $request
+     * @param PaginationService $pagination
+     * @param ScoreService $scoreService
+     * @param RankedScoresRepository $rankedScoresRepository
      * @return Response
      */
     public function globalRanking(Request $request, PaginationService $pagination, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository): Response

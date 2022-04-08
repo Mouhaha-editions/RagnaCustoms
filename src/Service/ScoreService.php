@@ -6,7 +6,6 @@ use App\Entity\Country;
 use App\Entity\RankedScores;
 use App\Entity\Score;
 use App\Entity\ScoreHistory;
-use App\Entity\Season;
 use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,37 +25,6 @@ class ScoreService
         $this->em = $em;
         $this->kernel = $kernel;
     }
-
-    public function getMine(Utilisateur $user, SongDifficulty $songDifficulty, ?Season $season)
-    {
-        $return = [];
-        $level = $songDifficulty->getDifficultyRank()->getLevel();
-        $hash = $songDifficulty->getSong()->getNewGuid();
-
-        /** @var Score $score */
-        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")->where('s.user = :user')->andWhere('s.difficulty = :difficulty')->andWhere('s.hash = :hash')->setParameter('user', $user)->setParameter('hash', $hash)->setParameter('difficulty', $level);
-        if ($season) {
-            $qb->andWhere('s.season = :season')->setParameter('season', $season);
-        }
-        $qb->orderBy("s.score", 'DESC');
-        $score = $qb->setFirstResult(0)->setMaxResults(1)->getQuery()->getOneOrNullResult();
-        if ($score == null) {
-            return null;
-        }
-        $return['score'] = $score;
-
-        $qb = $this->em->getRepository(Score::class)->createQueryBuilder("s")->select("MAX(s.score)")->where('s.difficulty = :difficulty')->andWhere("s.hash = :hash")->having("MAX(s.score) >= :score")->andWhere("s.user != :user")->setParameter('score', $score->getScore())->setParameter('user', $user)->setParameter('hash', $hash)->setParameter('difficulty', $level);
-        if ($season) {
-            $qb->andWhere('s.season = :season')->setParameter('season', $season);
-        }
-        $qb->groupBy('s.user');
-
-        $otherScore = $qb->getQuery()->getResult();
-        $return['place'] = count($otherScore) + 1;
-        return $return;
-    }
-
-
 
     public function calculateDifficulties(string $infoDat)
     {

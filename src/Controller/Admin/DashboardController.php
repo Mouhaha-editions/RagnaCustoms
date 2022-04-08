@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Season;
 use App\Entity\Song;
 use App\Entity\SongCategory;
 use App\Entity\SongDifficulty;
@@ -27,14 +26,6 @@ class DashboardController extends AbstractDashboardController
 
         return $this->redirect($routeBuilder->setController(VoteCrudController::class)->generateUrl());
 
-        // you can also redirect to different pages depending on the current user
-//        if ('jane' === $this->getUser()->getUsername()) {
-//            return $this->redirect('...');
-//        }
-
-        // you can also render some template to display a proper Dashboard
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        return $this->render('@EasyAdmin/page/content.html.twig');
     }
 
     public function configureDashboard(): Dashboard
@@ -50,7 +41,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Song', 'fa fa-music', Song::class)->setPermission('ROLE_MODERATOR');
         yield MenuItem::linkToCrud('SongCategory', 'fa fa-music', SongCategory::class)->setPermission('ROLE_MODERATOR');
         yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', Utilisateur::class)->setPermission('ROLE_ADMIN');
-        yield MenuItem::linkToCrud('Seasons', 'fa fa-tree', Season::class)->setPermission('ROLE_MODERATOR');
         yield MenuItem::linkToCrud('Difficulties', 'fa fa-star', SongDifficulty::class)->setPermission('ROLE_ADMIN');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }

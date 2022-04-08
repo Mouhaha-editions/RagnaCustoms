@@ -518,23 +518,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getBestScore(Score $scoreSample, Season $season = null)
-    {
-        $scores = $this->getScores()->filter(function (Score $score) use ($scoreSample, $season) {
-            if ($season == null) {
-                return $score->getDifficulty() === $scoreSample->getDifficulty() && $scoreSample->getHash() == $score->getHash();
-            }
-            return $score->getDifficulty() === $scoreSample->getDifficulty() && $scoreSample->getHash() == $score->getHash() && $score->getSeason() === $season;
-        });
-        $max = 0;
-        /** @var Score $score */
-        foreach ($scores as $score) {
-            if ($score->getScore() >= $max) {
-                $max = $score->getScore();
-            }
-        }
-        return $max;
-    }
 
     /**
      * @return Collection|Score[]

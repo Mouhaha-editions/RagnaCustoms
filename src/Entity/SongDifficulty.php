@@ -43,10 +43,7 @@ class SongDifficulty
      * @ORM\Column(type="integer", nullable=true)
      */
     private $notesCount;
-    /**
-     * @ORM\ManyToMany(targetEntity=Season::class, mappedBy="difficulties")
-     */
-    private $seasons;
+
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songDifficulties",cascade={"persist", "remove"})
      * @ORM\JoinColumn(onDelete="CASCADE")
@@ -87,7 +84,6 @@ class SongDifficulty
 
     public function __construct()
     {
-        $this->seasons = new ArrayCollection();
         $this->scores = new ArrayCollection();
         $this->scoreHistories = new ArrayCollection();
     }
@@ -184,70 +180,6 @@ class SongDifficulty
         $this->NotePerSecond = $NotePerSecond;
 
         return $this;
-    }
-
-    public function addSeason(Season $season): self
-    {
-        if (!$this->seasons->contains($season)) {
-            $this->seasons[] = $season;
-            $season->addDifficulty($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSeason(Season $season): self
-    {
-        if ($this->seasons->removeElement($season)) {
-            $season->removeDifficulty($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Utilisateur $user
-     * @param Season|null $season
-     * @return bool
-     */
-    public function isPlayedBy(Utilisateur $user, Season $season = null)
-    {
-        if ($this->isSeasonRanked() && $season != null) {
-            foreach ($user->getScores() as $score) {
-                if ($score->getSeason() != null && in_array($score->getHash(), $this->getSong()->getHashes()) && $score->getDifficulty() == $this->getDifficultyRank()->getLevel() && $score->getSeason()->getId() === $season->getId() && $score->getUser() === $user) {
-                    return true;
-                }
-            }
-        }else{
-            foreach ($user->getScores() as $score) {
-                 $hashes = $this->getSong()->getHashes();
-                 $userId = $score->getUser()->getId();
-                 $level = $this->getDifficultyRank()->getLevel();
-
-                if (in_array($score->getHash(), $hashes) && $score->getDifficulty() == $level &&  $userId === $user->getId()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public function isSeasonRanked()
-    {
-        foreach ($this->getSeasons() as $season) {
-            if ($season->isActive()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @return Collection|Season[]
-     */
-    public function getSeasons(): Collection
-    {
-        return $this->seasons;
     }
 
     public function getClawDifficulty(): ?string
