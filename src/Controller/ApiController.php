@@ -60,7 +60,6 @@ class ApiController extends AbstractController
     }
 
 
-
     /**
      * @Route("/api/search/{term}", name="api_search")
      */
@@ -74,7 +73,7 @@ class ApiController extends AbstractController
             $songs[] = [
                 "Id" => $song->getId(),
                 "Name" => $song->getName(),
-                "IsRanked" => $song->isSeasonRanked(),
+                "IsRanked" => $song->isRanked(),
                 "Hash" => $song->getNewGuid(),
                 "Author" => $song->getAuthorName(),
                 "Mapper" => $song->getLevelAuthorName(),
@@ -84,9 +83,9 @@ class ApiController extends AbstractController
         }
 
         return new JsonResponse([
-                "Results" => $songs,
-                "Count" => count($songs)
-            ]);
+            "Results" => $songs,
+            "Count" => count($songs)
+        ]);
     }
 
     /**
@@ -95,16 +94,17 @@ class ApiController extends AbstractController
     public function song(Request $request, Song $song): Response
     {
         return new JsonResponse([
-                "Id" => $song->getId(),
-                "Name" => $song->getName(),
-                "Author" => $song->getAuthorName(),
-                "IsRanked" => $song->isSeasonRanked(),
-                "Hash" => $song->getNewGuid(),
-                "Mapper" => $song->getLevelAuthorName(),
-                "Difficulties" => $song->getSongDifficultiesStr(),
-                "CoverImageExtension" => $song->getCoverImageExtension(),
-            ]);
+            "Id" => $song->getId(),
+            "Name" => $song->getName(),
+            "Author" => $song->getAuthorName(),
+            "IsRanked" => $song->isRanked(),
+            "Hash" => $song->getNewGuid(),
+            "Mapper" => $song->getLevelAuthorName(),
+            "Difficulties" => $song->getSongDifficultiesStr(),
+            "CoverImageExtension" => $song->getCoverImageExtension(),
+        ]);
     }
+
     /**
      * @param Request $request
      * @Route("/api/song-list/{id}", name="api_song_list")
@@ -112,12 +112,12 @@ class ApiController extends AbstractController
     public function songList(Request $request, SongTemporaryList $songTemporaryList)
     {
         $data = [];
-        foreach($songTemporaryList->getSongs() AS $song){
+        foreach ($songTemporaryList->getSongs() as $song) {
             $data[] = [
                 "Id" => $song->getId(),
                 "Name" => $song->getName(),
                 "Author" => $song->getAuthorName(),
-                "IsRanked" => $song->isSeasonRanked(),
+                "IsRanked" => $song->isRanked(),
                 "Hash" => $song->getNewGuid(),
                 "Mapper" => $song->getLevelAuthorName(),
                 "Difficulties" => $song->getSongDifficultiesStr(),
@@ -137,15 +137,15 @@ class ApiController extends AbstractController
             return new Response("NOK", 400);
         }
         return new JsonResponse([
-                "Id" => $song->getId(),
-                "Name" => $song->getName(),
-                "Author" => $song->getAuthorName(),
-                "IsRanked" => $song->isSeasonRanked(),
-                "Hash" => $song->getNewGuid(),
-                "Mapper" => $song->getLevelAuthorName(),
-                "Difficulties" => $song->getSongDifficultiesStr(),
-                "CoverImageExtension" => $song->getCoverImageExtension(),
-            ]);
+            "Id" => $song->getId(),
+            "Name" => $song->getName(),
+            "Author" => $song->getAuthorName(),
+            "IsRanked" => $song->isRanked(),
+            "Hash" => $song->getNewGuid(),
+            "Mapper" => $song->getLevelAuthorName(),
+            "Difficulties" => $song->getSongDifficultiesStr(),
+            "CoverImageExtension" => $song->getCoverImageExtension(),
+        ]);
     }
 
     /**
