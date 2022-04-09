@@ -2,6 +2,8 @@
 @import "~bootstrap";
 @import "~select2/dist/css/select2.min.css";
 @import 'ragna-beat.scss';
+@import 'sweetalert2/src/sweetalert2.scss';
+
 .select2-results {
   color: $bg;
 }

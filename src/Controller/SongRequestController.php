@@ -88,10 +88,10 @@ class SongRequestController extends AbstractController
        if($this->isGranted('ROLE_USER')){
 
         if ($user->getOpenSongRequests()->count() >= 3) {
-            $reason = '<div class="alert alert-danger">You already have 3 or more requests, please wait before adding a new one.</div>';
+            $reason = '<div class="alert d-none" data-type="info"  data-title="Too much requests">You already have 3 or more requests, please wait before adding a new one.</div>';
             $save = false;
         } elseif ($user->getCredits() < 30) {
-            $reason = '<div class="alert alert-danger">You need 30 credits to add a song request,play more songs to earn credits ;)</div>';
+            $reason = '<div class="alert d-none"  data-type="info"  data-title="Not enough credits">You need 30 credits to add a song request, play more songs to earn credits ;)</div>';
             $save = false;
         }
     }

@@ -40,7 +40,7 @@
         "symfony/webpack-encore-bundle": "^1.13",
         "symfony/yaml": "5.3.*",
         "symfonycasts/reset-password-bundle": "^1.5",
-        "symfonycasts/verify-email-bundle": "^1.2",
+        "symfonycasts/verify-email-bundle": "^1.10",
         "team-reflex/discord-php": "^5.1",
         "tetranz/select2entity-bundle": "^3.1",
         "twig/extra-bundle": "^2.12|^3.0",
