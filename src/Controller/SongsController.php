@@ -79,10 +79,7 @@ class SongsController extends AbstractController
      */
     public function homepage(): Response
     {
-        $this->addFlash('danger',"Stop je sens un danger");
-        $this->addFlash('warning',"Thooo !");
-        $this->addFlash('success',"youhou  !");
-        $this->addFlash('info',"The fuck?!");
+
         return $this->render('songs/homepage.html.twig');
     }
 
