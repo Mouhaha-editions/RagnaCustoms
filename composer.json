@@ -16,7 +16,6 @@
         "easycorp/easyadmin-bundle": "^3",
         "erusev/parsedown": "^1.7",
         "gedmo/doctrine-extensions": "^3.1",
-        "google/analytics-data": "^0.8.0",
         "intervention/image": "^2.7",
         "knpuniversity/oauth2-client-bundle": "^2.10",
         "nelmio/api-doc-bundle": "^4.4",
