@@ -53,6 +53,7 @@ body {
 }
 
 .up_down_vote {
+  div{display:inline-block}
   a {
     color: #fff;
 
@@ -229,29 +230,8 @@ h1 {
 
 .featured-table {
   .level-list {
-    .level.is-ranked {
-      position: relative;
-      background: transparent !important;
-      width: 16px !important;
 
-      i {
-        position: absolute;
-        font-size: 16px;
-        left: 0;
-        top: -2px;
-      }
-
-      span {
-        z-index: 200;
-        position: relative;
-        text-align: center;
-      }
-    }
   }
-}
-
-
-.featured-table {
   th {
     font-size: 12px;
     color: #8F8F8F;
@@ -272,6 +252,24 @@ h1 {
       color: #fff;
       margin-left: 2px;
       float: left;
+      &.is-ranked {
+        position: relative;
+        background: transparent !important;
+        width: 16px !important;
+
+        i {
+          position: absolute;
+          font-size: 16px;
+          left: 0;
+          top: -2px;
+        }
+
+        span {
+          z-index: 200;
+          position: relative;
+          text-align: center;
+        }
+      }
     }
   }
 
@@ -415,7 +413,11 @@ h1 {
 
     .up_down_vote {
       color: #868686;
-
+      div{
+        display:block;
+        min-width:50px;
+        font-size: 14px;
+      }
       a {
         color: #fff;
       }
