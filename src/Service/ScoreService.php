@@ -102,9 +102,10 @@ class ScoreService
             return null;
         }
         $qb2 =$this->em->getRepository(RankedScores::class)
-            ->createQueryBuilder("s")->select('s.id')->where('s.totalPPScore > :my_score')->andWhere('s.user != :me')->setParameter('my_score', $mine->getTotalPPScore())->setParameter('me', $user)->groupBy('s.user');
+            ->createQueryBuilder("s")->select('s.id')->where('s.totalPPScore > :my_score')
+            ->andWhere('s.user != :me')->setParameter('my_score', $mine->getTotalPPScore())->setParameter('me', $user)->groupBy('s.user');
         if ($country) {
-            $qb2->leftJoin('u.country', 'c')->andWhere('c.id = :country')->setParameter('country', $country);
+            $qb2->leftJoin("s.user",'u')->leftJoin('u.country', 'c')->andWhere('c.id = :country')->setParameter('country', $country);
         }
 
         return count($qb2->getQuery()->getResult()) + 1;
