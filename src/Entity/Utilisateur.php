@@ -10,6 +10,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
@@ -52,6 +53,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private $downloadCounters;
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(mode="strict")
      */
     private $email;
     /**
