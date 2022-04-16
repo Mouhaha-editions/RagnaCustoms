@@ -152,12 +152,6 @@ class SongsController extends AbstractController
         $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
             ->groupBy("s.id");
 
-        if ($request->get('display_wip', null) != null) {
-            //$qb->andWhere("s.wip = true AND s.wip != true ");
-            $filters[] = "display wip";
-        } else {
-            $qb->andWhere("s.wip != true");
-        }
         $qb->leftJoin('s.songDifficulties', 'song_difficulties');
 
         if ($request->get('only_ranked', null) != null) {
@@ -239,6 +233,26 @@ class SongsController extends AbstractController
 
                     break;
             }
+        }
+
+        if ($request->get('wip_maps', null)) {
+
+            switch ($request->get('wip_maps')) {
+                case 1:
+                    //with
+                    $filters[] = "display W.I.P.";
+                    break;
+                case 2 :
+                    //only
+                    $qb->andWhere('s.wip = true');
+                    $filters[] = "only W.I.P.";
+                    break;
+                default:
+                    $qb->andWhere('s.wip != true');
+                    break;
+            }
+        }else{
+            $qb->andWhere('s.wip != true');
         }
 
         if ($request->get('downloads_submitted_date', null)) {

@@ -127,6 +127,17 @@
                                     value="2">{{ "Only converted"|trans }}</option>
                         </select>
                     </div>
+                    <div class="form-group ">
+                        <label for="downloads-filter-converted">{{ "W.I.P. map"|trans }}</label>
+                        <select id="downloads-filter-converted" name="wip_maps"
+                                class="form-control form-control-sm">
+                            <option value="">{{ "Without"|trans }}</option>
+                            <option {% if app.request.get('wip_maps') == 1 %}selected="selected"{% endif %}
+                                    value="1">{{ "With"|trans }}</option>
+                            <option {% if app.request.get('wip_maps') == 2 %}selected="selected"{% endif %}
+                                    value="2">{{ "Only W.I.P."|trans }}</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         {% if is_granted('ROLE_USER') %}
                         <div class="form-check">
@@ -150,12 +161,7 @@
                                 </label>
                             </div>
                         {% endif %}
-                        <div class="form-check">
-                            <input class="form-check-input" {% if app.request.get("display_wip") == 1%}checked="checked"{% endif%} type="checkbox" value="1" name="display_wip" id="display_wip">
-                            <label class="form-check-label" for="display_wip">
-                                {{ "Display WIP"|trans }}
-                            </label>
-                        </div>
+
 
                     </div>
                     <button type="submit" name="search_btn" value="1"
