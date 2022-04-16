@@ -84,7 +84,7 @@ class VotesController extends AbstractController
             return new JsonResponse([
                 "error" => true,
                 "errorMessage" => $translator->trans("You can't review a Work in progres SONG"),
-                "response" => $translator->trans("Work in progress!"),
+                "response" => $translator->trans("Work in progress! You can't review that."),
 
             ]);
         }
