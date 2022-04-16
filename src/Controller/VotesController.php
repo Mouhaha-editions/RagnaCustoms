@@ -73,11 +73,19 @@ class VotesController extends AbstractController
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 "error" => true,
-                "errorMessage" => $translator->trans("You need an account to vote !"),
+                "errorMessage" => $translator->trans("You need an account to vote!"),
                 "response" => $this->renderView('songs/partial/detail_vote.html.twig', [
                     "song" => $song,
                     'message' => $translator->trans("You need an account to vote !")
                 ])
+            ]);
+        }
+        if ($song->getWip()) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => $translator->trans("You can't review a Work in progres SONG"),
+                "response" => $translator->trans("Work in progress!"),
+
             ]);
         }
 
