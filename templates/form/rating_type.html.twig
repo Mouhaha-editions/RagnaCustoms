@@ -1,7 +1,11 @@
 
 {% block rating_row %}
-    <div class="rating-wrap d-flex">
-        <label>{{ label|trans }}</label>
+    <div class="rating-wrap d-flex justify-content-between">
+        <div><label>{{ label|trans }}
+        </label>
+            <small>&nbsp;<i class="fas fa-info-circle" data-toggle="tooltip" title="{{ help|trans }}"></i></small>
+        </div>
+
         {{- form_widget(form) -}}
     </div>
 
@@ -16,5 +20,4 @@
             </div>
         {% endfor %}
     </div>
-    <div class="text-right">&nbsp;&nbsp;<i class="fas fa-info-circle" title="{{ help|trans }}"></i> </div>
 {% endblock %}

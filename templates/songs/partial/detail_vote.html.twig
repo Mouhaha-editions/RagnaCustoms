@@ -1,6 +1,7 @@
 {{ "%song_name% by %artist%"|trans|replace({"%song_name%": song.name,"%artist%": song.authorName}) }}
 <div class="text-danger">{{ message }}</div>
-<div class="form pb-4">
+<div class="form pb-4 row">
+    <div class="col-md-6">
     {% import "songs/macros/vote.html.twig" as macro_vote %}
     {{ macro_vote.ratingDisplay("Fun factor:"|trans,song.funFactorAverage) }}
     {{ macro_vote.ratingDisplay("Rhythm:"|trans,song.rhythmAverage) }}
@@ -8,4 +9,5 @@
     {{ macro_vote.ratingDisplay("Pattern quality:"|trans,song.patternQualityAverage) }}
     {{ macro_vote.ratingDisplay("Readability:"|trans,song.readabilityAverage) }}
     {{ macro_vote.ratingDisplay("Level quality:"|trans,song.levelQualityAverage) }}
+</div>
 </div>
