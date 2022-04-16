@@ -1,10 +1,12 @@
 <div class="up_down_vote" id="up_down_vote_{{ song.id }}">
     {% set voteCounter = song.isVoteCounterBy(app.user) %}
-    {% if not is_granted('ROLE_USER') %}
-        <div><i style="color:grey;opacity:0.5" class="fas fa-arrow-up"></i>
-            {{ song.voteUp }}</div>
-        <div><i style="color:grey;opacity:0.5" class="fas fa-arrow-down"></i>
-            {{ song.voteDown }}</div>
+    {% if not is_granted('ROLE_USER') or song.wip %}
+        <i style="color:grey;opacity:0.5" class="fas fa-arrow-up"></i>
+        {{ song.voteUp }}
+{#        <span>&nbsp;</span>#}
+        <i style="color:grey;opacity:0.5" class="fas fa-arrow-down"></i>
+        {{ song.voteDown }}
+
     {% else %}
     <div><a style="text-decoration:none"
            data-toggle="tooltip"
