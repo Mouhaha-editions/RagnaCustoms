@@ -1,4 +1,6 @@
 security:
+    enable_authenticator_manager: true
+
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
@@ -21,7 +23,6 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
             lazy: true
             provider: app_user_provider
             switch_user: { role: ROLE_ADMIN }

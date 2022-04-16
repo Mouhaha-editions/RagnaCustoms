@@ -103,7 +103,9 @@
                         </div>
                         <div class="mt-3">
                             <div class="label">{{ "Mapped by"|trans }}</div>
-                            <div class="mapper"><a href="{{ url("mapper_profile",{username:song.user.username}) }}">{{ song.mapper }}</a></div>
+                            <div class="mapper"><a
+                                        href="{{ url("mapper_profile",{username:song.user.username}) }}">{{ song.mapper }}</a>
+                            </div>
                         </div>
                         <div class="mt-3">
                             <div class="label">{{ "Description"|trans }}</div>
@@ -113,40 +115,63 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <div>
-                            <div class="label">{{ "Rating" }}</div>
-
-                            {% if song.wip %}
-                                <div class="rating-up">
-                                    <span class="text-danger">{{ "Not available when the song is in \"WIP\" mode"|trans }}</span>
-                                </div>
-                            {% else %}
-                                <div class="d-inline-flex rating-up">
-                                    <div>{{ macro_vote.starsDisplay(song.voteAverage|round(2, "floor")) }}</div>
-                                    <div class="ml-3">{{ song.voteAverage|round(2, "floor") }}
-                                        ({{ song.countVotes+0 }})
+                        {% set feedbacks = songService.getVotePublicOrMine(app.user,song) %}
+                        <div id="feedback-and-rating">
+                            <div id="rating-box">
+                                <div class="label">{{ "Rating" }}</div>
+                                {% if song.wip %}
+                                    <div class="rating-up">
+                                        <span class="text-danger">{{ "Not available when the song is in \"WIP\" mode"|trans }}</span>
                                     </div>
+                                {% else %}
+                                    <div class="d-inline-flex rating-up">
+                                        <div>{{ macro_vote.starsDisplay(song.voteAverage|round(2, "floor")) }}</div>
+                                        <div class="ml-3">{{ song.voteAverage|round(2, "floor") }}
+                                            ({{ song.countVotes+0 }})
+                                        </div>
+                                    </div>
+                                    <hr class="mt-1 mb-3"/>
+                                    <div>
+                                        {{ macro_vote.ratingDisplayLabel("Fun factor:"|trans,song.funFactorAverage) }}
+                                        {{ macro_vote.ratingDisplayLabel("Rhythm:"|trans,song.rhythmAverage) }}
+                                        {{ macro_vote.ratingDisplayLabel("Pattern quality:"|trans,song.patternQualityAverage) }}
+                                        {{ macro_vote.ratingDisplayLabel("Readability:"|trans,song.readabilityAverage) }}
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-1 mb-2 song-review"
+                                                data-toggle="modal"
+                                                data-target="#reviewSong"
+                                                data-refresh="true"
+                                                data-url="{{ url('song_vote_review',{id:song.id}) }}"
+                                                data-song-id="{{ song.id }}"
+                                        >{{ "Submit rating"|trans }}</button>
+                                        <button class="btn btn-block btn-sm mt-1 mb-2 song-feedback"
+                                        >{{ "Read Feedback"|trans }} ({{ feedbacks|length }})</button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div id="feedback-box">
+                                <div class="label">{{ "Feedbacks"|trans }}</div>
+                                <div class="content-feedback">
+                                    {% for feedback in feedbacks %}
+                                        <div>
+                                            {% if feedback.isAnonymous %}
+                                                <b>{{ "Anonymous:"|trans }} </b>
+                                            {% else %}
+                                                <b>{{ feedback.user.username }} : {% if not feedback.isModerated %}
+                                                        <div class="badge badge-danger">{{ "not moderated"|trans }}</div>{% endif %}
+                                                </b>
+                                            {% endif %}
+                                            {{ feedback.feedback }}
+                                        </div>
+                                        <hr/>
+                                    {% else %}
+                                        <p>{{ "No feedback for now, be the first!"|trans }}</p>
+                                    {% endfor %}
                                 </div>
-                                <hr class="mt-1 mb-3"/>
-                                <div>
-                                    {{ macro_vote.ratingDisplayLabel("Fun factor:"|trans,song.funFactorAverage) }}
-                                    {{ macro_vote.ratingDisplayLabel("Rhythm:"|trans,song.rhythmAverage) }}
-                                    {{ macro_vote.ratingDisplayLabel("Pattern quality:"|trans,song.patternQualityAverage) }}
-                                    {{ macro_vote.ratingDisplayLabel("Readability:"|trans,song.readabilityAverage) }}
-                                </div>
-                                <div>
-                                    <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-1 mb-2 song-review"
-                                            data-toggle="modal"
-                                            data-target="#reviewSong"
-                                            data-refresh="true"
-                                            data-url="{{ url('song_vote_review',{id:song.id}) }}"
-                                            data-song-id="{{ song.id }}"
-                                    >{{ "Submit rating"|trans }}</button>
-                                    <button class="btn btn-block btn-sm mt-1 mb-2 song-feedback"
-
-                                    >{{ "Read Feedback"|trans }}</button>
-                                </div>
-                            {% endif %}
+                                <button class="btn btn-block btn-sm mt-1 mb-2 back-feedback btn-outline-info"
+                                >{{ "Back"|trans }}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,7 +179,8 @@
         </div>
         <div class="container">
             <div class="row pt-2">
-                <div class="col-md-3" id="ragna_{{ song.id }}_detail" data-file="{{ song.infoDatFile }}" {{ stimulus_target('song-detail', 'info') }}>
+                <div class="col-md-3" id="ragna_{{ song.id }}_detail"
+                     data-file="{{ song.infoDatFile }}" {{ stimulus_target('song-detail', 'info') }}>
                     <h3>{{ "Preview"|trans }}</h3>
                     <div id="ragna-beat-diffs"></div>
                     <div id="ragna-beat-buttons"></div>
@@ -225,6 +251,9 @@
                             "ratingValue": "{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}"
                         }
                     }
+
+
+
 
     </script>
 

@@ -52,6 +52,7 @@ class UploadSongController extends AbstractController
      * @param Song $song
      * @param TranslatorInterface $translator
      * @param SongService $songService
+     * @param ScoreService $scoreService
      * @return JsonResponse
      */
     public function edit(Request $request, Song $song, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)

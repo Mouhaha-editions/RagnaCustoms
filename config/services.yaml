@@ -4,7 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-
+    discord_client_id: "%env(resolve:DISCORD_CLIENT_ID)%"
+    discord_client_secret: "%env(resolve:DISCORD_CLIENT_SECRET)%"
 services:
     # default configuration for services in *this* file
     _defaults:

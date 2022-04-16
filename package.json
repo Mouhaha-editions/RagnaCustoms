@@ -42,6 +42,7 @@
         "popper.js": "^1.16.1",
         "postcss": "^8.2.15",
         "select2": "^4.1.0-rc.0",
+        "sweetalert2": "^11.4.8",
         "tarteaucitronjs": "^1.9.5"
     },
     "license": "UNLICENSED",
