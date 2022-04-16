@@ -907,9 +907,13 @@ class SongService
 
     }
 
-    public function count()
+    public function count($addWip = false)
     {
-        $songs = $this->em->getRepository(Song::class)->createQueryBuilder('s')->where('s.isDeleted != true')->select('COUNT(s.id) AS count')->setFirstResult(0)->setMaxResults(1)->getQuery()->getOneOrNullResult();
+        $qb = $this->em->getRepository(Song::class)->createQueryBuilder('s')->where('s.isDeleted != true')->select('COUNT(s.id) AS count')->setFirstResult(0)->setMaxResults(1);
+        if (!$addWip) {
+            $qb->andWhere('s.wip != true');
+        }
+        $songs = $qb->getQuery()->getOneOrNullResult();
         return $songs['count'];
     }
 
