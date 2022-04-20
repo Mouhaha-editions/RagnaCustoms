@@ -196,30 +196,6 @@ class SongsController extends AbstractController
             $filters[] = "categories spécifiques";
         }
 
-        if ($request->get('downloads_filter_order', null)) {
-            switch ($request->get('downloads_filter_order')) {
-                case 1:
-                    $qb->orderBy('s.voteUp - s.voteDown', 'DESC');
-                    break;
-                case 2 :
-                    $qb->orderBy('s.approximativeDuration', 'DESC');
-                    break;
-                case 4 :
-                    $qb->orderBy('s.name', 'ASC');
-                    break;
-                case 5 :
-                    $qb->orderBy('s.downloads', 'DESC');
-                    break;
-                case 3 :
-                default:
-                    $qb->orderBy('s.lastDateUpload', 'DESC');
-                    break;
-            }
-        } else {
-            $qb->orderBy('s.createdAt', 'DESC');
-        }
-
-
         if ($request->get('converted_maps', null)) {
 
             switch ($request->get('converted_maps')) {
@@ -338,25 +314,26 @@ class SongsController extends AbstractController
             return $this->redirect("ragnac://list/" . $list->getId());
         }
 
-        if ($request->get('order_by') && in_array($request->get('order_by'), [
-                's.lastDateUpload',
-                'rating',
-                's.downloads',
-                's.name'
-            ], true)) {
-            $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
-        }
+            switch($request->get('order_by', null)){
+                case 'downloads':
+                    $qb->orderBy("s.downloads", $request->get('order_sort', 'asc')=="asc" ? "asc":"desc");
+                    break;
+                case 'upload_date':
+                    $qb->orderBy("s.lastDateUpload", $request->get('order_sort', 'asc')=="asc" ? "asc":"desc");
+                    break;
+                case 'name':
+                    $qb->orderBy("s.name", $request->get('order_sort', 'asc')=="asc" ? "asc":"desc");
+                    break;
+                case 'rating':
+                    $qb->orderBy("rating", $request->get('order_sort', 'asc')=="asc" ? "asc":"desc");
+                    break;
+                default:
+                    $qb->orderBy("s.createdAt", "DESC");
+                    break;
+            }
+
 
         $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
-
-        if ($ajaxRequest) {
-            $html = $this->renderView('songs/partial/song_row_div.html.twig', [
-                'songs' => $pagination
-            ]);
-            return new JsonResponse([
-                "html" => $html
-            ]);
-        }
 
         if ($pagination->isPartial()) {
             return $this->render('songs/partial/song_row_div.html.twig', [

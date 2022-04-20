@@ -18,31 +18,23 @@
 <div>
     Filters : {% for filter in filters %}<span class="tag-filter">{{ filter|trans|capitalize }}</span>{% else %} {{ "no filter"|trans }}{% endfor %}
 </div>
+
+                {% import "widget/order_link.html.twig" as macro_order %}
                 <table class="featured-table-lg table table-sm">
                     <tr>
-                        <th><a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.name", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
-                            class="{% if app.request.get('order_by') == "s.name" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">
-                            {{ "Title"|trans }}
-                            </a>
+                        <th>
+                            {{ macro_order.order_link("Title","name") }}
                         </th>
                         <th>{{ "Difficulties"|trans }}</th>
                         <th>{{ "Mapper"|trans }}</th>
-                        <th><a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"rating", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
-                               class="{% if app.request.get('order_by') == "rating" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">
-                                {{ "Votes"|trans }}</a></th>
+                        <th>
+                            {{ macro_order.order_link("Votes","rating") }}
                         <th>{{ "Rating"|trans }}</th>
                         <th class="text-right">
-                            <a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.lastDateUpload", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
-                               class="{% if app.request.get('order_by') == "s.lastDateUpload" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">
-                            {{ "Upload Date"|trans }}
-                            </a>
+                            {{ macro_order.order_link("Upload Date","upload_date") }}
                         </th>
                         <th class="text-right">
-                            <a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.downloads", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
-                               class="{% if app.request.get('order_by') == "s.downloads" %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" %}sort-asc{% else %}sort-desc{% endif %}">
-
-                            {{ "Downloads"|trans }}
-                            </a>
+                            {{ macro_order.order_link("Downloads","downloads") }}
                         </th>
                         <th></th>
                     </tr>

@@ -40,21 +40,18 @@ class UserController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        $qb = $scoreRepository
-            ->createQueryBuilder('s')
-            ->where('s.user = :user')
-            ->setParameter('user', $utilisateur)
-            ;
+        $qb = $scoreRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $utilisateur);
 
-        if ($request->get('order_by') && in_array($request->get('order_by'), [
-                's.rawPP',
-                's.createdAt'
-
-            ], true)) {
-            $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
-        }else {
-            $qb->orderBy('s.createdAt', "desc");
+        switch ($request->get('order_by', null)) {
+            case 'score':
+                $qb->orderBy("s.rawPP", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            default:
+            case 'date':
+                $qb->orderBy("s.createdAt", "DESC");
+                break;
         }
+
         $pagination = $paginationService->setDefaults(15)->process($qb, $request);
 
         return $this->render('user/partial/song_played.html.twig', [
@@ -112,12 +109,8 @@ class UserController extends AbstractController
      */
     public function mappedProfile(Request $request, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
     {
-        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
-//            ->leftJoin("s.downloadCounters",'dc')
-            ->groupBy("s.id");
-//        $qb->leftJoin('s.songDifficulties', 'song_difficulties')
-//            ->leftJoin('song_difficulties.difficultyRank', 'rank');
-//        $qb->addSelect('s,song_difficulties');
+        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->groupBy("s.id");
+
 
         if ($request->get('display_wip', null) != null) {
             $qb->andWhere("s.wip = true");
@@ -175,10 +168,6 @@ class UserController extends AbstractController
                     break;
                 case 5 :
                     $qb->orderBy('s.downloads', 'DESC');
-
-//                    $qb->addSelect("COUNT(dc.id) AS HIDDEN count_dl");
-//                    $qb->groupBy("s.id");
-//                    $qb->orderBy('count_dl', 'DESC');
                     break;
                 case 3:
                 default:
@@ -238,12 +227,6 @@ class UserController extends AbstractController
                         $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
-//                case 'category':
-//                    if (count($exp) >= 1) {
-//                        $qb->andWhere('(s.songCategory = :category)')
-//                            ->setParameter('category', $exp[1] == "" ? null : $exp[1]);
-//                    }
-//                    break;
                 case 'artist':
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
@@ -272,14 +255,24 @@ class UserController extends AbstractController
                 }, $ids)));
         }
 
-        if ($request->get('order_by') && in_array($request->get('order_by'), [
-                's.lastDateUpload',
-                'rating',
-                's.downloads',
-                's.name'
-            ], true)) {
-            $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
+        switch ($request->get('order_by', null)) {
+            case 'downloads':
+                $qb->orderBy("s.downloads", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'upload_date':
+                $qb->orderBy("s.lastDateUpload", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'name':
+                $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'rating':
+                $qb->orderBy("rating", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            default:
+                $qb->orderBy("s.createdAt", "DESC");
+                break;
         }
+
         //$pagination = null;
         //if($ajaxRequest || $request->get('ppage1')) {
         $songs = $pagination->setDefaults(15)->process($qb, $request);
