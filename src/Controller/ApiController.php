@@ -184,6 +184,8 @@ class ApiController extends AbstractController
             $em->persist($overlay);
             $em->flush();
         }
+        if(!isset($data["Song"])) return new Response("No Song", 500);
+
         $song = $songRepository->findOneBy(['newGuid' => $data["Song"]["Hash"]]);
         if ($song == null) {
             $overlay->setDifficulty(null);
