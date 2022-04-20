@@ -13,9 +13,9 @@ use Symfony\Component\Security\Core\Security;
 
 class DownloadService
 {
-    private $security;
-    protected $requestStack;
     protected $em;
+    protected $requestStack;
+    private $security;
 
     public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em)
     {
@@ -40,24 +40,22 @@ class DownloadService
 
     public function addOne(Song $song, $apiKey = null)
     {
-        if($apiKey == null) {
+        if ($apiKey == null) {
             if (!$this->security->isGranted('ROLE_USER')) {
                 return;
             }
             /** @var Utilisateur $user */
             $user = $this->security->getUser();
-        }else{
-            $user = $this->em->getRepository(Utilisateur::class)
-                ->findOneBy(['apiKey'=>$apiKey]);
+        } else {
+            $user = $this->em->getRepository(Utilisateur::class)->findOneBy(['apiKey' => $apiKey]);
         }
-
-        $dlu = $this->em->getRepository(DownloadCounter::class)->createQueryBuilder('dc')
+        if ($user == null) {
+            return;
+        }
+        $dlu = $this->em->getRepository(DownloadCounter::class)
+            ->createQueryBuilder('dc')
             ->where('dc.song = :song')
-            ->andWhere('(dc.user = :user)')
-            ->setParameter('user', $user)
-            ->setParameter('song', $song)
-            ->setFirstResult(0)->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
+            ->andWhere('(dc.user = :user)')->setParameter('user', $user)->setParameter('song', $song)->setFirstResult(0)->setMaxResults(1)->getQuery()->getOneOrNullResult();
         if ($dlu == null) {
             $dlu = new DownloadCounter();
             $dlu->setSong($song);
