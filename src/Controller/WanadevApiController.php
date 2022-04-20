@@ -48,12 +48,14 @@ class WanadevApiController extends AbstractController
     /**
      * @Route("/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}", name="wd_api_score_get",methods={"GET","POST"})
      */
-    public function score(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, LoggerInterface $logger, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
+    public function score(Request $request, string $apiKey, string $hash,
+                          SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository,
+                          ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository,
+                          ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
     {
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
         if ($user == null) {
-            $logger->error("API : " . $apiKey . " USER NOT FOUND");
             return new JsonResponse("NOK USER", 400);
         }
         configureScope(function (Scope $scope) use ($user): void {
