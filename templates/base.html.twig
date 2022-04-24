@@ -28,190 +28,194 @@
 {#    containers: ['#swup', '#nav'] #}
 {# }) }} #}
 <div id="main">
-<nav id="nav" class="navbar navbar-expand-lg">
-    <div class="container">
-        <a class="navbar-brand viking-text-bold" href="/">
-            <img width="40" height="40" src="/apps/logo.png" class="img-fluid" alt="logo"/>
-            <img height="40" src="/apps/ragnacustoms_logo.png" alt="Ragnacustoms"/>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse d-flex" id="navbarNav">
-            <ul class="navbar-nav flex-grow-1">
-                {% if is_granted('ROLE_MODERATOR') %}
+    <nav id="nav" class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand viking-text-bold" href="/">
+                <img width="40" height="40" src="/apps/logo.png" class="img-fluid" alt="logo"/>
+                <img height="40" src="/apps/ragnacustoms_logo.png" alt="Ragnacustoms"/>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class=" fas fa-bars text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse " id="navbarNav">
+                <ul class="navbar-nav ml-4 flex-grow-1">
+                    {% if is_granted('ROLE_MODERATOR') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin</a>
+                        </li>
+                    {% endif %}  </ul>
+                <ul class="navbar-nav ml-4">
+                    {# <li class="nav-item"> #}
+                    {# <a class="nav-link" href="#">{{ "Getting started"|trans }}</a> #}
+                    {# </li> #}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin</a>
+                        <a class="nav-link" href="{{ url('getting_started') }}">{{ "getting started"|trans }}</a>
                     </li>
-                {% endif %}  </ul>
-            <ul class="navbar-nav">
-                {# <li class="nav-item"> #}
-                {# <a class="nav-link" href="#">{{ "Getting started"|trans }}</a> #}
-                {# </li> #}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('getting_started') }}">{{ "getting started"|trans }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('song_library') }}">{{ "Song library"|trans }}</a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link " href="{{ url('score_global_ranking') }}">
-                        {{ "Leaderboard"|trans }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('mappers') }}">Mappers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-level-9" href="{{ url("applications") }}">{{ "Apps"|trans }}</a>
-                </li>
-                {% if is_granted('ROLE_USER') %}
-                <li class="nav-item">
-                    <a href="#"
-                       data-modal="#editSong"
-                       data-refresh="true"
-                       data-url="{{ url('new_song') }}"
-                       data-title="{{ "New Custom Song"|trans }}"
-                       class="btn btn-blue float-right mt-2 ml-4 mr-4 ajax-modal-form">
-                        {{ "Submit a map"|trans }}
-                    </a>
-                </li>
-                {% endif %}
-
-                {% if not is_granted("ROLE_USER") %}
                     <li class="nav-item">
-                        <a href="{{ url('app_login') }}" class="nav-link">{{ "Login"|trans }}</a>
+                        <a class="nav-link" href="{{ url('song_library') }}">{{ "Song library"|trans }}</a>
                     </li>
-                {% else %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="{{ app.user.gravatar }}" alt="" class="avatar-mini" width="30px" height="30px"/>
-                            {{ app.user.username }}
+                    <li class="nav-item ">
+                        <a class="nav-link " href="{{ url('score_global_ranking') }}">
+                            {{ "Leaderboard"|trans }}
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "my uploads"|trans }}</a>
-                            <hr class="m-1"/>
-                            <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
-                            <hr class="m-1"/>
-                            {#                            <a class="dropdown-item" #}
-                            {#                               href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a> #}
-
-                            <hr class="m-1"/>
-                            <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
-                        </div>
                     </li>
-                {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('mappers') }}">Mappers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-level-9" href="{{ url("applications") }}">{{ "Apps"|trans }}</a>
+                    </li>
+                    {% if is_granted('ROLE_USER') %}
+                        <li class="nav-item">
+                            <a href="#"
+                               data-modal="#editSong"
+                               data-refresh="true"
+                               data-url="{{ url('new_song') }}"
+                               data-title="{{ "New Custom Song"|trans }}"
+                               class="btn btn-blue mt-2 mr-4 ajax-modal-form">
+                                {{ "Submit a map"|trans }}
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if not is_granted("ROLE_USER") %}
+                        <li class="nav-item">
+                            <a href="{{ url('app_login') }}" class="nav-link">{{ "Login"|trans }}</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="{{ app.user.gravatar }}" alt="" class="avatar-mini" width="30px"
+                                     height="30px"/>
+                                {{ app.user.username }}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "my uploads"|trans }}</a>
+                                <hr class="m-1"/>
+                                <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
+                                <hr class="m-1"/>
+                                {#                            <a class="dropdown-item" #}
+                                {#                               href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a> #}
+
+                                <hr class="m-1"/>
+                                <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
+                            </div>
+                        </li>
+                    {% endif %}
 
 
-            </ul>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
-{# <div class="runes"><img width="512" height="512" src="/apps/runes.png" alt="runes"/></div> #}
-{% for label, messages in app.flashes %}
-    {% for message in messages %}
-        <div class="alert d-none " data-type="{{ label }}" data-title="{{ label }}">
-            {{ message|trans }}
-        </div>
+    </nav>
+    {# <div class="runes"><img width="512" height="512" src="/apps/runes.png" alt="runes"/></div> #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert d-none " data-type="{{ label }}" data-title="{{ label }}">
+                {{ message|trans }}
+            </div>
+        {% endfor %}
     {% endfor %}
-{% endfor %}
-<main id="swup">
-    {% block body %}
+    <main id="swup">
+        {% block body %}
 
+        {% endblock %}
+    </main>
+
+    {% block endBody %}
+        <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel2">Custom Song</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="form-edit">
+                        ...
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="previewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song preview"|trans }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="form-review">
+                        ...
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song Review"|trans }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="form-review">
+                        ...
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="songPlaylists" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel3" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel3">{{ "Add song to playlist"|trans }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="form-playlist">
+                        ...
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endblock %}
-</main>
-
-{% block endBody %}
-    <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel2">Custom Song</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-edit">
-                    ...
-                </div>
-
-            </div>
+    <div class="row p-3 footer">
+        <div class="col-md-6 text-right">
+            <span>{{ "RagnaCustoms is not associated with <b>Ragnaröck VR</b>, <b>WanadevStudio</b>, <b>Steam</b> or <b>Meta</b>"|trans|raw }}</span>
+        </div>
+        <div class="col-md-6 text-left">
+            <a class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer" target="_blank">
+                <i class="fab fa-patreon"></i>
+            </a>&nbsp;
+            <a class="text" href="https://discord.com/invite/2vCAAGuwsR" rel="noreferrer" target="_blank">
+                <i class="fab fa-discord"></i>
+            </a>&nbsp;
+            <a class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank">
+                <i class="fab fa-facebook"></i>
+            </a>&nbsp;
+            <a class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer" target="_blank">
+                <i class="fab fa-twitter"></i>
+            </a>&nbsp;
+            <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer" target="_blank">
+                <i class="fab fa-reddit"></i>
+            </a>
         </div>
     </div>
-    <div class="modal fade" id="previewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song preview"|trans }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-review">
-                    ...
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="reviewSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song Review"|trans }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-review">
-                    ...
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="songPlaylists" data-backdrop="static" data-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel3" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel3">{{ "Add song to playlist"|trans }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form-playlist">
-                    ...
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-<div class="p-3 text-center footer">
-    <span>{{ "RagnaCustoms is not associated with <b>Ragnaröck VR</b>, <b>WanadevStudio</b>, <b>Steam</b> or <b>Meta</b>"|trans|raw }}</span>
-    <a class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer" target="_blank">
-        <i class="fab fa-patreon"></i>
-    </a>&nbsp;
-    <a class="text" href="https://discord.com/invite/2vCAAGuwsR" rel="noreferrer" target="_blank">
-        <i class="fab fa-discord"></i>
-    </a>&nbsp;
-    <a class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank">
-        <i class="fab fa-facebook"></i>
-    </a>&nbsp;
-    <a class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer" target="_blank">
-        <i class="fab fa-twitter"></i>
-    </a>&nbsp;
-    <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer" target="_blank">
-        <i class="fab fa-reddit"></i>
-    </a>
-
-</div>
 </div>
 
 
