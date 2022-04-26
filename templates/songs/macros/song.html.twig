@@ -19,7 +19,7 @@
         <div class="col-6">
 
             <div class="title">
-                <a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song.name }}</a>
+                <a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song|raw }}</a>
             </div>
             <div class="author pb-3">
                 <a href="{{ url('home') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>

@@ -231,7 +231,8 @@ class Song
 
     public function __toString()
     {
-        return $this->getName();
+        return $this->getName().($this->getConverted() == true ? " <small data-toggle='tooltip' title='Converted' class='badge badge-danger'>C</small>":"").
+            ($this->getIsExplicit() ?" <small data-toggle='tooltip' title='Explicit content' class='badge badge-warning'>E</small>":"");
     }
 
     public function getName(): ?string

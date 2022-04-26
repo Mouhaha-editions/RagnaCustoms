@@ -5,7 +5,7 @@
                                                                      alt="cover"/></a>
             <div class="song pl-1">
                 <div class="title"><a
-                            href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.wip ? "[WIP] ":"" }}{{ song.name }}</a>
+                            href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.wip ? "[WIP] ":"" }}{{ song|raw }}</a>
                 </div>
                 <div class="author"><a
                             href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
