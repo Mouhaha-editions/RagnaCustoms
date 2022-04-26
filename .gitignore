@@ -31,5 +31,3 @@ public/tmp-evaluator/*
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
-/.env
-/.env
