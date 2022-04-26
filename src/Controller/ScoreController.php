@@ -3,14 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Country;
+use App\Entity\RankedScores;
+use App\Entity\SongDifficulty;
 use App\Repository\RankedScoresRepository;
 use App\Repository\SongRepository;
+use App\Repository\ScoreRepository;
 use App\Service\ScoreService;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ScoreController extends AbstractController
 {
@@ -75,6 +79,47 @@ class ScoreController extends AbstractController
         return $this->render('score/global_ranking.html.twig', [
             'scores' => $scores,
         ]);
+    }
+
+    /**
+     * @Route("/ranking/unrank/{id}", name="score_unrank")
+     * @param Request $request
+     * @param ScoreService $scoreService
+     * @param RankedScoresRepository $rankedScoresRepository
+     */
+    public function unrankScoreUpdate(Request $request, 
+                                        String $id, 
+                                        ScoreService $scoreService,
+                                        ScoreRepository $scoreRepository, 
+                                        RankedScoresRepository $rankedScoresRepository,
+                                        SongDifficulty $songDifficulty)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        //unrank the song
+        $songDifficulty->setIsRanked(!$songDifficulty->isRanked());
+
+        //get the score of everyone on this song
+        $scores = $scoreRepository->createQueryBuilder('score')->leftJoin('score.songDifficulty', 'diff')->where('diff.id = :id')->setParameter('id', $id)->getQuery()->getResult();
+        
+        //reset the raw PP score of the song
+        foreach ($scores as $score) {
+            $user = $score->getUser();
+            $score->setRawPP(0);
+
+            //update of the score into ranked_scores
+            $rankedScore = $rankedScoresRepository->findOneBy([
+                'user' => $user
+            ]);
+
+            $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
+
+
+            $rankedScore->setTotalPPScore($totalPondPPScore);
+        }
+        
+        $em->flush();
+
     }
 
 

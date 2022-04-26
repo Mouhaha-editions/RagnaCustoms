@@ -63,6 +63,11 @@ class SongDifficulty
     private $theoricalMaxScore;
 
     /**
+     * @ORM\Column(type="float", nullable=false)
+     */
+    private $theoricalMinScore;
+
+    /**
     * @ORM\Column(type="boolean", nullable=false)
     */
     private $isRanked;
@@ -202,6 +207,18 @@ class SongDifficulty
     public function setTheoricalMaxScore($theoricalMaxScore): self
     {
         $this->theoricalMaxScore = $theoricalMaxScore;
+
+        return $this;
+    }
+
+    public function getTheoricalMinScore(): ?float
+    {
+        return $this->theoricalMinScore;
+    }
+
+    public function setTheoricalMinScore($theoricalMinScore): self
+    {
+        $this->theoricalMinScore = $theoricalMinScore;
 
         return $this;
     }

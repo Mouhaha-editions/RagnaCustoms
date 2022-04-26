@@ -247,6 +247,7 @@ class SongService
             $diff->setNotesCount(count($json2->_notes));
             $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
             $diff->setTheoricalMaxScore($this->calculateTheoricalMaxScore($diff));
+            $diff->setTheoricalMinScore($this->calculateTheoricalMinScore($diff));
             $song->addSongDifficulty($diff);
             $this->em->persist($diff);
             $allowedFiles[] = $difficulty->_beatmapFilename;
@@ -368,6 +369,34 @@ class SongService
         // + Number of yellow combos * base speed for 3 second
 
         $theoricalMaxScore = ($baseSpeed * $duration) + ($noteCount * 0.3 * $baseSpeed / 4) - ($miss * 0.3 * $baseSpeed / 4) + ($maxBlueCombo * 3 / 4 * $baseSpeed) + ($maxYellowCombo * 3 * $baseSpeed);
+
+        return round($theoricalMaxScore, 2);
+    }
+
+    public function calculateTheoricalMinScore(SongDifficulty $diff) {
+        // we consider that all note were missed
+        $miss = $diff->getNotesCount();
+        // We consider that none combo is used
+        $maxBlueCombo = 0;
+        $maxYellowCombo = 0;
+        // base speed of the boat given by Wanadev
+        $baseSpeed = 17.18;
+        $duration = $diff->getSong()->getApproximativeDuration();
+        //each notes are missed = 0 hit
+        $noteCount = 0;
+
+        // Score calculation based on Wanadev public formula (unit is the distance traveled by the boat):
+        //   base speed * duration of the song
+        // + 1/4 of the base speed for each note for 0.3 second
+        // - 1/4 of the base speed for each miss note for 0.3 second
+        // + Number of blue combos * base speed for 0.75 second
+        // + Number of yellow combos * base speed for 3 second
+
+        $theoricalMaxScore = ($baseSpeed * $duration) 
+                            + ($noteCount * 0.3 * $baseSpeed / 4) 
+                            - ($miss * 0.3 * $baseSpeed / 4) 
+                            + ($maxBlueCombo * 3 / 4 * $baseSpeed) 
+                            + ($maxYellowCombo * 3 * $baseSpeed);
 
         return round($theoricalMaxScore, 2);
     }
@@ -800,6 +829,7 @@ class SongService
                 $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
                 $jsonContent = file_get_contents($unzipFolder . "/" . $difficulty->_beatmapFilename);
                 $diff->setTheoricalMaxScore($this->calculateTheoricalMaxScore($diff));
+                $diff->setTheoricalMinScore($this->calculateTheoricalMinScore($diff));
                 $diff->setWanadevHash(Fcrc::StrCrc32($jsonContent));
                 $this->em->flush();
 
