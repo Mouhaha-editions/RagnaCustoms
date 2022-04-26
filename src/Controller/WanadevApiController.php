@@ -111,7 +111,7 @@ class WanadevApiController extends AbstractController
 
             //calculation of the ponderate PP scores
             if ($songDiff->isRanked()) {
-                $totalPondPPScore = $this->calculateTotalPondPPScore($scoreRepository, $user);
+                $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
                 //insert/update of the score into ranked_scores
                 $rankedScore = $rankedScoresRepository->findOneBy([
                     'user' => $user
@@ -155,24 +155,5 @@ class WanadevApiController extends AbstractController
         $rawPP = (($userScore / $maxSongScore) * (0.4 + 0.1 * $songLevel)) * 100;
 
         return round($rawPP, 2);
-    }
-
-    private function calculateTotalPondPPScore(ScoreRepository $scoreRepository, Utilisateur $user)
-    {
-        $totalPP = 0;
-        $scores = $scoreRepository->createQueryBuilder('score')->leftJoin('score.songDifficulty', 'diff')->where('score.user = :user')->andWhere('diff.isRanked = true')->setParameter('user', $user)->addOrderBy('score.rawPP', 'desc')->getQuery()->getResult();
-
-        $index = 0;
-        foreach ($scores as $score) {
-            $rawPPScore = $score->getRawPP();
-            $pondPPScore = $rawPPScore * pow(0.965, $index);
-            $totalPP = $totalPP + $pondPPScore;
-
-            //register the weighted PP score
-            $score->setWeightedPP(round($pondPPScore, 2));          
-
-            $index++;
-        }
-        return round($totalPP, 2);
     }
 }
