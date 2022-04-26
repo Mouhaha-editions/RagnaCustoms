@@ -86,13 +86,14 @@ class ScoreController extends AbstractController
      * @param Request $request
      * @param ScoreService $scoreService
      * @param RankedScoresRepository $rankedScoresRepository
+     * @return Response
      */
     public function unrankScoreUpdate(Request $request, 
                                         String $id, 
                                         ScoreService $scoreService,
                                         ScoreRepository $scoreRepository, 
                                         RankedScoresRepository $rankedScoresRepository,
-                                        SongDifficulty $songDifficulty)
+                                        SongDifficulty $songDifficulty) : Response
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -119,6 +120,8 @@ class ScoreController extends AbstractController
         }
         
         $em->flush();
+
+        return new JsonResponse(['result' => $songDifficulty->isRanked() ? '<i class="fas fa-star"></i> ranked' : '<i class="far fa-star"></i> not r.']);
 
     }
 
