@@ -62,8 +62,24 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <h6>Oculus</h6>
-                    Soon.
+                    <div class="indent">
+                        <h6>Oculus</h6>
+                        <span>Step 1:</span> Create a file Ragnarock.ini save it anywhere.
+{#                        <div class="code">%LOCALAPPDATA%\Ragnarock\Saved\Config\WindowsNoEditor\</div>#}
+                        <br/>
+                        <span>Step 2:</span> Edit this file and add:<br/>
+                        <div>
+                            <div class="code">
+                                {"CustomApiURLs":["https://api.ragnacustoms.com/wanapi/score/{% if is_granted("ROLE_USER") %}{{ app.user.apiKey }}{% else %}
+                                <a href="{{ url('user') }}">your api key</a>{% endif %}"]}
+                            </div>
+                        </div>
+                        <span>Step 3:</span> Save the file.<br/>
+                        <span>Step 4:</span> Copy and paste this file into :
+                        <div class="code">PC\Quest 2\Internal shared storage\Android\data\com.wanadev.ragnarockquest\files\UE4Game\Ragnarock\Ragnarock\Saved\Config</div> (if Config doesn't exists create it)<br/>
+                        <span>Step 5:</span> Start the game, in advanced menu, check "Allow Sending Custom Songs Scores".<br/>
+                        <span>Step 6:</span> Play & enjoy.
+                    </div>
                 </div>
             </div>
             <h5 class="pt-4">Q: Where are custom songs located in the game?</h5>

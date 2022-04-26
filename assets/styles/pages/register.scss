@@ -8,7 +8,7 @@
 .register{
   padding-bottom:150px;
 }
-input[type=text],input[type=password],select, option{
+input[type=text],input[type=password],input[type=email],select, option{
   background:  $bg-lighter!important;
   color:#fff!important;
   &:placeholder-shown{

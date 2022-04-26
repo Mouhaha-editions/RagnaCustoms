@@ -7,6 +7,7 @@ use App\Entity\Utilisateur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -28,7 +29,7 @@ class RegistrationFormType extends AbstractType
                 'placeholder' => '-- optional --',
                 'required' => false
             ])
-            ->add('email', null, [
+            ->add('email', EmailType::class, [
                 'help' => "Registration confirmation will be emailed to you."
             ])
 //            ->add('agreeTerms', CheckboxType::class, [

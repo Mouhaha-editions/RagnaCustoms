@@ -8,6 +8,7 @@ use App\Entity\Score;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\SongTemporaryList;
+use App\Entity\Utilisateur;
 use App\Entity\Vote;
 use App\Form\AddPlaylistFormType;
 use App\Form\VoteType;
@@ -25,6 +26,7 @@ use App\Service\SongService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -33,48 +35,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Wohali\OAuth2\Client\Provider\Discord;
+use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 
 
 class SongsController extends AbstractController
 {
     private $paginate = 30;
-
-    /**
-     * @Route("/getting-started", name="getting_started")
-     * @return Response
-     */
-    public function gettingStarted(): Response
-    {
-        return $this->render('songs/getting_started.html.twig');
-    }
-
-    /**
-     * @Route("/ranking-system", name="ranking_system")
-     * @return Response
-     */
-    public function rankingSystem(): Response
-    {
-        return $this->render('songs/ranking_system.html.twig');
-    }
-
-    /**
-     * @Route("/acceptance-criteria", name="acceptance_criteria")
-     * @return Response
-     */
-    public function acceptanceCriteria(): Response
-    {
-        return $this->render('songs/acceptance_criteria.html.twig');
-    }
-
-    /**
-     * @Route("/", name="home")
-     * @return Response
-     */
-    public function homepage(): Response
-    {
-        return $this->render('songs/homepage.html.twig');
-    }
 
     /**
      * @Route("/song/detail/{id}", name="song_detail_old")
@@ -177,16 +146,11 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function library(Request $request, SongCategoryRepository $categoryRepository,
-                            PaginationService $paginationService): Response
+    public function library(Request $request, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
     {
         $filters = [];
         $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
-//            ->leftJoin("s.downloadCounters",'dc')
             ->groupBy("s.id");
-//        $qb->leftJoin('s.songDifficulties', 'song_difficulties')
-//            ->leftJoin('song_difficulties.difficultyRank', 'rank');
-//        $qb->addSelect('s,song_difficulties');
 
         if ($request->get('display_wip', null) != null) {
             //$qb->andWhere("s.wip = true AND s.wip != true ");
@@ -246,19 +210,13 @@ class SongsController extends AbstractController
                 case 2 :
                     $qb->orderBy('s.approximativeDuration', 'DESC');
                     break;
-                case 3 :
-                    $qb->orderBy('s.lastDateUpload', 'DESC');
-                    break;
                 case 4 :
                     $qb->orderBy('s.name', 'ASC');
                     break;
                 case 5 :
                     $qb->orderBy('s.downloads', 'DESC');
-
-//                    $qb->addSelect("COUNT(dc.id) AS HIDDEN count_dl");
-//                    $qb->groupBy("s.id");
-//                    $qb->orderBy('count_dl', 'DESC');
                     break;
+                case 3 :
                 default:
                     $qb->orderBy('s.lastDateUpload', 'DESC');
                     break;
@@ -363,7 +321,7 @@ class SongsController extends AbstractController
             $em->persist($list);
             $em->flush();
 
-            return $this->redirect("ragnac://list/" .$list->getId());
+            return $this->redirect("ragnac://list/" . $list->getId());
         }
 
         if ($request->get('order_by') && in_array($request->get('order_by'), [
@@ -374,17 +332,13 @@ class SongsController extends AbstractController
             ], true)) {
             $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
         }
-        //$pagination = null;
-        //if($ajaxRequest || $request->get('ppage1')) {
+
         $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
 
-        //if this is an ajax request, send the HTML twig back to the calling fn in a json response
         if ($ajaxRequest) {
-            //get the html from the twig
             $html = $this->renderView('songs/partial/song_row_div.html.twig', [
                 'songs' => $pagination
             ]);
-            //send the html back in json
             return new JsonResponse([
                 "html" => $html
             ]);
@@ -423,7 +377,6 @@ class SongsController extends AbstractController
         $downloadService->addOne($song);
 
         $response = new Response($fileContent);
-
         $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $song->getId() . '.zip');
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-type', "application/octet-stream");

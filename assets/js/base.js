@@ -1,4 +1,21 @@
 const {RagnaBeat} = require("./ragna-beat/ragnabeat");
+const Swal = require('sweetalert2/dist/sweetalert2.js');
+
+
+
+
+
+let swl = null;
+$(function(){
+    $(".alert").each(function(){
+         Swal.fire({
+             title: $(this).data('title'),
+             html: $(this).html(),
+             icon: $(this).data('type') === "danger"?"error":$(this).data('type'),
+             confirmButtonText: 'close'
+         });
+    });
+});
 
 $(document).on('click', '[data-confirm]', function () {
     return confirm($(this).data('confirm'));

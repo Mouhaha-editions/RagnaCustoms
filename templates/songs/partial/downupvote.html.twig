@@ -6,8 +6,9 @@
 {#        <span>&nbsp;</span>#}
         <i style="color:grey;opacity:0.5" class="fas fa-arrow-down"></i>
         {{ song.voteDown }}
+
     {% else %}
-        <a style="text-decoration:none"
+    <div><a style="text-decoration:none"
            data-toggle="tooltip"
                 {% set isPositive = false %}
                 {% if voteCounter is not null and voteCounter.votesIndc == true %}
@@ -22,11 +23,10 @@
            href="#"
            data-url="{{ path('song_vote_upvote',{id:song.id}) }}"
         >
-            <i class="{{  isPositive ? "text-success":"text-grey" }} fas fa-arrow-up"></i>
+            <i class="{{ isPositive ? "text-success":"text-grey" }} fas fa-arrow-up"></i>
             {{ song.voteUp }}
-        </a>
-{#        <span>&nbsp;</span>#}
-
+        </a></div>
+<div>
         <a style="text-decoration:none"
            data-toggle="tooltip"
            class="ajax-link"
@@ -42,8 +42,9 @@
            href="#"
            data-url="{{ path('song_vote_downvote',{id:song.id}) }}"
         >
-            <i  class="{{ isNegative ? "text-danger":"text-grey" }} fas fa-arrow-down"></i>
+            <i class="{{ isNegative ? "text-danger":"text-grey" }} fas fa-arrow-down"></i>
             {{ song.voteDown }}
         </a>
+</div>
     {% endif %}
 </div>

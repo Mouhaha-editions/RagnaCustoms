@@ -218,3 +218,42 @@
   }
 
 }
+#feedback-and-rating{
+  position:relative;
+  height:100%;
+  #feedback-box{
+    position: absolute;
+    top:0;
+    display:none;
+    height: 100%;
+
+    .content-feedback {
+      position:relative;
+      height: 80%;
+      overflow: auto;
+    }
+  }
+  #rating-box {
+    position: absolute;
+    top:0;
+
+  }
+  }
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

@@ -1,6 +1,7 @@
 import {Controller} from '@hotwired/stimulus';
 import {average} from 'color.js'
 import 'jquery'
+// import 'jquery-ui/ui/'
 import {RagnaBeat} from "../js/ragna-beat/ragnabeat";
 require('../js/base');
 require('../js/plugins/modal_ajax');
@@ -9,7 +10,7 @@ require('../js/plugins/rating');
 
 
 export default class extends Controller {
-    static targets = ['img', 'background', 'info']
+    static targets = ['img', 'background', 'info','readFeedback']
     ragna = null;
 
     connect() {
@@ -22,6 +23,15 @@ export default class extends Controller {
         // const swup = new Swup();
         this.ragna = new RagnaBeat();
         this.ragna.startInit(divId, file);
+        $(".song-feedback").on("click",function(){
+            $("#rating-box").hide("slow",function(){
+                $("#feedback-box").show("slow");
+            });
+        });$(".back-feedback").on("click",function(){
+            $("#feedback-box").hide("slow",function(){
+                $("#rating-box").show("slow");
+            });
+        });
     }
 
     disconnect() {

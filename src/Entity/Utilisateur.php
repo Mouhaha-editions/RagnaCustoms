@@ -10,6 +10,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
@@ -52,6 +53,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private $downloadCounters;
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(mode="strict")
      */
     private $email;
     /**
@@ -821,4 +823,67 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         }
         return false;
     }
+
+    /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $discordUsername;
+    /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $discordId;
+    /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $discordEmail;
+
+    /**
+     * @return mixed
+     */
+    public function getDiscordUsername()
+    {
+        return $this->discordUsername;
+    }
+
+    /**
+     * @param mixed $discordUsername
+     */
+    public function setDiscordUsername($discordUsername): void
+    {
+        $this->discordUsername = $discordUsername;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiscordId()
+    {
+        return $this->discordId;
+    }
+
+    /**
+     * @param mixed $discordId
+     */
+    public function setDiscordId($discordId): void
+    {
+        $this->discordId = $discordId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiscordEmail()
+    {
+        return $this->discordEmail;
+    }
+
+    /**
+     * @param mixed $discordEmail
+     */
+    public function setDiscordEmail($discordEmail): void
+    {
+        $this->discordEmail = $discordEmail;
+    }
+
+
 }

@@ -129,7 +129,7 @@ class VotesController extends AbstractController
             return new JsonResponse([
                 "error" => false,
                 "errorMessage" => false,
-                "response" => $this->renderView("songs/partial/vote.html.twig", [
+                "response" => $this->renderView("songs/partial/vote_small.html.twig", [
                     'song' => $song,
                     "vote" => $vote
                 ]),

@@ -127,35 +127,11 @@
     "fig/http-message-util": {
         "version": "1.1.5"
     },
-    "firebase/php-jwt": {
-        "version": "v5.5.1"
-    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
     },
     "gedmo/doctrine-extensions": {
         "version": "v3.0.3"
-    },
-    "google/analytics-data": {
-        "version": "v0.8.0"
-    },
-    "google/auth": {
-        "version": "v1.18.0"
-    },
-    "google/common-protos": {
-        "version": "2.0.0"
-    },
-    "google/gax": {
-        "version": "v1.11.4"
-    },
-    "google/grpc-gcp": {
-        "version": "v0.2.0"
-    },
-    "google/protobuf": {
-        "version": "v3.19.4"
-    },
-    "grpc/grpc": {
-        "version": "1.42.0"
     },
     "guzzlehttp/guzzle": {
         "version": "7.3.0"

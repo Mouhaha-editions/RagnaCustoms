@@ -107,7 +107,7 @@
                 </tr>
 
                 {% for score in pagination.entities %}
-                    {% include 'songs/partial/song_row_recently_played.html.twig' with {score:score} %}
+                    {% include 'songs/partial/song_row_recently_played_with_weighted.html.twig' with {score:score} %}
                 {% endfor %}
             </table>
             {% include 'widget/paginate.html.twig' with {pagination:pagination} %}
