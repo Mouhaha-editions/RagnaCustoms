@@ -150,7 +150,7 @@ class UploadSongController extends AbstractController
                         'song' => $song,
                         "error" => $e->getMessage()
                     ])
-                ]);
+                ],500) ;
             }
         }
         return new JsonResponse([
