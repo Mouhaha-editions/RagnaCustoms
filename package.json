@@ -15,7 +15,7 @@
         "core-js": "^3.0.0",
         "cssnano": "^5.0.17",
         "eslint": "^8.8.0",
-        "grunt": "^1.0.4",
+        "grunt": "^1.5.2",
         "grunt-browserify": "^6.0.0",
         "grunt-contrib-concat": "^1.0.1",
         "grunt-contrib-connect": "^2.1.0",
