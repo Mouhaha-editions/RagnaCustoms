@@ -7,7 +7,6 @@ import 'select2/dist/js/select2.full.min';
 
 require('../../public/bundles/tetranzselect2entity/js/select2entity');
 require('../js/base');
-require('../js/plugins/modal_ajax');
 require('../js/plugins/ajax_link');
 require('../js/plugins/rating');
 

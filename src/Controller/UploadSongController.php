@@ -144,13 +144,13 @@ class UploadSongController extends AbstractController
             } catch (Exception $e) {
                 return new JsonResponse([
                     'error' => true,
-                    'errorMessage' => null,
+                    'errorMessage' => $e->getMessage(),
                     'response' => $this->renderView('upload_song/partial/edit.html.twig', [
                         'form' => $form->createView(),
                         'song' => $song,
                         "error" => $e->getMessage()
                     ])
-                ],500) ;
+                ]) ;
             }
         }
         return new JsonResponse([

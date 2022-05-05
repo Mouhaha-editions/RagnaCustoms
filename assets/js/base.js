@@ -1,10 +1,6 @@
 const {RagnaBeat} = require("./ragna-beat/ragnabeat");
 const Swal = require('sweetalert2/dist/sweetalert2.js');
 
-
-
-
-
 let swl = null;
 $(function(){
     $(".alert").each(function(){
@@ -146,7 +142,7 @@ function loadForm(content) {
             processData: false,
             contentType: false,
             success: function (data) {
-                if (data.goto !== false) {
+                if (data.goto !== undefined && data.goto !== false) {
                     window.location.href = data.goto;
                 }
                 if (data.reload) {

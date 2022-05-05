@@ -4,7 +4,6 @@ import 'jquery'
 // import 'jquery-ui/ui/'
 import {RagnaBeat} from "../js/ragna-beat/ragnabeat";
 require('../js/base');
-require('../js/plugins/modal_ajax');
 require('../js/plugins/ajax_link');
 require('../js/plugins/rating');
 
