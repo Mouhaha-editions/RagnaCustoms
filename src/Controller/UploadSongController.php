@@ -71,11 +71,12 @@ class UploadSongController extends AbstractController
 
         $isWip = $song->getWip();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+      $submitted = $form->isSubmitted();
+      $valid = $form->isSubmitted();
+        if ($submitted && $valid) {
             try {
                 $file = $form->get('zipFile')->getData();
                 if ($file == null) {
-
                     $this->addFlash('success', str_replace([
                         "%song%",
                         "%artist%"
@@ -155,6 +156,7 @@ class UploadSongController extends AbstractController
         }
         return new JsonResponse([
             'error' => false,
+            "goto"=>$this->redirectToRoute("upload_song"),
             'errorMessage' => "",
             'response' => $this->renderView('upload_song/partial/edit.html.twig', [
                 'form' => $form->createView(),

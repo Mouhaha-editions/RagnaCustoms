@@ -142,6 +142,7 @@ function loadForm(content) {
             processData: false,
             contentType: false,
             success: function (data) {
+                console.log(data);
                 if (data.goto !== undefined && data.goto !== false) {
                     window.location.href = data.goto;
                 }
