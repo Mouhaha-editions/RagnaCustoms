@@ -117,192 +117,203 @@ class SongService
      */
     public function processFile(?FormInterface $form, Song $song, bool $isWip = false)
     {
-        $allowedFiles = [
-            'preview.ogg',
-            'info.dat',
-            'Info.dat',
-        ];
-        $finalFolder = $this->kernel->getProjectDir() . "/public/songs-files/";
-        $folder = $this->kernel->getProjectDir() . "/public/tmp-song/";
-        $unzipFolder = $folder . uniqid();
-        @mkdir($unzipFolder);
-        if ($form != null) {
-            $file = $form->get('zipFile')->getData();
-            $file->move($unzipFolder, $file->getClientOriginalName());
-            $unzippableFile = $unzipFolder . "/" . $file->getClientOriginalName();
-        } else {
-            $unzippableFile = $finalFolder . $song->getId() . ".zip";
-        }
-        $zip = new ZipArchive();
-        $theZip = $unzippableFile;
-        /** @var UploadedFile $file */
-        if ($zip->open($theZip) === TRUE) {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $filename = $zip->getNameIndex($i);
-                $elt = $this->remove_utf8_bom($zip->getFromIndex($i));
-                $exp = explode("/", $filename);
-                if (end($exp) != "") {
-                    $fileinfo = pathinfo($filename);
-                    if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
-                        $result = file_put_contents($unzipFolder . "/" . strtolower($fileinfo['basename']), $elt);
-                    } else {
-                        $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
+        try {
+            $allowedFiles = [
+                'preview.ogg',
+                'info.dat',
+                'Info.dat',
+            ];
+            $finalFolder = $this->kernel->getProjectDir() . "/public/songs-files/";
+            $folder = $this->kernel->getProjectDir() . "/public/tmp-song/";
+            $unzipFolder = $folder . uniqid();
+            @mkdir($unzipFolder);
+            if ($form != null) {
+                $file = $form->get('zipFile')->getData();
+                $file->move($unzipFolder, $file->getClientOriginalName());
+                $unzippableFile = $unzipFolder . "/" . $file->getClientOriginalName();
+            } else {
+                $unzippableFile = $finalFolder . $song->getId() . ".zip";
+            }
+            $zip = new ZipArchive();
+            $theZip = $unzippableFile;
+            /** @var UploadedFile $file */
+            if ($zip->open($theZip) === TRUE) {
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $filename = $zip->getNameIndex($i);
+                    $elt = $this->remove_utf8_bom($zip->getFromIndex($i));
+                    $exp = explode("/", $filename);
+                    if (end($exp) != "") {
+                        $fileinfo = pathinfo($filename);
+                        if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
+                            $result = file_put_contents($unzipFolder . "/" . strtolower($fileinfo['basename']), $elt);
+                        } else {
+                            $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
+                        }
                     }
                 }
+                $zip->close();
             }
-            $zip->close();
-        }
-        $file = $unzipFolder . "/info.dat";
-        if (!file_exists($file)) {
-            $file = $unzipFolder . "/Info.dat";
+            $file = $unzipFolder . "/info.dat";
             if (!file_exists($file)) {
-                $this->rrmdir($unzipFolder);
-                throw new Exception("The file seems to not be valid, at least info.dat is missing.");
-            }
-        }
-        $content = file_get_contents($file);
-        $json = json_decode($content);
-        if ($json == null) {
-            $this->rrmdir($unzipFolder);
-            throw new Exception("WTF? I can't read your info.dat please check the file encoding.");
-        }
-        $allowedFiles[] = $json->_coverImageFilename;
-        $allowedFiles[] = $json->_songFilename;
-
-
-        $new = $song->getId() == null || $isWip != $song->getWip();
-        foreach ($song->getSongDifficulties() as $difficulty) {
-            if ($difficulty->isRanked()) {
-                $this->rrmdir($unzipFolder);
-                throw new Exception("This song is ranked, you can't update it for now, please contact us.");
-            }
-        }
-
-
-        if ($form != null && $form->get('description')->getData() != null) {
-            preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('description')->getData(), $match);
-            if (count($match) > 0) {
-                $song->setYoutubeLink($match[0]);
-            } else {
-                $song->setYoutubeLink(null);
-            }
-            $song->setDescription($form->get('description')->getData());
-        }
-        if ($form != null && $form->get('youtubeLink')->getData() != null) {
-            if (preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('youtubeLink')->getData())) {
-                $song->setYoutubeLink($form->get('youtubeLink')->getData());
-            } else {
-
-            }
-        }
-        if (!isset($json->_songApproximativeDuration) || empty($json->_songApproximativeDuration)) {
-            $this->rrmdir($unzipFolder);
-            throw new Exception("\"_songApproximativeDuration\" is missing in the info.dat file!");
-        }
-
-        if ($form != null && empty($json->_coverImageFilename)) {
-            throw new Exception("Cover is missing, please fix it and upload again");
-        }
-
-        $song->setVersion($json->_version);
-        $song->setName(trim($json->_songName));
-        $song->setLastDateUpload(new DateTime());
-        $song->setSubName($json->_songSubName);
-        $song->setIsExplicit(isset($json->_explicit) ? $json->_explicit == "true" : false);
-        $song->setAuthorName($json->_songAuthorName);
-        $song->setLevelAuthorName($json->_levelAuthorName);
-        $song->setBeatsPerMinute($json->_beatsPerMinute);
-        $song->setShuffle($json->_shuffle);
-        $song->setShufflePeriod($json->_shufflePeriod);
-        $song->setPreviewStartTime($json->_previewStartTime);
-        $song->setPreviewDuration($json->_previewDuration);
-        $song->setApproximativeDuration($json->_songApproximativeDuration);
-        $song->setFileName($json->_songFilename);
-        $song->setCoverImageFileName($json->_coverImageFilename);
-        $song->setEnvironmentName($json->_environmentName);
-        $song->setModerated(true);
-
-        $this->em->persist($song);
-
-        foreach ($song->getSongDifficulties() as $difficulty) {
-            $overlays = $this->em->getRepository(Overlay::class)->findBy(["difficulty" => $difficulty]);
-            /** @var Overlay $overlay */
-            foreach ($overlays as $overlay) {
-                $overlay->setDifficulty(null);
-            }
-            $difficulty->setSong(null);
-            $this->em->remove($difficulty);
-        }
-
-        foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
-            $diff = new SongDifficulty();
-            $diff->setSong($song);
-            $diff->setIsRanked((bool)$diff->isRanked());
-            $diff->setDifficultyRank($this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]));
-            $diff->setDifficulty($difficulty->_difficulty);
-            $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
-            $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
-            $jsonContent = file_get_contents($unzipFolder . "/" . $difficulty->_beatmapFilename);
-            $json2 = json_decode($jsonContent);
-            $diff->setNotesCount(count($json2->_notes));
-            $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
-            $diff->setTheoricalMaxScore($this->calculateTheoricalMaxScore($diff));
-            $diff->setTheoricalMinScore($this->calculateTheoricalMinScore($diff));
-            $song->addSongDifficulty($diff);
-            $this->em->persist($diff);
-            $allowedFiles[] = $difficulty->_beatmapFilename;
-            $diff->setWanadevHash(Fcrc::StrCrc32($jsonContent));
-
-        }
-        if ($isWip != $song->getWip()) {
-            $song->setCreatedAt(new DateTime());
-        }
-        $this->em->flush();
-
-        /** @var UploadedFile $file */
-        $patterns_flattened = implode('|', $allowedFiles);
-        $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
-        $zip = new ZipArchive();
-        if ($zip->open($theZip) === TRUE) {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $filename = ($zip->getNameIndex($i));
-                if (!preg_match('/' . $patterns_flattened . '/', $filename, $matches) || preg_match('/autosaves/', $filename, $matches)) {
-                    $zip->deleteName($filename);
-                } else {
-                    $newfilename = ($zip->getNameIndex($i));
-                    $filename = ($zip->getNameIndex($i));
-                    if (preg_match("/Info\.dat/", $newfilename)) {
-                        $newfilename = strtolower($filename);
-                    }
-                    $x = explode('/', $newfilename);
-                    $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
+                $file = $unzipFolder . "/Info.dat";
+                if (!file_exists($file)) {
+                    $this->rrmdir($unzipFolder);
+                    throw new Exception("The file seems to not be valid, at least info.dat is missing.");
                 }
             }
-            $zip->close();
-        }
-
-        @copy($theZip, $finalFolder . $song->getId() . ".zip");
-        @copy($unzipFolder . "/" . $json->_coverImageFilename, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-        if (!$song->hasCover()) {
-            $song->setWip(true);
-        }
-        if ($this->kernel->getEnvironment() != "dev") {
-            if ($song->getWip()) {
-                $this->discordService->sendWipSongMessage($song);
-            } elseif ($new) {
-                $this->discordService->sendNewSongMessage($song);
-            } else {
-                $this->discordService->sendUpdatedSongMessage($song);
+            $content = file_get_contents($file);
+            $json = json_decode($content);
+            if ($json == null) {
+                $this->rrmdir($unzipFolder);
+                throw new Exception("WTF? I can't read your info.dat please check the file encoding.");
             }
-        }
-        if ($form !== null) {
-            $this->emulatorFileDispatcher($song, true);
-//        $this->coverOptimisation($song);
-        }
-        $this->rrmdir($unzipFolder);
+            $allowedFiles[] = $json->_coverImageFilename;
+            if ($json->_coverImageFilename == ".jpg" || empty($json->_coverImageFilename)) {
+                throw new Exception("The cover name need to contain less than 25 chars.");
+            }
+            if (strlen($json->_coverImageFilename) > 29) {
+                throw new Exception("Cover is missing, please fix it and upload again");
+            }
+            $allowedFiles[] = $json->_songFilename;
+            list($width, $height) = getimagesize($unzipFolder . "/" . $json->_coverImageFilename);
+            if ($width != $height) {
+                throw new Exception("Cover have to be a square.");
+            }
 
-        return true;
+            $new = $song->getId() == null || $isWip != $song->getWip();
+            foreach ($song->getSongDifficulties() as $difficulty) {
+                if ($difficulty->isRanked()) {
+                    $this->rrmdir($unzipFolder);
+                    throw new Exception("This song is ranked, you can't update it for now, please contact us.");
+                }
+            }
 
+
+            if ($form != null && $form->get('description')->getData() != null) {
+                preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('description')->getData(), $match);
+                if (count($match) > 0) {
+                    $song->setYoutubeLink($match[0]);
+                } else {
+                    $song->setYoutubeLink(null);
+                }
+                $song->setDescription($form->get('description')->getData());
+            }
+            if ($form != null && $form->get('youtubeLink')->getData() != null) {
+                if (preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('youtubeLink')->getData())) {
+                    $song->setYoutubeLink($form->get('youtubeLink')->getData());
+                } else {
+
+                }
+            }
+            if (!isset($json->_songApproximativeDuration) || empty($json->_songApproximativeDuration)) {
+                $this->rrmdir($unzipFolder);
+                throw new Exception("\"_songApproximativeDuration\" is missing in the info.dat file!");
+            }
+
+
+            $song->setVersion($json->_version);
+            $song->setName(trim($json->_songName));
+            $song->setLastDateUpload(new DateTime());
+            $song->setSubName($json->_songSubName);
+            $song->setIsExplicit(isset($json->_explicit) ? $json->_explicit == "true" : false);
+            $song->setAuthorName($json->_songAuthorName);
+            $song->setLevelAuthorName($json->_levelAuthorName);
+            $song->setBeatsPerMinute($json->_beatsPerMinute);
+            $song->setShuffle($json->_shuffle);
+            $song->setShufflePeriod($json->_shufflePeriod);
+            $song->setPreviewStartTime($json->_previewStartTime);
+            $song->setPreviewDuration($json->_previewDuration);
+            $song->setApproximativeDuration($json->_songApproximativeDuration);
+            $song->setFileName($json->_songFilename);
+            $song->setCoverImageFileName($json->_coverImageFilename);
+            $song->setEnvironmentName($json->_environmentName);
+            $song->setModerated(true);
+
+            $this->em->persist($song);
+
+            foreach ($song->getSongDifficulties() as $difficulty) {
+                $overlays = $this->em->getRepository(Overlay::class)->findBy(["difficulty" => $difficulty]);
+                /** @var Overlay $overlay */
+                foreach ($overlays as $overlay) {
+                    $overlay->setDifficulty(null);
+                }
+                $difficulty->setSong(null);
+                $this->em->remove($difficulty);
+            }
+
+            foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
+                $diff = new SongDifficulty();
+                $diff->setSong($song);
+                $diff->setIsRanked((bool)$diff->isRanked());
+                $diff->setDifficultyRank($this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]));
+                $diff->setDifficulty($difficulty->_difficulty);
+                $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
+                $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
+                $jsonContent = file_get_contents($unzipFolder . "/" . $difficulty->_beatmapFilename);
+                $json2 = json_decode($jsonContent);
+                $diff->setNotesCount(count($json2->_notes));
+                $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
+                $diff->setTheoricalMaxScore($this->calculateTheoricalMaxScore($diff));
+                $diff->setTheoricalMinScore($this->calculateTheoricalMinScore($diff));
+                $song->addSongDifficulty($diff);
+                $this->em->persist($diff);
+                $allowedFiles[] = $difficulty->_beatmapFilename;
+                $diff->setWanadevHash(Fcrc::StrCrc32($jsonContent));
+
+            }
+            if ($isWip != $song->getWip()) {
+                $song->setCreatedAt(new DateTime());
+            }
+            $this->em->flush();
+
+            /** @var UploadedFile $file */
+            $patterns_flattened = implode('|', $allowedFiles);
+            $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
+            $zip = new ZipArchive();
+            if ($zip->open($theZip) === TRUE) {
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $filename = ($zip->getNameIndex($i));
+                    if (!preg_match('/' . $patterns_flattened . '/', $filename, $matches) || preg_match('/autosaves/', $filename, $matches)) {
+                        $zip->deleteName($filename);
+                    } else {
+                        $newfilename = ($zip->getNameIndex($i));
+                        $filename = ($zip->getNameIndex($i));
+                        if (preg_match("/Info\.dat/", $newfilename)) {
+                            $newfilename = strtolower($filename);
+                        }
+                        $x = explode('/', $newfilename);
+                        $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
+                    }
+                }
+                $zip->close();
+            }
+
+            @copy($theZip, $finalFolder . $song->getId() . ".zip");
+            @copy($unzipFolder . "/" . $json->_coverImageFilename, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
+
+
+            if (!$song->hasCover()) {
+                $song->setWip(true);
+            }
+            if ($this->kernel->getEnvironment() != "dev") {
+                if ($song->getWip()) {
+                    $this->discordService->sendWipSongMessage($song);
+                } elseif ($new) {
+                    $this->discordService->sendNewSongMessage($song);
+                } else {
+                    $this->discordService->sendUpdatedSongMessage($song);
+                }
+            }
+            if ($form !== null) {
+                $this->emulatorFileDispatcher($song, true);
+                $this->coverOptimisation($song);
+            }
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        } finally {
+            $this->rrmdir($unzipFolder);
+            return true;
+        }
     }
 
     function remove_utf8_bom($text)
@@ -373,7 +384,8 @@ class SongService
         return round($theoricalMaxScore, 2);
     }
 
-    public function calculateTheoricalMinScore(SongDifficulty $diff) {
+    public function calculateTheoricalMinScore(SongDifficulty $diff)
+    {
         // we consider that all note were missed
         $miss = $diff->getNotesCount();
         // We consider that none combo is used
@@ -392,11 +404,7 @@ class SongService
         // + Number of blue combos * base speed for 0.75 second
         // + Number of yellow combos * base speed for 3 second
 
-        $theoricalMaxScore = ($baseSpeed * $duration) 
-                            + ($noteCount * 0.3 * $baseSpeed / 4) 
-                            - ($miss * 0.3 * $baseSpeed / 4) 
-                            + ($maxBlueCombo * 3 / 4 * $baseSpeed) 
-                            + ($maxYellowCombo * 3 * $baseSpeed);
+        $theoricalMaxScore = ($baseSpeed * $duration) + ($noteCount * 0.3 * $baseSpeed / 4) - ($miss * 0.3 * $baseSpeed / 4) + ($maxBlueCombo * 3 / 4 * $baseSpeed) + ($maxYellowCombo * 3 * $baseSpeed);
 
         return round($theoricalMaxScore, 2);
     }
@@ -492,6 +500,54 @@ class SongService
         sort($md5s);
         $str = implode('', $md5s);
         return md5($str);
+    }
+
+    private function coverOptimisation(Song $song = null)
+    {
+        if ($song != null) {
+            try {
+                $filedir = $this->kernel->getProjectDir() . "/public/covers/" . $value;
+
+                $image = Image::make($filedir);
+
+                $background = Image::canvas(349, 349, 'rgba(255, 255, 255, 0)');
+
+                if ($image->width() >= $image->height()) {
+                    $image->widen(349);
+                } else {
+                    $image->heighten(349);
+                }
+                $background->insert($image, 'center-center');
+                $background->save($filedir);
+            } catch (Exception $e) {
+
+            }
+        } else {
+
+            $cdir = scandir($this->kernel->getProjectDir() . "/public/covers");
+            foreach ($cdir as $key => $value) {
+                if ($value == "." || $value == "..") {
+                    continue;
+                }
+                try {
+                    $filedir = $this->kernel->getProjectDir() . "/public/covers/" . $value;
+
+                    $image = Image::make($filedir);
+
+                    $background = Image::canvas(349, 349, 'rgba(255, 255, 255, 0)');
+
+                    if ($image->width() >= $image->height()) {
+                        $image->widen(349);
+                    } else {
+                        $image->heighten(349);
+                    }
+                    $background->insert($image, 'center-center');
+                    $background->save($filedir);
+                } catch (Exception $exception) {
+
+                }
+            }
+        }
     }
 
     private function wannadev_crc32($str)
@@ -905,35 +961,6 @@ class SongService
         $this->rrmdir($unzipFolder);
 
         return $result;
-
-    }
-
-    private function coverOptimisation(Song $song)
-    {
-
-        $cdir = scandir($this->kernel->getProjectDir() . "/public/covers");
-        foreach ($cdir as $key => $value) {
-            if ($value == "." || $value == "..") {
-                continue;
-            }
-            try {
-                $filedir = $this->kernel->getProjectDir() . "/public/covers/" . $value;
-
-                $image = Image::make($filedir);
-
-                $background = Image::canvas(349, 349, 'rgba(255, 255, 255, 0)');
-
-                if ($image->width() >= $image->height()) {
-                    $image->widen(349);
-                } else {
-                    $image->heighten(349);
-                }
-                $background->insert($image, 'center-center');
-                $background->save($filedir);
-            } catch (Exception $exception) {
-
-            }
-        }
 
     }
 
