@@ -45,7 +45,7 @@ class ApiController extends AbstractController
     public function checkPhp(Request $request, SongRepository $songRepository): Response
     {
         phpinfo();
-    die;
+        return new Response("");
     }
     /**
         }
