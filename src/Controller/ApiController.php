@@ -40,6 +40,15 @@ class ApiController extends AbstractController
     const CurrentVersion = "3.0.0";
 
     /**
+     * @Route("/api/php/version", name="php_version")
+     */
+    public function checkPhp(Request $request, SongRepository $songRepository): Response
+    {
+        phpinfo();
+    die;
+    }
+    /**
+        }
      * @Route("/api/song/check-updates", name="api_song_check_updates")
      */
     public function checkUpdates(Request $request, SongRepository $songRepository): Response
