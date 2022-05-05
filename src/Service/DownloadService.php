@@ -29,11 +29,10 @@ class DownloadService
         /** @var Utilisateur $user */
         $user = $this->security->getUser();
         if ($user != null && $this->security->isGranted('ROLE_USER')) {
-            foreach ($user->getDownloadCounters() as $downloadCounter) {
-                if ($downloadCounter->getSong() === $song && $song->getLastDateUpload() < $downloadCounter->getUpdatedAt()) {
-                    return true;
-                }
-            }
+            $dl = $user->getDownloadCounters()->filter(function (DownloadCounter $downloadCounter) use ($song) {
+                return $downloadCounter->getSong() === $song;
+            });
+            return $dl->count() >= 1;
         }
         return false;
     }
@@ -52,10 +51,7 @@ class DownloadService
         if ($user == null) {
             return;
         }
-        $dlu = $this->em->getRepository(DownloadCounter::class)
-            ->createQueryBuilder('dc')
-            ->where('dc.song = :song')
-            ->andWhere('(dc.user = :user)')->setParameter('user', $user)->setParameter('song', $song)->setFirstResult(0)->setMaxResults(1)->getQuery()->getOneOrNullResult();
+        $dlu = $this->em->getRepository(DownloadCounter::class)->createQueryBuilder('dc')->where('dc.song = :song')->andWhere('(dc.user = :user)')->setParameter('user', $user)->setParameter('song', $song)->setFirstResult(0)->setMaxResults(1)->getQuery()->getOneOrNullResult();
         if ($dlu == null) {
             $dlu = new DownloadCounter();
             $dlu->setSong($song);

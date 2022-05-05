@@ -71,9 +71,8 @@ class UploadSongController extends AbstractController
 
         $isWip = $song->getWip();
         $form->handleRequest($request);
-      $submitted = $form->isSubmitted();
-      $valid = $form->isSubmitted();
-        if ($submitted && $valid) {
+
+        if ($form->isSubmitted() && $form->isSubmitted()) {
             try {
                 $file = $form->get('zipFile')->getData();
                 if ($file == null) {
@@ -89,7 +88,7 @@ class UploadSongController extends AbstractController
                     $em->flush();
                     return new JsonResponse([
                         'error' => false,
-                        'goto' => $this->generateUrl('song_detail',['slug'=>$song->getSlug()]),
+                        'goto' => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
                         'reload' => true,
                         'errorMessage' => null,
                         'response' => $this->renderView('upload_song/partial/edit.html.twig', [
@@ -120,7 +119,7 @@ class UploadSongController extends AbstractController
                     ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
                     return new JsonResponse([
                         'error' => false,
-                        'goto' => $this->generateUrl('song_detail',['slug'=>$song->getSlug()]),
+                        'goto' => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
                         'reload' => true,
                         'errorMessage' => null,
                         'response' => $this->renderView('upload_song/partial/edit.html.twig', [
@@ -130,18 +129,6 @@ class UploadSongController extends AbstractController
                         ])
                     ]);
                 }
-                $filedir = $this->get('kernel')->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension();
-
-                $image = Image::make($filedir);
-                $background = Image::canvas(349, 349, 'rgba(255, 255, 255, 0)');
-                if ($image->width() >= $image->height()) {
-                    $image->widen(349);
-                } else {
-                    $image->heighten(349);
-                }
-                $background->insert($image, 'center-center');
-                $background->save($filedir);
-
             } catch (Exception $e) {
                 return new JsonResponse([
                     'error' => true,
@@ -151,12 +138,12 @@ class UploadSongController extends AbstractController
                         'song' => $song,
                         "error" => $e->getMessage()
                     ])
-                ]) ;
+                ]);
             }
         }
         return new JsonResponse([
             'error' => false,
-            "goto"=>$this->redirectToRoute("upload_song"),
+            "goto" => $this->redirectToRoute("upload_song"),
             'errorMessage' => "",
             'response' => $this->renderView('upload_song/partial/edit.html.twig', [
                 'form' => $form->createView(),
@@ -196,21 +183,14 @@ class UploadSongController extends AbstractController
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
 
-        $qb = $songRepository->createQueryBuilder('s')
-            ->select('s')
-            ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
-            ->where('s.user = :user')
-            ->andWhere("s.isDeleted != true")
-            ->setParameter('user', $this->getUser())
-            ->orderBy('s.name', 'DESC');
+        $qb = $songRepository->createQueryBuilder('s')->select('s')->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->where('s.user = :user')->andWhere("s.isDeleted != true")->setParameter('user', $this->getUser())->orderBy('s.name', 'DESC');
 
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
             switch ($exp[0]) {
                 case 'mapper':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
 //                case 'category':
@@ -221,28 +201,29 @@ class UploadSongController extends AbstractController
 //                    break;
                 case 'artist':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.authorName LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
                 case 'title':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.name LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.name LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
                 case 'desc':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.description LIKE :search_string)')
-                            ->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.description LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
                 default:
-                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-                        ->setParameter('search_string', '%' . $request->get('search', null) . '%');
+                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $request->get('search', null) . '%');
             }
         }
-        if ($request->get('order_by') && in_array($request->get('order_by'),['s.lastDateUpload','rating','s.downloads','s.name'],true)) {
+        if ($request->get('order_by') && in_array($request->get('order_by'), [
+                's.lastDateUpload',
+                'rating',
+                's.downloads',
+                's.name'
+            ], true)) {
             $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
         }
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
@@ -282,9 +263,7 @@ class UploadSongController extends AbstractController
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . "/" . $object))
-                        $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
-                    else
+                    if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . "/" . $object)) $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object); else
                         unlink($dir . DIRECTORY_SEPARATOR . $object);
                 }
             }

@@ -11,6 +11,7 @@ use App\Entity\SongHash;
 use App\Entity\SongRequest;
 use App\Entity\Utilisateur;
 use App\Entity\Vote;
+use App\Repository\SongDifficultyRepository;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -181,13 +182,10 @@ class SongService
             }
 
             $new = $song->getId() == null || $isWip != $song->getWip();
-            foreach ($song->getSongDifficulties() as $difficulty) {
-                if ($difficulty->isRanked()) {
-                    $this->rrmdir($unzipFolder);
-                    throw new Exception("This song is ranked, you can't update it for now, please contact us.");
-                }
+            if ($song->isRanked()) {
+                $this->rrmdir($unzipFolder);
+                throw new Exception("This song is ranked, you can't update it for now, please contact us.");
             }
-
 
             if ($form != null && $form->get('description')->getData() != null) {
                 preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('description')->getData(), $match);
@@ -230,26 +228,52 @@ class SongService
             $song->setModerated(true);
 
             $this->em->persist($song);
-
+            $previousDiffs = [];
             foreach ($song->getSongDifficulties() as $difficulty) {
                 $overlays = $this->em->getRepository(Overlay::class)->findBy(["difficulty" => $difficulty]);
                 /** @var Overlay $overlay */
                 foreach ($overlays as $overlay) {
                     $overlay->setDifficulty(null);
                 }
-                $difficulty->setSong(null);
-                $this->em->remove($difficulty);
+                $previousDiffs[$difficulty->getId()] = $difficulty;
             }
 
             foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
-                $diff = new SongDifficulty();
-                $diff->setSong($song);
+                $jsonContent = file_get_contents($unzipFolder . "/" . $difficulty->_beatmapFilename);
+                $fcrc = Fcrc::StrCrc32($jsonContent);
+                $diff = $this->em->getRepository(SongDifficulty::class)
+                    ->createQueryBuilder('sd')->where('sd.wanadevHash = :fcrc')
+                    ->setParameter('fcrc', $fcrc)
+                    ->andWhere('sd.song = :song')->setParameter('song', $song)
+                    ->getQuery()->setMaxResults(1)
+                    ->setFirstResult(0)->getOneOrNullResult();
+                if ($diff != null) {
+                    unset($previousDiffs[$diff->getId()]);
+                    continue;
+                }
+                $rank = $this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]);
+                $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.difficultyRank = :rank')->setParameter('rank', $rank)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
+                if ($diff == null) {
+                    $diff = new SongDifficulty();
+                    $diff->setSong($song);
+                } else {
+                    unset($previousDiffs[$diff->getId()]);
+                }
+                foreach ($diff->getScores() as $score) {
+                    $this->em->remove($score);
+                }
+                foreach ($diff->getScoreHistories() as $score) {
+                    $this->em->remove($score);
+                }
+                foreach ($song->getDownloadCounters() as $download) {
+                    $this->em->remove($download);
+                }
                 $diff->setIsRanked((bool)$diff->isRanked());
-                $diff->setDifficultyRank($this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]));
+                $diff->setDifficultyRank($rank);
                 $diff->setDifficulty($difficulty->_difficulty);
                 $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
                 $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
-                $jsonContent = file_get_contents($unzipFolder . "/" . $difficulty->_beatmapFilename);
+
                 $json2 = json_decode($jsonContent);
                 $diff->setNotesCount(count($json2->_notes));
                 $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
@@ -258,9 +282,18 @@ class SongService
                 $song->addSongDifficulty($diff);
                 $this->em->persist($diff);
                 $allowedFiles[] = $difficulty->_beatmapFilename;
-                $diff->setWanadevHash(Fcrc::StrCrc32($jsonContent));
+                $diff->setWanadevHash($fcrc);
 
             }
+            if (count($previousDiffs) != 0) {
+                //there is at least one update on difficulties
+                foreach ($previousDiffs as $diff) {
+                    $diff->setSong(null);
+                    $this->em->remove($diff);
+                }
+
+            }
+
             if ($isWip != $song->getWip()) {
                 $song->setCreatedAt(new DateTime());
             }
