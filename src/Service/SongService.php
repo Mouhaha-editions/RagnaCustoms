@@ -254,15 +254,18 @@ class SongService
                     $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.wanadevHash = :fcrc')->setParameter('fcrc', $fcrc)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
                     if ($diff != null) {
                         unset($previousDiffs[$diff->getId()]);
+                        $allowedFiles[] = $difficulty->_beatmapFilename;
                         continue;
+                    } else {
+                        $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.difficultyRank = :rank')->setParameter('rank', $rank)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
                     }
-                    $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.difficultyRank = :rank')->setParameter('rank', $rank)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
                 }
                 if ($diff == null) {
                     $diff = new SongDifficulty();
                     $diff->setSong($song);
                 } else {
                     unset($previousDiffs[$diff->getId()]);
+                    $allowedFiles[] = $difficulty->_beatmapFilename;
                 }
                 foreach ($diff->getScores() as $score) {
                     $this->em->remove($score);
