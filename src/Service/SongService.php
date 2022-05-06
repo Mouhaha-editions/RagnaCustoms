@@ -345,8 +345,9 @@ class SongService
             throw new Exception($e->getMessage());
         } finally {
             $this->rrmdir($unzipFolder);
-            return true;
         }
+        return true;
+
     }
 
     function remove_utf8_bom($text)
