@@ -1,0 +1,39 @@
+{% set follow = is_granted("ROLE_USER") ? app.user.isFollower(mapper): null %}
+<div class="follow-buttons">
+    {% if follow != null %}
+        <a href="#" class="btn btn-sm btn-warning bg-transparent text-warning ajax-link"
+           data-toggle="tooltip"
+           data-success-action="replace-html"
+           data-replace-selector="#follow_{{ mapper.id }}"
+           data-url="{{ path('follow_toggle',{id:mapper.id, type:2}) }}"
+           title="Click to unfollow">
+            <i class="fas fa-heart"></i><span>&nbsp;unfollow</span></a>
+        {% if follow.isNotificationEnabled %}
+            <a href="#" class="btn btn-sm btn-info bg-transparent text-info ajax-link"
+               data-toggle="tooltip"
+               data-success-action="replace-html"
+               data-replace-selector="#follow_{{ mapper.id }}"
+               data-url="{{ path('follow_notification_toggle',{id:mapper.id, type:2}) }}"
+               title="Click to remove notifications">
+                <i class="fas fa-bell"></i></a>
+        {% else %}
+            <a href="#" class="text-info btn btn-sm btn-info bg-transparent ajax-link"
+               data-toggle="tooltip"
+               data-success-action="replace-html"
+               data-replace-selector="#follow_{{ mapper.id }}"
+               data-url="{{ path('follow_notification_toggle',{id:mapper.id, type:2}) }}"
+               title="Click to be notified on updates">
+                <i class="far fa-bell-slash"></i></a>
+        {% endif %}
+    {% else %}
+        <a href="#" class="btn btn-sm btn-warning bg-transparent text-warning ajax-link" data-toggle="tooltip"
+           data-success-action="replace-html"
+           data-replace-selector="#follow_{{ mapper.id }}"
+           data-url="{{ path('follow_toggle',{id:mapper.id, type:2}) }}"
+           title="Click to follow"><i
+                    class="far fa-heart"></i><span>&nbsp;follow</span></a>
+    {% endif %}
+</div>
+<div class="followers mt-2 small text-right">
+    {{ mapper.followersCounter }}
+</div>

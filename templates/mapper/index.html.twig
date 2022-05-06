@@ -5,41 +5,49 @@
 
 {% block body %}
     <div {{ stimulus_controller('mappers') }} class="container" id="mappers">
-    <div class="row mt-5">
-        <div class="col-12">
-            <a href="{{ url("song_request_index") }}" class="btn btn-warning btn-lg float-right ml-2">{{ "Open song requests"|trans }}</a>
-            <a href="{{ url("home") }}" class="btn btn-warning btn-bg-empty btn-lg float-right">{{ "Learn how to map"|trans }}</a>
-            <h1>{{ "Mappers"|trans }}</h1>
-            <table class="table table-sm">
-                <tr>
-                    <th>{{ "User"|trans }}</th>
-                    <th class="">{{ "Maps"|trans }}</th>
-                    <th class="">{{ "Votes"|trans }}</th>
-                    <th class="">{{ "Avg. Rating"|trans }}</th>
-                    <th class="">{{ "Prefered genre"|trans }}</th>
-                    {#                    <th class="text-right">{{ "Songs played"|trans }}</th>#}
-                </tr>
-                {% for mapper in mappers %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <a href="{{ url("song_request_index") }}"
+                   class="btn btn-warning btn-lg float-right ml-2">{{ "Open song requests"|trans }}</a>
+                <a href="{{ url("home") }}"
+                   class="btn btn-warning btn-bg-empty btn-lg float-right">{{ "Learn how to map"|trans }}</a>
+                <h1>{{ "Mappers"|trans }}</h1>
+                <table class="table table-sm">
                     <tr>
-                        <td>
-                            <a href="{{ url("mapper_profile",{username:mapper.username}) }}">{{ mapper.username }}</a>
-                        </td>
-                        <td class="">{{ mapper.songs|length }}</td>
-                        <td class=""><small>{{ "soon" }}</small></td>
-                        <td class="">{{ mapper.avgRating }}</td>
-                        <td class="light-grey small">{{ mapper.preferedGenre(3) }}</td>
-                        {#                        <td class="text-right">{{ mapper.songAverage }}</td>#}
+                        <th></th>
+                        <th>{{ "User"|trans }}</th>
+                        <th class="">{{ "Maps"|trans }}</th>
+                        <th class="">{{ "Votes"|trans }}</th>
+                        <th class="">{{ "Avg. Rating"|trans }}</th>
+                        <th class="">{{ "Prefered genre"|trans }}</th>
+                        {#                    <th class="text-right">{{ "Songs played"|trans }}</th> #}
                     </tr>
-                {% endfor %}
-            </table>
+                    {% for mapper in mappers.entities %}
+                        <tr>
+                            <td id="follow_{{ mapper.id }}">
+                               {% include 'follower/partial/buttons.html.twig' with {mapper:mapper} %}
+                            </td>
+                            <td>
+                                <a href="{{ url("mapper_profile",{username:mapper.username}) }}">{{ mapper.username }}</a>
+                            </td>
+                            <td class="">{{ mapper.songs|length }}</td>
+                            <td class=""><small>{{ "soon" }}</small></td>
+                            <td class="">{{ mapper.avgRating }}</td>
+                            <td class="light-grey small">{{ mapper.preferedGenre(3) }}</td>
+                            {#                        <td class="text-right">{{ mapper.songAverage }}</td> #}
+                        </tr>
+                    {% endfor %}
+                </table>
+                {% include 'widget/paginate.html.twig' with {pagination:mappers} %}
+
+            </div>
         </div>
-    </div>
     </div>
 {% endblock %}
  {% block metas %}
-     {#     <meta name="description" value="{{ playlist.description}}">#}
-     {#     <meta property="og:description" value="{{ playlist.description}}">#}
-     {#     <meta property="og:url" content="{{ url('playlist_show',{id:playlist.id}) }}"/>#}
+     {#     <meta name="description" value="{{ playlist.description}}"> #}
+     {#     <meta property="og:description" value="{{ playlist.description}}"> #}
+     {#     <meta property="og:url" content="{{ url('playlist_show',{id:playlist.id}) }}"/> #}
      <meta property="og:type" content="website"/>
      <meta property="og:title" content="Mappers on RagnaCustoms.com"/>
  {% endblock %}

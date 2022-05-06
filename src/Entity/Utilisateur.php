@@ -933,6 +933,25 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->followers;
     }
+    public function getFollowersCounter()
+    {
+        $followers = $this->getFollowers()->count();
+        if ($followers < 1000) {
+            // Anything less than a million
+            $n_format = number_format($followers);
+        } else if ($followers < 1000000/ 1000) {
+            // Anything less than a million
+            $n_format = number_format($followers,1). 'K';
+        } else if ($followers < 1000000000) {
+            // Anything less than a billion
+            $n_format = number_format($followers / 1000000, 1) . 'M';
+        } else {
+            // At least a billion
+            $n_format = number_format($followers / 1000000000, 1) . 'B';
+        }
+
+        return $n_format." follower".($n_format>1?"s":"");
+    }
 
     public function addFollower(FollowMapper $follower): self
     {
@@ -960,5 +979,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->getUsername();
+    }
+
+    public function isFollower(Utilisateur $mapper)
+    {
+        return $this->getFollowedMappers()->filter(function(FollowMapper $follow)use($mapper){return $follow->getMapper() === $mapper;})->first();
     }
 }

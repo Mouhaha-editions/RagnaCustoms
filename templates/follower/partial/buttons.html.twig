@@ -1,0 +1,36 @@
+{% set follow = is_granted("ROLE_USER") ? app.user.isFollower(mapper): null %}
+<div class="follow-buttons">
+{% if follow != null %}
+    <a href="#" class="text-warning ajax-link"
+       data-toggle="tooltip"
+       data-success-action="replace-html"
+       data-replace-selector="#follow_{{ mapper.id }}"
+       data-url="{{ path('follow_toggle',{id:mapper.id, type:1}) }}"
+       title="Click to unfollow">
+        <i class="fas fa-heart"></i></a>
+    {% if follow.isNotificationEnabled %}
+        <a href="#" class="text-info ajax-link"
+           data-toggle="tooltip"
+           data-success-action="replace-html"
+           data-replace-selector="#follow_{{ mapper.id }}"
+           data-url="{{ path('follow_notification_toggle',{id:mapper.id, type:1}) }}"
+           title="Click to remove notifications">
+            <i class="fas fa-bell"></i></a>
+    {% else %}
+        <a href="#" class="text-info ajax-link"
+           data-toggle="tooltip"
+           data-success-action="replace-html"
+           data-replace-selector="#follow_{{ mapper.id }}"
+           data-url="{{ path('follow_notification_toggle',{id:mapper.id, type:1}) }}"
+           title="Click to be notified on updates">
+            <i class="far fa-bell-slash"></i></a>
+    {% endif %}
+{% else %}
+    <a href="#" class="text-warning ajax-link" data-toggle="tooltip"
+       data-success-action="replace-html"
+       data-replace-selector="#follow_{{ mapper.id }}"
+       data-url="{{ path('follow_toggle',{id:mapper.id, type:1}) }}"
+       title="Click to follow"><i
+                class="far fa-heart"></i></a>
+{% endif %}
+</div>

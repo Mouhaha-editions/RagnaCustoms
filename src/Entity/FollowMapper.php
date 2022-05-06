@@ -35,7 +35,7 @@ class FollowMapper
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isNotificationEnabled;
+    private $isNotificationEnabled = true;
 
     public function getId(): ?int
     {

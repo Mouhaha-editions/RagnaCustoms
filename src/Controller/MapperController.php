@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
+use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,10 +18,10 @@ class MapperController extends AbstractController
     /**
      * @Route("/mappers", name="mappers")
      */
-    public function list(UtilisateurRepository $utilisateurRepository): Response
+    public function list(Request $request,UtilisateurRepository $utilisateurRepository, PaginationService $paginationService): Response
     {
         /** @var Utilisateur[] $mappers */
-        $mappers = $utilisateurRepository->createQueryBuilder("u")
+        $qb = $utilisateurRepository->createQueryBuilder("u")
             ->leftJoin('u.songs', 's')
             ->select('u,COUNT(s) AS HIDDEN count_song')
             ->where('u.isMapper = 1')
@@ -28,8 +29,9 @@ class MapperController extends AbstractController
             ->where('s.isDeleted = 0')
             ->orderBy('count_song', 'desc')
             ->groupBy("u.id")
-            ->getQuery()->getResult();
+            ;
 
+        $mappers = $paginationService->setDefaults(50)->process($qb,$request);
         return $this->render('mapper/index.html.twig', [
             'mappers' => $mappers,
         ]);
