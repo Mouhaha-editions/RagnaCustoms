@@ -15,7 +15,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
  * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
- * @method string getUserIdentifier()
  */
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -167,6 +166,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->currentlyMapped = new ArrayCollection();
         $this->songRequestVotes = new ArrayCollection();
         $this->voteCounter = new ArrayCollection();
+        $this->followedMappers = new ArrayCollection();
+        $this->followers = new ArrayCollection();
     }
 
     public function __toString()
@@ -838,6 +839,16 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private $discordEmail;
 
     /**
+     * @ORM\OneToMany(targetEntity=FollowMapper::class, mappedBy="user")
+     */
+    private $followedMappers;
+
+    /**
+     * @ORM\OneToMany(targetEntity=FollowMapper::class, mappedBy="mapper", orphanRemoval=true)
+     */
+    private $followers;
+
+    /**
      * @return mixed
      */
     public function getDiscordUsername()
@@ -885,5 +896,69 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->discordEmail = $discordEmail;
     }
 
+    /**
+     * @return Collection<int, FollowMapper>
+     */
+    public function getFollowedMappers(): Collection
+    {
+        return $this->followedMappers;
+    }
 
+    public function addFollowedMapper(FollowMapper $followedMapper): self
+    {
+        if (!$this->followedMappers->contains($followedMapper)) {
+            $this->followedMappers[] = $followedMapper;
+            $followedMapper->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowedMapper(FollowMapper $followedMapper): self
+    {
+        if ($this->followedMappers->removeElement($followedMapper)) {
+            // set the owning side to null (unless already changed)
+            if ($followedMapper->getUser() === $this) {
+                $followedMapper->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FollowMapper>
+     */
+    public function getFollowers(): Collection
+    {
+        return $this->followers;
+    }
+
+    public function addFollower(FollowMapper $follower): self
+    {
+        if (!$this->followers->contains($follower)) {
+            $this->followers[] = $follower;
+            $follower->setMapper($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollower(FollowMapper $follower): self
+    {
+        if ($this->followers->removeElement($follower)) {
+            // set the owning side to null (unless already changed)
+            if ($follower->getMapper() === $this) {
+                $follower->setMapper(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getUsername();
+    }
 }
