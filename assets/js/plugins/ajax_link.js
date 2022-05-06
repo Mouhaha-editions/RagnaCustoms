@@ -7,7 +7,6 @@ $(document).on("click", ".ajax-link", function () {
         url: t.data('url'),
         dataType: 'json',
         success: function (data) {
-            console.log(data);
             if (data.error) {
                 alert(data.errorMessage);
                 return;
@@ -18,8 +17,6 @@ $(document).on("click", ".ajax-link", function () {
                     $(t.data('replace-selector')+" [data-toggle=\"tooltip\"]").tooltip();
                     break;
                 case "replace-html":
-                    console.log(data);
-                    console.log(t.data('replace-selector'));
                     $(t.data('replace-selector')).html(data.result);
                     $(t.data('replace-selector')+" [data-toggle=\"tooltip\"]").tooltip();
                     break;

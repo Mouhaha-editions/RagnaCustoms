@@ -35,6 +35,7 @@ Encore
     .addStyleEntry('mappers', './assets/styles/pages/mappers.scss')
     .addStyleEntry('mapper_profile', './assets/styles/pages/mapper_profile.scss')
     .addStyleEntry('song_library', './assets/styles/pages/song_library.scss')
+    .addStyleEntry('notification', './assets/styles/pages/notification.scss')
     .addStyleEntry('application', './assets/styles/pages/application.scss')
     .addStyleEntry('getting_started', './assets/styles/pages/getting_started.scss')
     .addStyleEntry('ranking_system', './assets/styles/pages/ranking_system.scss')

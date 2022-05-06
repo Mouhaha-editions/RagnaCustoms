@@ -1,0 +1,15 @@
+{% if notification.state == constant("\\App\\Entity\\Notification::STATE_READ") %}
+    <a href="#"
+       data-url="{{ url("notification_toggle_read",{id:notification.id}) }}"
+       data-success-action="replace-html"
+       data-replace-selector="#read_{{ notification.id }}"
+       class="ajax-link text-default"
+       data-toggle="tooltip"
+       title="Mark as unread" ><i class="fas fa-eye-slash"></i> </a>
+{% else %}
+    <a href="#"
+       data-url="{{ url("notification_toggle_read",{id:notification.id}) }}"
+       data-success-action="replace-html"
+       data-replace-selector="#read_{{ notification.id }}"
+       class="ajax-link text-info" data-toggle="tooltip" title="Mark as read" ><i class="fas fa-eye"></i> </a>
+{% endif %}

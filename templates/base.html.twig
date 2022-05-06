@@ -103,8 +103,8 @@
                                 <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" onclick="return alert('Soon')" class="nav-link">
+                        <li class="nav-item pt-1">
+                            <a href="{{ url('app_notification') }}" class="nav-link">
                                 {% if app.user.unreadNotifications|length > 0 %}
                                     <i class="fas fa-bell"></i>
                                     <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border  rounded-circle"></span>
