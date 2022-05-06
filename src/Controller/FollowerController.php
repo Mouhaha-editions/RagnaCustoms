@@ -27,6 +27,15 @@ class FollowerController extends AbstractController
                 ])
             ]);
         }
+        if ($this->getUser() === $mapper) {
+            return new JsonResponse([
+                "error" => true,
+                "errorMessage" => $translator->trans("You can't follow yourself!"),
+                "result" => $this->renderView(($type == 1?'follower/partial/buttons.html.twig':'follower/partial/bigButtons.html.twig'), [
+                    "mapper" => $mapper
+                ])
+            ]);
+        }
         $em = $doctrine->getManager();
         $follow = $followMapperRepository->findOneBy([
             'mapper' => $mapper,
