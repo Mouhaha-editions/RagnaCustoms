@@ -25,6 +25,7 @@ use App\Service\ScoreService;
 use App\Service\SongService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -61,7 +62,7 @@ class SongsController extends AbstractController
      * @param TranslatorInterface $translator
      * @return JsonResponse
      */
-    public function formPlaylist(Request $request, Song $song, TranslatorInterface $translator)
+    public function formPlaylist(Request $request,ManagerRegistry $doctrine, Song $song, TranslatorInterface $translator)
     {
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
@@ -90,7 +91,7 @@ class SongsController extends AbstractController
         ]);
 
         $form->handleRequest($request);
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Playlist $playlist */
             $playlist = $form->get('playlist')->getData();
@@ -146,10 +147,10 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function library(Request $request, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
+    public function library(Request $request,ManagerRegistry $doctrine, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
     {
         $filters = [];
-        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
+        $qb = $doctrine->getRepository(Song::class)->createQueryBuilder("s")->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
             ->groupBy("s.id");
 
         $qb->leftJoin('s.songDifficulties', 'song_difficulties');
@@ -304,7 +305,7 @@ class SongsController extends AbstractController
             $songs = $qb->getQuery()->getResult();
             $list = new SongTemporaryList();
 
-            $em = $this->getDoctrine()->getManager();
+            $em = $doctrine->getManager();
             foreach ($songs as $song) {
                 $list->addSong($song);
             }
@@ -355,12 +356,12 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/download/{id}", name="song_download")
      */
-    public function download(Request $request, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    public function download(Request $request,ManagerRegistry $doctrine, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
         }
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
 
@@ -380,12 +381,12 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/download/{id}/{api}", name="song_download_api", defaults={"api"=null})
      */
-    public function downloadApiKey(Request $request, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    public function downloadApiKey(Request $request,ManagerRegistry $doctrine, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
         }
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
 
@@ -406,12 +407,12 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/ddl/{id}", name="song_direct_download")
      */
-    public function directDownload(Song $song, KernelInterface $kernel, DownloadService $downloadService): Response
+    public function directDownload(Song $song,ManagerRegistry $doctrine, KernelInterface $kernel, DownloadService $downloadService): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
         }
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
         $downloadService->addOne($song);
@@ -435,10 +436,10 @@ class SongsController extends AbstractController
     /**
      * @Route("/toggle/{id}", name="diff_toggle_ranked", defaults={"slug"=null})
      */
-    public function toggleRanked(Request $request, SongDifficulty $songDifficulty, ScoreService $scoreService)
+    public function toggleRanked(Request $request,ManagerRegistry $doctrine, SongDifficulty $songDifficulty, ScoreService $scoreService)
     {
         if ($this->isGranted('ROLE_MODERATOR')) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $doctrine->getManager();
             $songDifficulty->setIsRanked(!$songDifficulty->isRanked());
             /** @var Score $score */
             foreach ($songDifficulty->getScores() as $score) {
@@ -456,7 +457,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
      */
-    public function songDetail(Request $request, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService, ?Song $song = null)
+    public function songDetail(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService, ?Song $song = null)
     {
 
         if ($song == null || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
@@ -471,7 +472,7 @@ class SongsController extends AbstractController
         $feedbackForm = $this->createForm(VoteType::class, $feedback);
 
         $feedbackForm->handleRequest($request);
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
 
         if ($feedbackForm->isSubmitted() && $feedbackForm->isValid() && $this->getUser() != null) {
             $em->persist($feedback);
@@ -490,7 +491,7 @@ class SongsController extends AbstractController
         $levels = [];
         foreach ($song->getSongDifficulties() as $difficulty) {
             $level = $difficulty->getDifficultyRank()->getLevel();
-            $scores = $this->getDoctrine()->getRepository(Score::class)->createQueryBuilder('s')->select('s, MAX(s.score) AS HIDDEN max_score')->where('s.songDifficulty = :diff')->setParameter('diff', $difficulty)
+            $scores = $doctrine->getRepository(Score::class)->createQueryBuilder('s')->select('s, MAX(s.score) AS HIDDEN max_score')->where('s.songDifficulty = :diff')->setParameter('diff', $difficulty)
 //                ->setParameter('hash', $difficulty->getSong()->getNewGuid())
                 ->groupBy('s.user')->addOrderBy('max_score', 'DESC');
 

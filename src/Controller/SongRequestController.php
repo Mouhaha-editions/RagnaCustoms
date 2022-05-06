@@ -9,6 +9,7 @@ use App\Form\SongRequestFormType;
 use App\Repository\SongRequestRepository;
 use App\Repository\SongRequestVoteRepository;
 use App\Service\DiscordService;
+use Doctrine\Persistence\ManagerRegistry;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ class SongRequestController extends AbstractController
      * @param DiscordService $discordService
      * @return Response
      */
-    public function index(Request $request, SongRequestRepository $songRequestRepository, PaginationService $pagination, DiscordService $discordService): Response
+    public function index(Request $request,ManagerRegistry $doctrine, SongRequestRepository $songRequestRepository, PaginationService $pagination, DiscordService $discordService): Response
     {
         $form = null;
         if ($this->isGranted('ROLE_USER')) {
@@ -50,7 +51,7 @@ class SongRequestController extends AbstractController
                     $this->addFlash('warning', 'You need 30 credits to add a song request,play more songs to earn credits ;)');
                     $save = false;
                 } else {
-                    $em = $this->getDoctrine()->getManager();
+                    $em = $doctrine->getManager();
                     $em->persist($songReq);
                     $em->flush();
                     $discordService->sendRequestSongMessage($songReq);
@@ -109,7 +110,7 @@ class SongRequestController extends AbstractController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function claim(Request $request, SongRequest $songRequest, TranslatorInterface $translator): Response
+    public function claim(Request $request,ManagerRegistry $doctrine, SongRequest $songRequest, TranslatorInterface $translator): Response
     {
         // not connected
         if (!$this->isGranted('ROLE_USER')) {
@@ -136,7 +137,7 @@ class SongRequestController extends AbstractController
 
         $songRequest->addMapperOnIt($user);
         $songRequest->setState(SongRequest::STATE_IN_PROGRESS);
-        $this->getDoctrine()->getManager()->flush();
+        $doctrine->getManager()->flush();
         $this->addFlash('success', "Song request claimed !");
         return $this->redirectToRoute('song_request_index');
     }
@@ -148,7 +149,7 @@ class SongRequestController extends AbstractController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function unclaim(Request $request, SongRequest $songRequest, TranslatorInterface $translator): Response
+    public function unclaim(Request $request,ManagerRegistry $doctrine, SongRequest $songRequest, TranslatorInterface $translator): Response
     {
         // not connected
         if (!$this->isGranted('ROLE_USER')) {
@@ -170,7 +171,7 @@ class SongRequestController extends AbstractController
         }
         $songRequest->removeMapperOnIt($user);
         $songRequest->setState(SongRequest::STATE_ASKED);
-        $this->getDoctrine()->getManager()->flush();
+        $doctrine->getManager()->flush();
         $this->addFlash('success', "Song request unclaimed !");
         return $this->redirectToRoute('song_request_index');
     }
@@ -183,7 +184,7 @@ class SongRequestController extends AbstractController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function toggleOne(Request $request, SongRequest $songRequest, SongRequestVoteRepository $songRequestVoteRepository, TranslatorInterface $translator): Response
+    public function toggleOne(Request $request,ManagerRegistry $doctrine, SongRequest $songRequest, SongRequestVoteRepository $songRequestVoteRepository, TranslatorInterface $translator): Response
     {
         // not connected
         if (!$this->isGranted('ROLE_USER')) {
@@ -195,7 +196,7 @@ class SongRequestController extends AbstractController
             'user' => $this->getUser(),
             'songRequest' => $songRequest
         ]);
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
 
         if ($vote == null) {
             $vote = new SongRequestVote();

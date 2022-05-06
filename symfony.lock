@@ -118,6 +118,9 @@
     "erusev/parsedown": {
         "version": "1.7.4"
     },
+    "evenement/evenement": {
+        "version": "v3.0.1"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
     },
@@ -190,6 +193,9 @@
     },
     "phar-io/version": {
         "version": "3.1.1"
+    },
+    "php-ffmpeg/php-ffmpeg": {
+        "version": "v1.0.1"
     },
     "php-http/client-common": {
         "version": "2.3.0"
@@ -329,10 +335,10 @@
         "version": "3.0.2"
     },
     "sensio/framework-extra-bundle": {
-        "version": "5.2",
+        "version": "6.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "5.2",
             "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
         },
@@ -357,6 +363,9 @@
         "files": [
             "./config/packages/sentry.yaml"
         ]
+    },
+    "spatie/temporary-directory": {
+        "version": "2.1.0"
     },
     "stof/doctrine-extensions-bundle": {
         "version": "1.2",
@@ -578,6 +587,9 @@
     },
     "symfony/polyfill-uuid": {
         "version": "v1.22.1"
+    },
+    "symfony/process": {
+        "version": "v6.0.8"
     },
     "symfony/property-access": {
         "version": "v5.2.4"

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +20,7 @@ class DiscordController extends AbstractController
      * @return Response
      * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
-    public function Discord(): Response
+    public function Discord(ManagerRegistry $doctrine): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', 'You need to be logged to link your discord account.');
@@ -69,7 +70,7 @@ class DiscordController extends AbstractController
                 $user->setDiscordId($DiscordUser->getId());
                 $user->setDiscordEmail($DiscordUser->getEmail());
 
-                $this->getDoctrine()->getManager()->flush();
+                $doctrine->getManager()->flush();
                 $this->addFlash('success', 'Account linked with Discord');
             } catch (Exception $e) {
 
@@ -121,7 +122,7 @@ class DiscordController extends AbstractController
      * @return Response
      * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
-    public function DiscordCheck(): Response
+    public function DiscordCheck(ManagerRegistry $doctrine,): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', 'You need to be logged to link your discord account.');
@@ -171,7 +172,7 @@ class DiscordController extends AbstractController
                 $user->setDiscordId($DiscordUser->getId());
                 $user->setDiscordEmail($DiscordUser->getEmail());
 
-                $this->getDoctrine()->getManager()->flush();
+                $doctrine->getManager()->flush();
                 $this->addFlash('success', 'Account linked with Discord');
             } catch (Exception $e) {
 

@@ -7,6 +7,7 @@ use App\Entity\Song;
 use App\Form\PlaylistType;
 use App\Repository\PlaylistRepository;
 use App\Repository\SongRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -74,7 +75,7 @@ class PlaylistController extends AbstractController
      * @param SongRepository $songRepository
      * @return Response
      */
-    public function remove(Request $request,PlaylistRepository $playlistRepository, SongRepository $songRepository)
+    public function remove(Request $request,ManagerRegistry $doctrine,PlaylistRepository $playlistRepository, SongRepository $songRepository)
     {
         $playlist = $playlistRepository->find($request->get('playlist_id'));
         if (!$this->isGranted("ROLE_USER") || $this->getUser()->getId() !== $playlist->getUser()->getId()) {
@@ -83,7 +84,7 @@ class PlaylistController extends AbstractController
         }
         $song = $songRepository->find($request->get('id'));
         $playlist->removeSong($song);
-        $this->getDoctrine()->getManager()->flush();
+        $doctrine->getManager()->flush();
         return new JsonResponse();
     }
 
@@ -95,7 +96,7 @@ class PlaylistController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function edit(Request $request, Playlist $playlist, SongRepository $songRepository, PaginationService $paginationService)
+    public function edit(Request $request,ManagerRegistry $doctrine, Playlist $playlist, SongRepository $songRepository, PaginationService $paginationService)
     {
         if (!$this->isGranted("ROLE_USER") || $this->getUser()->getId() !== $playlist->getUser()->getId()) {
             $this->addFlash("danger", "You are not the owner of this playlist.");
@@ -104,7 +105,7 @@ class PlaylistController extends AbstractController
         $form = $this->createForm(PlaylistType::class, $playlist);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $this->getDoctrine()->getManager()->flush();
+            $doctrine->getManager()->flush();
             $this->addFlash('success',"Playlist edited!");
         }
 
@@ -135,14 +136,14 @@ class PlaylistController extends AbstractController
      * @param SongRepository $song
      * @return Response
      */
-    public function delete(Request $request, Playlist $playlist)
+    public function delete(Request $request,ManagerRegistry $doctrine, Playlist $playlist)
     {
         if (!$this->isGranted("ROLE_USER") || $this->getUser()->getId() !== $playlist->getUser()->getId()) {
             $this->addFlash("danger", "You are not the owner of this playlist.");
             return $this->redirectToRoute("playlist");
         }
         try {
-            $em = $this->getDoctrine()->getManager();
+            $em = $doctrine->getManager();
             $em->remove($playlist);
             $em->flush();
             $this->addFlash("success", "Your playlist is deleted.");

@@ -23,6 +23,7 @@ use App\Repository\UtilisateurRepository;
 use App\Service\ScoreService;
 use App\Service\SongService;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Sentry\State\Scope;
@@ -171,7 +172,7 @@ class ApiController extends AbstractController
      * @param SongDifficultyRepository $songDifficultyRepository
      * @return Response
      */
-    public function overlay(Request $request, UtilisateurRepository $utilisateurRepository, DifficultyRankRepository $difficultyRankRepository, OverlayRepository $overlayRepository, SongRepository $songRepository, SongDifficultyRepository $songDifficultyRepository): Response
+    public function overlay(Request $request,ManagerRegistry $doctrine, UtilisateurRepository $utilisateurRepository, DifficultyRankRepository $difficultyRankRepository, OverlayRepository $overlayRepository, SongRepository $songRepository, SongDifficultyRepository $songDifficultyRepository): Response
     {
         $data = json_decode($request->getContent(), true);
         $apiKey = $request->headers->get('x-api-key');
@@ -181,7 +182,7 @@ class ApiController extends AbstractController
         }
 
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
         if ($user == null) {
             return new Response("NO USER", 500);
         }
@@ -229,12 +230,12 @@ class ApiController extends AbstractController
      * @param OverlayRepository $overlayRepository
      * @return Response
      */
-    public function overlayClean(Request $request, UtilisateurRepository $utilisateurRepository, OverlayRepository $overlayRepository): Response
+    public function overlayClean(Request $request,ManagerRegistry $doctrine, UtilisateurRepository $utilisateurRepository, OverlayRepository $overlayRepository): Response
     {
         $apiKey = $request->headers->get('x-api-key');
 
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
         if ($user == null) {
             return new Response("NO USER", 500);
         }

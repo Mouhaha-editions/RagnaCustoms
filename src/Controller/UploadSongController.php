@@ -9,6 +9,7 @@ use App\Repository\SongRepository;
 use App\Service\ScoreService;
 use App\Service\SongService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Intervention\Image\ImageManagerStatic as Image;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -31,7 +32,7 @@ class UploadSongController extends AbstractController
      * @param ScoreService $scoreService
      * @return JsonResponse
      */
-    public function new(Request $request, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
+    public function new(Request $request,ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
     {
         if (!$this->isGranted("ROLE_USER")) {
             return new JsonResponse([
@@ -42,7 +43,7 @@ class UploadSongController extends AbstractController
         }
         $song = new Song();
         $song->setUser($this->getUser());
-        return $this->edit($request, $song, $translator, $songService, $scoreService);
+        return $this->edit($request,$doctrine, $song, $translator, $songService, $scoreService);
     }
 
 
@@ -55,7 +56,7 @@ class UploadSongController extends AbstractController
      * @param ScoreService $scoreService
      * @return JsonResponse
      */
-    public function edit(Request $request, Song $song, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
+    public function edit(Request $request,ManagerRegistry $doctrine, Song $song, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
     {
         if ($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse([
@@ -83,7 +84,7 @@ class UploadSongController extends AbstractController
                         $song->getName(),
                         $song->getAuthorName()
                     ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
-                    $em = $this->getDoctrine()->getManager();
+                    $em = $doctrine->getManager();
                     $em->persist($song);
                     $em->flush();
                     return new JsonResponse([
@@ -107,7 +108,7 @@ class UploadSongController extends AbstractController
                         if ($song_request->getWantToBeNotified()) {
                             $songService->emailRequestDone($song_request, $song);
                         }
-                        $this->getDoctrine()->getManager()->flush();
+                        $doctrine->getManager()->flush();
                     }
 
                     $this->addFlash('success', str_replace([

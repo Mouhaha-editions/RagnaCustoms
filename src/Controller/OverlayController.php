@@ -9,6 +9,7 @@ use App\Repository\OverlayRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use DoctrineExtensions\Query\Mysql\Over;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,7 +43,7 @@ class OverlayController extends AbstractController
     /**
      * @Route("/overlay/reset/", name="overlay_reset")
      */
-    public function editorReset(SongRepository $songRepository, OverlayRepository $overlayRepository)
+    public function editorReset(SongRepository $songRepository,ManagerRegistry $doctrine, OverlayRepository $overlayRepository)
     {
         if (!$this->isGranted('ROLE_USER')) {
             return $this->redirectToRoute("home");
@@ -56,7 +57,7 @@ class OverlayController extends AbstractController
 
         $overlay->setHtml(null);
         $overlay->setCss(null);
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
         $em->flush();
         $this->addFlash('success',"You overlay is reset to default.");
         return $this->redirectToRoute('home');
@@ -94,9 +95,9 @@ class OverlayController extends AbstractController
     /**
      * @Route("/overlay/editor/save", name="overlay_editor_save")
      */
-    public function editorSave(Request $request, OverlayRepository $overlayRepository)
+    public function editorSave(Request $request,ManagerRegistry $doctrine, OverlayRepository $overlayRepository)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
         if (!$this->isGranted('ROLE_USER')) {
             return $this->redirectToRoute("home");
         }

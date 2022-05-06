@@ -13,6 +13,7 @@ use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\StatisticService;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -107,9 +108,9 @@ class UserController extends AbstractController
     /**
      * @Route("/mapper-profile/{username}", name="mapper_profile")
      */
-    public function mappedProfile(Request $request, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
+    public function mappedProfile(Request $request,ManagerRegistry $doctrine, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
     {
-        $qb = $this->getDoctrine()->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->groupBy("s.id");
+        $qb = $doctrine->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->groupBy("s.id");
 
 
         if ($request->get('display_wip', null) != null) {
@@ -288,13 +289,13 @@ class UserController extends AbstractController
     /**
      * @Route("/user", name="user")
      */
-    public function index(Request $request, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository, ScoreHistoryRepository $scoreHistoryRepository, PaginationService $paginationService): Response
+    public function index(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository, ScoreHistoryRepository $scoreHistoryRepository, PaginationService $paginationService): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account to access this page."));
             return $this->redirectToRoute('home');
         }
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
         if ($this->getUser()->getApiKey() == null) {
             $this->getUser()->setApiKey(md5(date('d/m/Y H:i:s') . $this->getUser()->getUsername()));
         }
@@ -312,7 +313,7 @@ class UserController extends AbstractController
                 if ($email_user != null && $user->getId() !== $email_user->getId()) {
                     $form->addError(new FormError("This mapper name is already used."));
                 } else {
-                    $this->getDoctrine()->getManager()->flush();
+                    $doctrine->getManager()->flush();
                 }
             }
         }

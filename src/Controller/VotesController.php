@@ -8,6 +8,7 @@ use App\Form\VoteType;
 use App\Repository\VoteRepository;
 use App\Service\DiscordService;
 use App\Service\VoteService;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,7 +59,7 @@ class VotesController extends AbstractController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function songReview(Request        $request, Song $song,
+    public function songReview(Request        $request, Song $song,ManagerRegistry $doctrine,
                                VoteRepository $voteRepository, TranslatorInterface $translator,
                                VoteService    $voteService, DiscordService $discordService): Response
     {
@@ -119,7 +120,7 @@ class VotesController extends AbstractController
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $doctrine->getManager();
             if ($vote->getId() != null) {
                 $voteService->subScore($song, $voteBefore);
             }

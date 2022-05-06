@@ -7,6 +7,7 @@ use App\Entity\SongDifficulty;
 use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreRepository;
 use App\Service\ScoreService;
+use Doctrine\Persistence\ManagerRegistry;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -88,12 +89,13 @@ class ScoreController extends AbstractController
      */
     public function unrankScoreUpdate(Request                $request,
                                       ScoreService           $scoreService,
+                                      ManagerRegistry $doctrine,
                                       ScoreRepository        $scoreRepository,
                                       RankedScoresRepository $rankedScoresRepository,
                                       SongDifficulty         $songDifficulty): Response
     {
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
 
         //unrank the song
         $songDifficulty->setIsRanked(!$songDifficulty->isRanked());

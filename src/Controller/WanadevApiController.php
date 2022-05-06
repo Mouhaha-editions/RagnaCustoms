@@ -21,6 +21,7 @@ use App\Repository\UtilisateurRepository;
 use App\Service\ScoreService;
 use App\Service\SongService;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Sentry\State\Scope;
@@ -39,16 +40,16 @@ class WanadevApiController extends AbstractController
     /**
      * @Route("/wanapi/score/{apiKey}/{osef}-{hash}", name="wd_api_score_simple_get",methods={"GET","POST"})
      */
-    public function scoreSimple(Request $request, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
+    public function scoreSimple(Request $request,ManagerRegistry $doctrine, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
     {
 
-        return $this->score($request, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository,  $scoreRepository, $scoreHistoryRepository, false);
+        return $this->score($request,$doctrine, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository,  $scoreRepository, $scoreHistoryRepository, false);
     }
 
     /**
      * @Route("/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}", name="wd_api_score_get",methods={"GET","POST"})
      */
-    public function score(Request $request, string $apiKey, string $hash,
+    public function score(Request $request,ManagerRegistry $doctrine, string $apiKey, string $hash,
                           SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository,
                           ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository,
                           ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
@@ -69,7 +70,7 @@ class WanadevApiController extends AbstractController
 
         if ($request->isMethod("post")) {
             $data = json_decode($request->getContent(), true);
-            $em = $this->getDoctrine()->getManager();
+            $em = $doctrine->getManager();
 
             $newScore = new Score();
             $newScore->setUser($user);
