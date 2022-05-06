@@ -122,7 +122,7 @@ class DiscordController extends AbstractController
      * @return Response
      * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
-    public function DiscordCheck(ManagerRegistry $doctrine,): Response
+    public function DiscordCheck(ManagerRegistry $doctrine): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', 'You need to be logged to link your discord account.');

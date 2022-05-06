@@ -539,7 +539,7 @@ class SongService
     {
         if ($song != null) {
             try {
-                $filedir = $this->kernel->getProjectDir() . "/public/covers/" . $value;
+                $filedir = $this->kernel->getProjectDir() . "/public/covers/" . $song->getId(). $song->getCoverImageExtension();
 
                 $image = Image::make($filedir);
 
