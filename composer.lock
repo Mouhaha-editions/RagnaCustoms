@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3482464f1413398f36d8f60bbbd650d2",
+    "content-hash": "8656669f3e6cb8b941fd6f5751b414b1",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -1399,16 +1399,16 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "2.5.2",
+            "version": "2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/persistence.git",
-                "reference": "4276c6cbc0ca692c190f650a2678623bf04af2d2"
+                "reference": "d7edf274b6d35ad82328e223439cc2bb2f92bd9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/persistence/zipball/4276c6cbc0ca692c190f650a2678623bf04af2d2",
-                "reference": "4276c6cbc0ca692c190f650a2678623bf04af2d2",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/d7edf274b6d35ad82328e223439cc2bb2f92bd9e",
+                "reference": "d7edf274b6d35ad82328e223439cc2bb2f92bd9e",
                 "shasum": ""
             },
             "require": {
@@ -1481,7 +1481,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/persistence/issues",
-                "source": "https://github.com/doctrine/persistence/tree/2.5.2"
+                "source": "https://github.com/doctrine/persistence/tree/2.5.3"
             },
             "funding": [
                 {
@@ -1497,7 +1497,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-02T17:29:02+00:00"
+            "time": "2022-05-03T09:16:53+00:00"
         },
         {
             "name": "doctrine/sql-formatter",
@@ -10156,16 +10156,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "3eb4e8193b74373251edc1f614f9fe5401a28c0c"
+                "reference": "86ab9cb3468a9a6989b14f57d95bb4202aa593ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/3eb4e8193b74373251edc1f614f9fe5401a28c0c",
-                "reference": "3eb4e8193b74373251edc1f614f9fe5401a28c0c",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/86ab9cb3468a9a6989b14f57d95bb4202aa593ce",
+                "reference": "86ab9cb3468a9a6989b14f57d95bb4202aa593ce",
                 "shasum": ""
             },
             "require": {
@@ -10227,9 +10227,9 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/4.4.0"
+                "source": "https://github.com/zircote/swagger-php/tree/4.4.1"
             },
-            "time": "2022-05-05T20:23:51+00:00"
+            "time": "2022-05-06T09:12:54+00:00"
         }
     ],
     "packages-dev": [

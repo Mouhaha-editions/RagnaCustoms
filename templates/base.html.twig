@@ -103,6 +103,16 @@
                                 <a class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a href="#" onclick="return alert('Soon')" class="nav-link">
+                                {% if app.user.unreadNotifications|length > 0 %}
+                                    <i class="fas fa-bell"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border  rounded-circle"></span>
+                                {% else %}
+                                    <i class="far fa-bell"></i>
+                                {% endif %}
+                            </a>
+                        </li>
                     {% endif %}
 
 
@@ -194,29 +204,30 @@
             </div>
         </div>
     {% endblock %}
-   <div class="container-fluid">
-       <div class="row p-3 footer">
-        <div class="col-md-6 text-center">
-            <span>{{ "RagnaCustoms is not associated with <b>Ragnaröck VR</b>, <b>WanadevStudio</b>, <b>Steam</b> or <b>Meta</b>"|trans|raw }}</span>
+    <div class="container-fluid">
+        <div class="row p-3 footer">
+            <div class="col-md-6 text-center">
+                <span>{{ "RagnaCustoms is not associated with <b>Ragnaröck VR</b>, <b>WanadevStudio</b>, <b>Steam</b> or <b>Meta</b>"|trans|raw }}</span>
+            </div>
+            <div class="col-md-6 text-center">
+                <a class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer"
+                   target="_blank">
+                    <i class="fab fa-patreon"></i>
+                </a>&nbsp;
+                <a class="text" href="https://discord.com/invite/2vCAAGuwsR" rel="noreferrer" target="_blank">
+                    <i class="fab fa-discord"></i>
+                </a>&nbsp;
+                <a class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank">
+                    <i class="fab fa-facebook"></i>
+                </a>&nbsp;
+                <a class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>&nbsp;
+                <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer" target="_blank">
+                    <i class="fab fa-reddit"></i>
+                </a>
+            </div>
         </div>
-        <div class="col-md-6 text-center">
-            <a class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer" target="_blank">
-                <i class="fab fa-patreon"></i>
-            </a>&nbsp;
-            <a class="text" href="https://discord.com/invite/2vCAAGuwsR" rel="noreferrer" target="_blank">
-                <i class="fab fa-discord"></i>
-            </a>&nbsp;
-            <a class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank">
-                <i class="fab fa-facebook"></i>
-            </a>&nbsp;
-            <a class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer" target="_blank">
-                <i class="fab fa-twitter"></i>
-            </a>&nbsp;
-            <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer" target="_blank">
-                <i class="fab fa-reddit"></i>
-            </a>
-        </div>
-    </div>
     </div>
 </div>
 

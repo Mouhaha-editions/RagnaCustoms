@@ -6,7 +6,7 @@
         "version": "v1.3.0"
     },
     "clue/stream-filter": {
-        "version": "v1.5.0"
+        "version": "v1.6.0"
     },
     "dama/doctrine-test-bundle": {
         "version": "6.7",
@@ -137,13 +137,13 @@
         "version": "1.8.1"
     },
     "http-interop/http-factory-guzzle": {
-        "version": "1.0.0"
+        "version": "1.2.0"
     },
     "intervention/image": {
         "version": "2.7.0"
     },
     "jean85/pretty-package-versions": {
-        "version": "2.0.3"
+        "version": "2.0.5"
     },
     "knpuniversity/oauth2-client-bundle": {
         "version": "1.20",
@@ -198,16 +198,16 @@
         "version": "v1.0.1"
     },
     "php-http/client-common": {
-        "version": "2.3.0"
+        "version": "2.5.0"
     },
     "php-http/discovery": {
-        "version": "1.13.0"
+        "version": "1.14.1"
     },
     "php-http/httplug": {
-        "version": "2.2.0"
+        "version": "2.3.0"
     },
     "php-http/message": {
-        "version": "1.11.0"
+        "version": "1.13.0"
     },
     "php-http/message-factory": {
         "version": "v1.0.2"
@@ -347,16 +347,16 @@
         ]
     },
     "sentry/sdk": {
-        "version": "3.1.0"
+        "version": "3.1.1"
     },
     "sentry/sentry": {
-        "version": "3.2.0"
+        "version": "3.4.0"
     },
     "sentry/sentry-symfony": {
-        "version": "3.0",
+        "version": "4.2",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
+            "branch": "main",
             "version": "3.0",
             "ref": "9746f0823302d7980e5273ef7a69ef3f5ac80914"
         },
@@ -487,10 +487,10 @@
         ]
     },
     "symfony/http-client": {
-        "version": "v5.2.6"
+        "version": "v6.0.8"
     },
     "symfony/http-client-contracts": {
-        "version": "v2.3.1"
+        "version": "v3.0.1"
     },
     "symfony/http-foundation": {
         "version": "v5.2.4"
@@ -598,7 +598,7 @@
         "version": "v5.2.4"
     },
     "symfony/psr-http-message-bridge": {
-        "version": "v2.1.0"
+        "version": "v2.1.2"
     },
     "symfony/routing": {
         "version": "5.1",

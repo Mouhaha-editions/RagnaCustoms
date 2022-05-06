@@ -47,6 +47,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $currentlyMapped;
     /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $discordEmail;
+    /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $discordId;
+    /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $discordUsername;
+    /**
      * @ORM\OneToMany(targetEntity=DownloadCounter::class, mappedBy="user")
      */
     private $downloadCounters;
@@ -59,7 +71,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="boolean")
      */
     private $enableEmailNotification = false;
-
+    /**
+     * @ORM\OneToMany(targetEntity=FollowMapper::class, mappedBy="user")
+     */
+    private $followedMappers;
+    /**
+     * @ORM\OneToMany(targetEntity=FollowMapper::class, mappedBy="mapper", orphanRemoval=true)
+     */
+    private $followers;
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
@@ -98,6 +117,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $mapper_name;
     /**
+     * @ORM\OneToMany(targetEntity=Notification::class, mappedBy="user")
+     */
+    private $notifications;
+    /**
      * @ORM\OneToOne(targetEntity=Overlay::class, mappedBy="user", cascade={"persist", "remove"})
      */
     private $overlay;
@@ -119,7 +142,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OrderBy({"updatedAt"="desc"})
      */
     private $scoreHistories;
-
     /**
      * @ORM\OneToMany(targetEntity=Score::class, mappedBy="user")
      */
@@ -168,6 +190,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->voteCounter = new ArrayCollection();
         $this->followedMappers = new ArrayCollection();
         $this->followers = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function __toString()
@@ -178,23 +201,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUsername(): string
-    {
-        return (string)$this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
     }
 
     /**
@@ -517,15 +523,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
-    /**
-     * @return Collection|Score[]
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
-    }
-
     public function getOverlay(): ?Overlay
     {
         return $this->overlay;
@@ -810,43 +807,30 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getScoresRanked()
     {
-        foreach($this->getScores() AS $score){
-            if($score->getSongDifficulty()->isRanked()) {
+        foreach ($this->getScores() as $score) {
+            if ($score->getSongDifficulty()->isRanked()) {
                 yield $score;
             }
         }
     }
 
-    public function hasPlayed(SongDifficulty  $difficulty)
+    /**
+     * @return Collection|Score[]
+     */
+    public function getScores(): Collection
     {
-        foreach ($this->getScoreHistories() AS $scoreHistory){
-            if($scoreHistory->getSongDifficulty() === $difficulty){return true;}
+        return $this->scores;
+    }
+
+    public function hasPlayed(SongDifficulty $difficulty)
+    {
+        foreach ($this->getScoreHistories() as $scoreHistory) {
+            if ($scoreHistory->getSongDifficulty() === $difficulty) {
+                return true;
+            }
         }
         return false;
     }
-
-    /**
-     * @ORM\Column(type="string", unique=true, nullable=true)
-     */
-    private $discordUsername;
-    /**
-     * @ORM\Column(type="string", unique=true, nullable=true)
-     */
-    private $discordId;
-    /**
-     * @ORM\Column(type="string", unique=true, nullable=true)
-     */
-    private $discordEmail;
-
-    /**
-     * @ORM\OneToMany(targetEntity=FollowMapper::class, mappedBy="user")
-     */
-    private $followedMappers;
-
-    /**
-     * @ORM\OneToMany(targetEntity=FollowMapper::class, mappedBy="mapper", orphanRemoval=true)
-     */
-    private $followers;
 
     /**
      * @return mixed
@@ -896,14 +880,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->discordEmail = $discordEmail;
     }
 
-    /**
-     * @return Collection<int, FollowMapper>
-     */
-    public function getFollowedMappers(): Collection
-    {
-        return $this->followedMappers;
-    }
-
     public function addFollowedMapper(FollowMapper $followedMapper): self
     {
         if (!$this->followedMappers->contains($followedMapper)) {
@@ -926,22 +902,15 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, FollowMapper>
-     */
-    public function getFollowers(): Collection
-    {
-        return $this->followers;
-    }
     public function getFollowersCounter()
     {
         $followers = $this->getFollowers()->count();
         if ($followers < 1000) {
             // Anything less than a million
             $n_format = number_format($followers);
-        } else if ($followers < 1000000/ 1000) {
+        } else if ($followers < 1000000 / 1000) {
             // Anything less than a million
-            $n_format = number_format($followers,1). 'K';
+            $n_format = number_format($followers, 1) . 'K';
         } else if ($followers < 1000000000) {
             // Anything less than a billion
             $n_format = number_format($followers / 1000000, 1) . 'M';
@@ -950,7 +919,15 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             $n_format = number_format($followers / 1000000000, 1) . 'B';
         }
 
-        return $n_format." follower".($n_format>1?"s":"");
+        return $n_format . " follower" . ($n_format > 1 ? "s" : "");
+    }
+
+    /**
+     * @return Collection<int, FollowMapper>
+     */
+    public function getFollowers(): Collection
+    {
+        return $this->followers;
     }
 
     public function addFollower(FollowMapper $follower): self
@@ -975,14 +952,84 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
     public function getUserIdentifier(): string
     {
         return $this->getUsername();
     }
 
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
+    {
+        return (string)$this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
     public function isFollower(Utilisateur $mapper)
     {
-        return $this->getFollowedMappers()->filter(function(FollowMapper $follow)use($mapper){return $follow->getMapper() === $mapper;})->first();
+        return $this->getFollowedMappers()->filter(function (FollowMapper $follow) use ($mapper) {
+            return $follow->getMapper() === $mapper;
+        })->first();
+    }
+
+    /**
+     * @return Collection<int, FollowMapper>
+     */
+    public function getFollowedMappers(): Collection
+    {
+        return $this->followedMappers;
+    }
+
+    public function getFollowersNotifiable()
+    {
+        return $this->getFollowers()->filter(function (FollowMapper $follow) {
+            return $follow->getIsNotificationEnabled();
+        });
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUnreadNotifications()
+    {
+        return $this->getNotifications()->filter(function (Notification $notification) {
+            return $notification->getState() == Notification::STATE_UNREAD;
+        });
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
     }
 }

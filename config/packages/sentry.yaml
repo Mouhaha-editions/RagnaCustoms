@@ -1,22 +1,2 @@
 sentry:
     dsn: '%env(SENTRY_DSN)%'
-    options:
-        integrations:
-            - 'Sentry\Integration\IgnoreErrorsIntegration'
-services:
-    Sentry\Integration\IgnoreErrorsIntegration:
-        arguments:
-            $options:
-                ignore_exceptions:
-                    - 'Symfony\Component\HttpKernel\Exception\NotFoundHttpException'
-                    - 'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'
-                    - 'Symfony\Component\Security\Core\Exception\AccessDeniedException'
-    Sentry\Monolog\Handler:
-        arguments:
-            $hub: '@Sentry\State\HubInterface'
-            $level: !php/const Monolog\Logger::ERROR
-monolog:
-    handlers:
-        sentry:
-            type: service
-            id: Sentry\Monolog\Handler

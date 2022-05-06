@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\DifficultyRank;
+use App\Entity\Notification;
 use App\Entity\Overlay;
 use App\Entity\Score;
 use App\Entity\Song;
@@ -328,12 +329,40 @@ class SongService
                 $song->setWip(true);
             }
             if ($this->kernel->getEnvironment() != "dev") {
+                    $user = $song->getUser();
                 if ($song->getWip()) {
+                    /** @var Utilisateur $user */
+                    foreach ($user->getFollowersNotifiable() as $follower) {
+                        $notification = new Notification();
+                        $notification->setUser($follower);
+                        if ($new) {
+                            $notification->setMessage("New song : [WIP] " . $song->getName() . " by " . $user->getMapperName());
+                        } else {
+                            $notification->setMessage("Song edit : [WIP] " . $song->getName() . " by " . $user->getMapperName());
+                        }
+                        $this->em->persist($notification);
+                    }
+                    $this->em->flush();
+
                     $this->discordService->sendWipSongMessage($song);
                 } elseif ($new) {
                     $this->discordService->sendNewSongMessage($song);
+                    foreach ($user->getFollowersNotifiable() as $follower) {
+                        $notification = new Notification();
+                        $notification->setUser($follower);
+                        $notification->setMessage("New song : " . $song->getName() . " by " . $user->getMapperName());
+                        $this->em->persist($notification);
+                    }
+                    $this->em->flush();
                 } else {
                     $this->discordService->sendUpdatedSongMessage($song);
+                    foreach ($user->getFollowersNotifiable() as $follower) {
+                        $notification = new Notification();
+                        $notification->setUser($follower);
+                        $notification->setMessage("Edit song : " . $song->getName() . " by " . $user->getMapperName());
+                        $this->em->persist($notification);
+                    }
+                    $this->em->flush();
                 }
             }
             if ($form !== null) {
