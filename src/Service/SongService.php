@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\VarDumper\VarDumper;
 use ZipArchive;
@@ -50,16 +51,19 @@ class SongService
      * @var MailerInterface
      */
     private $mailer;
+    private UrlGeneratorInterface $router;
     /**
      * @var ScoreService
      */
     private $scoreService;
 
-    public function __construct(KernelInterface $kernel, EntityManagerInterface $em, MailerInterface $mailer, DiscordService $discordService, ScoreService $scoreService)
+    public function __construct(KernelInterface $kernel, EntityManagerInterface $em, MailerInterface $mailer,
+                                DiscordService $discordService, ScoreService $scoreService, UrlGeneratorInterface $router)
     {
         $this->kernel = $kernel;
         $this->em = $em;
         $this->mailer = $mailer;
+        $this->router = $router;
         $this->discordService = $discordService;
         $this->scoreService = $scoreService;
     }
@@ -337,9 +341,17 @@ class SongService
                         $notification = new Notification();
                         $notification->setUser($follower->getUser());
                         if ($new) {
-                            $notification->setMessage("New song : [WIP] " . $song->getName() . " by " . $user->getMapperName());
+                            $notification->setMessage("New song : <a href='".
+                                $this->router->generate('song_detail',['slug'=>$song->getSlug()])."'>[WIP] " .
+                                $song->getName() . "</a> by <a href='".
+                                $this->router->generate('mapper_profile',['username'=>$user->getUsername()])."'>" .
+                                $user->getMapperName()."</a>");
                         } else {
-                            $notification->setMessage("Song edit : [WIP] " . $song->getName() . " by " . $user->getMapperName());
+                            $notification->setMessage("Song edit : <a href='".
+                                $this->router->generate('song_detail',['slug'=>$song->getSlug()])."'>[WIP] " .
+                                $song->getName() . "</a> by <a href='".
+                                $this->router->generate('mapper_profile',['username'=>$user->getUsername()])."'>" .
+                                $user->getMapperName()."</a>");
                         }
                         $this->em->persist($notification);
                     }
@@ -351,7 +363,11 @@ class SongService
                     foreach ($user->getFollowersNotifiable() as $follower) {
                         $notification = new Notification();
                         $notification->setUser($follower->getUser());
-                        $notification->setMessage("New song : " . $song->getName() . " by " . $user->getMapperName());
+                        $notification->setMessage("New song : <a href='".
+                            $this->router->generate('song_detail',['slug'=>$song->getSlug()])."'>" .
+                            $song->getName() . "</a> by <a href='".
+                            $this->router->generate('mapper_profile',['username'=>$user->getUsername()])."'>" .
+                            $user->getMapperName()."</a>");
                         $this->em->persist($notification);
                     }
                     $this->em->flush();
@@ -361,7 +377,11 @@ class SongService
                     foreach ($user->getFollowersNotifiable() as $follower) {
                         $notification = new Notification();
                         $notification->setUser($follower->getUser());
-                        $notification->setMessage("Edit song : " . $song->getName() . " by " . $user->getMapperName());
+                        $notification->setMessage("Edit song : <a href='".
+                            $this->router->generate('song_detail',['slug'=>$song->getSlug()])."'>" .
+                            $song->getName() . "</a> by <a href='".
+                            $this->router->generate('mapper_profile',['username'=>$user->getUsername()])."'>" .
+                            $user->getMapperName()."</a>");
                         $this->em->persist($notification);
                     }
                     $this->em->flush();

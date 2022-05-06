@@ -61,6 +61,8 @@ services:
             - '@mailer'
             - '@App\Service\DiscordService'
             - '@App\Service\ScoreService'
+            - '@router'
+
     App\Service\ScoreService:
         arguments: [ '@doctrine.orm.entity_manager','@kernel' ]
 
