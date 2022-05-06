@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\DifficultyRank;
+use App\Entity\FollowMapper;
 use App\Entity\Notification;
 use App\Entity\Overlay;
 use App\Entity\Score;
@@ -334,7 +335,7 @@ class SongService
                     /** @var Utilisateur $user */
                     foreach ($user->getFollowersNotifiable() as $follower) {
                         $notification = new Notification();
-                        $notification->setUser($follower);
+                        $notification->setUser($follower->getUser());
                         if ($new) {
                             $notification->setMessage("New song : [WIP] " . $song->getName() . " by " . $user->getMapperName());
                         } else {
@@ -349,16 +350,17 @@ class SongService
                     $this->discordService->sendNewSongMessage($song);
                     foreach ($user->getFollowersNotifiable() as $follower) {
                         $notification = new Notification();
-                        $notification->setUser($follower);
+                        $notification->setUser($follower->getUser());
                         $notification->setMessage("New song : " . $song->getName() . " by " . $user->getMapperName());
                         $this->em->persist($notification);
                     }
                     $this->em->flush();
                 } else {
                     $this->discordService->sendUpdatedSongMessage($song);
+                    /** @var FollowMapper $follower */
                     foreach ($user->getFollowersNotifiable() as $follower) {
                         $notification = new Notification();
-                        $notification->setUser($follower);
+                        $notification->setUser($follower->getUser());
                         $notification->setMessage("Edit song : " . $song->getName() . " by " . $user->getMapperName());
                         $this->em->persist($notification);
                     }
