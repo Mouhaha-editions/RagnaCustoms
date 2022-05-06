@@ -241,18 +241,17 @@ class SongService
             foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
                 $jsonContent = file_get_contents($unzipFolder . "/" . $difficulty->_beatmapFilename);
                 $fcrc = Fcrc::StrCrc32($jsonContent);
-                $diff = $this->em->getRepository(SongDifficulty::class)
-                    ->createQueryBuilder('sd')->where('sd.wanadevHash = :fcrc')
-                    ->setParameter('fcrc', $fcrc)
-                    ->andWhere('sd.song = :song')->setParameter('song', $song)
-                    ->getQuery()->setMaxResults(1)
-                    ->setFirstResult(0)->getOneOrNullResult();
-                if ($diff != null) {
-                    unset($previousDiffs[$diff->getId()]);
-                    continue;
-                }
+
                 $rank = $this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]);
-                $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.difficultyRank = :rank')->setParameter('rank', $rank)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
+                $diff = null;
+                if ($song->getId() !== null) {
+                    $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.wanadevHash = :fcrc')->setParameter('fcrc', $fcrc)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
+                    if ($diff != null) {
+                        unset($previousDiffs[$diff->getId()]);
+                        continue;
+                    }
+                    $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.difficultyRank = :rank')->setParameter('rank', $rank)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
+                }
                 if ($diff == null) {
                     $diff = new SongDifficulty();
                     $diff->setSong($song);
@@ -540,7 +539,7 @@ class SongService
     {
         if ($song != null) {
             try {
-                $filedir = $this->kernel->getProjectDir() . "/public/covers/" . $song->getId(). $song->getCoverImageExtension();
+                $filedir = $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension();
 
                 $image = Image::make($filedir);
 

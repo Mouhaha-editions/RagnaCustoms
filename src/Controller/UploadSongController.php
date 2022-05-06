@@ -32,7 +32,7 @@ class UploadSongController extends AbstractController
      * @param ScoreService $scoreService
      * @return JsonResponse
      */
-    public function new(Request $request,ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
+    public function new(Request $request, TranslatorInterface $translator,ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
     {
         if (!$this->isGranted("ROLE_USER")) {
             return new JsonResponse([
@@ -43,7 +43,7 @@ class UploadSongController extends AbstractController
         }
         $song = new Song();
         $song->setUser($this->getUser());
-        return $this->edit($request,$doctrine, $song, $translator, $songService, $scoreService);
+        return $this->edit($request, $song, $doctrine, $translator, $songService, $scoreService);
     }
 
 
@@ -56,7 +56,7 @@ class UploadSongController extends AbstractController
      * @param ScoreService $scoreService
      * @return JsonResponse
      */
-    public function edit(Request $request,ManagerRegistry $doctrine, Song $song, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
+    public function edit(Request $request,Song $song,ManagerRegistry $doctrine,  TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
     {
         if ($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse([
