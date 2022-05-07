@@ -14,10 +14,16 @@
         </div>
         <div id="song-list" class="row">
             <div class="col-md-10">
+<div class="text-right">
+<a href="{{ url('notification_read_all') }}" style="color:#979797;" class="small">Mark all as read</a>&nbsp;|
+    &nbsp;<a href="{{ url('notifications_setting') }}" style="color:#979797;" data-toogle="tooltip" title="{{ "Notification settings"|trans }}"><i class="fas fa-cogs"></i></a>
+
+</div>
 <table class="table table-sm featured-table">
     <tr>
         <th style="width:10%;">{{ "Date"|trans }}</th>
         <th>{{ "Message"|trans }}</th>
+        <th style="width:20px;"></th>
         <th style="width:20px;"></th>
     </tr>
     {% for notification in notifications.entities %}
@@ -26,6 +32,9 @@
         <td class="text-left">{{ notification.message|raw }}</td>
         <td id="read_{{ notification.id }}">
           {%  include 'notification/partial/buttons.html.twig' with {notification: notification} %}
+        </td>
+        <td>
+            <a href="{{ url("notification_delete",{id:notification.id}) }}" class="text-danger"><i class="fas fa-trash"></i></a>
         </td>
     </tr>
         {% else %}

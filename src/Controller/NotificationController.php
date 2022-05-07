@@ -54,13 +54,12 @@ class NotificationController extends AbstractController
             "choice_label" => "label",
             'multiple' => true,
             'expanded' => true,
-        ])
-            ->add('notificationPreference', EnumType::class, [
-            'class' => ENotification::class,
-            "choice_label" => "label",
-            'multiple' => true,
-            'expanded' => true,
-        ]);
+        ])->add('notificationPreference', EnumType::class, [
+                'class' => ENotification::class,
+                "choice_label" => "label",
+                'multiple' => true,
+                'expanded' => true,
+            ]);
 
         $form = $form->getForm();
 
@@ -108,5 +107,40 @@ class NotificationController extends AbstractController
                 "notification" => $notification
             ])
         ]);
+    }
+
+    #[Route('/notification/toggle/read-all', name: 'notification_read_all')]
+    public function notification_readAll(ManagerRegistry $doctrine, TranslatorInterface $translator, NotificationRepository $notificationRepository)
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            $this->addFlash('danger', $translator->trans("You need an account to follow!"));
+            return $this->redirectToRoute('app_notification');
+        }
+        foreach ($notificationRepository->findBy([
+            'user' => $this->getUser(),
+            'state' => Notification::STATE_UNREAD
+        ]) as $notification) {
+            $notification->setState(Notification::STATE_READ);
+        }
+
+        $doctrine->getManager()->flush();
+        return $this->redirectToRoute('app_notification');
+    }
+
+    #[Route('/notification/toggle/delete/{id}', name: 'notification_delete')]
+    public function notification_delete(Notification $notification, ManagerRegistry $doctrine, TranslatorInterface $translator)
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            $this->addFlash('danger', $translator->trans("You need an account to follow!"));
+            return $this->redirectToRoute('app_notification');
+        }
+        if ($this->getUser() !== $notification->getUser()) {
+            $this->addFlash('danger', $translator->trans("You are not the owners!"));
+            return $this->redirectToRoute('app_notification');
+        }
+
+        $doctrine->getManager()->remove($notification);
+        $doctrine->getManager()->flush();
+        return $this->redirectToRoute('app_notification');
     }
 }
