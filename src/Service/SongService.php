@@ -251,8 +251,9 @@ class SongService
                 $rank = $this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]);
                 $diff = null;
                 if ($song->getId() !== null) {
+                    /** @var SongDifficulty $diff */
                     $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.wanadevHash = :fcrc')->setParameter('fcrc', $fcrc)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
-                    if ($diff != null) {
+                    if ($diff != null && $diff->getDifficultyRank() === $rank) {
                         unset($previousDiffs[$diff->getId()]);
                         $allowedFiles[] = $difficulty->_beatmapFilename;
                         continue;
