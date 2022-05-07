@@ -3,10 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Notification;
+use App\Entity\Utilisateur;
+use App\Enum\EEmail;
+use App\Enum\ENotification;
 use App\Repository\NotificationRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,11 +26,54 @@ class NotificationController extends AbstractController
             $this->addFlash('danger', $translator->trans("You need an account to access this page."));
             return $this->redirectToRoute('home');
         }
+
         $qb = $notificationRepository->createQueryBuilder('n')->where('n.user = :user')->setParameter('user', $this->getUser())->orderBy('n.createdAt', 'DESC');
 
         $notifications = $paginationService->process($qb, $request);
         return $this->render('notification/index.html.twig', [
             'notifications' => $notifications,
+        ]);
+    }
+
+    #[Route('/notifications/setting', name: 'notifications_setting')]
+    public function notificationSetting(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, PaginationService $paginationService, NotificationRepository $notificationRepository): Response
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            $this->addFlash('danger', $translator->trans("You need an account to access this page."));
+            return $this->redirectToRoute('home');
+        }
+        /** @var Utilisateur $user */
+        $user = $this->getUser();
+        $data = [
+            "emailPreference" => $user->getEmailPreferences(),
+            "notificationPreference" => $user->getNotificationPreferences(),
+        ];
+
+        $form = $this->createFormBuilder($data)->add('emailPreference', EnumType::class, [
+            'class' => EEmail::class,
+            "choice_label" => "label",
+            'multiple' => true,
+            'expanded' => true,
+        ])
+            ->add('notificationPreference', EnumType::class, [
+            'class' => ENotification::class,
+            "choice_label" => "label",
+            'multiple' => true,
+            'expanded' => true,
+        ]);
+
+        $form = $form->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setEmailPreference(serialize($form->get('emailPreference')->getData()));
+            $user->setNotificationPreference(serialize($form->get('notificationPreference')->getData()));
+            $doctrine->getManager()->flush();
+            $this->addFlash('success', "Your preferences are saved!");
+        }
+
+        return $this->renderForm('notification/preference.html.twig', [
+            'form' => $form
         ]);
     }
 

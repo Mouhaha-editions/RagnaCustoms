@@ -2,21 +2,21 @@
 
 namespace App\Enum;
 
-enum EmailNotification
+enum EEmail: int
 {
     /** general cases */
-    case General_new_map;
-    case General_stats_report;
+    case General_new_map = 1;
+    case General_stats_report = 2;
 
     /** Follow */
-    case Followed_mapper_new_map;
-    case Followed_mapper_new_map_wip;
-    case Followed_mapper_update_map;
-    case Followed_mapper_update_map_wip;
+    case Followed_mapper_new_map=50;
+    case Followed_mapper_new_map_wip=51;
+    case Followed_mapper_update_map=52;
+    case Followed_mapper_update_map_wip=53;
 
     /** Mapper notifications */
-    case Mapper_feedback_new;
-    case Mapper_stats_report;
+    case Mapper_feedback_new=100;
+    case Mapper_stats_report=101;
 
     public function label(): string
     {

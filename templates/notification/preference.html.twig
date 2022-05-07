@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RagnaCustoms.com, Custom song library{% endblock %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% block body %}
+    <div {{ stimulus_controller('notifications') }} class="container">
+        <div class="row pt-5">
+            <div class="col-md-10 text-left">
+                <h1 class="">
+                    {{ "Emails & Notifications"|trans }}
+                </h1>
+
+            </div>
+        </div>
+        {{ form_start(form) }}
+        <div id="song-list" class="row">
+            <div class="col-md-6">
+                {{ form_row(form.emailPreference) }}
+                <button type="submit" class="btn btn-sm btn-info"><i class="fas fa-floppy-disk"></i> save</button>
+            </div>
+            <div class="col-md-6">
+
+                {{ form_row(form.notificationPreference) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+   {% block stylesheets %}
+       {{ parent() }}
+       {{ encore_entry_link_tags('notification') }}
+   {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}

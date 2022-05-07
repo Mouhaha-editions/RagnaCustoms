@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Enum\EEmail;
+use App\Enum\ENotification;
 use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,6 +28,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $EmailPreference;
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $NotificationPreference;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -1031,5 +1041,38 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getNotifications(): Collection
     {
         return $this->notifications;
+    }
+
+    public function getEmailPreference(): ?string
+    {
+        return $this->EmailPreference;
+    }
+    public function getEmailPreferences()
+    {
+        return $this->getEmailPreference() == null ? EEmail::cases() :unserialize($this->getEmailPreference());
+    }
+
+    public function setEmailPreference(?string $EmailPreference): self
+    {
+        $this->EmailPreference = $EmailPreference;
+
+        return $this;
+    }
+
+    public function getNotificationPreferences()
+    {
+        return $this->getNotificationPreference() == null ? ENotification::cases() :unserialize($this->getNotificationPreference());
+    }
+
+    public function getNotificationPreference(): ?string
+    {
+        return $this->NotificationPreference;
+    }
+
+    public function setNotificationPreference(string $NotificationPreference): self
+    {
+        $this->NotificationPreference = $NotificationPreference;
+
+        return $this;
     }
 }
