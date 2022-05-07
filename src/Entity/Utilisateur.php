@@ -33,7 +33,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $EmailPreference;
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $NotificationPreference;
     /**
