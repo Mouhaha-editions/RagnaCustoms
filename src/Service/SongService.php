@@ -13,6 +13,7 @@ use App\Entity\SongHash;
 use App\Entity\SongRequest;
 use App\Entity\Utilisateur;
 use App\Entity\Vote;
+use App\Enum\ENotification;
 use App\Repository\SongDifficultyRepository;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
@@ -341,30 +342,30 @@ class SongService
                     $user = $song->getUser();
                 if ($song->getWip()) {
                     /** @var Utilisateur $user */
-                    foreach ($user->getFollowersNotifiable() as $follower) {
-                        $notification = new Notification();
-                        $notification->setUser($follower->getUser());
-                        if ($new) {
-                            $notification->setMessage("New song : <a href='".
-                                $this->router->generate('song_detail',['slug'=>$song->getSlug()])."'>[WIP] " .
-                                $song->getName() . "</a> by <a href='".
-                                $this->router->generate('mapper_profile',['username'=>$user->getUsername()])."'>" .
-                                $user->getMapperName()."</a>");
-                        } else {
-                            $notification->setMessage("Song edit : <a href='".
-                                $this->router->generate('song_detail',['slug'=>$song->getSlug()])."'>[WIP] " .
-                                $song->getName() . "</a> by <a href='".
-                                $this->router->generate('mapper_profile',['username'=>$user->getUsername()])."'>" .
-                                $user->getMapperName()."</a>");
+
+                    if ($new) {
+                        foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map_wip) as $follower) {
+                            $notification = new Notification();
+                            $notification->setUser($follower->getUser());
+                            $notification->setMessage("New song : <a href='" . $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>[WIP] " . $song->getName() . "</a> by <a href='" . $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" . $user->getMapperName() . "</a>");
+                            $this->em->persist($notification);
                         }
-                        $this->em->persist($notification);
+                    } else {
+                        foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map_wip) as $follower) {
+                            $notification = new Notification();
+                            $notification->setUser($follower->getUser());
+                            $notification->setMessage("Song edit : <a href='" . $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>[WIP] " . $song->getName() . "</a> by <a href='" . $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" . $user->getMapperName() . "</a>");
+                            $this->em->persist($notification);
+                        }
+                        $this->em->flush();
+
+                        $this->discordService->sendWipSongMessage($song);
                     }
-                    $this->em->flush();
 
                     $this->discordService->sendWipSongMessage($song);
                 } elseif ($new) {
                     $this->discordService->sendNewSongMessage($song);
-                    foreach ($user->getFollowersNotifiable() as $follower) {
+                    foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
                         $notification = new Notification();
                         $notification->setUser($follower->getUser());
                         $notification->setMessage("New song : <a href='".
@@ -378,7 +379,7 @@ class SongService
                 } else {
                     $this->discordService->sendUpdatedSongMessage($song);
                     /** @var FollowMapper $follower */
-                    foreach ($user->getFollowersNotifiable() as $follower) {
+                    foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map) as $follower) {
                         $notification = new Notification();
                         $notification->setUser($follower->getUser());
                         $notification->setMessage("Edit song : <a href='".

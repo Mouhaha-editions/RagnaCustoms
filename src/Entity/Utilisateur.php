@@ -999,10 +999,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->followedMappers;
     }
 
-    public function getFollowersNotifiable()
+    public function getFollowersNotifiable(ENotification $event)
     {
-        return $this->getFollowers()->filter(function (FollowMapper $follow) {
-            return $follow->getIsNotificationEnabled();
+        return $this->getFollowers()->filter(function (FollowMapper $follow)use($event) {
+            return $follow->getIsNotificationEnabled() && $follow->getUser()->hasNotificationPreference($event);
         });
     }
 
@@ -1074,5 +1074,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->NotificationPreference = $NotificationPreference;
 
         return $this;
+    }
+    public function hasEmailPreference(ENotification $event)
+    {
+        return in_array($event,$this->getEmailPreferences());
+    }
+
+    public function hasNotificationPreference(ENotification $event)
+    {
+        return in_array($event,$this->getNotificationPreferences());
     }
 }
