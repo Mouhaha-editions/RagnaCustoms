@@ -108,16 +108,18 @@ class ScoreController extends AbstractController
 
         //reset the raw PP score of the song
         foreach ($scores as $score) {
-            $user = $score->getUser();
-            $score->setRawPP(0);
-            //update of the score into ranked_scores
-            $rankedScore = $rankedScoresRepository->findOneBy([
-                'user' => $user
-            ]);
-            if($rankedScore != null) {
-                $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
-                $rankedScore->setTotalPPScore($totalPondPPScore);
-            }
+            $scoreService->archive($score,true);
+
+//            $user = $score->getUser();
+//            $score->setRawPP(0);
+//            //update of the score into ranked_scores
+//            $rankedScore = $rankedScoresRepository->findOneBy([
+//                'user' => $user
+//            ]);
+//            if($rankedScore != null) {
+//                $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
+//                $rankedScore->setTotalPPScore($totalPondPPScore);
+//            }
         }
 
         $em->flush();
