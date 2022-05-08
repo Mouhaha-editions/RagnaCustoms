@@ -114,8 +114,10 @@ class ScoreController extends AbstractController
             $rankedScore = $rankedScoresRepository->findOneBy([
                 'user' => $user
             ]);
-            $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
-            $rankedScore->setTotalPPScore($totalPondPPScore);
+            if($rankedScore != null) {
+                $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
+                $rankedScore->setTotalPPScore($totalPondPPScore);
+            }
         }
 
         $em->flush();
