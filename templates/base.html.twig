@@ -61,7 +61,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('mappers') }}">Mappers</a>
+                        <a class="nav-link" href="{{ url('mappers') }}">{{ "Mappers"|trans }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-level-9" href="{{ url("applications") }}">{{ "Apps"|trans }}</a>
@@ -96,7 +96,7 @@
                                 <hr class="m-1"/>
                                 <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
                                 <hr class="m-1"/>
-                                <a class="dropdown-item" href="{{ url('notifications_setting') }}">{{ "Email & notifications"|trans }}</a>
+                                <a class="dropdown-item" href="{{ url('notifications_setting') }}">{{ "Emails & Notifications"|trans }}</a>
 
                                 {#                            <a class="dropdown-item" #}
                                 {#                               href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a> #}
@@ -142,7 +142,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel2">Custom Song</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel2"></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -177,7 +177,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song Review"|trans }}</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel2">{{ "Song feedback"|trans }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

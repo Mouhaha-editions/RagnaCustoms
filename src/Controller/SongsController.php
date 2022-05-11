@@ -62,13 +62,13 @@ class SongsController extends AbstractController
      * @param TranslatorInterface $translator
      * @return JsonResponse
      */
-    public function formPlaylist(Request $request,ManagerRegistry $doctrine, Song $song, TranslatorInterface $translator)
+    public function formPlaylist(Request $request, ManagerRegistry $doctrine, Song $song, TranslatorInterface $translator)
     {
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 "error" => true,
-                "errorMessage" => $translator->trans("You need an account to use playlist!"),
-                "response" => $translator->trans("You need an account to use playlist!"),
+                "errorMessage" => $translator->trans("You need an account!"),
+                "response" => $translator->trans("You need an account!"),
             ]);
         }
 
@@ -124,8 +124,8 @@ class SongsController extends AbstractController
             $em->flush();
             return new JsonResponse([
                 "error" => false,
-                "errorMessage" => "You need an account to vote !",
-                "response" => "<div class='alert alert-success'>" . $translator->trans("Song added to your playlist!") . "</div>",
+                "errorMessage" => "You need an account!",
+                "response" => "<div class='alert alert-success'>" . $translator->trans("Song added!") . "</div>",
 
             ]);
         }
@@ -147,11 +147,10 @@ class SongsController extends AbstractController
      * @param PaginationService $paginationService
      * @return Response
      */
-    public function library(Request $request,ManagerRegistry $doctrine, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
+    public function library(Request $request, ManagerRegistry $doctrine, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
     {
         $filters = [];
-        $qb = $doctrine->getRepository(Song::class)->createQueryBuilder("s")->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
-            ->groupBy("s.id");
+        $qb = $doctrine->getRepository(Song::class)->createQueryBuilder("s")->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->groupBy("s.id");
 
         $qb->leftJoin('s.songDifficulties', 'song_difficulties');
 
@@ -228,7 +227,7 @@ class SongsController extends AbstractController
                     $qb->andWhere('s.wip != true');
                     break;
             }
-        }else{
+        } else {
             $qb->andWhere('s.wip != true');
         }
 
@@ -315,32 +314,25 @@ class SongsController extends AbstractController
             return $this->redirect("ragnac://list/" . $list->getId());
         }
 
-            switch($request->get('order_by', null)){
-                case 'downloads':
-                    $qb->orderBy("s.downloads", $request->get('order_sort', 'asc')=="asc" ? "asc":"desc");
-                    break;
-                case 'upload_date':
-                    $qb->orderBy("s.lastDateUpload", $request->get('order_sort', 'asc')=="asc" ? "asc":"desc");
-                    break;
-                case 'name':
-                    $qb->orderBy("s.name", $request->get('order_sort', 'asc')=="asc" ? "asc":"desc");
-                    break;
-                case 'rating':
-                    $qb->orderBy("rating", $request->get('order_sort', 'asc')=="asc" ? "asc":"desc");
-                    break;
-                default:
-                    $qb->orderBy("s.createdAt", "DESC");
-                    break;
-            }
-
+        switch ($request->get('order_by', null)) {
+            case 'downloads':
+                $qb->orderBy("s.downloads", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'upload_date':
+                $qb->orderBy("s.lastDateUpload", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'name':
+                $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'rating':
+                $qb->orderBy("rating", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            default:
+                $qb->orderBy("s.createdAt", "DESC");
+                break;
+        }
 
         $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
-
-        if ($pagination->isPartial()) {
-            return $this->render('songs/partial/song_row_div.html.twig', [
-                'songs' => $pagination
-            ]);
-        }
 
         $categories = $categoryRepository->createQueryBuilder("c")->leftJoin("c.songs", 's')->where('c.isOnlyForAdmin != true')->andWhere("s.id is not null")->orderBy('c.label')->getQuery()->getResult();
 
@@ -356,7 +348,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/download/{id}", name="song_download")
      */
-    public function download(Request $request,ManagerRegistry $doctrine, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    public function download(Request $request, ManagerRegistry $doctrine, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -381,7 +373,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/download/{id}/{api}", name="song_download_api", defaults={"api"=null})
      */
-    public function downloadApiKey(Request $request,ManagerRegistry $doctrine, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    public function downloadApiKey(Request $request, ManagerRegistry $doctrine, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -407,7 +399,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/ddl/{id}", name="song_direct_download")
      */
-    public function directDownload(Song $song,ManagerRegistry $doctrine, KernelInterface $kernel, DownloadService $downloadService): Response
+    public function directDownload(Song $song, ManagerRegistry $doctrine, KernelInterface $kernel, DownloadService $downloadService): Response
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -436,7 +428,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/toggle/{id}", name="diff_toggle_ranked", defaults={"slug"=null})
      */
-    public function toggleRanked(Request $request,ManagerRegistry $doctrine, SongDifficulty $songDifficulty, ScoreService $scoreService)
+    public function toggleRanked(Request $request, ManagerRegistry $doctrine, SongDifficulty $songDifficulty, ScoreService $scoreService)
     {
         if ($this->isGranted('ROLE_MODERATOR')) {
             $em = $doctrine->getManager();

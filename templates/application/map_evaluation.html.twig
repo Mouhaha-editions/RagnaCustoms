@@ -11,20 +11,20 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1 class="mt-5">Evaluate your map <span class="badge-info badges">Beta</span></h1>
+                <h1 class="mt-5">{{ "Evaluate your map"|trans }} <span class="badge-info badges">Beta</span></h1>
                 {{ form(form) }}
             </div>
             {% if results|length >= 1 %}
                 <div class="col-12">
                     <hr/>
-                    <h2 class="mt-5">Difficulties evaluation</h2>
+                    <h2 class="mt-5">{{ "Difficulties evaluation"|trans }}</h2>
                 </div>
                 <div class="col-md-6">
                     <table class="table">
                         <tr>
                             <th>File Name</th>
-                            <th class="text-right">Rank defined</th>
-                            <th class="text-right">Our estimation</th>
+                            <th class="text-right">{{ "Rank defined"|trans }}</th>
+                            <th class="text-right">{{ "Our estimation"|trans }}</th>
                         </tr>
                         {% for file,result in results %}
                             <tr>

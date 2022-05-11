@@ -23,7 +23,7 @@ class NotificationController extends AbstractController
     public function index(Request $request, TranslatorInterface $translator, PaginationService $paginationService, NotificationRepository $notificationRepository): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash('danger', $translator->trans("You need an account to access this page."));
+            $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('home');
         }
 
@@ -39,7 +39,7 @@ class NotificationController extends AbstractController
     public function notificationSetting(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, PaginationService $paginationService, NotificationRepository $notificationRepository): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash('danger', $translator->trans("You need an account to access this page."));
+            $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('home');
         }
         /** @var Utilisateur $user */
@@ -82,7 +82,7 @@ class NotificationController extends AbstractController
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 "error" => true,
-                "errorMessage" => $translator->trans("You need an account to follow!"),
+                "errorMessage" => $translator->trans("You need an account!"),
                 "result" => $this->renderView('notification/partial/buttons.html.twig', [
                     "notification" => $notification
                 ])
@@ -113,7 +113,7 @@ class NotificationController extends AbstractController
     public function notification_readAll(ManagerRegistry $doctrine, TranslatorInterface $translator, NotificationRepository $notificationRepository)
     {
         if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash('danger', $translator->trans("You need an account to follow!"));
+            $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('app_notification');
         }
         foreach ($notificationRepository->findBy([
@@ -131,7 +131,7 @@ class NotificationController extends AbstractController
     public function notification_delete(Notification $notification, ManagerRegistry $doctrine, TranslatorInterface $translator)
     {
         if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash('danger', $translator->trans("You need an account to follow!"));
+            $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('app_notification');
         }
         if ($this->getUser() !== $notification->getUser()) {

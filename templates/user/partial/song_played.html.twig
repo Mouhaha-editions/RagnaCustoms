@@ -38,7 +38,7 @@
                 <div class="col-md-3">
                     <div class="mini-box">
                         <div class="numeric">{{ user.scoreHistories|length }}</div>
-                        <div class="text">{{ "Songs Played"|trans }}</div>
+                        <div class="text">{{ "Songs played"|trans }}</div>
                     </div>
                 </div>
 
@@ -51,7 +51,7 @@
                 <div class="col-md-3">
                     <div class="mini-box">
                         <div class="numeric">{{ user.votes|length }}</div>
-                        <div class="text">{{ "Reviews send" }}</div>
+                        <div class="text">{{ "Reviews send"|trans }}</div>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                              style="width:50%">{{ (totalDistance/user.scores|length)|number_format(2,'.',',') }}
                             m
                         </div>
-                        <div class="avg-text">avg. per song</div>
+                        <div class="avg-text">{{ "avg. per song"|trans }}</div>
                         <div class="clearfix"></div>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                         {% set avg2 = (statisticService.totalNotesHit(user)/user.scores|length) %}
                         <div class="avg-bar"
                              style="width:50%;">{{ avg2|number_format(0,'.',',') }}</div>
-                        <div class="avg-text">avg. per song</div>
+                        <div class="avg-text">{{ "avg. per song"|trans }}</div>
                         <div class="clearfix"></div>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                     <th class="">{{ "Difficulty"|trans }}</th>
                     <th class="">{{ "Distance"|trans }}</th>
                     <th class="">
-                        {{ macro_order.order_link("Raw PP","score") }} <small>Weighted PP</small>
+                        {{ macro_order.order_link("Raw PP","score") }} <small>{{ "Weighted PP"|trans }}</small>
                     </th>
                     <th class="">
                         {{ macro_order.order_link("Date","date") }}

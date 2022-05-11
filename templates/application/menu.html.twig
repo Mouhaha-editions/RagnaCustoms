@@ -19,8 +19,10 @@
                     <h2>{{ "RagnaCustoms.exe"|trans }}</h2>
                 </div>
                 <div class="card-body">
-                    <p>by installing this application you enable the one click download, then you also can use it for twitch requests and streaming overlay.</p>
-                    <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases" target ="_blank" class="btn btn-block btn-lg btn-primary">Go to download page <i class="fas fa-external-link-alt"></i></a>
+                    <p>{{ "By installing this application you enable the one click download, then you also can use it for
+                    twitch requests and streaming overlay."|trans }}</p>
+                    <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases" target ="_blank" class="btn btn-block btn-lg btn-primary">{{ "Go
+                    to download page"|trans }} <i class="fas fa-external-link-alt"></i></a>
                 </div>
             </div>
         </div>
@@ -33,8 +35,9 @@
                     <h2>{{ "Overlay editor"|trans }}</h2>
                 </div>
                 <div class="card-body">
-                    <p>An online tool to edit your streaming overlay. It's not a perfect but it works, you need an account on the website and the application ragnacustoms.exe</p>
-                    <a href="{{ path('overlay_editor') }}" class="btn btn-block btn-lg btn-primary">Edit my overlay</a>
+                    <p>{{ "An online tool to edit your streaming overlay. It's not a perfect but it works, you need an
+                        account on the website and the application ragnacustoms.exe"|trans}}</p>
+                    <a href="{{ path('overlay_editor') }}" class="btn btn-block btn-lg btn-primary">{{ "Edit my overlay"|trans }}</a>
                 </div>
             </div>
         </div>
@@ -47,8 +50,9 @@
                     <h2>{{ "Map evaluator"|trans }} <span class="badge badge-info">beta</span></h2>
                 </div>
                 <div class="card-body">
-                    <p>Online tool to check level of the custom song you made. It's a beta test for mapper who really don't know how to define the level of a song. It can be wrong, it don't have feelings.</p>
-                    <a href="{{ path('map_evaluator') }}" class="btn btn-block btn-lg btn-primary">Try my map</a>
+                    <p>{{ "Online tool to check level of the custom song you made. It's a beta test for mapper who really
+                        don't know how to define the level of a song. It can be wrong, it don't have feelings."|trans}}</p>
+                    <a href="{{ path('map_evaluator') }}" class="btn btn-block btn-lg btn-primary">{{ "Try my map"|trans }}</a>
                 </div>
             </div>
         </div>
@@ -58,12 +62,14 @@
                 <div class="card-header">
                     <div class="overlay"></div>
                     <img src="{{ asset('apps/edda.jpg') }}">
-                    <h2>{{ "Edda"|trans }}</h2>
+                    <h2>{{ "Edda" }}</h2>
                 </div>
                 <div class="card-body">
-                    <p>The defacto editor for Ragnarock. Created by PkBeam, Edda is a user-friendly program that allows you to map custom songs for
-                        Ragnarock VR on Steam and Quest.</p>
-                    <a href="https://pkbeam.github.io/Edda/" target ="_blank" class="btn btn-block btn-lg btn-primary">Official website <i class="fas fa-external-link-alt"></i></a>
+                    <p>{{ "The defacto editor for Ragnarock. Created by PkBeam, Edda is a user-friendly program that allows
+                    you to map custom songs for
+                    Ragnarock VR on Steam and Quest."|trans }}</p>
+                    <a href="https://pkbeam.github.io/Edda/" target ="_blank" class="btn btn-block btn-lg btn-primary">{{ "Official
+                    website"|trans }} <i class="fas fa-external-link-alt"></i></a>
                 </div>
             </div>
         </div>
@@ -72,6 +78,6 @@
 {% endblock %}
 
 {% block title %}
-    Apps
+    Ragnarock VR custom song applications
 {% endblock %}
 

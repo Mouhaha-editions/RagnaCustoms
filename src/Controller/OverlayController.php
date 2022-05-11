@@ -71,7 +71,7 @@ class OverlayController extends AbstractController
     {
 
         if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash("warning","You need an account to access this feature.");
+            $this->addFlash("warning","You need an account!");
             return $this->redirectToRoute("home");
         }
         /** @var Song[] $songs */

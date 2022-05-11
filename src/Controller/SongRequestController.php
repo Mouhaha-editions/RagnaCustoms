@@ -114,19 +114,19 @@ class SongRequestController extends AbstractController
     {
         // not connected
         if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash('danger', $translator->trans("You need an account to access this page."));
+            $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('home');
         }
         /** @var Utilisateur $user */
         $user = $this->getUser();
         //not a mapper
         if (!$user->getIsMapper()) {
-            $this->addFlash('danger', $translator->trans("You need to be a mapper to access this page."));
+            $this->addFlash('danger', $translator->trans("You need to be a mapper!"));
             return $this->redirectToRoute('user');
         }
         //song already get a mapper
         if ($songRequest->getMapper()) {
-            $this->addFlash('danger', $translator->trans("This request is already taken by a mapper."));
+            $this->addFlash('danger', $translator->trans("This request is already claimed!"));
             return $this->redirectToRoute('song_request_index');
         }
         //mapper already is mapping something
@@ -138,7 +138,7 @@ class SongRequestController extends AbstractController
         $songRequest->addMapperOnIt($user);
         $songRequest->setState(SongRequest::STATE_IN_PROGRESS);
         $doctrine->getManager()->flush();
-        $this->addFlash('success', "Song request claimed !");
+        $this->addFlash('success', "Song request claimed!");
         return $this->redirectToRoute('song_request_index');
     }
 
@@ -153,14 +153,14 @@ class SongRequestController extends AbstractController
     {
         // not connected
         if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash('danger', $translator->trans("You need an account to access this page."));
+            $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('home');
         }
         /** @var Utilisateur $user */
         $user = $this->getUser();
         //not a mapper
         if (!$user->getIsMapper()) {
-            $this->addFlash('danger', $translator->trans("You need to be a mapper to access this page."));
+            $this->addFlash('danger', $translator->trans("You need to be a mapper!"));
             return $this->redirectToRoute('user');
         }
 
@@ -172,7 +172,7 @@ class SongRequestController extends AbstractController
         $songRequest->removeMapperOnIt($user);
         $songRequest->setState(SongRequest::STATE_ASKED);
         $doctrine->getManager()->flush();
-        $this->addFlash('success', "Song request unclaimed !");
+        $this->addFlash('success', "Song request unclaimed!");
         return $this->redirectToRoute('song_request_index');
     }
 
@@ -188,7 +188,7 @@ class SongRequestController extends AbstractController
     {
         // not connected
         if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash('danger', $translator->trans("You need an account to access this page."));
+            $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('home');
         }
 

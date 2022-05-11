@@ -55,7 +55,7 @@
                             </div>
                             <div class="d-inline-block">
                                 <a href="{{ url('song_direct_download',{id: song.id}) }}"
-                                   class="btn btn-block ml-1 btn-info">{{ "ZIP"|trans }}</a>
+                                   class="btn btn-block ml-1 btn-info text-uppercase">{{ "Zip"|trans }}</a>
                             </div>
                         </div>
                         <div>
@@ -132,10 +132,10 @@
                                     </div>
                                     <hr class="mt-1 mb-3"/>
                                     <div>
-                                        {{ macro_vote.ratingDisplayLabel("Fun factor:"|trans,song.funFactorAverage) }}
-                                        {{ macro_vote.ratingDisplayLabel("Rhythm:"|trans,song.rhythmAverage) }}
-                                        {{ macro_vote.ratingDisplayLabel("Pattern quality:"|trans,song.patternQualityAverage) }}
-                                        {{ macro_vote.ratingDisplayLabel("Readability:"|trans,song.readabilityAverage) }}
+                                        {{ macro_vote.ratingDisplayLabel("Fun factor"|trans,song.funFactorAverage) }}
+                                        {{ macro_vote.ratingDisplayLabel("Rhythm"|trans,song.rhythmAverage) }}
+                                        {{ macro_vote.ratingDisplayLabel("Pattern quality"|trans,song.patternQualityAverage) }}
+                                        {{ macro_vote.ratingDisplayLabel("Readability"|trans,song.readabilityAverage) }}
                                     </div>
                                     <div>
                                         <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-1 mb-2 song-review"

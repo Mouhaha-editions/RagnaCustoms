@@ -39,16 +39,16 @@
                                 <table class="table-sm">
                                     <tr>
                                         <td>{{ app.user.scores|length }}</td>
-                                        <td>Scores uploaded</td>
+                                        <td>{{ "Scores uploaded"|trans }}</td>
                                     </tr>
                                     <tr>
                                         <td>{{ app.user.votes|length }}</td>
-                                        <td>Songs rated</td>
+                                        <td>{{ "Songs rated"|trans }}</td>
 
                                     </tr>
                                     <tr>
                                         <td>{{ app.user.songs|length }}</td>
-                                        <td>Songs mapped</td>
+                                        <td>{{ "Songs mapped"|trans }}</td>
 
                                     </tr>
                                 </table>
@@ -56,7 +56,7 @@
                             </div>
                             <div class="flex-fill">
                                 <div class="count">{{ app.user.openSongRequests|length }} of 3</div>
-                                <div>Open requests</div>
+                                <div>{{ "Open requests"|trans }}</div>
                             </div>
                         </div>
 
@@ -70,8 +70,8 @@
                         </div>
                         <div class="mb-3">
                             <small>
-                                If you already get the application <a href="ragnac://api/{{ app.user.apiKey }}">click
-                                    here</a> to auto-set your API key
+                                {{"If you already get the application <a href=\"ragnac://api/{{ app.user.apiKey }}\">click
+                                here</a> to auto-set your API key"|trans|raw }}
                             </small>
                         </div>
 
@@ -80,7 +80,7 @@
 
                         <div class="mt-2">
                             <div class="float-right">
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="submit" class="btn btn-primary">{{ "Save"|trans }}</button>
                             </div>
                             <div class="form-check form-check-inline">
                                 {{ form_widget(form.isMapper,{"attr":{"class":"form-check-input"}}) }}
@@ -102,14 +102,14 @@
                             {{ form_row(form.mapperName) }}
                             {{ form_row(form.mapperDiscord) }}
                             {{ form_row(form.mapperDescription) }}
-                            {% if app.user.discordUsername is null %}
-                                <a href="{{ url('discord_link') }}" class="btn btn-sm btn-info btn-discord">link discord</a>
-                            {% else %}
-                                {{ app.user.discordUsername }}
-                            {% endif %}
+{#                            {% if app.user.discordUsername is null %}#}
+{#                                <a href="{{ url('discord_link') }}" class="btn btn-sm btn-info btn-discord">link discord</a>#}
+{#                            {% else %}#}
+{#                                {{ app.user.discordUsername }}#}
+{#                            {% endif %}#}
 
                             <div class="float-right">
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="submit" class="btn btn-primary">{{ "Save"|trans }}</button>
                             </div>
                         </div>
                     </div>
@@ -141,7 +141,7 @@
                 </div>
                 <div class="col-md-6">
                     <h2>{{ "Score History"|trans }}</h2>
-                    <p>(Soon) Select a song from your recently played to see your score history</p>
+                    <p>(Soon) {{ "Select a song from your recently played to see your score history"|trans }}</p>
                 </div>
             </div>
         </div>

@@ -292,7 +292,7 @@ class UserController extends AbstractController
     public function index(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository, ScoreHistoryRepository $scoreHistoryRepository, PaginationService $paginationService): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash('danger', $translator->trans("You need an account to access this page."));
+            $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('home');
         }
         $em = $doctrine->getManager();

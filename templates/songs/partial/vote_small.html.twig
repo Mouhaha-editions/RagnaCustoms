@@ -1,9 +1,7 @@
 <div class="d-flex">
     <div class="song-vote-{{ song.id }} text-left popover-trigger pt-2 pb-2 pr-1" data-html="true"
-     data-toggle="popover" data-trigger="hover"
-     title="{{ "Rating"|trans }}"
-     data-placement="top"
-     data-content="{% include 'songs/partial/rate.html.twig' with {song:song} %}">
+     data-toggle="tooltip" data-trigger="hover"
+     title="{{ "Feedback"|trans }}">
     <div>
         <a href='#' class='button ajax-load ajax-modal-form disabled with-only-icon popup-review-trigger song-review'
            data-toggle='modal' data-target='#reviewSong'

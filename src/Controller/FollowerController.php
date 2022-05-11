@@ -21,7 +21,7 @@ class FollowerController extends AbstractController
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 "error" => true,
-                "errorMessage" => $translator->trans("You need an account to follow!"),
+                "errorMessage" => $translator->trans("You need an account!"),
                 "result" => $this->renderView(($type == 1?'follower/partial/buttons.html.twig':'follower/partial/bigButtons.html.twig'), [
                     "mapper" => $mapper
                 ])
@@ -67,7 +67,7 @@ class FollowerController extends AbstractController
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 "error" => true,
-                "errorMessage" => $translator->trans("You need an account to be notified!"),
+                "errorMessage" => $translator->trans("You need an account!"),
                 "result" => $this->renderView(($type == 1?'follower/partial/buttons.html.twig':'follower/partial/bigButtons.html.twig'), [
                     "mapper" => $mapper
                 ])

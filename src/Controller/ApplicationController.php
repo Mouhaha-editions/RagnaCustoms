@@ -63,7 +63,7 @@ class ApplicationController extends AbstractController
     public function mapEvaluator(Request $request, SongService $songService)
     {
         if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash("warning", "You need an account to access this feature.");
+            $this->addFlash("warning", "You need an account!");
             return $this->redirectToRoute("home");
         }
         $form = $this->createForm(EvaluatorType::class);

@@ -66,18 +66,18 @@ class VotesController extends AbstractController
         if ($song == null) {
             return new JsonResponse([
                 "error" => true,
-                "errorMessage" => $translator->trans("You need an account to vote !"),
-                "response" => $translator->trans("Custom song not found !"),
+                "errorMessage" => $translator->trans("You need an account!"),
+                "response" => $translator->trans("Custom song not found!"),
             ]);
         }
 
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 "error" => true,
-                "errorMessage" => $translator->trans("You need an account to vote!"),
+                "errorMessage" => $translator->trans("You need an account!"),
                 "response" => $this->renderView('songs/partial/detail_vote.html.twig', [
                     "song" => $song,
-                    'message' => $translator->trans("You need an account to vote !")
+                    'message' => $translator->trans("You need an account!")
                 ])
             ]);
         }
@@ -93,7 +93,7 @@ class VotesController extends AbstractController
         if ($song->getUser() == $this->getUser()) {
             return new JsonResponse([
                 "error" => true,
-                "errorMessage" => $translator->trans("You need an account to vote !"),
+                "errorMessage" => $translator->trans("You need an account!"),
                 "response" => $this->renderView('songs/partial/detail_vote.html.twig', [
                     "song" => $song,
                     'message' => $translator->trans("You can't review a custom song you've submitted")
