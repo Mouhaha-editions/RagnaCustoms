@@ -81,13 +81,13 @@ class ScoreController extends AbstractController
     }
 
     /**
-     * @Route("/ranking/unrank/{id}", name="score_unrank")
+     * @Route("/ranking/toggle/{id}", name="rank_toggle")
      * @param Request $request
      * @param ScoreService $scoreService
      * @param RankedScoresRepository $rankedScoresRepository
      * @return Response
      */
-    public function unrankScoreUpdate(Request                $request,
+    public function toggleRankScore(Request                $request,
                                       ScoreService           $scoreService,
                                       ManagerRegistry $doctrine,
                                       ScoreRepository        $scoreRepository,
@@ -96,9 +96,10 @@ class ScoreController extends AbstractController
     {
 
         $em = $doctrine->getManager();
-
-        //unrank the song
+        
+        //unrank or rank the song
         $songDifficulty->setIsRanked(!$songDifficulty->isRanked());
+        $em->flush();
 
         //get the score of everyone on this song
         $scores = $scoreRepository->createQueryBuilder('score')
@@ -106,20 +107,26 @@ class ScoreController extends AbstractController
             ->setParameter('diff', $songDifficulty)
             ->getQuery()->getResult();
 
-        //reset the raw PP score of the song
+         //if we rank then calculate the raw PP of the song
+        //if we unrank then reset the raw PP score of the song
         foreach ($scores as $score) {
-            $scoreService->archive($score,true);
+            
+             $user = $score->getUser();
+            if(!$score->getSongDifficulty()->isRanked()){
+                $score->setRawPP(0);
+            }else{
+                //calcul du rawPP + definir car on est ranked
+                $score->setRawPP($scoreService->calculateRawPP($score));
+            }
+            //update of the score into ranked_scores
+            $rankedScore = $rankedScoresRepository->findOneBy([
+                'user' => $user
+            ]);
+            if($rankedScore != null) {
+                $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
+                $rankedScore->setTotalPPScore($totalPondPPScore);            
+            }
 
-//            $user = $score->getUser();
-//            $score->setRawPP(0);
-//            //update of the score into ranked_scores
-//            $rankedScore = $rankedScoresRepository->findOneBy([
-//                'user' => $user
-//            ]);
-//            if($rankedScore != null) {
-//                $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
-//                $rankedScore->setTotalPPScore($totalPondPPScore);
-//            }
         }
 
         $em->flush();

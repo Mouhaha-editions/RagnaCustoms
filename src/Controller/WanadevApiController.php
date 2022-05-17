@@ -90,7 +90,7 @@ class WanadevApiController extends AbstractController
             $newScore->setExtra(json_encode($data['extra']));
             $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
             if ($songDiff->isRanked()) {
-                $rawPP = $this->calculateRawPP($newScore, $songDiff);
+                $rawPP = $scoreService->calculateRawPP($newScore);
                 $newScore->setRawPP($rawPP);
             }
             /** @var Score $score */
@@ -144,17 +144,5 @@ class WanadevApiController extends AbstractController
             "content-type" => "application/json",
             "my-custom-key"=>"abcdefghijklmnop"
         ]);
-    }
-
-    private function calculateRawPP(Score $score, SongDifficulty $songDiff)
-    {
-        $userScore = $score->getScore() / 100;
-        $songLevel = $score->getSongDifficulty()->getDifficultyRank()->getLevel();
-        $maxSongScore = $songDiff->getTheoricalMaxScore();
-        // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
-        // it is ponderated by the song level
-        $rawPP = (($userScore / $maxSongScore) * (0.4 + 0.1 * $songLevel)) * 100;
-
-        return round($rawPP, 2);
     }
 }
