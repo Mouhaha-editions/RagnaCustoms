@@ -220,5 +220,17 @@ class ScoreService
         }
         return round($totalPP, 2);
     }
+
+    public function calculateRawPP(Score $score)
+    {
+        $userScore = $score->getScore() / 100;
+        $songLevel = $score->getSongDifficulty()->getDifficultyRank()->getLevel();
+        $maxSongScore = $score->getSongDifficulty()->getTheoricalMaxScore();
+        // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
+        // it is ponderated by the song level
+        $rawPP = (($userScore / $maxSongScore) * (0.4 + 0.1 * $songLevel)) * 100;
+
+        return round($rawPP, 2);
+    }
 }
 
