@@ -216,7 +216,7 @@
                                    id="ranked-{{ level['difficulty'].id }}"
                                    data-replace-selector="#ranked-{{ level['difficulty'].id }}"
                                         data-success-action="replace-html"
-                                        data-url="{{ url("score_unrank",{id: level['difficulty'].id })  }}"
+                                        data-url="{{ url("rank_toggle",{id: level['difficulty'].id })  }}"
                                         href="#">
                                     {% if level['difficulty'].isRanked %}
                                         <i class="fas fa-star"></i> ranked
