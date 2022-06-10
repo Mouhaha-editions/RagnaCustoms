@@ -324,7 +324,7 @@
 {% if is_granted('ROLE_USER') %}
 <script>
     WonderPush.push(['setProperty', 'username', "{{ app.user.username }}"])
-    WonderPush.push(['setProperty', 'follow', "[{{ app.user.followedMappers|join('","') }}]"])
+    {#WonderPush.push(['setProperty', 'follow', "[{{ app.user.followedMappers|join('","') }}]"])#}
 </script>
 {% endif %}
 </body>
