@@ -323,7 +323,17 @@
 {#<!-- End PushAlert -->#}
 {% if is_granted('ROLE_USER') %}
 <script>
-    WonderPush.push(['setProperty', 'username', "{{ app.user.username }}"])
+    WonderPush.push(function () {
+        WonderPush.putProperties({
+        "string_name": "{{ app.user.username }}"
+        })
+    });
+    {% for follow in app.user.followedMappers %}
+    WonderPush.push(function() {
+        WonderPush.addTag("mapper", "{{ follow.mapper }}");
+    });
+
+    {% endfor %}
     {#WonderPush.push(['setProperty', 'follow', "[{{ app.user.followedMappers|join('","') }}]"])#}
 </script>
 {% endif %}
