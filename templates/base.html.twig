@@ -328,14 +328,18 @@
         "string_name": "{{ app.user.username }}"
         })
     });
+    WonderPush.push(function() {
+        WonderPush.removeAllTags();
+    });
     {% for follow in app.user.followedMappers %}
+
     {% if follow.isNotificationEnabled %}
     WonderPush.push(function() {
-        WonderPush.addTag("mapper_{{ follow.mapper }}");
+        WonderPush.addTag("mapper_{{ follow.mapper|lower }}");
     });
     {% else %}
     WonderPush.push(function() {
-        WonderPush.removeTag("mapper_{{ follow.mapper }}");
+        WonderPush.removeTag("mapper_{{ follow.mapper|lower }}");
     });
     {% endif %}
 
