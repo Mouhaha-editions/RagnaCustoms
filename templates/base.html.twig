@@ -34,15 +34,18 @@
         /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="https://matomo.ragnacustoms.com/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
+        (function () {
+            var u = "https://matomo.ragnacustoms.com/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
             _paq.push(['setSiteId', '1']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.async = true;
+            g.src = u + 'matomo.js';
+            s.parentNode.insertBefore(g, s);
         })();
     </script>
-    <noscript><p><img src="https://matomo.ragnacustoms.com/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+    <noscript><p><img src="https://matomo.ragnacustoms.com/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt=""/></p>
+    </noscript>
 
 </head>
 <body>
@@ -118,7 +121,8 @@
                                 <hr class="m-1"/>
                                 <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
                                 <hr class="m-1"/>
-                                <a class="dropdown-item" href="{{ url('notifications_setting') }}">{{ "Emails & Notifications"|trans }}</a>
+                                <a class="dropdown-item"
+                                   href="{{ url('notifications_setting') }}">{{ "Emails & Notifications"|trans }}</a>
 
                                 {#                            <a class="dropdown-item" #}
                                 {#                               href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a> #}
@@ -260,93 +264,87 @@
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
-{#<script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@1.9.5/tarteaucitron.min.js"></script>#}
-{#<script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@1.9.5/tarteaucitron.services.min.js"></script>#}
+{# <script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@1.9.5/tarteaucitron.min.js"></script> #}
+{# <script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@1.9.5/tarteaucitron.services.min.js"></script> #}
 
-{#<script>#}
-{#    tarteaucitron.init({#}
-{#// "privacyUrl": "", /* Privacy policy url */#}
+{# <script> #}
+{#    tarteaucitron.init({ #}
+{# // "privacyUrl": "", /* Privacy policy url */ #}
 
-{#        "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */#}
-{#        "cookieName": "tarteaucitron", /* Cookie name */#}
+{#        "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */ #}
+{#        "cookieName": "tarteaucitron", /* Cookie name */ #}
 
-{#        "orientation": "bottom", /* Banner position (top - bottom - middle - popup) */#}
+{#        "orientation": "bottom", /* Banner position (top - bottom - middle - popup) */ #}
 
-{#        "groupServices": true, /* Group services by category */#}
+{#        "groupServices": true, /* Group services by category */ #}
 
-{#        "showAlertSmall": false, /* Show the small banner on bottom right */#}
-{#        "cookieslist": true, /* Show the cookie list */#}
+{#        "showAlertSmall": false, /* Show the small banner on bottom right */ #}
+{#        "cookieslist": true, /* Show the cookie list */ #}
 
-{#        "showIcon": true, /* Show cookie icon to manage cookies */#}
-{#        "iconSrc": "/apps/cookie.png", /* Optionnal: URL or base64 encoded image */#}
-{#        "iconPosition": "BottomLeft", /* Position of the icon between BottomRight, BottomLeft, TopRight and TopLeft */#}
+{#        "showIcon": true, /* Show cookie icon to manage cookies */ #}
+{#        "iconSrc": "/apps/cookie.png", /* Optionnal: URL or base64 encoded image */ #}
+{#        "iconPosition": "BottomLeft", /* Position of the icon between BottomRight, BottomLeft, TopRight and TopLeft */ #}
 
-{#        "adblocker": false, /* Show a Warning if an adblocker is detected */#}
+{#        "adblocker": false, /* Show a Warning if an adblocker is detected */ #}
 
-{#        "DenyAllCta": true, /* Show the deny all button */#}
-{#        "AcceptAllCta": true, /* Show the accept all button when highPrivacy on */#}
-{#        "highPrivacy": true, /* HIGHLY RECOMMANDED Disable auto consent */#}
+{#        "DenyAllCta": true, /* Show the deny all button */ #}
+{#        "AcceptAllCta": true, /* Show the accept all button when highPrivacy on */ #}
+{#        "highPrivacy": true, /* HIGHLY RECOMMANDED Disable auto consent */ #}
 
-{#        "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */#}
+{#        "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */ #}
 
-{#        "removeCredit": true, /* Remove credit link */#}
-{#        "moreInfoLink": true, /* Show more info link */#}
-{#        "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */#}
+{#        "removeCredit": true, /* Remove credit link */ #}
+{#        "moreInfoLink": true, /* Show more info link */ #}
+{#        "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */ #}
 
-{#//"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for subdomain website */#}
+{# //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for subdomain website */ #}
 
-{#// "readmoreLink": "", /* Change the default readmore link pointing to tarteaucitron.io */#}
+{# // "readmoreLink": "", /* Change the default readmore link pointing to tarteaucitron.io */ #}
 
-{#        "mandatory": true /* Show a message about mandatory cookies */#}
-{#    });#}
+{#        "mandatory": true /* Show a message about mandatory cookies */ #}
+{#    }); #}
 
-{#    tarteaucitron.user.matomoId = 1;#}
-{#    (tarteaucitron.job = tarteaucitron.job || []).push('matomo');#}
-{#    tarteaucitron.user.matomoHost = '//matomo.ragnacustoms.com/';#}
-{#    var _mtm = window._mtm = window._mtm || [];#}
-{#    _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});#}
-{#    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];#}
-{#    g.async = true;#}
-{#    g.src = 'https://matomo.ragnacustoms.com/js/container_4wEYbYum.js';#}
-{#    s.parentNode.insertBefore(g, s);#}
-{#</script>#}
+{#    tarteaucitron.user.matomoId = 1; #}
+{#    (tarteaucitron.job = tarteaucitron.job || []).push('matomo'); #}
+{#    tarteaucitron.user.matomoHost = '//matomo.ragnacustoms.com/'; #}
+{#    var _mtm = window._mtm = window._mtm || []; #}
+{#    _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'}); #}
+{#    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0]; #}
+{#    g.async = true; #}
+{#    g.src = 'https://matomo.ragnacustoms.com/js/container_4wEYbYum.js'; #}
+{#    s.parentNode.insertBefore(g, s); #}
+{# </script> #}
 
-{#<!-- PushAlert -->#}
-{#<script type="text/javascript">#}
-{#    (function(d, t) {#}
-{#        var g = d.createElement(t),#}
-{#            s = d.getElementsByTagName(t)[0];#}
-{#        g.src = "https://cdn.pushalert.co/integrate_8c7cfac8a35cd49b3fcee27693bed509.js";#}
-{#        s.parentNode.insertBefore(g, s);#}
-{#    }(document, "script"));#}
-{#</script>#}
-{#<!-- End PushAlert -->#}
+{# <!-- PushAlert --> #}
+{# <script type="text/javascript"> #}
+{#    (function(d, t) { #}
+{#        var g = d.createElement(t), #}
+{#            s = d.getElementsByTagName(t)[0]; #}
+{#        g.src = "https://cdn.pushalert.co/integrate_8c7cfac8a35cd49b3fcee27693bed509.js"; #}
+{#        s.parentNode.insertBefore(g, s); #}
+{#    }(document, "script")); #}
+{# </script> #}
+{# <!-- End PushAlert --> #}
 {% if is_granted('ROLE_USER') %}
-<script>
-    WonderPush.push(function () {
-        WonderPush.putProperties({
-        "string_name": "{{ app.user.username }}"
-        })
-    });
-    WonderPush.push(function() {
-        WonderPush.removeAllTags();
-    });
-    {% for follow in app.user.followedMappers %}
-
-    {% if follow.isNotificationEnabled %}
-    WonderPush.push(function() {
-        WonderPush.addTag("mapper_{{ follow.mapper|lower }}");
-    });
-    {% else %}
-    WonderPush.push(function() {
-        WonderPush.removeTag("mapper_{{ follow.mapper|lower }}");
-    });
-    {% endif %}
-
-
-    {% endfor %}
-    {#WonderPush.push(['setProperty', 'follow', "[{{ app.user.followedMappers|join('","') }}]"])#}
-</script>
+    <script>
+        WonderPush.push(function () {
+            WonderPush.putProperties({
+                "string_name": "{{ app.user.username }}"
+            });
+        });
+        WonderPush.push(function () {
+            WonderPush.removeAllTags();
+        });
+        WonderPush.push(function () {
+            {% for follow in app.user.followedMappers %}
+                {% if follow.isNotificationEnabled %}
+                WonderPush.addTag("mapper_{{ follow.mapper|lower }}");
+                {% else %}
+                WonderPush.removeTag("mapper_{{ follow.mapper|lower }}");
+                {% endif %}
+            {% endfor %}
+        });
+    </script>
 {% endif %}
 </body>
 </html>
