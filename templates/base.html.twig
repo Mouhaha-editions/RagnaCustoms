@@ -329,9 +329,16 @@
         })
     });
     {% for follow in app.user.followedMappers %}
+    {% if follow.isNotificationEnabled %}
     WonderPush.push(function() {
-        WonderPush.addTag("mapper", "{{ follow.mapper }}");
+        WonderPush.addTag("mapper_{{ follow.mapper }}");
     });
+    {% else %}
+    WonderPush.push(function() {
+        WonderPush.removeTag("mapper_{{ follow.mapper }}");
+    });
+    {% endif %}
+
 
     {% endfor %}
     {#WonderPush.push(['setProperty', 'follow', "[{{ app.user.followedMappers|join('","') }}]"])#}
