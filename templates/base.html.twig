@@ -21,16 +21,14 @@
         <meta property="og:description" content="The best place to find your favorite custom songs for Ragnaröck VR"/>
         <meta property="og:image" content="https://ragnacustoms.com/apps/logo.png"/>
     {% endblock %}
-    <!-- PushAlert -->
-    <script type="text/javascript">
-        (function(d, t) {
-            var g = d.createElement(t),
-                s = d.getElementsByTagName(t)[0];
-            g.src = "https://cdn.pushalert.co/integrate_8c7cfac8a35cd49b3fcee27693bed509.js";
-            s.parentNode.insertBefore(g, s);
-        }(document, "script"));
+    <script src="https://cdn.by.wonderpush.com/sdk/1.1/wonderpush-loader.min.js" async></script>
+    <script>
+        window.WonderPush = window.WonderPush || [];
+        WonderPush.push(["init", {
+            webKey: "d969cccbe40a5ad445316eeb4e1392d81398ed7f5fa54225aef64e4fd0057b28",
+        }]);
     </script>
-    <!-- End PushAlert -->
+
     <script>
         var _paq = window._paq = window._paq || [];
         /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
