@@ -329,7 +329,8 @@
     <script>
         WonderPush.push(function () {
             WonderPush.putProperties({
-                "string_name": "{{ app.user.username }}"
+                "string_name": "{{ app.user.username }}",
+                "string_lang": "{{ app.user.country.twoLetters }}"
             });
         });
         WonderPush.push(function () {
