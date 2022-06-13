@@ -40,7 +40,7 @@
     <td class="text-right text-grey">
         {{ song.getTimeAgo }}&nbsp;
     </td>
-    <td class="text-right pt-2 pb-2">{{ matomoService.urlStat(url("song_detail",{slug:song.slug})) }}</td>
+{#    <td class="text-right pt-2 pb-2">{{ matomoService.urlStat(url("song_detail",{slug:song.slug})) }}</td>#}
     <td class="text-right pt-2 pb-2">
 
         {{ song.downloads|number_format(0) }}
