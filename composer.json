@@ -46,6 +46,7 @@
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/markdown-extra": "^3.3",
         "twig/twig": "^2.12|^3.0",
+        "visualappeal/matomo-php-api": "^1.6",
         "wohali/oauth2-discord-new": "^1.1"
     },
     "require-dev": {

@@ -771,6 +771,21 @@
     "twig/twig": {
         "version": "v3.3.0"
     },
+    "visualappeal/matomo-php-api": {
+        "version": "1.6.1"
+    },
+    "voku/httpful": {
+        "version": "2.4.7"
+    },
+    "voku/portable-ascii": {
+        "version": "2.0.1"
+    },
+    "voku/portable-utf8": {
+        "version": "6.0.4"
+    },
+    "voku/simple_html_dom": {
+        "version": "4.8.6"
+    },
     "webmozart/assert": {
         "version": "1.10.0"
     },
