@@ -37,6 +37,9 @@ services:
         arguments:
             $file: '../Ragnacustoms-ec54cc8bdcad.json'
             $viewId: '%env(resolve:GOOGLE_VIEW_ID)%'
+    App\Service\MatomoService:
+        arguments:
+            $apiKey: '%env(resolve:MATOMO_API_KEY)%'
 
     App\Service\DiscordService:
         arguments:

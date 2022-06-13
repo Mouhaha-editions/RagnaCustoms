@@ -8,9 +8,9 @@ class MatomoService
 {
     private Matomo $singleton;
 
-    public function __construct()
+    public function __construct(string $apiKey)
     {
-        $this->singleton = new Matomo("https://matomo.ragnacustoms.com", "e19493332a26e28b4f3a57ea4f856039", "1");
+        $this->singleton = new Matomo("https://matomo.ragnacustoms.com", $apiKey, "1");
         $this->singleton->reset();
     }
 
