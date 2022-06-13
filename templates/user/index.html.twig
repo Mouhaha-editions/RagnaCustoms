@@ -3,7 +3,7 @@
 {% block stylesheets %}
     {{ encore_entry_link_tags('user') }}
 {% endblock %}
-{% block title %}{{ "My Profile"|trans }}{% endblock %}
+{% block title %}{{ "My account"|trans }}{% endblock %}
 {% block body %}
     <div {{ stimulus_controller('user') }} {{ stimulus_target('user', 'background') }}>
         <div class="darker">
@@ -11,7 +11,7 @@
                 {{ form_start(form) }}
                 <div class="row">
                     <div class="col-12">
-                        <h1>{{ "My profile"|trans }}</h1>
+                        <h1>{{ "My account"|trans }}</h1>
                         {{ form_errors(form) }}
                     </div>
 
