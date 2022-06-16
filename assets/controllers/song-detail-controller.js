@@ -34,9 +34,8 @@ export default class extends Controller {
     }
 
     disconnect() {
-        console.log("disconnect")
         $("#main").attr('style', " background: transparent");
-        this.ragna.stop();
+        this.ragna.stopSong();
     }
 
     back() {
