@@ -2,8 +2,11 @@ const {RagnaBeat} = require("./ragna-beat/ragnabeat");
 const Swal = require('sweetalert2/dist/sweetalert2.js');
 import Swup from 'swup';
 import SwupMatomoPlugin from '@swup/matomo-plugin';
+
 const swup = new Swup({
     plugins: [new SwupMatomoPlugin()]
+
+
 });
 let swl = null;
 $(function(){

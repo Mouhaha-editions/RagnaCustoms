@@ -15,22 +15,24 @@ export default class extends Controller {
     connect() {
         let file= $(this.infoTarget).data('file');
         let divId= $(this.infoTarget).attr('id');
+        // $("#main").attr('style',"transition:all linear 10s 2s;");
+        // $("#main").attr('style',"background:#000");
         average(this.imgTarget.src, {amount: 1}).then(color => {
-            $("#main").attr('style', " background: radial-gradient(100% 100% at 0% 0%, rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.7) 0%, rgba(0, 0, 0, 0) 100%), #2B2B2B;");
+            $("#main").attr('style', "background: radial-gradient(100% 100% at 0% 0%, rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.7) 0%, rgba(0, 0, 0, 0) 100%), #2B2B2B;background-position:0");
         });
         $(".back-button").attr('href', document.referrer !== undefined ? document.referrer : "#");
         // const swup = new Swup();
-        this.ragna = new RagnaBeat();
-        this.ragna.startInit(divId, file);
-        $(".song-feedback").on("click",function(){
-            $("#rating-box").hide("slow",function(){
-                $("#feedback-box").show("slow");
-            });
-        });$(".back-feedback").on("click",function(){
-            $("#feedback-box").hide("slow",function(){
-                $("#rating-box").show("slow");
-            });
-        });
+        // this.ragna = new RagnaBeat();
+        // this.ragna.startInit(divId, file);
+        // $(".song-feedback").on("click",function(){
+        //     $("#rating-box").hide("slow",function(){
+        //         $("#feedback-box").show("slow");
+        //     });
+        // });$(".back-feedback").on("click",function(){
+        //     $("#feedback-box").hide("slow",function(){
+        //         $("#rating-box").show("slow");
+        //     });
+        // });
     }
 
     disconnect() {

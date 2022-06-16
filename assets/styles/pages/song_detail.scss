@@ -1,6 +1,9 @@
 @import '../common';
-
+#main{
+  transition:all 2s;
+}
 #song_detail {
+
   table {
     border:none;
   }

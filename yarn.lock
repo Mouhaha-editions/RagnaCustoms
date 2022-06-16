@@ -1063,6 +1063,13 @@
   resolved "https://registry.npmjs.org/@swup/plugin/-/plugin-1.0.1.tgz"
   integrity sha512-QrTGn1DLx+50CNsk6oGzUFnyNyLkDK6iLb032qKImmAXS+0Dd1cwa8cSGvJ+I27J4qR8y6oJNurgHIEc6ZCTrg==
 
+"@swup/progress-plugin@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@swup/progress-plugin/-/progress-plugin-1.1.2.tgz#ee8d42ec036fc519f1907ef1a09e9198ee7b9816"
+  integrity sha512-1xMTRcdVHQnVha+vYsUalgZJaLxcV21Jx0LaLzGAbuymjU4qAwYISRGOJk3ZvFPa+SbtwEx/hXYhfk6fo/L8Og==
+  dependencies:
+    "@swup/plugin" "^1.0.1"
+
 "@swup/slide-theme@^1.0":
   version "1.0.5"
   resolved "https://registry.npmjs.org/@swup/slide-theme/-/slide-theme-1.0.5.tgz"

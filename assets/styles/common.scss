@@ -4,6 +4,8 @@
 @import 'ragna-beat.scss';
 @import 'sweetalert2/src/sweetalert2.scss';
 
+#main{background-position:-3000px;transition:all ease 3s 0s;background-repeat: no-repeat!important;}
+
 .select2-results {
   color: $bg;
 }
