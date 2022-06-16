@@ -1,49 +1,52 @@
 @import '../common.scss';
-
-.search-and-filter {
-  label {
-    color: #fff;
-    font-weight: 400;
+#song_library {
+  .search-and-filter {
+    label {
+      color: #fff;
+      font-weight: 400;
+    }
   }
-}
 
-.select2-results {
-  color: $bg;
-}
+  .select2-results {
+    color: $bg;
+  }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background: $bg-lighter;
-  border-color: $bg;
-}
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background: $bg-lighter;
+    border-color: $bg;
+  }
 
-.table {
-  tr {
-    &:nth-child(2n) {
-      background: $bg-tr-pair;
+  .table {
+    border:none;
+    tr {
+      &:nth-child(2n) {
+        background: $bg-tr-pair;
 
-      &:hover {
-        background: $bg-lighter;
+        &:hover {
+          background: $bg-lighter;
+        }
       }
     }
-  }
 
-  th {
-    font-size: 14px;
+    th {
+      font-size: 14px;
 
-    .fa {
-      font-size: 12px;
+      .fa {
+        font-size: 12px;
+      }
+    }
+
+    td {
+      border: none;
     }
   }
 
-  td {
-    border: none;
+  .tag-filter {
+    color: $danger;
+    border: 1px solid $danger;
+    border-radius: 5px;
+    font-size: 12px;
+    padding: 3px 8px;
+    margin-left: 8px;
   }
-}
-
-.tag-filter {
-  color: $danger;
-  border: 1px solid $danger;
-  border-radius:5px;
-  font-size:12px;padding:3px 8px;
-  margin-left:8px;
 }

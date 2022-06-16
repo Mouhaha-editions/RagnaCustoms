@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Country;
+use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreRepository;
@@ -17,6 +18,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ScoreController extends AbstractController
 {
+    /**
+     * @Route("/score/stats/{id}", name="score_stats")
+     * @return void
+     */
+    public function getStats(Song $song)
+    {
+
+    }
 
     /**
      * @Route("/ranking/country/{twoLetters}", name="score_global_country")
@@ -88,15 +97,15 @@ class ScoreController extends AbstractController
      * @return Response
      */
     public function toggleRankScore(Request                $request,
-                                      ScoreService           $scoreService,
-                                      ManagerRegistry $doctrine,
-                                      ScoreRepository        $scoreRepository,
-                                      RankedScoresRepository $rankedScoresRepository,
-                                      SongDifficulty         $songDifficulty): Response
+                                    ScoreService           $scoreService,
+                                    ManagerRegistry        $doctrine,
+                                    ScoreRepository        $scoreRepository,
+                                    RankedScoresRepository $rankedScoresRepository,
+                                    SongDifficulty         $songDifficulty): Response
     {
 
         $em = $doctrine->getManager();
-        
+
         //unrank or rank the song
         $songDifficulty->setIsRanked(!$songDifficulty->isRanked());
         $em->flush();
@@ -107,14 +116,14 @@ class ScoreController extends AbstractController
             ->setParameter('diff', $songDifficulty)
             ->getQuery()->getResult();
 
-         //if we rank then calculate the raw PP of the song
+        //if we rank then calculate the raw PP of the song
         //if we unrank then reset the raw PP score of the song
         foreach ($scores as $score) {
-            
-             $user = $score->getUser();
-            if(!$score->getSongDifficulty()->isRanked()){
+
+            $user = $score->getUser();
+            if (!$score->getSongDifficulty()->isRanked()) {
                 $score->setRawPP(0);
-            }else{
+            } else {
                 //calcul du rawPP + definir car on est ranked
                 $score->setRawPP($scoreService->calculateRawPP($score));
             }
@@ -122,9 +131,9 @@ class ScoreController extends AbstractController
             $rankedScore = $rankedScoresRepository->findOneBy([
                 'user' => $user
             ]);
-            if($rankedScore != null) {
+            if ($rankedScore != null) {
                 $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
-                $rankedScore->setTotalPPScore($totalPondPPScore);            
+                $rankedScore->setTotalPPScore($totalPondPPScore);
             }
 
         }

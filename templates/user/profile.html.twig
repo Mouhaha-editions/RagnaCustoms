@@ -1,8 +1,5 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ "%username%'s profile"|trans|replace({"%username%":user.username}) }}{% endblock %}
-{% block stylesheets %}
-    {{ encore_entry_link_tags('mapper_profile') }}
-{% endblock %}
 
 {% block body %}
     <div class="profile pb-3">

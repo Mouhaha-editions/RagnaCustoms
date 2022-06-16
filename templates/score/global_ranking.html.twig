@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('leaderboard') }}
-    {% endblock %}
+
 
 {% block body %}
     <div {{ stimulus_controller('leaderboard') }} id="leaderboard" class="container">

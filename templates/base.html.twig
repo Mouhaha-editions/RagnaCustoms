@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
     {% endblock %}
 
     <link id="favicon" rel="icon" href="/apps/favicon.ico">
@@ -48,11 +49,12 @@
     </noscript>
 
 </head>
-<body>
-{# {{ stimulus_controller('symfony/ux-swup/swup', { #}
-{#    containers: ['#swup', '#nav'] #}
-{# }) }} #}
+<body
+ {{ stimulus_controller('symfony/ux-swup/swup', {
+    containers: ['#swup', '#nav']
+ }) }} >
 <div id="main">
+{#    {{ dump(app.request.attributes.get('_route')) }}#}
     <nav id="nav" class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand viking-text-bold" href="/">
@@ -157,9 +159,11 @@
         {% endfor %}
     {% endfor %}
     <main id="swup">
-        {% block body %}
+        <div id="{{ app.request.attributes.get('_route') }}">
+            {% block body %}
 
         {% endblock %}
+        </div>
     </main>
 
     {% block endBody %}
@@ -258,7 +262,6 @@
         </div>
     </div>
 </div>
-
 
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}

@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('mappers') }}
-    {% endblock %}
+
 
 {% block body %}
     <div {{ stimulus_controller('mappers') }} class="container" id="mappers">

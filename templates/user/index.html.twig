@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 {% import "songs/macros/song.html.twig" as macro_song %}
-{% block stylesheets %}
-    {{ encore_entry_link_tags('user') }}
-{% endblock %}
+
 {% block title %}{{ "My account"|trans }}{% endblock %}
 {% block body %}
     <div {{ stimulus_controller('user') }} {{ stimulus_target('user', 'background') }}>

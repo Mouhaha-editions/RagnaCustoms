@@ -1,48 +1,54 @@
 @import '../common.scss';
-
-#leaderboard {
-  table{
-    th:first-child{
-      width:50px;
-    }
-    a{
-      color:#fff;
-      &:hover{
-        text-decoration:underline;
-        color:#fff;
+#score_global_ranking {
+  #leaderboard {
+    table {
+      th:first-child {
+        width: 50px;
       }
-    }
-    .text-success{
-      a{
-        color:$success!important;
-      }
-    }
-  }
 
-  .table {
-    font-size: 14px;
-    tr {
-      &:nth-child(2n) {
-        background: $bg-tr-pair;
+      a {
+        color: #fff;
 
         &:hover {
-          background: $bg-lighter;
+          text-decoration: underline;
+          color: #fff;
+        }
+      }
+
+      .text-success {
+        a {
+          color: $success !important;
         }
       }
     }
 
-    th {
+    .table {
       font-size: 14px;
 
-      .fa {
-        font-size: 12px;
-      }
-    }
+      tr {
+        &:nth-child(2n) {
+          background: $bg-tr-pair;
 
-    td {
-      border: none;
-      span{
-        color:$light-grey;
+          &:hover {
+            background: $bg-lighter;
+          }
+        }
+      }
+
+      th {
+        font-size: 14px;
+
+        .fa {
+          font-size: 12px;
+        }
+      }
+
+      td {
+        border: none;
+
+        span {
+          color: $light-grey;
+        }
       }
     }
   }

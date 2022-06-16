@@ -228,7 +228,6 @@ class UploadSongController extends AbstractController
             $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
         }else{
             $qb->orderBy("s.lastDateUpload", "desc");
-
         }
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
         if ($pagination->isPartial()) {

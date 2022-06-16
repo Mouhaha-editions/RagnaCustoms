@@ -22,6 +22,7 @@ export default class extends Controller {
     }
 
     disconnect() {
+        $("#main").attr('style', " background: transparent");
     }
 
     back() {
