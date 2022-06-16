@@ -22,21 +22,21 @@ export default class extends Controller {
         });
         $(".back-button").attr('href', document.referrer !== undefined ? document.referrer : "#");
         // const swup = new Swup();
-        // this.ragna = new RagnaBeat();
-        // this.ragna.startInit(divId, file);
-        // $(".song-feedback").on("click",function(){
-        //     $("#rating-box").hide("slow",function(){
-        //         $("#feedback-box").show("slow");
-        //     });
-        // });$(".back-feedback").on("click",function(){
-        //     $("#feedback-box").hide("slow",function(){
-        //         $("#rating-box").show("slow");
-        //     });
-        // });
+        this.ragna = new RagnaBeat();
+        this.ragna.startInit(divId, file);
+        $(".song-feedback").on("click",function(){
+            $("#rating-box").hide("slow",function(){
+                $("#feedback-box").show("slow");
+            });
+        });$(".back-feedback").on("click",function(){
+            $("#feedback-box").hide("slow",function(){
+                $("#rating-box").show("slow");
+            });
+        });
     }
 
     disconnect() {
-        $("#main").attr('style', " background: transparent");
+        $("#main").attr('style', "background: transparent;background-position:-3000px");
         this.ragna.stopSong();
     }
 
