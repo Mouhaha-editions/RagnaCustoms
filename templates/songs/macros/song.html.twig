@@ -46,9 +46,9 @@
             </div>
             <div class="pt-3 d-flex buttons">
 
-                <div><a href="{{ url("song_direct_download",{id:song.id}) }}"
+                <div><a data-no-swup="true" href="{{ url("song_direct_download",{id:song.id}) }}"
                         class="btn btn-info btn-sm btn-download-zip"><i class="fas fa-download"></i> {{ "Zip"|trans }}</a></div>
-                <div class="ml-2"><a href="ragnac://install/{{ song.id }}"
+                <div class="ml-2"><a data-no-swup="true" href="ragnac://install/{{ song.id }}"
                                      class="btn btn-sm btn-success btn-download-1-click"><i class="fas fa-download"></i> {{ "1 click"|trans }}</a></div>
             </div>
         </div>

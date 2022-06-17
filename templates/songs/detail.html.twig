@@ -50,11 +50,11 @@
                         </div>
                         <div class="download-buttons">
                             <div class="d-inline-block">
-                                <a href="ragnac://install/{{ song.id }}"
+                                <a data-no-swup="true" href="ragnac://install/{{ song.id }}"
                                    class="btn btn-block mr-1 btn-success">{{ "Install via RC App"|trans }}</a>
                             </div>
                             <div class="d-inline-block">
-                                <a href="{{ url('song_direct_download',{id: song.id}) }}"
+                                <a data-no-swup="true" href="{{ url('song_direct_download',{id: song.id}) }}"
                                    class="btn btn-block ml-1 btn-info text-uppercase">{{ "Zip"|trans }}</a>
                             </div>
                         </div>
