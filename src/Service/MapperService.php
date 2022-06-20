@@ -62,7 +62,7 @@ class MapperService
     public function getAvgReview(UserInterface $user)
     {
         $res = $this->em->getRepository(Song::class)->createQueryBuilder('s')
-            ->select("SUM(s.totalVotes)/SUM(s.countVotes)")
+            ->select("SUM(s.totalVotes/s.countVotes)")
             ->where('s.user = :user')
             ->andWhere('s.wip != 1')
             ->andWhere('s.isDeleted != 1')
