@@ -64,6 +64,7 @@ class MapperService
         $res = $this->em->getRepository(Song::class)->createQueryBuilder('s')
             ->select("SUM(s.totalVotes)/SUM(s.countVotes)")
             ->where('s.user = :user')
+            ->andWhere('s.wip != 1')
             ->andWhere('s.isDeleted != 1')
             ->andWhere('s.countVotes != 0')
             ->setParameter('user', $user)
