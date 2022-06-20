@@ -48,9 +48,8 @@
 
             <div class="light-grey mt-3">{{ "Average rating" }}</div>
             <div class="d-inline-flex rating-up">
-                {% set avgReview = mapperService.avgReview(user) %}
-                <div>{{ macro_vote.starsDisplay(avgReview|round(2, "floor")) }}</div>
-                <div class="ml-3">{{ avgReview|round(2, "floor") }}
+                <div>{{ macro_vote.starsDisplay(user.avgRating|round(2, "floor")) }}</div>
+                <div class="ml-3">{{ user.avgRating|round(2, "floor") }}
                     ({{ mapperService.totalreview(user)+0 }})
                 </div>
             </div>

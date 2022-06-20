@@ -59,26 +59,13 @@ class MapperService
         return $res != null ? array_pop($res):0;
     }
 
-    public function getAvgReview(UserInterface $user)
-    {
-        $res = $this->em->getRepository(Song::class)->createQueryBuilder('s')
-            ->select("SUM(s.totalVotes/s.countVotes)")
-            ->where('s.user = :user')
-            ->andWhere('s.wip != 1')
-            ->andWhere('s.isDeleted != 1')
-            ->andWhere('s.countVotes != 0')
-            ->setParameter('user', $user)
-            ->groupBy("s.user")
-            ->getQuery()->getOneOrNullResult();
-        return $res != null ? array_pop($res):0;
-    }
-
     public function getTotalReview(UserInterface $user)
     {
         $res = $this->em->getRepository(Song::class)->createQueryBuilder('s')
             ->select("SUM(s.countVotes)")
             ->where('s.user = :user')
             ->andWhere('s.isDeleted != 1')
+            ->andWhere('s.wip != 1')
             ->andWhere('s.countVotes != 0')
             ->setParameter('user', $user)
             ->groupBy("s.user")
