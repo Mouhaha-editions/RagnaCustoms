@@ -99,17 +99,17 @@ class UploadSongController extends AbstractController
                         ])
                     ]);
                 }
-
+                $song_request = $form->get('song_request')->getData();
+                if ($song_request != null) {
+                    $song_request->setState(SongRequest::STATE_ENDED);
+                    if ($song_request->getWantToBeNotified()) {
+                        $songService->emailRequestDone($song_request, $song);
+                    }
+                    $doctrine->getManager()->flush();
+                }
                 if ($songService->processFile($form, $song, $isWip)) {
                     /** @var ?SongRequest $song_request */
-                    $song_request = $form->get('song_request')->getData();
-                    if ($song_request != null) {
-                        $song_request->setState(SongRequest::STATE_ENDED);
-                        if ($song_request->getWantToBeNotified()) {
-                            $songService->emailRequestDone($song_request, $song);
-                        }
-                        $doctrine->getManager()->flush();
-                    }
+
 
                     $this->addFlash('success', str_replace([
                         "%song%",
