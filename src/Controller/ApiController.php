@@ -120,7 +120,7 @@ class ApiController extends AbstractController
      * @param int $results
      * @param ScoreHistoryRepository $scoreRepository
      * @return JsonResponse
-     * @Route("/api/songs/last-played/{results}", name="api_song_list")
+     * @Route("/api/songs/last-played/{results}", name="api_song_last_played")
      */
     public function lastPlayed(int $results, ScoreHistoryRepository $scoreRepository)
     {
@@ -145,9 +145,9 @@ class ApiController extends AbstractController
 
     /**
      * @param int $results
-     * @param ScoreHistoryRepository $scoreRepository
+     * @param SongRepository $songRepository
      * @return JsonResponse
-     * @Route("/api/songs/last-uploaded/{results}", name="api_song_list")
+     * @Route("/api/songs/last-uploaded/{results}", name="api_song_last_uploaded")
      */
     public function lastUploaded(int $results, SongRepository $songRepository)
     {
@@ -171,7 +171,7 @@ class ApiController extends AbstractController
      * @param int $days
      * @param SongRepository $songRepository
      * @return JsonResponse
-     * @Route("/api/songs/top-rated/{results}/{days}", name="api_song_list")
+     * @Route("/api/songs/top-rated/{results}/{days}", name="api_song_top_rated")
      */
     public function topRated(int $results,int $days, SongRepository $songRepository)
     {
