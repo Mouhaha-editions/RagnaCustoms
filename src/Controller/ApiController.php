@@ -135,7 +135,7 @@ class ApiController extends AbstractController
             ->setMaxResults($results)
             ->getQuery()->getResult();
         /** @var Song[] $songs */
-        $songs = array_map(function(Score $score){return $score->getSongDifficulty()->getSong();}, $scores);
+        $songs = array_map(function(ScoreHistory $score){return $score->getSongDifficulty()->getSong();}, $scores);
        $data=[];
         foreach($songs AS $song){
             $data[] = $song->__api();
