@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Score;
+use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
@@ -43,7 +44,7 @@ class SongPartialController extends AbstractController
             ->setFirstResult(0)
             ->setMaxResults($this->count)
             ->getQuery()->getResult();
-        $songs = array_map(function(Score $score){return $score->getSongDifficulty()->getSong();}, $scores);
+        $songs = array_map(function(ScoreHistory $score){return $score->getSongDifficulty()->getSong();}, $scores);
 
 
         return $this->render('song_partial/index.html.twig', [
