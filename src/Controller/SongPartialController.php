@@ -32,9 +32,9 @@ class SongPartialController extends AbstractController
         ]);
     }
 
-    public function lastPlayed(ScoreHistoryRepository $scoreRepository,SongRepository $songRepository): Response
+    public function lastPlayed(ScoreHistoryRepository $scoreHistoryRepository,SongRepository $songRepository): Response
     {
-        $scores = $scoreRepository->createQueryBuilder("score")
+        $scores = $scoreHistoryRepository->createQueryBuilder("score")
             ->leftJoin("score.songDifficulty",'diff')
             ->leftJoin("diff.song",'s')
             ->orderBy('score.updatedAt', 'DESC')
