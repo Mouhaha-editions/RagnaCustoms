@@ -48,8 +48,8 @@ class ApiController extends AbstractController
         phpinfo();
         return new Response("");
     }
+
     /**
-        }
      * @Route("/api/song/check-updates", name="api_song_check_updates")
      */
     public function checkUpdates(Request $request, SongRepository $songRepository): Response
@@ -64,7 +64,13 @@ class ApiController extends AbstractController
          * "Mapper" => $song->getLevelAuthorName(),
          * "Difficulties" => $song->getSongDifficultiesStr(),
          */
-        $songs = $songRepository->createQueryBuilder('s')->select('s.id, s.name, s.authorName AS author, s.levelAuthorName AS mapper, s.newGuid AS hash, GROUP_CONCAT(r.level) AS Difficulties')->leftJoin("s.songDifficulties", 'sd')->leftJoin('sd.difficultyRank', 'r')->where("s.isDeleted != 1")->groupBy('s.id')->getQuery()->getArrayResult();
+        $songs = $songRepository->createQueryBuilder('s')
+            ->select('s.id, s.name, s.authorName AS author, s.levelAuthorName AS mapper, s.newGuid AS hash, GROUP_CONCAT(r.level) AS Difficulties')
+            ->leftJoin("s.songDifficulties", 'sd')
+            ->leftJoin('sd.difficultyRank', 'r')
+            ->where("s.isDeleted != 1")
+            ->groupBy('s.id')
+            ->getQuery()->getArrayResult();
 
         return new JsonResponse($songs);
     }
@@ -80,17 +86,7 @@ class ApiController extends AbstractController
 
         /** @var Song $song */
         foreach ($songsEntities as $song) {
-            $songs[] = [
-                "Id" => $song->getId(),
-                "Name" => $song->getName(),
-                "IsRanked" => $song->isRanked(),
-                "Hash" => $song->getNewGuid(),
-                "Ragnabeat" => $song->getInfoDatFile(),
-                "Author" => $song->getAuthorName(),
-                "Mapper" => $song->getLevelAuthorName(),
-                "Difficulties" => $song->getSongDifficultiesStr(),
-                "CoverImageExtension" => $song->getCoverImageExtension(),
-            ];
+            $songs[] = $song->__api();
         }
 
         return new JsonResponse([
@@ -104,17 +100,7 @@ class ApiController extends AbstractController
      */
     public function song(Request $request, Song $song): Response
     {
-        return new JsonResponse([
-            "Id" => $song->getId(),
-            "Name" => $song->getName(),
-            "Author" => $song->getAuthorName(),
-            "IsRanked" => $song->isRanked(),
-            "Ragnabeat" => $song->getInfoDatFile(),
-            "Hash" => $song->getNewGuid(),
-            "Mapper" => $song->getLevelAuthorName(),
-            "Difficulties" => $song->getSongDifficultiesStr(),
-            "CoverImageExtension" => $song->getCoverImageExtension(),
-        ]);
+        return new JsonResponse($song->__api());
     }
 
     /**
@@ -125,17 +111,87 @@ class ApiController extends AbstractController
     {
         $data = [];
         foreach ($songTemporaryList->getSongs() as $song) {
-            $data[] = [
-                "Id" => $song->getId(),
-                "Name" => $song->getName(),
-                "Author" => $song->getAuthorName(),
-                "Ragnabeat" => $song->getInfoDatFile(),
-                "IsRanked" => $song->isRanked(),
-                "Hash" => $song->getNewGuid(),
-                "Mapper" => $song->getLevelAuthorName(),
-                "Difficulties" => $song->getSongDifficultiesStr(),
-                "CoverImageExtension" => $song->getCoverImageExtension(),
-            ];
+            $data[] = $song->__api();
+        }
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @param int $results
+     * @param ScoreHistoryRepository $scoreRepository
+     * @return JsonResponse
+     * @Route("/api/songs/last-played/{results}", name="api_song_list")
+     */
+    public function lastPlayed(int $results, ScoreHistoryRepository $scoreRepository)
+    {
+        /** @var ScoreHistory[] $scores */
+        $scores = $scoreRepository->createQueryBuilder("score")
+            ->leftJoin("score.songDifficulty",'diff')
+            ->leftJoin("diff.song",'s')
+            ->orderBy('score.updatedAt', 'DESC')
+            ->where('s.isDeleted != true')
+            ->andWhere('s.wip != true')
+            ->setFirstResult(0)
+            ->setMaxResults($results)
+            ->getQuery()->getResult();
+        /** @var Song[] $songs */
+        $songs = array_map(function(Score $score){return $score->getSongDifficulty()->getSong();}, $scores);
+       $data=[];
+        foreach($songs AS $song){
+            $data[] = $song->__api();
+        }
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @param int $results
+     * @param ScoreHistoryRepository $scoreRepository
+     * @return JsonResponse
+     * @Route("/api/songs/last-uploaded/{results}", name="api_song_list")
+     */
+    public function lastUploaded(int $results, SongRepository $songRepository)
+    {
+        /** @var Song[] $songs */
+        $songs = $songRepository->createQueryBuilder("s")
+            ->orderBy("s.createdAt", 'DESC')
+            ->where('s.isDeleted != true')
+            ->andWhere('s.wip != true')
+            ->setMaxResults($results)
+            ->setFirstResult(0)
+            ->getQuery()->getResult();
+        $data=[];
+        foreach($songs AS $song){
+            $data[] = $song->__api();
+        }
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @param int $results
+     * @param int $days
+     * @param SongRepository $songRepository
+     * @return JsonResponse
+     * @Route("/api/songs/top-rated/{results}/{days}", name="api_song_list")
+     */
+    public function topRated(int $results,int $days, SongRepository $songRepository)
+    {
+        /** @var Song[] $songs */
+        $songs = $songRepository->createQueryBuilder("s")
+            ->addSelect('s, SUM(IF(v.votes_indc IS NULL,0,IF(v.votes_indc = 0,-1,1))) AS HIDDEN sum_votes')
+            ->leftJoin("s.voteCounters",'v')
+            ->orderBy("sum_votes", 'DESC')
+            ->where('s.isDeleted != true')
+            ->andWhere('s.wip != true')
+            ->andWhere('v.updatedAt >= :date')
+            ->setParameter('date',(new \DateTime())->modify('-'.$days." days"))
+            ->groupBy('s.id')
+            ->setMaxResults($results)
+            ->setFirstResult(0)
+            ->getQuery()->getResult();
+
+        $data=[];
+        foreach($songs AS $song){
+            $data[] = $song->__api();
         }
         return new JsonResponse($data);
     }
@@ -149,17 +205,7 @@ class ApiController extends AbstractController
         if (!$song) {
             return new Response("NOK", 400);
         }
-        return new JsonResponse([
-            "Id" => $song->getId(),
-            "Name" => $song->getName(),
-            "Author" => $song->getAuthorName(),
-            "Ragnabeat" => $song->getInfoDatFile(),
-            "IsRanked" => $song->isRanked(),
-            "Hash" => $song->getNewGuid(),
-            "Mapper" => $song->getLevelAuthorName(),
-            "Difficulties" => $song->getSongDifficultiesStr(),
-            "CoverImageExtension" => $song->getCoverImageExtension(),
-        ]);
+        return new JsonResponse($song->__api());
     }
 
     /**
@@ -172,7 +218,7 @@ class ApiController extends AbstractController
      * @param SongDifficultyRepository $songDifficultyRepository
      * @return Response
      */
-    public function overlay(Request $request,ManagerRegistry $doctrine, UtilisateurRepository $utilisateurRepository, DifficultyRankRepository $difficultyRankRepository, OverlayRepository $overlayRepository, SongRepository $songRepository, SongDifficultyRepository $songDifficultyRepository): Response
+    public function overlay(Request $request, ManagerRegistry $doctrine, UtilisateurRepository $utilisateurRepository, DifficultyRankRepository $difficultyRankRepository, OverlayRepository $overlayRepository, SongRepository $songRepository, SongDifficultyRepository $songDifficultyRepository): Response
     {
         $data = json_decode($request->getContent(), true);
         $apiKey = $request->headers->get('x-api-key');
@@ -194,7 +240,7 @@ class ApiController extends AbstractController
             $em->persist($overlay);
             $em->flush();
         }
-        if(!isset($data["Song"])) return new Response("No Song", 500);
+        if (!isset($data["Song"])) return new Response("No Song", 500);
 
         $song = $songRepository->findOneBy(['newGuid' => $data["Song"]["Hash"]]);
         if ($song == null) {
@@ -230,7 +276,7 @@ class ApiController extends AbstractController
      * @param OverlayRepository $overlayRepository
      * @return Response
      */
-    public function overlayClean(Request $request,ManagerRegistry $doctrine, UtilisateurRepository $utilisateurRepository, OverlayRepository $overlayRepository): Response
+    public function overlayClean(Request $request, ManagerRegistry $doctrine, UtilisateurRepository $utilisateurRepository, OverlayRepository $overlayRepository): Response
     {
         $apiKey = $request->headers->get('x-api-key');
 
@@ -255,6 +301,8 @@ class ApiController extends AbstractController
 
     /**
      * @param Request $request
+     * @param SongCategoryRepository $categoryRepository
+     * @return JsonResponse
      * @Route("/api/song-categories", name="api_song_categories")
      */
     public function songCategories(Request $request, SongCategoryRepository $categoryRepository)

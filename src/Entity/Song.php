@@ -1054,4 +1054,19 @@ class Song
         return StatisticService::dateDiplayer($this->getLastDateUpload());
     }
 
+    public function __api()
+    {
+        return [
+            "Id" => $this->getId(),
+            "Name" => $this->getName(),
+            "IsRanked" => $this->isRanked(),
+            "Hash" => $this->getNewGuid(),
+            "Ragnabeat" => $this->getInfoDatFile(),
+            "Author" => $this->getAuthorName(),
+            "Mapper" => $this->getLevelAuthorName(),
+            "Difficulties" => $this->getSongDifficultiesStr(),
+            "CoverImageExtension" => $this->getCoverImageExtension(),
+        ];
+    }
+
 }

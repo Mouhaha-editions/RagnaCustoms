@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Score;
 use App\Entity\Song;
+use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -31,7 +32,7 @@ class SongPartialController extends AbstractController
         ]);
     }
 
-    public function lastPlayed(ScoreRepository $scoreRepository,SongRepository $songRepository): Response
+    public function lastPlayed(ScoreHistoryRepository $scoreRepository,SongRepository $songRepository): Response
     {
         $scores = $scoreRepository->createQueryBuilder("score")
             ->leftJoin("score.songDifficulty",'diff')
