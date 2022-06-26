@@ -561,17 +561,17 @@ class SongService
                 $song->setNewGuid($hash);
                 $this->em->flush();
 
-                if (!$getpreview) {
-                    $ffprobe = FFProbe::create([
-                        'ffmpeg.binaries' => '/usr/bin/ffmpeg',
-                        'ffprobe.binaries' => '/usr/bin/ffprobe'
-                    ]);
-                    $probe = $ffprobe->format($songfile);
-                    $durationMp3 = (int)($probe->get('duration') / 2);
-                    exec('ffmpeg -y -i "' . $songfile . '"  -ss ' . $durationMp3 . ' -t 5 -c:a copy -b:a 96k "' . $previewFile . '"');
-
-                    $zip->addFile($previewFile, $previewLocalnameFile);
-                }
+//                if (!$getpreview) {
+//                    $ffprobe = FFProbe::create([
+//                        'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+//                        'ffprobe.binaries' => '/usr/bin/ffprobe'
+//                    ]);
+//                    $probe = $ffprobe->format($songfile);
+//                    $durationMp3 = (int)($probe->get('duration') / 2);
+//                    exec('ffmpeg -y -i "' . $songfile . '"  -ss ' . $durationMp3 . ' -t 5 -c:a copy -b:a 96k "' . $previewFile . '"');
+//
+//                    $zip->addFile($previewFile, $previewLocalnameFile);
+//                }
                 $zip->close();
             }
         } catch (Exception $e) {
