@@ -991,7 +991,10 @@ class SongService
 
     public function getLastSongsPlayed($count)
     {
-        return $this->em->getRepository(Song::class)->createQueryBuilder('s')->leftJoin('s.songHashes', 'song_hashes')->leftJoin(Score::class, 'score', Join::WITH, 'score.hash = song_hashes.hash')->orderBy('score.updatedAt', 'DESC')->setFirstResult(0)->setMaxResults($count)->getQuery()->getResult();
+        return $this->em->getRepository(Song::class)
+            ->createQueryBuilder('s')
+            ->leftJoin('s.songHashes', 'song_hashes')
+            ->leftJoin(Score::class, 'score', Join::WITH, 'score.hash = song_hashes.hash')->orderBy('score.updatedAt', 'DESC')->setFirstResult(0)->setMaxResults($count)->getQuery()->getResult();
 
     }
 

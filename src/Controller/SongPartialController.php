@@ -38,7 +38,7 @@ class SongPartialController extends AbstractController
         $scores = $scoreHistoryRepository->createQueryBuilder("score")
             ->leftJoin("score.songDifficulty",'diff')
             ->leftJoin("diff.song",'s')
-            ->orderBy('score.updatedAt', 'DESC')
+            ->orderBy('score.createdAt', 'DESC')
             ->where('s.isDeleted != true')
             ->andWhere('s.wip != true')
             ->setFirstResult(0)
