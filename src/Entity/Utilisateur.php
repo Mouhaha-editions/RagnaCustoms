@@ -21,6 +21,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
  */
 #[ApiResource(
+    collectionOperations: [
+     //   "get",
+//        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
+    ],
+    itemOperations: [
+        "get",
+//        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
+    ],
     normalizationContext: ['groups' => ['read']],
 )]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface

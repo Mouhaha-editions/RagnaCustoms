@@ -13,6 +13,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=CountryRepository::class)
  */
 #[ApiResource(
+    collectionOperations: [
+      //  "get",
+//        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
+    ],
+    itemOperations: [
+        "get",
+//        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
+    ],
     normalizationContext: ['groups' => ['read']],
 )]
 class Country
