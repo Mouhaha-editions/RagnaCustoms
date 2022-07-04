@@ -173,7 +173,6 @@ class Song
     /**
      * @ORM\OneToMany(targetEntity=SongDifficulty::class, mappedBy="song")
      */
-    #[Groups("read")]
     private $songDifficulties;
     /**
      * @ORM\OneToMany(targetEntity=SongHash::class, mappedBy="Song")

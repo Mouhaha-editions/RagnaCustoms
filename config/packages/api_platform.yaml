@@ -2,8 +2,6 @@ api_platform:
     version: '1.0.0'
     title: 'API RagnaCustoms'
     show_webby: false
-    eager_loading:
-        max_joins: 100
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
