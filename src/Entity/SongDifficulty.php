@@ -2,15 +2,26 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\SongDifficultyRepository;
-use ContainerQGkBoxD\getUtilisateur2Service;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=SongDifficultyRepository::class)
  */
+#[ApiResource(
+    collectionOperations: [
+        "get",
+//        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
+    ],
+    itemOperations: [
+        "get",
+//        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
+    ],
+    normalizationContext: ['groups' => ['read']])]
 class SongDifficulty
 {
     /**
@@ -18,58 +29,69 @@ class SongDifficulty
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups("read")]
     private $id;
     /**
      * @ORM\Column(type="float", nullable=true)
      */
+    #[Groups("read")]
     private $NotePerSecond;
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups("read")]
     private $difficulty;
     /**
      * @ORM\ManyToOne(targetEntity=DifficultyRank::class, inversedBy="songDifficulties")
      */
+    #[Groups("read")]
     private $difficultyRank;
     /**
      * @ORM\Column(type="integer")
      */
+    #[Groups("read")]
     private $noteJumpMovementSpeed;
     /**
      * @ORM\Column(type="integer")
      */
+    #[Groups("read")]
     private $noteJumpStartBeatOffset;
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
+    #[Groups("read")]
     private $notesCount;
 
     /**
      * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songDifficulties",cascade={"persist", "remove"})
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
+    #[Groups("read")]
     private $song;
-
 
 
     /**
      * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
      */
+    #[Groups("read")]
     private $claw_difficulty;
 
     /**
      * @ORM\Column(type="float", nullable=false)
      */
+    #[Groups("read")]
     private $theoricalMaxScore;
 
     /**
      * @ORM\Column(type="float", nullable=false)
      */
+    #[Groups("read")]
     private $theoricalMinScore;
 
     /**
-    * @ORM\Column(type="boolean", nullable=false)
-    */
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    #[Groups("read")]
     private $isRanked;
 
     /**

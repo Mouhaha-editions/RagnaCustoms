@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Enum\EEmail;
 use App\Enum\ENotification;
 use App\Repository\UtilisateurRepository;
@@ -12,12 +13,16 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
  * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
  */
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+)]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableEntity;
@@ -27,6 +32,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups("read")]
     private $id;
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -47,6 +53,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Country::class, inversedBy="utilisateurs")
      */
+    #[Groups("read")]
     private $country;
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -176,6 +183,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
+    #[Groups("read")]
     private $username;
     /**
      * @ORM\OneToMany(targetEntity=VoteCounter::class, mappedBy="user", orphanRemoval=true)
@@ -1001,7 +1009,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFollowersNotifiable(ENotification $event)
     {
-        return $this->getFollowers()->filter(function (FollowMapper $follow)use($event) {
+        return $this->getFollowers()->filter(function (FollowMapper $follow) use ($event) {
             return $follow->getIsNotificationEnabled() && $follow->getUser()->hasNotificationPreference($event);
         });
     }
@@ -1047,9 +1055,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->EmailPreference;
     }
+
     public function getEmailPreferences()
     {
-        return $this->getEmailPreference() == null ? EEmail::cases() :unserialize($this->getEmailPreference());
+        return $this->getEmailPreference() == null ? EEmail::cases() : unserialize($this->getEmailPreference());
     }
 
     public function setEmailPreference(?string $EmailPreference): self
@@ -1061,7 +1070,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getNotificationPreferences()
     {
-        return $this->getNotificationPreference() == null ? ENotification::cases() :unserialize($this->getNotificationPreference());
+        return $this->getNotificationPreference() == null ? ENotification::cases() : unserialize($this->getNotificationPreference());
     }
 
     public function getNotificationPreference(): ?string
@@ -1075,13 +1084,15 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
     public function hasEmailPreference(ENotification $event)
     {
-        return in_array($event,$this->getEmailPreferences());
+        return in_array($event, $this->getEmailPreferences());
     }
 
     public function hasNotificationPreference(ENotification $event)
     {
-        return in_array($event,$this->getNotificationPreferences());
+        return in_array($event, $this->getNotificationPreferences());
     }
+
 }

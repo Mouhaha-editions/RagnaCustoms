@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\SongRepository;
 use App\Service\StatisticService;
 use DateTime;
@@ -12,10 +13,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=SongRepository::class)
  */
+#[ApiResource(
+    collectionOperations: [
+        "get",
+//        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
+    ],
+    itemOperations: [
+        "get",
+//        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
+    ],
+    normalizationContext: ['groups' => ['read']])]
 class Song
 {
     use TimestampableEntity;
@@ -25,42 +37,52 @@ class Song
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups("read")]
     private $id;
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
+    #[Groups("read")]
     private $active;
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
+    #[Groups("read")]
     private $approximativeDuration;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[Groups("read")]
     private $authorName;
     /**
      * @ORM\Column(type="float", nullable=true)
      */
+    #[Groups("read")]
     private $beatsPerMinute;
     /**
      * @ORM\ManyToMany(targetEntity=SongCategory::class, inversedBy="songs")
      */
+    #[Groups("read")]
     private $categoryTags;
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
+    #[Groups("read")]
     private $converted;
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
+    #[Groups("read")]
     private $countVotes;
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups("read")]
     private $coverImageFileName;
     /**
      * @ORM\Column(type="text", nullable=true)
      */
+    #[Groups("read")]
     private $description;
     /**
      * @ORM\OneToMany(targetEntity=DownloadCounter::class, mappedBy="song")
@@ -69,46 +91,57 @@ class Song
     /**
      * @ORM\Column(type="integer")
      */
+    #[Groups("read")]
     private $downloads = 0;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[Groups("read")]
     private $environmentName;
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups("read")]
     private $fileName;
     /**
      * @ORM\Column(type="text", nullable=true)
      */
+    #[Groups("read")]
     private $infoDatFile;
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
+    #[Groups("read")]
     private $isDeleted = false;
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
+    #[Groups("read")]
     private $isExplicit;
     /**
      * @ORM\Column(type="datetime")
      */
+    #[Groups("read")]
     private $lastDateUpload;
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups("read")]
     private $levelAuthorName;
     /**
      * @ORM\Column(type="boolean")
      */
+    #[Groups("read")]
     private $moderated = false;
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups("read")]
     private $name;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[Groups("read")]
     private $newGuid;
     /**
      * @ORM\ManyToMany(targetEntity=Playlist::class, mappedBy="songs")
@@ -135,10 +168,12 @@ class Song
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[Groups("read")]
     private $slug;
     /**
      * @ORM\OneToMany(targetEntity=SongDifficulty::class, mappedBy="song")
      */
+    #[Groups("read")]
     private $songDifficulties;
     /**
      * @ORM\OneToMany(targetEntity=SongHash::class, mappedBy="Song")
@@ -159,6 +194,8 @@ class Song
     /**
      * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="songs")
      */
+
+    #[Groups("read")]
     private $user;
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -187,10 +224,12 @@ class Song
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
+    #[Groups("read")]
     private $wip = false;
     /**
      * @ORM\Column(type="text", nullable=true)
      */
+    #[Groups("read")]
     private $youtubeLink;
 
     public function __construct()
