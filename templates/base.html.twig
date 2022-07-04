@@ -267,88 +267,8 @@
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
-{# <script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@1.9.5/tarteaucitron.min.js"></script> #}
-{# <script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@1.9.5/tarteaucitron.services.min.js"></script> #}
-
-{# <script> #}
-{#    tarteaucitron.init({ #}
-{# // "privacyUrl": "", /* Privacy policy url */ #}
-
-{#        "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */ #}
-{#        "cookieName": "tarteaucitron", /* Cookie name */ #}
-
-{#        "orientation": "bottom", /* Banner position (top - bottom - middle - popup) */ #}
-
-{#        "groupServices": true, /* Group services by category */ #}
-
-{#        "showAlertSmall": false, /* Show the small banner on bottom right */ #}
-{#        "cookieslist": true, /* Show the cookie list */ #}
-
-{#        "showIcon": true, /* Show cookie icon to manage cookies */ #}
-{#        "iconSrc": "/apps/cookie.png", /* Optionnal: URL or base64 encoded image */ #}
-{#        "iconPosition": "BottomLeft", /* Position of the icon between BottomRight, BottomLeft, TopRight and TopLeft */ #}
-
-{#        "adblocker": false, /* Show a Warning if an adblocker is detected */ #}
-
-{#        "DenyAllCta": true, /* Show the deny all button */ #}
-{#        "AcceptAllCta": true, /* Show the accept all button when highPrivacy on */ #}
-{#        "highPrivacy": true, /* HIGHLY RECOMMANDED Disable auto consent */ #}
-
-{#        "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */ #}
-
-{#        "removeCredit": true, /* Remove credit link */ #}
-{#        "moreInfoLink": true, /* Show more info link */ #}
-{#        "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */ #}
-
-{# //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for subdomain website */ #}
-
-{# // "readmoreLink": "", /* Change the default readmore link pointing to tarteaucitron.io */ #}
-
-{#        "mandatory": true /* Show a message about mandatory cookies */ #}
-{#    }); #}
-
-{#    tarteaucitron.user.matomoId = 1; #}
-{#    (tarteaucitron.job = tarteaucitron.job || []).push('matomo'); #}
-{#    tarteaucitron.user.matomoHost = '//matomo.ragnacustoms.com/'; #}
-{#    var _mtm = window._mtm = window._mtm || []; #}
-{#    _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'}); #}
-{#    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0]; #}
-{#    g.async = true; #}
-{#    g.src = 'https://matomo.ragnacustoms.com/js/container_4wEYbYum.js'; #}
-{#    s.parentNode.insertBefore(g, s); #}
-{# </script> #}
-
-{# <!-- PushAlert --> #}
-{# <script type="text/javascript"> #}
-{#    (function(d, t) { #}
-{#        var g = d.createElement(t), #}
-{#            s = d.getElementsByTagName(t)[0]; #}
-{#        g.src = "https://cdn.pushalert.co/integrate_8c7cfac8a35cd49b3fcee27693bed509.js"; #}
-{#        s.parentNode.insertBefore(g, s); #}
-{#    }(document, "script")); #}
-{# </script> #}
-{# <!-- End PushAlert --> #}
 {% if is_granted('ROLE_USER') %}
-    <script>
-        WonderPush.push(function () {
-            WonderPush.putProperties({
-                "string_name": "{{ app.user.username }}",
-                "string_lang": "{{ app.user.country.twoLetters }}"
-            });
-        });
-        WonderPush.push(function () {
-            WonderPush.removeAllTags();
-        });
-        WonderPush.push(function () {
-            {% for follow in app.user.followedMappers %}
-                {% if follow.isNotificationEnabled %}
-                WonderPush.addTag("mapper_{{ follow.mapper|lower }}");
-                {% else %}
-                WonderPush.removeTag("mapper_{{ follow.mapper|lower }}");
-                {% endif %}
-            {% endfor %}
-        });
-    </script>
+    <!-- push alert -->
 {% endif %}
 </body>
 </html>
