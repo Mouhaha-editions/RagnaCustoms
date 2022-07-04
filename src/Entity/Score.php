@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ScoreRepository;
 use App\Service\StatisticService;
 use Doctrine\ORM\Mapping as ORM;
@@ -103,11 +105,13 @@ class Score
      * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scores")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
+    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private $songDifficulty;
     /**
      * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="scores")
      * @ORM\JoinColumn(nullable=false)
      */
+    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private $user;
 
     public function getId(): ?int
