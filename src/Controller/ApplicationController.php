@@ -19,9 +19,7 @@ class ApplicationController extends AbstractController
      */
     public function howTo(): Response
     {
-        return $this->render('howto/index.html.twig', [
-            'controller_name' => 'ApplicationController',
-        ]);
+        return $this->redirectToRoute('getting_started');
     }
 
     /**
