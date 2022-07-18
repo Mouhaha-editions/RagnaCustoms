@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\API\MethodsController;
 use App\Repository\SongRepository;
 use App\Service\StatisticService;
 use DateTime;
@@ -25,9 +28,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     itemOperations: [
         "get",
+//        'get_search' => [
+////            'route_name' => 'song_get_search',
+//            'method' => 'GET',
+//            'path' => '/song/search/{term}',
+//            'controller' => MethodsController::class,
+//            'normalization_context' => ['groups' => 'read']
+//        ],
+
 //        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
     ],
     normalizationContext: ['groups' => ['read']])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'authorName' => 'partial','levelAuthorName'=>'partial'])]
+
 class Song
 {
     use TimestampableEntity;
