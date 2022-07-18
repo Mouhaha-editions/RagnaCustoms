@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\API\MethodsController;
+use App\Filter\SimpleSearchFilter;
 use App\Repository\SongRepository;
 use App\Service\StatisticService;
 use DateTime;
@@ -39,7 +40,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 //        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
     ],
     normalizationContext: ['groups' => ['read']])]
-#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'authorName' => 'partial','levelAuthorName'=>'partial'])]
+#[ApiFilter(SimpleSearchFilter::class, properties: ['name' , 'authorName' ,'levelAuthorName'])]
 
 class Song
 {
