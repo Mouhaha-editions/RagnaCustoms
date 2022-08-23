@@ -63,8 +63,8 @@
                         </div>
                     </div>
                     <div class="col-md-7">
-                        <h1 class="text-warning">{{ song|raw }}</h1>
-                        <h2>{{ song.authorName }}</h2>
+                        <h1 class="force-default text-warning">{{ song|raw }}</h1>
+                        <h2 class="force-default">{{ song.authorName }}</h2>
                         <div class="tags">
                             {% for category in song.categoryTags %}
                                 <span>{{ category.label }}</span>
