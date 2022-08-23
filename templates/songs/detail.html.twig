@@ -78,13 +78,15 @@
                                 <a href="#"
                                    class="text-level-10 ajax-load popover-trigger btn btn-playlist"
                                    data-trigger="hover"
+                                   title="Add to playlist"
                                    data-placement="top"
                                    data-content="{{ "Add to playlist"|trans }}"
                                    data-replace-selector="#songPlaylists .modal-body"
                                    data-toggle='modal' data-target='#songPlaylists'
                                    data-url='{{ url('song_playlist',{id:song.id}) }}'
                                    data-song-id='{{ song.id }}'>
-                                    <i class="fas fa-heart"></i>
+                                    <i                                    title="Add to playlist"
+                                                                           data-toggle="tooltip"  class="fas fa-heart"></i>
                                 </a>
                             </div>
                             {% if song.youtubeLink != null %}
@@ -96,7 +98,7 @@
                                 </div>
                             {% endif %}
                             <div class="d-inline-block">
-                                <a href="#" data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn btn-twitch">
+                                <a  data-toggle="tooltip" href="#" title="Click to copy !rc code" data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn btn-twitch">
                                     <i class="fab fa-twitch"></i>
                                 </a>
                             </div>
