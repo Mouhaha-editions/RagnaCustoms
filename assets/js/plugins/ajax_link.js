@@ -1,8 +1,12 @@
 $(document).on("click", ".ajax-link", function () {
-    console.log("coucou");
     let t = $(this);
     $(this).tooltip("hide")
     let action = t.data('success-action');
+    if($(this).is('.confirm')){
+        if(!confirm($(this).data('confirm-message'))){
+            return;
+        }
+    }
     $.ajax({
         url: t.data('url'),
         dataType: 'json',
@@ -22,6 +26,9 @@ $(document).on("click", ".ajax-link", function () {
                     break;
                 case "remove":
                     $(t.data('remove-selector')).remove();
+                    break;
+                    case "reload":
+                    window.location.reload();
                     break;
             }
         },

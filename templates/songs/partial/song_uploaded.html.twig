@@ -1,4 +1,4 @@
-<tr>
+<tr id="song-{{ song.id }}">
     <td>
         <div class="d-flex ">
             <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" class="small-cover"
@@ -55,9 +55,17 @@
                data-refresh="true"
                data-url="{{ url('edit_song',{id:song.id}) }}"
            data-title="{{ "Edit Custom Song<br/><small class='text-warning'>\"%songName%\"</small>"|trans|replace({"%songName%":song.name}) }}"
-           class="btn btn-blue float-right mt-2 ml-4 mr-4 ajax-modal-form">
+           class="mt-2 ajax-modal-form">
             <i class="fas fa-edit"></i>
         </a>
+            <a href="#"
+               data-success-action="remove"
+               data-remove-selector="#song-{{ song.id }}"
+               data-url="{{ url('delete_song',{id:song.id}) }}"
+               data-confirm-message="{{ "Are you sure? You won't be able to recover this map after you delete it."|trans }}"
+               class="text-danger confirm mt-2 ml-2 ajax-link">
+                <i class="fas fa-trash"></i>
+            </a>
         {% else %}
             <small>{{ "Ranked"|trans }}</small>
         {% endif %}

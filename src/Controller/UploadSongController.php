@@ -6,6 +6,7 @@ use App\Entity\Song;
 use App\Entity\SongRequest;
 use App\Form\SongType;
 use App\Repository\SongRepository;
+use App\Service\DiscordService;
 use App\Service\ScoreService;
 use App\Service\SongService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -159,19 +160,32 @@ class UploadSongController extends AbstractController
     /**
      * @Route("/upload/song/delete/{id}", name="delete_song")
      */
-    public function delete(Song $song, KernelInterface $kernel, EntityManagerInterface $em)
+    public function delete(Song $song, EntityManagerInterface $em, DiscordService $discordService)
     {
+        if ($song->getUser() === $this->getUser() && !$song->isRanked()) {
 
-        if ($song->getUser() == $this->getUser()) {
-            $song->setIsDeleted(true);
-            $song->setSlug($song->getSlug() . '-deleted');
-            $this->addFlash('success', "Song removed from catalog.");
+            $songFile = $this->getParameter('kernel.project_dir') . "/public/songs-files/";
+            $ragnaBeat = $this->getParameter('kernel.project_dir') . "/public/ragna-beat/";
+            $cover = $this->getParameter('kernel.project_dir') . "/public/covers/";
+            $infoDatFile = explode("/", $song->getInfoDatFile());
+            $ragnaBeat.=$infoDatFile[2];
+            $files = glob($ragnaBeat."/*"); // get all file names
+            foreach($files as $file){ // iterate files
+                if(is_file($file)) {
+                    @unlink($file); // delete file
+                }
+            }
+            @rmdir($ragnaBeat);
+            @unlink($songFile.$song->getId().".zip");
+            @unlink($cover.$song->getId().$song->getCoverImageExtension());
 
+            $discordService->deletedSong($song);
+            $em->remove($song);
             $em->flush();
-            return $this->redirectToRoute("upload_song");
+            return new JsonResponse(['success'=>true]);
         } else {
-            $this->addFlash('success', "You are not the file uploader..");
-            return $this->redirectToRoute("upload_song");
+
+            return new JsonResponse(['success'=>false]);
         }
     }
 

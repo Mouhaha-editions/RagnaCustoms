@@ -53,7 +53,7 @@
 {#                                {{ "Played"|trans }}#}
 {#                            </a>#}
 {#                        </th>#}
-                        <th></th>
+                        <th style="width:60px"></th>
                     </tr>
                     {% for song in songs.entities %}
                         {% include 'songs/partial/song_uploaded.html.twig' with {songs:songs, seePlayed:true} %}
