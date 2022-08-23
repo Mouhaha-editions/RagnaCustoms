@@ -9,14 +9,38 @@ const swup = new Swup({
 
 });
 let swl = null;
-$(function(){
-    $(".alert").each(function(){
-         Swal.fire({
-             title: $(this).data('title'),
-             html: $(this).html(),
-             icon: $(this).data('type') === "danger"?"error":$(this).data('type'),
-             confirmButtonText: 'close'
-         });
+$(function () {
+
+    let maxBg = 26;
+    let currentBg = Math.floor(Math.random() * maxBg-1) +1;
+
+    var images = [];
+
+    function preload() {
+        for (var i = 1; i < maxBg; i++) {
+            images[i] = new Image();
+            images[i].src = '/bg/' + currentBg + '.jpg';
+        }
+    }
+    let switchBg = function () {
+        $("header").css({"background-image": 'url("/bg/' + currentBg + '.jpg")'});
+        currentBg += 1;
+        if (currentBg > maxBg) {
+            currentBg = 1;
+        }
+    };
+
+    preload();
+    switchBg();
+
+    setInterval(switchBg, 10000);
+    $(".alert").each(function () {
+        Swal.fire({
+            title: $(this).data('title'),
+            html: $(this).html(),
+            icon: $(this).data('type') === "danger" ? "error" : $(this).data('type'),
+            confirmButtonText: 'close'
+        });
     });
 });
 
@@ -24,32 +48,31 @@ $(document).on('click', '[data-confirm]', function () {
     return confirm($(this).data('confirm'));
 });
 
-$(document).on('change','input[type="file"]', function (e) {
+$(document).on('change', 'input[type="file"]', function (e) {
     let fileName = e.target.files[0].name;
     $('.custom-file-label').html(fileName);
 });
 
 
-$("[data-toggle=\"tooltip\"]").tooltip({delay:100});
+$("[data-toggle=\"tooltip\"]").tooltip({delay: 100});
 
 $(document).on('click', '.open-download-buttons', function () {
-    let t = $(this).closest('.on-hover').find('.big-buttons')
+    let t = $(this).closest('.on-hover').find('.big-buttons');
     t.toggleClass('d-none');
     return false;
 });
 
-$(document).on('preview-ready', function (evt,p) {
+$(document).on('preview-ready', function (evt, p) {
     let ragnabeat = new RagnaBeat();
-    if(p.type === "modal"){
+    if (p.type === "modal") {
         ragnabeat.enableModal();
     }
-    ragnabeat.startInit(p.uid,p.file);
+    ragnabeat.startInit(p.uid, p.file);
 
     $("#previewSong").on("hide.bs.modal", function () {
         ragnabeat.stopSong();
     });
 });
-
 
 
 $(document).on('click', ".ajax-load", function () {
@@ -106,7 +129,7 @@ $(document).on('click', ".ajax-load", function () {
 });
 
 
-$(document).on('change','input[type="file"]', function (e) {
+$(document).on('change', 'input[type="file"]', function (e) {
     let fileName = e.target.files[0].name;
     $('.custom-file-label').html(fileName);
 });

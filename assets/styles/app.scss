@@ -184,3 +184,7 @@
 .force-default{
   text-transform: inherit!important;
 }
+
+header{
+  transition: background-image 2s;
+}
