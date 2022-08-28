@@ -34,7 +34,7 @@
             </div>
             <div class="pt-3">
                 <label class="light-grey pb-0 mb-0">{{ "Description"|trans }}</label>
-                <p class="pt-0">{{ user.mapperDescription }}</p>
+                {% apply markdown_to_html %}{{ user.mapperDescription }}{% endapply %}
             </div>
 
         </div>
