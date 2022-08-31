@@ -181,10 +181,28 @@
 
   }
 }
-.force-default{
-  text-transform: inherit!important;
+
+.force-default {
+  text-transform: inherit !important;
 }
 
-header{
+header {
   transition: background-image 2s;
+}
+
+.be-patreon {
+  font-size: 25px;
+  line-height: 50px;
+  text-shadow: 0 0 8px black;
+
+  a {
+    background: #f96854;
+    color: #fff;
+    line-height: inherit;
+    box-shadow: 0px 0px 20px #000;
+    text-shadow: none;
+    display: inline-block;
+    padding: 5px 20px;
+    font-size: 25px;
+  }
 }
