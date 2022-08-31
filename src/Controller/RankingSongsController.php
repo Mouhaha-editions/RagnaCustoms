@@ -58,6 +58,9 @@ class RankingSongsController extends AbstractController
         $form->add('songs', EntityType::class, [
             'class' => Song::class,
             'multiple' => true,
+            'choice_label' => function (Song $song) {
+                return ($song->isRanked() ? "[R] ":"").$song->getName();
+            },
             "attr" => [
                 'class' => "select2"
             ],
