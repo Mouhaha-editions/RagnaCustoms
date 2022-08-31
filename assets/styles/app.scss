@@ -206,3 +206,13 @@ header {
     font-size: 25px;
   }
 }
+h2{
+  a{
+    color:inherit;
+    text-decoration: none;
+    &:hover{
+      color:inherit;
+      text-decoration: none;
+    }
+  }
+}

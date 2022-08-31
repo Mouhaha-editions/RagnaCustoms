@@ -115,7 +115,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPublic = false;
+    private $isPublic = true;
     /**
      * @ORM\Column(type="boolean")
      */
@@ -530,7 +530,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->isPublic;
     }
 
-    public function setIsPublic(bool $isPublic = false): self
+    public function setIsPublic(bool $isPublic = true): self
     {
         $this->isPublic = $isPublic;
 
