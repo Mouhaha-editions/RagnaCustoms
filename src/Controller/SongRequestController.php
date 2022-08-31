@@ -23,6 +23,25 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SongRequestController extends AbstractController
 {
     /**
+     * @Route("/delete/{id}", name="_delete")
+     * @param Request $request
+     * @param SongRequestRepository $songRequestRepository
+     * @param PaginationService $pagination
+     * @param DiscordService $discordService
+     * @return Response
+     */
+    public function delete(Request $request, SongRequest $songRequest, SongRequestRepository $songRequestRepository): Response
+    {
+        if ($songRequest->getRequestedBy() == $this->getUser() || $this->isGranted('ROLE_MODERATOR')) {
+            $songRequestRepository->remove($songRequest);
+            $this->addFlash('danger', "Request deleted");
+        } else {
+            $this->addFlash('danger', "this request can't be deleted");
+        }
+        return $this->redirect($this->generateUrl('song_request_index')."#your-song");
+    }
+
+    /**
      * @Route("/", name="_index")
      * @param Request $request
      * @param SongRequestRepository $songRequestRepository
@@ -30,7 +49,8 @@ class SongRequestController extends AbstractController
      * @param DiscordService $discordService
      * @return Response
      */
-    public function index(Request $request,ManagerRegistry $doctrine, SongRequestRepository $songRequestRepository, PaginationService $pagination, DiscordService $discordService): Response
+
+    public function index(Request $request, ManagerRegistry $doctrine, SongRequestRepository $songRequestRepository, PaginationService $pagination, DiscordService $discordService): Response
     {
         $form = null;
         if ($this->isGranted('ROLE_USER')) {
@@ -85,21 +105,21 @@ class SongRequestController extends AbstractController
         }
 
         $songRequests = $pagination->setDefaults(50)->process($qb, $request);
-           $reason = "";
-       if($this->isGranted('ROLE_USER')){
+        $reason = "";
+        if ($this->isGranted('ROLE_USER')) {
 
-        if ($user->getOpenSongRequests()->count() >= 3) {
-            $reason = '<div class="alert d-none" data-type="info"  data-title="Too much requests">You already have 3 or more requests, please wait before adding a new one.</div>';
-            $save = false;
-        } elseif ($user->getCredits() < 30) {
-            $reason = '<div class="alert d-none"  data-type="info"  data-title="Not enough credits">You need 30 credits to add a song request, play more songs to earn credits ;)</div>';
-            $save = false;
+            if ($user->getOpenSongRequests()->count() >= 3) {
+                $reason = '<div class="alert d-none" data-type="info"  data-title="Too much requests">You already have 3 or more requests, please wait before adding a new one.</div>';
+                $save = false;
+            } elseif ($user->getCredits() < 30) {
+                $reason = '<div class="alert d-none"  data-type="info"  data-title="Not enough credits">You need 30 credits to add a song request, play more songs to earn credits ;)</div>';
+                $save = false;
+            }
         }
-    }
         return $this->render('song_request/index.html.twig', [
             'songRequests' => $songRequests,
-            'form' => $form && $save? $form->createView() : null,
-            "reason"=>$reason
+            'form' => $form && $save ? $form->createView() : null,
+            "reason" => $reason
         ]);
     }
 
@@ -110,7 +130,7 @@ class SongRequestController extends AbstractController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function claim(Request $request,ManagerRegistry $doctrine, SongRequest $songRequest, TranslatorInterface $translator): Response
+    public function claim(Request $request, ManagerRegistry $doctrine, SongRequest $songRequest, TranslatorInterface $translator): Response
     {
         // not connected
         if (!$this->isGranted('ROLE_USER')) {
@@ -149,7 +169,7 @@ class SongRequestController extends AbstractController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function unclaim(Request $request,ManagerRegistry $doctrine, SongRequest $songRequest, TranslatorInterface $translator): Response
+    public function unclaim(Request $request, ManagerRegistry $doctrine, SongRequest $songRequest, TranslatorInterface $translator): Response
     {
         // not connected
         if (!$this->isGranted('ROLE_USER')) {
@@ -184,7 +204,7 @@ class SongRequestController extends AbstractController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function toggleOne(Request $request,ManagerRegistry $doctrine, SongRequest $songRequest, SongRequestVoteRepository $songRequestVoteRepository, TranslatorInterface $translator): Response
+    public function toggleOne(Request $request, ManagerRegistry $doctrine, SongRequest $songRequest, SongRequestVoteRepository $songRequestVoteRepository, TranslatorInterface $translator): Response
     {
         // not connected
         if (!$this->isGranted('ROLE_USER')) {

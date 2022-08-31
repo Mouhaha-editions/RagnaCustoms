@@ -82,6 +82,13 @@
                             <small>{{ "Mapper working on it :"|trans }} {{ ("<span class='text-danger'>"~("No one"|trans)~"</span>")|raw }}</small>
                         </div>
                         <div class="col-4 text-right">
+
+                            {% if is_granted('ROLE_MODERATOR') %}
+                                <small><a href="{{ path('song_request_delete',{id:songRequest.id}) }}" class="btn btn-sm btn-danger float-right"
+                                          data-confirm="You are going to delete this request"><i
+                                                class="fas fa-trash"></i>
+                                    </a></small>
+{% endif %}
                             {% if app.user.isMapper and app.user.songRequestInProgress is null %}
                                 <small><a href="{{ path('song_request_claim',{id:songRequest.id}) }}" class="btn btn-sm btn-success"
                                           data-confirm="You claimed this request. You have month to submit your work before someone else can claim it"><i
@@ -113,8 +120,48 @@
 <div class="row">
     <div class="col-12">
         {% include 'widget/paginate.html.twig' with {pagination:songRequests} %}
-
     </div>
+    <div class="col-12">
+        <h2 id="your-song">Your songs</h2>
+    </div>
+{%  for songRequest in app.user.songRequests %}
+    <div class="col-md-4 mb-4 border-1">
+
+        <a href="https://www.youtube.com/watch?v={{ songRequest.youtubeEmbeded }}"  rel="noreferrer" target="_blank">
+            {{ "%song_name% by %artist%"|trans|replace({"%song_name%":songRequest.title,"%artist%":songRequest.author}) }}
+        </a>
+        <br/>
+        <small>{{ "Requested by you"|trans }}
+            <small>{{ "and %count% other"|trans|replace({"%count%":songRequest.songRequestVotes|length}) }}</small>&nbsp;
+            {% if app.user is defined and songRequest.requestedBy != app.user %}
+                {% if app.user.wantedToo(songRequest) %}
+                    <a href="{{ path('song_request_toggle',{id:songRequest.id}) }}" class="btn btn-xs btn-danger">-
+                        1</a>
+                {% else %}
+                    <a href="{{ path('song_request_toggle',{id:songRequest.id}) }}" class="btn btn-xs btn-info">+
+                        1</a>
+                {% endif %}
+            {% endif %}
+        </small><br/>
+        {% if songRequest.getMapper == false %}
+            <div class="row">
+                <div class="col-8">
+                    <small>{{ "Mapper working on it :"|trans }} {{ ("<span class='text-danger'>"~("No one"|trans)~"</span>")|raw }}</small>
+                </div>
+                <div class="col-4 text-right">
+                    {% if app.user.isMapper and app.user.songRequestInProgress is null %}
+                        <small><a href="{{ path('song_request_delete',{id:songRequest.id}) }}" class="btn btn-sm btn-danger"
+                                  data-confirm="You are going to delete this request"><i
+                                        class="fas fa-trash"></i> {{ "delete"|trans }}
+                            </a></small>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+        {% endfor %}
+    </div>
+
         <div class="col-12">
             {{ reason|raw }}
             {% if form is not null %}
