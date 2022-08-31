@@ -34,11 +34,11 @@ class UtilisateurType extends AbstractType
                 "required"=>false,
                 "label"=>"I'm a mapper"
             ])
-            ->add('isPublic', null,[
-                "required"=>false,
-                "label"=>"Make my profile public",
-                "attr"=>["class"=>""]
-            ])
+//            ->add('isPublic', null,[
+//                "required"=>false,
+//                "label"=>"Make my profile public",
+//                "attr"=>["class"=>""]
+//            ])
             ->add('enableEmailNotification', null,[
                 "required"=>false,
                 "label"=>"Enable email notifications",
