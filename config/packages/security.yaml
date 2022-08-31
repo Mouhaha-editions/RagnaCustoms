@@ -51,5 +51,6 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_MODERATOR }
+        - { path: ^/ranking-song/, roles: ROLE_MODERATOR }
         - { path: ^/upload, roles: ROLE_USER }
         - { path: ^/playlists, roles: ROLE_USER }
