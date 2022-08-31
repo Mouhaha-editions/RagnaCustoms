@@ -81,6 +81,8 @@ class RankingSongsController extends AbstractController
                 }
                 $discordService->rankedSong($song);
             }
+            $this->addFlash('success','Songs ranked or unranked');
+        return $this->redirectToRoute('ranking_song');
         }
 
         return $this->renderForm('ranking_song/index.html.twig', [
