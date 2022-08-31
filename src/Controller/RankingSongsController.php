@@ -52,24 +52,36 @@ class RankingSongsController extends AbstractController
     /**
      * @Route("/ranking-song/", name="ranking_song")
      */
-    public function library(Request $request, ManagerRegistry $doctrine, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
+    public function library(Request $request, DiscordService $discordService, SongDifficultyRepository $songDifficultyRepository): Response
     {
         $form = $this->createFormBuilder();
         $form->add('songs', EntityType::class, [
-            'class' => SongDifficulty::class,
+            'class' => Song::class,
             'multiple' => true,
-            "attr"=>[
-                'class'=>"select2"
+            "attr" => [
+                'class' => "select2"
             ],
-            "query_builder" => function (SongDifficultyRepository $er) {
-                return $er->createQueryBuilder('sd')->leftJoin('sd.song', 's')
-                    ->orderBy("s.name", "ASC")->addOrderBy('sd.difficultyRank');
+            "query_builder" => function (SongRepository $er) {
+                return $er->createQueryBuilder('s')
+                    ->orderBy("s.name", "ASC");
             }
         ]);
         $form->add('rank_unrank', SubmitType::class);
         $form = $form->getForm();
-        return $this->renderForm('ranking_song/index.html.twig',[
-            'form'=>$form
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Song $song */
+            foreach ($form->get('songs')->getData() as $song) {
+                foreach ($song->getSongDifficulties() as $diff) {
+                    $diff->setIsRanked(!$diff->isRanked());
+                    $songDifficultyRepository->add($diff, true);
+                }
+                $discordService->rankedSong($song);
+            }
+        }
+
+        return $this->renderForm('ranking_song/index.html.twig', [
+            'form' => $form
         ]);
     }
 

@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\SongDifficulty;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,7 +20,29 @@ class SongDifficultyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, SongDifficulty::class);
     }
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function add(SongDifficulty $entity, bool $flush = false): void
+    {
+        $this->_em->persist($entity);
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
 
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function remove(SongDifficulty $entity, bool $flush = false): void
+    {
+        $this->_em->remove($entity);
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
     // /**
     //  * @return SongDifficulty[] Returns an array of SongDifficulty objects
     //  */
