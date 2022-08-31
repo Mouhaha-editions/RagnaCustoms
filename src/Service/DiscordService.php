@@ -497,7 +497,7 @@ class DiscordService
             "embeds" => [
                 [
                     // Embed Title
-                    "title" => ($song->isRanked() ? "[RANKED]":"[UNRANKED]").$song->getName() . " by " . $song->getAuthorName(),
+                    "title" => ($song->isRanked() ? "[RANKED] ":"[UNRANKED] ").$song->getName() . " by " . $song->getAuthorName(),
 
                     // Embed Type
                     "type" => "rich",
