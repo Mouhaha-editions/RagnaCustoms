@@ -718,9 +718,7 @@ class Song
     public function getVotes(): Collection
     {
         $song = $this;
-        return $this->votes->filter(function (Vote $vote) use ($song) {
-            return $song->getLastDateUpload() <= $vote->getUpdatedAt();
-        });
+        return $this->votes;
     }
 
     public function getRhythmAverage(): ?float
