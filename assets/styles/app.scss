@@ -204,20 +204,27 @@ header {
     display: inline-block;
     padding: 5px 20px;
     font-size: 25px;
-    &:hover{
+
+    &:hover {
       text-decoration: none;
-      background: lighten(#f96854,5%);
+      background: lighten(#f96854, 5%);
     }
   }
 }
 
-h2{
-  a{
-    color:inherit;
+h2 {
+  a {
+    color: inherit;
     text-decoration: none;
-    &:hover{
-      color:inherit;
+
+    &:hover {
+      color: inherit;
       text-decoration: none;
     }
   }
+}
+
+a.disabled {
+  pointer-events: none;
+  opacity: 50%;
 }

@@ -677,16 +677,22 @@ section {
 }
 
 
-.pagination {
+.pagination-rhokapa {
   a {
     color: #fff;
-    text-decoration: underline;
+    text-decoration: none;
     margin-left: 3px;
     margin-right: 3px;
-
-    &.active, &:hover {
+     &:hover{
+       text-decoration: none;
+       cursor: pointer;
+     }
+    &.active {
       color: $active;
       text-decoration: none;
+      padding: 0 7px;
+      background-color: rgb(55, 55, 55);
+      border: 1px solid $active;
     }
 
     &.no-decoration {
