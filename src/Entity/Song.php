@@ -186,7 +186,7 @@ class Song
     private $slug;
     /**
      * @ORM\OneToMany(targetEntity=SongDifficulty::class, mappedBy="song")
-     * @ORM\OrderBy({"difficulty_rank_id"="asc"})
+     * @ORM\OrderBy({"difficultyRankId"="asc"})
      */
     private $songDifficulties;
     /**
