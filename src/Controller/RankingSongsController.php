@@ -77,7 +77,6 @@ class RankingSongsController extends AbstractController
             /** @var Song $song */
             $alreadyRanked = false;
             foreach ($form->get('songs')->getData() as $song) {
-
                 foreach ($song->getSongDifficulties() as $diff) {
                     if($diff->isRanked()){
                         $alreadyRanked = true;

@@ -19,7 +19,7 @@
             {% for diff in song.songDifficulties %}
                 <div class='level {% if diff.isRanked %}is-ranked{% endif %} {% if app.request.get('alreadyplayed') is not null and is_granted('ROLE_USER') and app.user.hasPlayed(diff) %}disabled{% endif %}'
                      style="background-color:#{{ diff.difficultyRank.color }};">
-                    {% if diff.isRanked %}<i class="fas fa-star"
+                    {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked"
                                              style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
                     <span>{{ diff.difficultyRank.level }}</span>
                 </div>
