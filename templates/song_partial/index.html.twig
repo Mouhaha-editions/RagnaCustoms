@@ -33,7 +33,7 @@
                 <div class="level-list">
                     {% for diff in song.songDifficulties %}
                         <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">
-                            {% if diff.isRanked %}<i class="fas fa-star" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                            {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
                             <span>{{ diff.difficultyRank.level }}</span>
                         </div>
                     {% endfor %}

@@ -75,12 +75,19 @@ class RankingSongsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Song $song */
+            $alreadyRanked = false;
             foreach ($form->get('songs')->getData() as $song) {
+
                 foreach ($song->getSongDifficulties() as $diff) {
+                    if($diff->isRanked()){
+                        $alreadyRanked = true;
+                    }
                     $diff->setIsRanked(true);//!$diff->isRanked());
                     $songDifficultyRepository->add($diff, true);
                 }
-                $discordService->rankedSong($song);
+                if(!$alreadyRanked) {
+                    $discordService->rankedSong($song);
+                }
                 $rankingScoreService->calculateForSong($song);
             }
             $this->addFlash('success','Songs ranked or unranked');
