@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\ScoreHistory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,5 +20,27 @@ class ScoreHistoryRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ScoreHistory::class);
     }
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function add(ScoreHistory $entity, bool $flush = false): void
+    {
+        $this->_em->persist($entity);
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
 
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function remove(ScoreHistory $entity, bool $flush = false): void
+    {
+        $this->_em->remove($entity);
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
 }

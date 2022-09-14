@@ -21,6 +21,7 @@ use App\Repository\VoteCounterRepository;
 use App\Service\DiscordService;
 use App\Service\DownloadService;
 use App\Service\GoogleAnalyticsService;
+use App\Service\RankingScoreService;
 use App\Service\ScoreService;
 use App\Service\SongService;
 use DateTime;
@@ -52,7 +53,7 @@ class RankingSongsController extends AbstractController
     /**
      * @Route("/ranking-song/", name="ranking_song")
      */
-    public function library(Request $request, DiscordService $discordService, SongDifficultyRepository $songDifficultyRepository): Response
+    public function library(Request $request, DiscordService $discordService, SongDifficultyRepository $songDifficultyRepository, RankingScoreService $rankingScoreService): Response
     {
         $form = $this->createFormBuilder();
         $form->add('songs', EntityType::class, [
@@ -76,10 +77,11 @@ class RankingSongsController extends AbstractController
             /** @var Song $song */
             foreach ($form->get('songs')->getData() as $song) {
                 foreach ($song->getSongDifficulties() as $diff) {
-                    $diff->setIsRanked(!$diff->isRanked());
+                    $diff->setIsRanked(true);//!$diff->isRanked());
                     $songDifficultyRepository->add($diff, true);
                 }
                 $discordService->rankedSong($song);
+                $rankingScoreService->calculateForSong($song);
             }
             $this->addFlash('success','Songs ranked or unranked');
         return $this->redirectToRoute('ranking_song');
