@@ -33,7 +33,7 @@ $(function () {
     preload();
     switchBg();
 
-    setInterval(switchBg, 10000);
+    // setInterval(switchBg, 10000);
     $(".alert").each(function () {
         Swal.fire({
             title: $(this).data('title'),
