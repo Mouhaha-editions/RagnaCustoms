@@ -71,7 +71,7 @@
                         {% if songRequest.requestedBy.isPatreon %}<i class="fab fa-patreon text-level-6 "
                                                                      title="Is a Patreon"></i>{% endif %}
                         <small>{{ "and %count% other"|trans|replace({"%count%":songRequest.songRequestVotes|length}) }}</small>&nbsp;
-                        {% if app.user is defined and songRequest.requestedBy != app.user %}
+                        {% if is_granted('ROLE_USER') and songRequest.requestedBy != app.user %}
                             {% if app.user.wantedToo(songRequest) %}
                                 <a href="{{ path('song_request_toggle',{id:songRequest.id}) }}"
                                    class="btn btn-xs btn-danger">-
@@ -98,7 +98,7 @@
                                         </a></small>
                                 {% endif %}
 
-                                {% if app.user.isMapper and app.user.songRequestInProgress is null %}
+                                {% if is_granted('ROLE_USER') and app.user.isMapper and app.user.songRequestInProgress is null %}
                                     <small><a href="{{ path('song_request_claim',{id:songRequest.id}) }}"
                                               class="btn btn-sm btn-success"
                                               data-confirm="You claimed this request. You have month to submit your work before someone else can claim it"><i
@@ -131,6 +131,7 @@
             <div class="col-12">
                 {% include 'widget/paginate.html.twig' with {pagination:songRequests} %}
             </div>
+            {% if is_granted('ROLE_USER') %}
             <div class="col-12">
                 <h2 id="your-song">Your songs</h2>
             </div>
@@ -174,6 +175,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
+            {% endif %}
         </div>
 
         <div class="col-12">
@@ -185,5 +187,5 @@
             {% endif %}
         </div>
     </div>
-    </div>
+
 {% endblock %}
