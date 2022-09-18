@@ -7,6 +7,7 @@ use App\Repository\RankedScoresRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Service\StatisticService;
 
 /**
  * @ORM\Entity(repositoryClass=RankedScoresRepository::class)
@@ -68,5 +69,10 @@ class RankedScores
         $this->totalPPScore = $totalPPScore;
 
         return $this;
+    }
+
+    public function getTimeAgoShort()
+    {
+      return StatisticService::dateDiplayerShort($this->updatedAt);
     }
 }
