@@ -117,6 +117,9 @@
                                 <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "my uploads"|trans }}</a>
                                 <hr class="m-1"/>
                                 <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
+                                {% if is_granted('ROLE_MODERATOR') %}
+                                <a class="dropdown-item" href="{{ url('user_applications') }}">{{ "Applications"|trans }}</a>
+                                {% endif %}
                                 <hr class="m-1"/>
                                 <a class="dropdown-item"
                                    href="{{ url('notifications_setting') }}">{{ "Emails & Notifications"|trans }}</a>

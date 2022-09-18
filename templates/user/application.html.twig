@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ "My applications & Premium"|trans }}{% endblock %}
+{% block body %}
+    <div {{ stimulus_controller('user_application') }} {{ stimulus_target('user_application', 'background') }}>
+        <div class="container pt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>{{ "Applications Linked"|trans }}</h2>
+                    {% if app.user.discordEmail %}
+                    <a href="">Discord</a>
+                    {% endif %}
+                    <h2>{{ "Applications"|trans }}</h2>
+                    {% if not app.user.discordEmail %}
+                        <a href="">Discord</a>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <h2>{{ "Premium"|trans }}</h2>
+                    <h5 class="pt-4">Q: What is Premium?</h5>
+                    <div class="indent">
+                        Premium is a paid service, that give you some advantages on the website.
+                    </div>
+                    <h5 class="pt-4">Q: How to be Premium?</h5>
+                    <div class="indent">
+                        Premium use Patreon subscriptions, each level of subscription unlock some extra settings.
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -285,7 +285,17 @@ class UserController extends AbstractController
             'songs' => $songs
         ]);
     }
+    /**
+     * @Route("/user/app-and-premium", name="user_applications")
+     */
+    public function ApplicationsAndPremium()
+    {
 
+
+        return $this->render('user/application.html.twig', [
+
+        ]);
+}
     /**
      * @Route("/user", name="user")
      */
