@@ -371,4 +371,9 @@ class ScoreHistory
     {
         return StatisticService::dateDiplayer($this->getCreatedAt());
     }
+
+    public function getTimeAgoShort()
+    {
+       return StatisticService::dateDiplayerShort($this->getCreatedAt());
+    }
 }
