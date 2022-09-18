@@ -47,7 +47,7 @@
                             </td>
                             <td class="text-right">{{ score.totalPPScore|round(2) }} pts</td>
                             <td class="text-right"><span>{{ score.user.scoresRanked|length }}</span></td>
-                            <td class="text-right"><span>{{ score.user.lastScoreHistory.timeAgo() }}</span></td>
+                            <td class="text-right"><span>{{ score.timeAgoShort() }}</span></td>
                         </tr>
                     {% endfor %}
                 </table>

@@ -468,7 +468,10 @@ class SongService
         // + Number of blue combos * base speed for 0.75 second
         // + Number of yellow combos * base speed for 3 second
 
-        $theoricalMaxScore = ($baseSpeed * $duration) + ($noteCount * 0.3 * $baseSpeed / 4) - ($miss * 0.3 * $baseSpeed / 4) + ($maxBlueCombo * 3 / 4 * $baseSpeed) + ($maxYellowCombo * 3 * $baseSpeed);
+        $theoricalMaxScore = ($baseSpeed * $duration) + ($noteCount * 0.3 * $baseSpeed / 4)
+                                                      - ($miss * 0.3 * $baseSpeed / 4)
+                                                      + ($maxBlueCombo * 3 / 4 * $baseSpeed)
+                                                      + ($maxYellowCombo * 3 * $baseSpeed);
 
         return round($theoricalMaxScore, 2);
     }

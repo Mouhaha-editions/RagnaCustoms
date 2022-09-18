@@ -181,5 +181,37 @@ class StatisticService
 
     }
 
+    public static function dateDiplayerShort(\DateTimeInterface $date){
+
+            $difference = $date->diff(new DateTime(), true);
+
+            $etime = date_create('@0')->add($difference)->getTimestamp();
+
+            if ($etime < 1)
+            {
+                return '0 seconds';
+            }
+
+            $a = array( 365 * 24 * 60 * 60  =>  'y',
+                30 * 24 * 60 * 60  =>  'mo',
+                24 * 60 * 60  =>  'd',
+                60 * 60  =>  'h',
+                60  =>  'm',
+                1  =>  's'
+            );
+
+            foreach ($a as $secs => $str)
+            {
+                $d = $etime / $secs;
+                if ($d >= 1)
+                {
+                    $r = round($d);
+                    return $r . $str . ' ago';
+                }
+            }
+            return '99999 seconds';
+
+        }
+
 }
 

@@ -429,4 +429,9 @@ class Score
         $this->plateform = $plateform;
     }
 
+
+    public function getTimeAgoShort()
+    {
+       return StatisticService::dateDiplayerShort($this->createdAt);
+    }
 }
