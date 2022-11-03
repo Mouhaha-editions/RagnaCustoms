@@ -60,7 +60,7 @@ class RankingSongsController extends AbstractController
             'class' => Song::class,
             'multiple' => true,
             'choice_label' => function (Song $song) {
-                return ($song->isRanked() ? "[R] ":"").$song->getName();
+                return ($song->isRanked() ? "[R] ":"").$song->getName()." - ". $song->getAuthorName();
             },
             "attr" => [
                 'class' => "select2"
