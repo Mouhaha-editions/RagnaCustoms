@@ -1017,7 +1017,7 @@ class Song
 
     public function getCover(): string
     {
-        $cover = "/covers/" . $this->getId() . $this->getCoverImageExtension();
+        $cover = "/covers/" . $this->getId() .".webp";
         if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
             $cover = $this->getPlaceholder();
         }
@@ -1026,7 +1026,7 @@ class Song
 
     public function getPlaceholder(): string
     {
-        return "/apps/logo.png";
+        return "/apps/logo.webp";
     }
 
     /**

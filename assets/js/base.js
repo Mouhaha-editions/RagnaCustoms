@@ -11,7 +11,7 @@ const swup = new Swup({
 let swl = null;
 $(function () {
 
-    let maxBg = 26;
+    let maxBg = 21;
     let currentBg = Math.floor(Math.random() * maxBg-1) +1;
 
     var images = [];
@@ -19,11 +19,11 @@ $(function () {
     function preload() {
         for (var i = 1; i < maxBg; i++) {
             images[i] = new Image();
-            images[i].src = '/bg/' + currentBg + '.jpg';
+            images[i].src = '/bg/' + currentBg + '.webp';
         }
     }
     let switchBg = function () {
-        $("header").css({"background-image": 'url("/bg/' + currentBg + '.jpg")'});
+        $("header").css({"background-image": 'url("/bg/' + currentBg + '.webp")'});
         currentBg += 1;
         if (currentBg > maxBg) {
             currentBg = 1;

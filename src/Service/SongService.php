@@ -14,14 +14,12 @@ use App\Entity\SongRequest;
 use App\Entity\Utilisateur;
 use App\Entity\Vote;
 use App\Enum\ENotification;
-use App\Repository\SongDifficultyRepository;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Exception;
-use FFMpeg\FFProbe;
 use Intervention\Image\ImageManagerStatic as Image;
 use Pkshetlie\PhpUE\FCrc;
 use Symfony\Component\Form\FormInterface;
@@ -59,7 +57,7 @@ class SongService
     private $scoreService;
 
     public function __construct(KernelInterface $kernel, EntityManagerInterface $em, MailerInterface $mailer,
-                                DiscordService $discordService, ScoreService $scoreService, UrlGeneratorInterface $router)
+                                DiscordService  $discordService, ScoreService $scoreService, UrlGeneratorInterface $router)
     {
         $this->kernel = $kernel;
         $this->em = $em;
@@ -219,6 +217,9 @@ class SongService
             $song->setVersion($json->_version);
             $song->setName(trim($json->_songName));
             $song->setLastDateUpload(new DateTime());
+            if(!isset($json->_songSubName)){
+                throw new Exception("\"_songSubName\" is missing in the info.dat file!");
+            }
             $song->setSubName($json->_songSubName);
             $song->setIsExplicit(isset($json->_explicit) ? $json->_explicit == "true" : false);
             $song->setAuthorName($json->_songAuthorName);
@@ -334,12 +335,35 @@ class SongService
             @copy($theZip, $finalFolder . $song->getId() . ".zip");
             @copy($unzipFolder . "/" . $json->_coverImageFilename, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
 
+            $source = $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension();
+            if (in_array(strtolower($song->getCoverImageExtension()), [
+                '.jpg',
+                '.jpeg'
+            ])) {
+                $image = imagecreatefromjpeg($source);
+                imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
+                unlink($source);
+                imagedestroy($image);
+            } elseif (in_array(strtolower($song->getCoverImageExtension()),['.gif'])) {
+                $image = imagecreatefromgif($source);
+                imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
+                unlink($source);
+                imagedestroy($image);
+            } elseif  (in_array(strtolower($song->getCoverImageExtension()),['.png'])) {
+                $image = imagecreatefrompng($source);
+                imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
+                unlink($source);
+                imagedestroy($image);
+            }elseif(in_array(strtolower($song->getCoverImageExtension()),['.webp'])) {
+            } else {
+                throw new Exception("Your cover not a gif or a jpg or a png");
+            }
 
             if (!$song->hasCover()) {
                 $song->setWip(true);
             }
             if ($this->kernel->getEnvironment() != "dev") {
-                    $user = $song->getUser();
+                $user = $song->getUser();
                 if ($song->getWip()) {
                     /** @var Utilisateur $user */
 
@@ -368,11 +392,11 @@ class SongService
                     foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
                         $notification = new Notification();
                         $notification->setUser($follower->getUser());
-                        $notification->setMessage("New song : <a href='".
-                            $this->router->generate('song_detail',['slug'=>$song->getSlug()])."'>" .
-                            $song->getName() . "</a> by <a href='".
-                            $this->router->generate('mapper_profile',['username'=>$user->getUsername()])."'>" .
-                            $user->getMapperName()."</a>");
+                        $notification->setMessage("New song : <a href='" .
+                            $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
+                            $song->getName() . "</a> by <a href='" .
+                            $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
+                            $user->getMapperName() . "</a>");
                         $this->em->persist($notification);
                     }
                     $this->em->flush();
@@ -382,11 +406,11 @@ class SongService
                     foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map) as $follower) {
                         $notification = new Notification();
                         $notification->setUser($follower->getUser());
-                        $notification->setMessage("Edit song : <a href='".
-                            $this->router->generate('song_detail',['slug'=>$song->getSlug()])."'>" .
-                            $song->getName() . "</a> by <a href='".
-                            $this->router->generate('mapper_profile',['username'=>$user->getUsername()])."'>" .
-                            $user->getMapperName()."</a>");
+                        $notification->setMessage("Edit song : <a href='" .
+                            $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
+                            $song->getName() . "</a> by <a href='" .
+                            $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
+                            $user->getMapperName() . "</a>");
                         $this->em->persist($notification);
                     }
                     $this->em->flush();
@@ -469,9 +493,9 @@ class SongService
         // + Number of yellow combos * base speed for 3 second
 
         $theoricalMaxScore = ($baseSpeed * $duration) + ($noteCount * 0.3 * $baseSpeed / 4)
-                                                      - ($miss * 0.3 * $baseSpeed / 4)
-                                                      + ($maxBlueCombo * 3 / 4 * $baseSpeed)
-                                                      + ($maxYellowCombo * 3 * $baseSpeed);
+            - ($miss * 0.3 * $baseSpeed / 4)
+            + ($maxBlueCombo * 3 / 4 * $baseSpeed)
+            + ($maxYellowCombo * 3 * $baseSpeed);
 
         return round($theoricalMaxScore, 2);
     }
@@ -966,7 +990,7 @@ class SongService
             foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
                 $rank = $this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]);
                 $diff = $this->em->getRepository(SongDifficulty::class)->findOneBy([
-                    'song' => $song,
+                    'song'           => $song,
                     'difficultyRank' => $rank
                 ]);
                 if ($diff == null) {
@@ -995,9 +1019,9 @@ class SongService
     public function getLastSongsPlayed($count)
     {
         return $this->em->getRepository(Song::class)
-            ->createQueryBuilder('s')
-            ->leftJoin('s.songHashes', 'song_hashes')
-            ->leftJoin(Score::class, 'score', Join::WITH, 'score.hash = song_hashes.hash')->orderBy('score.updatedAt', 'DESC')->setFirstResult(0)->setMaxResults($count)->getQuery()->getResult();
+                        ->createQueryBuilder('s')
+                        ->leftJoin('s.songHashes', 'song_hashes')
+                        ->leftJoin(Score::class, 'score', Join::WITH, 'score.hash = song_hashes.hash')->orderBy('score.updatedAt', 'DESC')->setFirstResult(0)->setMaxResults($count)->getQuery()->getResult();
 
     }
 
@@ -1073,14 +1097,14 @@ class SongService
     {
         return $this->em->getRepository(Song::class)->createQueryBuilder('s')->distinct()->leftJoin('s.categoryTags', 'category_tags')->where("category_tags.id IN (:categories)")->andWhere('s.id != :song')->setParameter('categories', $song->getCategoryTags())->setParameter('song', $song)
 //            ->orderBy('s')
-            ->setMaxResults($max)->setFirstResult(0)->getQuery()->getResult();
+                        ->setMaxResults($max)->setFirstResult(0)->getQuery()->getResult();
     }
 
 
     public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty)
     {
         $mine = $this->em->getRepository(Score::class)->findOneBy([
-            'user' => $user,
+            'user'           => $user,
             'songDifficulty' => $songDifficulty
         ]);
         if ($mine == null) {
