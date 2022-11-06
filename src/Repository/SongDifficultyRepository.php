@@ -76,7 +76,7 @@ class SongDifficultyRepository extends ServiceEntityRepository
     * @throws ORMException
     * @throws OptimisticLockException
     */
-    public function finAllScoresRankedFromAllUsers()
+    public function findAllScoresRankedFromAllUsers()
         {
             return $this->createQueryBuilder('s')
                 ->where("s.isRanked = 1")

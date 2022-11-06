@@ -32,7 +32,7 @@ class RankedScores
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="scores")
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;

@@ -6,12 +6,11 @@ use App\Entity\RankedScores;
 use App\Entity\Score;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
-use App\Entity\SongDifficulty;
 use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreHistoryRepository;
-use App\Repository\SongDifficultyRepository;
 use App\Repository\ScoreRepository;
-use Doctrine\ORM\Mapping as ORM;
+use App\Repository\SongDifficultyRepository;
+use App\Repository\UtilisateurRepository;
 
 class RankingScoreService
 {
@@ -20,11 +19,16 @@ class RankingScoreService
     private RankedScoresRepository $rankedScoresRepository;
     private ScoreHistoryRepository $scoreHistoryRepository;
     private ScoreRepository $scoreRepository;
+    private UtilisateurRepository $userRepository;
 
-    public function __construct(ScoreRepository $scoreRepository, RankedScoresRepository $rankedScoresRepository, SongDifficultyRepository $songDifficultyRepository)
+    public function __construct(ScoreRepository          $scoreRepository,
+                                UtilisateurRepository    $userRepository,
+                                RankedScoresRepository   $rankedScoresRepository,
+                                SongDifficultyRepository $songDifficultyRepository)
     {
         $this->scoreRepository = $scoreRepository;
         $this->rankedScoresRepository = $rankedScoresRepository;
+        $this->userRepository = $userRepository;
         $this->songDifficultyRepository = $songDifficultyRepository;
     }
 
@@ -56,9 +60,19 @@ class RankingScoreService
     }
 
     public function calculateAll()
-        {
-            //we get all the existing ranked scores for all the user and all the ranked songs
-            $rankedSongs = $this->songDifficultyRepository->finAllScoresRankedFromAllUsers();
+    {
+        //we get all the existing users with ranked scores
+        foreach ($this->userRepository->findAllWithRankedScore() as $user) {
+            foreach ($user->getScoresRanked() as $score) {
+                $score->setRawPP($this->calculateRawPP($score));
+                $this->scoreRepository->add($score);
+            }
+            /** @var RankedScores $rankedScore */
+            $rankedScore = $this->rankedScoresRepository->findOneBy(['user' => $user]);
+            $rankedScore->setTotalPPScore($this->calculateTotalPondPPScore($user));
+            $this->rankedScoresRepository->add($rankedScore);
+        }
+
 
 //             //first we re calculate all the raw pp
 //             foreach ($rankedSongs->getSongDifficulties() as $difficulty) {
@@ -87,7 +101,7 @@ class RankingScoreService
 //                      $this->rankedScoresRepository->add($rankedScore);
 //                  }
 //             }
-        }
+    }
 
     public function calculateTotalPondPPScore(Utilisateur $user)
     {
@@ -115,20 +129,19 @@ class RankingScoreService
         $maxSongScore = $score->getSongDifficulty()->getTheoricalMaxScore();
         $minSongScore = $score->getSongDifficulty()->getTheoricalMinScore();
 
-       //We subtract the theoretical min score to the user effective score
-       //this is because the boat as a minimum speed. Doing so we consider that if no runes as been hit, then the score is 0
-               $realUserScore = $userScore - $minSongScore;
-               if ($realUserScore < 0) {
-                   $realUserScore = 0;
-               }
+        //We subtract the theoretical min score to the user effective score
+        //this is because the boat as a minimum speed. Doing so we consider that if no runes as been hit, then the score is 0
+        $realUserScore = $userScore - $minSongScore;
+        if ($realUserScore < 0) {
+            $realUserScore = 0;
+        }
 
-               // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
-               // it is ponderated by the song level
-               $rawPP = (($realUserScore / $maxSongScore) * (0.4 + 0.1 * $songLevel)) * 250;
+        // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
+        // it is ponderated by the song level
+        $rawPP = (($realUserScore / $maxSongScore) * (0.4 + 0.1 * $songLevel)) * 250;
 
         return round($rawPP, 2);
     }
-
 
 
 }
