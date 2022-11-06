@@ -51,7 +51,7 @@ class WanadevApiController extends AbstractController
      */
     public function score(Request $request,ManagerRegistry $doctrine, string $apiKey, string $hash,
                           SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository,
-                          ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository,
+                          ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, RankingScoreService $rankingScoreService,
                           ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
     {
         /** @var Utilisateur $user */
@@ -90,7 +90,7 @@ class WanadevApiController extends AbstractController
             $newScore->setExtra(json_encode($data['extra']));
             $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
             if ($songDiff->isRanked()) {
-                $rawPP = $scoreService->calculateRawPP($newScore);
+                $rawPP = $rankingScoreService->calculateRawPP($newScore);
                 $newScore->setRawPP($rawPP);
             }
             /** @var Score $score */
@@ -112,7 +112,7 @@ class WanadevApiController extends AbstractController
 
             //calculation of the ponderate PP scores
             if ($songDiff->isRanked()) {
-                $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
+                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($scoreRepository, $user);
                 //insert/update of the score into ranked_scores
                 $rankedScore = $rankedScoresRepository->findOneBy([
                     'user' => $user

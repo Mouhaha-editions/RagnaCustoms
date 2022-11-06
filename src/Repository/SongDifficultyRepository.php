@@ -71,4 +71,16 @@ class SongDifficultyRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+    * @throws ORMException
+    * @throws OptimisticLockException
+    */
+    public function finAllScoresRankedFromAllUsers()
+        {
+            return $this->createQueryBuilder('s')
+                ->where("s.isRanked = 1")
+                ->getQuery()
+                ->getResult();
+        }
 }

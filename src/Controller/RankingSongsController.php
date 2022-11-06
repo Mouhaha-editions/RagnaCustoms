@@ -98,5 +98,14 @@ class RankingSongsController extends AbstractController
         ]);
     }
 
+     /**
+     * @Route("/ranking-song/calculateAll", name="calculateAll")
+     */
+    public function calculateAll(RankingScoreService $rankingScoreService) {
+ $rankingScoreService->calculateAll();
+        return $this->redirectToRoute('ranking_song');
+
+    }
+
 
 }

@@ -2,11 +2,14 @@
 
 {% block body %}
     <div {{ stimulus_controller('ranking-song') }} class="container">
-        <div class="row pt-5">
-            <div class="col-md-10 text-left">
-                {{ form_start(form) }}
-                {{ form_end(form) }}
+            <div class="row pt-5">
+                <div class="col-md-10 text-left">
+                    {{ form_start(form) }}
+                    {{ form_end(form) }}
+                </div>
             </div>
         </div>
-    </div>
+        <div>
+        <a href="/ranking-song/calculateAll">test</a>
+        </div>
 {% endblock %}

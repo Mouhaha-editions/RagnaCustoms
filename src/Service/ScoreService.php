@@ -201,36 +201,5 @@ class ScoreService
     {
         return count($this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where('s.score > :my_score')->andWhere('s.songDifficulty = :difficulty')->setParameter('my_score', $getScore)->setParameter('difficulty', $songDifficulty)->groupBy('s.user')->getQuery()->getResult()) + 1;
     }
-
-    public function calculateTotalPondPPScore(ScoreRepository $scoreRepository, Utilisateur $user)
-    {
-        $totalPP = 0;
-        $scores = $scoreRepository->createQueryBuilder('score')->leftJoin('score.songDifficulty', 'diff')->where('score.user = :user')->andWhere('diff.isRanked = true')->setParameter('user', $user)->addOrderBy('score.rawPP', 'desc')->getQuery()->getResult();
-
-        $index = 0;
-        foreach ($scores as $score) {
-            $rawPPScore = $score->getRawPP();
-            $pondPPScore = $rawPPScore * pow(0.965, $index);
-            $totalPP = $totalPP + $pondPPScore;
-
-            //register the weighted PP score
-            $score->setWeightedPP(round($pondPPScore, 2));          
-
-            $index++;
-        }
-        return round($totalPP, 2);
-    }
-
-    public function calculateRawPP(Score $score)
-    {
-        $userScore = $score->getScore() / 100;
-        $songLevel = $score->getSongDifficulty()->getDifficultyRank()->getLevel();
-        $maxSongScore = $score->getSongDifficulty()->getTheoricalMaxScore();
-        // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
-        // it is ponderated by the song level
-        $rawPP = (($userScore / $maxSongScore) * (0.4 + 0.1 * $songLevel)) * 100;
-
-        return round($rawPP, 2);
-    }
 }
 
