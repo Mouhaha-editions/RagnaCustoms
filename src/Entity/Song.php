@@ -997,7 +997,7 @@ class Song
 
     public function hasCover(): bool
     {
-        $cover = "/covers/" . $this->getId() . $this->getCoverImageExtension();
+        $cover = "/covers/" . $this->getId() . '.webp';
         if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
             return false;
         }
