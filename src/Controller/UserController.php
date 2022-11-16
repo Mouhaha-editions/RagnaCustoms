@@ -316,7 +316,11 @@ class UserController extends AbstractController
             // and use the final redirect url to redirect your user to the relevant unlocked content or feature in your site/app.
             $api_client = new API($user->getPatreonAccessToken());
             $current_member = $api_client->fetch_user();
-var_dump($current_member);die;
+            echo(json_encode($current_member));
+            die;
+
+
+
         }
 
 // Return from the API can be received in either array, object or JSON formats by setting the return format. It defaults to array if not specifically set. Specifically setting return format is not necessary. Below is shown as an example of having the return parsed as an object. If there is anyone using Art4 JSON parser lib or any other parser, they can just set the API return to JSON and then have the return parsed by that parser
