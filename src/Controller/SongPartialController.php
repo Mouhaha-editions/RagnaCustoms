@@ -36,6 +36,7 @@ class SongPartialController extends AbstractController
     public function lastPlayed(ScoreHistoryRepository $scoreHistoryRepository,SongRepository $songRepository): Response
     {
         $scores = $scoreHistoryRepository->createQueryBuilder("score")
+            ->select("s.id")
             ->leftJoin("score.songDifficulty",'diff')
             ->leftJoin("diff.song",'s')
             ->orderBy('score.createdAt', 'DESC')
@@ -43,8 +44,8 @@ class SongPartialController extends AbstractController
             ->andWhere('s.wip != true')
             ->setFirstResult(0)
             ->setMaxResults($this->count)
-            ->getQuery()->getResult();
-        $songs = array_map(function(ScoreHistory $score){return $score->getSongDifficulty()->getSong();}, $scores);
+            ->getQuery()->getArrayResult();
+        $songs = array_map(function(array $score) use($songRepository){return $songRepository->find($score['id']);}, $scores);
 
 
         return $this->render('song_partial/index.html.twig', [
