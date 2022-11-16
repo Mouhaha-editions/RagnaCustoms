@@ -311,16 +311,15 @@ class UserController extends AbstractController
 
             $user->setPatreonAccessToken($access_token);
             $user->setPatreonRefreshToken($refresh_token);
-            $userRepo->add($user);
             // Here you can decode the state var returned from Patreon,
             // and use the final redirect url to redirect your user to the relevant unlocked content or feature in your site/app.
             $api_client = new API($user->getPatreonAccessToken());
             $current_member = $api_client->fetch_user();
-            echo(json_encode($current_member));
-            die;
-
-
-
+            $user->setPatreonUser($current_member['data']['id']);
+            if (count($current_member['data']["relationships"]['memberships']['data']) > 0) {
+                $user->setIsPatreon(true);
+            }
+            $userRepo->add($user);
         }
 
 // Return from the API can be received in either array, object or JSON formats by setting the return format. It defaults to array if not specifically set. Specifically setting return format is not necessary. Below is shown as an example of having the return parsed as an object. If there is anyone using Art4 JSON parser lib or any other parser, they can just set the API return to JSON and then have the return parsed by that parser
