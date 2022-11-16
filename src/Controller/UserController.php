@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
@@ -11,9 +12,10 @@ use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
-use App\Service\StatisticService;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
+use Patreon\API;
+use Patreon\OAuth;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -57,9 +59,9 @@ class UserController extends AbstractController
 
         return $this->render('user/partial/song_played.html.twig', [
             'controller_name' => 'UserController',
-            'pagination' => $pagination,
-            'user' => $utilisateur,
-            'mapperProfile' => false,
+            'pagination'      => $pagination,
+            'user'            => $utilisateur,
+            'mapperProfile'   => false,
         ]);
     }
 
@@ -96,19 +98,19 @@ class UserController extends AbstractController
 
         return $this->render('user/progress.html.twig', [
             'controller_name' => 'UserController',
-            'scores' => $scores,
-            "song" => $song,
-            "level" => $level,
-            "labels" => $labels,
-            "data" => $data,
-            "notesHit" => $notesHit,
+            'scores'          => $scores,
+            "song"            => $song,
+            "level"           => $level,
+            "labels"          => $labels,
+            "data"            => $data,
+            "notesHit"        => $notesHit,
         ]);
     }
 
     /**
      * @Route("/mapper-profile/{username}", name="mapper_profile")
      */
-    public function mappedProfile(Request $request,ManagerRegistry $doctrine, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
+    public function mappedProfile(Request $request, ManagerRegistry $doctrine, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
     {
         $qb = $doctrine->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->groupBy("s.id");
 
@@ -280,22 +282,52 @@ class UserController extends AbstractController
 
         return $this->render('user/partial/song_mapped.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $utilisateur,
-            'categories' => $categories,
-            'songs' => $songs
+            'user'            => $utilisateur,
+            'categories'      => $categories,
+            'songs'           => $songs
         ]);
     }
+
+
     /**
      * @Route("/user/app-and-premium", name="user_applications")
      */
-    public function ApplicationsAndPremium()
+    public function ApplicationsAndPremium(Request $request, UtilisateurRepository $userRepo)
     {
+        /** @var Utilisateur $user */
+        $user = $this->getUser();
+        if ($request->get('code')) {
+            $oauth_client = new OAuth($this->getParameter('patreon_client_id'), $this->getParameter('patreon_client_secret'));
+
+            $tokens = $oauth_client->get_tokens($_GET['code'], $this->generateUrl('user_applications', [], UrlGeneratorInterface::ABS_URL));
+
+            $access_token = $tokens['access_token'];
+            $refresh_token = $tokens['refresh_token'];
+// Here, you should save the access and refresh tokens for this user somewhere.
+// Conceptually this is the point either you link an existing user of your app with his/her Patreon account,
+// or, if the user is a new user, create an account for him or her in your app, log him/her in,
+// and then link this new account with the Patreon account.
+// More or less a social login logic applies here.
+
+            $user->setPatreonAccessToken($access_token);
+            $user->setPatreonRefreshToken($refresh_token);
+            $userRepo->add($user);
+            // Here you can decode the state var returned from Patreon,
+            // and use the final redirect url to redirect your user to the relevant unlocked content or feature in your site/app.
+            $api_client = new API($user->getPatreonAccessToken());
+            $current_member = $api_client->fetch_user();
+var_dump($current_member);die;
+        }
+
+// Return from the API can be received in either array, object or JSON formats by setting the return format. It defaults to array if not specifically set. Specifically setting return format is not necessary. Below is shown as an example of having the return parsed as an object. If there is anyone using Art4 JSON parser lib or any other parser, they can just set the API return to JSON and then have the return parsed by that parser
 
 
+// Now get the current user:
         return $this->render('user/application.html.twig', [
 
         ]);
-}
+    }
+
     /**
      * @Route("/user", name="user")
      */
@@ -333,8 +365,8 @@ class UserController extends AbstractController
 
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
-            'pagination' => $pagination,
-            'form' => $form->createView()
+            'pagination'      => $pagination,
+            'form'            => $form->createView()
         ]);
     }
 }

@@ -202,6 +202,21 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $votes;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $patreonAccessToken;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $patreonRefreshToken;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $patreonUser;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -1101,6 +1116,42 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function hasNotificationPreference(ENotification $event)
     {
         return in_array($event, $this->getNotificationPreferences());
+    }
+
+    public function getPatreonAccessToken(): ?string
+    {
+        return $this->patreonAccessToken;
+    }
+
+    public function setPatreonAccessToken(?string $patreonAccessToken): self
+    {
+        $this->patreonAccessToken = $patreonAccessToken;
+
+        return $this;
+    }
+
+    public function getPatreonRefreshToken(): ?string
+    {
+        return $this->patreonRefreshToken;
+    }
+
+    public function setPatreonRefreshToken(?string $patreonRefreshToken): self
+    {
+        $this->patreonRefreshToken = $patreonRefreshToken;
+
+        return $this;
+    }
+
+    public function getPatreonUser(): ?string
+    {
+        return $this->patreonUser;
+    }
+
+    public function setPatreonUser(?string $patreonUser): self
+    {
+        $this->patreonUser = $patreonUser;
+
+        return $this;
     }
 
 }
