@@ -6,14 +6,12 @@
         <div class="container pt-4">
             <div class="row">
                 <div class="col-md-6">
-                    <h2>{{ "Applications Linked"|trans }}</h2>
-                    {% if app.user.discordEmail %}
-                    <a href="">Discord</a>
-                    {% endif %}
+
                     <h2>{{ "Applications"|trans }}</h2>
-                    {% if not app.user.discordEmail %}
-                        <a href="">Discord</a>
-                    {% endif %}
+{#                        <a href="">Discord</a>#}
+                    <a href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id={{ patreon_client_id}}&redirect_uri={{ url('user_applications') }}
+    &scope=<optional list of requested scopes>
+    &state=<optional string>">{{ "Link your Patreon account"|trans }}</a>
                 </div>
                 <div class="col-md-6">
                     <h2>{{ "Premium"|trans }}</h2>
