@@ -15,7 +15,7 @@
                         <th>{{ "#" }}</th>
                         <th>{{ "User"|trans }}</th>
                         <th class="text-right">{{ "Score"|trans }}</th>
-                        <th class="text-right">{{ "Songs Played"|trans }}</th>
+                        <th class="text-right">{{ "Diff Played"|trans }}</th>
                         <th class="text-right">{{ "Last Update"|trans }}</th>
                         {#                        <th class="text-right">{{ "Songs played"|trans }}</th> #}
                     </tr>
@@ -46,7 +46,7 @@
 
                             </td>
                             <td class="text-right">{{ score.totalPPScore|round(2) }} PP</td>
-                            <td class="text-right"><span>{{ score.user.scoresRanked|length }}</span></td>
+                            <td class="text-right"><span>{{ rankingScoreService.countRanked(score.user) }}</span></td>
                             <td class="text-right"><span>{{ score.timeAgoShort() }}</span></td>
                         </tr>
                     {% endfor %}

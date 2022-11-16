@@ -5,6 +5,7 @@ twig:
         downloadsService: '@App\Service\DownloadService'
         mapperService: '@App\Service\MapperService'
         scoreService: '@App\Service\ScoreService'
+        rankingScoreService: '@App\Service\RankingScoreService'
         songService: '@App\Service\SongService'
         statisticService: '@App\Service\StatisticService'
         matomoService: '@App\Service\MatomoService'
