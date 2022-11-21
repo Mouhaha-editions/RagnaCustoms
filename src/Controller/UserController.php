@@ -12,6 +12,7 @@ use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
+use App\Service\GrantedService;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Patreon\API;

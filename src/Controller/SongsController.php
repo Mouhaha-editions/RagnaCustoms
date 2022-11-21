@@ -15,6 +15,7 @@ use App\Repository\SongCategoryRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\DiscordService;
 use App\Service\DownloadService;
+use App\Service\GrantedService;
 use App\Service\ScoreService;
 use App\Service\SongService;
 use DateTime;
@@ -346,7 +347,7 @@ class SongsController extends AbstractController
         $em->flush();
 
         $downloadService->addOne($song);
-        $this->RestrictedDownload($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip",$song->getId().".zip");
+        $this->RestrictedDownload($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip", $song->getId() . ".zip");
 
 //        $response = new Response($fileContent);
 //        $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $song->getId() . '.zip');
@@ -360,7 +361,7 @@ class SongsController extends AbstractController
     /**
      * @Route("/songs/download/{id}/{api}", name="song_download_api", defaults={"api"=null})
      */
-    public function downloadApiKey(ManagerRegistry $doctrine, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, UtilisateurRepository $utilisateurRepository)
+    public function downloadApiKey(GrantedService $grantedService, ManagerRegistry $doctrine, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, UtilisateurRepository $utilisateurRepository)
     {
         if (!$song->isModerated()) {
             return new Response("Not available now", 403);
@@ -372,7 +373,7 @@ class SongsController extends AbstractController
         if ($user != null) {
             $downloadService->addOne($song, $api);
         }
-        if ($user != null && $user->getIsPatreon()) {
+        if ($grantedService->isGranted($user, 'ROLE_PREMIUM_LVL1')) {
             $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
 
             $response = new Response($fileContent);
@@ -385,7 +386,7 @@ class SongsController extends AbstractController
             return $response;
         } else {
             $file = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"; // Nom du fichier
-            $this->RestrictedDownload($file,$song->getId().".zip");
+            $this->RestrictedDownload($file, $song->getId() . ".zip");
         }
     }
 
@@ -401,7 +402,7 @@ class SongsController extends AbstractController
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
         $downloadService->addOne($song);
-        if ($this->isGranted('ROLE_USER') && $this->getUser()->getIsPatreon()) {
+        if ($this->isGranted('ROLE_PREMIUM_LVL1') ) {
             $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
             $response = new Response($fileContent);
             $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $this->cleanName($song->getName()) . '.zip');
@@ -413,7 +414,7 @@ class SongsController extends AbstractController
 
         } else {
             $file = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"; // Nom du fichier
-            $this->RestrictedDownload($file,$song->getId().".zip");
+            $this->RestrictedDownload($file, $song->getId() . ".zip");
         }
 
     }
@@ -533,14 +534,14 @@ class SongsController extends AbstractController
         return new JsonResponse(['response' => $this->renderView("songs/partial/preview_player.html.twig", ['song' => $song])]);
     }
 
-    private function RestrictedDownload(string $file,string $filename)
+    private function RestrictedDownload(string $file, string $filename)
     {
         $speed = 1000; // i.e. 50 kb/s temps de telechargement
         if (file_exists($file) && is_file($file)) {
             header("Cache-control: private");
             header("Content-Type: application/octet-stream");
             header("Content-Length: " . filesize($file));
-            header("Content-Disposition: filename=" . $filename );
+            header("Content-Disposition: filename=" . $filename);
             flush();
             $fd = fopen($file, "r");
             while (!feof($fd)) {
