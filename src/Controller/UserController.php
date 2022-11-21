@@ -332,6 +332,7 @@ class UserController extends AbstractController
 // You dont need the below line if you are going to use the return as array.
 //                $api_client->api_return_format = 'object';
             $user->setPatreonData($api_client->fetch_user());
+                $userRepo->add($user);
 
 
             }catch(Exception $e) {}
