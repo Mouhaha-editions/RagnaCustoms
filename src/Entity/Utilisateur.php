@@ -217,6 +217,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $patreonUser;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $patreonData;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -1153,5 +1158,24 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPatreonData()
+    {
+        return $this->patreonData;
+    }
+
+    /**
+     * @param mixed $patreonData
+     */
+    public function setPatreonData($patreonData): self
+    {
+        $this->patreonData = $patreonData;
+        return $this;
+    }
+
+
 
 }

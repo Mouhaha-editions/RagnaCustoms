@@ -298,33 +298,44 @@ class UserController extends AbstractController
         $user = $this->getUser();
         if ($request->get('code')) {
             $oauth_client = new OAuth($this->getParameter('patreon_client_id'), $this->getParameter('patreon_client_secret'));
-
             $tokens = $oauth_client->get_tokens($_GET['code'], $this->generateUrl('user_applications', [], UrlGeneratorInterface::ABS_URL));
-
-            $access_token = $tokens['access_token'];
-            $refresh_token = $tokens['refresh_token'];
+           if(!isset($tokens['error'])) {
+               $access_token = $tokens['access_token'];
+               $refresh_token = $tokens['refresh_token'];
 // Here, you should save the access and refresh tokens for this user somewhere.
 // Conceptually this is the point either you link an existing user of your app with his/her Patreon account,
 // or, if the user is a new user, create an account for him or her in your app, log him/her in,
 // and then link this new account with the Patreon account.
 // More or less a social login logic applies here.
 
-            $user->setPatreonAccessToken($access_token);
-            $user->setPatreonRefreshToken($refresh_token);
-            // Here you can decode the state var returned from Patreon,
-            // and use the final redirect url to redirect your user to the relevant unlocked content or feature in your site/app.
-            $api_client = new API($user->getPatreonAccessToken());
-            $current_member = $api_client->fetch_user();
-            $user->setPatreonUser($current_member['data']['id']);
-            if (count($current_member['data']["relationships"]['memberships']['data']) > 0) {
-                $user->setIsPatreon(true);
-            }
-            $userRepo->add($user);
+               $user->setPatreonAccessToken($access_token);
+               $user->setPatreonRefreshToken($refresh_token);
+               // Here you can decode the state var returned from Patreon,
+               // and use the final redirect url to redirect your user to the relevant unlocked content or feature in your site/app.
+               $api_client = new API($user->getPatreonAccessToken());
+               $current_member = $api_client->fetch_user();
+               $user->setPatreonUser($current_member['data']['id']);
+
+               if (count($current_member['data']["relationships"]['memberships']['data']) > 0) {
+                   $user->setIsPatreon(true);
+               }
+               $userRepo->add($user);
+           }
         }
 
 // Return from the API can be received in either array, object or JSON formats by setting the return format. It defaults to array if not specifically set. Specifically setting return format is not necessary. Below is shown as an example of having the return parsed as an object. If there is anyone using Art4 JSON parser lib or any other parser, they can just set the API return to JSON and then have the return parsed by that parser
+        if ($user->getPatreonAccessToken()) {
+            try {
+                $api_client = new API($user->getPatreonAccessToken());
+// Return from the API can be received in either array, object or JSON formats by setting the return format. It defaults to array if not specifically set. Specifically setting return format is not necessary. Below is shown as an example of having the return parsed as an object. Default is array (associated) and there is no need to specifically set it if you are going to use it as an array. If there is anyone using Art4 JSON parser lib or any other parser, they can just set the API return to json and then have the return parsed by that parser
+
+// You dont need the below line if you are going to use the return as array.
+//                $api_client->api_return_format = 'object';
+            $user->setPatreonData($api_client->fetch_user());
 
 
+            }catch(Exception $e) {}
+        }
 // Now get the current user:
         return $this->render('user/application.html.twig', [
 
