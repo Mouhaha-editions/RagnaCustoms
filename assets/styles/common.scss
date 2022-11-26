@@ -778,3 +778,9 @@ img.big-rounded {
 .force-default{
   text-transform: inherit!important;
 }
+.membership {
+  border:1px solid white;
+  b{
+    color:$patreon
+  }
+}

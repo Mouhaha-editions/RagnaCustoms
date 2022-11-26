@@ -22,6 +22,13 @@
                                 <small>We use <a href="https://gravatar.com/" target="_blank">Gravatar</a> for your
                                     avatar</small>
                             </div>
+                            <div class="text-center mt-2 p-3 membership">
+                                Your membership: {% if is_granted('ROLE_PREMIUM_LVL3') %}<b>Tier 3</b>
+                                {% elseif is_granted('ROLE_PREMIUM_LVL2') %}<b>Tier 2</b>
+                                {% elseif is_granted('ROLE_PREMIUM_LVL1') %}<b>Tier 1</b>
+                                {% else %}None <small><a href="{{ url('user_applications') }}">Get
+                                        one</a></small>{% endif %}
+                            </div>
                         </div>
                     </div>
 
@@ -68,7 +75,7 @@
                         </div>
                         <div class="mb-3">
                             <small>
-                                {{"If you already get the application <a href=\"ragnac://api/{{ app.user.apiKey }}\">click
+                                {{ "If you already get the application <a href=\"ragnac://api/{{ app.user.apiKey }}\">click
                                 here</a> to auto-set your API key"|trans|raw }}
                             </small>
                         </div>
@@ -84,10 +91,10 @@
                                 {{ form_widget(form.isMapper,{"attr":{"class":"form-check-input"}}) }}
                                 {{ form_label(form.isMapper,null,{"label_attr":{"class":"form-check-label"}}) }}
                             </div>
-{#                            <div class="form-check form-check-inline">#}
-{#                                {{ form_widget(form.isPublic,{"attr":{"class":"form-check-input"}}) }}#}
-{#                                {{ form_label(form.isPublic,null,{"label_attr":{"class":"form-check-label"}}) }}#}
-{#                            </div>#}
+                            {#                            <div class="form-check form-check-inline"> #}
+                            {#                                {{ form_widget(form.isPublic,{"attr":{"class":"form-check-input"}}) }} #}
+                            {#                                {{ form_label(form.isPublic,null,{"label_attr":{"class":"form-check-label"}}) }} #}
+                            {#                            </div> #}
                             <div class="form-check form-check-inline">
                                 {{ form_widget(form.enableEmailNotification,{"attr":{"class":"form-check-input"}}) }}
                                 {{ form_label(form.enableEmailNotification,null,{"label_attr":{"class":"form-check-label"}}) }}
@@ -100,11 +107,11 @@
                             {{ form_row(form.mapperName) }}
                             {{ form_row(form.mapperDiscord) }}
                             {{ form_row(form.mapperDescription) }}
-{#                            {% if app.user.discordUsername is null %}#}
-{#                                <a href="{{ url('discord_link') }}" class="btn btn-sm btn-info btn-discord">link discord</a>#}
-{#                            {% else %}#}
-{#                                {{ app.user.discordUsername }}#}
-{#                            {% endif %}#}
+                            {#                            {% if app.user.discordUsername is null %} #}
+                            {#                                <a href="{{ url('discord_link') }}" class="btn btn-sm btn-info btn-discord">link discord</a> #}
+                            {#                            {% else %} #}
+                            {#                                {{ app.user.discordUsername }} #}
+                            {#                            {% endif %} #}
 
                             <div class="float-right">
                                 <button type="submit" class="btn btn-primary">{{ "Save"|trans }}</button>
