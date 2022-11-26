@@ -5,13 +5,33 @@
     <div {{ stimulus_controller('user_application') }} {{ stimulus_target('user_application', 'background') }}>
         <div class="container pt-4">
             <div class="row">
+                <div class="col-12 text-center mt-2 mb-4 p-3 membership">
+                    Your membership: {% if is_granted('ROLE_PREMIUM_LVL3') %}<b>Tier 3</b>
+                    {% elseif is_granted('ROLE_PREMIUM_LVL2') %}<b>Tier 2</b>
+                    {% elseif is_granted('ROLE_PREMIUM_LVL1') %}<b>Tier 1</b>
+                    {% else %}None <small><a href="{{ url('user_applications') }}">Get
+                            one</a></small>{% endif %}
+                </div>
                 <div class="col-md-6">
-
                     <h2>{{ "Applications"|trans }}</h2>
-{#                        <a href="">Discord</a>#}
+                    {%  if app.user.patreonUser is not empty %}
                     <div class="be-patreon">
-                    <a data-no-swup="true" href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id={{ patreon_client_id}}&redirect_uri={{ url('user_applications') }}">{{ "Link your Patreon account"|trans }}</a>
+                        <a data-no-swup="true" href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id={{ patreon_client_id}}&redirect_uri={{ url('user_applications') }}">{{ "Update your Patreon informations"|trans }}</a>
                     </div>
+                    {% else %}
+                        <div class="be-patreon">
+                            <a data-no-swup="true" href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id={{ patreon_client_id}}&redirect_uri={{ url('user_applications') }}">{{ "Link your Patreon account"|trans }}</a>
+                        </div>
+                    {% endif %}
+                    {%  if app.user.patreonUser is not empty %}
+                        <div class="be-twitch">
+                            <a data-no-swup="true" href="https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={{ patreon_client_id}}&redirect_uri={{ url('user_applications') }}">{{ "Update your Twitch informations"|trans }}</a>
+                        </div>
+                    {% else %}
+                        <div class="be-twitch">
+                            <a data-no-swup="true" href="https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={{ patreon_client_id}}&redirect_uri={{ url('user_applications') }}">{{ "Link your Twitch account"|trans }}</a>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="col-md-6">
                     <h2>{{ "Premium"|trans }}</h2>
@@ -21,9 +41,8 @@
                     </div>
                     <h5 class="pt-4">Q: How to be Premium?</h5>
                     <div class="indent">
-                        Premium use Patreon subscriptions, each level of subscription unlock some extra settings.
+                        Premium use Patreon & Twitch subscriptions, each level of subscription unlock some extra settings.
                     </div>
-
                 </div>
             </div>
         </div>

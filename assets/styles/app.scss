@@ -191,8 +191,9 @@ header {
 }
 
 .be-patreon {
-  font-size: 25px;
-  line-height: 50px;
+  margin-top:18px;
+  font-size: 18px;
+  line-height: 20px;
   text-shadow: 0 0 8px black;
 
   a {
@@ -203,11 +204,33 @@ header {
     text-shadow: none;
     display: inline-block;
     padding: 5px 20px;
-    font-size: 25px;
+    font-size: 18px;
 
     &:hover {
       text-decoration: none;
       background: lighten(#f96854, 5%);
+    }
+  }
+}
+.be-twitch {
+  margin-top:18px;
+  font-size: 18px;
+  line-height: 20px;
+  text-shadow: 0 0 8px black;
+
+  a {
+    background: $twitch;
+    color: #fff;
+    line-height: inherit;
+    box-shadow: 0px 0px 20px #000;
+    text-shadow: none;
+    display: inline-block;
+    padding: 5px 20px;
+    font-size: 18px;
+
+    &:hover {
+      text-decoration: none;
+      background: lighten($twitch, 5%);
     }
   }
 }

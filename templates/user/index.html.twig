@@ -33,7 +33,10 @@
                     </div>
 
                     <div class="col-md-4">
-                        <h2 class="username">{{ app.user.username }}</h2>
+                        <h2 class="username">{{ membershipService.displayUsername(app.user)|raw }}</h2>
+                        <div class="{% if is_granted('ROLE_PREMIUM_LVL2') %}hide{% endif %}"> Username color
+                            : {{ form_widget(form.usernameColor) }}
+                        </div>
                         <div class="encart p-2 d-flex justify-content-center align-self-center">
                             <div class="big flex-fill">
                                 <div class="credits">{{ app.user.credits??0 }}</div>

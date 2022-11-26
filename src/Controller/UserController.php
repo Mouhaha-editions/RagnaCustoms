@@ -363,6 +363,9 @@ class UserController extends AbstractController
         $form = $this->createForm(UtilisateurType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if(!$this->isGranted('ROLE_PREMIUM_LVL2')){
+                $user->setUsernameColor("#ffffff");
+            }
             $email_user = $utilisateurRepository->findOneBy(['email' => $user->getEmail()]);
             if ($email_user != null && $user->getId() !== $email_user->getId()) {
                 $form->addError(new FormError("This email is already used."));

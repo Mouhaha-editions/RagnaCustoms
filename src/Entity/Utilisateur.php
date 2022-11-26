@@ -141,6 +141,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $mapper_name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $usernameColor;
+
     /**
      * @ORM\OneToMany(targetEntity=Notification::class, mappedBy="user")
      */
@@ -1173,6 +1179,24 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPatreonData($patreonData): self
     {
         $this->patreonData = $patreonData;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsernameColor()
+    {
+        return $this->usernameColor;
+    }
+
+    /**
+     * @param mixed $usernameColor
+     * @return Utilisateur
+     */
+    public function setUsernameColor($usernameColor)
+    {
+        $this->usernameColor = $usernameColor;
         return $this;
     }
 
