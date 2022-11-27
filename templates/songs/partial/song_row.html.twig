@@ -52,7 +52,7 @@
             <div class="big-buttons d-none">
                 <a data-no-swup="true" href="ragnac://install/{{ song.id }}" class="one-click"><i class="fas fa-download"></i><br/>1
                     click</a>
-                <a data-no-swup="true" href="{{ url("song_direct_download",{id:song.id}) }}" class="ddl text-uppercase" data-toggle="tooltip" title="File size: {{ songService.fileSize(song) }}"><i
+                <a data-no-swup="true" href="{{ url("song_direct_download",{id:song.id}) }}" class="ddl text-uppercase"><i
                             class="fas fa-download"></i><br/>Zip</a>
             </div>
             <a href="#"
@@ -65,6 +65,7 @@
             </a>
 
             <a href="#"
+               data-toggle="tooltip" title="File size: {{ songService.fileSize(song) }}"
                class="open-download-buttons text-success ml-1">
                 <i class="fas fa-download"></i>
             </a>
