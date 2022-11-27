@@ -114,6 +114,14 @@ class SongService
         return $this->em->getRepository(Vote::class)->createQueryBuilder('f')->where('(f.song = :song AND f.isPublic = true AND f.isModerated = true AND f.feedback is not null)')->orWhere('(f.song = :song AND f.user = :user AND f.feedback is not null)')->setParameter('song', $song)->setParameter('user', $user)->getQuery()->getResult();
     }
 
+    public function getFileSize(Song $song)
+    {
+        $size = filesize($this->kernel->getProjectDir() . "/public/songs-files/".$song->getId() . ".zip");
+        $sz = 'BKMGTP';
+        $factor = floor((strlen($size) - 1) / 3);
+        return sprintf("%.2f", $size / pow(1024, $factor)) . @$sz[$factor];
+    }
+
     /**
      * @param FormInterface $form
      * @param Song $song
@@ -217,7 +225,7 @@ class SongService
             $song->setVersion($json->_version);
             $song->setName(trim($json->_songName));
             $song->setLastDateUpload(new DateTime());
-            if(!isset($json->_songSubName)){
+            if (!isset($json->_songSubName)) {
                 throw new Exception("\"_songSubName\" is missing in the info.dat file!");
             }
             $song->setSubName($json->_songSubName);
@@ -344,17 +352,17 @@ class SongService
                 imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
                 unlink($source);
                 imagedestroy($image);
-            } elseif (in_array(strtolower($song->getCoverImageExtension()),['.gif'])) {
+            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.gif'])) {
                 $image = imagecreatefromgif($source);
                 imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
                 unlink($source);
                 imagedestroy($image);
-            } elseif  (in_array(strtolower($song->getCoverImageExtension()),['.png'])) {
+            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.png'])) {
                 $image = imagecreatefrompng($source);
                 imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
                 unlink($source);
                 imagedestroy($image);
-            }elseif(in_array(strtolower($song->getCoverImageExtension()),['.webp'])) {
+            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.webp'])) {
             } else {
                 throw new Exception("Your cover not a gif or a jpg or a png");
             }
