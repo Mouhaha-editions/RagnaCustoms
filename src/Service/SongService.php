@@ -116,10 +116,20 @@ class SongService
 
     public function getFileSize(Song $song)
     {
-        $size = filesize($this->kernel->getProjectDir() . "/public/songs-files/".$song->getId() . ".zip");
+        $size = filesize($this->kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
         $sz = 'BKMGTP';
         $factor = floor((strlen($size) - 1) / 3);
         return sprintf("%.2f", $size / pow(1024, $factor)) . @$sz[$factor];
+    }
+
+    public function getAdventCalendar()
+    {
+        return $this->em->getRepository(Song::class)
+                        ->createQueryBuilder('s')
+                        ->where('s.lastDateUpload BETWEEN \'2022-12-01\' AND \'2022-12-26\' ')
+                        ->andWhere('s.user = :user')
+                        ->setParameter('user', 29)
+                        ->getQuery()->getResult();
     }
 
     /**

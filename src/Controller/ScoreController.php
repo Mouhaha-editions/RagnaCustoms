@@ -52,12 +52,12 @@ class ScoreController extends AbstractController
         }
 
         $qb = $rankedScoresRepository->createQueryBuilder('rs')->leftJoin('rs.user', 'u')
-            ->leftJoin('u.country', 'c')->where('u.country = :country')
-            ->setParameter('country', $country)
-            ->orderBy("rs.totalPPScore", "DESC");
+                                     ->leftJoin('u.country', 'c')->where('u.country = :country')
+                                     ->setParameter('country', $country)
+                                     ->orderBy("rs.totalPPScore", "DESC");
         $scores = $pagination->setDefaults(25)->process($qb, $request);
         return $this->render('score/global_ranking.html.twig', [
-            'scores' => $scores,
+            'scores'  => $scores,
             'country' => $country
         ]);
     }
@@ -112,9 +112,9 @@ class ScoreController extends AbstractController
 
         //get the score of everyone on this song
         $scores = $scoreRepository->createQueryBuilder('score')
-            ->where('score.songDifficulty = :diff')
-            ->setParameter('diff', $songDifficulty)
-            ->getQuery()->getResult();
+                                  ->where('score.songDifficulty = :diff')
+                                  ->setParameter('diff', $songDifficulty)
+                                  ->getQuery()->getResult();
 
         //if we rank then calculate the raw PP of the song
         //if we unrank then reset the raw PP score of the song
