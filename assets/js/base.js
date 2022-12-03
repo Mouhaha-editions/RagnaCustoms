@@ -6,12 +6,10 @@ import SwupMatomoPlugin from '@swup/matomo-plugin';
 
 const swup = new Swup({
     plugins: [new SwupMatomoPlugin()]
-
-
 });
 let swl = null;
 $(function () {
-
+    $("[data-toggle=tooltip]").tooltip();
     let maxBg = 21;
     let currentBg = Math.floor(Math.random() * maxBg-1) +1;
 
