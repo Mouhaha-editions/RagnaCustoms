@@ -1187,7 +1187,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsernameColor()
     {
-        return $this->usernameColor;
+        return $this->usernameColor??"#0b8dea";
     }
 
     /**
