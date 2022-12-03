@@ -27,7 +27,7 @@
             <div class="mapper pb-3">
                 <a href="{{ url('mapper_profile', {username:song.user.username}) }}">
 {#                    <i class="fas fa-pen"></i> #}
-                    {{ song.mapper }}</a>
+                    {{ membershipService.displayMappername(song.user)|raw }}</a>
             </div>
             {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
 
