@@ -12,7 +12,7 @@
 @import 'pages/song_detail';
 @import 'pages/song_library';
 @import 'pages/song_upload';
-
+body{ overflow-x: hidden;}
 #user_profile {
   .darker {
     background: rgba(0, 0, 0, 0.21);
