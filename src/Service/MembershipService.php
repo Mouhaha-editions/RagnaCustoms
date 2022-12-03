@@ -18,7 +18,7 @@ class MembershipService
     public function  displayUsername(Utilisateur $user)
     {
         if($this->grantedService->isGranted($user,'ROLE_PREMIUM_LVL2')){
-            return "<span style='color:".$user->getUsernameColor()."'>".$user->getUsername()."</span>";
+            return "<span style='color:".$user->getUsernameColor()."'><i data-toggle='tooltip' title='Premium member' class='fas fa-gavel'></i> ".$user->getUsername()."</span>";
         }else{
             return "<span style='color:#ffffff'>".$user->getUsername()."</span>";
         }
