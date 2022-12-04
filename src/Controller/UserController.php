@@ -381,6 +381,7 @@ class UserController extends AbstractController
                 $userRepo->add($user);
             }catch(Exception $e) {}
         }
+        if(!isset($api_client)){return;}
         $current_member = $api_client->fetch_user();
 
         if ($current_member != null && isset($current_member['data']) && isset($current_member['data']['included'])) {
