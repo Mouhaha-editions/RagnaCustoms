@@ -227,6 +227,25 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="text", nullable=true)
      */
     private $patreonData;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $twitchAccessToken;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $twitchRefreshToken;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $twitchUser;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $twitchData;
 
     public function __construct()
     {
@@ -1215,6 +1234,78 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 break;
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTwitchAccessToken()
+    {
+        return $this->twitchAccessToken;
+    }
+
+    /**
+     * @param mixed $twitchAccessToken
+     * @return Utilisateur
+     */
+    public function setTwitchAccessToken($twitchAccessToken)
+    {
+        $this->twitchAccessToken = $twitchAccessToken;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTwitchRefreshToken()
+    {
+        return $this->twitchRefreshToken;
+    }
+
+    /**
+     * @param mixed $twitchRefreshToken
+     * @return Utilisateur
+     */
+    public function setTwitchRefreshToken($twitchRefreshToken)
+    {
+        $this->twitchRefreshToken = $twitchRefreshToken;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTwitchUser()
+    {
+        return $this->twitchUser;
+    }
+
+    /**
+     * @param mixed $twitchUser
+     * @return Utilisateur
+     */
+    public function setTwitchUser($twitchUser)
+    {
+        $this->twitchUser = $twitchUser;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTwitchData()
+    {
+        return $this->twitchData;
+    }
+
+    /**
+     * @param mixed $twitchData
+     * @return Utilisateur
+     */
+    public function setTwitchData($twitchData)
+    {
+        $this->twitchData = $twitchData;
         return $this;
     }
 

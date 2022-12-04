@@ -23,13 +23,13 @@
                             <a data-no-swup="true" href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id={{ patreon_client_id}}&redirect_uri={{ url('user_applications') }}">{{ "Link your Patreon account"|trans }}</a>
                         </div>
                     {% endif %}
-                    {%  if app.user.patreonUser is not empty %}
+                    {%  if app.user.twitchUser is not empty %}
                         <div class="be-twitch">
-                            <a data-no-swup="true" href="https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={{ patreon_client_id}}&redirect_uri={{ url('user_applications') }}">{{ "Update your Twitch informations"|trans }}</a>
+                            <a data-no-swup="true" href="https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={{ twitch_client_id }}&redirect_uri={{ url('user_applications') }}&scope={{ "user:read:subscriptions"|escape }}">{{ "Update your Twitch informations"|trans }}</a>
                         </div>
                     {% else %}
                         <div class="be-twitch">
-                            <a data-no-swup="true" href="https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={{ patreon_client_id}}&redirect_uri={{ url('user_applications') }}">{{ "Link your Twitch account"|trans }}</a>
+                            <a data-no-swup="true" href="https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={{ twitch_client_id}}&redirect_uri={{ url('user_applications') }}&scope={{ "user:read:subscriptions"|escape }}">{{ "Link your Twitch account"|trans }}</a>
                         </div>
                     {% endif %}
                 </div>
