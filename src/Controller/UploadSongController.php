@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Song;
 use App\Entity\SongRequest;
+use App\Form\SongRestrictedTier1Type;
+use App\Form\SongRestrictedType;
 use App\Form\SongType;
 use App\Repository\SongRepository;
 use App\Service\DiscordService;
@@ -66,10 +68,22 @@ class UploadSongController extends AbstractController
                 'response' => ""
             ]);
         }
-        $form = $this->createForm(SongType::class, $song, [
-            'method' => "post",
-            'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
-        ]);
+        if($this->isGranted('ROLE_PREMIUM_LVL2')) {
+            $form = $this->createForm(SongType::class, $song, [
+                'method' => "post",
+                'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
+            ]);
+        }else if($this->isGranted('ROLE_PREMIUM_LVL1')) {
+            $form = $this->createForm(SongRestrictedTier1Type::class, $song, [
+                'method' => "post",
+                'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
+            ]);
+        }else{
+            $form = $this->createForm(SongRestrictedType::class, $song, [
+                'method' => "post",
+                'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
+            ]);
+        }
 
         $isWip = $song->getWip();
         $form->handleRequest($request);

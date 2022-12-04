@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 use function React\Partial\placeholder;
 
-class SongType extends AbstractType
+class SongRestrictedType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -27,58 +27,58 @@ class SongType extends AbstractType
         $entity = $builder->getData();
         $builder
             ->add("zipFile", FileType::class, [
-                "mapped"      => false,
-                "required"    => $entity->getId() == null,
-                "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
-                "constraints" => [
+                "mapped" => false,
+                "required" => $entity->getId() == null,
+                "help" => "Upload a .zip file (max 8Mo) containing all the files for the map, Premium member can upload up to 15Mo.",
+                "constraints"=>[
                     new File([
-                        'maxSize'        => '10M',
-                        'maxSizeMessage' => 'You can upload up to 15Mo with a premium account Tier 2',
-                    ])
-                ]
+                        'maxSize' => '8M',
+                        'maxSizeMessage' => 'You can upload up to 8Mo with a non premium account',
+                        ])
+                    ]
             ])
             ->add('description', null, [
-                'help'      => "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description",
+                'help' => "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description",
                 'help_html' => true
             ])
             ->add('youtubeLink', TextType::class, [
-                'label'    => "Youtube Link",
-                "attr"     => ["placeholder " => "https://youtu..."],
+                'label' => "Youtube Link",
+                "attr" => ["placeholder " => "https://youtu..."],
                 'required' => false
             ])
             ->add('categoryTags', Select2EntityType::class, [
-                "class"                => SongCategory::class,
-                'remote_route'         => 'api_song_categories',
-                'multiple'             => true,
-                "label"                => "Categories",
-                'primary_key'          => 'id',
-                'text_property'        => 'label',
+                "class" => SongCategory::class,
+                'remote_route' => 'api_song_categories',
+                'multiple' => true,
+                "label" => "Categories",
+                'primary_key' => 'id',
+                'text_property' => 'label',
                 'minimum_input_length' => 0,
-                'allow_clear'          => true,
-                'delay'                => 250,
-                'placeholder'          => 'Select a category, or more ..',
+                'allow_clear' => true,
+                'delay' => 250,
+                'placeholder' => 'Select a category, or more ..',
 
                 'required' => true
             ])
             ->add('approximativeDuration', HiddenType::class, [
                 "label" => "Duration (in sec) ",
-                "help"  => "leave empty on first upload",
-                "attr"  => [
+                "help" => "leave empty on first upload",
+                "attr" => [
                     "placeholder " => "leave empty on first upload",
                 ]
             ])
             ->add('song_request', EntityType::class, [
-                'mapped'        => false,
-                'class'         => SongRequest::class,
-                'required'      => false,
-                'placeholder'   => "Not a requested song",
+                'mapped' => false,
+                'class' => SongRequest::class,
+                'required' => false,
+                'placeholder' => "Not a requested song",
                 'query_builder' => function (EntityRepository $er) use ($entity) {
                     return $er->createQueryBuilder("sr")
-                              ->leftJoin("sr.mapperOnIt", 'mapper')
-                              ->where('mapper = :mapperid')
-                              ->andWhere('sr.state IN (:available)')
-                              ->setParameter('mapperid', $entity->getUser())
-                              ->setParameter('available', [SongRequest::STATE_IN_PROGRESS]);
+                        ->leftJoin("sr.mapperOnIt", 'mapper')
+                        ->where('mapper = :mapperid')
+                        ->andWhere('sr.state IN (:available)')
+                        ->setParameter('mapperid', $entity->getUser())
+                        ->setParameter('available', [SongRequest::STATE_IN_PROGRESS]);
                 }
             ])
             ->add('wip', null, [
