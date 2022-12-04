@@ -1200,6 +1200,23 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function addRole(string $string)
+    {
+        $this->roles[] = $string;
+        $this->roles = array_unique($this->roles);
+        return $this;
+    }
+
+    public function removeRole(string $string)
+    {
+        foreach($this->roles AS $k=>$v){
+            if($v == $string){
+                unset($this->roles[$k]);
+                break;
+            }
+        }
+        return $this;
+    }
 
 
 }

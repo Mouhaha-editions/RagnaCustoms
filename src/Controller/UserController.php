@@ -289,7 +289,6 @@ class UserController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/user/app-and-premium", name="user_applications")
      */
@@ -315,10 +314,29 @@ class UserController extends AbstractController
                // and use the final redirect url to redirect your user to the relevant unlocked content or feature in your site/app.
                $api_client = new API($user->getPatreonAccessToken());
                $current_member = $api_client->fetch_user();
-               $user->setPatreonUser($current_member['data']['id']);
 
-               if (count($current_member['data']["relationships"]['memberships']['data']) > 0) {
-                   $user->setIsPatreon(true);
+               if (isset($current_member['data']) && isset($current_member['data']['included'])) {
+                   $attrs= $current_member['data']['included']['attributes'];
+                   if(count($attrs)>0){
+                        $attr = array_pop($attrs);
+                        if($attr["patron_status"] == "active_patron"){
+                            switch ($attr["currently_entitled_amount_cents"]){
+                                case 600:
+                                    $user->addRole('ROLE_PREMIUM_LVL3');
+                                    break;
+                                case 300:
+                                    $user->addRole('ROLE_PREMIUM_LVL2');
+                                    break;
+                                case 100:
+                                    $user->addRole('ROLE_PREMIUM_LVL1');
+                                    break;
+                            }
+                        }else{
+                            $user->removeRole('ROLE_PREMIUM_LVL3');
+                            $user->removeRole('ROLE_PREMIUM_LVL2');
+                            $user->removeRole('ROLE_PREMIUM_LVL1');
+                        }
+                   }
                }
                $userRepo->add($user);
            }
