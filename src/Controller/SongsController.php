@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -347,7 +348,7 @@ class SongsController extends AbstractController
         $em->flush();
 
         $downloadService->addOne($song);
-        $this->RestrictedDownload($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip", $song->getId() . ".zip");
+        return $this->RestrictedDownload($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip", $song->getId() . ".zip");
 
 //        $response = new Response($fileContent);
 //        $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $song->getId() . '.zip');
@@ -356,6 +357,7 @@ class SongsController extends AbstractController
 //        $response->headers->set('Content-Transfer-Encoding', "binary");
 //        $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
 //        return $response;
+
     }
 
     /**
@@ -386,7 +388,7 @@ class SongsController extends AbstractController
             return $response;
         } else {
             $file = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"; // Nom du fichier
-            $this->RestrictedDownload($file, $song->getId() . ".zip");
+            return $this->RestrictedDownload($file, $song->getId() . ".zip");
         }
     }
 
@@ -402,7 +404,9 @@ class SongsController extends AbstractController
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
         $downloadService->addOne($song);
-        if ($this->isGranted('ROLE_PREMIUM_LVL1') ) {
+        $response = new StreamedResponse();
+
+        if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
             $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
             $response = new Response($fileContent);
             $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $this->cleanName($song->getName()) . '.zip');
@@ -414,9 +418,8 @@ class SongsController extends AbstractController
 
         } else {
             $file = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"; // Nom du fichier
-            $this->RestrictedDownload($file, $song->getId() . ".zip");
+            return $this->RestrictedDownload($file, $this->cleanName($song->getName()) . ".zip");
         }
-
     }
 
     private function cleanName(?string $getName)
@@ -536,20 +539,26 @@ class SongsController extends AbstractController
 
     private function RestrictedDownload(string $file, string $filename)
     {
-        $speed = 1000; // i.e. 50 kb/s temps de telechargement
         if (file_exists($file) && is_file($file)) {
-            header("Cache-control: private");
-            header("Content-Type: application/octet-stream");
-            header("Content-Length: " . filesize($file));
-            header("Content-Disposition: filename=" . $filename);
-            flush();
-            $fd = fopen($file, "r");
-            while (!feof($fd)) {
-                echo fread($fd, round($speed * 1024)); // $speed kilobytes (Kb)
+            $response = new StreamedResponse();
+            $response->setCallback(function () use ($file, $filename) {
+                $speed = 1000; // i.e. 50 kb/s temps de telechargement
+                header("Cache-control: private");
+                header("Content-Type: application/octet-stream");
+                header("Content-Length: " . filesize($file));
+                header("Content-Disposition: filename=" . $filename);
                 flush();
-                sleep(1);
-            }
-            fclose($fd);
+                $fd = fopen($file, "r");
+                while (!feof($fd)) {
+                    echo fread($fd, round($speed * 1024)); // $speed kilobytes (Kb)
+                    flush();
+                    sleep(1);
+                }
+                fclose($fd);
+            });
+            $response->send();
+            return $response;
         }
+        return new Response("ERROR",400);
     }
 }
