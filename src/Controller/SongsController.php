@@ -548,14 +548,14 @@ class SongsController extends AbstractController
             $response->setCallback(function () use ($file, $filename) {
                 $speed = 1000; // i.e. 50 kb/s temps de telechargement
                 $fd = fopen($file, "r");
+                $octet = round($speed * 1024);
                 while (!feof($fd)) {
-                    echo fread($fd, round($speed * 1024)); // $speed kilobytes (Kb)
+                    echo fread($fd, $octet); // $speed kilobytes (Kb)
                     flush();
                     sleep(1);
                 }
                 fclose($fd);
             });
-            $response->send();
             return $response;
         }
         return new Response("ERROR", 400);
