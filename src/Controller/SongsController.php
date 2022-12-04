@@ -404,7 +404,6 @@ class SongsController extends AbstractController
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
         $downloadService->addOne($song);
-        $response = new StreamedResponse();
 
         if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
             $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
@@ -541,13 +540,13 @@ class SongsController extends AbstractController
     {
         if (file_exists($file) && is_file($file)) {
             $response = new StreamedResponse();
+            $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $filename);
+            $response->headers->set('Content-Disposition', $disposition);
+            $response->headers->set('Content-type', "application/octet-stream");
+            $response->headers->set('Content-Transfer-Encoding', "binary");
+            $response->headers->set('Content-Length', filesize($file));
             $response->setCallback(function () use ($file, $filename) {
                 $speed = 1000; // i.e. 50 kb/s temps de telechargement
-                header("Cache-control: private");
-                header("Content-Type: application/octet-stream");
-                header("Content-Length: " . filesize($file));
-                header("Content-Disposition: filename=" . $filename);
-                flush();
                 $fd = fopen($file, "r");
                 while (!feof($fd)) {
                     echo fread($fd, round($speed * 1024)); // $speed kilobytes (Kb)
@@ -559,6 +558,6 @@ class SongsController extends AbstractController
             $response->send();
             return $response;
         }
-        return new Response("ERROR",400);
+        return new Response("ERROR", 400);
     }
 }
