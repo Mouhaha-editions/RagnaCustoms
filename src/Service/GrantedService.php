@@ -20,8 +20,9 @@ class GrantedService
         $this->accessDecisionManager = $accessDecisionManager;
     }
 
-    public function isGranted(Utilisateur $user, $attributes, $object = null)
+    public function isGranted(?Utilisateur $user, $attributes, $object = null)
     {
+        if($user === null)return false;
         if (!is_array($attributes))
             $attributes = [$attributes];
         $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
