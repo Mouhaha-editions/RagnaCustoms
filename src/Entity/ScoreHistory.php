@@ -4,96 +4,57 @@ namespace App\Entity;
 
 use App\Repository\ScoreHistoryRepository;
 use App\Service\StatisticService;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-/**
- * @ORM\Entity(repositoryClass=ScoreHistoryRepository::class)
- */
+#[ORM\Entity(repositoryClass: ScoreHistoryRepository::class)]
 class ScoreHistory
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
     use TimestampableEntity;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $comboBlue;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $comboYellow;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $country;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $dateRagnarock;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $extra;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $hit;
-    /**
-     * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
-     */
+    #[ORM\Column(type: 'decimal', precision: 20, scale: 6, nullable: true)]
     private $hitAccuracy;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $hitDeltaAverage;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $hitPercentage;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $missed;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $percentageOfPerfects;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $plateform;
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $rawPP;
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: 'float')]
     private $score;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $session;
-    /**
-     * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scoreHistories")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: SongDifficulty::class, inversedBy: 'scoreHistories')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $songDifficulty;
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="scoreHistories")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'scoreHistories')]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $userRagnarock;
 
     public function getId(): ?int
@@ -375,5 +336,17 @@ class ScoreHistory
     public function getTimeAgoShort()
     {
        return StatisticService::dateDiplayerShort($this->getCreatedAt());
+    }
+
+    public function getHitAccuracy(): ?string
+    {
+        return $this->hitAccuracy;
+    }
+
+    public function setHitAccuracy(?string $hitAccuracy): self
+    {
+        $this->hitAccuracy = $hitAccuracy;
+
+        return $this;
     }
 }

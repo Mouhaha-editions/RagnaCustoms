@@ -29,13 +29,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/user-profile/{username}", name="user_profile")
      * @param Request $request
      * @param Utilisateur $utilisateur
      * @param PaginationService $paginationService
      * @param ScoreHistoryRepository $scoreHistoryRepository
      * @return Response
      */
+    #[Route(path: '/user-profile/{username}', name: 'user_profile')]
     public function profile(Request $request, Utilisateur $utilisateur, PaginationService $paginationService, ScoreRepository $scoreRepository): Response
     {
 
@@ -66,9 +66,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/ajax/countries", name="ajax_countries")
-     */
+    #[Route(path: '/ajax/countries', name: 'ajax_countries')]
     public function ajaxCountries(Request $request, CountryRepository $countryRepository): Response
     {
         $data = $countryRepository->createQueryBuilder("sc")->select("sc.id AS id, sc.label AS text")->where('sc.label LIKE :search')->setParameter('search', '%' . $request->get('q') . '%')->orderBy('sc.label')->getQuery()->getArrayResult();
@@ -78,9 +76,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/user/progess/{id}/{level}", name="user_progress_song")
-     */
+    #[Route(path: '/user/progess/{id}/{level}', name: 'user_progress_song')]
     public function progressSong(Request $request, Song $song, string $level, Utilisateur $utilisateur, ScoreHistoryRepository $scoreHistoryRepository): Response
     {
         $hashes = $song->getHashes();
@@ -108,9 +104,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/mapper-profile/{username}", name="mapper_profile")
-     */
+    #[Route(path: '/mapper-profile/{username}', name: 'mapper_profile')]
     public function mappedProfile(Request $request, ManagerRegistry $doctrine, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
     {
         $qb = $doctrine->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->groupBy("s.id");
@@ -289,9 +283,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/user/app-and-premium", name="user_applications")
-     */
+    #[Route(path: '/user/app-and-premium', name: 'user_applications')]
     public function ApplicationsAndPremium(Request $request, UtilisateurRepository $userRepo)
     {
 
@@ -302,9 +294,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/user", name="user")
-     */
+    #[Route(path: '/user', name: 'user')]
     public function index(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository, ScoreHistoryRepository $scoreHistoryRepository, PaginationService $paginationService): Response
     {
         if (!$this->isGranted('ROLE_USER')) {

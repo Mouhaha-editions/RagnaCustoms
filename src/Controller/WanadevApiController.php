@@ -37,18 +37,14 @@ class WanadevApiController extends AbstractController
 {
 
 
-    /**
-     * @Route("/wanapi/score/{apiKey}/{osef}-{hash}", name="wd_api_score_simple_get",methods={"GET","POST"})
-     */
+    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}', name: 'wd_api_score_simple_get', methods: ['GET', 'POST'])]
     public function scoreSimple(Request $request, ManagerRegistry $doctrine, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
     {
 
         return $this->score($request, $doctrine, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository, $scoreRepository, $scoreHistoryRepository, false);
     }
 
-    /**
-     * @Route("/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}", name="wd_api_score_get",methods={"GET","POST"})
-     */
+    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}', name: 'wd_api_score_get', methods: ['GET', 'POST'])]
     public function score(Request                  $request, ManagerRegistry $doctrine, string $apiKey, string $hash,
                           SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository,
                           ScoreService             $scoreService, RankedScoresRepository $rankedScoresRepository,

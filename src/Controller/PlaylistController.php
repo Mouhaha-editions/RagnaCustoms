@@ -18,9 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PlaylistController extends AbstractController
 {
-    /**
-     * @Route("/playlists", name="playlist")
-     */
+    #[Route(path: '/playlists', name: 'playlist')]
     public function index(): Response
     {
         /** @var Playlist[] $playlists */
@@ -32,14 +30,13 @@ class PlaylistController extends AbstractController
     }
 
     /**
-     * @Route("/playlist/show/{id}", name="playlist_show")
      * @param Request $request
      * @param Playlist $playlist
      * @param PaginationService $paginationService
      * @param SongRepository $songRepository
      * @return Response
      */
-
+    #[Route(path: '/playlist/show/{id}', name: 'playlist_show')]
     public function show(Request $request, Playlist $playlist, PaginationService $paginationService,
                          SongRepository $songRepository): Response
     {
@@ -69,12 +66,12 @@ class PlaylistController extends AbstractController
 
 
     /**
-     * @Route("/playlist/remove", name="playlist_remove")
      * @param Request $request
      * @param PlaylistRepository $playlistRepository
      * @param SongRepository $songRepository
      * @return Response
      */
+    #[Route(path: '/playlist/remove', name: 'playlist_remove')]
     public function remove(Request $request,ManagerRegistry $doctrine,PlaylistRepository $playlistRepository, SongRepository $songRepository)
     {
         $playlist = $playlistRepository->find($request->get('playlist_id'));
@@ -89,13 +86,13 @@ class PlaylistController extends AbstractController
     }
 
     /**
-     * @Route("/playlist/edit/{id}", name="playlist_edit")
      * @param Request $request
      * @param Playlist $playlist
      * @param SongRepository $songRepository
      * @param PaginationService $paginationService
      * @return Response
      */
+    #[Route(path: '/playlist/edit/{id}', name: 'playlist_edit')]
     public function edit(Request $request,ManagerRegistry $doctrine, Playlist $playlist, SongRepository $songRepository, PaginationService $paginationService)
     {
         if (!$this->isGranted("ROLE_USER") || $this->getUser()->getId() !== $playlist->getUser()->getId()) {
@@ -129,13 +126,13 @@ class PlaylistController extends AbstractController
     }
 
     /**
-     * @Route("/playlist/delete/{id}", name="playlist_delete")
      * @param Request $request
      * @param Playlist $playlist
      * @param PaginationService $paginationService
      * @param SongRepository $song
      * @return Response
      */
+    #[Route(path: '/playlist/delete/{id}', name: 'playlist_delete')]
     public function delete(Request $request,ManagerRegistry $doctrine, Playlist $playlist)
     {
         if (!$this->isGranted("ROLE_USER") || $this->getUser()->getId() !== $playlist->getUser()->getId()) {

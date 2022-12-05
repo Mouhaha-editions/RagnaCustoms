@@ -40,18 +40,14 @@ class ApiController extends AbstractController
 
     const CurrentVersion = "3.0.0";
 
-    /**
-     * @Route("/api/php/version", name="php_version")
-     */
+    #[Route(path: '/api/php/version', name: 'php_version')]
     public function checkPhp(Request $request, SongRepository $songRepository): Response
     {
         phpinfo();
         return new Response("");
     }
 
-    /**
-     * @Route("/api/song/check-updates", name="api_song_check_updates")
-     */
+    #[Route(path: '/api/song/check-updates', name: 'api_song_check_updates')]
     public function checkUpdates(Request $request, SongRepository $songRepository): Response
     {
 
@@ -76,9 +72,7 @@ class ApiController extends AbstractController
     }
 
 
-    /**
-     * @Route("/api/search/{term}", name="api_search")
-     */
+    #[Route(path: '/api/search/{term}', name: 'api_search')]
     public function index(Request $request, string $term = null, SongRepository $songRepository): Response
     {
         $songsEntities = $songRepository->createQueryBuilder('s')->where('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')->andWhere('s.moderated = true')->andWhere('s.isDeleted != true')->setParameter('search_string', '%' . $term . '%')->getQuery()->getResult();
@@ -95,9 +89,7 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/api/song/{id}", name="api_song")
-     */
+    #[Route(path: '/api/song/{id}', name: 'api_song')]
     public function song(Request $request, Song $song): Response
     {
         return new JsonResponse($song->__api());
@@ -105,8 +97,8 @@ class ApiController extends AbstractController
 
     /**
      * @param Request $request
-     * @Route("/api/song-list/{id}", name="api_song_list")
      */
+    #[Route(path: '/api/song-list/{id}', name: 'api_song_list')]
     public function songList(Request $request, SongTemporaryList $songTemporaryList)
     {
         $data = [];
@@ -120,8 +112,8 @@ class ApiController extends AbstractController
      * @param int $results
      * @param ScoreHistoryRepository $scoreRepository
      * @return JsonResponse
-     * @Route("/api/songs/last-played/{results}", name="api_song_last_played")
      */
+    #[Route(path: '/api/songs/last-played/{results}', name: 'api_song_last_played')]
     public function lastPlayed(int $results, ScoreHistoryRepository $scoreRepository)
     {
         /** @var ScoreHistory[] $scores */
@@ -147,8 +139,8 @@ class ApiController extends AbstractController
      * @param int $results
      * @param SongRepository $songRepository
      * @return JsonResponse
-     * @Route("/api/songs/last-uploaded/{results}", name="api_song_last_uploaded")
      */
+    #[Route(path: '/api/songs/last-uploaded/{results}', name: 'api_song_last_uploaded')]
     public function lastUploaded(int $results, SongRepository $songRepository)
     {
         /** @var Song[] $songs */
@@ -171,8 +163,8 @@ class ApiController extends AbstractController
      * @param int $days
      * @param SongRepository $songRepository
      * @return JsonResponse
-     * @Route("/api/songs/top-rated/{results}/{days}", name="api_song_top_rated")
      */
+    #[Route(path: '/api/songs/top-rated/{results}/{days}', name: 'api_song_top_rated')]
     public function topRated(int $results,int $days, SongRepository $songRepository)
     {
         /** @var Song[] $songs */
@@ -196,9 +188,7 @@ class ApiController extends AbstractController
         return new JsonResponse($data);
     }
 
-    /**
-     * @Route("/api/hash/{hash}", name="api_hash")
-     */
+    #[Route(path: '/api/hash/{hash}', name: 'api_hash')]
     public function hash(Request $request, string $hash, SongRepository $songRepository): Response
     {
         $song = $songRepository->createQueryBuilder('s')->where('s.newGuid LIKE :search_string)')->andWhere('s.moderated = true')->setParameter('search_string', $hash)->getQuery()->setFirstResult(0)->setMaxResults(1)->getOneOrNullResult();
@@ -209,7 +199,6 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/api/overlay/", name="api_overlay")
      * @param Request $request
      * @param UtilisateurRepository $utilisateurRepository
      * @param DifficultyRankRepository $difficultyRankRepository
@@ -218,6 +207,7 @@ class ApiController extends AbstractController
      * @param SongDifficultyRepository $songDifficultyRepository
      * @return Response
      */
+    #[Route(path: '/api/overlay/', name: 'api_overlay')]
     public function overlay(Request $request, ManagerRegistry $doctrine, UtilisateurRepository $utilisateurRepository, DifficultyRankRepository $difficultyRankRepository, OverlayRepository $overlayRepository, SongRepository $songRepository, SongDifficultyRepository $songDifficultyRepository): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -270,12 +260,12 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/api/overlay/clean/", name="api_overlay_clear")
      * @param Request $request
      * @param UtilisateurRepository $utilisateurRepository
      * @param OverlayRepository $overlayRepository
      * @return Response
      */
+    #[Route(path: '/api/overlay/clean/', name: 'api_overlay_clear')]
     public function overlayClean(Request $request, ManagerRegistry $doctrine, UtilisateurRepository $utilisateurRepository, OverlayRepository $overlayRepository): Response
     {
         $apiKey = $request->headers->get('x-api-key');
@@ -303,8 +293,8 @@ class ApiController extends AbstractController
      * @param Request $request
      * @param SongCategoryRepository $categoryRepository
      * @return JsonResponse
-     * @Route("/api/song-categories", name="api_song_categories")
      */
+    #[Route(path: '/api/song-categories', name: 'api_song_categories')]
     public function songCategories(Request $request, SongCategoryRepository $categoryRepository)
     {
         $data = $categoryRepository->createQueryBuilder("sc")->select("sc.id AS id, sc.label AS text")->where('sc.label LIKE :search')->setParameter('search', '%' . $request->get('q') . '%')->andWhere('sc.isOnlyForAdmin = false')->orderBy('sc.label')->getQuery()->getArrayResult();

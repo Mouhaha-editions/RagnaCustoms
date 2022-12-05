@@ -5,13 +5,12 @@ namespace App\Entity;
 use App\Repository\SongRequestRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\VarDumper\VarDumper;
 
-/**
- * @ORM\Entity(repositoryClass=SongRequestRepository::class)
- */
+#[ORM\Entity(repositoryClass: SongRequestRepository::class)]
 class SongRequest
 {
     use TimestampableEntity;
@@ -21,53 +20,35 @@ class SongRequest
     const STATE_IN_PROGRESS = 5;
     const STATE_ENDED = 10;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     private $link;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="songRequests")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'songRequests')]
+    #[ORM\JoinColumn(nullable: false)]
     private $requestedBy;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Utilisateur::class, inversedBy="currentlyMapped")
-     */
+    #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'currentlyMapped')]
     private $mapperOnIt;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $author;
 
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $state = self::STATE_ASKED;
 
-    /**
-     * @ORM\OneToMany(targetEntity=SongRequestVote::class, mappedBy="songRequest", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: SongRequestVote::class, mappedBy: 'songRequest', orphanRemoval: true)]
     private $songRequestVotes;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $wantToBeNotified = true;
     public function __construct()
     {
@@ -224,6 +205,11 @@ class SongRequest
         $this->wantToBeNotified = $wantToBeNotified;
 
         return $this;
+    }
+
+    public function isWantToBeNotified(): ?bool
+    {
+        return $this->wantToBeNotified;
     }
 
 }

@@ -15,7 +15,7 @@ export default class extends Controller {
 
     connect() {
         Dropzone.autoDiscover = false;
-        let myDropzone = new Dropzone("#my-form",{url:});
+        let myDropzone = new Dropzone("#my-form",{url:"/upload/bundle/song/add"});
         myDropzone.on("addedfile", file => {
             console.log(`File added: ${file.name}`);
         });

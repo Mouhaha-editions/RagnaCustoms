@@ -36,9 +36,7 @@ class SongsController extends AbstractController
 {
     private $paginate = 30;
 
-    /**
-     * @Route("/song/detail/{id}", name="song_detail_old")
-     */
+    #[Route(path: '/song/detail/{id}', name: 'song_detail_old')]
     public function songDetailId(Request $request, Song $song)
     {
         return $this->redirectToRoute("song_detail", ['slug' => $song->getSlug()], 301);
@@ -46,12 +44,12 @@ class SongsController extends AbstractController
 
 
     /**
-     * @Route("/song/playlist/{id}", name="song_playlist")
      * @param Request $request
      * @param Song $song
      * @param TranslatorInterface $translator
      * @return JsonResponse
      */
+    #[Route(path: '/song/playlist/{id}', name: 'song_playlist')]
     public function formPlaylist(Request $request, ManagerRegistry $doctrine, Song $song, TranslatorInterface $translator)
     {
         if (!$this->isGranted('ROLE_USER')) {
@@ -131,12 +129,12 @@ class SongsController extends AbstractController
     }
 
     /**
-     * @Route("/song-library", name="song_library")
      * @param Request $request
      * @param SongCategoryRepository $categoryRepository
      * @param PaginationService $paginationService
      * @return Response
      */
+    #[Route(path: '/song-library', name: 'song_library')]
     public function library(Request $request, ManagerRegistry $doctrine, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
     {
         $filters = [];
@@ -335,9 +333,7 @@ class SongsController extends AbstractController
     }
 
 
-    /**
-     * @Route("/songs/download/{id}", name="song_download")
-     */
+    #[Route(path: '/songs/download/{id}', name: 'song_download')]
     public function download(Request $request, ManagerRegistry $doctrine, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository)
     {
         if (!$song->isModerated()) {
@@ -360,9 +356,7 @@ class SongsController extends AbstractController
 
     }
 
-    /**
-     * @Route("/songs/download/{id}/{api}", name="song_download_api", defaults={"api"=null})
-     */
+    #[Route(path: '/songs/download/{id}/{api}', name: 'song_download_api', defaults: ['api' => null])]
     public function downloadApiKey(GrantedService $grantedService, ManagerRegistry $doctrine, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, UtilisateurRepository $utilisateurRepository)
     {
         if (!$song->isModerated()) {
@@ -392,9 +386,7 @@ class SongsController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/songs/ddl/{id}", name="song_direct_download")
-     */
+    #[Route(path: '/songs/ddl/{id}', name: 'song_direct_download')]
     public function directDownload(Song $song, ManagerRegistry $doctrine, KernelInterface $kernel, DownloadService $downloadService)
     {
         if (!$song->isModerated()) {
@@ -426,9 +418,7 @@ class SongsController extends AbstractController
         return preg_replace('/[^a-zA-Z]/i', '', $getName);
     }
 
-    /**
-     * @Route("/toggle/{id}", name="diff_toggle_ranked", defaults={"slug"=null})
-     */
+    #[Route(path: '/toggle/{id}', name: 'diff_toggle_ranked', defaults: ['slug' => null])]
     public function toggleRanked(Request $request, ManagerRegistry $doctrine, SongDifficulty $songDifficulty, ScoreService $scoreService)
     {
         if ($this->isGranted('ROLE_MODERATOR')) {
@@ -447,9 +437,7 @@ class SongsController extends AbstractController
         return new Response('');
     }
 
-    /**
-     * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
-     */
+    #[Route(path: '/song/{slug}', name: 'song_detail', defaults: ['slug' => null])]
     public function songDetail(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService, ?Song $song = null)
     {
 
@@ -504,33 +492,25 @@ class SongsController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/song/partial/last-played", name="last_songs_played")
-     */
+    #[Route(path: '/song/partial/last-played', name: 'last_songs_played')]
     public function lastSongsPlayed(Request $request, SongService $songService)
     {
         return $this->render('songs/partial/slider_cards.html.twig', ['songs' => $songService->getLastSongsPlayed(8)]);
     }
 
-    /**
-     * @Route("/song/partial/best", name="best_songs")
-     */
+    #[Route(path: '/song/partial/best', name: 'best_songs')]
     public function bestSongs(Request $request, SongService $songService)
     {
         return $this->render('songs/partial/slider_cards.html.twig', ['songs' => $songService->getLastSongsPlayed(8)]);
     }
 
-    /**
-     * @Route("/song/partial/last-added", name="last_songs_added")
-     */
+    #[Route(path: '/song/partial/last-added', name: 'last_songs_added')]
     public function lastSongsAdded(Request $request, SongService $songService)
     {
         return $this->render('songs/partial/slider_cards.html.twig', ['songs' => $songService->getLastSongsPlayed(8)]);
     }
 
-    /**
-     * @Route("/song/partial/preview/{id}", name="partial_preview_song")
-     */
+    #[Route(path: '/song/partial/preview/{id}', name: 'partial_preview_song')]
     public function partialPreview(Song $song)
     {
         return new JsonResponse(['response' => $this->renderView("songs/partial/preview_player.html.twig", ['song' => $song])]);

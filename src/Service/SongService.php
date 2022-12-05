@@ -24,6 +24,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 use Pkshetlie\PhpUE\FCrc;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -158,57 +159,6 @@ class SongService
             } else {
                 $unzippableFile = $finalFolder . $song->getId() . ".zip";
             }
-            $zip = new ZipArchive();
-            $theZip = $unzippableFile;
-            /** @var UploadedFile $file */
-            if ($zip->open($theZip) === TRUE) {
-                for ($i = 0; $i < $zip->numFiles; $i++) {
-                    $filename = $zip->getNameIndex($i);
-                    $elt = $this->remove_utf8_bom($zip->getFromIndex($i));
-                    $exp = explode("/", $filename);
-                    if (end($exp) != "") {
-                        $fileinfo = pathinfo($filename);
-                        if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
-                            $result = file_put_contents($unzipFolder . "/" . strtolower($fileinfo['basename']), $elt);
-                        } else {
-                            $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
-                        }
-                    }
-                }
-                $zip->close();
-            }
-            $file = $unzipFolder . "/info.dat";
-            if (!file_exists($file)) {
-                $file = $unzipFolder . "/Info.dat";
-                if (!file_exists($file)) {
-                    $this->rrmdir($unzipFolder);
-                    throw new Exception("The file seems to not be valid, at least info.dat is missing.");
-                }
-            }
-            $content = file_get_contents($file);
-            $json = json_decode($content);
-            if ($json == null) {
-                $this->rrmdir($unzipFolder);
-                throw new Exception("WTF? I can't read your info.dat please check the file encoding.");
-            }
-            $allowedFiles[] = $json->_coverImageFilename;
-            if ($json->_coverImageFilename == ".jpg" || empty($json->_coverImageFilename)) {
-                throw new Exception("The cover name need to contain less than 25 chars.");
-            }
-            if (strlen($json->_coverImageFilename) > 29) {
-                throw new Exception("Cover is missing, please fix it and upload again");
-            }
-            $allowedFiles[] = $json->_songFilename;
-            list($width, $height) = getimagesize($unzipFolder . "/" . $json->_coverImageFilename);
-            if ($width != $height) {
-                throw new Exception("Cover have to be a square.");
-            }
-
-            $new = $song->getId() == null || $isWip != $song->getWip();
-            if ($song->isRanked()) {
-                $this->rrmdir($unzipFolder);
-                throw new Exception("This song is ranked, you can't update it for now, please contact us.");
-            }
 
             if ($form != null && $form->get('description')->getData() != null) {
                 preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('description')->getData(), $match);
@@ -222,218 +172,9 @@ class SongService
             if ($form != null && $form->get('youtubeLink')->getData() != null) {
                 if (preg_match('~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~', $form->get('youtubeLink')->getData())) {
                     $song->setYoutubeLink($form->get('youtubeLink')->getData());
-                } else {
-
                 }
             }
-            if (!isset($json->_songApproximativeDuration) || empty($json->_songApproximativeDuration)) {
-                $this->rrmdir($unzipFolder);
-                throw new Exception("\"_songApproximativeDuration\" is missing in the info.dat file!");
-            }
-
-
-            $song->setVersion($json->_version);
-            $song->setName(trim($json->_songName));
-            $song->setLastDateUpload(new DateTime());
-            if (!isset($json->_songSubName)) {
-                throw new Exception("\"_songSubName\" is missing in the info.dat file!");
-            }
-            $song->setSubName($json->_songSubName);
-            $song->setIsExplicit(isset($json->_explicit) ? $json->_explicit == "true" : false);
-            $song->setAuthorName($json->_songAuthorName);
-            $song->setLevelAuthorName($json->_levelAuthorName);
-            $song->setBeatsPerMinute($json->_beatsPerMinute);
-            $song->setShuffle($json->_shuffle);
-            $song->setShufflePeriod($json->_shufflePeriod);
-            $song->setPreviewStartTime($json->_previewStartTime);
-            $song->setPreviewDuration($json->_previewDuration);
-            $song->setApproximativeDuration($json->_songApproximativeDuration);
-            $song->setFileName($json->_songFilename);
-            $song->setCoverImageFileName($json->_coverImageFilename);
-            $song->setEnvironmentName($json->_environmentName);
-            $song->setModerated(true);
-
-            $this->em->persist($song);
-            $previousDiffs = [];
-            foreach ($song->getSongDifficulties() as $difficulty) {
-                $overlays = $this->em->getRepository(Overlay::class)->findBy(["difficulty" => $difficulty]);
-                /** @var Overlay $overlay */
-                foreach ($overlays as $overlay) {
-                    $overlay->setDifficulty(null);
-                }
-                $previousDiffs[$difficulty->getId()] = $difficulty;
-            }
-
-            foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
-                $jsonContent = file_get_contents($unzipFolder . "/" . $difficulty->_beatmapFilename);
-                $fcrc = Fcrc::StrCrc32($jsonContent);
-
-                $rank = $this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]);
-                $diff = null;
-                if ($song->getId() !== null) {
-                    /** @var SongDifficulty $diff */
-                    $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.wanadevHash = :fcrc')->setParameter('fcrc', $fcrc)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
-                    if ($diff != null && $diff->getDifficultyRank() === $rank) {
-                        unset($previousDiffs[$diff->getId()]);
-                        $allowedFiles[] = $difficulty->_beatmapFilename;
-                        continue;
-                    } else {
-                        $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.difficultyRank = :rank')->setParameter('rank', $rank)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
-                    }
-                }
-                if ($diff == null) {
-                    $diff = new SongDifficulty();
-                    $diff->setSong($song);
-                } else {
-                    unset($previousDiffs[$diff->getId()]);
-                    $allowedFiles[] = $difficulty->_beatmapFilename;
-                }
-                foreach ($diff->getScores() as $score) {
-                    $this->em->remove($score);
-                }
-                foreach ($diff->getScoreHistories() as $score) {
-                    $this->em->remove($score);
-                }
-                foreach ($song->getDownloadCounters() as $download) {
-                    $this->em->remove($download);
-                }
-                $diff->setIsRanked((bool)$diff->isRanked());
-                $diff->setDifficultyRank($rank);
-                $diff->setDifficulty($difficulty->_difficulty);
-                $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
-                $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
-
-                $json2 = json_decode($jsonContent);
-                $diff->setNotesCount(count($json2->_notes));
-                $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
-                $diff->setTheoricalMaxScore($this->calculateTheoricalMaxScore($diff));
-                $diff->setTheoricalMinScore($this->calculateTheoricalMinScore($diff));
-                $song->addSongDifficulty($diff);
-                $this->em->persist($diff);
-                $allowedFiles[] = $difficulty->_beatmapFilename;
-                $diff->setWanadevHash($fcrc);
-
-            }
-            if (count($previousDiffs) != 0) {
-                //there is at least one update on difficulties
-                foreach ($previousDiffs as $diff) {
-                    $diff->setSong(null);
-                    $this->em->remove($diff);
-                }
-
-            }
-
-            if ($isWip != $song->getWip()) {
-                $song->setCreatedAt(new DateTime());
-            }
-            $this->em->flush();
-
-            /** @var UploadedFile $file */
-            $patterns_flattened = implode('|', $allowedFiles);
-            $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
-            $zip = new ZipArchive();
-            if ($zip->open($theZip) === TRUE) {
-                for ($i = 0; $i < $zip->numFiles; $i++) {
-                    $filename = ($zip->getNameIndex($i));
-                    if (!preg_match('/' . $patterns_flattened . '/', $filename, $matches) || preg_match('/autosaves/', $filename, $matches)) {
-                        $zip->deleteName($filename);
-                    } else {
-                        $newfilename = ($zip->getNameIndex($i));
-                        $filename = ($zip->getNameIndex($i));
-                        if (preg_match("/Info\.dat/", $newfilename)) {
-                            $newfilename = strtolower($filename);
-                        }
-                        $x = explode('/', $newfilename);
-                        $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
-                    }
-                }
-                $zip->close();
-            }
-
-            @copy($theZip, $finalFolder . $song->getId() . ".zip");
-            @copy($unzipFolder . "/" . $json->_coverImageFilename, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
-
-            $source = $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension();
-            if (in_array(strtolower($song->getCoverImageExtension()), [
-                '.jpg',
-                '.jpeg'
-            ])) {
-                $image = imagecreatefromjpeg($source);
-                imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
-                unlink($source);
-                imagedestroy($image);
-            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.gif'])) {
-                $image = imagecreatefromgif($source);
-                imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
-                unlink($source);
-                imagedestroy($image);
-            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.png'])) {
-                $image = imagecreatefrompng($source);
-                imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
-                unlink($source);
-                imagedestroy($image);
-            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.webp'])) {
-            } else {
-                throw new Exception("Your cover not a gif or a jpg or a png");
-            }
-
-            if (!$song->hasCover()) {
-                $song->setWip(true);
-            }
-            if ($this->kernel->getEnvironment() != "dev") {
-                $user = $song->getUser();
-                if ($song->getWip()) {
-                    /** @var Utilisateur $user */
-
-                    if ($new) {
-                        foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map_wip) as $follower) {
-                            $notification = new Notification();
-                            $notification->setUser($follower->getUser());
-                            $notification->setMessage("New song : <a href='" . $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>[WIP] " . $song->getName() . "</a> by <a href='" . $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" . $user->getMapperName() . "</a>");
-                            $this->em->persist($notification);
-                        }
-                    } else {
-                        foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map_wip) as $follower) {
-                            $notification = new Notification();
-                            $notification->setUser($follower->getUser());
-                            $notification->setMessage("Song edit : <a href='" . $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>[WIP] " . $song->getName() . "</a> by <a href='" . $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" . $user->getMapperName() . "</a>");
-                            $this->em->persist($notification);
-                        }
-                        $this->em->flush();
-
-                        $this->discordService->sendWipSongMessage($song);
-                    }
-
-                    $this->discordService->sendWipSongMessage($song);
-                } elseif ($new) {
-                    $this->discordService->sendNewSongMessage($song);
-                    foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
-                        $notification = new Notification();
-                        $notification->setUser($follower->getUser());
-                        $notification->setMessage("New song : <a href='" .
-                            $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
-                            $song->getName() . "</a> by <a href='" .
-                            $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
-                            $user->getMapperName() . "</a>");
-                        $this->em->persist($notification);
-                    }
-                    $this->em->flush();
-                } else {
-                    $this->discordService->sendUpdatedSongMessage($song);
-                    /** @var FollowMapper $follower */
-                    foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map) as $follower) {
-                        $notification = new Notification();
-                        $notification->setUser($follower->getUser());
-                        $notification->setMessage("Edit song : <a href='" .
-                            $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
-                            $song->getName() . "</a> by <a href='" .
-                            $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
-                            $user->getMapperName() . "</a>");
-                        $this->em->persist($notification);
-                    }
-                    $this->em->flush();
-                }
-            }
+            $this->process($unzippableFile,$unzipFolder, $song, $isWip);
             if ($form !== null) {
                 $this->emulatorFileDispatcher($song, true);
                 $this->coverOptimisation($song);
@@ -444,6 +185,304 @@ class SongService
             $this->rrmdir($unzipFolder);
         }
         return true;
+
+    }
+
+    public function processFileWithoutForm(Request $request)
+    {
+        try {
+            $allowedFiles = [
+                'preview.ogg',
+                'info.dat',
+                'Info.dat',
+            ];
+            $folder = $this->kernel->getProjectDir() . "/public/tmp-song/";
+            $unzipFolder = $folder . uniqid();
+            @mkdir($unzipFolder);
+            if ($request->files->get('file') != null) {
+                $file = $request->files->get('file');
+                $file->move($unzipFolder, $file->getClientOriginalName());
+                $unzippableFile = $unzipFolder . "/" . $file->getClientOriginalName();
+            } else {
+                return false;
+            }
+            $song = new Song();
+            $song->setActive(false);
+            $this->process($unzippableFile, $unzipFolder,$song, true);
+            $this->coverOptimisation($song);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        } finally {
+            $this->rrmdir($unzipFolder);
+        }
+        return true;
+    }
+
+    private function process(string $unzippableFile,string $unzipFolder, Song $song, bool $isWip = false)
+    {
+        $finalFolder = $this->kernel->getProjectDir() . "/public/songs-files/";
+        $zip = new ZipArchive();
+        $theZip = $unzippableFile;
+        /** @var UploadedFile $file */
+        if ($zip->open($theZip) === TRUE) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $elt = $this->remove_utf8_bom($zip->getFromIndex($i));
+                $exp = explode("/", $filename);
+                if (end($exp) != "") {
+                    $fileinfo = pathinfo($filename);
+                    if (preg_match("#info\.dat#isU", $fileinfo['basename'])) {
+                        $result = file_put_contents($unzipFolder . "/" . strtolower($fileinfo['basename']), $elt);
+                    } else {
+                        $result = file_put_contents($unzipFolder . "/" . $fileinfo['basename'], $elt);
+                    }
+                }
+            }
+            $zip->close();
+        }
+        $file = $unzipFolder . "/info.dat";
+        if (!file_exists($file)) {
+            $file = $unzipFolder . "/Info.dat";
+            if (!file_exists($file)) {
+                $this->rrmdir($unzipFolder);
+                throw new Exception("The file seems to not be valid, at least info.dat is missing.");
+            }
+        }
+        $content = file_get_contents($file);
+        $json = json_decode($content);
+        if ($json == null) {
+            $this->rrmdir($unzipFolder);
+            throw new Exception("WTF? I can't read your info.dat please check the file encoding.");
+        }
+        $allowedFiles[] = $json->_coverImageFilename;
+        if ($json->_coverImageFilename == ".jpg" || empty($json->_coverImageFilename)) {
+            throw new Exception("The cover name need to contain less than 25 chars.");
+        }
+        if (strlen($json->_coverImageFilename) > 29) {
+            throw new Exception("Cover is missing, please fix it and upload again");
+        }
+        $allowedFiles[] = $json->_songFilename;
+        list($width, $height) = getimagesize($unzipFolder . "/" . $json->_coverImageFilename);
+        if ($width != $height) {
+            throw new Exception("Cover have to be a square.");
+        }
+
+        $new =  $song->getId() == null || $isWip != $song->getWip();
+        if ($song2->isRanked()) {
+            $this->rrmdir($unzipFolder);
+            throw new Exception("This song is ranked, you can't update it for now, please contact us.");
+        }
+
+
+
+        if (!isset($json->_songApproximativeDuration) || empty($json->_songApproximativeDuration)) {
+            $this->rrmdir($unzipFolder);
+            throw new Exception("\"_songApproximativeDuration\" is missing in the info.dat file!");
+        }
+
+
+        $song->setVersion($json->_version);
+        $song->setName(trim($json->_songName));
+        $song->setLastDateUpload(new DateTime());
+        if (!isset($json->_songSubName)) {
+            throw new Exception("\"_songSubName\" is missing in the info.dat file!");
+        }
+        $song->setSubName($json->_songSubName);
+        $song->setIsExplicit(isset($json->_explicit) ? $json->_explicit == "true" : false);
+        $song->setAuthorName($json->_songAuthorName);
+        $song->setLevelAuthorName($json->_levelAuthorName);
+        $song->setBeatsPerMinute($json->_beatsPerMinute);
+        $song->setShuffle($json->_shuffle);
+        $song->setShufflePeriod($json->_shufflePeriod);
+        $song->setPreviewStartTime($json->_previewStartTime);
+        $song->setPreviewDuration($json->_previewDuration);
+        $song->setApproximativeDuration($json->_songApproximativeDuration);
+        $song->setFileName($json->_songFilename);
+        $song->setCoverImageFileName($json->_coverImageFilename);
+        $song->setEnvironmentName($json->_environmentName);
+        $song->setModerated(true);
+
+        $this->em->persist($song);
+        $previousDiffs = [];
+        foreach ($song->getSongDifficulties() as $difficulty) {
+            $overlays = $this->em->getRepository(Overlay::class)->findBy(["difficulty" => $difficulty]);
+            /** @var Overlay $overlay */
+            foreach ($overlays as $overlay) {
+                $overlay->setDifficulty(null);
+            }
+            $previousDiffs[$difficulty->getId()] = $difficulty;
+        }
+
+        foreach (($json->_difficultyBeatmapSets[0])->_difficultyBeatmaps as $difficulty) {
+            $jsonContent = file_get_contents($unzipFolder . "/" . $difficulty->_beatmapFilename);
+            $fcrc = Fcrc::StrCrc32($jsonContent);
+
+            $rank = $this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]);
+            $diff = null;
+            if ($song->getId() !== null) {
+                /** @var SongDifficulty $diff */
+                $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.wanadevHash = :fcrc')->setParameter('fcrc', $fcrc)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
+                if ($diff != null && $diff->getDifficultyRank() === $rank) {
+                    unset($previousDiffs[$diff->getId()]);
+                    $allowedFiles[] = $difficulty->_beatmapFilename;
+                    continue;
+                } else {
+                    $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where('sd.difficultyRank = :rank')->setParameter('rank', $rank)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
+                }
+            }
+            if ($diff == null) {
+                $diff = new SongDifficulty();
+                $diff->setSong($song);
+            } else {
+                unset($previousDiffs[$diff->getId()]);
+                $allowedFiles[] = $difficulty->_beatmapFilename;
+            }
+            foreach ($diff->getScores() as $score) {
+                $this->em->remove($score);
+            }
+            foreach ($diff->getScoreHistories() as $score) {
+                $this->em->remove($score);
+            }
+            foreach ($song->getDownloadCounters() as $download) {
+                $this->em->remove($download);
+            }
+            $diff->setIsRanked((bool)$diff->isRanked());
+            $diff->setDifficultyRank($rank);
+            $diff->setDifficulty($difficulty->_difficulty);
+            $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
+            $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
+
+            $json2 = json_decode($jsonContent);
+            $diff->setNotesCount(count($json2->_notes));
+            $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
+            $diff->setTheoricalMaxScore($this->calculateTheoricalMaxScore($diff));
+            $diff->setTheoricalMinScore($this->calculateTheoricalMinScore($diff));
+            $song->addSongDifficulty($diff);
+            $this->em->persist($diff);
+            $allowedFiles[] = $difficulty->_beatmapFilename;
+            $diff->setWanadevHash($fcrc);
+
+        }
+        if (count($previousDiffs) != 0) {
+            //there is at least one update on difficulties
+            foreach ($previousDiffs as $diff) {
+                $diff->setSong(null);
+                $this->em->remove($diff);
+            }
+
+        }
+
+        if ($isWip != $song->getWip()) {
+            $song->setCreatedAt(new DateTime());
+        }
+        $this->em->flush();
+
+        /** @var UploadedFile $file */
+        $patterns_flattened = implode('|', $allowedFiles);
+        $infolder = strtolower(preg_replace('/[^a-zA-Z]/', '', $song->getName()));
+        $zip = new ZipArchive();
+        if ($zip->open($theZip) === TRUE) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = ($zip->getNameIndex($i));
+                if (!preg_match('/' . $patterns_flattened . '/', $filename, $matches) || preg_match('/autosaves/', $filename, $matches)) {
+                    $zip->deleteName($filename);
+                } else {
+                    $newfilename = ($zip->getNameIndex($i));
+                    $filename = ($zip->getNameIndex($i));
+                    if (preg_match("/Info\.dat/", $newfilename)) {
+                        $newfilename = strtolower($filename);
+                    }
+                    $x = explode('/', $newfilename);
+                    $zip->renameName($filename, $infolder . "/" . $x[count($x) - 1]);
+                }
+            }
+            $zip->close();
+        }
+
+        @copy($theZip, $finalFolder . $song->getId() . ".zip");
+        @copy($unzipFolder . "/" . $json->_coverImageFilename, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension());
+
+        $source = $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . $song->getCoverImageExtension();
+        if (in_array(strtolower($song->getCoverImageExtension()), [
+            '.jpg',
+            '.jpeg'
+        ])) {
+            $image = imagecreatefromjpeg($source);
+            imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
+            unlink($source);
+            imagedestroy($image);
+        } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.gif'])) {
+            $image = imagecreatefromgif($source);
+            imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
+            unlink($source);
+            imagedestroy($image);
+        } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.png'])) {
+            $image = imagecreatefrompng($source);
+            imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $song->getId() . ".webp");
+            unlink($source);
+            imagedestroy($image);
+        } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.webp'])) {
+        } else {
+            throw new Exception("Your cover not a gif or a jpg or a png");
+        }
+
+        if (!$song->hasCover()) {
+            $song->setWip(true);
+        }
+        if ($this->kernel->getEnvironment() != "dev") {
+            $user = $song->getUser();
+            if ($song->getWip()) {
+                /** @var Utilisateur $user */
+
+                if ($new) {
+                    foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map_wip) as $follower) {
+                        $notification = new Notification();
+                        $notification->setUser($follower->getUser());
+                        $notification->setMessage("New song : <a href='" . $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>[WIP] " . $song->getName() . "</a> by <a href='" . $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" . $user->getMapperName() . "</a>");
+                        $this->em->persist($notification);
+                    }
+                } else {
+                    foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map_wip) as $follower) {
+                        $notification = new Notification();
+                        $notification->setUser($follower->getUser());
+                        $notification->setMessage("Song edit : <a href='" . $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>[WIP] " . $song->getName() . "</a> by <a href='" . $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" . $user->getMapperName() . "</a>");
+                        $this->em->persist($notification);
+                    }
+                    $this->em->flush();
+
+                    $this->discordService->sendWipSongMessage($song);
+                }
+
+                $this->discordService->sendWipSongMessage($song);
+            } elseif ($new) {
+                $this->discordService->sendNewSongMessage($song);
+                foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
+                    $notification = new Notification();
+                    $notification->setUser($follower->getUser());
+                    $notification->setMessage("New song : <a href='" .
+                        $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
+                        $song->getName() . "</a> by <a href='" .
+                        $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
+                        $user->getMapperName() . "</a>");
+                    $this->em->persist($notification);
+                }
+                $this->em->flush();
+            } else {
+                $this->discordService->sendUpdatedSongMessage($song);
+                /** @var FollowMapper $follower */
+                foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map) as $follower) {
+                    $notification = new Notification();
+                    $notification->setUser($follower->getUser());
+                    $notification->setMessage("Edit song : <a href='" .
+                        $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
+                        $song->getName() . "</a> by <a href='" .
+                        $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
+                        $user->getMapperName() . "</a>");
+                    $this->em->persist($notification);
+                }
+                $this->em->flush();
+            }
+        }
 
     }
 

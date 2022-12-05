@@ -17,19 +17,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/song-request", name="song_request")
- */
+#[Route(path: '/song-request', name: 'song_request')]
 class SongRequestController extends AbstractController
 {
     /**
-     * @Route("/delete/{id}", name="_delete")
      * @param Request $request
      * @param SongRequestRepository $songRequestRepository
      * @param PaginationService $pagination
      * @param DiscordService $discordService
      * @return Response
      */
+    #[Route(path: '/delete/{id}', name: '_delete')]
     public function delete(Request $request, SongRequest $songRequest, SongRequestRepository $songRequestRepository): Response
     {
         if ($songRequest->getRequestedBy() == $this->getUser() || $this->isGranted('ROLE_MODERATOR')) {
@@ -42,14 +40,13 @@ class SongRequestController extends AbstractController
     }
 
     /**
-     * @Route("/", name="_index")
      * @param Request $request
      * @param SongRequestRepository $songRequestRepository
      * @param PaginationService $pagination
      * @param DiscordService $discordService
      * @return Response
      */
-
+    #[Route(path: '/', name: '_index')]
     public function index(Request $request, ManagerRegistry $doctrine, SongRequestRepository $songRequestRepository, PaginationService $pagination, DiscordService $discordService): Response
     {
         $form = null;
@@ -124,12 +121,12 @@ class SongRequestController extends AbstractController
     }
 
     /**
-     * @Route("/claim/{id}", name="_claim")
      * @param Request $request
      * @param SongRequest $songRequest
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/claim/{id}', name: '_claim')]
     public function claim(Request $request, ManagerRegistry $doctrine, SongRequest $songRequest, TranslatorInterface $translator): Response
     {
         // not connected
@@ -163,12 +160,12 @@ class SongRequestController extends AbstractController
     }
 
     /**
-     * @Route("/unclaim/{id}", name="_unclaim")
      * @param Request $request
      * @param SongRequest $songRequest
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/unclaim/{id}', name: '_unclaim')]
     public function unclaim(Request $request, ManagerRegistry $doctrine, SongRequest $songRequest, TranslatorInterface $translator): Response
     {
         // not connected
@@ -197,13 +194,13 @@ class SongRequestController extends AbstractController
     }
 
     /**
-     * @Route("/toggle/one/{id}", name="_toggle")
      * @param Request $request
      * @param SongRequest $songRequest
      * @param SongRequestVoteRepository $songRequestVoteRepository
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/toggle/one/{id}', name: '_toggle')]
     public function toggleOne(Request $request, ManagerRegistry $doctrine, SongRequest $songRequest, SongRequestVoteRepository $songRequestVoteRepository, TranslatorInterface $translator): Response
     {
         // not connected

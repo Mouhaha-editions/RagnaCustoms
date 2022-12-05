@@ -8,6 +8,7 @@ use App\Enum\ENotification;
 use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -16,10 +17,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
- * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
- */
 #[ApiResource(
     collectionOperations: [
      //   "get",
@@ -31,220 +28,127 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     normalizationContext: ['groups' => ['read']],
 )]
+#[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableEntity;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
     #[Groups("read")]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $EmailPreference;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $NotificationPreference;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $apiKey;
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $certified;
-    /**
-     * @ORM\ManyToOne(targetEntity=Country::class, inversedBy="utilisateurs")
-     */
     #[Groups("read")]
+    #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'utilisateurs')]
     private $country;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $credits;
-    /**
-     * @ORM\ManyToMany(targetEntity=SongRequest::class, mappedBy="mapperOnIt")
-     */
+    #[ORM\ManyToMany(targetEntity: SongRequest::class, mappedBy: 'mapperOnIt')]
     private $currentlyMapped;
-    /**
-     * @ORM\Column(type="string", unique=true, nullable=true)
-     */
+    #[ORM\Column(type: 'string', unique: true, nullable: true)]
     private $discordEmail;
-    /**
-     * @ORM\Column(type="string", unique=true, nullable=true)
-     */
+    #[ORM\Column(type: 'string', unique: true, nullable: true)]
     private $discordId;
-    /**
-     * @ORM\Column(type="string", unique=true, nullable=true)
-     */
+    #[ORM\Column(type: 'string', unique: true, nullable: true)]
     private $discordUsername;
-    /**
-     * @ORM\OneToMany(targetEntity=DownloadCounter::class, mappedBy="user")
-     */
+    #[ORM\OneToMany(targetEntity: DownloadCounter::class, mappedBy: 'user')]
     private $downloadCounters;
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Email(mode="strict")
-     */
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Email(mode: 'strict')]
     private $email;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $enableEmailNotification = false;
-    /**
-     * @ORM\OneToMany(targetEntity=FollowMapper::class, mappedBy="user")
-     */
+    #[ORM\OneToMany(targetEntity: FollowMapper::class, mappedBy: 'user')]
     private $followedMappers;
-    /**
-     * @ORM\OneToMany(targetEntity=FollowMapper::class, mappedBy="mapper", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: FollowMapper::class, mappedBy: 'mapper', orphanRemoval: true)]
     private $followers;
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $isMapper = false;
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $isPatreon;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $isPublic = true;
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $mailingNewSong = false;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $mapper_description = null;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $mapper_discord = null;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $mapper_img;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $mapper_name;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $usernameColor;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Notification::class, mappedBy="user")
-     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user')]
     private $notifications;
-    /**
-     * @ORM\OneToOne(targetEntity=Overlay::class, mappedBy="user", cascade={"persist", "remove"})
-     */
+    #[ORM\OneToOne(targetEntity: Overlay::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private $overlay;
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private $password;
-    /**
-     * @ORM\OneToMany(targetEntity=Playlist::class, mappedBy="user", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: Playlist::class, mappedBy: 'user', orphanRemoval: true)]
     private $playlists;
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private $roles = [];
-    /**
-     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="user", orphanRemoval=true)
-     * @ORM\OrderBy({"updatedAt"="desc"})
-     */
+    #[ORM\OneToMany(targetEntity: ScoreHistory::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OrderBy(['updatedAt' => 'desc'])]
     private $scoreHistories;
-    /**
-     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="user")
-     */
+    #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'user')]
     private $scores;
-    /**
-     * @ORM\OneToMany(targetEntity=SongRequestVote::class, mappedBy="user", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: SongRequestVote::class, mappedBy: 'user', orphanRemoval: true)]
     private $songRequestVotes;
-    /**
-     * @ORM\OneToMany(targetEntity=SongRequest::class, mappedBy="requestedBy", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: SongRequest::class, mappedBy: 'requestedBy', orphanRemoval: true)]
     private $songRequests;
-    /**
-     * @ORM\OneToMany(targetEntity=Song::class, mappedBy="user")
-     * @ORM\OrderBy({"updatedAt"="desc"})
-     */
+    #[ORM\OneToMany(targetEntity: Song::class, mappedBy: 'user')]
+    #[ORM\OrderBy(['updatedAt' => 'desc'])]
     private $songs;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $steamCommunityId;
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $username;
-    /**
-     * @ORM\OneToMany(targetEntity=VoteCounter::class, mappedBy="user", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: VoteCounter::class, mappedBy: 'user', orphanRemoval: true)]
     private $voteCounter;
-    /**
-     * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="user", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'user', orphanRemoval: true)]
     private $votes;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $patreonAccessToken;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $patreonRefreshToken;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $patreonUser;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $patreonData;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $twitchAccessToken;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $twitchRefreshToken;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $twitchUser;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $twitchData;
 
     public function __construct()
@@ -1306,6 +1210,66 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTwitchData($twitchData)
     {
         $this->twitchData = $twitchData;
+        return $this;
+    }
+
+    public function isEnableEmailNotification(): ?bool
+    {
+        return $this->enableEmailNotification;
+    }
+
+    public function isIsMapper(): ?bool
+    {
+        return $this->isMapper;
+    }
+
+    public function isIsPatreon(): ?bool
+    {
+        return $this->isPatreon;
+    }
+
+    public function isIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function isIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function isMailingNewSong(): ?bool
+    {
+        return $this->mailingNewSong;
+    }
+
+    /**
+     * @return Collection<int, VoteCounter>
+     */
+    public function getVoteCounter(): Collection
+    {
+        return $this->voteCounter;
+    }
+
+    public function addVoteCounter(VoteCounter $voteCounter): self
+    {
+        if (!$this->voteCounter->contains($voteCounter)) {
+            $this->voteCounter->add($voteCounter);
+            $voteCounter->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoteCounter(VoteCounter $voteCounter): self
+    {
+        if ($this->voteCounter->removeElement($voteCounter)) {
+            // set the owning side to null (unless already changed)
+            if ($voteCounter->getUser() === $this) {
+                $voteCounter->setUser(null);
+            }
+        }
+
         return $this;
     }
 

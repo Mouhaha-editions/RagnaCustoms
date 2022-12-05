@@ -7,35 +7,25 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity(repositoryClass=VoteCounterRepository::class)
- */
+#[ORM\Entity(repositoryClass: VoteCounterRepository::class)]
 class VoteCounter
 {
     use TimestampableEntity;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="voteCounter")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'voteCounter')]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="voteCounters")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: Song::class, inversedBy: 'voteCounters')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $song;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     private $votes_indc;
 
     public function getId(): ?int
@@ -77,5 +67,10 @@ class VoteCounter
         $this->votes_indc = $votesIndc;
 
         return $this;
+    }
+
+    public function isVotesIndc(): ?bool
+    {
+        return $this->votes_indc;
     }
 }

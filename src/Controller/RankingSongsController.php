@@ -50,9 +50,7 @@ class RankingSongsController extends AbstractController
 {
     private $paginate = 30;
 
-    /**
-     * @Route("/ranking-song/", name="ranking_song")
-     */
+    #[Route(path: '/ranking-song/', name: 'ranking_song')]
     public function library(Request $request, DiscordService $discordService, SongDifficultyRepository $songDifficultyRepository, RankingScoreService $rankingScoreService): Response
     {
         $form = $this->createFormBuilder();

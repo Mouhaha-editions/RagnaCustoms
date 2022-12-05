@@ -14,17 +14,13 @@ class ApplicationController extends AbstractController
 {
 
 
-    /**
-     * @Route("/howto", name="howto")
-     */
+    #[Route(path: '/howto', name: 'howto')]
     public function howTo(): Response
     {
         return $this->redirectToRoute('getting_started');
     }
 
-    /**
-     * @Route("/applications", name="applications")
-     */
+    #[Route(path: '/applications', name: 'applications')]
     public function menu(): Response
     {
         return $this->render('application/menu.html.twig', [
@@ -32,9 +28,7 @@ class ApplicationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/application", name="application")
-     */
+    #[Route(path: '/application', name: 'application')]
     public function index(): Response
     {
         return $this->render('application/index.html.twig', [
@@ -42,9 +36,7 @@ class ApplicationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/locale/{locale}", name="change_locale")
-     */
+    #[Route(path: '/locale/{locale}', name: 'change_locale')]
     public function changeLocale(Request $request, string $locale, SessionInterface $session)
     {
         $session->set('_locale', $locale);
@@ -55,9 +47,7 @@ class ApplicationController extends AbstractController
     }
 
 
-    /**
-     * @Route("/map-evaluator", name="map_evaluator")
-     */
+    #[Route(path: '/map-evaluator', name: 'map_evaluator')]
     public function mapEvaluator(Request $request, SongService $songService)
     {
         if (!$this->isGranted('ROLE_USER')) {

@@ -9,9 +9,6 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Service\StatisticService;
 
-/**
- * @ORM\Entity(repositoryClass=RankedScoresRepository::class)
- */
 #[ApiResource(
     collectionOperations: [
         "get",
@@ -21,25 +18,20 @@ use App\Service\StatisticService;
         "get",
 //        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
     ])]
+#[ORM\Entity(repositoryClass: RankedScoresRepository::class)]
 class RankedScores
 {
     use TimestampableEntity;
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="scores")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'scores')]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    /**
-    * @ORM\Column(type="float", nullable=true)
-    */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $totalPPScore;
 
     public function getId(): ?int

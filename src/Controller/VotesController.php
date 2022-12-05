@@ -17,15 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 
-/**
- * @Route("/song-vote", name="song_vote")
- */
+#[Route(path: '/song-vote', name: 'song_vote')]
 class VotesController extends AbstractController
 {
 
-    /**
-     * @Route("/upvote/{id}", name="_upvote")
-     */
+    #[Route(path: '/upvote/{id}', name: '_upvote')]
     public function toggleUpVote(VoteService $voteService, Song $song, TranslatorInterface $translator)
     {
         // not connected
@@ -37,9 +33,7 @@ class VotesController extends AbstractController
         return new JsonResponse(['result' => $this->renderView('songs/partial/downupvote.html.twig', ['song' => $song,])]);
     }
 
-    /**
-     * @Route("/downvote/{id}", name="_downvote")
-     */
+    #[Route(path: '/downvote/{id}', name: '_downvote')]
     public function toggleDownVote(VoteService $voteService, Song $song, TranslatorInterface $translator)
     {
         // not connected
@@ -52,13 +46,13 @@ class VotesController extends AbstractController
     }
 
     /**
-     * @Route("/review/{id}", name="_review")
      * @param Request $request
      * @param Song $song
      * @param VoteRepository $voteRepository
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/review/{id}', name: '_review')]
     public function songReview(Request        $request, Song $song,ManagerRegistry $doctrine,
                                VoteRepository $voteRepository, TranslatorInterface $translator,
                                VoteService    $voteService, DiscordService $discordService): Response

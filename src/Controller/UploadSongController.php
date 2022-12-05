@@ -28,20 +28,20 @@ class UploadSongController extends AbstractController
 {
 
     /**
-     * @Route("/upload/song/new", name="new_song")
      * @param Request $request
      * @param TranslatorInterface $translator
      * @param SongService $songService
      * @param ScoreService $scoreService
      * @return JsonResponse
      */
-    public function new(Request $request, TranslatorInterface $translator,ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
+    #[Route(path: '/upload/song/new', name: 'new_song')]
+    public function new(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
     {
         if (!$this->isGranted("ROLE_USER")) {
             return new JsonResponse([
-                'error' => true,
+                'error'        => true,
                 'errorMessage' => $translator->trans("You need to be connected"),
-                'response' => ""
+                'response'     => ""
             ]);
         }
         $song = new Song();
@@ -51,7 +51,6 @@ class UploadSongController extends AbstractController
 
 
     /**
-     * @Route("/upload/song/edit/{id}", name="edit_song")
      * @param Request $request
      * @param Song $song
      * @param TranslatorInterface $translator
@@ -59,26 +58,27 @@ class UploadSongController extends AbstractController
      * @param ScoreService $scoreService
      * @return JsonResponse
      */
-    public function edit(Request $request,Song $song,ManagerRegistry $doctrine,  TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
+    #[Route(path: '/upload/song/edit/{id}', name: 'edit_song')]
+    public function edit(Request $request, Song $song, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
     {
         if ($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse([
-                'error' => true,
+                'error'        => true,
                 'errorMessage' => $translator->trans("This Custom song is not your's"),
-                'response' => ""
+                'response'     => ""
             ]);
         }
-        if($this->isGranted('ROLE_PREMIUM_LVL2')) {
+        if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
             $form = $this->createForm(SongType::class, $song, [
                 'method' => "post",
                 'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
             ]);
-        }else if($this->isGranted('ROLE_PREMIUM_LVL1')) {
+        } else if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
             $form = $this->createForm(SongRestrictedTier1Type::class, $song, [
                 'method' => "post",
                 'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
             ]);
-        }else{
+        } else {
             $form = $this->createForm(SongRestrictedType::class, $song, [
                 'method' => "post",
                 'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
@@ -111,13 +111,13 @@ class UploadSongController extends AbstractController
                     $em->persist($song);
                     $em->flush();
                     return new JsonResponse([
-                        'error' => false,
-                        'goto' => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
-                        'reload' => true,
+                        'error'        => false,
+                        'goto'         => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
+                        'reload'       => true,
                         'errorMessage' => null,
-                        'response' => $this->renderView('upload_song/partial/edit.html.twig', [
-                            'form' => $form->createView(),
-                            'song' => $song,
+                        'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
+                            'form'  => $form->createView(),
+                            'song'  => $song,
                             "error" => null
                         ])
                     ]);
@@ -136,44 +136,42 @@ class UploadSongController extends AbstractController
                         $song->getAuthorName()
                     ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
                     return new JsonResponse([
-                        'error' => false,
-                        'goto' => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
-                        'reload' => true,
+                        'error'        => false,
+                        'goto'         => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
+                        'reload'       => true,
                         'errorMessage' => null,
-                        'response' => $this->renderView('upload_song/partial/edit.html.twig', [
-                            'form' => $form->createView(),
-                            'song' => $song,
+                        'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
+                            'form'  => $form->createView(),
+                            'song'  => $song,
                             "error" => null
                         ])
                     ]);
                 }
             } catch (Exception $e) {
                 return new JsonResponse([
-                    'error' => true,
+                    'error'        => true,
                     'errorMessage' => $e->getMessage(),
-                    'response' => $this->renderView('upload_song/partial/edit.html.twig', [
-                        'form' => $form->createView(),
-                        'song' => $song,
+                    'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
+                        'form'  => $form->createView(),
+                        'song'  => $song,
                         "error" => $e->getMessage()
                     ])
                 ]);
             }
         }
         return new JsonResponse([
-            'error' => false,
-            "goto" => $this->redirectToRoute("upload_song"),
+            'error'        => false,
+            "goto"         => $this->redirectToRoute("upload_song"),
             'errorMessage' => "",
-            'response' => $this->renderView('upload_song/partial/edit.html.twig', [
-                'form' => $form->createView(),
-                'song' => $song,
+            'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
+                'form'  => $form->createView(),
+                'song'  => $song,
                 "error" => null
             ])
         ]);
     }
 
-    /**
-     * @Route("/upload/song/delete/{id}", name="delete_song")
-     */
+    #[Route(path: '/upload/song/delete/{id}', name: 'delete_song')]
     public function delete(Song $song, EntityManagerInterface $em, DiscordService $discordService)
     {
         if ($song->getUser() === $this->getUser() && !$song->isRanked()) {
@@ -182,35 +180,35 @@ class UploadSongController extends AbstractController
             $ragnaBeat = $this->getParameter('kernel.project_dir') . "/public/ragna-beat/";
             $cover = $this->getParameter('kernel.project_dir') . "/public/covers/";
             $infoDatFile = explode("/", $song->getInfoDatFile());
-            $ragnaBeat.=$infoDatFile[2];
-            $files = glob($ragnaBeat."/*"); // get all file names
-            foreach($files as $file){ // iterate files
-                if(is_file($file)) {
+            $ragnaBeat .= $infoDatFile[2];
+            $files = glob($ragnaBeat . "/*"); // get all file names
+            foreach ($files as $file) { // iterate files
+                if (is_file($file)) {
                     @unlink($file); // delete file
                 }
             }
             @rmdir($ragnaBeat);
-            @unlink($songFile.$song->getId().".zip");
-            @unlink($cover.$song->getId().$song->getCoverImageExtension());
+            @unlink($songFile . $song->getId() . ".zip");
+            @unlink($cover . $song->getId() . $song->getCoverImageExtension());
 
             $discordService->deletedSong($song);
             $em->remove($song);
             $em->flush();
-            return new JsonResponse(['success'=>true]);
+            return new JsonResponse(['success' => true]);
         } else {
 
-            return new JsonResponse(['success'=>false]);
+            return new JsonResponse(['success' => false]);
         }
     }
 
 
     /**
-     * @Route("/upload/song", name="upload_song")
      * @param Request $request
      * @param SongRepository $songRepository
      * @param PaginationService $paginationService
      * @return Response
      */
+    #[Route(path: '/upload/song', name: 'upload_song')]
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
 
@@ -256,7 +254,7 @@ class UploadSongController extends AbstractController
                 's.name'
             ], true)) {
             $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
-        }else{
+        } else {
             $qb->orderBy("s.lastDateUpload", "desc");
         }
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
@@ -303,17 +301,68 @@ class UploadSongController extends AbstractController
             rmdir($dir);
         }
     }
+
     /**
-     * @Route("/upload/song-v2/new", name="new_song_v2")
      * @param Request $request
      * @param TranslatorInterface $translator
      * @param SongService $songService
      * @param ScoreService $scoreService
      * @return
      */
-    public function indexV2(Request $request, TranslatorInterface $translator,ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
+    #[Route(path: '/upload/song-v2/new', name: 'new_song_v2')]
+    public function indexV2(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
     {
 
         return $this->render('upload_song/index_v2.html.twig');
+    }
+
+    /**
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param SongService $songService
+     * @param ScoreService $scoreService
+     * @return
+     */
+    #[Route(path: '/upload/bundle/song/add', name: 'bundle_song')]
+    public function bundleUpload(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
+    {
+        try {
+
+            if ($songService->processFileWithoutForm($request)) {
+                /** @var ?SongRequest $song_request */
+            }
+//                $doctrine->getManager()->flush();
+//
+//                $this->addFlash('success', str_replace([
+//                    "%song%",
+//                    "%artist%"
+//                ], [
+//                    $song->getName(),
+//                    $song->getAuthorName()
+//                ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
+//                return new JsonResponse([
+//                    'error'        => false,
+//                    'goto'         => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
+//                    'reload'       => true,
+//                    'errorMessage' => null,
+//                    'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
+//                        'form'  => $form->createView(),
+//                        'song'  => $song,
+//                        "error" => null
+//                    ])
+//                ]);
+//            }
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'error'        => true,
+                'errorMessage' => $e->getMessage(),
+                'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
+                    'form'  => $form->createView(),
+                    'song'  => $song,
+                    "error" => $e->getMessage()
+                ])
+            ]);
+        }
+        return new JsonResponse(["success" => true]);
     }
 }

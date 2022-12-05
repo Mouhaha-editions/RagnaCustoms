@@ -5,7 +5,6 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use App\Controller\API\MethodsController;
 use App\Filter\SimpleSearchFilter;
 use App\Repository\SongRepository;
 use App\Service\StatisticService;
@@ -13,237 +12,108 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=SongRepository::class)
- */
-#[ApiResource(
-    collectionOperations: [
-        "get",
-//        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
-    ],
-    itemOperations: [
-        "get",
-//        'get_search' => [
-////            'route_name' => 'song_get_search',
-//            'method' => 'GET',
-//            'path' => '/song/search/{term}',
-//            'controller' => MethodsController::class,
-//            'normalization_context' => ['groups' => 'read']
-//        ],
-
-//        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
-    ],
-    normalizationContext: ['groups' => ['read']])]
-#[ApiFilter(SimpleSearchFilter::class, properties: ['name' , 'authorName' ,'levelAuthorName'])]
-
+#[ORM\Entity(repositoryClass: SongRepository::class)]
 class Song
 {
     use TimestampableEntity;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    #[Groups("read")]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $active = true;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $approximativeDuration;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $authorName;
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'float', nullable: true)]
     private $beatsPerMinute;
-    /**
-     * @ORM\ManyToMany(targetEntity=SongCategory::class, inversedBy="songs")
-     */
-    #[Groups("read")]
+    #[ORM\ManyToMany(targetEntity: SongCategory::class, inversedBy: 'songs')]
     private $categoryTags;
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $converted;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $countVotes;
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 255)]
     private $coverImageFileName;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
-    /**
-     * @ORM\OneToMany(targetEntity=DownloadCounter::class, mappedBy="song")
-     */
+    #[ORM\OneToMany(targetEntity: DownloadCounter::class, mappedBy: 'song')]
     private $downloadCounters;
-    /**
-     * @ORM\Column(type="integer")
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'integer')]
     private $downloads = 0;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $environmentName;
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 255)]
     private $fileName;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $infoDatFile;
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $isDeleted = false;
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $isExplicit;
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'datetime')]
     private $lastDateUpload;
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 255)]
     private $levelAuthorName;
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'boolean')]
     private $moderated = false;
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 255)]
     private $name;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $newGuid;
-    /**
-     * @ORM\ManyToMany(targetEntity=Playlist::class, mappedBy="songs")
-     */
+    #[ORM\ManyToMany(targetEntity: Playlist::class, mappedBy: 'songs')]
     private $playlists;
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $previewDuration;
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $previewStartTime;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $shuffle;
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $shufflePeriod;
     /**
      * @Gedmo\Slug(fields={"name"})
-     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $slug;
-    /**
-     * @ORM\OneToMany(targetEntity=SongDifficulty::class, mappedBy="song")
-     * @ORM\OrderBy({"difficultyRank"="asc"})
-     */
+    #[ORM\OneToMany(targetEntity: SongDifficulty::class, mappedBy: 'song')]
+    #[ORM\OrderBy(['difficultyRank' => 'asc'])]
     private $songDifficulties;
-    /**
-     * @ORM\OneToMany(targetEntity=SongHash::class, mappedBy="Song")
-     */
+    #[ORM\OneToMany(targetEntity: SongHash::class, mappedBy: 'Song')]
     private $songHashes;
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $subName;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $timeOffset;
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $totalVotes;
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="songs")
-     */
-
-    #[Groups("read")]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'songs')]
     private $user;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $version;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $views;
-    /**
-     * @ORM\OneToMany(targetEntity=VoteCounter::class, mappedBy="song")
-     */
+    #[ORM\OneToMany(targetEntity: VoteCounter::class, mappedBy: 'song')]
     private $voteCounters;
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $voteDown = 0;
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $voteUp = 0;
-    /**
-     * @ORM\OneToMany(targetEntity=Vote::class, mappedBy="song", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'song', orphanRemoval: true)]
     private $votes;
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $wip = false;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    #[Groups("read")]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $youtubeLink;
 
     public function __construct()
@@ -1118,6 +988,31 @@ class Song
             "Difficulties" => $this->getSongDifficultiesStr(),
             "CoverImageExtension" => $this->getCoverImageExtension(),
         ];
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function isConverted(): ?bool
+    {
+        return $this->converted;
+    }
+
+    public function isIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function isIsExplicit(): ?bool
+    {
+        return $this->isExplicit;
+    }
+
+    public function isWip(): ?bool
+    {
+        return $this->wip;
     }
 
 }

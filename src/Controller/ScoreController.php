@@ -19,16 +19,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class ScoreController extends AbstractController
 {
     /**
-     * @Route("/score/stats/{id}", name="score_stats")
      * @return void
      */
+    #[Route(path: '/score/stats/{id}', name: 'score_stats')]
     public function getStats(Song $song)
     {
 
     }
 
     /**
-     * @Route("/ranking/country/{twoLetters}", name="score_global_country")
      * @param Request $request
      * @param Country $country
      * @param PaginationService $pagination
@@ -36,6 +35,7 @@ class ScoreController extends AbstractController
      * @param RankedScoresRepository $rankedScoresRepository
      * @return Response
      */
+    #[Route(path: '/ranking/country/{twoLetters}', name: 'score_global_country')]
     public function globalCountryRanking(Request $request, Country $country, PaginationService $pagination, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository): Response
     {
         if ($request->get('findme', null)) {
@@ -63,13 +63,13 @@ class ScoreController extends AbstractController
     }
 
     /**
-     * @Route("/ranking/global", name="score_global_ranking")
      * @param Request $request
      * @param PaginationService $pagination
      * @param ScoreService $scoreService
      * @param RankedScoresRepository $rankedScoresRepository
      * @return Response
      */
+    #[Route(path: '/ranking/global', name: 'score_global_ranking')]
     public function globalRanking(Request $request, PaginationService $pagination, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository): Response
     {
         if ($request->get('findme', null)) {
@@ -90,12 +90,12 @@ class ScoreController extends AbstractController
     }
 
     /**
-     * @Route("/ranking/toggle/{id}", name="rank_toggle")
      * @param Request $request
      * @param ScoreService $scoreService
      * @param RankedScoresRepository $rankedScoresRepository
      * @return Response
      */
+    #[Route(path: '/ranking/toggle/{id}', name: 'rank_toggle')]
     public function toggleRankScore(Request                $request,
                                     ScoreService           $scoreService,
                                     ManagerRegistry        $doctrine,
