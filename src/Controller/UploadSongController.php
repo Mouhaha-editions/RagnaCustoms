@@ -303,5 +303,17 @@ class UploadSongController extends AbstractController
             rmdir($dir);
         }
     }
+    /**
+     * @Route("/upload/song-v2/new", name="new_song_v2")
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param SongService $songService
+     * @param ScoreService $scoreService
+     * @return
+     */
+    public function indexV2(Request $request, TranslatorInterface $translator,ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
+    {
 
+        return $this->render('upload_song/index_v2.html.twig');
+    }
 }

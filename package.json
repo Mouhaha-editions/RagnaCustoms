@@ -37,6 +37,7 @@
         "bootstrap": "^4",
         "chart.js": "^3.5.0",
         "color.js": "^1.2.0",
+        "dropzone": "^6.0.0-beta.2",
         "jquery": "^3.6.0",
         "jquery-ui": "^1.13.2",
         "lodash": "^4",
@@ -45,7 +46,8 @@
         "postcss": "^8.2.15",
         "select2": "^4.1.0-rc.0",
         "sweetalert2": "^11.4.8",
-        "tarteaucitronjs": "^1.9.5"
+        "tarteaucitronjs": "^1.9.5",
+        "vue-template-compiler": "^2.7.14"
     },
     "license": "UNLICENSED",
     "private": true,

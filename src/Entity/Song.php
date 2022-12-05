@@ -57,7 +57,7 @@ class Song
      * @ORM\Column(type="boolean", nullable=true)
      */
     #[Groups("read")]
-    private $active;
+    private $active = true;
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
