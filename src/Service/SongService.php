@@ -455,16 +455,18 @@ class SongService
 
                 $this->discordService->sendWipSongMessage($song);
             } elseif ($new) {
-                $this->discordService->sendNewSongMessage($song);
-                foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
-                    $notification = new Notification();
-                    $notification->setUser($follower->getUser());
-                    $notification->setMessage("New song : <a href='" .
-                        $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
-                        $song->getName() . "</a> by <a href='" .
-                        $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
-                        $user->getMapperName() . "</a>");
-                    $this->em->persist($notification);
+                if($song->getProgrammationDate()<=new DateTime()) {
+                    $this->discordService->sendNewSongMessage($song);
+                    foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
+                        $notification = new Notification();
+                        $notification->setUser($follower->getUser());
+                        $notification->setMessage("New song : <a href='" .
+                            $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
+                            $song->getName() . "</a> by <a href='" .
+                            $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
+                            $user->getMapperName() . "</a>");
+                        $this->em->persist($notification);
+                    }
                 }
                 $this->em->flush();
             } else {
