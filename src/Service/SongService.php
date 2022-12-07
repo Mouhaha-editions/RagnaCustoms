@@ -449,7 +449,6 @@ class SongService
                         $this->em->persist($notification);
                     }
                     $this->em->flush();
-
                     $this->discordService->sendWipSongMessage($song);
                 }
 

@@ -119,6 +119,9 @@ class Song
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $programmationDate = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isNotificationDone = false;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -1026,6 +1029,18 @@ class Song
     public function setProgrammationDate(?\DateTimeInterface $programmationDate): self
     {
         $this->programmationDate = $programmationDate;
+
+        return $this;
+    }
+
+    public function isIsNotificationDone(): ?bool
+    {
+        return $this->isNotificationDone;
+    }
+
+    public function setIsNotificationDone(?bool $isNotificationDone): self
+    {
+        $this->isNotificationDone = $isNotificationDone;
 
         return $this;
     }
