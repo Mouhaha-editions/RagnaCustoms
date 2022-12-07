@@ -217,7 +217,7 @@ class SongService
         }
         return true;
     }
-
+    
     private function process(string $unzippableFile,string $unzipFolder, Song $song, bool $isWip = false)
     {
         $finalFolder = $this->kernel->getProjectDir() . "/public/songs-files/";
@@ -454,19 +454,7 @@ class SongService
 
                 $this->discordService->sendWipSongMessage($song);
             } elseif ($new) {
-                if($song->getProgrammationDate()<=new DateTime()) {
-                    $this->discordService->sendNewSongMessage($song);
-                    foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
-                        $notification = new Notification();
-                        $notification->setUser($follower->getUser());
-                        $notification->setMessage("New song : <a href='" .
-                            $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
-                            $song->getName() . "</a> by <a href='" .
-                            $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
-                            $user->getMapperName() . "</a>");
-                        $this->em->persist($notification);
-                    }
-                }
+                $this->sendNewNotification($song);
                 $this->em->flush();
             } else {
                 $this->discordService->sendUpdatedSongMessage($song);
@@ -1171,6 +1159,25 @@ class SongService
         return count($this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where('s.rawPP > :my_score')->andWhere('s.songDifficulty = :difficulty')->andWhere('s.user != :me')->setParameter('my_score', $mine->getRawPP())->setParameter('difficulty', $songDifficulty)->setParameter('me', $user)->groupBy('s.user')->getQuery()->getResult()) + 1;
 
 
+    }
+
+    public function sendNewNotification(Song $song)
+    {
+        if($song->getProgrammationDate()<=new DateTime()) {
+
+            $user = $song->getUser();
+            $this->discordService->sendNewSongMessage($song);
+            foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
+                $notification = new Notification();
+                $notification->setUser($follower->getUser());
+                $notification->setMessage("New song : <a href='" .
+                    $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
+                    $song->getName() . "</a> by <a href='" .
+                    $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
+                    $user->getMapperName() . "</a>");
+                $this->em->persist($notification);
+            }
+        }
     }
 }
 
