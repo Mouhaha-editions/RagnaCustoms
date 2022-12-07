@@ -17,7 +17,12 @@ export default class extends Controller {
         Dropzone.autoDiscover = false;
         let myDropzone = new Dropzone("#my-form",{url:"/upload/bundle/song/add"});
         myDropzone.on("addedfile", file => {
-            console.log(`File added: ${file.name}`);
+        });
+        myDropzone.on("success", (file) => {
+            let resp = JSON.parse(file.xhr.response);
+            if(resp.success){
+                $(file.previewTemplate).find(" .dz-image").css({'background':"url("+resp.cover+")"})
+            }
         });
     }
 

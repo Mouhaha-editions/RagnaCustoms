@@ -578,7 +578,7 @@ class SongService
         $file = $this->kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip";
         $uniqBeat = "/ragna-beat/" . uniqid();
         $unzipFolder = $this->kernel->getProjectDir() . "/public" . $uniqBeat;
-        mkdir($this->kernel->getProjectDir() . "/public" . $uniqBeat);
+        @mkdir($this->kernel->getProjectDir() . "/public" . $uniqBeat);
         $zip = new ZipArchive();
 //        try {
 

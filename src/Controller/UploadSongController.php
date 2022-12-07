@@ -347,6 +347,6 @@ class UploadSongController extends AbstractController
         } catch (Exception $e) {
             return new Response($e->getMessage(), 500);
         }
-        return new JsonResponse(["success" => true]);
+        return new JsonResponse(["success" => true, 'cover'=>$song->getCover()]);
     }
 }
