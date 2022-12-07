@@ -280,7 +280,6 @@ class SongService
             throw new Exception("\"_songApproximativeDuration\" is missing in the info.dat file!");
         }
 
-
         $song->setVersion($json->_version);
         $song->setName(trim($json->_songName));
         $song->setLastDateUpload(new DateTime());
@@ -1163,7 +1162,7 @@ class SongService
 
     public function sendNewNotification(Song $song)
     {
-        if($song->getProgrammationDate()<=new DateTime()) {
+        if($song->getActive() == true && $song->getProgrammationDate()<=new DateTime()) {
             $user = $song->getUser();
             $this->discordService->sendNewSongMessage($song);
             foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
