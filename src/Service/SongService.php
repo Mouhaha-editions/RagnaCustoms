@@ -1164,7 +1164,6 @@ class SongService
     public function sendNewNotification(Song $song)
     {
         if($song->getProgrammationDate()<=new DateTime()) {
-
             $user = $song->getUser();
             $this->discordService->sendNewSongMessage($song);
             foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
@@ -1176,7 +1175,9 @@ class SongService
                     $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
                     $user->getMapperName() . "</a>");
                 $this->em->persist($notification);
+                $song->setIsNotificationDone(true);
             }
+            $this->em->flush();
         }
     }
 }
