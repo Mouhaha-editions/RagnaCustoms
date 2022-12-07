@@ -116,6 +116,9 @@ class Song
     #[ORM\Column(type: 'text', nullable: true)]
     private $youtubeLink;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $programmationDate = null;
+
     public function __construct()
     {
         $this->songDifficulties = new ArrayCollection();
@@ -1013,6 +1016,18 @@ class Song
     public function isWip(): ?bool
     {
         return $this->wip;
+    }
+
+    public function getProgrammationDate(): ?\DateTimeInterface
+    {
+        return $this->programmationDate;
+    }
+
+    public function setProgrammationDate(?\DateTimeInterface $programmationDate): self
+    {
+        $this->programmationDate = $programmationDate;
+
+        return $this;
     }
 
 }

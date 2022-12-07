@@ -1,11 +1,30 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
-{#<h4>{{ song.name is null ? "New custom song":song.name }}</h4>#}
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-12">
 {% if error is not null %}
 <div class="alert alert-danger">{{ error }}</div>
 {% endif %}
-{#<small class="text-danger">Do not delete song to edit one, please use the edit button</small>#}
-{{ form_start(form) }}
-{{ form_end(form) }}
+    </div>
+
+
+    <div class="col-md-6">
+        {{ form_row(form.zipFile) }}
+        {{ form_row(form.categoryTags) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.youtubeLink) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.programmationDate) }}
+        {{ form_row(form.active) }}
+        {{ form_row(form.song_request) }}
+        {{ form_row(form.wip) }}
+        {{ form_row(form.isExplicit) }}
+        {{ form_row(form.converted) }}
+
+    </div>
+    <div class="col-12">
 <small style="font-size: 12px;">By uploading your map, you acknowledge that you agree to our <a data-no-swup="true" href="/doc/TOS.pdf">Terms of Service.</a></small>
-{#<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>#}
-{#<script src="{{ asset('bundles/tetranzselect2entity/js/select2entity.js') }}"></script>#}
+    </div>
+</div>
+{{ form_end(form) }}

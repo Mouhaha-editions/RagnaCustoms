@@ -88,7 +88,15 @@
                     <li class="nav-item">
                         <a class="nav-link text-level-9" href="{{ url("applications") }}">{{ "Apps"|trans }}</a>
                     </li>
-                    {% if is_granted('ROLE_USER') %}
+                    {% if is_granted('ROLE_PREMIUM_LVL2') %}
+                        <li class="nav-item">
+                            <a
+                               href="{{ url('new_song_multi') }}"
+                               class="btn btn-blue mt-2 mr-4">
+                                {{ "Submit maps"|trans }}
+                            </a>
+                        </li>
+                    {% elseif is_granted('ROLE_USER') %}
                         <li class="nav-item">
                             <a href="#"
                                data-modal="#editSong"
@@ -167,7 +175,7 @@
     {% block endBody %}
         <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
              aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel2"></h5>

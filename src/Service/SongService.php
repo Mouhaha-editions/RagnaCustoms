@@ -188,7 +188,7 @@ class SongService
 
     }
 
-    public function processFileWithoutForm(Request $request)
+    public function processFileWithoutForm(Request $request,Song $song)
     {
         try {
             $allowedFiles = [
@@ -206,9 +206,9 @@ class SongService
             } else {
                 return false;
             }
-            $song = new Song();
             $song->setActive(false);
             $this->process($unzippableFile, $unzipFolder,$song, true);
+            $this->emulatorFileDispatcher($song, true);
             $this->coverOptimisation($song);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -268,7 +268,7 @@ class SongService
         }
 
         $new =  $song->getId() == null || $isWip != $song->getWip();
-        if ($song2->isRanked()) {
+        if ($song->isRanked()) {
             $this->rrmdir($unzipFolder);
             throw new Exception("This song is ranked, you can't update it for now, please contact us.");
         }

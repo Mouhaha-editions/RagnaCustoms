@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div {{ stimulus_controller('song-upload-v2') }}  class="container">
+    <div class="row">
+    <h1>
+        Multi upload
+    </h1>
+        <div class="col-12">
+
+    <form action="/target" class="dropzone" id="my-form" style="border: 1px solid #444;background: #2e2e2e;"></form>
+        </div>
+            <div class="col-12 text-center p-5">
+                <p>Once uploads are finished go to your uploads to publish your songs</p>
+              <a href="{{ url('upload_song') }}" class="btn btn-warning">Finish upload</a>
+            </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

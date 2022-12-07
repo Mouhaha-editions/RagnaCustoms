@@ -45,6 +45,7 @@ class UploadSongController extends AbstractController
             ]);
         }
         $song = new Song();
+        $song->setProgrammationDate(new \DateTime());
         $song->setUser($this->getUser());
         return $this->edit($request, $song, $doctrine, $translator, $songService, $scoreService);
     }
@@ -201,6 +202,20 @@ class UploadSongController extends AbstractController
         }
     }
 
+    #[Route(path: '/upload/song/toggle/{id}', name: 'upload_song_toggle')]
+    public function toggleSong(Request $request, Song $song, SongRepository $songRepository)
+    {
+        if($song->getUser() != $this->getUser()){
+            return new JsonResponse(['success' => false,'message'=>"This is not YOUR song"]);
+        }
+        if($song->getCategoryTags()->count() == 0){
+            return new JsonResponse(['success' => false,'message'=>"You need at least 1 category for this song"]);
+        }
+        $song->setActive(!$song->getActive());
+        $songRepository->add($song);
+
+        return new JsonResponse(['success' => true]);
+    }
 
     /**
      * @param Request $request
@@ -309,11 +324,10 @@ class UploadSongController extends AbstractController
      * @param ScoreService $scoreService
      * @return
      */
-    #[Route(path: '/upload/song-v2/new', name: 'new_song_v2')]
+    #[Route(path: '/upload/song/new-multi', name: 'new_song_multi')]
     public function indexV2(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
     {
-
-        return $this->render('upload_song/index_v2.html.twig');
+        return $this->render('upload_song/index_multi.html.twig');
     }
 
     /**
@@ -327,41 +341,11 @@ class UploadSongController extends AbstractController
     public function bundleUpload(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
     {
         try {
-
-            if ($songService->processFileWithoutForm($request)) {
-                /** @var ?SongRequest $song_request */
-            }
-//                $doctrine->getManager()->flush();
-//
-//                $this->addFlash('success', str_replace([
-//                    "%song%",
-//                    "%artist%"
-//                ], [
-//                    $song->getName(),
-//                    $song->getAuthorName()
-//                ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
-//                return new JsonResponse([
-//                    'error'        => false,
-//                    'goto'         => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
-//                    'reload'       => true,
-//                    'errorMessage' => null,
-//                    'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
-//                        'form'  => $form->createView(),
-//                        'song'  => $song,
-//                        "error" => null
-//                    ])
-//                ]);
-//            }
+            $song = new Song();
+            $song->setUser($this->getUser());
+            $songService->processFileWithoutForm($request, $song);
         } catch (Exception $e) {
-            return new JsonResponse([
-                'error'        => true,
-                'errorMessage' => $e->getMessage(),
-                'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
-                    'form'  => $form->createView(),
-                    'song'  => $song,
-                    "error" => $e->getMessage()
-                ])
-            ]);
+            return new Response($e->getMessage(), 500);
         }
         return new JsonResponse(["success" => true]);
     }

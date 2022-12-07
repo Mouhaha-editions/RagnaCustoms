@@ -48,6 +48,17 @@
     {#    {% if seePlayed is defined %}#}
     {#        <td class="text-right">{{ song.scores|length }}</td>#}
     {#    {% endif %}#}
+    <td>
+        {{ song.programmationDate is not null ? song.programmationDate.format('Y-m-d H:i') : 'now' }}
+    </td>
+    <td>
+        {% if not song.isRanked() %}
+        <label class="switch">
+            <input data-song="{{ song.id }}" class="enable-song" type="checkbox" {% if song.active %}checked="checked"{% endif %} value="1">
+            <span class="slider round"></span>
+        </label>
+        {% endif %}
+    </td>
     <td class="download">
         {% if not song.isRanked() %}
         <a href="#"

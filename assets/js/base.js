@@ -115,6 +115,7 @@ window.onload = function() {
 };
 //endregion
 $(function () {
+    toggle_snow();
     $(document).on('click','.snowflake-toggle',function(){
         toggle_snow();
     })

@@ -241,6 +241,8 @@ class SongsController extends AbstractController
             $filters[] = "not downloaded";
         }
         $qb->andWhere('s.moderated = true');
+        $qb->andWhere('s.active = true');
+        $qb->andWhere('s.programmationDate <= NOW() ');
 
         //get the 'type' param (added for ajax search)
         $type = $request->get('type', null);
