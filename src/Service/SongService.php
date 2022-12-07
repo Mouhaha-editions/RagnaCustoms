@@ -1162,7 +1162,7 @@ class SongService
 
     public function sendNewNotification(Song $song)
     {
-        if($song->getActive() == true && $song->getProgrammationDate()<=new DateTime()) {
+        if($song->getActive() === true && $song->getProgrammationDate()<=new DateTime()) {
             $user = $song->getUser();
             $this->discordService->sendNewSongMessage($song);
             foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
