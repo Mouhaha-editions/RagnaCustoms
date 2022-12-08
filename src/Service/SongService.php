@@ -454,21 +454,21 @@ class SongService
 
                 $this->discordService->sendWipSongMessage($song);
             } elseif ($new) {
-                $this->sendNewNotification($song);
+//                $this->sendNewNotification($song);
                 $this->em->flush();
             } else {
-                $this->discordService->sendUpdatedSongMessage($song);
-                /** @var FollowMapper $follower */
-                foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map) as $follower) {
-                    $notification = new Notification();
-                    $notification->setUser($follower->getUser());
-                    $notification->setMessage("Edit song : <a href='" .
-                        $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
-                        $song->getName() . "</a> by <a href='" .
-                        $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
-                        $user->getMapperName() . "</a>");
-                    $this->em->persist($notification);
-                }
+//                $this->discordService->sendUpdatedSongMessage($song);
+//                /** @var FollowMapper $follower */
+//                foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map) as $follower) {
+//                    $notification = new Notification();
+//                    $notification->setUser($follower->getUser());
+//                    $notification->setMessage("Edit song : <a href='" .
+//                        $this->router->generate('song_detail', ['slug' => $song->getSlug()]) . "'>" .
+//                        $song->getName() . "</a> by <a href='" .
+//                        $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
+//                        $user->getMapperName() . "</a>");
+//                    $this->em->persist($notification);
+//                }
                 $this->em->flush();
             }
         }
