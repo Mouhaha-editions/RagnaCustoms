@@ -21,7 +21,7 @@ export default class extends Controller {
         myDropzone.on("success", (file) => {
             let resp = JSON.parse(file.xhr.response);
             if(resp.success){
-                $(file.previewTemplate).find(" .dz-image").css({'background':"url("+resp.cover+")"})
+                $(file.previewTemplate).find(" .dz-image").css({'background':"url("+resp.cover+")",'background-size':'cover'})
             }
         });
     }

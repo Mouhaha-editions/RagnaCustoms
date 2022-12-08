@@ -191,11 +191,7 @@ class SongService
     public function processFileWithoutForm(Request $request,Song $song)
     {
         try {
-            $allowedFiles = [
-                'preview.ogg',
-                'info.dat',
-                'Info.dat',
-            ];
+
             $folder = $this->kernel->getProjectDir() . "/public/tmp-song/";
             $unzipFolder = $folder . uniqid();
             @mkdir($unzipFolder);
@@ -220,6 +216,11 @@ class SongService
     
     private function process(string $unzippableFile,string $unzipFolder, Song $song, bool $isWip = false)
     {
+        $allowedFiles = [
+            'preview.ogg',
+            'info.dat',
+            'Info.dat',
+        ];
         $finalFolder = $this->kernel->getProjectDir() . "/public/songs-files/";
         $zip = new ZipArchive();
         $theZip = $unzippableFile;
@@ -992,6 +993,11 @@ class SongService
     public function processExistingFile(Song $song)
     {
         try {
+            $allowedFiles = [
+                'preview.ogg',
+                'info.dat',
+                'Info.dat',
+            ];
             $finalFolder = $this->kernel->getProjectDir() . "/public/songs-files/";
             $folder = $this->kernel->getProjectDir() . "/public/tmp-song/";
             $unzipFolder = $folder . uniqid();
