@@ -44,11 +44,14 @@ class SongPublishCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $songs = $this->songRepository->createQueryBuilder('s')
-                                      ->where("s.active = 1")
-                                      ->andWhere("s.wip = 0")
-                                      ->andWhere("s.isNotificationDone = 0")
-                                      ->andWhere("s.programmationDate <= :now")->setParameter('now', new \DateTime())->getQuery()->getResult();
+        $songs = $this->songRepository
+            ->createQueryBuilder('s')
+            ->where("s.active = 1")
+            ->andWhere("s.wip = 0")
+            ->andWhere("s.isNotificationDone = 0")
+            ->andWhere("s.programmationDate <= :now")
+            ->setParameter('now', new \DateTime())
+            ->getQuery()->getResult();
         /** @var Song $song */
         foreach ($songs as $song) {
             $song->setLastDateUpload(new \DateTime());
