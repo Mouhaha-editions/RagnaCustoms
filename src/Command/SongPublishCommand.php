@@ -51,7 +51,9 @@ class SongPublishCommand extends Command
                                       ->andWhere("s.programmationDate <= :now")->setParameter('now', new \DateTime())->getQuery()->getResult();
         /** @var Song $song */
         foreach ($songs as $song) {
+            $song->setLastDateUpload(new \DateTime());
             $this->songService->sendNewNotification($song);
+            $this->songRepository->add($song);
             echo $song->getName() . "\r\n";
         }
 
