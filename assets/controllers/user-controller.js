@@ -19,7 +19,20 @@ export default class extends Controller {
 
             //$("body").attr('style', " background: radial-gradient(100% 100% at 0% 0%, rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.2) 0%, rgba(0, 0, 0, 0) 100%), #2B2B2B;");
         });
-    }
+        $("#utilisateur_usernameColor").on('input',function(){
+            $(".username span").css({"color":$(this).val()});
+        });
+        $("#utilisateur_usernameColor").on('change',function() {
+            let form = $(".username").closest('form');
+            var formData = form.serialize() ;
+
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: formData
+            });
+        });
+        }
 
     disconnect() {
         $("#main").attr('style', " background: transparent");
