@@ -1180,8 +1180,8 @@ class SongService
                     $this->router->generate('mapper_profile', ['username' => $user->getUsername()]) . "'>" .
                     $user->getMapperName() . "</a>");
                 $this->em->persist($notification);
-                $song->setIsNotificationDone(true);
             }
+            $song->setIsNotificationDone(true);
             $this->em->flush();
         }
     }

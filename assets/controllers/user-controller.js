@@ -24,7 +24,7 @@ export default class extends Controller {
         });
         $("#utilisateur_usernameColor").on('change',function() {
             let form = $(".username").closest('form');
-            var formData = form.serialize() ;
+            let formData = form.serialize() ;
 
             $.ajax({
                 type: "POST",
@@ -32,6 +32,15 @@ export default class extends Controller {
                 data: formData
             });
         });
+        $("form[name=\"utilisateur\"] input,form[name=\"utilisateur\"] select,form[name=\"utilisateur\"] textarea").on('change',function(){
+            let form = $(this).closest('form');
+            let formData = form.serialize() ;
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: formData
+            });
+        })
         }
 
     disconnect() {
