@@ -23,9 +23,9 @@
                                     avatar</small>
                             </div>
                             <div class="text-center mt-2 p-3 membership">
-                                Your membership: {% if is_granted('ROLE_PREMIUM_LVL3') %}<b>Tier 3</b>
-                                {% elseif is_granted('ROLE_PREMIUM_LVL2') %}<b>Tier 2</b>
-                                {% elseif is_granted('ROLE_PREMIUM_LVL1') %}<b>Tier 1</b>
+                                Your membership: {% if is_granted('ROLE_PREMIUM_LVL3') %}<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> <b>Tier 3</b>
+                                {% elseif is_granted('ROLE_PREMIUM_LVL2') %}<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> <b>Tier 2</b>
+                                {% elseif is_granted('ROLE_PREMIUM_LVL1') %}<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> <b>Tier 1</b>
                                 {% else %}None <small><a href="{{ url('user_applications') }}">Get
                                         one</a></small>{% endif %}
                             </div>
@@ -34,7 +34,7 @@
 
                     <div class="col-md-4">
                         <h2 class="username">{{ membershipService.displayUsername(app.user)|raw }}</h2>
-                        <div class="{% if is_granted('ROLE_PREMIUM_LVL2') %}hide{% endif %}"> Username color
+                        <div class="{% if is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %}"><i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Username color
                             : {{ form_widget(form.usernameColor) }}
                         </div>
                         <div class="encart p-2 d-flex justify-content-center align-self-center">

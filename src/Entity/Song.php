@@ -149,7 +149,10 @@ class Song
         return count($votes) > 0;
     }
 
-
+    public function isPublished()
+    {
+        return $this->programmationDate  <= new DateTime() && !$this->isWip();
+}
     /**
      * @return Collection|SongDifficulty[]
      */

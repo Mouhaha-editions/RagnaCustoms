@@ -15,8 +15,9 @@
         {{ form_row(form.youtubeLink) }}
     </div>
     <div class="col-md-6">
+        {% if is_granted("ROLE_PREMIUM_LVL2") %}
         {{ form_row(form.programmationDate) }}
-        {{ form_row(form.active) }}
+        {% endif %}
         {{ form_row(form.song_request) }}
         {{ form_row(form.wip) }}
         {{ form_row(form.isExplicit) }}

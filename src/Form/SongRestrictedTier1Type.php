@@ -82,24 +82,7 @@ class SongRestrictedTier1Type extends AbstractType
                         ->setParameter('available', [SongRequest::STATE_IN_PROGRESS]);
                 }
             ])
-            ->add('active',
-                ChoiceType::class, [
-                    'choices' => [
-                        "YES" => 1,
-                        "NO"  => 0,
-                    ],
-                    'label'   => "Publish",
-                    'help'    => 'Publish at "Publishing date"'
-                ])
-            ->add('programmationDate',
-                DateTimeType::class, [
-                    'label'      => 'Publishing date',
-                    'widget'     => 'single_text',
 
-                    'input'      => "datetime",
-                    "empty_data" => '',
-                    'help'       => "sorry for now it's based on UTC+1 (french time) "
-                ])
             ->add('wip', null, [
                 'label' => "Work in progress"
             ])

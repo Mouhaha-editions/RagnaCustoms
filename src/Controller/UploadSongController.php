@@ -62,6 +62,7 @@ class UploadSongController extends AbstractController
     #[Route(path: '/upload/song/edit/{id}', name: 'edit_song')]
     public function edit(Request $request, Song $song, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
     {
+
         if ($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse([
                 'error'        => true,
