@@ -344,6 +344,7 @@ class UploadSongController extends AbstractController
         try {
             $song = new Song();
             $song->setUser($this->getUser());
+            $song->setActive(true);
             $songService->processFileWithoutForm($request, $song);
         } catch (Exception $e) {
             return new Response($e->getMessage(), 500);
