@@ -202,7 +202,6 @@ class SongService
             } else {
                 return false;
             }
-            $song->setActive(false);
             $this->process($unzippableFile, $unzipFolder,$song, true);
             $this->emulatorFileDispatcher($song, true);
             $this->coverOptimisation($song);
