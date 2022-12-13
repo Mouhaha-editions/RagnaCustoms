@@ -52,7 +52,7 @@ class ApiController extends AbstractController
     public function login(Request $request, UtilisateurRepository $utilisateurRepository, UserPasswordHasherInterface $hasher): Response
     {
         /** @var Utilisateur $user */
-        $user = $utilisateurRepository->findBy(['username' => $request->get('username')]);
+        $user = $utilisateurRepository->findOneBy(['username' => $request->get('username')]);
         if ($user !== null) {
             if ($hasher->isPasswordValid($user, $request->get('password'))) {
                 return new JsonResponse(['api_key' => $user->getApiKey()]);
