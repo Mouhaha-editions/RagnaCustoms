@@ -54,11 +54,20 @@ class ApiController extends AbstractController
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['username' => $request->get('username')]);
         if ($user !== null) {
-            if ($hasher->isPasswordValid($user, $request->get('password'))) {
+
+            if ($hasher->isPasswordValid($user, $request->get('password')) && ($user->getCountApiAttempt()<=5 || $user->getLastApiAttempt() >= (new DateTime())->modify('-1 days') ) ) {
+                $user->setCountApiAttempt(0);
+                $user->setLastApiAttempt(null);
                 return new JsonResponse(['api_key' => $user->getApiKey()]);
             }
+            $user->setCountApiAttempt((int)$user->getCountApiAttempt()+1);
+            $user->setLastApiAttempt(new DateTime());
+            $utilisateurRepository->add($user);
             return new JsonResponse(['api_key' => false],400);
         }
+        $user->setCountApiAttempt((int)$user->getCountApiAttempt()+1);
+        $user->setLastApiAttempt(new DateTime());
+        $utilisateurRepository->add($user);
         return new JsonResponse(['api_key' => false],400);
     }
 

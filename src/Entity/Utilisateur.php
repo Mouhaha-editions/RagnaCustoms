@@ -151,6 +151,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'text', nullable: true)]
     private $twitchData;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $countApiAttempt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $lastApiAttempt = null;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -1269,6 +1275,30 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 $voteCounter->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCountApiAttempt(): ?int
+    {
+        return $this->countApiAttempt;
+    }
+
+    public function setCountApiAttempt(?int $countApiAttempt): self
+    {
+        $this->countApiAttempt = $countApiAttempt;
+
+        return $this;
+    }
+
+    public function getLastApiAttempt(): ?\DateTimeInterface
+    {
+        return $this->lastApiAttempt;
+    }
+
+    public function setLastApiAttempt(?\DateTimeInterface $lastApiAttempt): self
+    {
+        $this->lastApiAttempt = $lastApiAttempt;
 
         return $this;
     }
