@@ -58,6 +58,7 @@ class ApiController extends AbstractController
             if ($hasher->isPasswordValid($user, $request->get('password')) && ($user->getCountApiAttempt()<=5 || $user->getLastApiAttempt() <= (new DateTime())->modify('-1 days') ) ) {
                 $user->setCountApiAttempt(0);
                 $user->setLastApiAttempt(null);
+                $utilisateurRepository->add($user);
                 return new JsonResponse(['api_key' => $user->getApiKey()]);
             }
             $user->setCountApiAttempt((int)$user->getCountApiAttempt()+1);
