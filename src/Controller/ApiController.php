@@ -59,17 +59,17 @@ class ApiController extends AbstractController
                 $user->setCountApiAttempt(0);
                 $user->setLastApiAttempt(null);
                 $utilisateurRepository->add($user);
-                return new JsonResponse(['api_key' => $user->getApiKey()]);
+                return new Response($user->getApiKey());
             }
             $user->setCountApiAttempt((int)$user->getCountApiAttempt()+1);
             $user->setLastApiAttempt(new DateTime());
             $utilisateurRepository->add($user);
-            return new JsonResponse(['api_key' => false],400);
+            return new Response("",400);
         }
         $user->setCountApiAttempt((int)$user->getCountApiAttempt()+1);
         $user->setLastApiAttempt(new DateTime());
         $utilisateurRepository->add($user);
-        return new JsonResponse(['api_key' => false],400);
+        return new Response('',400);
     }
 
     #[Route(path: '/api/song/check-updates', name: 'api_song_check_updates')]
