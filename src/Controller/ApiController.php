@@ -66,9 +66,7 @@ class ApiController extends AbstractController
             $utilisateurRepository->add($user);
             return new Response("",400);
         }
-        $user->setCountApiAttempt((int)$user->getCountApiAttempt()+1);
-        $user->setLastApiAttempt(new DateTime());
-        $utilisateurRepository->add($user);
+
         return new Response('',400);
     }
 
