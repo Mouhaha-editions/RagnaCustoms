@@ -100,7 +100,13 @@ class ApiController extends AbstractController
     #[Route(path: '/api/search/{term}', name: 'api_search')]
     public function index(Request $request, string $term = null, SongRepository $songRepository): Response
     {
-        $songsEntities = $songRepository->createQueryBuilder('s')->where('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')->andWhere('s.moderated = true')->andWhere('s.isDeleted != true')->setParameter('search_string', '%' . $term . '%')->getQuery()->getResult();
+        $songsEntities = $songRepository
+            ->createQueryBuilder('s')->where('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
+
+            ->andWhere('(s.programmationDate <= :now  )')
+            ->setParameter('now',(new \DateTime()))
+                                     ->andWhere('s.moderated = true')
+                                     ->andWhere('s.isDeleted != true')->setParameter('search_string', '%' . $term . '%')->getQuery()->getResult();
         $songs = [];
 
         /** @var Song $song */
