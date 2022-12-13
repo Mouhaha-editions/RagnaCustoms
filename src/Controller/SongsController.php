@@ -338,7 +338,7 @@ class SongsController extends AbstractController
     #[Route(path: '/songs/download/{id}', name: 'song_download')]
     public function download(Request $request, ManagerRegistry $doctrine, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository)
     {
-        if (!$song->isModerated()) {
+        if (!$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate() > new DateTime()) {
             return new Response("Not available now", 403);
         }
         $em = $doctrine->getManager();
@@ -361,7 +361,7 @@ class SongsController extends AbstractController
     #[Route(path: '/songs/download/{id}/{api}', name: 'song_download_api', defaults: ['api' => null])]
     public function downloadApiKey(GrantedService $grantedService, ManagerRegistry $doctrine, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, UtilisateurRepository $utilisateurRepository)
     {
-        if (!$song->isModerated()) {
+        if (!$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate() > new DateTime()) {
             return new Response("Not available now", 403);
         }
         $em = $doctrine->getManager();
@@ -391,7 +391,7 @@ class SongsController extends AbstractController
     #[Route(path: '/songs/ddl/{id}', name: 'song_direct_download')]
     public function directDownload(Song $song, ManagerRegistry $doctrine, KernelInterface $kernel, DownloadService $downloadService)
     {
-        if (!$song->isModerated()) {
+        if (!$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate() > new DateTime()) {
             return new Response("Not available now", 403);
         }
         $em = $doctrine->getManager();
