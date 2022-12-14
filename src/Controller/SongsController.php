@@ -443,7 +443,7 @@ class SongsController extends AbstractController
     public function songDetail(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService, ?Song $song = null)
     {
 
-        if ($song == null || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
+        if ($song->getProgrammationDate() == null || $song->getProgrammationDate() >= new DateTime()|| $song == null || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }
