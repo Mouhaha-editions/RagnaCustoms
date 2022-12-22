@@ -107,7 +107,14 @@ class UserController extends AbstractController
     #[Route(path: '/mapper-profile/{username}', name: 'mapper_profile')]
     public function mappedProfile(Request $request, ManagerRegistry $doctrine, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
     {
-        $qb = $doctrine->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->groupBy("s.id");
+        $qb = $doctrine->getRepository(Song::class)
+                       ->createQueryBuilder("s")
+                       ->where('s.user = :user')
+            ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')
+            ->setParameter('now', new DateTime())
+            ->setParameter('user', $utilisateur)
+                       ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
+                       ->groupBy("s.id");
 
 
         if ($request->get('display_wip', null) != null) {
@@ -287,7 +294,7 @@ class UserController extends AbstractController
     public function ApplicationsAndPremium(Request $request, UtilisateurRepository $userRepo)
     {
 
-       $this->PatreonAction($request, $userRepo);
+        $this->PatreonAction($request, $userRepo);
 
         return $this->render('user/application.html.twig', [
 
@@ -311,7 +318,7 @@ class UserController extends AbstractController
         $form = $this->createForm(UtilisateurType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if(!$this->isGranted('ROLE_PREMIUM_LVL2')){
+            if (!$this->isGranted('ROLE_PREMIUM_LVL2')) {
                 $user->setUsernameColor("#ffffff");
             }
             $email_user = $utilisateurRepository->findOneBy(['email' => $user->getEmail()]);
@@ -344,7 +351,7 @@ class UserController extends AbstractController
         if ($request->get('code')) {
             $oauth_client = new OAuth($this->getParameter('patreon_client_id'), $this->getParameter('patreon_client_secret'));
             $tokens = $oauth_client->get_tokens($_GET['code'], $this->generateUrl('user_applications', [], UrlGeneratorInterface::ABS_URL));
-            if(!isset($tokens['error'])) {
+            if (!isset($tokens['error'])) {
                 $access_token = $tokens['access_token'];
                 $refresh_token = $tokens['refresh_token'];
 // Here, you should save the access and refresh tokens for this user somewhere.
@@ -369,17 +376,20 @@ class UserController extends AbstractController
                 $api_client = new API($user->getPatreonAccessToken());
                 $user->setPatreonData(json_encode($api_client->fetch_user()));
                 $userRepo->add($user);
-            }catch(Exception $e) {}
+            } catch (Exception $e) {
+            }
         }
-        if(!isset($api_client)){return;}
+        if (!isset($api_client)) {
+            return;
+        }
         $current_member = $api_client->fetch_user();
 
         if ($current_member != null && isset($current_member['data']) && isset($current_member['data']['included'])) {
-            $attrs= $current_member['data']['included']['attributes'];
-            if(count($attrs)>0){
+            $attrs = $current_member['data']['included']['attributes'];
+            if (count($attrs) > 0) {
                 $attr = array_pop($attrs);
-                if($attr["patron_status"] == "active_patron"){
-                    switch ($attr["currently_entitled_amount_cents"]){
+                if ($attr["patron_status"] == "active_patron") {
+                    switch ($attr["currently_entitled_amount_cents"]) {
                         case 600:
                             $user->addRole('ROLE_PREMIUM_LVL3');
                             break;
@@ -390,7 +400,7 @@ class UserController extends AbstractController
                             $user->addRole('ROLE_PREMIUM_LVL1');
                             break;
                     }
-                }else{
+                } else {
                     $user->removeRole('ROLE_PREMIUM_LVL3');
                     $user->removeRole('ROLE_PREMIUM_LVL2');
                     $user->removeRole('ROLE_PREMIUM_LVL1');

@@ -334,7 +334,6 @@ class SongsController extends AbstractController
         ]);
     }
 
-
     #[Route(path: '/songs/download/{id}', name: 'song_download')]
     public function download(Request $request, ManagerRegistry $doctrine, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository)
     {
