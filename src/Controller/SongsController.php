@@ -309,7 +309,7 @@ class SongsController extends AbstractController
                 $qb->orderBy("s.downloads", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             case 'upload_date':
-                $qb->orderBy("s.lastDateUpload", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                $qb->orderBy("s.programmationDate", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             case 'name':
                 $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
