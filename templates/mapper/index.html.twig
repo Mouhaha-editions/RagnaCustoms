@@ -26,11 +26,12 @@
                             <td id="follow_{{ mapper.id }}">
                                {% include 'follower/partial/buttons.html.twig' with {mapper:mapper} %}
                             </td>
-                            <td>
-                                {{ mapper.followers|length }}
-                            </td>
+
                             <td>
                                 <a href="{{ url("mapper_profile",{username:mapper.username}) }}">{{ mapper.username }}</a>
+                            </td>
+                            <td>
+                                {{ mapper.followers|length }}
                             </td>
                             <td class="">{{ mapper.songs|length }}</td>
                             <td class="">
