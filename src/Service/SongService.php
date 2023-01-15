@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Exception;
+use FFMpeg\FFProbe;
 use Intervention\Image\ImageManagerStatic as Image;
 use Pkshetlie\PhpUE\FCrc;
 use Symfony\Component\Form\FormInterface;
