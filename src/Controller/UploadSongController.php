@@ -127,9 +127,7 @@ class UploadSongController extends AbstractController
 
                 if ($songService->processFile($form, $song, $isWip)) {
                     /** @var ?SongRequest $song_request */
-
                     $doctrine->getManager()->flush();
-
                     $this->addFlash('success', str_replace([
                         "%song%",
                         "%artist%"
@@ -137,6 +135,7 @@ class UploadSongController extends AbstractController
                         $song->getName(),
                         $song->getAuthorName()
                     ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
+
                     return new JsonResponse([
                         'error'        => false,
                         'goto'         => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
