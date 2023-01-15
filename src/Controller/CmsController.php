@@ -41,7 +41,6 @@ class CmsController extends AbstractController
     #[Route(path: '/', name: 'home')]
     public function homepage(): Response
     {
-
         return $this->render('cms/homepage.html.twig');
     }
 

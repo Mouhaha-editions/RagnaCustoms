@@ -191,7 +191,6 @@ class SongService
     public function processFileWithoutForm(Request $request,Song $song)
     {
         try {
-
             $folder = $this->kernel->getProjectDir() . "/public/tmp-song/";
             $unzipFolder = $folder . uniqid();
             @mkdir($unzipFolder);
@@ -280,15 +279,22 @@ class SongService
             throw new Exception("\"_songApproximativeDuration\" is missing in the info.dat file!");
         }
 
+        $songName = trim($json->_songName);
+        $authorName = $json->_songAuthorName;
+        $existingSong = $this->em->getRepository(Song::class)
+        ->findOneBy(['name'=>$songName,'authorName'=>$authorName,'user'=>$song->getUser()]);
+        if($existingSong != null  && $new == true){
+            throw new Exception("You already uploaded this song, please edit the last upload.");
+        }
         $song->setVersion($json->_version);
-        $song->setName(trim($json->_songName));
+        $song->setName($songName);
         $song->setLastDateUpload(new DateTime());
         if (!isset($json->_songSubName)) {
             throw new Exception("\"_songSubName\" is missing in the info.dat file!");
         }
         $song->setSubName($json->_songSubName);
         $song->setIsExplicit(isset($json->_explicit) ? $json->_explicit == "true" : false);
-        $song->setAuthorName($json->_songAuthorName);
+        $song->setAuthorName($authorName);
         $song->setLevelAuthorName($json->_levelAuthorName);
         $song->setBeatsPerMinute($json->_beatsPerMinute);
         $song->setShuffle($json->_shuffle);
