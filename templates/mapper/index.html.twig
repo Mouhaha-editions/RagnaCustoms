@@ -29,7 +29,12 @@
                                 <a href="{{ url("mapper_profile",{username:mapper.username}) }}">{{ mapper.username }}</a>
                             </td>
                             <td class="">{{ mapper.songs|length }}</td>
-                            <td class=""><small>{{ "soon" }}</small></td>
+                            <td class="">
+                                <div class="song-votes" style="font-size:14px;">
+                                    <i class="fas fa-arrow-up text-success"></i> {{ mapperService.totalUpperVotes(mapper) }}
+                                    <i class="fas fa-arrow-down text-danger"></i> {{ mapperService.totalLowerVotes(mapper) }}
+                                </div>
+                            </td>
                             <td class="">{{ mapper.avgRating }}</td>
                             <td class="light-grey small">{{ mapper.preferedGenre(3) }}</td>
                             {#                        <td class="text-right">{{ mapper.songAverage }}</td> #}
