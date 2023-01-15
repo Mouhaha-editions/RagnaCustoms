@@ -247,11 +247,16 @@ class SongService
                 throw new Exception("The file seems to not be valid, at least info.dat is missing.");
             }
         }
+
+
         $content = file_get_contents($file);
         $json = json_decode($content);
         if ($json == null) {
             $this->rrmdir($unzipFolder);
             throw new Exception("WTF? I can't read your info.dat please check the file encoding.");
+        }
+        if(!file_exists($unzipFolder."/".$json->_coverImageFilename)){
+            throw new Exception("The cover name doesn't match to the name in the info.dat.");
         }
         $allowedFiles[] = $json->_coverImageFilename;
         if ($json->_coverImageFilename == ".jpg" || empty($json->_coverImageFilename)) {
@@ -374,7 +379,6 @@ class SongService
                 $diff->setSong(null);
                 $this->em->remove($diff);
             }
-
         }
 
         if ($isWip != $song->getWip()) {

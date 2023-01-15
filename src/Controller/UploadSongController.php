@@ -226,9 +226,7 @@ class UploadSongController extends AbstractController
     #[Route(path: '/upload/song', name: 'upload_song')]
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
-
         $qb = $songRepository->createQueryBuilder('s')->select('s')->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->where('s.user = :user')->andWhere("s.isDeleted != true")->setParameter('user', $this->getUser())->orderBy('s.name', 'DESC');
-
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
             switch ($exp[0]) {
