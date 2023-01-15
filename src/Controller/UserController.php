@@ -7,6 +7,7 @@ use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
+use App\Helper\ChartJsDataSet;
 use App\Repository\CountryRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
@@ -28,13 +29,68 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
-    /**
-     * @param Request $request
-     * @param Utilisateur $utilisateur
-     * @param PaginationService $paginationService
-     * @param ScoreHistoryRepository $scoreHistoryRepository
-     * @return Response
-     */
+
+    #[Route(path: '/user/more-stats', name: 'more_stat')]
+    public function moreStats(Request $request,ScoreHistoryRepository $scoreHistoryRepository): Response
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            return new JsonResponse([
+                'success' => false,
+                'dataset'   => null
+            ], 400);
+        }
+        /** @var Utilisateur $utilisateur */
+        $utilisateur = $this->getUser();
+        $histories = $scoreHistoryRepository->findBy(['user'=>$utilisateur,'songDifficulty'=>$request->get('diff')],['createdAt'=>"ASC"]);
+        $data= [];
+
+        #region missed runes
+        $missedRunes = new ChartJsDataSet();
+        $missedRunes->setLabel("Missed runes");
+        $missedRunes->setBackgroundColor("#ff0000");
+        $missedRunes->setBorderColor("#ff0000");
+        #endregion
+
+        #region blue combo
+        $blueCombos = new ChartJsDataSet();
+        $blueCombos->setLabel("Blue combos");
+        $blueCombos->setBackgroundColor("#18b3f5");
+        $blueCombos->setBorderColor("#18b3f5");
+        #endregion
+
+        #region yellow combo
+        $yellowCombos = new ChartJsDataSet();
+        $yellowCombos->setLabel("Yellow combos");
+        $yellowCombos->setBackgroundColor("#f5cc18");
+        $yellowCombos->setBorderColor("#f5cc18");
+        #endregion
+
+        #region distance
+        $distance = new ChartJsDataSet();
+        $distance->setLabel("Distance");
+        $distance->setBackgroundColor("#781667");
+        $distance->setBorderColor("#781667");
+        $distance->setYAxisID("y1");
+        #endregion
+
+        foreach($histories AS $history){
+            $missedRunes->addData($history->getMissed());
+            $blueCombos->addData($history->getComboBlue());
+            $yellowCombos->addData($history->getComboYellow());
+            $distance->addData($history->getScore());
+        }
+        $data[] = ($missedRunes->serialize());
+        $data[] = ($blueCombos->serialize());
+        $data[] = ($yellowCombos->serialize());
+        $data[] = ($distance->serialize());
+
+        return new JsonResponse([
+            'success' => true,
+            'dataset'   => $data
+        ], 200);
+
+    }
+
     #[Route(path: '/reset/apikey', name: 'reset_apikey')]
     public function resetApiKey(Request $request, UtilisateurRepository $userRepository): Response
     {
@@ -78,7 +134,6 @@ class UserController extends AbstractController
         $pagination = $paginationService->setDefaults(15)->process($qb, $request);
 
         return $this->render('user/partial/song_played.html.twig', [
-            'controller_name' => 'UserController',
             'pagination'      => $pagination,
             'user'            => $utilisateur,
             'mapperProfile'   => false,

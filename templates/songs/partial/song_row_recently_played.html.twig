@@ -32,9 +32,12 @@
         {{ score.timeAgoShort}}&nbsp;
     </td>
     <td>
-{#        {{ dump(score) }}#}
-        {{ song_macro.stats(score) }}
+        <div class="more-stat" data-toggle="tooltip" title="Click to see the history" data-song-difficulty="{{ score.songDifficulty.id }}">
+            {{ song_macro.stats(score) }}
+        </div>
     </td>
+
+
 </tr>
 
 
