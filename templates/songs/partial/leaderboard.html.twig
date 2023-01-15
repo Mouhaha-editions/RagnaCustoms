@@ -1,4 +1,5 @@
 {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+{% import "songs/macros/song.html.twig" as macro_song %}
 <div class="row">
     <div class="col-12">
         {% if is_granted('ROLE_USER') %}
@@ -25,32 +26,7 @@
                     <td class="text-right">{{ score.percentageOfPerfects }}</td>
                     <td class="text-right">{{ score.timeAgoShort() }}</td>
                     <td class="text-right">
-                    <div class="tooltip"><i class="fa-solid fa-chart-line"></i>
-                          <span class="tooltiptext">
-                                <table class="tooltiptable">
-                                    <tr>
-                                        <th>
-                                            Combos
-                                        </th>
-                                        <th>
-                                            Hit %
-                                        </th>
-                                        <th>
-                                            Missed
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-right"><font color="#4b9ce2">{{ score.comboBlue }}</font> | <font color="#ffc107">{{ score.comboYellow }}</font></td>
-                                        <td>
-                                            {{ score.hitPercentage }}
-                                        </td>
-                                        <td>
-                                            {{ score.missed }}
-                                        </td>
-                                    </tr>
-                                </table>
-                          </span>
-                        </div>
+                        {{ macro_song.stats(score) }}
                     </td>
                 </tr>
             {% else %}

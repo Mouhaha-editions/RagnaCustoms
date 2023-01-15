@@ -1,4 +1,4 @@
-
+{% import "songs/macros/song.html.twig" as song_macro %}
 {% set song = score.songDifficulty.song %}
 <tr>
     <td>
@@ -30,6 +30,9 @@
     </td>
     <td class="text-grey">
         {{ score.timeAgoShort}}&nbsp;
+    </td>
+    <td>
+        {{ song_macro.stats(score) }}
     </td>
 </tr>
 

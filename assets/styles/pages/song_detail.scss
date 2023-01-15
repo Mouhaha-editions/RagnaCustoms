@@ -178,51 +178,6 @@
             border: none;
           }
 
-          .tooltip {
-            opacity: 1;
-            padding: 3px;
-            position: relative;
-            text-align: center;
-          }
-
-          /* Tooltip text */
-          .tooltiptext {
-            visibility: hidden;
-            width: fit-content;
-            background-color: #555;
-            border-radius: 6px;
-
-            /* Position the tooltip text */
-            position: absolute;
-            z-index: 1;
-            top: -25px;
-            left: 105%;
-            /* Fade in tooltip */
-            opacity: 0;
-            transition: opacity 0.3s;
-          }
-
-          /* Tooltip arrow */
-          .tooltiptext::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            right: 100%; /* To the left of the tooltip */
-            margin-top: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: transparent #555 transparent transparent;
-          }
-
-          /* Show the tooltip text when you mouse over the tooltip container */
-          .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-          }
-
-          .tooltiptable {
-            width: max-content;
-          }
         }
       }
     }

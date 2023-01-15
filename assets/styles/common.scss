@@ -844,3 +844,44 @@ img.big-rounded {
     text-shadow: 0 0 8px black ;
   }
 }
+
+table tr {
+  .tooltip {
+    opacity: 1;
+    padding: 3px;
+    position: relative;
+    text-align: center;
+    .tooltiptext {
+      visibility: hidden;
+      width: fit-content;
+      background-color: #555;
+      border-radius: 6px;
+      position: absolute;
+      z-index: 1;
+      top: -25px;
+      left: 105%;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 100%; /* To the left of the tooltip */
+      margin-top: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent #555 transparent transparent;
+    }
+
+    /* Show the tooltip text when you mouse over the tooltip container */
+    &:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .tooltiptable {
+      width: max-content;
+    }
+  }
+}
