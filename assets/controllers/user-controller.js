@@ -40,7 +40,23 @@ export default class extends Controller {
                 url: form.attr('action'),
                 data: formData
             });
-        })
+        });
+        $(".reset-api-key").on('click', function(){
+            console.log("furet")
+            if(confirm('You are going to change your api key, are you sure to continue ? ')){
+                $.ajax({
+                    type: "POST",
+                    url: '/reset/apikey',
+                    dataType:'json',
+                    success:function(data){
+                        $("#ApiKey").val(data.value);
+                    }
+                });
+            }
+
+        });
+
+
         }
 
     disconnect() {

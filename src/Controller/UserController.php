@@ -35,6 +35,25 @@ class UserController extends AbstractController
      * @param ScoreHistoryRepository $scoreHistoryRepository
      * @return Response
      */
+    #[Route(path: '/reset/apikey', name: 'reset_apikey')]
+    public function resetApiKey(Request $request, UtilisateurRepository $userRepository): Response
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            return new JsonResponse([
+                'success' => false,
+                'value'   => null
+            ], 400);
+        }
+        /** @var Utilisateur $user */
+        $user = $this->getUser();
+        $user->setApiKey(md5(date('y-m-dH:i') . rand(9000, 100000000) . $user->getUsername()));
+        $userRepository->add($user);
+        return new JsonResponse([
+            'success' => true,
+            'value'   => $user->getApiKey()
+        ], 200);
+    }
+
     #[Route(path: '/user-profile/{username}', name: 'user_profile')]
     public function profile(Request $request, Utilisateur $utilisateur, PaginationService $paginationService, ScoreRepository $scoreRepository): Response
     {
@@ -110,9 +129,9 @@ class UserController extends AbstractController
         $qb = $doctrine->getRepository(Song::class)
                        ->createQueryBuilder("s")
                        ->where('s.user = :user')
-            ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')
-            ->setParameter('now', new DateTime())
-            ->setParameter('user', $utilisateur)
+                       ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')
+                       ->setParameter('now', new DateTime())
+                       ->setParameter('user', $utilisateur)
                        ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
                        ->groupBy("s.id");
 
