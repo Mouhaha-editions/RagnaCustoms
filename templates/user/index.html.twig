@@ -34,7 +34,7 @@
 
                     <div class="col-md-4">
                         <h2 class="username">{{ membershipService.displayUsername(app.user)|raw }}</h2>
-                        <div class="{% if is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %}"><i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Username color
+                        <div class="{% if not is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %}"><i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Username color
                             : {{ form_widget(form.usernameColor) }}
                         </div>
                         <div class="encart p-2 d-flex justify-content-center align-self-center">
