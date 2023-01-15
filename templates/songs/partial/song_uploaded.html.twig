@@ -49,7 +49,7 @@
     {#        <td class="text-right">{{ song.scores|length }}</td>#}
     {#    {% endif %}#}
     <td>
-        {{ song.programmationDate is not null ? song.programmationDate.format('Y-m-d H:i') : song.createdAt.format('Y-m-d H:i') }}
+        {{ song.programmationDate is not null ? song.programmationDate.format('Y-m-d H:i') : "Not programmated" }}
     </td>
     <td>
         {{ song.published  ? "<i class='fas fa-check text-success'></i>" :  "<i class='fas fa-cloase text-danger'></i>"  }}

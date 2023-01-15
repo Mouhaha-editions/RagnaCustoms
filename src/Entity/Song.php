@@ -151,7 +151,7 @@ class Song
 
     public function isPublished()
     {
-        return $this->programmationDate  <= new DateTime() && !$this->isWip();
+        return $this->programmationDate != null && $this->programmationDate  <= new DateTime() && !$this->isWip();
 }
     /**
      * @return Collection|SongDifficulty[]
