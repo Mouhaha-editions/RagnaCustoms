@@ -287,7 +287,7 @@ class SongService
         $authorName = $json->_songAuthorName;
         $existingSong = $this->em->getRepository(Song::class)
         ->findOneBy(['name'=>$songName,'authorName'=>$authorName,'user'=>$song->getUser()]);
-        if($existingSong != null  && $new == true){
+        if($existingSong != null  && $new == true && $isWip == false){
             throw new Exception("You already uploaded this song, please edit the last upload.");
         }
         $song->setVersion($json->_version);
