@@ -311,11 +311,11 @@ class SongDifficulty
     public function getDifficultyFile()
     {
         $file = str_replace('info.dat',$this->difficulty."Standard.dat", $this->getSong()->getInfoDatFile());
-        if(fileExists('../public/'.$file)){
+        if(file_exists('../public'.$file)){
             return $file;
         }
         $file = str_replace('info.dat',$this->difficulty.".dat", $this->getSong()->getInfoDatFile());
-        if(fileExists('../public/'.$file)){
+        if(file_exists('../public'.$file)){
             return $file;
         }
         return '';
