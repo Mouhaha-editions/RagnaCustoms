@@ -468,7 +468,7 @@ class SongsController extends AbstractController
             $feedbackForm = $this->createForm(VoteType::class, $feedback);
             $this->addFlash("success", $translator->trans("Feedback sent!"));
         }
-        $songService->emulatorFileDispatcher($song,true);
+        $songService->emulatorFileDispatcher($song);
         $em->flush();
 
         $levels = [];
