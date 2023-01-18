@@ -30,7 +30,7 @@
                         {{ macro_song.stats(score) }}
                     </td>
                     <td>
-                        {% if is_granted('ROLE_USER') and app.user == score.user %}
+                        {% if (is_granted('ROLE_USER') and app.user == score.user) OR is_granted('ROLE_MODERATOR')  %}
                             <small><i data-toggle="modal" data-target="#ScatterView" class="fas fa-magnifying-glass scatter-open-score" style="font-size:10px;cursor: pointer" data-score="{{ score.id }}"></i></small>
                         {% endif %}
                     </td>
