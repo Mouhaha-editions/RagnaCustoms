@@ -353,26 +353,18 @@ $('.scatter-open-score').on('click', function(){
         url: '/stats/scatter-score/'+$(this).data('score'),
         dataType:'json',
         success: function (response) {
-            // chart.data.labels = [];
             chart.data.datasets = [];
-            // for (var i = 1; response.dataset[0].data.length >= i; i++) {
-            //     chart.data.labels.push("Session " + i);
-            // }
             chart.data = response.datasets;
             chart.update();
         }
-    })
+    });
 })
 $('.scatter-open-score-history').on('click', function(){
     $.ajax({
         url: '/stats/scatter-score-history/'+$(this).data('score'),
         dataType:'json',
         success: function (response) {
-            // chart.data.labels = [];
             chart.data.datasets = [];
-            // for (var i = 1; response.dataset[0].data.length >= i; i++) {
-            //     chart.data.labels.push("Session " + i);
-            // }
             chart.data = response.datasets;
             chart.update();
         }
