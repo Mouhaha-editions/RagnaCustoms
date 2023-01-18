@@ -1,3 +1,5 @@
+import Chart from "chart.js/auto";
+
 const {RagnaBeat} = require("./ragna-beat/ragnabeat");
 const Swal = require('sweetalert2/dist/sweetalert2.js');
 import Swup from 'swup';
@@ -320,3 +322,59 @@ $(document).on('click', ".ajax-modal-form", function () {
     return false;
 
 });
+
+const config = {
+    type: 'scatter',
+    data: null,
+    options: {
+        xAxis: {
+            key: 'x'
+        },
+        yAxis: {
+            key: 'y'
+        },
+        scales: {
+            y: {
+                suggestedMin: -100,
+                suggestedMax: 100
+            },
+
+            x: {
+                type: 'linear',
+                position: 'bottom'
+            }
+        }
+    }
+};
+const ctx = document.getElementById('scatter-plot');
+const chart = new Chart(ctx,config);
+$('.scatter-open-score').on('click', function(){
+    $.ajax({
+        url: '/stats/scatter-score/'+$(this).data('score'),
+        dataType:'json',
+        success: function (response) {
+            // chart.data.labels = [];
+            chart.data.datasets = [];
+            // for (var i = 1; response.dataset[0].data.length >= i; i++) {
+            //     chart.data.labels.push("Session " + i);
+            // }
+            chart.data = response.datasets;
+            chart.update();
+        }
+    })
+})
+$('.scatter-open-score-history').on('click', function(){
+    $.ajax({
+        url: '/stats/scatter-score-history/'+$(this).data('score'),
+        dataType:'json',
+        success: function (response) {
+            // chart.data.labels = [];
+            chart.data.datasets = [];
+            // for (var i = 1; response.dataset[0].data.length >= i; i++) {
+            //     chart.data.labels.push("Session " + i);
+            // }
+            chart.data = response.datasets;
+            chart.update();
+        }
+    })
+})

@@ -3,6 +3,7 @@ import {average} from 'color.js'
 import 'jquery'
 // import 'jquery-ui/ui/'
 import {RagnaBeat} from "../js/ragna-beat/ragnabeat";
+import Chart from "chart.js/auto";
 require('../js/base');
 require('../js/plugins/ajax_link');
 require('../js/plugins/rating');
@@ -33,6 +34,10 @@ export default class extends Controller {
                 $("#rating-box").show("slow");
             });
         });
+
+
+
+
     }
 
     disconnect() {

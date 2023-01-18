@@ -36,7 +36,11 @@
             {{ song_macro.stats(score) }}
         </div>
     </td>
-
+<td>
+    {% if is_granted('ROLE_USER') and app.user == score.user %}
+        <small><i data-toggle="modal" data-target="#ScatterView" class="fas fa-magnifying-glass scatter-open-score-history" style="font-size:10px;cursor: pointer" data-score="{{ score.id }}"></i></small>
+    {% endif %}
+</td>
 
 </tr>
 

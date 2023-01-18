@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Repository\ScoreHistoryRepository;
+use App\Service\StatisticService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 
 class CmsController extends AbstractController
 {
@@ -39,9 +42,11 @@ class CmsController extends AbstractController
      * @return Response
      */
     #[Route(path: '/', name: 'home')]
-    public function homepage(): Response
+    public function homepage(ScoreHistoryRepository $scoreHistoryRepository, StatisticService $statisticService): Response
     {
-        return $this->render('cms/homepage.html.twig');
+
+        return $this->render('cms/homepage.html.twig', [
+        ]);
     }
 
 }

@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use function PHPUnit\Framework\fileExists;
 
 #[ApiResource(
     collectionOperations: [
@@ -305,6 +306,19 @@ class SongDifficulty
     public function isIsRanked(): ?bool
     {
         return $this->isRanked;
+    }
+
+    public function getDifficultyFile()
+    {
+        $file = str_replace('info.dat',$this->difficulty."Standard.dat", $this->getSong()->getInfoDatFile());
+        if(fileExists('../public/'.$file)){
+            return $file;
+        }
+        $file = str_replace('info.dat',$this->difficulty.".dat", $this->getSong()->getInfoDatFile());
+        if(fileExists('../public/'.$file)){
+            return $file;
+        }
+        return '';
     }
 
 }

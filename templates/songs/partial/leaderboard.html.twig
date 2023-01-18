@@ -14,6 +14,7 @@
                 <th class="text-right">{{ "Perfects (%)" }}</th>
                 <th class="text-right">{{ "Time Set" }}</th>
                 <th class="text-right">{{ "More Stats" }}</th>
+                <th class="text-right"></th>
             </tr>
             {% set imin = false %}
             {% for score in level['scores'].entities %}
@@ -27,6 +28,11 @@
                     <td class="text-right">{{ score.timeAgoShort() }}</td>
                     <td class="text-right">
                         {{ macro_song.stats(score) }}
+                    </td>
+                    <td>
+                        {% if is_granted('ROLE_USER') and app.user == score.user %}
+                            <small><i data-toggle="modal" data-target="#ScatterView" class="fas fa-magnifying-glass scatter-open-score" style="font-size:10px;cursor: pointer" data-score="{{ score.id }}"></i></small>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}

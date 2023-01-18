@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\DownloadCounter;
+use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
@@ -212,6 +213,71 @@ class StatisticService
             return '99999 seconds';
 
         }
+
+        /** idealement travailler avec une interface plutot que deux faire deux methodes */
+    public function getScatterDataSetsByScore(?Score $sh)
+    {
+        $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
+        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
+       return $this->getScatterDatasets($raw_data, $song_file);
+    }
+
+    public function getScatterDataSetsByScorehistory(?ScoreHistory $sh)
+    {
+        $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
+        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
+        return $this->getScatterDatasets($raw_data, $song_file);
+    }
+
+    private function getScatterDatasets($raw_data, string $song_file)
+    {
+        $json = json_decode(file_get_contents($song_file));
+        $notes = $json->_notes;
+        for ($i = 0; $i < count($raw_data); $i++) {
+            if ($raw_data[$i] == -1000) {
+                $raw_data[$i] = -100;
+            }
+        }
+        $df = array();
+        foreach ($notes as $note) {
+            $df[] = (array)$note;
+        }
+        $datasets = [
+            [
+                "label" => "miss",
+                "data"                 => [],
+                'pointBackgroundColor' => '#f55142'
+            ],
+            [
+                "label" => "ok",
+                "data"                 => [],
+                'pointBackgroundColor' => '#42c8f5'
+            ],
+            [
+                "label" => "perfect",
+                "data"                 => [],
+                'pointBackgroundColor' => '#42f581'
+
+            ]
+        ];
+        foreach ($df as $k=>$note) {
+            $note['x'] = $note['_time'];
+            $note['y'] = $raw_data[$k];
+            unset($note['_time']);
+            unset($note['_lineLayer']);
+            unset($note['_lineIndex']);
+            unset($note['_type']);
+            unset($note['_cutDirection']);
+            if ($note['y'] == -100) {
+                $datasets[0]['data'][] = $note;
+            } elseif ($note['y'] <= -15 || $note['y'] >= 15) {
+                $datasets[1]['data'][] = $note;
+            } else {
+                $datasets[2]['data'][] = $note;
+            }
+        }
+        return (['datasets' => $datasets]);
+    }
 
 }
 

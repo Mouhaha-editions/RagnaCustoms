@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Playlist;
 use App\Entity\Score;
+use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\SongTemporaryList;
