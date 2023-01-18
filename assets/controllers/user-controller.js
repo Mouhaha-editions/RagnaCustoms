@@ -165,9 +165,9 @@ export default class extends Controller {
                 url: '/stats/scatter-score-history/'+$(this).data('score'),
                 dataType:'json',
                 success: function (response) {
-                    chart.data.datasets = [];
-                    chart.data = response.datasets;
-                    chart.update();
+                    chart2.data.datasets = [];
+                    chart2.data = response.datasets;
+                    chart2.update();
                 }
             })
         });
