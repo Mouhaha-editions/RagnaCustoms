@@ -121,7 +121,56 @@ export default class extends Controller {
             })
         });
 
-        console.log(document.getElementById('UserChart'));
+        const config = {
+            type: 'scatter',
+            data: null,
+            options: {
+                xAxis: {
+                    key: 'x'
+                },
+                yAxis: {
+                    key: 'y'
+                },
+                scales: {
+                    y: {
+                        suggestedMin: -100,
+                        suggestedMax: 100
+                    },
+
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    }
+                }
+            }
+        };
+        var canvas = $('#scatter-plot');
+        canvas.parent().append("<canvas id='scatter-plot'></canvas>");
+        canvas.remove();
+        const ctx = $('#scatter-plot');
+        const chart2 = new Chart(ctx,config);
+        $('.scatter-open-score').on('click', function(){
+            $.ajax({
+                url: '/stats/scatter-score/'+$(this).data('score'),
+                dataType:'json',
+                success: function (response) {
+                    chart2.data.datasets = [];
+                    chart2.data = response.datasets;
+                    chart2.update();
+                }
+            });
+        })
+        $('.scatter-open-score-history').on('click', function(){
+            $.ajax({
+                url: '/stats/scatter-score-history/'+$(this).data('score'),
+                dataType:'json',
+                success: function (response) {
+                    chart.data.datasets = [];
+                    chart.data = response.datasets;
+                    chart.update();
+                }
+            })
+        });
 
     }
 
