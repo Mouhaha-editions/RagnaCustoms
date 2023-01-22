@@ -212,6 +212,32 @@ header {
     }
   }
 }
+#home {
+  .be-patreon {
+    margin-top: 18px;
+    font-size: 25px;
+    line-height: 35px;
+    text-shadow: 0 0 8px black;
+
+    a {
+      background: #f96854;
+      color: #fff;
+      line-height: inherit;
+      box-shadow: 0px 0px 20px #000;
+      text-shadow: none;
+      display: inline-block;
+      padding: 5px 20px;
+      font-size: 24px;
+
+      &:hover {
+        text-decoration: none;
+        background: lighten(#f96854, 5%);
+      }
+    }
+  }
+}
+
+
 .be-twitch {
   margin-top:18px;
   font-size: 18px;
