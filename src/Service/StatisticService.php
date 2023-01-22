@@ -263,6 +263,7 @@ class StatisticService
         foreach ($df as $k=>$note) {
             $note['x'] = $note['_time'];
             $note['y'] = $raw_data[$k];
+            $note['drum'] = $note['_lineIndex'] ==0 ?"left":($note['_lineIndex'] ==1 ? "center-left":($note['_lineIndex'] ==2 ? "center-right":"right"));
             unset($note['_time']);
             unset($note['_lineLayer']);
             unset($note['_lineIndex']);
@@ -275,6 +276,7 @@ class StatisticService
             } else {
                 $datasets[2]['data'][] = $note;
             }
+
         }
         return (['datasets' => $datasets]);
     }

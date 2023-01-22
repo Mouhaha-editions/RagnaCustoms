@@ -42,11 +42,11 @@
 
 </head>
 <body
- {{ stimulus_controller('symfony/ux-swup/swup', {
-    containers: ['#swup', '#nav']
- }) }} >
+        {{ stimulus_controller('symfony/ux-swup/swup', {
+            containers: ['#swup', '#nav']
+        }) }} >
 <div id="main">
-{#    {{ dump(app.request.attributes.get('_route')) }}#}
+    {#    {{ dump(app.request.attributes.get('_route')) }} #}
     <nav id="nav" class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand viking-text-bold" href="/">
@@ -64,8 +64,8 @@
                             <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin</a>
                         </li>
                         <li class="nav-item">
-                        <a class="nav-link" href="{{ url('ranking_song') }}">Ranking</a>
-                    </li>
+                            <a class="nav-link" href="{{ url('ranking_song') }}">Ranking</a>
+                        </li>
                     {% endif %}  </ul>
                 <ul class="navbar-nav ml-4">
                     {# <li class="nav-item"> #}
@@ -91,8 +91,8 @@
                     {% if is_granted('ROLE_PREMIUM_LVL2') %}
                         <li class="nav-item">
                             <a
-                               href="{{ url('new_song_multi') }}"
-                               class="btn btn-blue mt-2 mr-4">
+                                    href="{{ url('new_song_multi') }}"
+                                    class="btn btn-blue mt-2 mr-4">
                                 {{ "Submit maps"|trans }}
                             </a>
                         </li>
@@ -125,7 +125,8 @@
                                 <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "my uploads"|trans }}</a>
                                 <hr class="m-1"/>
                                 <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
-                                <a class="dropdown-item" href="{{ url('user_applications') }}">{{ "Applications"|trans }}</a>
+                                <a class="dropdown-item"
+                                   href="{{ url('user_applications') }}">{{ "Applications"|trans }}</a>
                                 <hr class="m-1"/>
                                 <a class="dropdown-item"
                                    href="{{ url('notifications_setting') }}">{{ "Emails & Notifications"|trans }}</a>
@@ -148,7 +149,7 @@
                             </a>
                         </li>
                     {% endif %}
-                {#<li><span class="p-3 mt-3 snowflake-toggle" title="click to toggle" style="cursor:pointer"><i class="fas fa-snowflake mt-3"></i></span></li>#}
+                    {# <li><span class="p-3 mt-3 snowflake-toggle" title="click to toggle" style="cursor:pointer"><i class="fas fa-snowflake mt-3"></i></span></li> #}
                 </ul>
             </div>
         </div>
@@ -167,7 +168,7 @@
         <div id="{{ app.request.attributes.get('_route') }}">
             {% block body %}
 
-        {% endblock %}
+            {% endblock %}
         </div>
     </main>
 
@@ -229,7 +230,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-
+                        <div class="modal-title"></div>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -266,20 +267,25 @@
                 <a data-no-swup="true" href="/doc/Privacy_policy.pdf" target="_blank">Privacy policy</a>
             </div>
             <div class="col-md-6 text-center">
-                <a data-no-swup="true" class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer"
+                <a data-no-swup="true" class="text-patreon" href="https://www.patreon.com/ragnacustoms_com"
+                   rel="noreferrer"
                    target="_blank">
                     <i class="fab fa-patreon"></i>
                 </a>&nbsp;
-                <a data-no-swup="true" class="text" href="https://discord.com/invite/2vCAAGuwsR" rel="noreferrer" target="_blank">
+                <a data-no-swup="true" class="text" href="https://discord.com/invite/2vCAAGuwsR" rel="noreferrer"
+                   target="_blank">
                     <i class="fab fa-discord"></i>
                 </a>&nbsp;
-                <a data-no-swup="true" class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank">
+                <a data-no-swup="true" class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer"
+                   target="_blank">
                     <i class="fab fa-facebook"></i>
                 </a>&nbsp;
-                <a data-no-swup="true" class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer" target="_blank">
+                <a data-no-swup="true" class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer"
+                   target="_blank">
                     <i class="fab fa-twitter"></i>
                 </a>&nbsp;
-                <a data-no-swup="true" class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer" target="_blank">
+                <a data-no-swup="true" class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer"
+                   target="_blank">
                     <i class="fab fa-reddit"></i>
                 </a>
             </div>

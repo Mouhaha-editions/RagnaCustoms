@@ -125,6 +125,15 @@ export default class extends Controller {
             type: 'scatter',
             data: null,
             options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                return "Drum "+tooltipItem.raw.drum+" : "+tooltipItem.raw.y+"ms";
+                            }
+                        }
+                    },
+                },
                 xAxis: {
                     key: 'x'
                 },
@@ -148,11 +157,11 @@ export default class extends Controller {
         canvas.parent().append("<canvas id='scatter-plot'></canvas>");
         canvas.remove();
         const ctx = $('#scatter-plot');
-        const chart2 = new Chart(ctx,config);
-        $('.scatter-open-score').on('click', function(){
+        const chart2 = new Chart(ctx, config);
+        $('.scatter-open-score').on('click', function () {
             $.ajax({
-                url: '/stats/scatter-score/'+$(this).data('score'),
-                dataType:'json',
+                url: '/stats/scatter-score/' + $(this).data('score'),
+                dataType: 'json',
                 success: function (response) {
                     chart2.data.datasets = [];
                     chart2.data = response.datasets;
@@ -160,10 +169,11 @@ export default class extends Controller {
                 }
             });
         })
-        $('.scatter-open-score-history').on('click', function(){
+        $('.scatter-open-score-history').on('click', function () {
+            $("#ScatterView .modal-header .modal-title").html($(this).data('title'));
             $.ajax({
-                url: '/stats/scatter-score-history/'+$(this).data('score'),
-                dataType:'json',
+                url: '/stats/scatter-score-history/' + $(this).data('score'),
+                dataType: 'json',
                 success: function (response) {
                     chart2.data.datasets = [];
                     chart2.data = response.datasets;

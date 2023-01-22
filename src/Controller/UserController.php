@@ -15,6 +15,7 @@ use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\GrantedService;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 use Patreon\API;
 use Patreon\OAuth;
@@ -41,7 +42,17 @@ class UserController extends AbstractController
         }
         /** @var Utilisateur $utilisateur */
         $utilisateur = $this->getUser();
-        $histories = $scoreHistoryRepository->findBy(['user'=>$utilisateur,'songDifficulty'=>$request->get('diff')],['createdAt'=>"ASC"]);
+        /** @var ArrayCollection|ScoreHistory[] $histories */
+        $histories = $scoreHistoryRepository->
+        createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->andWhere('s.songDifficulty = :difficulty')
+            ->setParameter('user',$utilisateur)
+            ->setParameter('difficulty',$request->get('diff'))
+            ->setMaxResults($this->isGranted('ROLE_PREMIUM_LVL1') ? 20 : 6)
+            ->setFirstResult(0)
+            ->orderBy('s.createdAt',"DESC")->getQuery()->getResult();
+        $histories = array_reverse($histories);
         $data= [];
 
         #region missed runes
