@@ -36,19 +36,39 @@ class OptimizationCommand extends Command
             if($value == "." || $value == ".." ){continue;}
             try {
                 $filedir = $this->kernel->getProjectDir() . "/public/covers/" . $value;
-
                 $image = Image::make($filedir);
-
                 $background = Image::canvas(349, 349, 'rgba(255, 255, 255, 0)');
-
                 if ($image->width() >= $image->height()) {
                     $image->widen(349);
                 } else {
                     $image->heighten(349);
                 }
                 $background->insert($image, 'center-center');
-
                 $background->save($filedir);
+
+                $cover = explode('.', $value);
+
+                if (in_array(strtolower($cover[1]), [
+                    'jpg',
+                    'jpeg'
+                ])) {
+                    $image = imagecreatefromjpeg($filedir);
+                    imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" .$cover[0] . ".webp");
+                    unlink($filedir);
+                    imagedestroy($image);
+                } elseif (in_array(strtolower($cover[1]),['gif'])) {
+                    $image = imagecreatefromgif($filedir);
+                    imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $cover[0] . ".webp");
+                    unlink($filedir);
+                    imagedestroy($image);
+                } elseif  (in_array(strtolower($cover[1]),['png'])) {
+                    $image = imagecreatefrompng($filedir);
+                    imagewebp($image, $this->kernel->getProjectDir() . "/public/covers/" . $cover[0] . ".webp");
+                    unlink($filedir);
+                    imagedestroy($image);
+                }
+
+
             }catch(\Exception $exception){
                 echo $filedir." ".$exception->getMessage();
             }

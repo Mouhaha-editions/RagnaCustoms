@@ -15,9 +15,7 @@ class XmlController extends AbstractController
     private $paginate = 51;
 
 
-    /**
-     * @Route("/songs.xml", name="sitemap_songs")
-     */
+    #[Route(path: '/songs.xml', name: 'sitemap_songs')]
     public function sitemap(SongRepository $songRepository)
     {
         $artists = $songRepository->createQueryBuilder('s')
@@ -37,10 +35,10 @@ class XmlController extends AbstractController
     }
 
     /**
-     * @Route("/artists-{page}.xml", name="sitemap_artists_page")
      * @param SongRepository $songRepository
      * @return Response
      */
+    #[Route(path: '/artists-{page}.xml', name: 'sitemap_artists_page')]
     public function sitemapArtistsPage(SongRepository $songRepository, int $page)
     {
         return $this->render('sitemap/artists.html.twig', [
@@ -57,10 +55,10 @@ class XmlController extends AbstractController
     }
 
     /**
-     * @Route("/songs-{page}.xml", name="sitemap_songs_page")
      * @param SongRepository $songRepository
      * @return Response
      */
+    #[Route(path: '/songs-{page}.xml', name: 'sitemap_songs_page')]
     public function sitemapSongsPage(SongRepository $songRepository, int $page)
     {
         return $this->render('sitemap/songs.html.twig', [
@@ -75,9 +73,7 @@ class XmlController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/rss.xml", name="rss_song")
-     */
+    #[Route(path: '/rss.xml', name: 'rss_song')]
     public function rss(SongRepository $songRepository)
     {
         $songs = $songRepository->findBy([

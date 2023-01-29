@@ -20,9 +20,7 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class OverlayController extends AbstractController
 {
-    /**
-     * @Route("/overlay/display/{api}", name="overlay")
-     */
+    #[Route(path: '/overlay/display/{api}', name: 'overlay')]
     public function index(string $api, OverlayRepository $overlayRepository): Response
     {
         /** @var Overlay $overlay */
@@ -40,9 +38,7 @@ class OverlayController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/overlay/reset/", name="overlay_reset")
-     */
+    #[Route(path: '/overlay/reset/', name: 'overlay_reset')]
     public function editorReset(SongRepository $songRepository,ManagerRegistry $doctrine, OverlayRepository $overlayRepository)
     {
         if (!$this->isGranted('ROLE_USER')) {
@@ -65,8 +61,8 @@ class OverlayController extends AbstractController
 
     /**
      * }
-     * @Route("/overlay/editor/", name="overlay_editor")
      */
+    #[Route(path: '/overlay/editor/', name: 'overlay_editor')]
     public function editor(SongRepository $songRepository, OverlayRepository $overlayRepository)
     {
 
@@ -92,9 +88,7 @@ class OverlayController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/overlay/editor/save", name="overlay_editor_save")
-     */
+    #[Route(path: '/overlay/editor/save', name: 'overlay_editor_save')]
     public function editorSave(Request $request,ManagerRegistry $doctrine, OverlayRepository $overlayRepository)
     {
         $em = $doctrine->getManager();
@@ -116,9 +110,7 @@ class OverlayController extends AbstractController
         return new JsonResponse([]);
     }
 
-    /**
-     * @Route("/overlay/details/{apikey}", name="overlay_details")
-     */
+    #[Route(path: '/overlay/details/{apikey}', name: 'overlay_details')]
     public function detail(Request $request, string $apikey, OverlayRepository $overlayRepository, SongDifficultyRepository $songDifficultyRepository): Response
     {
         /** @var Overlay $overlay */

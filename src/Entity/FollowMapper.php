@@ -6,35 +6,25 @@ use App\Repository\FollowMapperRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-/**
- * @ORM\Entity(repositoryClass=FollowMapperRepository::class)
- */
+#[ORM\Entity(repositoryClass: FollowMapperRepository::class)]
 class FollowMapper
 {
 
     use TimestampableEntity;
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="followedMappers")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'followedMappers')]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="followers")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'followers')]
+    #[ORM\JoinColumn(nullable: false)]
     private $mapper;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $isNotificationEnabled = true;
 
     public function getId(): ?int
@@ -76,5 +66,10 @@ class FollowMapper
         $this->isNotificationEnabled = $isNotificationEnabled;
 
         return $this;
+    }
+
+    public function isIsNotificationEnabled(): ?bool
+    {
+        return $this->isNotificationEnabled;
     }
 }

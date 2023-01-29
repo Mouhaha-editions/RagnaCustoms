@@ -21,9 +21,13 @@ class SongPartialController extends AbstractController
     public function latestSongs(SongRepository $songRepository): Response
     {
         $songs = $songRepository->createQueryBuilder("s")
-            ->orderBy("s.createdAt", 'DESC')
+            ->orderBy("s.programmationDate", 'DESC')
+            ->addOrderBy("s.createdAt", 'DESC')
             ->where('s.isDeleted != true')
+            ->andWhere('(s.programmationDate <= :now )')
+            ->setParameter('now',(new \DateTime()))
             ->andWhere('s.wip != true')
+            ->andWhere('s.active = true')
             ->setMaxResults($this->count)
             ->setFirstResult(0)
             ->getQuery()->getResult();
@@ -36,15 +40,20 @@ class SongPartialController extends AbstractController
     public function lastPlayed(ScoreHistoryRepository $scoreHistoryRepository,SongRepository $songRepository): Response
     {
         $scores = $scoreHistoryRepository->createQueryBuilder("score")
+            ->select("s.id")
             ->leftJoin("score.songDifficulty",'diff')
             ->leftJoin("diff.song",'s')
             ->orderBy('score.createdAt', 'DESC')
             ->where('s.isDeleted != true')
+            ->andWhere('(s.programmationDate <= :now)')
             ->andWhere('s.wip != true')
+            ->setParameter('now',(new \DateTime()))
+
+            ->andWhere('s.active = true')
             ->setFirstResult(0)
             ->setMaxResults($this->count)
-            ->getQuery()->getResult();
-        $songs = array_map(function(ScoreHistory $score){return $score->getSongDifficulty()->getSong();}, $scores);
+            ->getQuery()->getArrayResult();
+        $songs = array_map(function(array $score) use($songRepository){return $songRepository->find($score['id']);}, $scores);
 
 
         return $this->render('song_partial/index.html.twig', [
@@ -60,8 +69,11 @@ class SongPartialController extends AbstractController
             ->orderBy("sum_votes", 'DESC')
             ->where('s.isDeleted != true')
             ->andWhere('s.wip != true')
+            ->andWhere('s.active = true')
+            ->andWhere('(s.programmationDate <= :now)')
             ->andWhere('v.updatedAt >= :date')
             ->setParameter('date',(new \DateTime())->modify('-'.$lastXDays." days"))
+            ->setParameter('now',(new \DateTime()))
             ->groupBy('s.id')
             ->setMaxResults($this->count)
             ->setFirstResult(0)

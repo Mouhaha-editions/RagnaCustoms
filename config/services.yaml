@@ -4,6 +4,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    patreon_client_id: "%env(resolve:PATREON_CLIENT_ID)%"
+    patreon_client_secret: "%env(resolve:PATREON_CLIENT_SECRET)%"
+    twitch_client_id: "%env(resolve:TWITCH_CLIENT_ID)%"
+    twitch_client_secret: "%env(resolve:TWITCH_CLIENT_SECRET)%"
     discord_client_id: "%env(resolve:DISCORD_CLIENT_ID)%"
     discord_client_secret: "%env(resolve:DISCORD_CLIENT_SECRET)%"
 services:

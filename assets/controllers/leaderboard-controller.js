@@ -4,6 +4,7 @@ import 'jquery'
 export default class extends Controller {
     static targets = ['img', 'background']
     connect() {
+        $("[data-toggle=tooltip]").tooltip();
     }
 
     disconnect() {

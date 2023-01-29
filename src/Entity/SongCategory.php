@@ -8,9 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=SongCategoryRepository::class)
- */
 #[ApiResource(
     collectionOperations: [
         "get",
@@ -20,39 +17,28 @@ use Doctrine\ORM\Mapping as ORM;
         "get",
 //        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
     ])]
+#[ORM\Entity(repositoryClass: SongCategoryRepository::class)]
 class SongCategory
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $label;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $isFeedbackable;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $isReviewable;
 
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $isOnlyForAdmin;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Song::class, mappedBy="categoryTags")
-     */
+    #[ORM\ManyToMany(targetEntity: Song::class, mappedBy: 'categoryTags')]
     private $songs;
 
     public function __construct()
@@ -139,6 +125,21 @@ class SongCategory
         }
 
         return $this;
+    }
+
+    public function isIsFeedbackable(): ?bool
+    {
+        return $this->isFeedbackable;
+    }
+
+    public function isIsReviewable(): ?bool
+    {
+        return $this->isReviewable;
+    }
+
+    public function isIsOnlyForAdmin(): ?bool
+    {
+        return $this->isOnlyForAdmin;
     }
 
 }

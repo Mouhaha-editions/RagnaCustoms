@@ -15,9 +15,7 @@ class MapperController extends AbstractController
 {
 
 
-    /**
-     * @Route("/mappers", name="mappers")
-     */
+    #[Route(path: '/mappers', name: 'mappers')]
     public function list(Request $request,UtilisateurRepository $utilisateurRepository, PaginationService $paginationService): Response
     {
         /** @var Utilisateur[] $mappers */
@@ -37,9 +35,7 @@ class MapperController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/application", name="application")
-     */
+    #[Route(path: '/application', name: 'application')]
     public function index(): Response
     {
         return $this->render('application/index.html.twig', [
@@ -47,9 +43,7 @@ class MapperController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/locale/{locale}", name="change_locale")
-     */
+    #[Route(path: '/locale/{locale}', name: 'change_locale')]
     public function changeLocale(Request $request, string $locale, SessionInterface $session)
     {
         $session->set('_locale', $locale);

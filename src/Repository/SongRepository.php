@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Song;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -34,6 +36,20 @@ class SongRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function add(Song $entity, bool $flush = true): void
+    {
+        $this->_em->persist($entity);
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
+    public function remove(Song $entity, bool $flush = true): void
+    {
+        $this->_em->remove($entity);
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
 
     /*
     public function findOneBySomeField($value): ?Song

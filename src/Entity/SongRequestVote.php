@@ -6,30 +6,22 @@ use App\Repository\SongRequestVoteRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-/**
- * @ORM\Entity(repositoryClass=SongRequestVoteRepository::class)
- */
+#[ORM\Entity(repositoryClass: SongRequestVoteRepository::class)]
 class SongRequestVote
 {
     use TimestampableEntity;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=SongRequest::class, inversedBy="songRequestVotes")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: SongRequest::class, inversedBy: 'songRequestVotes')]
+    #[ORM\JoinColumn(nullable: false)]
     private $songRequest;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="songRequestVotes")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'songRequestVotes')]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
     public function getId(): ?int

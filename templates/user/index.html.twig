@@ -22,11 +22,21 @@
                                 <small>We use <a href="https://gravatar.com/" target="_blank">Gravatar</a> for your
                                     avatar</small>
                             </div>
+                            <div class="text-center mt-2 p-3 membership">
+                                Your membership: {% if is_granted('ROLE_PREMIUM_LVL3') %}<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> <b>Tier 3</b>
+                                {% elseif is_granted('ROLE_PREMIUM_LVL2') %}<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> <b>Tier 2</b>
+                                {% elseif is_granted('ROLE_PREMIUM_LVL1') %}<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> <b>Tier 1</b>
+                                {% else %}None <small><a href="{{ url('user_applications') }}">Get
+                                        one</a></small>{% endif %}
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-md-4">
-                        <h2 class="username">{{ app.user.username }}</h2>
+                        <h2 class="username">{{ membershipService.displayUsername(app.user)|raw }}</h2>
+                        <div class="{% if not is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %}"><i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Username color
+                            : {{ form_widget(form.usernameColor) }}
+                        </div>
                         <div class="encart p-2 d-flex justify-content-center align-self-center">
                             <div class="big flex-fill">
                                 <div class="credits">{{ app.user.credits??0 }}</div>
@@ -65,10 +75,13 @@
                                      data-to-copy="{{ app.user.apiKey }}"><i class="fa fa-copy"></i></div>
                             </div>
                             <input id="ApiKey" class="form-control " value="{{ app.user.apiKey }}" readonly/>
+                            <div class="input-group-append">
+                                <div class="input-group-btn btn btn-warning reset-api-key" title="reset your apiKey" ><i class="fa fa-refresh"></i></div>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <small>
-                                {{"If you already get the application <a href=\"ragnac://api/{{ app.user.apiKey }}\">click
+                                {{ "If you already get the application <a href=\"ragnac://api/{{ app.user.apiKey }}\">click
                                 here</a> to auto-set your API key"|trans|raw }}
                             </small>
                         </div>
@@ -84,10 +97,10 @@
                                 {{ form_widget(form.isMapper,{"attr":{"class":"form-check-input"}}) }}
                                 {{ form_label(form.isMapper,null,{"label_attr":{"class":"form-check-label"}}) }}
                             </div>
-{#                            <div class="form-check form-check-inline">#}
-{#                                {{ form_widget(form.isPublic,{"attr":{"class":"form-check-input"}}) }}#}
-{#                                {{ form_label(form.isPublic,null,{"label_attr":{"class":"form-check-label"}}) }}#}
-{#                            </div>#}
+                            {#                            <div class="form-check form-check-inline"> #}
+                            {#                                {{ form_widget(form.isPublic,{"attr":{"class":"form-check-input"}}) }} #}
+                            {#                                {{ form_label(form.isPublic,null,{"label_attr":{"class":"form-check-label"}}) }} #}
+                            {#                            </div> #}
                             <div class="form-check form-check-inline">
                                 {{ form_widget(form.enableEmailNotification,{"attr":{"class":"form-check-input"}}) }}
                                 {{ form_label(form.enableEmailNotification,null,{"label_attr":{"class":"form-check-label"}}) }}
@@ -100,11 +113,11 @@
                             {{ form_row(form.mapperName) }}
                             {{ form_row(form.mapperDiscord) }}
                             {{ form_row(form.mapperDescription) }}
-{#                            {% if app.user.discordUsername is null %}#}
-{#                                <a href="{{ url('discord_link') }}" class="btn btn-sm btn-info btn-discord">link discord</a>#}
-{#                            {% else %}#}
-{#                                {{ app.user.discordUsername }}#}
-{#                            {% endif %}#}
+                            {#                            {% if app.user.discordUsername is null %} #}
+                            {#                                <a href="{{ url('discord_link') }}" class="btn btn-sm btn-info btn-discord">link discord</a> #}
+                            {#                            {% else %} #}
+                            {#                                {{ app.user.discordUsername }} #}
+                            {#                            {% endif %} #}
 
                             <div class="float-right">
                                 <button type="submit" class="btn btn-primary">{{ "Save"|trans }}</button>
@@ -129,6 +142,8 @@
                             <th class="">{{ "Distance"|trans }}</th>
                             <th class="">{{ "Score"|trans }}</th>
                             <th class="">{{ "Date"|trans }}</th>
+                            <th class="">{{ "Stats"|trans }}</th>
+                            <th></th>
                         </tr>
                         {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
                         {% for score in pagination.entities %}
@@ -139,7 +154,8 @@
                 </div>
                 <div class="col-md-6">
                     <h2>{{ "Score History"|trans }}</h2>
-                    <p>(Soon) {{ "Select a song from your recently played to see your score history"|trans }}</p>
+                    <canvas  id="UserChart" style="width:100%;height:450px;"></canvas >
+                    <small>{{ "Click on <i class='fas fa-chart-line'></i> to see the history of the song."|trans|raw }}{% if not is_granted('ROLE_PREMIUM_LVL1') %}You only can see you 6 last sessions, as premium member you will be able to see the 20 last sessions{% endif %}</small>
                 </div>
             </div>
         </div>

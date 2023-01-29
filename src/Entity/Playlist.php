@@ -5,46 +5,33 @@ namespace App\Entity;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-/**
- * @ORM\Entity(repositoryClass=PlaylistRepository::class)
- */
+#[ORM\Entity(repositoryClass: PlaylistRepository::class)]
 class Playlist
 {
     use TimestampableEntity;
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Song::class, inversedBy="playlists")
-     */
+    #[ORM\ManyToMany(targetEntity: Song::class, inversedBy: 'playlists')]
     private $songs;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="playlists")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'playlists')]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $label;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $isPublic = true;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     public function __construct()
@@ -127,5 +114,10 @@ class Playlist
         $this->description = $description;
 
         return $this;
+    }
+
+    public function isIsPublic(): ?bool
+    {
+        return $this->isPublic;
     }
 }

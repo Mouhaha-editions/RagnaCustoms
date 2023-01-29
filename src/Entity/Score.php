@@ -7,16 +7,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ScoreRepository;
 use App\Service\StatisticService;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-/**
- * @ORM\Entity(repositoryClass=ScoreRepository::class)
- * @ORM\Table(name="score", uniqueConstraints={
- *  @ORM\UniqueConstraint(name="user_difficulty_2",
- *            columns={"user_id","song_difficulty_id"})
- *     })
- */
 #[ApiResource(
     collectionOperations: [
     "get",
@@ -26,92 +20,59 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
         "get",
 //        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
     ])]
+#[ORM\Table(name: 'score')]
+#[ORM\UniqueConstraint(name: 'user_difficulty_2', columns: ['user_id', 'song_difficulty_id'])]
+#[ORM\Entity(repositoryClass: ScoreRepository::class)]
 class Score
 {
     use TimestampableEntity;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $comboBlue;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $session;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $userRagnarock;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $country;
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $plateform;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $comboYellow;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $hit;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $hitDeltaAverage;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $hitPercentage;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $missed;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $percentageOfPerfects;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $extra;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $rawPP;
     
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: 'float', nullable: true)]
     private $weightedPP;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: 'float')]
     private $score;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=SongDifficulty::class, inversedBy="scores")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
+    #[ORM\ManyToOne(targetEntity: SongDifficulty::class, inversedBy: 'scores')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $songDifficulty;
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="scores")
-     * @ORM\JoinColumn(nullable=false)
-     */
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'scores')]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
     public function getId(): ?int
@@ -360,9 +321,7 @@ class Score
         $this->session = $session;
     }
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $dateRagnarock;
 
     /**

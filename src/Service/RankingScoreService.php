@@ -9,8 +9,6 @@ use App\Entity\Utilisateur;
 use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
-use App\Repository\SongDifficultyRepository;
-use App\Repository\UtilisateurRepository;
 
 class RankingScoreService
 {
@@ -143,5 +141,31 @@ class RankingScoreService
         return round($rawPP, 2);
     }
 
+    public function countRanked(Utilisateur $user)
+    {
+        $res = $this->scoreRepository->createQueryBuilder("s")
+                                     ->select('COUNT(s) as count')
+                                     ->where('s.user = :user')
+                                     ->andWhere('s.rawPP IS NOT NULL')
+                                     ->andWhere('s.rawPP != 0')
+                                     ->setParameter('user', $user)
+                                     ->groupBy('s.user')
+                                     ->getQuery()->getArrayResult();
+        return $res[0]['count'];
+    }
 
+    public function timeAgoShort(Utilisateur $user)
+    {
+        /** @var Score $res */
+        $res = $this->scoreRepository->createQueryBuilder("s")
+                                     ->select('s')
+                                     ->where('s.user = :user')
+                                     ->andWhere('s.rawPP IS NOT NULL')
+                                     ->andWhere('s.rawPP != 0')
+                                     ->setParameter('user', $user)
+                                     ->orderBy("s.updatedAt",'Desc')
+                                     ->setFirstResult(0)->setMaxResults(1)
+                                     ->getQuery()->getOneOrNullResult();
+        return StatisticService::dateDiplayerShort($res->getUpdatedAt());
+    }
 }

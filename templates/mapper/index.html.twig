@@ -7,13 +7,14 @@
             <div class="col-12">
                 <a href="{{ url("song_request_index") }}"
                    class="btn btn-warning btn-lg float-right ml-2">{{ "Open song requests"|trans }}</a>
-                <a href="{{ url("home") }}"
-                   class="btn btn-warning btn-bg-empty btn-lg float-right">{{ "Learn how to map"|trans }}</a>
+                <a href="https://discord.gg/2vCAAGuwsR" target="_blank"
+                   class="btn btn-warning btn-bg-empty btn-lg float-right">{{ "Learn how to map"|trans }} <i class="fab fa-discord"></i></a>
                 <h1>{{ "Mappers"|trans }}</h1>
                 <table class="table table-sm">
                     <tr>
                         <th></th>
                         <th>{{ "User"|trans }}</th>
+                        <th class="">{{ "Follows"|trans }}</th>
                         <th class="">{{ "Maps"|trans }}</th>
                         <th class="">{{ "Votes"|trans }}</th>
                         <th class="">{{ "Avg. Rating"|trans }}</th>
@@ -25,11 +26,20 @@
                             <td id="follow_{{ mapper.id }}">
                                {% include 'follower/partial/buttons.html.twig' with {mapper:mapper} %}
                             </td>
+
                             <td>
                                 <a href="{{ url("mapper_profile",{username:mapper.username}) }}">{{ mapper.username }}</a>
                             </td>
+                            <td>
+                                {{ mapper.followers|length }}
+                            </td>
                             <td class="">{{ mapper.songs|length }}</td>
-                            <td class=""><small>{{ "soon" }}</small></td>
+                            <td class="">
+                                <div class="song-votes" style="font-size:14px;">
+                                    <i class="fas fa-arrow-up text-success"></i> {{ mapperService.totalUpperVotes(mapper) }}
+                                    <i class="fas fa-arrow-down text-danger"></i> {{ mapperService.totalLowerVotes(mapper) }}
+                                </div>
+                            </td>
                             <td class="">{{ mapper.avgRating }}</td>
                             <td class="light-grey small">{{ mapper.preferedGenre(3) }}</td>
                             {#                        <td class="text-right">{{ mapper.songAverage }}</td> #}

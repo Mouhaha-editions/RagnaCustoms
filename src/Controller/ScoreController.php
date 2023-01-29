@@ -19,16 +19,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class ScoreController extends AbstractController
 {
     /**
-     * @Route("/score/stats/{id}", name="score_stats")
      * @return void
      */
+    #[Route(path: '/score/stats/{id}', name: 'score_stats')]
     public function getStats(Song $song)
     {
 
     }
 
     /**
-     * @Route("/ranking/country/{twoLetters}", name="score_global_country")
      * @param Request $request
      * @param Country $country
      * @param PaginationService $pagination
@@ -36,6 +35,7 @@ class ScoreController extends AbstractController
      * @param RankedScoresRepository $rankedScoresRepository
      * @return Response
      */
+    #[Route(path: '/ranking/country/{twoLetters}', name: 'score_global_country')]
     public function globalCountryRanking(Request $request, Country $country, PaginationService $pagination, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository): Response
     {
         if ($request->get('findme', null)) {
@@ -52,24 +52,24 @@ class ScoreController extends AbstractController
         }
 
         $qb = $rankedScoresRepository->createQueryBuilder('rs')->leftJoin('rs.user', 'u')
-            ->leftJoin('u.country', 'c')->where('u.country = :country')
-            ->setParameter('country', $country)
-            ->orderBy("rs.totalPPScore", "DESC");
+                                     ->leftJoin('u.country', 'c')->where('u.country = :country')
+                                     ->setParameter('country', $country)
+                                     ->orderBy("rs.totalPPScore", "DESC");
         $scores = $pagination->setDefaults(25)->process($qb, $request);
         return $this->render('score/global_ranking.html.twig', [
-            'scores' => $scores,
+            'scores'  => $scores,
             'country' => $country
         ]);
     }
 
     /**
-     * @Route("/ranking/global", name="score_global_ranking")
      * @param Request $request
      * @param PaginationService $pagination
      * @param ScoreService $scoreService
      * @param RankedScoresRepository $rankedScoresRepository
      * @return Response
      */
+    #[Route(path: '/ranking/global', name: 'score_global_ranking')]
     public function globalRanking(Request $request, PaginationService $pagination, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository): Response
     {
         if ($request->get('findme', null)) {
@@ -90,12 +90,12 @@ class ScoreController extends AbstractController
     }
 
     /**
-     * @Route("/ranking/toggle/{id}", name="rank_toggle")
      * @param Request $request
      * @param ScoreService $scoreService
      * @param RankedScoresRepository $rankedScoresRepository
      * @return Response
      */
+    #[Route(path: '/ranking/toggle/{id}', name: 'rank_toggle')]
     public function toggleRankScore(Request                $request,
                                     ScoreService           $scoreService,
                                     ManagerRegistry        $doctrine,
@@ -113,9 +113,9 @@ class ScoreController extends AbstractController
 
         //get the score of everyone on this song
         $scores = $scoreRepository->createQueryBuilder('score')
-            ->where('score.songDifficulty = :diff')
-            ->setParameter('diff', $songDifficulty)
-            ->getQuery()->getResult();
+                                  ->where('score.songDifficulty = :diff')
+                                  ->setParameter('diff', $songDifficulty)
+                                  ->getQuery()->getResult();
 
         //if we rank then calculate the raw PP of the song
         //if we unrank then reset the raw PP score of the song
