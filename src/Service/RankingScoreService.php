@@ -9,6 +9,8 @@ use App\Entity\Utilisateur;
 use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
+use App\Repository\SongDifficultyRepository;
+use App\Repository\UtilisateurRepository;
 
 class RankingScoreService
 {
