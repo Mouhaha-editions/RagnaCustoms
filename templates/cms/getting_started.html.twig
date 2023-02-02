@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}RagnaCustoms.com, Get started with custom songs for Ragnarock VR - Q&A{% endblock %}
+{% block title %}RagnaCustoms.com, Get started with custom songs for Ragnarock VR - FAQ{% endblock %}
 
 {% block body %}
 <script>
@@ -164,17 +164,55 @@
                 </div>
             </div>
             <br>
-
-            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#custom-songs-guide-q9">
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseNine">
                 <i class="fas fa-chevron-down collapse-icon"></i>
                 Q: Can I submit my own maps for ranking?
             </button>
-            <div id="custom-songs-guide-q9" class="collapse">
+            <div id="collapseNine" class="collapse">
                 <div class="indent">
                 Yes, on the condition it comply the following <a href="{{ url('acceptance_criteria') }}" target="_blank">acceptance criteria </a><br>
                 Once you have read the acceptance criteria, you can submit your map by filling out the <a href="https://www.shorturl.at/fmBHR" target="_blank">following form </a>
                 </div>
-            <div>
+            </div>
+            <br>
+
+            <h2 class="pt-5 pb-5">Streaming/Twitch questions</h2>
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseTen">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: How do I activate the request bot ?
+            </button>
+            <div id="collapseTen" class="collapse">
+                <div class="indent">
+                    The Ragnacustoms App is allowing you to use a bot that will grab requests from your viewers.</br>
+                    The chat command is <b>!rc [Id of the song]</b>. (for example : !rc 1250).</br>
+                    Here is how you can activate it :
+                        <div class="indent">
+                        <span>Step 1:</span> On the Preference options, put your Authentification token. You can get it by clicking on the link.<br/>
+                        <span>Step 2:</span> Put your channel name on the field<br/>
+                        <span>Step 3:</span> Decide on witch folder the requested maps will be downloaded. By default it is the "Requested" folder<br/>
+                        <img src="{{ asset('apps/request_bot_app.jpg') }}"/><br>
+                        <span>Step 4:</span> Once the settings are done, go to the "TwitchBot" section and start your bot.</br> Note that you will have to manually delete the songs in the folder after your streaming session or they wil stay in it for the next one.<br/>
+
+                        <img src="{{ asset('apps/twitchbot_start.jpg') }}"/></br></br>
+                        <span>Additional: </span>You can choose a bot prefix for your twitch chat and to automatically start the bot when you open the app.<br/>
+                        </br>
+                        Note that if you do not have a map, if a requested is made on it the app will automatically download it and install it for you. </br>
+                        You will just need to refresh your folder in game to see it (by going on another one and switching back on the Requests folder).
+                        </div>
+                </div>
+            </div>
+            <br>
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseEleven">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: Where can I find the id of the song or the request command if I want to request it on a Twitch chat ?
+            </button>
+            <div id="collapseEleven" class="collapse">
+                <div class="indent">
+                    The easiest way to have the command to request a song to your favorite streamer is to go on the detail page of the map and clic on the twitch button.</br>
+                    It will automatically copy the command. You can then paste it in the twitch chat.</br>
+                    <img style="width:30%" src="{{ asset('apps/twitch_request_button.jpg') }}"/>
+                </div>
+            </div>
             <br>
         </div>
     </div>
