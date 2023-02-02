@@ -1,126 +1,226 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}RagnaCustoms.com, Get started with custom songs for Ragnarock VR- FAQ{% endblock %}
+{% block title %}RagnaCustoms.com, Get started with custom songs for Ragnarock VR - FAQ{% endblock %}
 
 {% block body %}
+<script>
+    function changeChevron() {
+        var target = event.currentTarget;
+        var chevron = target.querySelector(".collapse-icon");
+        if (chevron.classList.contains("fa-chevron-down")) {
+            chevron.classList.remove("fa-chevron-down");
+            chevron.classList.add("fa-chevron-up");
+        } else {
+            chevron.classList.remove("fa-chevron-up");
+            chevron.classList.add("fa-chevron-down");
+        }
+    }
+</script>
+
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1 class="pt-5 pb-5">Getting started - FAQ</h1>
-            <h5 class="pt-4">Q: How do I install custom songs on the <b>Steam</b> version of Ragnarock?</h5>
-            <div class="indent">
-                There are two ways that you can install custom songs into Ragnarock.
-                <div class="indent">
-                    <div class="span">Option 1 - RagnaCustoms App (Preferred)</div>
-                    You can easily search and download songs usings the RagnaCustoms App. The app will allow
-                    you to see new songs, download and install with a click of a button.<br/>
-                    Learn more by checking out the <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases"
-                                                      target="_blank">RagnaCustoms App</a>.
-                    <br/>
-                    <div class="span">Option 2 - Extract Zip</div>
-                    Or you can simply download the zip from the song page and extacting it to the following
-                    folder
-                    <div class="code">%USERPROFILE%\Documents\Ragnarock\CustomSongs\</div>.
-                </div>
-            </div>
-            <h5 class="pt-4">Q: How do I install custom songs on the <b>Oculus Quest</b> version of Ragnarock?</h5>
-            <div class="indent">
-                The easiest way to install custom songs on the Quest version of RagnaRock is to install the
-                RagnaCustoms App on your Windows PC.
-                <div class="indent">
-                    <span>Step 1:</span> Download the RagnaCustoms App.<br/>
-                    <span>Step 2:</span> Plug in your Quest and enable device access.<br/>
-                    <span>Step 3:</span> Click “Check Access” to make sure the computer can access your Quest
-                    device. See image below.<br/>
-                    <span>Step 4:</span> Download the songs from the list or using the “1 click download” button on
-                    the website.<br/>
-                    <span>Step 5:</span> When you have downloaded all the songs you want to play, click “Sync
-                    Songs.” See image below.<br/>
-                    <img src="{{ asset('apps/oculus_sync.jpg') }}" alt="oculus sync"/>
-                </div>
-            </div>
-            <h5 class="pt-4">Q: How do I upload scores to RagnaCustoms?</h5>
-            <div class="row">
-                <div class="col-md-6">
-                     <div class="indent">
-                        <h6>Steam</h6>
-                        <span>Step 1:</span> Open the file Game.ini located at:
-                        <div class="code">%LOCALAPPDATA%\Ragnarock\Saved\Config\WindowsNoEditor\
-                        </div>
-                        <br/>
-                        <span>Step 2:</span> Edit this file and add (copy without changing anything):<br/>
-                        <div>
-                            <div class="code">
-                                [/Script/Ragnarock.RagnarockSettings]<br/>
-                                CustomApiURLs="https://ragnacustoms.com/wanapi/score/{% if is_granted("ROLE_USER") %}{{ app.user.apiKey }}{% else %}
-                                <a href="{{ url('user') }}">your api key</a>{% endif %}"
-                            </div>
-                        </div>
-                        <span>Step 3:</span> Save the file and start the game.<br/>
-                        <span>Step 4:</span> In advanced menu, check "Allow Sending Custom Songs Scores".<br/>
-                        <span>Step 5:</span> Play & enjoy.
-                    </div>
-                </div>
-                <div class="col-md-6">
+            <h1 class="pt-5 pb-5">Getting started - Q&A</h1>
+            <h2 class="pt-5 pb-5">General questions</h2>
+            <button style="color:white;background-color:transparent;border-width:0px" onClick="changeChevron()" class="h5 collapse-btn" data-toggle="collapse" data-target="#collapseOne">
+                <i class="fas fa-chevron-down collapse-icon"></i> 
+                Q: How do I install custom songs on the Steam version of Ragnarock?
+            </button>
+                <div id="collapseOne" class="collapse">
                     <div class="indent">
-                        <h6>Oculus</h6>
-                        <span>Step 1:</span> Create a file Ragnarock.ini save it anywhere.
-{#                        <div class="code">%LOCALAPPDATA%\Ragnarock\Saved\Config\WindowsNoEditor\</div>#}
+                        <div class="span">Option 1 - RagnaCustoms App (single one clic download)</div>
+                        If you want to install one by one the songs, you can easily search and download songs using the RagnaCustoms App.<br>
+                        The app will allow you to see new songs, download and install with a click of a button.<br/>
+                        You have to have filled up your api key on the app preference option before.<br>
+                        <img src="{{ asset('apps/api_key.jpg') }}" alt="oculus sync"/><br>
+                        You can find your key in you profile page of the website.<br>
+                        Learn more by checking out the <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases"
+                        target="_blank">RagnaCustoms App</a>.<br>
                         <br/>
-                        <span>Step 2:</span> Edit this file and add (copy without changing anything):<br/>
-                        <div>
-                            <div class="code">
-                                {"CustomApiURLs":["https://api.ragnacustoms.com/wanapi/score/{% if is_granted("ROLE_USER") %}{{ app.user.apiKey }}{% else %}
-                                <a href="{{ url('user') }}">your api key</a>{% endif %}"]}
-                            </div>
-                        </div>
-                        <span>Step 3:</span> Save the file.<br/>
-                        <span>Step 4:</span> Copy and paste this file into :
-                        <div class="code">PC\Quest 2\Internal shared storage\Android\data\com.wanadev.ragnarockquest\files\UE4Game\Ragnarock\Ragnarock\Saved\Config</div> (if Config doesn't exists create it)<br/>
-                        <span>Step 5:</span> Start the game, in advanced menu, check "Allow Sending Custom Songs Scores".<br/>
-                        <span>Step 6:</span> Play & enjoy.
+
+                        <div class="span">Option 2 - One clic download on the website (mass download)</div>
+                        If you want to mass download a bunch of song  : 
+                        As for the Option 1, start by downloading the app and putting your api key into it.<br>
+                        Then, you can go on the song library page and clic on the 1 clic button a the bottom right of the page (under the filters)<br>
+                        This will start a mass download of all the songs that are displayed on the filter you applied.
+                        <br>
+                        <div class="span">Option 3 - Extract Zip</div>
+                        If you want to manually install one by one your songs then download the zip from the song page and extact it to the following
+                        folder
+                        <div class="code">%USERPROFILE%\Documents\Ragnarock\CustomSongs\</div>.
+                        <br>
                     </div>
                 </div>
-                <div><h6><u>Warning!</u></h6> Be sure to have the check box "File name extension" activated on your Windows Explorer (under "View") to see the real extension of the file. <br/>
-                You should not have a <b>.ini.text</b> file but a <b>.ini</b> file appearing as a configuration file.<div>
-            </div>
-            <h5 class="pt-4">Q: Where are custom songs located in the game?</h5>
-            <div class="indent">They will be located in the “Custom Songs” album at the bottom of the song catalog
-                menu.
-            </div>
+            <br>
 
-            <h5 class="pt-4">Q: Can I play custom songs against others in multiplayer?</h5>
-            <div class="indent">Yes! In private PVP.</div>
-
-            <h5 class="pt-4">Q: What songs are allowed?</h5>
-            <div class="indent">Generally speaking, any song is allowed as long as effort was put in to make it an
-                enjoyable experience
-                in Ragnarock. The only time where a song might be removed if it is deemed overtly offensive.
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseTwo">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: How do I install custom songs for non PCVR headsets ? (Quest/Pico)
+            </button>
+            <div id="collapseTwo" class="collapse">
+                <div class="indent">
+                    The easiest way to install custom songs for non PCVR versions of RagnaRock is to install the
+                    RagnaCustoms App on your Windows PC.
+                    <div class="indent">
+                        <span>Step 1:</span> Download the RagnaCustoms App.<br/>
+                        <span>Step 2:</span> Plug in your headset and enable device access.<br/>
+                        <span>Step 3:</span> Click “Check Access” to make sure the computer can access your headset. See image below.<br/>
+                        <span>Step 4:</span> Download the songs from the list or using the “1 click download” button on
+                        the website.<br/>
+                        <span>Step 5:</span> When you have downloaded all the songs you want to play, click “Sync
+                        Songs.” See image below.<br/>
+                        <img src="{{ asset('apps/oculus_sync.jpg') }}" alt="non PCVR sync"/>
+                    </div>
+                </div>
             </div>
+            <br>
 
-            <h5 class="pt-4">Q: How do I create my own custom songs?</h5>
-            <div class="indent">You can map your own customs songs for Ragnarock using <a
-                        href="https://pkbeam.github.io/Edda/" target="_blank">EDDA</a>, a
-                Ragnarock-specific mapping program created by PKBeam. Learn more at the <a
-                        href="https://pkbeam.github.io/Edda/" target="_blank">official EDDA website</a>.
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseThree">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: How do I upload scores to RagnaCustoms?
+            </button>
+            <div id="collapseThree" class="collapse">
+                <div class="row">
+                    <div>
+                        <div class="indent">
+                            To be able to upload scores on Ragnacutsoms follow these steps :
+                            <div class="indent">
+                            <span>Step 1:</span> Download the Ragnacustoms App<br/>
+                            <span>Step 2:</span> Put your Api Key on the Preference option of the app (You can find your key in you profile page of the website.) <br/>
+                            <span>Step 3:</span> Clic on the "Configure Game.ini" button<br/>
+                            <img src="{{ asset('apps/sending_scores_app.jpg') }}"/><br>
+                            For the Quest and Pico users be sure to have your headset plugged before<br>
+                            <span>Step 4:</span> Start your game, go to the Advanced settings and clic on the new check box at the bottom of the page<br/>
+                            <img src="{{ asset('apps/sending_scores_game.jpg') }}" style="max-width:40%"/><br>
+                            <span>Step 5:</span> Play & enjoy.
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <br>
 
-            <h5 class="pt-4">Q: How does the ranking system works?</h5>
-            <div class="indent">You can find the details of how the ranking system works on the <a
-                        href="{{ url('ranking_system') }}" target="_blank">Ranking system</a> page
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseFour">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: Where are custom songs located in the game?
+            </button>
+            <div id="collapseFour" class="collapse">
+                <div class="indent">
+                    They are located in the “Custom Songs” album at the bottom of the song catalog (full left)
+                    menu.
+                </div>
             </div>
+            <br>
 
-            <h5 class="pt-4">Q: Can I submit my own maps for ranking?</h5>
-            <div class="indent">Yes, on the condition it comply the following <a href="{{ url('acceptance_criteria') }}" target="_blank">acceptance criteria </a><br>
-            Once you have read the acceptance criteria, you can submit your map by filling out the <a href="https://www.shorturl.at/fmBHR" target="_blank">following form </a>
-
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseCinq">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: Can I play custom songs against others in multiplayer?
+            </button>
+            <div id="collapseCinq" class="collapse">
+                <div class="indent">
+                    Yes! But only in private lobby PVP.<br>
+                    You have to make sure that your have the exact same folder map name or you won't be able to play together. Subfolders where you put your maps are not concerned.<br>
+                </div>
             </div>
+            <br>
+
+            <h2 class="pt-5 pb-5">Mapping questions</h2>
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseSix">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: What songs are allowed?
+            </button>
+            <div id="collapseSix" class="collapse">
+                <div class="indent">
+                    Generally speaking, any song is allowed as long as effort was put in to make it an
+                    enjoyable experience in Ragnarock.<br> 
+                    The only time where a song might be removed if it is deemed overtly offensive.
+                </div>
+            </div>
+            <br>
+
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseSeven">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: How do I create my own custom songs?
+            </button>
+            <div id="collapseSeven" class="collapse">    
+                <div class="indent">
+                    You can map your own customs songs for Ragnarock using <a
+                            href="https://pkbeam.github.io/Edda/" target="_blank">EDDA</a>, a
+                    Ragnarock-specific mapping program created by PKBeam. Learn more at the <a
+                            href="https://pkbeam.github.io/Edda/" target="_blank">official EDDA website</a>.<br>
+                    Do not hesitate to join the Ragnacustoms Discord to have any help and information about mapping.
+                </div>
+            </div>
+            <br>
+
+            <h2 class="pt-5 pb-5">Ranking questions</h2>
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseEight">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: How does the ranking system works?
+            </button>
+            <div id="collapseEight" class="collapse">
+                <div class="indent">You can find the details of how the ranking system works on the <a
+                            href="{{ url('ranking_system') }}" target="_blank">Ranking system</a> page
+                </div>
+            </div>
+            <br>
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseNine">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: Can I submit my own maps for ranking?
+            </button>
+            <div id="collapseNine" class="collapse">
+                <div class="indent">
+                Yes, on the condition it comply the following <a href="{{ url('acceptance_criteria') }}" target="_blank">acceptance criteria </a><br>
+                Once you have read the acceptance criteria, you can submit your map by filling out the <a href="https://www.shorturl.at/fmBHR" target="_blank">following form </a>
+                </div>
+            </div>
+            <br>
+
+            <h2 class="pt-5 pb-5">Streaming/Twitch questions</h2>
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseTen">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: How do I activate the request bot ?
+            </button>
+            <div id="collapseTen" class="collapse">
+                <div class="indent">
+                    The Ragnacustoms App is allowing you to use a bot that will grab requests from your viewers.</br>
+                    The chat command is <b>!rc [Id of the song]</b>. (for example : !rc 1250).</br>
+                    Here is how you can activate it :
+                        <div class="indent">
+                        <span>Step 1:</span> On the Preference options, put your Authentification token. You can get it by clicking on the link.<br/>
+                        <span>Step 2:</span> Put your channel name on the field<br/>
+                        <span>Step 3:</span> Decide on witch folder the requested maps will be downloaded. By default it is the "Requested" folder<br/>
+                        <img src="{{ asset('apps/request_bot_app.jpg') }}"/><br>
+                        <span>Step 4:</span> Once the settings are done, go to the "TwitchBot" section and start your bot.</br> Note that you will have to manually delete the songs in the folder after your streaming session or they wil stay in it for the next one.<br/>
+
+                        <img src="{{ asset('apps/twitchbot_start.jpg') }}"/></br></br>
+                        <span>Additional: </span>You can choose a bot prefix for your twitch chat and to automatically start the bot when you open the app.<br/>
+                        </br>
+                        Note that if you do not have a map, if a requested is made on it the app will automatically download it and install it for you. </br>
+                        You will just need to refresh your folder in game to see it (by going on another one and switching back on the Requests folder).
+                        </div>
+                </div>
+            </div>
+            <br>
+            <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn" data-toggle="collapse" onClick="changeChevron()" data-target="#collapseEleven">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                Q: Where can I find the id of the song or the request command if I want to request it on a Twitch chat ?
+            </button>
+            <div id="collapseEleven" class="collapse">
+                <div class="indent">
+                    The easiest way to have the command to request a song to your favorite streamer is to go on the detail page of the map and clic on the twitch button.</br>
+                    It will automatically copy the command. You can then paste it in the twitch chat.</br>
+                    <img style="width:30%" src="{{ asset('apps/twitch_request_button.jpg') }}"/>
+                </div>
+            </div>
+            <br>
         </div>
     </div>
     {% endblock %}
 
-
+    
 
     {% block javascripts %}
+    
     {{ parent() }}
 {% endblock %}

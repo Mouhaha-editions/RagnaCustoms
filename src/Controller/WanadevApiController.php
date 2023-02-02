@@ -86,7 +86,7 @@ class WanadevApiController extends AbstractController
             $newScore->setExtra(json_encode($data['extra']));
             $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
             if ($songDiff->isRanked()) {
-                $rawPP = $scoreService->calculateRawPP($newScore);
+                $rawPP = $rankingScoreService->calculateRawPP($newScore);
                 $newScore->setRawPP($rawPP);
             }
             /** @var Score $score */
@@ -108,7 +108,7 @@ class WanadevApiController extends AbstractController
 
             //calculation of the ponderate PP scores
             if ($songDiff->isRanked()) {
-                $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
+                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($scoreRepository, $user);
                 //insert/update of the score into ranked_scores
                 $rankedScore = $rankedScoresRepository->findOneBy([
                     'user' => $user

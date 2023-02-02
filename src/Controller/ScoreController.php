@@ -101,7 +101,8 @@ class ScoreController extends AbstractController
                                     ManagerRegistry        $doctrine,
                                     ScoreRepository        $scoreRepository,
                                     RankedScoresRepository $rankedScoresRepository,
-                                    SongDifficulty         $songDifficulty): Response
+                                    SongDifficulty         $songDifficulty,
+                                    RankingScoreService    $rankingScoreService): Response
     {
 
         $em = $doctrine->getManager();
@@ -125,14 +126,14 @@ class ScoreController extends AbstractController
                 $score->setRawPP(0);
             } else {
                 //calcul du rawPP + definir car on est ranked
-                $score->setRawPP($scoreService->calculateRawPP($score));
+                $score->setRawPP($rankingScoreService->calculateRawPP($score));
             }
             //update of the score into ranked_scores
             $rankedScore = $rankedScoresRepository->findOneBy([
                 'user' => $user
             ]);
             if ($rankedScore != null) {
-                $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
+                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($scoreRepository, $user);
                 $rankedScore->setTotalPPScore($totalPondPPScore);
             }
 

@@ -4,11 +4,11 @@ namespace App\Repository;
 
 use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Utilisateur|null find($id, $lockMode = null, $lockVersion = null)
@@ -73,4 +73,16 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
         ;
     }
     */
+
+    /**
+     * @return Utilisateur[]|ArrayCollection
+     */
+    public function findAllWithRankedScore()
+    {
+        return $this->createQueryBuilder('u')
+                    ->distinct()
+                    ->join('u.scores', 's')
+                    ->where("s.rawPP IS NOT NULL")
+                    ->getQuery()->getResult();
+    }
 }
