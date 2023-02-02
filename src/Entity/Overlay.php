@@ -3,49 +3,34 @@
 namespace App\Entity;
 
 use App\Repository\OverlayRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=OverlayRepository::class)
- */
+#[ORM\Entity(repositoryClass: OverlayRepository::class)]
 class Overlay
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Utilisateur::class, inversedBy="overlay", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\OneToOne(targetEntity: Utilisateur::class, inversedBy: 'overlay', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    /**
-     * @ORM\OneToOne(targetEntity=SongDifficulty::class, cascade={"persist", "remove"})
-     */
+    #[ORM\OneToOne(targetEntity: SongDifficulty::class, cascade: ['persist', 'remove'])]
     private $difficulty;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $disposition;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $startAt;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $html;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $css;
 
     public function getId(): ?int

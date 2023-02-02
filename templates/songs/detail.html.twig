@@ -106,7 +106,7 @@
                         <div class="mt-3">
                             <div class="label">{{ "Mapped by"|trans }}</div>
                             <div class="mapper"><a
-                                        href="{{ url("mapper_profile",{username:song.user.username}) }}">{{ song.mapper }}</a>
+                                        href="{{ url("mapper_profile",{username:song.user.username}) }}">{{ membershipService.displayMappername(song.user)|raw }}</a>
                             </div>
                         </div>
                         <div class="mt-3">

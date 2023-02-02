@@ -16,10 +16,10 @@ use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 class DiscordController extends AbstractController
 {
     /**
-     * @Route("/discord-link", name="discord_link")
      * @return Response
      * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
+    #[Route(path: '/discord-link', name: 'discord_link')]
     public function Discord(ManagerRegistry $doctrine): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
@@ -97,10 +97,9 @@ class DiscordController extends AbstractController
     }
 
     /**
-     * @Route(name="discord_redirect_authorization", path="redirect_authorization")
-     *
      * @return Response
      */
+    #[Route(name: 'discord_redirect_authorization', path: 'redirect_authorization')]
     public function redirectAuthorizationAction(): Response
     {
         return $this->clientRegistry->getClient('discord')
@@ -108,20 +107,19 @@ class DiscordController extends AbstractController
     }
 
     /**
-     * @Route(name="discord_set_token", path="set_token")
-     *
      * @return void
      */
+    #[Route(name: 'discord_set_token', path: 'set_token')]
     public function setTokenAction(): void
     {
         // empty as authenticator will handle the request
     }
 
     /**
-     * @Route("/discord-link", name="discord_check")
      * @return Response
      * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
+    #[Route(path: '/discord-link', name: 'discord_check')]
     public function DiscordCheck(ManagerRegistry $doctrine): Response
     {
         if (!$this->isGranted('ROLE_USER')) {

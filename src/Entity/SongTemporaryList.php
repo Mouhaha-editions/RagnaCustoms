@@ -8,22 +8,16 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-/**
- * @ORM\Entity(repositoryClass=SongTemporaryListRepository::class)
- */
+#[ORM\Entity(repositoryClass: SongTemporaryListRepository::class)]
 class SongTemporaryList
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
     use TimestampableEntity;
-    /**
-     * @ORM\ManyToMany(targetEntity=Song::class)
-     */
+    #[ORM\ManyToMany(targetEntity: Song::class)]
     private $songs;
 
     public function __construct()

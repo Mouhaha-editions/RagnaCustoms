@@ -1,6 +1,6 @@
-
+{% import "songs/macros/song.html.twig" as song_macro %}
 {% set song = score.songDifficulty.song %}
-<tr>
+<tr >
     <td>
         <div class="d-flex ">
             <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" alt="cover"/></a>
@@ -31,6 +31,19 @@
     <td class="text-grey">
         {{ score.timeAgoShort}}&nbsp;
     </td>
+    <td>
+        <div class="more-stat" data-toggle="tooltip" title="Click to see the history" data-song-difficulty="{{ score.songDifficulty.id }}">
+            {{ song_macro.stats(score) }}
+        </div>
+    </td>
+<td>
+    {% if is_granted('ROLE_USER') and app.user == score.user %}
+        <small><i data-toggle="modal" data-target="#ScatterView" data-backdrop="true" data-keyboard="true"
+                  class="fas fa-magnifying-glass scatter-open-score-history" style="font-size:10px;cursor: pointer"
+                  data-title="{{ song.name }} - lvl {{ diff.difficultyRank.level }}"
+                  data-score="{{ score.id }}"></i></small>
+    {% endif %}
+</td>
 </tr>
 
 

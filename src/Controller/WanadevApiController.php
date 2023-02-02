@@ -37,22 +37,18 @@ class WanadevApiController extends AbstractController
 {
 
 
-    /**
-     * @Route("/wanapi/score/{apiKey}/{osef}-{hash}", name="wd_api_score_simple_get",methods={"GET","POST"})
-     */
-    public function scoreSimple(Request $request,ManagerRegistry $doctrine, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
+    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}', name: 'wd_api_score_simple_get', methods: ['GET', 'POST'])]
+    public function scoreSimple(Request $request, ManagerRegistry $doctrine, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
     {
 
-        return $this->score($request,$doctrine, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository,  $scoreRepository, $scoreHistoryRepository, false);
+        return $this->score($request, $doctrine, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository, $scoreRepository, $scoreHistoryRepository, false);
     }
 
-    /**
-     * @Route("/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}", name="wd_api_score_get",methods={"GET","POST"})
-     */
-    public function score(Request $request,ManagerRegistry $doctrine, string $apiKey, string $hash,
+    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}', name: 'wd_api_score_get', methods: ['GET', 'POST'])]
+    public function score(Request                  $request, ManagerRegistry $doctrine, string $apiKey, string $hash,
                           SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository,
-                          ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, RankingScoreService $rankingScoreService,
-                          ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
+                          ScoreService             $scoreService, RankedScoresRepository $rankedScoresRepository,
+                          ScoreRepository          $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
     {
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
@@ -94,8 +90,8 @@ class WanadevApiController extends AbstractController
                 $newScore->setRawPP($rawPP);
             }
             /** @var Score $score */
-            $score = $scoreRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $user)->andWhere('s.songDifficulty = :songDifficulty')->setParameter('songDifficulty', $songDiff)->getQuery()->getOneOrNullResult();
-
+            $score = $scoreRepository->createQueryBuilder('s')->where('s.user = :user')
+                ->setParameter('user', $user)->andWhere('s.songDifficulty = :songDifficulty')->setParameter('songDifficulty', $songDiff)->getQuery()->getOneOrNullResult();
             $scoreService->archive($newScore);
             if ($score == null || $score->getScore() <= $newScore->getScore()) {
                 //le nouveau score est meilleur
@@ -131,7 +127,7 @@ class WanadevApiController extends AbstractController
                 $history->setSession($newScore->getSession());
                 $em->flush();
             }
- 
+
             return new JsonResponse([
                 "rank" => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
                 "score" => $newScore->getScore(),
@@ -142,7 +138,7 @@ class WanadevApiController extends AbstractController
 
         return new JsonResponse($scoreService->getTop5Wanadev($songDiff, $user), 200, [
             "content-type" => "application/json",
-            "my-custom-key"=>"abcdefghijklmnop"
+            "my-custom-key" => "abcdefghijklmnop"
         ]);
     }
 }

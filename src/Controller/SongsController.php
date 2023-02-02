@@ -2,53 +2,42 @@
 
 namespace App\Controller;
 
-use App\Entity\DifficultyRank;
 use App\Entity\Playlist;
 use App\Entity\Score;
+use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\SongTemporaryList;
-use App\Entity\Utilisateur;
 use App\Entity\Vote;
 use App\Form\AddPlaylistFormType;
 use App\Form\VoteType;
 use App\Repository\DownloadCounterRepository;
-use App\Repository\ScoreRepository;
 use App\Repository\SongCategoryRepository;
-use App\Repository\SongDifficultyRepository;
-use App\Repository\SongRepository;
-use App\Repository\VoteCounterRepository;
+use App\Repository\UtilisateurRepository;
 use App\Service\DiscordService;
 use App\Service\DownloadService;
-use App\Service\GoogleAnalyticsService;
+use App\Service\GrantedService;
 use App\Service\ScoreService;
 use App\Service\SongService;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
-use Exception;
-use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Wohali\OAuth2\Client\Provider\Discord;
-use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 
 
 class SongsController extends AbstractController
 {
     private $paginate = 30;
 
-    /**
-     * @Route("/song/detail/{id}", name="song_detail_old")
-     */
+    #[Route(path: '/song/detail/{id}', name: 'song_detail_old')]
     public function songDetailId(Request $request, Song $song)
     {
         return $this->redirectToRoute("song_detail", ['slug' => $song->getSlug()], 301);
@@ -56,36 +45,36 @@ class SongsController extends AbstractController
 
 
     /**
-     * @Route("/song/playlist/{id}", name="song_playlist")
      * @param Request $request
      * @param Song $song
      * @param TranslatorInterface $translator
      * @return JsonResponse
      */
+    #[Route(path: '/song/playlist/{id}', name: 'song_playlist')]
     public function formPlaylist(Request $request, ManagerRegistry $doctrine, Song $song, TranslatorInterface $translator)
     {
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
-                "error" => true,
+                "error"        => true,
                 "errorMessage" => $translator->trans("You need an account!"),
-                "response" => $translator->trans("You need an account!"),
+                "response"     => $translator->trans("You need an account!"),
             ]);
         }
 
         if ($song == null) {
             return new JsonResponse([
-                "error" => true,
+                "error"        => true,
                 "errorMessage" => $translator->trans("Song not found!"),
-                "response" => $translator->trans("Song not found!"),
+                "response"     => $translator->trans("Song not found!"),
 
             ]);
         }
 
         $form = $this->createForm(AddPlaylistFormType::class, $this->getUser(), [
             'attr' => [
-                'class' => "form ajax-form",
-                'method' => "post",
-                "action" => $this->generateUrl("song_playlist", ["id" => $song->getId()]),
+                'class'    => "form ajax-form",
+                'method'   => "post",
+                "action"   => $this->generateUrl("song_playlist", ["id" => $song->getId()]),
                 "data-url" => $this->generateUrl("song_playlist", ["id" => $song->getId()])
             ]
         ]);
@@ -99,9 +88,9 @@ class SongsController extends AbstractController
                 $label = trim($form->get('newPlaylist')->getData());
                 if ($label == null || empty($label)) {
                     return new JsonResponse([
-                        "error" => true,
+                        "error"        => true,
                         "errorMessage" => $translator->trans("Playlist have to be named!"),
-                        "response" => $translator->trans("Playlist have to be named!"),
+                        "response"     => $translator->trans("Playlist have to be named!"),
 
                     ]);
                 }
@@ -114,26 +103,26 @@ class SongsController extends AbstractController
             foreach ($playlist->getSongs() as $psong) {
                 if ($song->getId() === $psong->getId()) {
                     return new JsonResponse([
-                        "error" => true,
+                        "error"        => true,
                         "errorMessage" => $translator->trans("Song already in playlist!"),
-                        "response" => $translator->trans("Song already in playlist!"),
+                        "response"     => $translator->trans("Song already in playlist!"),
                     ]);
                 }
             }
             $playlist->addSong($song);
             $em->flush();
             return new JsonResponse([
-                "error" => false,
+                "error"        => false,
                 "errorMessage" => "You need an account!",
-                "response" => "<div class='alert alert-success'>" . $translator->trans("Song added!") . "</div>",
+                "response"     => "<div class='alert alert-success'>" . $translator->trans("Song added!") . "</div>",
 
             ]);
         }
 
         return new JsonResponse([
-            "error" => false,
+            "error"        => false,
             "errorMessage" => false,
-            "response" => $this->renderView("songs/partial/form_playlist.html.twig", [
+            "response"     => $this->renderView("songs/partial/form_playlist.html.twig", [
                 'form' => $form->createView(),
                 'song' => $song,
             ]),
@@ -141,12 +130,12 @@ class SongsController extends AbstractController
     }
 
     /**
-     * @Route("/song-library", name="song_library")
      * @param Request $request
      * @param SongCategoryRepository $categoryRepository
      * @param PaginationService $paginationService
      * @return Response
      */
+    #[Route(path: '/song-library', name: 'song_library')]
     public function library(Request $request, ManagerRegistry $doctrine, SongCategoryRepository $categoryRepository, PaginationService $paginationService): Response
     {
         $filters = [];
@@ -235,15 +224,15 @@ class SongsController extends AbstractController
 
             switch ($request->get('downloads_submitted_date')) {
                 case 1:
-                    $qb->andWhere('(s.lastDateUpload >= :last7days)')->setParameter('last7days', (new DateTime())->modify('-7 days'));
+                    $qb->andWhere('(s.programmationDate >= :last7days)')->setParameter('last7days', (new DateTime())->modify('-7 days'));
                     $filters[] = "last 7 days";
                     break;
                 case 2 :
-                    $qb->andWhere('(s.lastDateUpload >= :last15days)')->setParameter('last15days', (new DateTime())->modify('-15 days'));
+                    $qb->andWhere('(s.programmationDate >= :last15days)')->setParameter('last15days', (new DateTime())->modify('-15 days'));
                     $filters[] = "last 15 days";
                     break;
                 case 3 :
-                    $qb->andWhere('(s.lastDateUpload >= :last45days)')->setParameter('last45days', (new DateTime())->modify('-45 days'));
+                    $qb->andWhere('(s.programmationDate >= :last45days)')->setParameter('last45days', (new DateTime())->modify('-45 days'));
                     $filters[] = "last 45 days";
                     break;
             }
@@ -253,7 +242,9 @@ class SongsController extends AbstractController
             $filters[] = "not downloaded";
         }
         $qb->andWhere('s.moderated = true');
-
+        $qb->andWhere('s.active = true')
+        ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')
+->setParameter('now', new DateTime());
         //get the 'type' param (added for ajax search)
         $type = $request->get('type', null);
         //check if this is an ajax request
@@ -319,7 +310,7 @@ class SongsController extends AbstractController
                 $qb->orderBy("s.downloads", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             case 'upload_date':
-                $qb->orderBy("s.lastDateUpload", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                $qb->orderBy("s.programmationDate", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             case 'name':
                 $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
@@ -328,7 +319,7 @@ class SongsController extends AbstractController
                 $qb->orderBy("rating", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             default:
-                $qb->orderBy("s.createdAt", "DESC");
+                $qb->orderBy("s.programmationDate", "DESC");
                 break;
         }
 
@@ -338,70 +329,69 @@ class SongsController extends AbstractController
 
         return $this->render('songs/song_library.html.twig', [
             'controller_name' => 'SongsController',
-            'songs' => $pagination,
-            'filters' => $filters,
-            'categories' => $categories
+            'songs'           => $pagination,
+            'filters'         => $filters,
+            'categories'      => $categories
         ]);
     }
 
-
-    /**
-     * @Route("/songs/download/{id}", name="song_download")
-     */
-    public function download(Request $request, ManagerRegistry $doctrine, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    #[Route(path: '/songs/download/{id}', name: 'song_download')]
+    public function download(Request $request, ManagerRegistry $doctrine, Song $song, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository)
     {
-        if (!$song->isModerated()) {
+        if (!$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate() > new DateTime()) {
             return new Response("Not available now", 403);
         }
         $em = $doctrine->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
 
-        $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
         $downloadService->addOne($song);
+        return $this->RestrictedDownload($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip", $song->getId() . ".zip");
 
-        $response = new Response($fileContent);
-        $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $song->getId() . '.zip');
-        $response->headers->set('Content-Disposition', $disposition);
-        $response->headers->set('Content-type', "application/octet-stream");
-        $response->headers->set('Content-Transfer-Encoding', "binary");
-        $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
+//        $response = new Response($fileContent);
+//        $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $song->getId() . '.zip');
+//        $response->headers->set('Content-Disposition', $disposition);
+//        $response->headers->set('Content-type', "application/octet-stream");
+//        $response->headers->set('Content-Transfer-Encoding', "binary");
+//        $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
+//        return $response;
 
-        return $response;
     }
 
-    /**
-     * @Route("/songs/download/{id}/{api}", name="song_download_api", defaults={"api"=null})
-     */
-    public function downloadApiKey(Request $request, ManagerRegistry $doctrine, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, DownloadCounterRepository $downloadCounterRepository): Response
+    #[Route(path: '/songs/download/{id}/{api}', name: 'song_download_api', defaults: ['api' => null])]
+    public function downloadApiKey(GrantedService $grantedService, ManagerRegistry $doctrine, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, UtilisateurRepository $utilisateurRepository)
     {
-        if (!$song->isModerated()) {
+        if (!$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate() > new DateTime()) {
             return new Response("Not available now", 403);
         }
         $em = $doctrine->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
+        $user = $utilisateurRepository->findOneBy(["apiKey" => $api]);
+        if ($user != null) {
+            $downloadService->addOne($song, $api);
+        }
+        if ($grantedService->isGranted($user, 'ROLE_PREMIUM_LVL1')) {
+            $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
 
-        $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
-        $downloadService->addOne($song, $api);
+            $response = new Response($fileContent);
+            $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $song->getId() . '.zip');
+            $response->headers->set('Content-Disposition', $disposition);
+            $response->headers->set('Content-type', "application/octet-stream");
+            $response->headers->set('Content-Transfer-Encoding', "binary");
+            $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
 
-        $response = new Response($fileContent);
-
-        $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $song->getId() . '.zip');
-        $response->headers->set('Content-Disposition', $disposition);
-        $response->headers->set('Content-type', "application/octet-stream");
-        $response->headers->set('Content-Transfer-Encoding', "binary");
-        $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
-
-        return $response;
+            return $response;
+        } else {
+            $file = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"; // Nom du fichier
+            return $this->RestrictedDownload($file, $song->getId() . ".zip");
+        }
     }
 
-    /**
-     * @Route("/songs/ddl/{id}", name="song_direct_download")
-     */
-    public function directDownload(Song $song, ManagerRegistry $doctrine, KernelInterface $kernel, DownloadService $downloadService): Response
+    #[Route(path: '/songs/ddl/{id}', name: 'song_direct_download')]
+    public function directDownload(Song $song, ManagerRegistry $doctrine, KernelInterface $kernel, DownloadService $downloadService)
     {
-        if (!$song->isModerated()) {
+        if (!$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate() > new DateTime()) {
             return new Response("Not available now", 403);
         }
         $em = $doctrine->getManager();
@@ -409,15 +399,20 @@ class SongsController extends AbstractController
         $em->flush();
         $downloadService->addOne($song);
 
-        $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
-        $response = new Response($fileContent);
+        if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
+            $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
+            $response = new Response($fileContent);
+            $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $this->cleanName($song->getName()) . '.zip');
+            $response->headers->set('Content-Disposition', $disposition);
+            $response->headers->set('Content-type', "application/octet-stream");
+            $response->headers->set('Content-Transfer-Encoding', "binary");
+            $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
+            return $response;
 
-        $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $this->cleanName($song->getName()) . '.zip');
-        $response->headers->set('Content-Disposition', $disposition);
-        $response->headers->set('Content-type', "application/octet-stream");
-        $response->headers->set('Content-Transfer-Encoding', "binary");
-        $response->headers->set('Content-Length', filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"));
-        return $response;
+        } else {
+            $file = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"; // Nom du fichier
+            return $this->RestrictedDownload($file, $this->cleanName($song->getName()) . ".zip");
+        }
     }
 
     private function cleanName(?string $getName)
@@ -425,9 +420,7 @@ class SongsController extends AbstractController
         return preg_replace('/[^a-zA-Z]/i', '', $getName);
     }
 
-    /**
-     * @Route("/toggle/{id}", name="diff_toggle_ranked", defaults={"slug"=null})
-     */
+    #[Route(path: '/toggle/{id}', name: 'diff_toggle_ranked', defaults: ['slug' => null])]
     public function toggleRanked(Request $request, ManagerRegistry $doctrine, SongDifficulty $songDifficulty, ScoreService $scoreService)
     {
         if ($this->isGranted('ROLE_MODERATOR')) {
@@ -446,13 +439,11 @@ class SongsController extends AbstractController
         return new Response('');
     }
 
-    /**
-     * @Route("/song/{slug}", name="song_detail", defaults={"slug"=null})
-     */
+    #[Route(path: '/song/{slug}', name: 'song_detail', defaults: ['slug' => null])]
     public function songDetail(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService, ?Song $song = null)
     {
 
-        if ($song == null || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
+        if ($song->getProgrammationDate() == null || $song->getProgrammationDate() >= new DateTime()|| $song == null || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }
@@ -485,53 +476,70 @@ class SongsController extends AbstractController
             $level = $difficulty->getDifficultyRank()->getLevel();
             $scores = $doctrine->getRepository(Score::class)->createQueryBuilder('s')->select('s, MAX(s.score) AS HIDDEN max_score')->where('s.songDifficulty = :diff')->setParameter('diff', $difficulty)
 //                ->setParameter('hash', $difficulty->getSong()->getNewGuid())
-                ->groupBy('s.user')->addOrderBy('max_score', 'DESC');
+                               ->groupBy('s.user')->addOrderBy('max_score', 'DESC');
 
             $pagination = $paginationService->setDefaults(20)->process($scores, $request);
             $levels [] = [
-                "level" => $level,
+                "level"      => $level,
                 "difficulty" => $difficulty,
-                "color" => $difficulty->getDifficultyRank()->getColor(),
-                'scores' => $pagination
+                "color"      => $difficulty->getDifficultyRank()->getColor(),
+                'scores'     => $pagination
             ];
         }
 
         return $this->render('songs/detail.html.twig', [
-            'song' => $song,
-            'levels' => $levels,
+            'song'         => $song,
+            'levels'       => $levels,
             "feedbackForm" => $feedbackForm->createView()
         ]);
     }
 
-    /**
-     * @Route("/song/partial/last-played", name="last_songs_played")
-     */
+    #[Route(path: '/song/partial/last-played', name: 'last_songs_played')]
     public function lastSongsPlayed(Request $request, SongService $songService)
     {
         return $this->render('songs/partial/slider_cards.html.twig', ['songs' => $songService->getLastSongsPlayed(8)]);
     }
 
-    /**
-     * @Route("/song/partial/best", name="best_songs")
-     */
+    #[Route(path: '/song/partial/best', name: 'best_songs')]
     public function bestSongs(Request $request, SongService $songService)
     {
         return $this->render('songs/partial/slider_cards.html.twig', ['songs' => $songService->getLastSongsPlayed(8)]);
     }
 
-    /**
-     * @Route("/song/partial/last-added", name="last_songs_added")
-     */
+    #[Route(path: '/song/partial/last-added', name: 'last_songs_added')]
     public function lastSongsAdded(Request $request, SongService $songService)
     {
         return $this->render('songs/partial/slider_cards.html.twig', ['songs' => $songService->getLastSongsPlayed(8)]);
     }
 
-    /**
-     * @Route("/song/partial/preview/{id}", name="partial_preview_song")
-     */
+    #[Route(path: '/song/partial/preview/{id}', name: 'partial_preview_song')]
     public function partialPreview(Song $song)
     {
         return new JsonResponse(['response' => $this->renderView("songs/partial/preview_player.html.twig", ['song' => $song])]);
+    }
+
+    private function RestrictedDownload(string $file, string $filename)
+    {
+        if (file_exists($file) && is_file($file)) {
+            $response = new StreamedResponse();
+            $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $filename);
+            $response->headers->set('Content-Disposition', $disposition);
+            $response->headers->set('Content-type', "application/octet-stream");
+            $response->headers->set('Content-Transfer-Encoding', "binary");
+            $response->headers->set('Content-Length', filesize($file));
+            $response->setCallback(function () use ($file, $filename) {
+                $speed = 1000; // i.e. 50 kb/s temps de telechargement
+                $fd = fopen($file, "r");
+                $octet = round($speed * 1024);
+                while (!feof($fd)) {
+                    echo fread($fd, $octet); // $speed kilobytes (Kb)
+                    flush();
+                    sleep(1);
+                }
+                fclose($fd);
+            });
+            return $response;
+        }
+        return new Response("ERROR", 400);
     }
 }

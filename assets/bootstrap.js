@@ -7,5 +7,6 @@ export const app = startStimulusApp(require.context(
     /\.(j|t)sx?$/
 ));
 
+
 //import './styles/bootstrap.scss';
 

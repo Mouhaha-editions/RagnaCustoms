@@ -8,9 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=DifficultyRankRepository::class)
- */
 #[ApiResource(
     collectionOperations: [
         "get",
@@ -20,28 +17,21 @@ use Doctrine\ORM\Mapping as ORM;
         "get",
 //        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
     ])]
+#[ORM\Entity(repositoryClass: DifficultyRankRepository::class)]
 class DifficultyRank
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $level;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $color;
 
-    /**
-     * @ORM\OneToMany(targetEntity=SongDifficulty::class, mappedBy="difficultyRank")
-     */
+    #[ORM\OneToMany(targetEntity: SongDifficulty::class, mappedBy: 'difficultyRank')]
     private $songDifficulties;
 
     public function __construct()

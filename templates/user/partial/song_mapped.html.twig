@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="col-md-5 ">
-            <div class="username mapper d-flex justify-content-between"><h2>{{ user.mapperName??user.username }}</h2>  <div class="" id="follow_{{ user.id }}">
+            <div class="username mapper d-flex justify-content-between"><h2>{{ membershipService.displayMappername(user)|raw }}</h2>  <div class="" id="follow_{{ user.id }}">
                     {% include 'follower/partial/bigButtons.html.twig' with {mapper:user} %}
                 </div>
             </div>

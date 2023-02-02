@@ -23,6 +23,14 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
         parent::__construct($registry, Utilisateur::class);
     }
 
+    public function add(Utilisateur $entity, bool $flush = true): void
+    {
+        $this->_em->persist($entity);
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
+
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */

@@ -7,32 +7,22 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity(repositoryClass=DownloadCounterRepository::class)
- */
+#[ORM\Entity(repositoryClass: DownloadCounterRepository::class)]
 class DownloadCounter
 {
     use TimestampableEntity;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="downloadCounters")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-
-     */
+    #[ORM\ManyToOne(targetEntity: Song::class, inversedBy: 'downloadCounters')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $song;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="downloadCounters")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-
-     */
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'downloadCounters')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $user;
 
     public function getId(): ?int

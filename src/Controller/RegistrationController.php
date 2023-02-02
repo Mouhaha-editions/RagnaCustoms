@@ -25,9 +25,7 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    /**
-     * @Route("/register", name="app_register")
-     */
+    #[Route(path: '/register', name: 'app_register')]
     public function register(Request $request,ManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new Utilisateur();
@@ -65,9 +63,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/verify/email", name="app_verify_email")
-     */
+    #[Route(path: '/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');

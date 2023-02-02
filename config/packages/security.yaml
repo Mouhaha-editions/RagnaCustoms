@@ -9,7 +9,10 @@ security:
 #            algorithm: auto
     role_hierarchy:
         ROLE_ADMIN: ROLE_MODERATOR
-        ROLE_MODERATOR: ROLE_USER
+        ROLE_MODERATOR: ROLE_PREMIUM_LVL3
+        ROLE_PREMIUM_LVL3: ROLE_PREMIUM_LVL2
+        ROLE_PREMIUM_LVL2: ROLE_PREMIUM_LVL1
+        ROLE_PREMIUM_LVL1: ROLE_USER
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:

@@ -9,9 +9,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=CountryRepository::class)
- */
 #[ApiResource(
     collectionOperations: [
       //  "get",
@@ -23,37 +20,28 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     normalizationContext: ['groups' => ['read']],
 )]
+#[ORM\Entity(repositoryClass: CountryRepository::class)]
 class Country
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
     #[Groups("read")]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 255)]
     private $label;
 
-    /**
-     * @ORM\Column(type="string", length=2)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 2)]
     private $twoLetters;
 
-    /**
-     * @ORM\Column(type="string", length=3)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 3)]
     private $threeLetters;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Utilisateur::class, mappedBy="country")
-     */
+    #[ORM\OneToMany(targetEntity: Utilisateur::class, mappedBy: 'country')]
     private $utilisateurs;
 
     public function __toString()

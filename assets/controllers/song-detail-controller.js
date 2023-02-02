@@ -3,6 +3,7 @@ import {average} from 'color.js'
 import 'jquery'
 // import 'jquery-ui/ui/'
 import {RagnaBeat} from "../js/ragna-beat/ragnabeat";
+import Chart from "chart.js/auto";
 require('../js/base');
 require('../js/plugins/ajax_link');
 require('../js/plugins/rating');
@@ -33,6 +34,60 @@ export default class extends Controller {
                 $("#rating-box").show("slow");
             });
         });
+
+
+
+        const config = {
+            type: 'scatter',
+            data: null,
+            options: {
+                xAxis: {
+                    key: 'x'
+                },
+                yAxis: {
+                    key: 'y'
+                },
+                scales: {
+                    y: {
+                        suggestedMin: -100,
+                        suggestedMax: 100
+                    },
+
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    }
+                }
+            }
+        };
+        var canvas = $('#scatter-plot');
+        canvas.parent().append("<canvas id='scatter-plot'></canvas>");
+        canvas.remove();
+        const ctx = $('#scatter-plot');
+        var chart = new Chart(ctx,config);
+        $('.scatter-open-score').on('click', function(){
+            $.ajax({
+                url: '/stats/scatter-score/'+$(this).data('score'),
+                dataType:'json',
+                success: function (response) {
+                    chart.data.datasets = [];
+                    chart.data = response.datasets;
+                    chart.update();
+                }
+            });
+        })
+        $('.scatter-open-score-history').on('click', function(){
+            $.ajax({
+                url: '/stats/scatter-score-history/'+$(this).data('score'),
+                dataType:'json',
+                success: function (response) {
+                    chart.data.datasets = [];
+                    chart.data = response.datasets;
+                    chart.update();
+                }
+            })
+        });
+
     }
 
     disconnect() {

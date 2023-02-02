@@ -2,12 +2,16 @@ twig:
     default_path: '%kernel.project_dir%/templates'
 #    form_themes: ['bootstrap_4_layout.html.twig']
     globals:
+        patreon_client_id: "%patreon_client_id%"
+        twitch_client_id: "%twitch_client_id%"
         downloadsService: '@App\Service\DownloadService'
         mapperService: '@App\Service\MapperService'
         scoreService: '@App\Service\ScoreService'
+        rankingScoreService: '@App\Service\RankingScoreService'
         songService: '@App\Service\SongService'
         statisticService: '@App\Service\StatisticService'
         matomoService: '@App\Service\MatomoService'
+        membershipService: '@App\Service\MembershipService'
     form_themes:
         - 'form/rating_type.html.twig'
         - '@TetranzSelect2Entity/Form/fields.html.twig'

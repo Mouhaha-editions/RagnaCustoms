@@ -6,6 +6,7 @@ use App\Entity\Country;
 use App\Entity\Utilisateur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,6 +21,9 @@ class UtilisateurType extends AbstractType
 //            ->add('password')
             ->add('email', null,[
                 "attr"=>["class"=>"form-control form-control-sm"]
+            ])
+            ->add('usernameColor', ColorType::class, [
+                'required' => false,
             ])
             ->add('country', EntityType::class, [
                 "class" => Country::class,

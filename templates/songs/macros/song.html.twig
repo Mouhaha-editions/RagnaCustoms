@@ -8,8 +8,10 @@
                 </a>
                 <div class="level-list">
                     {% for diff in song.songDifficulties %}
-                        <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">
-                            {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                        <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                             style="background-color:#{{ diff.difficultyRank.color }};">
+                            {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked"
+                                                     style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
                             <span>{{ diff.difficultyRank.level }}</span>
                         </div>
                     {% endfor %}
@@ -26,20 +28,20 @@
             </div>
             <div class="mapper pb-3">
                 <a href="{{ url('mapper_profile', {username:song.user.username}) }}">
-{#                    <i class="fas fa-pen"></i> #}
-                    {{ song.mapper }}</a>
+                    {#                    <i class="fas fa-pen"></i> #}
+                    {{ membershipService.displayMappername(song.user)|raw }}</a>
             </div>
             {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
 
-{#            <div class="buttons pt-3 pb-3">#}
-{#                <a href="#"><i class="fas fa-list-ol"></i> {{ "Leaderboards"|trans }}</a>#}
-{#            </div>#}
+            {#            <div class="buttons pt-3 pb-3"> #}
+            {#                <a href="#"><i class="fas fa-list-ol"></i> {{ "Leaderboards"|trans }}</a> #}
+            {#            </div> #}
             <div class="pt-3">
                 <a href="#"
                    data-toggle="modal"
                    data-target="#previewSong"
                    data-refresh="true"
-                   data-url="{{url("partial_preview_song",{id:song.id})}}"
+                   data-url="{{ url("partial_preview_song",{id:song.id}) }}"
                    class="ajax-load btn btn-sm btn-bg-empty btn-warning">
                     <i class="fas fa-play-circle"></i> Preview
                 </a>
@@ -47,10 +49,44 @@
             <div class="pt-3 d-flex buttons">
 
                 <div><a data-no-swup="true" href="{{ url("song_direct_download",{id:song.id}) }}"
-                        class="btn btn-info btn-sm btn-download-zip"><i class="fas fa-download"></i> {{ "Zip"|trans }}</a></div>
+                        class="btn btn-info btn-sm btn-download-zip"><i class="fas fa-download"></i> {{ "Zip"|trans }}
+                    </a></div>
                 <div class="ml-2"><a data-no-swup="true" href="ragnac://install/{{ song.id }}"
-                                     class="btn btn-sm btn-success btn-download-1-click"><i class="fas fa-download"></i> {{ "1 click"|trans }}</a></div>
+                                     class="btn btn-sm btn-success btn-download-1-click"><i
+                                class="fas fa-download"></i> {{ "1 click"|trans }}</a></div>
             </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro stats(score) %}
+    <div class="tooltip">
+        <i class="fa-solid fa-chart-line"></i>
+        <div class="tooltiptext">
+            <table class="tooltiptable">
+                <tr>
+                    <th>
+                        Combos
+                    </th>
+                    <th>
+                        Hit %
+                    </th>
+                    <th>
+                        Missed
+                    </th>
+                </tr>
+                <tr>
+                    <td class="text-right"><font
+                                color="#4b9ce2">{{ score.comboBlue }}</font> | <font
+                                color="#ffc107">{{ score.comboYellow }}</font></td>
+                    <td>
+                        {{ score.hitPercentage }}
+                    </td>
+                    <td>
+                        {{ score.missed }}
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 {% endmacro %}

@@ -2,18 +2,23 @@
 
 namespace App\Controller;
 
+use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
+use App\Helper\ChartJsDataSet;
 use App\Repository\CountryRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
-use App\Service\StatisticService;
+use App\Service\GrantedService;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
+use Patreon\API;
+use Patreon\OAuth;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -25,14 +30,98 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
-    /**
-     * @Route("/user-profile/{username}", name="user_profile")
-     * @param Request $request
-     * @param Utilisateur $utilisateur
-     * @param PaginationService $paginationService
-     * @param ScoreHistoryRepository $scoreHistoryRepository
-     * @return Response
-     */
+
+    #[Route(path: '/user/more-stats', name: 'more_stat')]
+    public function moreStats(Request $request,ScoreHistoryRepository $scoreHistoryRepository): Response
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            return new JsonResponse([
+                'success' => false,
+                'dataset'   => null
+            ], 400);
+        }
+        /** @var Utilisateur $utilisateur */
+        $utilisateur = $this->getUser();
+        /** @var ArrayCollection|ScoreHistory[] $histories */
+        $histories = $scoreHistoryRepository->
+        createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->andWhere('s.songDifficulty = :difficulty')
+            ->setParameter('user',$utilisateur)
+            ->setParameter('difficulty',$request->get('diff'))
+            ->setMaxResults($this->isGranted('ROLE_PREMIUM_LVL1') ? 20 : 6)
+            ->setFirstResult(0)
+            ->orderBy('s.createdAt',"DESC")->getQuery()->getResult();
+        $histories = array_reverse($histories);
+        $data= [];
+
+        #region missed runes
+        $missedRunes = new ChartJsDataSet();
+        $missedRunes->setLabel("Missed runes");
+        $missedRunes->setBackgroundColor("#ff0000");
+        $missedRunes->setBorderColor("#ff0000");
+        #endregion
+
+        #region blue combo
+        $blueCombos = new ChartJsDataSet();
+        $blueCombos->setLabel("Blue combos");
+        $blueCombos->setBackgroundColor("#18b3f5");
+        $blueCombos->setBorderColor("#18b3f5");
+        #endregion
+
+        #region yellow combo
+        $yellowCombos = new ChartJsDataSet();
+        $yellowCombos->setLabel("Yellow combos");
+        $yellowCombos->setBackgroundColor("#f5cc18");
+        $yellowCombos->setBorderColor("#f5cc18");
+        #endregion
+
+        #region distance
+        $distance = new ChartJsDataSet();
+        $distance->setLabel("Distance");
+        $distance->setBackgroundColor("#781667");
+        $distance->setBorderColor("#781667");
+        $distance->setYAxisID("y1");
+        #endregion
+
+        foreach($histories AS $history){
+            $missedRunes->addData($history->getMissed());
+            $blueCombos->addData($history->getComboBlue());
+            $yellowCombos->addData($history->getComboYellow());
+            $distance->addData($history->getScore());
+        }
+        $data[] = ($missedRunes->serialize());
+        $data[] = ($blueCombos->serialize());
+        $data[] = ($yellowCombos->serialize());
+        $data[] = ($distance->serialize());
+
+        return new JsonResponse([
+            'success' => true,
+            'dataset'   => $data
+        ], 200);
+
+    }
+
+    #[Route(path: '/reset/apikey', name: 'reset_apikey')]
+    public function resetApiKey(Request $request, UtilisateurRepository $userRepository): Response
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            return new JsonResponse([
+                'success' => false,
+                'value'   => null
+            ], 400);
+        }
+        /** @var Utilisateur $user */
+        $user = $this->getUser();
+        $user->setApiKey(md5(date('y-m-dH:i') . rand(9000, 100000000) . $user->getUsername()));
+        $userRepository->add($user);
+        return new JsonResponse([
+            'success' => true,
+            'value'   => $user->getApiKey()
+        ], 200);
+    }
+
+    #[Route(path: '/user-profile/{username}', name: 'user_profile')]
     public function profile(Request $request, Utilisateur $utilisateur, PaginationService $paginationService, ScoreRepository $scoreRepository): Response
     {
 
@@ -56,16 +145,13 @@ class UserController extends AbstractController
         $pagination = $paginationService->setDefaults(15)->process($qb, $request);
 
         return $this->render('user/partial/song_played.html.twig', [
-            'controller_name' => 'UserController',
-            'pagination' => $pagination,
-            'user' => $utilisateur,
-            'mapperProfile' => false,
+            'pagination'      => $pagination,
+            'user'            => $utilisateur,
+            'mapperProfile'   => false,
         ]);
     }
 
-    /**
-     * @Route("/ajax/countries", name="ajax_countries")
-     */
+    #[Route(path: '/ajax/countries', name: 'ajax_countries')]
     public function ajaxCountries(Request $request, CountryRepository $countryRepository): Response
     {
         $data = $countryRepository->createQueryBuilder("sc")->select("sc.id AS id, sc.label AS text")->where('sc.label LIKE :search')->setParameter('search', '%' . $request->get('q') . '%')->orderBy('sc.label')->getQuery()->getArrayResult();
@@ -75,9 +161,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/user/progess/{id}/{level}", name="user_progress_song")
-     */
+    #[Route(path: '/user/progess/{id}/{level}', name: 'user_progress_song')]
     public function progressSong(Request $request, Song $song, string $level, Utilisateur $utilisateur, ScoreHistoryRepository $scoreHistoryRepository): Response
     {
         $hashes = $song->getHashes();
@@ -96,21 +180,26 @@ class UserController extends AbstractController
 
         return $this->render('user/progress.html.twig', [
             'controller_name' => 'UserController',
-            'scores' => $scores,
-            "song" => $song,
-            "level" => $level,
-            "labels" => $labels,
-            "data" => $data,
-            "notesHit" => $notesHit,
+            'scores'          => $scores,
+            "song"            => $song,
+            "level"           => $level,
+            "labels"          => $labels,
+            "data"            => $data,
+            "notesHit"        => $notesHit,
         ]);
     }
 
-    /**
-     * @Route("/mapper-profile/{username}", name="mapper_profile")
-     */
-    public function mappedProfile(Request $request,ManagerRegistry $doctrine, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
+    #[Route(path: '/mapper-profile/{username}', name: 'mapper_profile')]
+    public function mappedProfile(Request $request, ManagerRegistry $doctrine, Utilisateur $utilisateur, SongRepository $songRepository, PaginationService $pagination): Response
     {
-        $qb = $doctrine->getRepository(Song::class)->createQueryBuilder("s")->where('s.user = :user')->setParameter('user', $utilisateur)->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->groupBy("s.id");
+        $qb = $doctrine->getRepository(Song::class)
+                       ->createQueryBuilder("s")
+                       ->where('s.user = :user')
+                       ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')
+                       ->setParameter('now', new DateTime())
+                       ->setParameter('user', $utilisateur)
+                       ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
+                       ->groupBy("s.id");
 
 
         if ($request->get('display_wip', null) != null) {
@@ -196,13 +285,13 @@ class UserController extends AbstractController
 
             switch ($request->get('downloads_submitted_date')) {
                 case 1:
-                    $qb->andWhere('(s.lastDateUpload >= :last7days)')->setParameter('last7days', (new DateTime())->modify('-7 days'));
+                    $qb->andWhere('(s.programmationDate >= :last7days)')->setParameter('last7days', (new DateTime())->modify('-7 days'));
                     break;
                 case 2 :
-                    $qb->andWhere('(s.lastDateUpload >= :last15days)')->setParameter('last15days', (new DateTime())->modify('-15 days'));
+                    $qb->andWhere('(s.programmationDate >= :last15days)')->setParameter('last15days', (new DateTime())->modify('-15 days'));
                     break;
                 case 3 :
-                    $qb->andWhere('(s.lastDateUpload >= :last45days)')->setParameter('last45days', (new DateTime())->modify('-45 days'));
+                    $qb->andWhere('(s.programmationDate >= :last45days)')->setParameter('last45days', (new DateTime())->modify('-45 days'));
                     break;
             }
         }
@@ -261,7 +350,7 @@ class UserController extends AbstractController
                 $qb->orderBy("s.downloads", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             case 'upload_date':
-                $qb->orderBy("s.lastDateUpload", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                $qb->orderBy("s.programmationDate", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             case 'name':
                 $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
@@ -280,15 +369,24 @@ class UserController extends AbstractController
 
         return $this->render('user/partial/song_mapped.html.twig', [
             'controller_name' => 'UserController',
-            'user' => $utilisateur,
-            'categories' => $categories,
-            'songs' => $songs
+            'user'            => $utilisateur,
+            'categories'      => $categories,
+            'songs'           => $songs
         ]);
     }
 
-    /**
-     * @Route("/user", name="user")
-     */
+    #[Route(path: '/user/app-and-premium', name: 'user_applications')]
+    public function ApplicationsAndPremium(Request $request, UtilisateurRepository $userRepo)
+    {
+
+        $this->PatreonAction($request, $userRepo);
+
+        return $this->render('user/application.html.twig', [
+
+        ]);
+    }
+
+    #[Route(path: '/user', name: 'user')]
     public function index(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository, ScoreHistoryRepository $scoreHistoryRepository, PaginationService $paginationService): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
@@ -305,6 +403,9 @@ class UserController extends AbstractController
         $form = $this->createForm(UtilisateurType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$this->isGranted('ROLE_PREMIUM_LVL2')) {
+                $user->setUsernameColor("#ffffff");
+            }
             $email_user = $utilisateurRepository->findOneBy(['email' => $user->getEmail()]);
             if ($email_user != null && $user->getId() !== $email_user->getId()) {
                 $form->addError(new FormError("This email is already used."));
@@ -323,8 +424,74 @@ class UserController extends AbstractController
 
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
-            'pagination' => $pagination,
-            'form' => $form->createView()
+            'pagination'      => $pagination,
+            'form'            => $form->createView()
         ]);
+    }
+
+    private function PatreonAction(Request $request, UtilisateurRepository $userRepo)
+    {
+        /** @var Utilisateur $user */
+        $user = $this->getUser();
+        if ($request->get('code')) {
+            $oauth_client = new OAuth($this->getParameter('patreon_client_id'), $this->getParameter('patreon_client_secret'));
+            $tokens = $oauth_client->get_tokens($_GET['code'], $this->generateUrl('user_applications', [], UrlGeneratorInterface::ABS_URL));
+            if (!isset($tokens['error'])) {
+                $access_token = $tokens['access_token'];
+                $refresh_token = $tokens['refresh_token'];
+// Here, you should save the access and refresh tokens for this user somewhere.
+// Conceptually this is the point either you link an existing user of your app with his/her Patreon account,
+// or, if the user is a new user, create an account for him or her in your app, log him/her in,
+// and then link this new account with the Patreon account.
+// More or less a social login logic applies here.
+
+                $user->setPatreonAccessToken($access_token);
+                $user->setPatreonRefreshToken($refresh_token);
+                // Here you can decode the state var returned from Patreon,
+                // and use the final redirect url to redirect your user to the relevant unlocked content or feature in your site/app.
+                $api_client = new API($user->getPatreonAccessToken());
+                $current_member = $api_client->fetch_user();
+
+
+                $userRepo->add($user);
+            }
+        }
+        if ($user->getPatreonAccessToken()) {
+            try {
+                $api_client = new API($user->getPatreonAccessToken());
+                $user->setPatreonData(json_encode($api_client->fetch_user()));
+                $userRepo->add($user);
+            } catch (Exception $e) {
+            }
+        }
+        if (!isset($api_client)) {
+            return;
+        }
+        $current_member = $api_client->fetch_user();
+
+        if ($current_member != null && isset($current_member['data']) && isset($current_member['data']['included'])) {
+            $attrs = $current_member['data']['included']['attributes'];
+            if (count($attrs) > 0) {
+                $attr = array_pop($attrs);
+                if ($attr["patron_status"] == "active_patron") {
+                    switch ($attr["currently_entitled_amount_cents"]) {
+                        case 600:
+                            $user->addRole('ROLE_PREMIUM_LVL3');
+                            break;
+                        case 300:
+                            $user->addRole('ROLE_PREMIUM_LVL2');
+                            break;
+                        case 100:
+                            $user->addRole('ROLE_PREMIUM_LVL1');
+                            break;
+                    }
+                } else {
+                    $user->removeRole('ROLE_PREMIUM_LVL3');
+                    $user->removeRole('ROLE_PREMIUM_LVL2');
+                    $user->removeRole('ROLE_PREMIUM_LVL1');
+                }
+                $userRepo->add($user);
+            }
+        }
     }
 }

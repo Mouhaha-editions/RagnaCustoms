@@ -1,4 +1,5 @@
 {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+{% import "songs/macros/song.html.twig" as macro_song %}
 <div class="row">
     <div class="col-12">
         {% if is_granted('ROLE_USER') %}
@@ -13,6 +14,7 @@
                 <th class="text-right">{{ "Perfects (%)" }}</th>
                 <th class="text-right">{{ "Time Set" }}</th>
                 <th class="text-right">{{ "More Stats" }}</th>
+                <th class="text-right"></th>
             </tr>
             {% set imin = false %}
             {% for score in level['scores'].entities %}
@@ -25,32 +27,12 @@
                     <td class="text-right">{{ score.percentageOfPerfects }}</td>
                     <td class="text-right">{{ score.timeAgoShort() }}</td>
                     <td class="text-right">
-                    <div class="tooltip"><i class="fa-solid fa-chart-line"></i>
-                          <span class="tooltiptext">
-                                <table class="tooltiptable">
-                                    <tr>
-                                        <th>
-                                            Combos
-                                        </th>
-                                        <th>
-                                            Hit %
-                                        </th>
-                                        <th>
-                                            Missed
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-right"><font color="#4b9ce2">{{ score.comboBlue }}</font> | <font color="#ffc107">{{ score.comboYellow }}</font></td>
-                                        <td>
-                                            {{ score.hitPercentage }}
-                                        </td>
-                                        <td>
-                                            {{ score.missed }}
-                                        </td>
-                                    </tr>
-                                </table>
-                          </span>
-                        </div>
+                        {{ macro_song.stats(score) }}
+                    </td>
+                    <td>
+                        {% if (is_granted('ROLE_USER') and app.user == score.user) or is_granted('ROLE_MODERATOR')  %}
+                            <small><i data-toggle="modal" data-target="#ScatterView" class="fas fa-magnifying-glass scatter-open-score" style="font-size:10px;cursor: pointer" data-score="{{ score.id }}"></i></small>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}

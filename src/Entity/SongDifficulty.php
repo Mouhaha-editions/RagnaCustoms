@@ -8,12 +8,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\SongDifficultyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use function PHPUnit\Framework\fileExists;
 
-/**
- * @ORM\Entity(repositoryClass=SongDifficultyRepository::class)
- */
 #[ApiResource(
     collectionOperations: [
         "get",
@@ -24,92 +23,63 @@ use Symfony\Component\Serializer\Annotation\Groups;
 //        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
     ],
     normalizationContext: ['groups' => ['read']])]
+#[ORM\Entity(repositoryClass: SongDifficultyRepository::class)]
 class SongDifficulty
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
     #[Groups("read")]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'float', nullable: true)]
     private $NotePerSecond;
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'string', length: 255)]
     private $difficulty;
-    /**
-     * @ORM\ManyToOne(targetEntity=DifficultyRank::class, inversedBy="songDifficulties")
-     */
     #[Groups("read")]
+    #[ORM\ManyToOne(targetEntity: DifficultyRank::class, inversedBy: 'songDifficulties')]
     private $difficultyRank;
-    /**
-     * @ORM\Column(type="integer")
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'integer')]
     private $noteJumpMovementSpeed;
-    /**
-     * @ORM\Column(type="integer")
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'integer')]
     private $noteJumpStartBeatOffset;
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $notesCount;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Song::class, inversedBy="songDifficulties",cascade={"persist", "remove"})
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
     #[Groups("read")]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
+    #[ORM\ManyToOne(targetEntity: Song::class, inversedBy: 'songDifficulties', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $song;
 
 
-    /**
-     * @ORM\Column(type="decimal", precision=20, scale=6, nullable=true)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'decimal', precision: 20, scale: 6, nullable: true)]
     private $claw_difficulty;
 
-    /**
-     * @ORM\Column(type="float", nullable=false)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'float', nullable: false)]
     private $theoricalMaxScore;
 
-    /**
-     * @ORM\Column(type="float", nullable=false)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'float', nullable: false)]
     private $theoricalMinScore;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
     #[Groups("read")]
+    #[ORM\Column(type: 'boolean', nullable: false)]
     private $isRanked;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Score::class, mappedBy="songDifficulty")
-     */
+    #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'songDifficulty')]
     private $scores;
 
-    /**
-     * @ORM\OneToMany(targetEntity=ScoreHistory::class, mappedBy="songDifficulty")
-     */
+    #[ORM\OneToMany(targetEntity: ScoreHistory::class, mappedBy: 'songDifficulty')]
     private $scoreHistories;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $wanadevHash;
 
     public function __construct()
@@ -331,6 +301,24 @@ class SongDifficulty
         $this->wanadevHash = $wanadevHash;
 
         return $this;
+    }
+
+    public function isIsRanked(): ?bool
+    {
+        return $this->isRanked;
+    }
+
+    public function getDifficultyFile()
+    {
+        $file = str_replace('info.dat',$this->difficulty."Standard.dat", $this->getSong()->getInfoDatFile());
+        if(file_exists('../public'.$file)){
+            return $file;
+        }
+        $file = str_replace('info.dat',$this->difficulty.".dat", $this->getSong()->getInfoDatFile());
+        if(file_exists('../public'.$file)){
+            return $file;
+        }
+        return '';
     }
 
 }

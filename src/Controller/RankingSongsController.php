@@ -19,17 +19,15 @@ class RankingSongsController extends AbstractController
 {
     private $paginate = 30;
 
-    /**
-     * @Route("/ranking-song/", name="ranking_song")
-     */
+    #[Route(path: '/ranking-song/', name: 'ranking_song')]
     public function library(Request $request, DiscordService $discordService, SongDifficultyRepository $songDifficultyRepository, RankingScoreService $rankingScoreService): Response
     {
         $form = $this->createFormBuilder();
         $form->add('songs', EntityType::class, [
-            'class'         => Song::class,
-            'multiple'      => true,
-            'choice_label'  => function (Song $song) {
-                return ($song->isRanked() ? "[R] " : "") . $song->getName();
+            'class' => Song::class,
+            'multiple' => true,
+            'choice_label' => function (Song $song) {
+                return ($song->isRanked() ? "[R] ":"").$song->getName()." - ". $song->getAuthorName();
             },
             "attr"          => [
                 'class' => "select2"

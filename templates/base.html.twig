@@ -20,7 +20,7 @@
         <meta property="og:type" content="website"/>
         <meta property="og:title" content="RagnaCustoms.com, Your favorites custom songs for Ragnarock VR"/>
         <meta property="og:description" content="The best place to find your favorite custom songs for Ragnaröck VR"/>
-        <meta property="og:image" content="https://ragnacustoms.com/apps/logo.png"/>
+        <meta property="og:image" content="https://ragnacustoms.com/apps/logo.webp?noel"/>
     {% endblock %}
     <script>
         var _paq = window._paq = window._paq || [];
@@ -42,16 +42,16 @@
 
 </head>
 <body
- {{ stimulus_controller('symfony/ux-swup/swup', {
-    containers: ['#swup', '#nav']
- }) }} >
+        {{ stimulus_controller('symfony/ux-swup/swup', {
+            containers: ['#swup', '#nav']
+        }) }} >
 <div id="main">
-{#    {{ dump(app.request.attributes.get('_route')) }}#}
+    {#    {{ dump(app.request.attributes.get('_route')) }} #}
     <nav id="nav" class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand viking-text-bold" href="/">
-                <img width="40" height="40" src="/apps/logo.png" class="img-fluid" alt="logo"/>
-                <img height="40" src="/apps/ragnacustoms_logo.png" alt="Ragnacustoms"/>
+                <img width="40" height="40" src="/apps/logo.webp?noel" class="img-fluid" alt="logo"/>
+                <img height="40" src="/apps/ragnacustoms_logo.webp?noel" alt="Ragnacustoms"/>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,8 +64,8 @@
                             <a class="nav-link" href="{{ url('app_admin_dashboard_index') }}">Admin</a>
                         </li>
                         <li class="nav-item">
-                        <a class="nav-link" href="{{ url('ranking_song') }}">Ranking</a>
-                    </li>
+                            <a class="nav-link" href="{{ url('ranking_song') }}">Ranking</a>
+                        </li>
                     {% endif %}  </ul>
                 <ul class="navbar-nav ml-4">
                     {# <li class="nav-item"> #}
@@ -88,7 +88,15 @@
                     <li class="nav-item">
                         <a class="nav-link text-level-9" href="{{ url("applications") }}">{{ "Apps"|trans }}</a>
                     </li>
-                    {% if is_granted('ROLE_USER') %}
+                    {% if is_granted('ROLE_PREMIUM_LVL2') %}
+                        <li class="nav-item">
+                            <a
+                                    href="{{ url('new_song_multi') }}"
+                                    class="btn btn-blue mt-2 mr-4">
+                                {{ "Submit maps"|trans }}
+                            </a>
+                        </li>
+                    {% elseif is_granted('ROLE_USER') %}
                         <li class="nav-item">
                             <a href="#"
                                data-modal="#editSong"
@@ -117,6 +125,8 @@
                                 <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "my uploads"|trans }}</a>
                                 <hr class="m-1"/>
                                 <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
+                                <a class="dropdown-item"
+                                   href="{{ url('user_applications') }}">{{ "Applications"|trans }}</a>
                                 <hr class="m-1"/>
                                 <a class="dropdown-item"
                                    href="{{ url('notifications_setting') }}">{{ "Emails & Notifications"|trans }}</a>
@@ -139,8 +149,7 @@
                             </a>
                         </li>
                     {% endif %}
-
-
+                    {# <li><span class="p-3 mt-3 snowflake-toggle" title="click to toggle" style="cursor:pointer"><i class="fas fa-snowflake mt-3"></i></span></li> #}
                 </ul>
             </div>
         </div>
@@ -153,18 +162,20 @@
             </div>
         {% endfor %}
     {% endfor %}
+    <div id="snow"></div>
+
     <main id="swup">
         <div id="{{ app.request.attributes.get('_route') }}">
             {% block body %}
 
-        {% endblock %}
+            {% endblock %}
         </div>
     </main>
 
     {% block endBody %}
         <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
              aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel2"></h5>
@@ -214,6 +225,23 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="ScatterView" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel3" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title"></div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="form-playlist">
+                        <canvas id="scatter-plot"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="songPlaylists" data-backdrop="static" data-keyboard="false" tabindex="-1"
              aria-labelledby="staticBackdropLabel3" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -234,25 +262,35 @@
     <div class="container-fluid">
         <div class="row p-3 footer">
             <div class="col-md-6 text-center">
-                <span>{{ "RagnaCustoms is not associated with <b>Ragnaröck VR</b>, <b>WanadevStudio</b>, <b>Steam</b> or <b>Meta</b>"|trans|raw }}</span>
+                <a data-no-swup="true" href="/doc/DMCA_policy.pdf" target="_blank">DMCA</a>
+                <a data-no-swup="true" href="/doc/TOS.pdf" target="_blank">Terms of service</a>
+                <a data-no-swup="true" href="/doc/Privacy_policy.pdf" target="_blank">Privacy policy</a>
             </div>
             <div class="col-md-6 text-center">
-                <a class="text-patreon" href="https://www.patreon.com/ragnacustoms_com" rel="noreferrer"
+                <a data-no-swup="true" class="text-patreon" href="https://www.patreon.com/ragnacustoms_com"
+                   rel="noreferrer"
                    target="_blank">
                     <i class="fab fa-patreon"></i>
                 </a>&nbsp;
-                <a class="text" href="https://discord.com/invite/2vCAAGuwsR" rel="noreferrer" target="_blank">
+                <a data-no-swup="true" class="text" href="https://discord.com/invite/2vCAAGuwsR" rel="noreferrer"
+                   target="_blank">
                     <i class="fab fa-discord"></i>
                 </a>&nbsp;
-                <a class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer" target="_blank">
+                <a data-no-swup="true" class="text" href="https://www.facebook.com/RagnaCustoms" rel="noreferrer"
+                   target="_blank">
                     <i class="fab fa-facebook"></i>
                 </a>&nbsp;
-                <a class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer" target="_blank">
+                <a data-no-swup="true" class="text" href="https://twitter.com/ragnacustoms" rel="noreferrer"
+                   target="_blank">
                     <i class="fab fa-twitter"></i>
                 </a>&nbsp;
-                <a class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer" target="_blank">
+                <a data-no-swup="true" class="text" href="https://www.reddit.com/r/RagnaCustoms_com/" rel="noreferrer"
+                   target="_blank">
                     <i class="fab fa-reddit"></i>
                 </a>
+            </div>
+            <div class="col-12 text-center">
+                <span>{{ "RagnaCustoms is not associated with <b>Ragnaröck VR</b>, <b>WanadevStudio</b>, <b>Steam</b> or <b>Meta</b>"|trans|raw }}</span>
             </div>
         </div>
     </div>
