@@ -29,7 +29,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['read']],
 )]
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[UniqueEntity(fields: ['username'], message: 'Username already used')]
+#[UniqueEntity(fields: ['email'], message: 'Email already used')]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableEntity;
