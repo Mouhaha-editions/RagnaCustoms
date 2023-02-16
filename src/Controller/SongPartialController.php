@@ -71,7 +71,7 @@ class SongPartialController extends AbstractController
             ->andWhere('s.wip != true')
             ->andWhere('s.active = true')
             ->andWhere('(s.programmationDate <= :now)')
-            ->andWhere('v.updatedAt >= :date')
+            ->andWhere('s.createdAt >= :date')
             ->setParameter('date',(new \DateTime())->modify('-'.$lastXDays." days"))
             ->setParameter('now',(new \DateTime()))
             ->groupBy('s.id')
