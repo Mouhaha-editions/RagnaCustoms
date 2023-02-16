@@ -22,10 +22,10 @@
                         title="{{ user.country }}">
                     {% endif %}{{ membershipService.displayUsername(user)|raw }}</h2></div>
             <div class="tags">
-                {% if user.songs|length > 0 %}<span>{{ "Mapper"|trans }}</span>{% endif %}
-                {% if user.certified|length > 0 %}<span>{{ "Certified"|trans }}</span>{% endif %}
-                {% if user.scores|length > 0 %}<span>{{ "Ranked"|trans }}</span>{% endif %}
-                {% if user.roles|length > 1 %}<span>{{ "Staff"|trans }}</span>{% endif %}
+                {% if user.songs|length > 0 %}<span title="Has release at least one map" data-toogle="tooltip">{{ "Mapper"|trans }}</span>{% endif %}
+{#                {% if user.certified|length > 0 %}<span>{{ "Certified"|trans }}</span>{% endif %}#}
+                {% if user.rankedSong|length > 0  %}<span title="Has at least one ranked map" data-toogle="tooltip">{{ "Ranked"|trans }}</span>{% endif %}
+                {% if grantedService.isGranted(user, 'ROLE_MODERATOR')  %}<span title="Is a good guy" data-toogle="tooltip">{{ "Staff"|trans }}</span>{% endif %}
             </div>
             <div class="row mt-3">
                 <div class="col-md-3">

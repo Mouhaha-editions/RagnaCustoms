@@ -19,12 +19,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     collectionOperations: [
-     //   "get",
-//        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
+        //   "get",
+        //        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
     ],
     itemOperations: [
         "get",
-//        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
+        //        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
     ],
     normalizationContext: ['groups' => ['read']],
 )]
@@ -95,7 +95,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user')]
     private $notifications;
-    #[ORM\OneToOne(targetEntity: Overlay::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Overlay::class, mappedBy: 'user', cascade: [
+        'persist',
+        'remove'
+    ])]
     private $overlay;
     /**
      * @var string The hashed password
@@ -1116,7 +1119,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsernameColor()
     {
-        return $this->usernameColor??"#0b8dea";
+        return $this->usernameColor ?? "#0b8dea";
     }
 
     /**
@@ -1138,8 +1141,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeRole(string $string)
     {
-        foreach($this->roles AS $k=>$v){
-            if($v == $string){
+        foreach ($this->roles as $k => $v) {
+            if ($v == $string) {
                 unset($this->roles[$k]);
                 break;
             }
@@ -1303,5 +1306,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
+    public function getRankedSong()
+    {
+        return $this->getSongs()->filter(function (Song $song) {
+            return $song->isRanked();
+        });
+    }
 }
