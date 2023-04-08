@@ -36,11 +36,12 @@ class ApiController extends AbstractController
         return new Response("");
     }
 
-    #[Route(path: '/api/check/{apiKey}', name: 'check_api_key')]
-    public function checkApiKey(Request $request, string $apiKey, UtilisateurRepository $utilisateurRepository): Response
+    #[Route(path: '/api/check', name: 'check_api_key')]
+    public function checkApiKey(Request $request, UtilisateurRepository $utilisateurRepository): Response
     {
-        $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
+        $apiKey = $request->headers->get('x-api-key','none');
 
+        $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
         if ($user) {
             return $this->json(['success' => true]);
         }
