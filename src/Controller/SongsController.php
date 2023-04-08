@@ -447,13 +447,13 @@ class SongsController extends AbstractController
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }
+
         $song->setViews($song->getViews() + 1);
         $feedback = new Vote();
         $feedback->setSong($song);
         $feedback->setHash($song->getNewGuid());
         $feedback->setUser($this->getUser());
         $feedbackForm = $this->createForm(VoteType::class, $feedback);
-
         $feedbackForm->handleRequest($request);
         $em = $doctrine->getManager();
 
