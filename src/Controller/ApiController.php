@@ -3,37 +3,25 @@
 namespace App\Controller;
 
 use App\Entity\Overlay;
-use App\Entity\RankedScores;
-use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
-use App\Entity\SongDifficulty;
 use App\Entity\SongTemporaryList;
 use App\Entity\Utilisateur;
 use App\Repository\DifficultyRankRepository;
 use App\Repository\OverlayRepository;
-use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreHistoryRepository;
-use App\Repository\ScoreRepository;
 use App\Repository\SongCategoryRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
-use App\Repository\SongTemporaryListRepository;
 use App\Repository\UtilisateurRepository;
-use App\Service\ScoreService;
-use App\Service\SongService;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
-use Exception;
-use Psr\Log\LoggerInterface;
-use Sentry\State\Scope;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use function Sentry\configureScope;
 
 
 class ApiController extends AbstractController
@@ -48,6 +36,18 @@ class ApiController extends AbstractController
         return new Response("");
     }
 
+    #[Route(path: '/api/check/{apiKey}', name: 'check_api_key')]
+    public function checkApiKey(Request $request, string $apiKey, UtilisateurRepository $utilisateurRepository): Response
+    {
+        $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
+
+        if ($user) {
+            return $this->json(['success' => true]);
+        }
+
+        return $this->json(['success' => false], 400);
+    }
+
     #[Route(path: '/api/login', name: 'api_login')]
     public function login(Request $request, UtilisateurRepository $utilisateurRepository, UserPasswordHasherInterface $hasher): Response
     {
@@ -55,19 +55,22 @@ class ApiController extends AbstractController
         $user = $utilisateurRepository->findOneBy(['username' => $request->get('username')]);
         if ($user !== null) {
 
-            if ($hasher->isPasswordValid($user, $request->get('password')) && ($user->getCountApiAttempt()<=5 || $user->getLastApiAttempt() <= (new DateTime())->modify('-1 days') ) ) {
+            if ($hasher->isPasswordValid($user, $request->get('password')) && ($user->getCountApiAttempt() <= 5 || $user->getLastApiAttempt() <= (new DateTime())->modify('-1 days'))) {
                 $user->setCountApiAttempt(0);
                 $user->setLastApiAttempt(null);
                 $utilisateurRepository->add($user);
+
                 return new Response($user->getApiKey());
             }
-            $user->setCountApiAttempt((int)$user->getCountApiAttempt()+1);
+
+            $user->setCountApiAttempt((int)$user->getCountApiAttempt() + 1);
             $user->setLastApiAttempt(new DateTime());
             $utilisateurRepository->add($user);
-            return new Response("",400);
+
+            return new Response("", 400);
         }
 
-        return new Response('',400);
+        return new Response('', 400);
     }
 
     #[Route(path: '/api/song/check-updates', name: 'api_song_check_updates')]
@@ -100,11 +103,10 @@ class ApiController extends AbstractController
     {
         $songsEntities = $songRepository
             ->createQueryBuilder('s')->where('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-
             ->andWhere('(s.programmationDate <= :now  )')
-            ->setParameter('now',(new \DateTime()))
-                                     ->andWhere('s.moderated = true')
-                                     ->andWhere('s.isDeleted != true')->setParameter('search_string', '%' . $term . '%')->getQuery()->getResult();
+            ->setParameter('now', (new \DateTime()))
+            ->andWhere('s.moderated = true')
+            ->andWhere('s.isDeleted != true')->setParameter('search_string', '%' . $term . '%')->getQuery()->getResult();
         $songs = [];
 
         /** @var Song $song */
