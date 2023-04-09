@@ -262,7 +262,7 @@
                         "aggregateRating": {
                             "@type": "AggregateRating",
                             "reviewCount": "{{ song.countVotes ? song.countVotes : 0 }}",
-                            "ratingValue": "{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }}"
+                            "ratingValue": "{{ song.voteAverage|round(2, "floor") }}"
                         }
                     }
 

@@ -485,7 +485,7 @@ class Song
 
     public function getVoteAverage()
     {
-        return $this->countVotes == 0 ? 0 : $this->getTotalVotes() / $this->getCountVotes();
+        return $this->countVotes == 0 ? 0.00 : $this->getTotalVotes() / $this->getCountVotes();
     }
 
     public function getTotalVotes(): ?float
