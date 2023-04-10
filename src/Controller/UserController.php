@@ -11,9 +11,9 @@ use App\Helper\ChartJsDataSet;
 use App\Repository\CountryRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
+use App\Repository\SongCategoryRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
-use App\Service\GrantedService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
@@ -32,28 +32,28 @@ class UserController extends AbstractController
 {
 
     #[Route(path: '/user/more-stats', name: 'more_stat')]
-    public function moreStats(Request $request,ScoreHistoryRepository $scoreHistoryRepository): Response
+    public function moreStats(Request $request, ScoreHistoryRepository $scoreHistoryRepository): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 'success' => false,
-                'dataset'   => null
+                'datasets' => null
             ], 400);
         }
         /** @var Utilisateur $utilisateur */
         $utilisateur = $this->getUser();
         /** @var ArrayCollection|ScoreHistory[] $histories */
-        $histories = $scoreHistoryRepository->
-        createQueryBuilder('s')
-            ->where('s.user = :user')
-            ->andWhere('s.songDifficulty = :difficulty')
-            ->setParameter('user',$utilisateur)
-            ->setParameter('difficulty',$request->get('diff'))
-            ->setMaxResults($this->isGranted('ROLE_PREMIUM_LVL1') ? 20 : 6)
-            ->setFirstResult(0)
-            ->orderBy('s.createdAt',"DESC")->getQuery()->getResult();
+        $histories = $scoreHistoryRepository->createQueryBuilder('s')
+                                            ->where('s.user = :user')
+                                            ->andWhere('s.songDifficulty = :difficulty')
+                                            ->setParameter('user', $utilisateur)
+                                            ->setParameter('difficulty', $request->get('diff'))
+                                            ->setMaxResults($this->isGranted('ROLE_PREMIUM_LVL1') ? 20 : 6)
+                                            ->setFirstResult(0)
+                                            ->orderBy('s.createdAt', "DESC")
+                                            ->getQuery()->getResult();
         $histories = array_reverse($histories);
-        $data= [];
+        $data = [];
 
         #region missed runes
         $missedRunes = new ChartJsDataSet();
@@ -84,7 +84,7 @@ class UserController extends AbstractController
         $distance->setYAxisID("y1");
         #endregion
 
-        foreach($histories AS $history){
+        foreach ($histories as $history) {
             $missedRunes->addData($history->getMissed());
             $blueCombos->addData($history->getComboBlue());
             $yellowCombos->addData($history->getComboYellow());
@@ -97,7 +97,7 @@ class UserController extends AbstractController
 
         return new JsonResponse([
             'success' => true,
-            'dataset'   => $data
+            'datasets' => ['datasets'=>$data]
         ], 200);
 
     }
@@ -119,6 +119,173 @@ class UserController extends AbstractController
             'success' => true,
             'value'   => $user->getApiKey()
         ], 200);
+    }
+
+    #[Route(path: '/recently-played/', name: 'recently_played')]
+    public function recentlyPlayed(Request $request, PaginationService $paginationService, ScoreHistoryRepository $scoreRepository, SongCategoryRepository $songCategoryRepository): Response
+    {
+        $user = $this->getUser();
+        $filters = [];
+        $qb = $scoreRepository
+            ->createQueryBuilder('score')
+            ->leftJoin('score.songDifficulty','song_difficulties')
+            ->leftJoin('song_difficulties.song','s')
+            ->where('score.user = :user')
+            ->setParameter('user', $user);
+
+        switch ($request->get('order_by', null)) {
+            case 'score':
+                $qb->orderBy("score.rawPP", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'name':
+                $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'date':
+                $qb->orderBy("score.createdAt", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            default:
+                $qb->orderBy("score.createdAt", "desc");
+                break;
+        }
+
+        if ($request->get('only_ranked', null) != null) {
+            $qb->andWhere("song_difficulties.isRanked = true");
+            $filters[] = "only ranked";
+        }
+
+        if ($request->get('downloads_filter_difficulties', null)) {
+            $qb->leftJoin('song_difficulties.difficultyRank', 'rank');
+            switch ($request->get('downloads_filter_difficulties')) {
+                case 1:
+                    $qb->andWhere('rank.level BETWEEN 1 and 3');
+                    $filters[] = "lvl 1 to 3";
+
+                    break;
+                case 2 :
+                    $qb->andWhere('rank.level BETWEEN 4 and 7');
+                    $filters[] = "lvl 4 to 7";
+                    break;
+                case 3 :
+                    $qb->andWhere('rank.level BETWEEN 8 and 10');
+                    $filters[] = "lvl 8 to 10";
+                    break;
+                case 6 :
+                    $qb->andWhere('rank.level > 10');
+                    $filters[] = "lvl over 10";
+                    break;
+
+            }
+        }
+
+        $categories = $request->get('downloads_filter_categories', null);
+        if ($categories != null) {
+            $qb->leftJoin('s.categoryTags', 't');
+
+            $cats = [];
+            foreach ($categories as $k => $v) {
+                $qb->andWhere("t.id = :tag$k")->setParameter("tag$k", $v);
+                $cats[] = $v;
+            }
+            $filters[] = "categories spécifiques";
+        }
+
+        if ($request->get('converted_maps', null)) {
+
+            switch ($request->get('converted_maps')) {
+                case 1:
+                    $qb->andWhere('(s.converted = false OR s.converted IS NULL)');
+                    $filters[] = "hide converted";
+                    break;
+                case 2 :
+                    $qb->andWhere('s.converted = true');
+                    $filters[] = "only converted";
+
+                    break;
+            }
+        }
+
+        if ($request->get('wip_maps', null)) {
+
+            switch ($request->get('wip_maps')) {
+                case 1:
+                    //with
+                    $filters[] = "display W.I.P.";
+                    break;
+                case 2 :
+                    //only
+                    $qb->andWhere('s.wip = true');
+                    $filters[] = "only W.I.P.";
+                    break;
+                default:
+                    $qb->andWhere('s.wip != true');
+                    break;
+            }
+        } else {
+            $qb->andWhere('s.wip != true');
+        }
+
+        if ($request->get('downloads_submitted_date', null)) {
+
+            switch ($request->get('downloads_submitted_date')) {
+                case 1:
+                    $qb->andWhere('(s.programmationDate >= :last7days)')->setParameter('last7days', (new DateTime())->modify('-7 days'));
+                    $filters[] = "last 7 days";
+                    break;
+                case 2 :
+                    $qb->andWhere('(s.programmationDate >= :last15days)')->setParameter('last15days', (new DateTime())->modify('-15 days'));
+                    $filters[] = "last 15 days";
+                    break;
+                case 3 :
+                    $qb->andWhere('(s.programmationDate >= :last45days)')->setParameter('last45days', (new DateTime())->modify('-45 days'));
+                    $filters[] = "last 45 days";
+                    break;
+            }
+        }
+        if ($request->get('search', null)) {
+            $exp = explode(':', $request->get('search'));
+            $filters[] = "search: \"" . $request->get('search') . "\"";
+
+            switch ($exp[0]) {
+                case 'mapper':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+//                case 'category':
+//                    if (count($exp) >= 1) {
+//                        $qb->andWhere('(s.songCategory = :category)')
+//                            ->setParameter('category', $exp[1] == "" ? null : $exp[1]);
+//                    }
+//                    break;
+                case 'artist':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'title':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.name LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'desc':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(s.description LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                default:
+                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $request->get('search', null) . '%');
+            }
+        }
+
+        $pagination = $paginationService->setDefaults(65)->process($qb, $request);
+
+        return $this->render('user/recently_played.html.twig', [
+            'pagination'    => $pagination,
+            'user'          => $user,
+            'filters'       => $filters,
+            'categories'    => $songCategoryRepository->findBy([], ['label' => "asc"]),
+            'mapperProfile' => false,
+        ]);
     }
 
     #[Route(path: '/user-profile/{username}', name: 'user_profile')]
@@ -145,9 +312,9 @@ class UserController extends AbstractController
         $pagination = $paginationService->setDefaults(15)->process($qb, $request);
 
         return $this->render('user/partial/song_played.html.twig', [
-            'pagination'      => $pagination,
-            'user'            => $utilisateur,
-            'mapperProfile'   => false,
+            'pagination'    => $pagination,
+            'user'          => $utilisateur,
+            'mapperProfile' => false,
         ]);
     }
 
@@ -386,49 +553,6 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/user', name: 'user')]
-    public function index(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository, ScoreHistoryRepository $scoreHistoryRepository, PaginationService $paginationService): Response
-    {
-        if (!$this->isGranted('ROLE_USER')) {
-            $this->addFlash('danger', $translator->trans("You need an account!"));
-            return $this->redirectToRoute('home');
-        }
-        $em = $doctrine->getManager();
-        if ($this->getUser()->getApiKey() == null) {
-            $this->getUser()->setApiKey(md5(date('d/m/Y H:i:s') . $this->getUser()->getUsername()));
-        }
-        $em->flush();
-        /** @var Utilisateur $user */
-        $user = $this->getUser();
-        $form = $this->createForm(UtilisateurType::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if (!$this->isGranted('ROLE_PREMIUM_LVL2')) {
-                $user->setUsernameColor("#ffffff");
-            }
-            $email_user = $utilisateurRepository->findOneBy(['email' => $user->getEmail()]);
-            if ($email_user != null && $user->getId() !== $email_user->getId()) {
-                $form->addError(new FormError("This email is already used."));
-            } else {
-                $email_user = $utilisateurRepository->findOneBy(['mapper_name' => $user->getMapperName()]);
-                if ($email_user != null && $user->getId() !== $email_user->getId()) {
-                    $form->addError(new FormError("This mapper name is already used."));
-                } else {
-                    $doctrine->getManager()->flush();
-                }
-            }
-        }
-
-        $qb = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $user)->orderBy('s.createdAt', "desc");
-        $pagination = $paginationService->setDefaults(10)->process($qb, $request);
-
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-            'pagination'      => $pagination,
-            'form'            => $form->createView()
-        ]);
-    }
-
     private function PatreonAction(Request $request, UtilisateurRepository $userRepo)
     {
         /** @var Utilisateur $user */
@@ -493,5 +617,48 @@ class UserController extends AbstractController
                 $userRepo->add($user);
             }
         }
+    }
+
+    #[Route(path: '/user', name: 'user')]
+    public function index(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, UtilisateurRepository $utilisateurRepository, ScoreHistoryRepository $scoreHistoryRepository, PaginationService $paginationService): Response
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            $this->addFlash('danger', $translator->trans("You need an account!"));
+            return $this->redirectToRoute('home');
+        }
+        $em = $doctrine->getManager();
+        if ($this->getUser()->getApiKey() == null) {
+            $this->getUser()->setApiKey(md5(date('d/m/Y H:i:s') . $this->getUser()->getUsername()));
+        }
+        $em->flush();
+        /** @var Utilisateur $user */
+        $user = $this->getUser();
+        $form = $this->createForm(UtilisateurType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!$this->isGranted('ROLE_PREMIUM_LVL2')) {
+                $user->setUsernameColor("#ffffff");
+            }
+            $email_user = $utilisateurRepository->findOneBy(['email' => $user->getEmail()]);
+            if ($email_user != null && $user->getId() !== $email_user->getId()) {
+                $form->addError(new FormError("This email is already used."));
+            } else {
+                $email_user = $utilisateurRepository->findOneBy(['mapper_name' => $user->getMapperName()]);
+                if ($email_user != null && $user->getId() !== $email_user->getId()) {
+                    $form->addError(new FormError("This mapper name is already used."));
+                } else {
+                    $doctrine->getManager()->flush();
+                }
+            }
+        }
+
+        $qb = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $user)->orderBy('s.createdAt', "desc");
+        $pagination = $paginationService->setDefaults(10)->process($qb, $request);
+
+        return $this->render('user/index.html.twig', [
+            'controller_name' => 'UserController',
+            'pagination'      => $pagination,
+            'form'            => $form->createView()
+        ]);
     }
 }

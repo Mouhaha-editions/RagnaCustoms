@@ -13,55 +13,16 @@ require('../js/plugins/rating');
 require('../js/plugins/copy_to_clipboard');
 
 export default class extends Controller {
-    static targets = ['img', 'background', 'info']
+    static targets = ['background', 'info']
     ragna = null;
 
     connect() {
-        if(this.img !== undefined) {
-            average(this.imgTarget.src, {amount: 1}).then(color => {
-                $("#main").attr('style', " background: radial-gradient(100% 100% at 0% 0%, rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.7) 0%, rgba(0, 0, 0, 0) 100%), #2B2B2B;");
 
-                //$("body").attr('style', " background: radial-gradient(100% 100% at 0% 0%, rgba(" + color[0] + ", " + color[1] + ", " + color[2] + ", 0.2) 0%, rgba(0, 0, 0, 0) 100%), #2B2B2B;");
-            });
-        }
-        $("#utilisateur_usernameColor").on('input', function () {
-            $(".username span").css({"color": $(this).val()});
-        });
-        $("#utilisateur_usernameColor").on('change', function () {
-            let form = $(".username").closest('form');
-            let formData = form.serialize();
-
-            $.ajax({
-                type: "POST",
-                url: form.attr('action'),
-                data: formData
-            });
-        });
-        $("form[name=\"utilisateur\"] input,form[name=\"utilisateur\"] select,form[name=\"utilisateur\"] textarea").on('change', function () {
-            let form = $(this).closest('form');
-            let formData = form.serialize();
-            $.ajax({
-                type: "POST",
-                url: form.attr('action'),
-                data: formData
-            });
-        });
-        $(".reset-api-key").on('click', function () {
-            console.log("furet")
-            if (confirm('You are going to change your api key, are you sure to continue ? ')) {
-                $.ajax({
-                    type: "POST",
-                    url: '/reset/apikey',
-                    dataType: 'json',
-                    success: function (data) {
-                        $("#ApiKey").val(data.value);
-                    }
-                });
-            }
-
-        });
-
-        const chart = new Chart(document.getElementById('UserChart'), {
+        var canvas2 = $('#session-history');
+        canvas2.parent().append("<canvas id='session-history'></canvas>");
+        canvas2.remove();
+        const ctx2 = $('#session-history');
+        const chart = new Chart(ctx2, {
             type: 'line',
             options: {
                 scales: {
@@ -174,6 +135,25 @@ export default class extends Controller {
                     chart2.update();
                 }
             })
+        });
+        $('.session-open-score-history').on('click', function () {
+            $("#SessionHistoryView .modal-header .modal-title").html($(this).data('title'));
+            $.ajax({
+                url: '/user/more-stats',
+                data: {
+                    diff: $(this).data('song-difficulty')
+                },
+                success: function (response) {
+                    chart.data.labels = [];
+                    chart.data.datasets = [];
+                    for (var i = 1; response.datasets.datasets[0].data.length >= i; i++) {
+                        chart.data.labels.push("Session " + i);
+                        console.log( "Session " + i)
+                    }
+                    chart.data.datasets = response.datasets.datasets;
+                    chart.update();
+                }
+            });
         });
     }
 

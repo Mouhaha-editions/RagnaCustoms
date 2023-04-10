@@ -241,6 +241,7 @@ class SongsController extends AbstractController
             $qb->leftJoin("s.downloadCounters", 'download_counters')->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")->andHaving("count_download_user = 0")->setParameter('user', $this->getuser());
             $filters[] = "not downloaded";
         }
+
         $qb->andWhere('s.moderated = true');
         $qb->andWhere('s.active = true')
         ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')

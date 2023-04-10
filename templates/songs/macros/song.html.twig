@@ -60,33 +60,30 @@
 {% endmacro %}
 
 {% macro stats(score) %}
-    <div class="tooltip">
-        <i class="fa-solid fa-chart-line"></i>
-        <div class="tooltiptext">
-            <table class="tooltiptable">
+
+            <table class="table-condensed">
                 <tr>
-                    <th>
+                    <th class="text-center p-0 pr-3">
                         Combos
                     </th>
-                    <th>
+                    <th class="text-center p-0 pr-3">
                         Hit %
                     </th>
-                    <th>
+                    <th class="text-center p-0">
                         Missed
                     </th>
                 </tr>
                 <tr>
-                    <td class="text-right"><font
+                    <td class="text-center p-0 pr-3"><font
                                 color="#4b9ce2">{{ score.comboBlue }}</font> | <font
                                 color="#ffc107">{{ score.comboYellow }}</font></td>
-                    <td>
+                    <td class="text-center p-0 pr-3">
                         {{ score.hitPercentage }}
                     </td>
-                    <td>
+                    <td class="text-center p-0">
                         {{ score.missed }}
                     </td>
                 </tr>
             </table>
-        </div>
-    </div>
+
 {% endmacro %}

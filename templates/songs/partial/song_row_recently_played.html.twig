@@ -32,16 +32,20 @@
         {{ score.timeAgoShort}}&nbsp;
     </td>
     <td>
-        <div class="more-stat" data-toggle="tooltip" title="Click to see the history" data-song-difficulty="{{ score.songDifficulty.id }}">
-            {{ song_macro.stats(score) }}
-        </div>
+        {{ song_macro.stats(score) }}
     </td>
-<td>
+<td style="vertical-align: middle">
     {% if is_granted('ROLE_USER') and app.user == score.user %}
-        <small><i data-toggle="modal" data-target="#ScatterView" data-backdrop="true" data-keyboard="true"
-                  class="fas fa-magnifying-glass scatter-open-score-history" style="font-size:10px;cursor: pointer"
+        <i data-toggle="modal" data-target="#ScatterView" data-backdrop="true" data-keyboard="true"
+                  class="fas fa-magnifying-glass scatter-open-score-history" style="cursor: pointer"
                   data-title="{{ song.name }} - lvl {{ diff.difficultyRank.level }}"
-                  data-score="{{ score.id }}"></i></small>
+                  data-score="{{ score.id }}"></i>&nbsp;
+
+        <i data-toggle="modal" data-target="#SessionHistoryView" data-backdrop="true" data-keyboard="true"
+           class="fas  fa-chart-line session-open-score-history" style="cursor: pointer"
+           data-title="{{ song.name }} - lvl {{ diff.difficultyRank.level }}"
+           data-song-difficulty="{{ score.songDifficulty.id }}"></i>
+
     {% endif %}
 </td>
 </tr>

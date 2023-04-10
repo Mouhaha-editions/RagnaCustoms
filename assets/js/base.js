@@ -111,9 +111,8 @@ function spawnSnowCSS(snow_density = 200){
 
 // Load the rules and execute after the DOM loads
 window.onload = function() {
-    spawnSnowCSS(snowflakes_count);
-    spawn_snow(snowflakes_count);
-    console.log("start");
+    // spawnSnowCSS(snowflakes_count);
+    // spawn_snow(snowflakes_count);
 };
 //endregion
 $(function () {
