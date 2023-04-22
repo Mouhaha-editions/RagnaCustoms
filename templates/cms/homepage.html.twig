@@ -56,15 +56,15 @@
 
         <div class="row">
             <div class="col-lg-4">
-                <h2>{{ "Top Rated"|trans }} <small>{{ "last %days% days"|trans|replace({"%days%":30}) }}</small></h2>
+                <h2 class="shiny-text">{{ "Top Rated"|trans }} <small>{{ "last %days% days"|trans|replace({"%days%":30}) }}</small></h2>
                 {{ render(controller("\\App\\Controller\\SongPartialController::topRated",{lastXDays:30})) }}
             </div>
             <div class="col-lg-4">
-                <h2>{{ "Latest Songs"|trans }}</h2>
+                <h2 class="shiny-text">{{ "Latest Songs"|trans }}</h2>
                 {{ render(controller("\\App\\Controller\\SongPartialController::latestSongs")) }}
             </div>
             <div class="col-lg-4">
-                <h2>{{ "Last Played"|trans }}</h2>
+                <h2 class="shiny-text">{{ "Last Played"|trans }}</h2>
                 {{ render(controller("\\App\\Controller\\SongPartialController::lastPlayed")) }}
             </div>
         </div>

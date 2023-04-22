@@ -277,3 +277,22 @@ a.disabled {
   pointer-events: none;
   opacity: 50%;
 }
+
+.shiny-text {
+  background-image: -webkit-linear-gradient(left, white 25%, #71b0fd 37.5%, #718eef, #6a8499 62.5%, white 75%);
+  background-image: linear-gradient(90deg, white 25%, #71b0fd 37.5%, #718eef, #6a8499 62.5%, white 75%);
+  background-position: right center;
+  background-size: 400% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: white;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  transition: color 200ms linear;
+}
+
+.shiny-text:hover {
+  background-position: left center;
+  color: #71bbef;
+  transition: background-position 2000ms ease-out;
+}
