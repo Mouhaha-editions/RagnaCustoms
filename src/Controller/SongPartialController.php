@@ -37,7 +37,7 @@ class SongPartialController extends AbstractController
         ]);
     }
 
-    public function lastPlayed(ScoreHistoryRepository $scoreRepository,SongRepository $songRepository): Response
+    public function lastPlayed(ScoreRepository $scoreRepository,SongRepository $songRepository): Response
     {
         $scores = $scoreRepository->createQueryBuilder("score")
             ->select('s.id')
