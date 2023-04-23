@@ -50,7 +50,7 @@ class SongPartialController extends AbstractController
             ->setParameter('now',(new \DateTime()))
 
             ->andWhere('s.active = true')
-            ->groupBy('diff.song')
+            ->groupBy('diff.song, score.user')
             ->setFirstResult(0)
             ->setMaxResults($this->count)
             ->getQuery()->getResult();
