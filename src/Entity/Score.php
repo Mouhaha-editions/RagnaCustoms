@@ -393,4 +393,9 @@ class Score
     {
        return StatisticService::dateDiplayerShort($this->createdAt);
     }
+
+    public function getPlateformIcon()
+    {
+        return in_array(strtolower($this->plateform),['steam_flat']) ? 'fa-desktop':'fa-vr-cardboard';
+}
 }
