@@ -479,7 +479,7 @@ class SongsController extends AbstractController
 //                ->setParameter('hash', $difficulty->getSong()->getNewGuid())
                                ->groupBy('s.user')->addOrderBy('max_score', 'DESC');
 
-            $pagination = $paginationService->setDefaults(20)->process($scores, $request);
+            $pagination = $paginationService->setDefaults(25)->process($scores, $request);
             $levels [] = [
                 "level"      => $level,
                 "difficulty" => $difficulty,

@@ -163,7 +163,7 @@
       table {
         color: #fff;
         border: none;
-        font-size: 18px;
+        font-size: 14px;
 
         tr {
           th {
@@ -171,7 +171,11 @@
             border-top: none;
             font-weight: normal;
           }
-
+.fas{
+  &.fa-vr-cardboard, &.vr-desktop{
+    font-size:10px;
+  }
+}
           border-bottom: 1px solid #868686;
 
           &:last-child {

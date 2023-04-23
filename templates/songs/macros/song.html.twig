@@ -87,3 +87,37 @@
             </table>
 
 {% endmacro %}
+
+{% macro statsZipped(score) %}
+
+    <div class="tooltip">
+        <i class="fa-solid fa-chart-line"></i>
+        <div class="tooltiptext">
+            <table class="tooltiptable">
+                <tr>
+                    <th>
+                        Combos
+                    </th>
+                    <th>
+                        Hit %
+                    </th>
+                    <th>
+                        Missed
+                    </th>
+                </tr>
+                <tr>
+                    <td class="text-right"><font
+                                color="#4b9ce2">{{ score.comboBlue }}</font> | <font
+                                color="#ffc107">{{ score.comboYellow }}</font></td>
+                    <td>
+                        {{ score.hitPercentage }}
+                    </td>
+                    <td>
+                        {{ score.missed }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+{% endmacro %}

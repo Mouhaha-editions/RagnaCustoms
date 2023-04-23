@@ -27,7 +27,7 @@
                     <td class="text-right">{{ score.percentageOfPerfects }}</td>
                     <td class="text-right">{{ score.timeAgoShort() }}</td>
                     <td class="text-right">
-                        {{ macro_song.stats(score) }}
+                        {{ macro_song.statsZipped(score) }}
                     </td>
                     <td>
                         {% if (is_granted('ROLE_USER') and app.user == score.user) or is_granted('ROLE_MODERATOR')  %}
