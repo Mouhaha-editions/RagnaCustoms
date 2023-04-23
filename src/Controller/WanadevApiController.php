@@ -107,7 +107,7 @@ class WanadevApiController extends AbstractController
             $em->flush();
 
             //calculation of the ponderate PP scores
-            if ($songDiff->isRanked()) {
+            if ($songDiff->isRanked() && !in_array(strtolower($data['platform']), ['steam_flat','mobile','android','ios'])) {
                 $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
                 //insert/update of the score into ranked_scores
                 $rankedScore = $rankedScoresRepository->findOneBy([
