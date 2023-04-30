@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Song;
 use App\Entity\SongCategory;
 use App\Entity\SongRequest;
+use App\Enum\EAvailablePlatform;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -89,7 +90,7 @@ class SongType extends AbstractType
                     'required'   => true,
                     'input'      => "datetime",
                     "empty_data" => '',
-                    'label_html'=>true,
+                    'label_html' => true,
                     'help'       => "sorry for now it's based on UTC+1 (french time) "
                 ])
             ->add('wip', null, [
@@ -97,6 +98,16 @@ class SongType extends AbstractType
             ])
             ->add('isExplicit', null, [
                 'label' => "Explicit content"
+            ])
+            ->add('bestPlatform', ChoiceType::class, [
+                'choices'  => [
+                    'Vr'=>0,
+                    'Flat'=>1,
+                ],
+                'required' => true,
+                'multiple'=>true,
+                'expanded'=>true,
+                'label'    => 'Mapped for',
             ])
             ->add('converted', null, [
                 'label' => "Converted map"

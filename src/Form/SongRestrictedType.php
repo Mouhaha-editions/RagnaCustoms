@@ -92,6 +92,16 @@ class SongRestrictedType extends AbstractType
             ->add('converted', null, [
                 'label' => "is a converted map ?"
             ])
+            ->add('bestPlatform', ChoiceType::class, [
+                'choices'  => [
+                    'Vr'=>0,
+                    'Flat'=>1,
+                ],
+                'required' => true,
+                'multiple'=>true,
+                'expanded'=>true,
+                'label'    => 'Mapped for',
+            ])
             ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-success']]);
     }
 

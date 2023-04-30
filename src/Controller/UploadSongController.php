@@ -13,6 +13,7 @@ use App\Service\ScoreService;
 use App\Service\SongService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use EasyCorp\Bundle\EasyAdminBundle\Exception\BaseException;
 use Exception;
 use Intervention\Image\ImageManagerStatic as Image;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -102,6 +103,9 @@ class UploadSongController extends AbstractController
 
                 $file = $form->get('zipFile')->getData();
                 if ($file == null) {
+                    if(empty($song->getBestPlatform())){
+                        throw new \Exception('Please choose at least one platform');
+                    }
                     $this->addFlash('success', str_replace([
                         "%song%",
                         "%artist%"

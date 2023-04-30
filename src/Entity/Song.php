@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Enum\EAvailablePlatform;
 use App\Filter\SimpleSearchFilter;
 use App\Repository\SongRepository;
 use App\Service\StatisticService;
@@ -121,6 +122,10 @@ class Song
 
     #[ORM\Column(nullable: true)]
     private ?bool $isNotificationDone = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $bestPlatform = [];
+
 
     public function __construct()
     {
@@ -1044,6 +1049,18 @@ class Song
     public function setIsNotificationDone(?bool $isNotificationDone): self
     {
         $this->isNotificationDone = $isNotificationDone;
+
+        return $this;
+    }
+
+    public function getBestPlatform(): ?array
+    {
+        return $this->bestPlatform;
+    }
+
+    public function setBestPlatform(?array $bestPlatform): self
+    {
+        $this->bestPlatform = $bestPlatform;
 
         return $this;
     }
