@@ -1064,5 +1064,8 @@ class Song
 
         return $this;
     }
-
+    public function hasBestPlatform($search): bool
+    {
+        return in_array($search, $this->bestPlatform);
+    }
 }

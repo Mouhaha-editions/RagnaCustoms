@@ -237,6 +237,21 @@ class SongsController extends AbstractController
                     break;
             }
         }
+
+        if ($request->get('mapped_for', null) !== null) {
+
+            switch ($request->get('mapped_for')) {
+                case 1:
+                    $qb->andWhere('(s.bestPlatform = 1)');
+                    $filters[] = "Mapped for flat";
+                    break;
+                case 0 :
+                    $qb->andWhere('(s.bestPlatform = 0)');
+                    $filters[] = "Mapped for VR";
+                    break;
+            }
+        }
+
         if ($request->get('not_downloaded', 0) > 0 && $this->isGranted('ROLE_USER')) {
             $qb->leftJoin("s.downloadCounters", 'download_counters')->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")->andHaving("count_download_user = 0")->setParameter('user', $this->getuser());
             $filters[] = "not downloaded";
