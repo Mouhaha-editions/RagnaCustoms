@@ -14,7 +14,6 @@ use App\Service\SongService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Exception\BaseException;
-use Exception;
 use Intervention\Image\ImageManagerStatic as Image;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,14 +26,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UploadSongController extends AbstractController
 {
-
-    /**
-     * @param Request $request
-     * @param TranslatorInterface $translator
-     * @param SongService $songService
-     * @param ScoreService $scoreService
-     * @return JsonResponse
-     */
     #[Route(path: '/upload/song/new', name: 'new_song')]
     public function new(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
     {
@@ -51,15 +42,6 @@ class UploadSongController extends AbstractController
         return $this->edit($request, $song, $doctrine, $translator, $songService, $scoreService);
     }
 
-
-    /**
-     * @param Request $request
-     * @param Song $song
-     * @param TranslatorInterface $translator
-     * @param SongService $songService
-     * @param ScoreService $scoreService
-     * @return JsonResponse
-     */
     #[Route(path: '/upload/song/edit/{id}', name: 'edit_song')]
     public function edit(Request $request, Song $song, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
     {
@@ -93,6 +75,9 @@ class UploadSongController extends AbstractController
 
         if ($form->isSubmitted() && $form->isSubmitted()) {
             try {
+                if(!count($song->getBestPlatform())){
+                    throw new \Exception('Select on which version your map is planed to be played (VR and/or Viking On Tour)');
+                }
                 $song_request = $form->get('song_request')->getData();
                 if ($song_request != null) {
                     $song_request->setState(SongRequest::STATE_ENDED);
@@ -152,7 +137,7 @@ class UploadSongController extends AbstractController
                         ])
                     ]);
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return new JsonResponse([
                     'error'        => true,
                     'errorMessage' => $e->getMessage(),
@@ -221,12 +206,6 @@ class UploadSongController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
-    /**
-     * @param Request $request
-     * @param SongRepository $songRepository
-     * @param PaginationService $paginationService
-     * @return Response
-     */
     #[Route(path: '/upload/song', name: 'upload_song')]
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
@@ -239,12 +218,6 @@ class UploadSongController extends AbstractController
                         $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
-//                case 'category':
-//                    if (count($exp) >= 1) {
-//                        $qb->andWhere('(s.songCategory = :category)')
-//                            ->setParameter('category', $exp[1] == "" ? null : $exp[1]);
-//                    }
-//                    break;
                 case 'artist':
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
@@ -319,13 +292,7 @@ class UploadSongController extends AbstractController
         }
     }
 
-    /**
-     * @param Request $request
-     * @param TranslatorInterface $translator
-     * @param SongService $songService
-     * @param ScoreService $scoreService
-     * @return
-     */
+
     #[Route(path: '/upload/song/new-multi', name: 'new_song_multi')]
     public function indexV2(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
     {
@@ -347,7 +314,7 @@ class UploadSongController extends AbstractController
             $song->setUser($this->getUser());
             $song->setActive(true);
             $songService->processFileWithoutForm($request, $song);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return new Response($e->getMessage(), 500);
         }
         return new JsonResponse(["success" => true, 'cover'=>$song->getCover()]);

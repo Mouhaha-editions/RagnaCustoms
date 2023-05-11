@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -28,8 +27,8 @@ class SongRestrictedTier1Type extends AbstractType
         $entity = $builder->getData();
         $builder
             ->add("zipFile", FileType::class, [
-                "mapped" => false,
-                "required" => $entity->getId() == null,
+                "mapped"      => false,
+                "required"    => $entity->getId() == null,
                 "help"        => "Upload a .zip file (max 10Mo) containing all the files for the map, upgrade your Premium member to upload more.",
                 "constraints" => [
                     new File([
@@ -39,50 +38,49 @@ class SongRestrictedTier1Type extends AbstractType
                 ]
             ])
             ->add('description', null, [
-                'help' => "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description",
+                'help'      => "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description",
                 'help_html' => true
             ])
             ->add('youtubeLink', TextType::class, [
-                'label' => "Youtube Link",
-                "attr" => ["placeholder " => "https://youtu..."],
+                'label'    => "Youtube Link",
+                "attr"     => ["placeholder " => "https://youtu..."],
                 'required' => false
             ])
             ->add('categoryTags', Select2EntityType::class, [
-                "class" => SongCategory::class,
-                'remote_route' => 'api_song_categories',
-                'multiple' => true,
-                "label" => "Categories",
-                'primary_key' => 'id',
-                'text_property' => 'label',
+                "class"                => SongCategory::class,
+                'remote_route'         => 'api_song_categories',
+                'multiple'             => true,
+                "label"                => "Categories",
+                'primary_key'          => 'id',
+                'text_property'        => 'label',
                 'minimum_input_length' => 0,
-                'allow_clear' => true,
-                'delay' => 250,
-                'placeholder' => 'Select a category, or more ..',
+                'allow_clear'          => true,
+                'delay'                => 250,
+                'placeholder'          => 'Select a category, or more ..',
 
                 'required' => true
             ])
             ->add('approximativeDuration', HiddenType::class, [
                 "label" => "Duration (in sec) ",
-                "help" => "leave empty on first upload",
-                "attr" => [
+                "help"  => "leave empty on first upload",
+                "attr"  => [
                     "placeholder " => "leave empty on first upload",
                 ]
             ])
             ->add('song_request', EntityType::class, [
-                'mapped' => false,
-                'class' => SongRequest::class,
-                'required' => false,
-                'placeholder' => "Not a requested song",
+                'mapped'        => false,
+                'class'         => SongRequest::class,
+                'required'      => false,
+                'placeholder'   => "Not a requested song",
                 'query_builder' => function (EntityRepository $er) use ($entity) {
                     return $er->createQueryBuilder("sr")
-                        ->leftJoin("sr.mapperOnIt", 'mapper')
-                        ->where('mapper = :mapperid')
-                        ->andWhere('sr.state IN (:available)')
-                        ->setParameter('mapperid', $entity->getUser())
-                        ->setParameter('available', [SongRequest::STATE_IN_PROGRESS]);
+                              ->leftJoin("sr.mapperOnIt", 'mapper')
+                              ->where('mapper = :mapperid')
+                              ->andWhere('sr.state IN (:available)')
+                              ->setParameter('mapperid', $entity->getUser())
+                              ->setParameter('available', [SongRequest::STATE_IN_PROGRESS]);
                 }
             ])
-
             ->add('wip', null, [
                 'label' => "Work in progress"
             ])
@@ -94,12 +92,12 @@ class SongRestrictedTier1Type extends AbstractType
             ])
             ->add('bestPlatform', ChoiceType::class, [
                 'choices'  => [
-                    'Vr'=>0,
-                    'Flat'=>1,
+                    'Vr'   => 0,
+                    'Viking On Tour' => 1,
                 ],
                 'required' => true,
-                'multiple'=>true,
-                'expanded'=>true,
+                'multiple' => true,
+                'expanded' => true,
                 'label'    => 'Mapped for',
             ])
             ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-success']]);

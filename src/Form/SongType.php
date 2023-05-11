@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Song;
 use App\Entity\SongCategory;
 use App\Entity\SongRequest;
-use App\Enum\EAvailablePlatform;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -101,12 +100,12 @@ class SongType extends AbstractType
             ])
             ->add('bestPlatform', ChoiceType::class, [
                 'choices'  => [
-                    'Vr'=>0,
-                    'Flat'=>1,
+                    'Vr'   => 0,
+                    'Viking On Tour' => 1,
                 ],
                 'required' => true,
-                'multiple'=>true,
-                'expanded'=>true,
+                'multiple' => true,
+                'expanded' => true,
                 'label'    => 'Mapped for',
             ])
             ->add('converted', null, [
