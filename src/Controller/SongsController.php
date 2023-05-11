@@ -495,6 +495,9 @@ class SongsController extends AbstractController
                                ->groupBy('s.user')->addOrderBy('max_score', 'DESC');
 
             $pagination = $paginationService->setDefaults(25)->process($scores, $request);
+            if($pagination->isPartial()){
+                return $this->render();
+            }
             $levels [] = [
                 "level"      => $level,
                 "difficulty" => $difficulty,

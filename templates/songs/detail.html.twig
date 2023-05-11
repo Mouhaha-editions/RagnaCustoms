@@ -235,7 +235,27 @@
                             <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
                                  id="pills-leaderboard-{{ level['level'] }}" role="tabpanel"
                                  aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
-                                {% include 'songs/partial/leaderboard.html.twig' with {level:level} %}
+                                {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+                                <div class="row">
+                                    <div class="col-12">
+                                        {% if is_granted('ROLE_USER') %}
+                                            <span class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-')}) }}</span>
+                                        {% endif %}
+                                        <table class="table table-sm">
+                                            <tr>
+                                                <th class="text-right">#</th>
+                                                <th>{{ "player"|trans }}</th>
+                                                <th class="text-right">{{ "distance"|trans }}</th>
+                                                <th class="text-right">{{ "PP"|trans }}</th>
+                                                <th class="text-right">{{ "Perfects (%)" }}</th>
+                                                <th class="text-right">{{ "Time Set" }}</th>
+                                                <th class="text-right">{{ "More Stats" }}</th>
+                                                <th class="text-right"></th>
+                                            </tr>
+                                            {% include 'songs/partial/leaderboard.html.twig' with {level:level} %}
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
