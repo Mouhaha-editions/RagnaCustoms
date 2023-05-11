@@ -28,14 +28,10 @@
             </div>
             <div class="mapper pb-3">
                 <a href="{{ url('mapper_profile', {username:song.user.username}) }}">
-                    {#                    <i class="fas fa-pen"></i> #}
                     {{ membershipService.displayMappername(song.user)|raw }}</a>
             </div>
             {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
 
-            {#            <div class="buttons pt-3 pb-3"> #}
-            {#                <a href="#"><i class="fas fa-list-ol"></i> {{ "Leaderboards"|trans }}</a> #}
-            {#            </div> #}
             <div class="pt-3">
                 <a href="#"
                    data-toggle="modal"
@@ -61,30 +57,30 @@
 
 {% macro stats(score) %}
 
-            <table class="table-condensed">
-                <tr>
-                    <th class="text-center p-0 pr-3">
-                        Combos
-                    </th>
-                    <th class="text-center p-0 pr-3">
-                        Hit %
-                    </th>
-                    <th class="text-center p-0">
-                        Missed
-                    </th>
-                </tr>
-                <tr>
-                    <td class="text-center p-0 pr-3"><font
-                                color="#4b9ce2">{{ score.comboBlue }}</font> | <font
-                                color="#ffc107">{{ score.comboYellow }}</font></td>
-                    <td class="text-center p-0 pr-3">
-                        {{ score.hitPercentage }}
-                    </td>
-                    <td class="text-center p-0">
-                        {{ score.missed }}
-                    </td>
-                </tr>
-            </table>
+    <table class="table-condensed">
+        <tr>
+            <th class="text-center p-0 pr-3">
+                Combos
+            </th>
+            <th class="text-center p-0 pr-3">
+                Hit %
+            </th>
+            <th class="text-center p-0">
+                Missed
+            </th>
+        </tr>
+        <tr>
+            <td class="text-center p-0 pr-3"><font
+                        color="#4b9ce2">{{ score.comboBlue }}</font> | <font
+                        color="#ffc107">{{ score.comboYellow }}</font></td>
+            <td class="text-center p-0 pr-3">
+                {{ score.hitPercentage }}
+            </td>
+            <td class="text-center p-0">
+                {{ score.missed }}
+            </td>
+        </tr>
+    </table>
 
 {% endmacro %}
 

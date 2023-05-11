@@ -626,10 +626,12 @@ class UserController extends AbstractController
             $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('home');
         }
-        $em = $doctrine->getManager();
+
         if ($this->getUser()->getApiKey() == null) {
             $this->getUser()->setApiKey(md5(date('d/m/Y H:i:s') . $this->getUser()->getUsername()));
         }
+
+        $em = $doctrine->getManager();
         $em->flush();
         /** @var Utilisateur $user */
         $user = $this->getUser();

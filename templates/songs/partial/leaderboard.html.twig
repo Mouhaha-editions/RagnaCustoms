@@ -1,46 +1,28 @@
-{% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
 {% import "songs/macros/song.html.twig" as macro_song %}
-<div class="row">
-    <div class="col-12">
-        {% if is_granted('ROLE_USER') %}
-            <span class="text-danger">{{ "Your position: #%position%"|trans|replace({"%position%":scoreService.leaderboardPosition(app.user,level['difficulty'])}) }}</span>
-{% endif %}
-        <table class="table table-sm">
-            <tr>
-                <th class="text-right">#</th>
-                <th>{{ "player"|trans }}</th>
-                <th class="text-right">{{ "distance"|trans }}</th>
-                <th class="text-right">{{ "PP"|trans }}</th>
-                <th class="text-right">{{ "Perfects (%)" }}</th>
-                <th class="text-right">{{ "Time Set" }}</th>
-                <th class="text-right">{{ "More Stats" }}</th>
-                <th class="text-right"></th>
-            </tr>
-            {% set imin = false %}
-            {% for score in level['scores'].entities %}
+{% for score in level['scores'].entities %}
 
-                <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-warning"{% endif %}>
-                    <td class="text-right">{{ loop.index+(50*(level['scores'].current-1)) }}.</td>
-                    <td>{{ score.user.username }}</td>
-                    <td class="text-right">{{ score.scoreDisplay }} <i data-toggle='tooltip' title="{{ score.plateform }}" class="fas {{ score.plateformIcon }}"></i></td>
-                    <td class="text-right">{{ score.rawPP }}</td>
-                    <td class="text-right">{{ score.percentageOfPerfects }}</td>
-                    <td class="text-right">{{ score.timeAgoShort() }}</td>
-                    <td class="text-right">
-                        {{ macro_song.statsZipped(score) }}
-                    </td>
-                    <td>
-                        {% if (is_granted('ROLE_USER') and app.user == score.user) or is_granted('ROLE_MODERATOR')  %}
-                            <small><i data-toggle="modal" data-target="#ScatterView" class="fas fa-magnifying-glass scatter-open-score" style="font-size:10px;cursor: pointer" data-score="{{ score.id }}"></i></small>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="3">{{ "no score for now"|trans }}</td>
-                </tr>
-            {% endfor %}
+    <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-warning"{% endif %}>
+        <td class="text-right">{{ loop.index+(50*(level['scores'].current-1)) }}.</td>
+        <td>{{ score.user.username }}</td>
+        <td class="text-right">{{ score.scoreDisplay }} <i data-toggle='tooltip' title="{{ score.plateform }}"
+                                                           class="fas {{ score.plateformIcon }}"></i></td>
+        <td class="text-right">{{ score.rawPP }}</td>
+        <td class="text-right">{{ score.percentageOfPerfects }}</td>
+        <td class="text-right">{{ score.timeAgoShort() }}</td>
+        <td class="text-right">
+            {{ macro_song.statsZipped(score) }}
+        </td>
+        <td>
+            {% if (is_granted('ROLE_USER') and app.user == score.user) or is_granted('ROLE_MODERATOR') %}
+                <small><i data-toggle="modal" data-target="#ScatterView"
+                          class="fas fa-magnifying-glass scatter-open-score" style="font-size:10px;cursor: pointer"
+                          data-score="{{ score.id }}"></i></small>
+            {% endif %}
+        </td>
+    </tr>
+{% else %}
+    <tr>
+        <td colspan="3">{{ "no score for now"|trans }}</td>
+    </tr>
+{% endfor %}
 
-        </table>
-    </div>
-</div>

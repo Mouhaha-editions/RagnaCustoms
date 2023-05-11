@@ -197,6 +197,29 @@ class ScoreService
         return count($this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where('s.score > :my_score')->andWhere('s.songDifficulty = :difficulty')->andWhere('s.user != :me')->setParameter('my_score', $mine->getScore())->setParameter('difficulty', $songDifficulty)->setParameter('me', $user)->groupBy('s.user')->getQuery()->getResult()) + 1;
     }
 
+    public function getLeaderboardPositionWithOrdinalSuffix(UserInterface $user, SongDifficulty $songDifficulty, $default = '-')
+    {
+        return $this->getOrdinalSuffix($this->getLeaderboardPosition($user, $songDifficulty, $default));
+    }
+
+    function getOrdinalSuffix($number)
+    {
+        if(!is_numeric($number)){
+            return $number;
+        }
+
+        if (($number % 100 >= 11 && $number % 100 <= 13) || $number % 10 === 0) {
+            return $number . 'th';
+        } elseif ($number % 10 === 1) {
+            return $number . 'st';
+        } elseif ($number % 10 === 2) {
+            return $number . 'nd';
+        } elseif ($number % 10 === 3) {
+            return $number . 'rd';
+        }
+        return $number . 'th';
+    }
+
     public function getTheoricalRank(SongDifficulty $songDifficulty, ?float $getScore)
     {
         return count($this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where('s.score > :my_score')->andWhere('s.songDifficulty = :difficulty')->setParameter('my_score', $getScore)->setParameter('difficulty', $songDifficulty)->groupBy('s.user')->getQuery()->getResult()) + 1;

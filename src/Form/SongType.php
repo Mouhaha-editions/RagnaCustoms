@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Song;
 use App\Entity\SongCategory;
 use App\Entity\SongRequest;
-use App\Enum\EAvailablePlatform;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -28,17 +27,6 @@ class SongType extends AbstractType
         /** @var Song $entity */
         $entity = $builder->getData();
         $builder
-            ->add("zipFile", FileType::class, [
-                "mapped"      => false,
-                "required"    => $entity->getId() == null,
-                "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
-                "constraints" => [
-                    new File([
-                        'maxSize'        => '10M',
-                        'maxSizeMessage' => 'You can upload up to 15Mo with a premium account Tier 2',
-                    ])
-                ]
-            ])
             ->add('description', null, [
                 'help'      => "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description",
                 'help_html' => true
@@ -101,12 +89,12 @@ class SongType extends AbstractType
             ])
             ->add('bestPlatform', ChoiceType::class, [
                 'choices'  => [
-                    'Vr'=>0,
-                    'Flat'=>1,
+                    'Vr'   => 0,
+                    'Viking On Tour' => 1,
                 ],
                 'required' => true,
-                'multiple'=>true,
-                'expanded'=>true,
+                'multiple' => true,
+                'expanded' => true,
                 'label'    => 'Mapped for',
             ])
             ->add('converted', null, [
