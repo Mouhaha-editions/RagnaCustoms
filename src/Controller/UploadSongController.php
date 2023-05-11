@@ -11,16 +11,15 @@ use App\Repository\SongRepository;
 use App\Service\DiscordService;
 use App\Service\ScoreService;
 use App\Service\SongService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use EasyCorp\Bundle\EasyAdminBundle\Exception\BaseException;
-use Intervention\Image\ImageManagerStatic as Image;
+use Exception;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -37,7 +36,7 @@ class UploadSongController extends AbstractController
             ]);
         }
         $song = new Song();
-        $song->setProgrammationDate(new \DateTime());
+        $song->setProgrammationDate(new DateTime());
         $song->setUser($this->getUser());
         return $this->edit($request, $song, $doctrine, $translator, $songService, $scoreService);
     }
@@ -75,8 +74,8 @@ class UploadSongController extends AbstractController
 
         if ($form->isSubmitted() && $form->isSubmitted()) {
             try {
-                if(!count($song->getBestPlatform())){
-                    throw new \Exception('Select on which version your map is planed to be played (VR and/or Viking On Tour)');
+                if (!count($song->getBestPlatform())) {
+                    throw new Exception('Select on which version your map is planed to be played (VR and/or Viking On Tour)');
                 }
                 $song_request = $form->get('song_request')->getData();
                 if ($song_request != null) {
@@ -88,8 +87,8 @@ class UploadSongController extends AbstractController
 
                 $file = $form->get('zipFile')->getData();
                 if ($file == null) {
-                    if(empty($song->getBestPlatform())){
-                        throw new \Exception('Please choose at least one platform');
+                    if (empty($song->getBestPlatform())) {
+                        throw new Exception('Please choose at least one platform');
                     }
                     $this->addFlash('success', str_replace([
                         "%song%",
@@ -137,7 +136,7 @@ class UploadSongController extends AbstractController
                         ])
                     ]);
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return new JsonResponse([
                     'error'        => true,
                     'errorMessage' => $e->getMessage(),
@@ -194,11 +193,17 @@ class UploadSongController extends AbstractController
     #[Route(path: '/upload/song/toggle/{id}', name: 'upload_song_toggle')]
     public function toggleSong(Request $request, Song $song, SongRepository $songRepository)
     {
-        if($song->getUser() != $this->getUser()){
-            return new JsonResponse(['success' => false,'message'=>"This is not YOUR song"]);
+        if ($song->getUser() != $this->getUser()) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => "This is not YOUR song"
+            ]);
         }
-        if($song->getCategoryTags()->count() == 0){
-            return new JsonResponse(['success' => false,'message'=>"You need at least 1 category for this song"]);
+        if ($song->getCategoryTags()->count() == 0) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => "You need at least 1 category for this song"
+            ]);
         }
         $song->setActive(!$song->getActive());
         $songRepository->add($song);
@@ -314,9 +319,12 @@ class UploadSongController extends AbstractController
             $song->setUser($this->getUser());
             $song->setActive(true);
             $songService->processFileWithoutForm($request, $song);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new Response($e->getMessage(), 500);
         }
-        return new JsonResponse(["success" => true, 'cover'=>$song->getCover()]);
+        return new JsonResponse([
+            "success" => true,
+            'cover'   => $song->getCover()
+        ]);
     }
 }
