@@ -17,10 +17,13 @@ use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UploadSongController extends AbstractController
@@ -52,20 +55,58 @@ class UploadSongController extends AbstractController
                 'response'     => ""
             ]);
         }
+
+        $form = $this->createForm(SongType::class, $song, [
+            'method' => "post",
+            'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
+        ]);
+
         if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
-            $form = $this->createForm(SongType::class, $song, [
-                'method' => "post",
-                'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
-            ]);
+           $form->add('programmationDate',
+               DateTimeType::class, [
+                   'label'      => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
+                   'widget'     => 'single_text',
+                   'required'   => true,
+                   'input'      => "datetime",
+                   "empty_data" => '',
+                   'label_html' => true,
+                   'help'       => "sorry for now it's based on UTC+1 (french time) "
+               ])
+                ->add("zipFile", FileType::class, [
+               "mapped"      => false,
+               "required"    => $song->getId() == null,
+               "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
+               "constraints" => [
+                   new File([
+                       'maxSize'        => '15M',
+                       'maxSizeMessage' => 'You can upload up to 50Mo with a premium account Tier 2',
+                   ])
+               ]
+           ]);
+
         } else if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
-            $form = $this->createForm(SongRestrictedTier1Type::class, $song, [
-                'method' => "post",
-                'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
-            ]);
+          $form->add("zipFile", FileType::class, [
+              "mapped"      => false,
+              "required"    => $song->getId() == null,
+              "help"        => "Upload a .zip file (max 10Mo) containing all the files for the map, upgrade your Premium member Tier 2 to upload more.",
+              "constraints" => [
+                  new File([
+                      'maxSize'        => '10M',
+                      'maxSizeMessage' => 'You can upload up to 10Mo with a premium account Tier 1',
+                  ])
+              ]
+          ]);
         } else {
-            $form = $this->createForm(SongRestrictedType::class, $song, [
-                'method' => "post",
-                'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
+            $form->add("zipFile", FileType::class, [
+                "mapped"      => false,
+                "required"    => $entity->getId() == null,
+                "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
+                "constraints" => [
+                    new File([
+                        'maxSize'        => '10M',
+                        'maxSizeMessage' => 'You can upload up to 15Mo with a premium account Tier 2',
+                    ])
+                ]
             ]);
         }
 

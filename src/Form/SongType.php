@@ -27,17 +27,6 @@ class SongType extends AbstractType
         /** @var Song $entity */
         $entity = $builder->getData();
         $builder
-            ->add("zipFile", FileType::class, [
-                "mapped"      => false,
-                "required"    => $entity->getId() == null,
-                "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
-                "constraints" => [
-                    new File([
-                        'maxSize'        => '10M',
-                        'maxSizeMessage' => 'You can upload up to 15Mo with a premium account Tier 2',
-                    ])
-                ]
-            ])
             ->add('description', null, [
                 'help'      => "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description",
                 'help_html' => true
