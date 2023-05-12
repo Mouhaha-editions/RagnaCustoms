@@ -99,7 +99,7 @@ class UploadSongController extends AbstractController
         } else {
             $form->add("zipFile", FileType::class, [
                 "mapped"      => false,
-                "required"    => $entity->getId() == null,
+                "required"    => $song->getId() == null,
                 "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
                 "constraints" => [
                     new File([
