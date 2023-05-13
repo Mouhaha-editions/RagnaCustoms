@@ -47,6 +47,12 @@
                         <a data-no-swup="true" href="ragnac://install/{{ song.id }}" class="one-click"><i class="fas fa-download"></i><br/>1 click</a>
                         <a data-no-swup="true" href="{{ url("song_direct_download",{id:song.id}) }}" class="ddl"><i class="fas fa-download"></i><br/>ZIP</a>
                     </div>
+                    <div class="d-inline-block">
+                        <a data-toggle="tooltip" href="#" title="Click to copy !rc code"
+                           data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn btn-twitch">
+                            <i class="fab fa-twitch"></i>
+                        </a>
+                    </div>
                     <a href="#"
                        data-toggle="modal"
                        data-target="#previewSong"

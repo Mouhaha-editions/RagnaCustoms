@@ -59,6 +59,10 @@
                 <a data-no-swup="true" href="{{ url("song_direct_download",{id:song.id}) }}" class="ddl text-uppercase"><i
                             class="fas fa-download"></i><br/>Zip</a>
             </div>
+            <a data-toggle="tooltip" href="#" title="Click to copy !rc code"
+               data-to-copy="!rc {{ song.id }}" class="copy-clipboard mr-1 btn-twitch">
+                <i class="fab fa-twitch" style="color:#bf94ff"></i>
+            </a>
             <a href="#"
                data-toggle="modal"
                data-target="#previewSong"
