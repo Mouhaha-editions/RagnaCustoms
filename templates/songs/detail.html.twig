@@ -30,7 +30,8 @@
                                 {% for diff in song.songDifficulties %}
                                     <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
                                          style="background-color:#{{ diff.difficultyRank.color }};">
-                                        {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked"
+                                        {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip"
+                                                                 title="Ranked"
                                                                  style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
                                         <span>{{ diff.difficultyRank.level }}</span>
                                     </div>
@@ -64,7 +65,9 @@
                     </div>
                     <div class="col-md-7">
                         <h1 class="force-default text-warning">{{ song|raw }}</h1>
-                        <h2 class="force-default"><a href="{{ url("song_library") }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a></h2>
+                        <h2 class="force-default"><a
+                                    href="{{ url("song_library") }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
+                        </h2>
                         <div class="tags">
                             {% for category in song.categoryTags %}
                                 <span>{{ category.label }}</span>
@@ -85,8 +88,8 @@
                                    data-toggle='modal' data-target='#songPlaylists'
                                    data-url='{{ url('song_playlist',{id:song.id}) }}'
                                    data-song-id='{{ song.id }}'>
-                                    <i                                    title="Add to playlist"
-                                                                           data-toggle="tooltip"  class="fas fa-heart"></i>
+                                    <i title="Add to playlist"
+                                       data-toggle="tooltip" class="fas fa-heart"></i>
                                 </a>
                             </div>
                             {% if song.youtubeLink != null %}
@@ -98,7 +101,8 @@
                                 </div>
                             {% endif %}
                             <div class="d-inline-block">
-                                <a  data-toggle="tooltip" href="#" title="Click to copy !rc code" data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn btn-twitch">
+                                <a data-toggle="tooltip" href="#" title="Click to copy !rc code"
+                                   data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn btn-twitch">
                                     <i class="fab fa-twitch"></i>
                                 </a>
                             </div>
@@ -148,7 +152,8 @@
                                                 data-song-id="{{ song.id }}"
                                         >{{ "Submit rating"|trans }}</button>
                                         <button class="btn btn-block btn-sm mt-1 mb-2 song-feedback"
-                                        >{{ "Read Feedback"|trans }} ({{ feedbacks|length }})</button>
+                                        >{{ "Read Feedback"|trans }} ({{ feedbacks|length }})
+                                        </button>
                                     </div>
                                 {% endif %}
                             </div>
@@ -214,19 +219,19 @@
                                    aria-controls="pills-leaderboard-{{ level['level'] }}"
                                    style="background-color:#{{ level['color'] }};"
                                 >level {{ level['level'] }} </a>
-{#{% if is_granted('ROLE_MODERATOR') %}<a class="ajax-link"#}
-{#                                   id="ranked-{{ level['difficulty'].id }}"#}
-{#                                   data-replace-selector="#ranked-{{ level['difficulty'].id }}"#}
-{#                                        data-success-action="replace-html"#}
-{#                                        data-url="{{ url("rank_toggle",{id: level['difficulty'].id })  }}"#}
-{#                                        href="#">#}
-{#                                    {% if level['difficulty'].isRanked %}#}
-{#                                        <i class="fas fa-star"></i> ranked#}
-{#                                    {% else %}#}
-{#                                        <i class="far fa-star"></i> not r.#}
-{#                                    {% endif %}#}
-{#                                </a>#}
-{#                                 {% endif %}#}
+                                {# {% if is_granted('ROLE_MODERATOR') %}<a class="ajax-link" #}
+                                {#                                   id="ranked-{{ level['difficulty'].id }}" #}
+                                {#                                   data-replace-selector="#ranked-{{ level['difficulty'].id }}" #}
+                                {#                                        data-success-action="replace-html" #}
+                                {#                                        data-url="{{ url("rank_toggle",{id: level['difficulty'].id })  }}" #}
+                                {#                                        href="#"> #}
+                                {#                                    {% if level['difficulty'].isRanked %} #}
+                                {#                                        <i class="fas fa-star"></i> ranked #}
+                                {#                                    {% else %} #}
+                                {#                                        <i class="far fa-star"></i> not r. #}
+                                {#                                    {% endif %} #}
+                                {#                                </a> #}
+                                {#                                 {% endif %} #}
                             </li>
                         {% endfor %}
                     </ul>
@@ -235,13 +240,12 @@
                             <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
                                  id="pills-leaderboard-{{ level['level'] }}" role="tabpanel"
                                  aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
-                                {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
                                 <div class="row">
                                     <div class="col-12">
                                         {% if is_granted('ROLE_USER') %}
                                             <span class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-')}) }}</span>
                                         {% endif %}
-                                        <table class="table table-sm">
+                                        <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
                                             <tr>
                                                 <th class="text-right">#</th>
                                                 <th>{{ "player"|trans }}</th>
@@ -254,6 +258,7 @@
                                             </tr>
                                             {% include 'songs/partial/leaderboard.html.twig' with {level:level} %}
                                         </table>
+
                                     </div>
                                 </div>
                             </div>
@@ -285,6 +290,7 @@
                             "ratingValue": "{{ song.voteAverage|round(2, "floor") }}"
                         }
                     }
+
 
 
 

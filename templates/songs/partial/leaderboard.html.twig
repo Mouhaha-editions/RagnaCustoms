@@ -1,8 +1,9 @@
+{% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
 {% import "songs/macros/song.html.twig" as macro_song %}
 {% for score in level['scores'].entities %}
 
     <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-warning"{% endif %}>
-        <td class="text-right">{{ loop.index+(50*(level['scores'].current-1)) }}.</td>
+        <td class="text-left">{{ scoreService.leaderboardPositionWithOrdinalSuffix(score.user, score.songDifficulty) }}</td>
         <td>{{ score.user.username }}</td>
         <td class="text-right">{{ score.scoreDisplay }} <i data-toggle='tooltip' title="{{ score.plateform }}"
                                                            class="fas {{ score.plateformIcon }}"></i></td>
@@ -25,4 +26,9 @@
         <td colspan="3">{{ "no score for now"|trans }}</td>
     </tr>
 {% endfor %}
+<tr class="see-more-delete">
+    <td colspan="8" class="text-center ">
+        {{ macro_pagination.seeMore(level['scores'],"see more"|trans,'btn btn-xs btn-outline-warning',{"parent":"#table-leaderboard-" ~level['level'] ,"remove":"#see",'do_not_remove': true}) }}
+    </td>
+</tr>
 

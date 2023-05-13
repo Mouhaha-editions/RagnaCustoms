@@ -494,16 +494,19 @@ class SongsController extends AbstractController
 //                ->setParameter('hash', $difficulty->getSong()->getNewGuid())
                                ->groupBy('s.user')->addOrderBy('max_score', 'DESC');
 
-            $pagination = $paginationService->setDefaults(25)->process($scores, $request);
-            if($pagination->isPartial()){
-                return $this->render();
-            }
+            $pagination = $paginationService->setDefaults(30)->process($scores, $request);
             $levels [] = [
                 "level"      => $level,
                 "difficulty" => $difficulty,
                 "color"      => $difficulty->getDifficultyRank()->getColor(),
                 'scores'     => $pagination
             ];
+            if($pagination->isPartial()){
+                return $this->render('songs/partial/leaderboard.html.twig',[
+                    'level'       => array_pop($levels),
+                ]);
+            }
+
         }
 
         return $this->render('songs/detail.html.twig', [
