@@ -7,21 +7,23 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ScoreRepository;
 use App\Service\StatisticService;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ApiResource(
     collectionOperations: [
-    "get",
-//    "post" => ["security" => "is_granted('ROLE_ADMIN')"],
-],
+        "get",
+        //    "post" => ["security" => "is_granted('ROLE_ADMIN')"],
+    ],
     itemOperations: [
         "get",
-//        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
+        //        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
     ])]
 #[ORM\Table(name: 'score')]
-#[ORM\UniqueConstraint(name: 'user_difficulty_2', columns: ['user_id', 'song_difficulty_id'])]
+#[ORM\UniqueConstraint(name: 'user_difficulty_2', columns: [
+    'user_id',
+    'song_difficulty_id'
+])]
 #[ORM\Entity(repositoryClass: ScoreRepository::class)]
 class Score
 {
@@ -33,16 +35,14 @@ class Score
     private $id;
     #[ORM\Column(type: 'integer', nullable: true)]
     private $comboBlue;
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $session;
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $userRagnarock;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $comboYellow;
     #[ORM\Column(type: 'text', nullable: true)]
     private $country;
     #[ORM\Column(type: 'text', nullable: true)]
-    private $plateform;
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private $comboYellow;
+    private $dateRagnarock;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $extra;
     #[ORM\Column(type: 'integer', nullable: true)]
     private $hit;
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -53,19 +53,14 @@ class Score
     private $missed;
     #[ORM\Column(type: 'integer', nullable: true)]
     private $percentageOfPerfects;
-
     #[ORM\Column(type: 'text', nullable: true)]
-    private $extra;
-
+    private $plateform;
     #[ORM\Column(type: 'float', nullable: true)]
     private $rawPP;
-    
-    #[ORM\Column(type: 'float', nullable: true)]
-    private $weightedPP;
-
     #[ORM\Column(type: 'float')]
     private $score;
-
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $session;
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     #[ORM\ManyToOne(targetEntity: SongDifficulty::class, inversedBy: 'scores')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
@@ -74,6 +69,10 @@ class Score
     #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'scores')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $userRagnarock;
+    #[ORM\Column(type: 'float', nullable: true)]
+    private $weightedPP;
 
     public function getId(): ?int
     {
@@ -97,16 +96,16 @@ class Score
         return $this->score;
     }
 
-    public function getScoreDisplay(): ?string
-    {
-        return $this->score / 100;
-    }
-
     public function setScore(float $score): self
     {
         $this->score = $score;
 
         return $this;
+    }
+
+    public function getScoreDisplay(): ?string
+    {
+        return $this->score / 100;
     }
 
     public function getHumanUpdatedAt(): ?string
@@ -156,7 +155,6 @@ class Score
 
         return $this;
     }
-
 
     /**
      * @return SongDifficulty|null
@@ -321,9 +319,6 @@ class Score
         $this->session = $session;
     }
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $dateRagnarock;
-
     /**
      * @return mixed
      */
@@ -391,11 +386,11 @@ class Score
 
     public function getTimeAgoShort()
     {
-       return StatisticService::dateDiplayerShort($this->createdAt);
+        return StatisticService::dateDiplayerShort($this->createdAt);
     }
 
     public function getPlateformIcon()
     {
-        return in_array(strtolower($this->plateform),['steam_flat']) ? 'fa-desktop':'fa-vr-cardboard';
-}
+        return in_array(strtolower($this->plateform), ['steam_flat']) ? 'fa-desktop' : 'fa-vr-cardboard';
+    }
 }
