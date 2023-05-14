@@ -40,7 +40,6 @@ class WanadevApiController extends AbstractController
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}', name: 'wd_api_score_simple_get', methods: ['GET', 'POST'])]
     public function scoreSimple(Request $request, ManagerRegistry $doctrine, string $apiKey, string $hash, SongDifficultyRepository $songDifficultyRepository, UtilisateurRepository $utilisateurRepository, ScoreService $scoreService, RankedScoresRepository $rankedScoresRepository, ScoreRepository $scoreRepository, ScoreHistoryRepository $scoreHistoryRepository, $onlyMe = true): Response
     {
-
         return $this->score($request, $doctrine, $apiKey, $hash, $songDifficultyRepository, $utilisateurRepository, $scoreService, $rankedScoresRepository, $scoreRepository, $scoreHistoryRepository, false);
     }
 
@@ -89,10 +88,25 @@ class WanadevApiController extends AbstractController
                 $rawPP = $scoreService->calculateRawPP($newScore);
                 $newScore->setRawPP($rawPP);
             }
+
             /** @var Score $score */
-            $score = $scoreRepository->createQueryBuilder('s')->where('s.user = :user')
-                ->setParameter('user', $user)->andWhere('s.songDifficulty = :songDifficulty')->setParameter('songDifficulty', $songDiff)->getQuery()->getOneOrNullResult();
+            $scoreQb = $scoreRepository
+                ->createQueryBuilder('s')
+                ->where('s.user = :user')
+                ->setParameter('user', $user)
+                ->andWhere('s.songDifficulty = :songDifficulty')
+                ->setParameter('songDifficulty', $songDiff)
+                ->setParameter('plateform', 'Steam_Flat');
+
+            if (in_array($newScore->getPlateform(), ['Steam_Flat'])) {
+                $scoreQb->andWhere('s.plateform = :plateform');
+            } else {
+                $scoreQb->andWhere('s.plateform != :plateform');
+            }
+
+            $score = $scoreQb->getQuery()->getOneOrNullResult();
             $scoreService->archive($newScore);
+
             if ($score == null || $score->getScore() <= $newScore->getScore()) {
                 //le nouveau score est meilleur
                 if ($score != null) {
