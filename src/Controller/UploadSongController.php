@@ -100,11 +100,11 @@ class UploadSongController extends AbstractController
             $form->add("zipFile", FileType::class, [
                 "mapped"      => false,
                 "required"    => $song->getId() == null,
-                "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
+                "help"        => "Upload a .zip file (max 8Mo) containing all the files for the map.",
                 "constraints" => [
                     new File([
-                        'maxSize'        => '10M',
-                        'maxSizeMessage' => 'You can upload up to 15Mo with a premium account Tier 2',
+                        'maxSize'        => '8M',
+                        'maxSizeMessage' => 'You can upload up to 8Mo without a premium account',
                     ])
                 ]
             ]);
