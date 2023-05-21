@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Song;
 use App\Entity\SongRequest;
-use App\Form\SongRestrictedTier1Type;
-use App\Form\SongRestrictedType;
 use App\Form\SongType;
 use App\Repository\SongRepository;
 use App\Service\DiscordService;
@@ -38,16 +36,17 @@ class UploadSongController extends AbstractController
                 'response'     => ""
             ]);
         }
+
         $song = new Song();
         $song->setProgrammationDate(new DateTime());
         $song->setUser($this->getUser());
+
         return $this->edit($request, $song, $doctrine, $translator, $songService, $scoreService);
     }
 
     #[Route(path: '/upload/song/edit/{id}', name: 'edit_song')]
     public function edit(Request $request, Song $song, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
     {
-
         if ($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse([
                 'error'        => true,
@@ -62,40 +61,39 @@ class UploadSongController extends AbstractController
         ]);
 
         if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
-           $form->add('programmationDate',
-               DateTimeType::class, [
-                   'label'      => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
-                   'widget'     => 'single_text',
-                   'required'   => true,
-                   'input'      => "datetime",
-                   "empty_data" => '',
-                   'label_html' => true,
-                   'help'       => "sorry for now it's based on UTC+1 (french time) "
-               ])
-                ->add("zipFile", FileType::class, [
-               "mapped"      => false,
-               "required"    => $song->getId() == null,
-               "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
-               "constraints" => [
-                   new File([
-                       'maxSize'        => '15M',
-                       'maxSizeMessage' => 'You can upload up to 50Mo with a premium account Tier 2',
-                   ])
-               ]
-           ]);
-
+            $form->add('programmationDate',
+                DateTimeType::class, [
+                    'label'      => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
+                    'widget'     => 'single_text',
+                    'required'   => true,
+                    'input'      => "datetime",
+                    "empty_data" => '',
+                    'label_html' => true,
+                    'help'       => "sorry for now it's based on UTC+1 (french time) "
+                ])
+                 ->add("zipFile", FileType::class, [
+                     "mapped"      => false,
+                     "required"    => $song->getId() == null,
+                     "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
+                     "constraints" => [
+                         new File([
+                             'maxSize'        => '15M',
+                             'maxSizeMessage' => 'You can upload up to 50Mo with a premium account Tier 2',
+                         ])
+                     ]
+                 ]);
         } else if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
-          $form->add("zipFile", FileType::class, [
-              "mapped"      => false,
-              "required"    => $song->getId() == null,
-              "help"        => "Upload a .zip file (max 10Mo) containing all the files for the map, upgrade your Premium member Tier 2 to upload more.",
-              "constraints" => [
-                  new File([
-                      'maxSize'        => '10M',
-                      'maxSizeMessage' => 'You can upload up to 10Mo with a premium account Tier 1',
-                  ])
-              ]
-          ]);
+            $form->add("zipFile", FileType::class, [
+                "mapped"      => false,
+                "required"    => $song->getId() == null,
+                "help"        => "Upload a .zip file (max 10Mo) containing all the files for the map, upgrade your Premium member Tier 2 to upload more.",
+                "constraints" => [
+                    new File([
+                        'maxSize'        => '10M',
+                        'maxSizeMessage' => 'You can upload up to 10Mo with a premium account Tier 1',
+                    ])
+                ]
+            ]);
         } else {
             $form->add("zipFile", FileType::class, [
                 "mapped"      => false,
@@ -118,7 +116,9 @@ class UploadSongController extends AbstractController
                 if (!count($song->getBestPlatform())) {
                     throw new Exception('Select on which version your map is planed to be played (VR and/or Viking On Tour)');
                 }
+
                 $song_request = $form->get('song_request')->getData();
+
                 if ($song_request != null) {
                     $song_request->setState(SongRequest::STATE_ENDED);
                     if ($song_request->getWantToBeNotified()) {
@@ -127,6 +127,7 @@ class UploadSongController extends AbstractController
                 }
 
                 $file = $form->get('zipFile')->getData();
+
                 if ($file == null) {
                     if (empty($song->getBestPlatform())) {
                         throw new Exception('Please choose at least one platform');
@@ -189,6 +190,7 @@ class UploadSongController extends AbstractController
                 ]);
             }
         }
+
         return new JsonResponse([
             'error'        => false,
             "goto"         => $this->redirectToRoute("upload_song"),
@@ -224,6 +226,7 @@ class UploadSongController extends AbstractController
             $discordService->deletedSong($song);
             $em->remove($song);
             $em->flush();
+
             return new JsonResponse(['success' => true]);
         } else {
 
@@ -240,12 +243,14 @@ class UploadSongController extends AbstractController
                 'message' => "This is not YOUR song"
             ]);
         }
+
         if ($song->getCategoryTags()->count() == 0) {
             return new JsonResponse([
                 'success' => false,
                 'message' => "You need at least 1 category for this song"
             ]);
         }
+
         $song->setActive(!$song->getActive());
         $songRepository->add($song);
 
@@ -256,6 +261,7 @@ class UploadSongController extends AbstractController
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
         $qb = $songRepository->createQueryBuilder('s')->select('s')->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->where('s.user = :user')->andWhere("s.isDeleted != true")->setParameter('user', $this->getUser())->orderBy('s.name', 'DESC');
+
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
             switch ($exp[0]) {
@@ -283,6 +289,7 @@ class UploadSongController extends AbstractController
                     $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $request->get('search', null) . '%');
             }
         }
+
         if ($request->get('order_by') && in_array($request->get('order_by'), [
                 's.lastDateUpload',
                 'rating',
@@ -293,12 +300,15 @@ class UploadSongController extends AbstractController
         } else {
             $qb->orderBy("s.lastDateUpload", "desc");
         }
+
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
+
         if ($pagination->isPartial()) {
             return $this->render('upload_song/partial/uploaded_song_row.html.twig', [
                 'songs' => $pagination
             ]);
         }
+
         return $this->render('upload_song/index.html.twig', [
             'songs' => $pagination
         ]);
@@ -330,14 +340,16 @@ class UploadSongController extends AbstractController
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . "/" . $object)) $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object); else
+                    if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . "/" . $object)) {
+                        $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
+                    } else {
                         unlink($dir . DIRECTORY_SEPARATOR . $object);
+                    }
                 }
             }
             rmdir($dir);
         }
     }
-
 
     #[Route(path: '/upload/song/new-multi', name: 'new_song_multi')]
     public function indexV2(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
@@ -345,13 +357,6 @@ class UploadSongController extends AbstractController
         return $this->render('upload_song/index_multi.html.twig');
     }
 
-    /**
-     * @param Request $request
-     * @param TranslatorInterface $translator
-     * @param SongService $songService
-     * @param ScoreService $scoreService
-     * @return
-     */
     #[Route(path: '/upload/bundle/song/add', name: 'bundle_song')]
     public function bundleUpload(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
     {
@@ -361,8 +366,10 @@ class UploadSongController extends AbstractController
             $song->setActive(true);
             $songService->processFileWithoutForm($request, $song);
         } catch (Exception $e) {
+
             return new Response($e->getMessage(), 500);
         }
+
         return new JsonResponse([
             "success" => true,
             'cover'   => $song->getCover()
