@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Playlist;
 use App\Entity\Score;
-use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\SongTemporaryList;
@@ -259,8 +258,8 @@ class SongsController extends AbstractController
 
         $qb->andWhere('s.moderated = true');
         $qb->andWhere('s.active = true')
-        ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')
-->setParameter('now', new DateTime());
+           ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')
+           ->setParameter('now', new DateTime());
         //get the 'type' param (added for ajax search)
         $type = $request->get('type', null);
         //check if this is an ajax request
@@ -374,6 +373,31 @@ class SongsController extends AbstractController
 
     }
 
+    private function RestrictedDownload(string $file, string $filename)
+    {
+        if (file_exists($file) && is_file($file)) {
+            $response = new StreamedResponse();
+            $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $filename);
+            $response->headers->set('Content-Disposition', $disposition);
+            $response->headers->set('Content-type', "application/octet-stream");
+            $response->headers->set('Content-Transfer-Encoding', "binary");
+            $response->headers->set('Content-Length', filesize($file));
+            $response->setCallback(function () use ($file, $filename) {
+                $speed = 1000; // i.e. 50 kb/s temps de telechargement
+                $fd = fopen($file, "r");
+                $octet = round($speed * 1024);
+                while (!feof($fd)) {
+                    echo fread($fd, $octet); // $speed kilobytes (Kb)
+                    flush();
+                    sleep(1);
+                }
+                fclose($fd);
+            });
+            return $response;
+        }
+        return new Response("ERROR", 400);
+    }
+
     #[Route(path: '/songs/download/{id}/{api}', name: 'song_download_api', defaults: ['api' => null])]
     public function downloadApiKey(GrantedService $grantedService, ManagerRegistry $doctrine, Song $song, string $api, KernelInterface $kernel, DownloadService $downloadService, UtilisateurRepository $utilisateurRepository)
     {
@@ -458,7 +482,6 @@ class SongsController extends AbstractController
     #[Route(path: '/song/{slug}', name: 'song_detail', defaults: ['slug' => null])]
     public function songDetail(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService, ?Song $song = null)
     {
-
         if ($song == null || $song->getProgrammationDate() == null || $song->getProgrammationDate() >= new DateTime() || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
@@ -484,15 +507,20 @@ class SongsController extends AbstractController
             $feedbackForm = $this->createForm(VoteType::class, $feedback);
             $this->addFlash("success", $translator->trans("Feedback sent!"));
         }
+
         $songService->emulatorFileDispatcher($song);
         $em->flush();
-
         $levels = [];
+
         foreach ($song->getSongDifficulties() as $difficulty) {
             $level = $difficulty->getDifficultyRank()->getLevel();
-            $scores = $doctrine->getRepository(Score::class)->createQueryBuilder('s')->select('s, MAX(s.score) AS HIDDEN max_score')->where('s.songDifficulty = :diff')->setParameter('diff', $difficulty)
-//                ->setParameter('hash', $difficulty->getSong()->getNewGuid())
-                               ->groupBy('s.user')->addOrderBy('max_score', 'DESC');
+            $scores = $doctrine->getRepository(Score::class)
+                               ->createQueryBuilder('s')
+                               ->select('s, MAX(s.score) AS HIDDEN max_score')
+                               ->where('s.songDifficulty = :diff')
+                               ->setParameter('diff', $difficulty)
+                               ->groupBy('s.user')
+                               ->addOrderBy('max_score', 'DESC');
 
             $pagination = $paginationService->setDefaults(30)->process($scores, $request);
             $levels [] = [
@@ -501,12 +529,12 @@ class SongsController extends AbstractController
                 "color"      => $difficulty->getDifficultyRank()->getColor(),
                 'scores'     => $pagination
             ];
-            if($pagination->isPartial()){
-                return $this->render('songs/partial/leaderboard.html.twig',[
-                    'level'       => array_pop($levels),
+
+            if ($pagination->isPartial()) {
+                return $this->render('songs/partial/leaderboard.html.twig', [
+                    'level' => array_pop($levels),
                 ]);
             }
-
         }
 
         return $this->render('songs/detail.html.twig', [
@@ -538,30 +566,5 @@ class SongsController extends AbstractController
     public function partialPreview(Song $song)
     {
         return new JsonResponse(['response' => $this->renderView("songs/partial/preview_player.html.twig", ['song' => $song])]);
-    }
-
-    private function RestrictedDownload(string $file, string $filename)
-    {
-        if (file_exists($file) && is_file($file)) {
-            $response = new StreamedResponse();
-            $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $filename);
-            $response->headers->set('Content-Disposition', $disposition);
-            $response->headers->set('Content-type', "application/octet-stream");
-            $response->headers->set('Content-Transfer-Encoding', "binary");
-            $response->headers->set('Content-Length', filesize($file));
-            $response->setCallback(function () use ($file, $filename) {
-                $speed = 1000; // i.e. 50 kb/s temps de telechargement
-                $fd = fopen($file, "r");
-                $octet = round($speed * 1024);
-                while (!feof($fd)) {
-                    echo fread($fd, $octet); // $speed kilobytes (Kb)
-                    flush();
-                    sleep(1);
-                }
-                fclose($fd);
-            });
-            return $response;
-        }
-        return new Response("ERROR", 400);
     }
 }
