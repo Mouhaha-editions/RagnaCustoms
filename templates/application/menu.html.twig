@@ -4,9 +4,8 @@
     <div class="container pb-5">
     <div class="row">
         <div class="col-12 mt-4">
-            <h1>All Our Softwares</h1>
+            <h1>Our Softwares</h1>
         </div>
-
 
         <div class="col-md-3">
             <div class="card">
@@ -28,21 +27,6 @@
             <div class="card">
                 <div class="card-header">
                     <div class="overlay"></div>
-                    <img src="{{ asset('apps/overlay.jpg') }}">
-                    <h2>{{ "Overlay editor"|trans }}</h2>
-                </div>
-                <div class="card-body">
-                    <p>{{ "An online tool to edit your streaming overlay. It's not a perfect but it works, you need an
-                        account on the website and the application ragnacustoms.exe"|trans}}</p>
-                    <a href="{{ path('overlay_editor') }}" class="btn btn-block btn-lg btn-primary">{{ "Edit my overlay"|trans }}</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <div class="overlay"></div>
                     <img src="{{ asset('apps/mapevaluator.jpg') }}">
                     <h2>{{ "Map evaluator"|trans }} <span class="badge badge-info">beta</span></h2>
                 </div>
@@ -52,6 +36,11 @@
                     <a href="{{ path('map_evaluator') }}" class="btn btn-block btn-lg btn-primary">{{ "Try my map"|trans }}</a>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-4">
+            <h1>Community Softwares & Tools</h1>
         </div>
 
         <div class="col-md-3">
@@ -70,6 +59,21 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="overlay"></div>
+                    <img src="{{ asset('apps/bifrost.png') }}">
+                    <h2>{{ "Bifrost" }}</h2>
+                </div>
+                <div class="card-body">
+                    <p>{{ "A simple stat graphic generator for Ragnarock videos and other content, creates both end-screen stats and song info screen."|trans }}</p>
+                    <a href="https://unforeseenocean.github.io/Bifrost/" target ="_blank" class="btn btn-block btn-lg btn-primary">{{ "Go to"|trans }} <i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+        </div>
+
+
     </div>
     </div>
 {% endblock %}
