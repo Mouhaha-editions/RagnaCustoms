@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use ZipArchive;
 
 
 class SongsController extends AbstractController
@@ -361,6 +362,8 @@ class SongsController extends AbstractController
         $em->flush();
 
         $downloadService->addOne($song);
+        $this->reformatSubFolderName($song, $kernel);
+
         return $this->RestrictedDownload($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip", $song->getId() . ".zip");
 
 //        $response = new Response($fileContent);
@@ -438,7 +441,7 @@ class SongsController extends AbstractController
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
         $downloadService->addOne($song);
-
+        $this->reformatSubFolderName($song, $kernel);
         if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
             $fileContent = file_get_contents($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip");
             $response = new Response($fileContent);
@@ -566,5 +569,32 @@ class SongsController extends AbstractController
     public function partialPreview(Song $song)
     {
         return new JsonResponse(['response' => $this->renderView("songs/partial/preview_player.html.twig", ['song' => $song])]);
+    }
+
+    private function reformatSubFolderName(Song $song, KernelInterface $kernel)
+    {
+        $zipFile = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip";
+//        var songDir = $"{songInfo.Name.Slug()}{songInfo.Author.Slug()}{songInfo.Mapper.Slug()}";
+        $oldFolderName = $this->slugify($song->getName());
+        $newFolderName = $this->slugify($song->getName()).$this->slugify($song->getAuthorName()).$this->slugify($song->getLevelAuthorName());
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipFile) === true) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                if(preg_match('#^'.$oldFolderName.'\/(.*)$#',$filename)){
+                    $zip->renameIndex($i,preg_replace('#^'.$oldFolderName.'\/(.*)$#',$newFolderName.'/$1',$filename));
+                }
+            }
+            $zip->close();
+        }
+    }
+
+    private function slugify(string $text): string
+    {
+        $pattern = '/[^a-zA-Z]/';
+        $text = preg_replace($pattern, '', $text);
+
+        return strtolower($text);
     }
 }
