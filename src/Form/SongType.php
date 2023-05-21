@@ -71,16 +71,7 @@ class SongType extends AbstractType
                               ->setParameter('available', [SongRequest::STATE_IN_PROGRESS]);
                 }
             ])
-            ->add('programmationDate',
-                DateTimeType::class, [
-                    'label'      => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
-                    'widget'     => 'single_text',
-                    'required'   => true,
-                    'input'      => "datetime",
-                    "empty_data" => '',
-                    'label_html' => true,
-                    'help'       => "sorry for now it's based on UTC+1 (french time) "
-                ])
+
             ->add('wip', null, [
                 'label' => "Work in progress"
             ])
