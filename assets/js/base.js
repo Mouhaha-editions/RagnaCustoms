@@ -111,12 +111,33 @@ function spawnSnowCSS(snow_density = 200){
 
 // Load the rules and execute after the DOM loads
 window.onload = function() {
-    spawnSnowCSS(snowflakes_count);
-    spawn_snow(snowflakes_count);
-    console.log("start");
+    // spawnSnowCSS(snowflakes_count);
+    // spawn_snow(snowflakes_count);
 };
 //endregion
 $(function () {
+    $(document).on('click','.btn-paginatation.see-more',function(){
+        let $t = $(this);
+        $.ajax({
+            url : $t.data('href'),
+            dataType: 'html',
+            success: function(data){
+                if($t.data('parent') === undefined) {
+                    $t.parent().append(data);
+                }else{
+                    let parentElt = $($t.data('parent'));
+                    parentElt.append(data);
+                }
+                if($t.closest(".see-more-delete") !== undefined) {
+                    $t.closest(".see-more-delete").remove();
+                }
+                $t.remove();
+                $(document).trigger('seemore.remove');
+            }
+        });
+        return false;
+    });
+
     toggle_snow();
     $(document).on('click','.snowflake-toggle',function(){
         toggle_snow();

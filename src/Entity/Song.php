@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Enum\EAvailablePlatform;
 use App\Filter\SimpleSearchFilter;
 use App\Repository\SongRepository;
 use App\Service\StatisticService;
@@ -121,6 +122,10 @@ class Song
 
     #[ORM\Column(nullable: true)]
     private ?bool $isNotificationDone = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $bestPlatform = [];
+
 
     public function __construct()
     {
@@ -485,7 +490,7 @@ class Song
 
     public function getVoteAverage()
     {
-        return $this->countVotes == 0 ? 0 : $this->getTotalVotes() / $this->getCountVotes();
+        return $this->countVotes == 0 ? 0.00 : $this->getTotalVotes() / $this->getCountVotes();
     }
 
     public function getTotalVotes(): ?float
@@ -1048,4 +1053,19 @@ class Song
         return $this;
     }
 
+    public function getBestPlatform(): ?array
+    {
+        return $this->bestPlatform;
+    }
+
+    public function setBestPlatform(?array $bestPlatform): self
+    {
+        $this->bestPlatform = $bestPlatform;
+
+        return $this;
+    }
+    public function hasBestPlatform($search): bool
+    {
+        return in_array($search, $this->bestPlatform);
+    }
 }

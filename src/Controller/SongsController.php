@@ -237,10 +237,26 @@ class SongsController extends AbstractController
                     break;
             }
         }
+
+        if ($request->get('mapped_for', null) !== null) {
+
+            switch ($request->get('mapped_for')) {
+                case 1:
+                    $qb->andWhere('(s.bestPlatform = 1)');
+                    $filters[] = "Mapped for flat";
+                    break;
+                case 0 :
+                    $qb->andWhere('(s.bestPlatform = 0)');
+                    $filters[] = "Mapped for VR";
+                    break;
+            }
+        }
+
         if ($request->get('not_downloaded', 0) > 0 && $this->isGranted('ROLE_USER')) {
             $qb->leftJoin("s.downloadCounters", 'download_counters')->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")->andHaving("count_download_user = 0")->setParameter('user', $this->getuser());
             $filters[] = "not downloaded";
         }
+
         $qb->andWhere('s.moderated = true');
         $qb->andWhere('s.active = true')
         ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')
@@ -443,17 +459,17 @@ class SongsController extends AbstractController
     public function songDetail(Request $request, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, PaginationService $paginationService, DiscordService $discordService, ?Song $song = null)
     {
 
-        if ($song->getProgrammationDate() == null || $song->getProgrammationDate() >= new DateTime()|| $song == null || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
+        if ($song == null || $song->getProgrammationDate() == null || $song->getProgrammationDate() >= new DateTime() || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser()) || $song->getIsDeleted()) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }
+
         $song->setViews($song->getViews() + 1);
         $feedback = new Vote();
         $feedback->setSong($song);
         $feedback->setHash($song->getNewGuid());
         $feedback->setUser($this->getUser());
         $feedbackForm = $this->createForm(VoteType::class, $feedback);
-
         $feedbackForm->handleRequest($request);
         $em = $doctrine->getManager();
 
@@ -478,13 +494,19 @@ class SongsController extends AbstractController
 //                ->setParameter('hash', $difficulty->getSong()->getNewGuid())
                                ->groupBy('s.user')->addOrderBy('max_score', 'DESC');
 
-            $pagination = $paginationService->setDefaults(20)->process($scores, $request);
+            $pagination = $paginationService->setDefaults(30)->process($scores, $request);
             $levels [] = [
                 "level"      => $level,
                 "difficulty" => $difficulty,
                 "color"      => $difficulty->getDifficultyRank()->getColor(),
                 'scores'     => $pagination
             ];
+            if($pagination->isPartial()){
+                return $this->render('songs/partial/leaderboard.html.twig',[
+                    'level'       => array_pop($levels),
+                ]);
+            }
+
         }
 
         return $this->render('songs/detail.html.twig', [

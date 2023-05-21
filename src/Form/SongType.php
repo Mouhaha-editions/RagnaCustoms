@@ -27,17 +27,6 @@ class SongType extends AbstractType
         /** @var Song $entity */
         $entity = $builder->getData();
         $builder
-            ->add("zipFile", FileType::class, [
-                "mapped"      => false,
-                "required"    => $entity->getId() == null,
-                "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
-                "constraints" => [
-                    new File([
-                        'maxSize'        => '10M',
-                        'maxSizeMessage' => 'You can upload up to 15Mo with a premium account Tier 2',
-                    ])
-                ]
-            ])
             ->add('description', null, [
                 'help'      => "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description",
                 'help_html' => true
@@ -82,21 +71,22 @@ class SongType extends AbstractType
                               ->setParameter('available', [SongRequest::STATE_IN_PROGRESS]);
                 }
             ])
-            ->add('programmationDate',
-                DateTimeType::class, [
-                    'label'      => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
-                    'widget'     => 'single_text',
-                    'required'   => true,
-                    'input'      => "datetime",
-                    "empty_data" => '',
-                    'label_html'=>true,
-                    'help'       => "sorry for now it's based on UTC+1 (french time) "
-                ])
+
             ->add('wip', null, [
                 'label' => "Work in progress"
             ])
             ->add('isExplicit', null, [
                 'label' => "Explicit content"
+            ])
+            ->add('bestPlatform', ChoiceType::class, [
+                'choices'  => [
+                    'Vr'   => 0,
+                    'Viking On Tour' => 1,
+                ],
+                'required' => true,
+                'multiple' => true,
+                'expanded' => true,
+                'label'    => 'Mapped for',
             ])
             ->add('converted', null, [
                 'label' => "Converted map"

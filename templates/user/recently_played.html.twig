@@ -1,58 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}RagnaCustoms.com, Custom song library{% endblock %}
-
 {% block body %}
-    <div {{ stimulus_controller('song-library') }}  class="container">
-        <div class="row pt-5">
-            <div class="col-md-10 text-left">
-                <h1 class="">
-                    {{ "Custom song library"|trans }}
-                </h1>
-
-            </div>
-        </div>
-        <div id="song-list" class="row">
+<div {{ stimulus_controller('recently-played') }} {{ stimulus_target('recently-played', 'background') }}>
+    <div  class="container pt-4">
+        <div class="row">
             <div class="col-md-10">
-
-<div>
-    Filters : {% for filter in filters %}<span class="tag-filter">{{ filter|trans|capitalize }}</span>{% else %} {{ "no filter"|trans }}{% endfor %}
-</div>
-
+                <h2>{{ "recently played"|trans }}</h2>
                 {% import "widget/order_link.html.twig" as macro_order %}
-                <table class="featured-table-lg table table-sm">
+                <table class="table songs recently-played">
                     <tr>
                         <th>
                             {{ macro_order.order_link("Title","name") }}
                         </th>
-                        <th></th>
-                        <th>{{ "Difficulties"|trans }}</th>
-                        <th>{{ "Mapper"|trans }}</th>
-                        <th>
-                            {{ macro_order.order_link("Votes","rating") }}
+                        <th class="">{{ "Difficulty"|trans }}</th>
+                        <th class="">{{ "Rank"|trans }}</th>
+                        <th class="">{{ "Distance"|trans }}</th>
+                        <th class="">
+                            {{ macro_order.order_link("Score","score") }}
                         </th>
-                        <th>{{ "Rating"|trans }}</th>
-                        <th class="text-right">
-                            {{ macro_order.order_link("Upload Date","upload_date") }}
+                        <th class="">
+                            {{ macro_order.order_link("Date","date") }}
                         </th>
-                        <th class="text-right">
-                            {{ macro_order.order_link("Downloads","downloads") }}
-
-                        </th>
+                        <th class="">{{ "Stats"|trans }}</th>
                         <th></th>
                     </tr>
-                    {% for song in songs.entities %}
-                        {% include 'songs/partial/song_row.html.twig' with {songs:songs} %}
-                    {% else %}
-
-                        <tr>
-                            <td colspan="8">
-                                {{ "No song for now"|trans }}
-                            </td>
-                        </tr>
+                    {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+                    {% for score in pagination.entities %}
+                        {% include 'songs/partial/song_row_recently_played.html.twig' with {score:score} %}
                     {% endfor %}
                 </table>
-                {% include 'widget/paginate.html.twig' with {pagination:songs} %}
+                {% include 'widget/paginate.html.twig' with {pagination:pagination} %}
             </div>
             <div class="col-md-2">
                 <h2 class="active">{{ "Filter"|trans }}</h2>
@@ -65,29 +42,16 @@
                                placeholder="" name="search"
                                id="search">
                     </div>
-                    <div class="form-group">
-                        <label for="mapped_for">{{ "Mapped for"|trans }}</label>
-                        <select id="mapped_for"
-                                name="mapped_for"
-                                class="form-control form-control-sm">
-                            <option
-                                    value="">{{ "Any"|trans }}</option>
-                            <option {% if  app.request.get('mapped_for', null) is same as 0 %}selected="selected"{% endif %}
-                                    value="0">{{ "VR"|trans }}</option>
-                            <option {% if  app.request.get('mapped_for', null) is same as 1 %}selected="selected"{% endif %}
-                                    value="1">{{ "Flat"|trans }}</option>
 
-                        </select>
-                    </div>
                     <div class="form-group">
-                        <label for="downloads-submitted-date">{{ "Submitted date"|trans }}</label>
+                        <label for="search">{{ "Submitted date"|trans }}</label>
                         <select id="downloads-submitted-date"
                                 name="downloads_submitted_date"
                                 class="form-control form-control-sm">
                             <option
                                     value="">{{ "Any time"|trans }}</option>
-                                <option {% if  app.request.get('downloads_submitted_date') == 1 %}selected="selected"{% endif %}
-                                        value="1">{{ "Last 7 days"|trans }}</option>
+                            <option {% if  app.request.get('downloads_submitted_date') == 1 %}selected="selected"{% endif %}
+                                    value="1">{{ "Last 7 days"|trans }}</option>
                             <option {% if  app.request.get('downloads_submitted_date') == 2 %}selected="selected"{% endif %}
                                     value="2">{{ "Last 15 days"|trans }}</option>
                             <option {% if  app.request.get('downloads_submitted_date') == 2 %}selected="selected"{% endif %}
@@ -148,12 +112,12 @@
                     </div>
                     <div class="form-group">
                         {% if is_granted('ROLE_USER') %}
-                        <div class="form-check">
-                            <input class="form-check-input" {% if app.request.get("not_downloaded") == 1%}checked="checked"{% endif%} type="checkbox" value="1" name="not_downloaded" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                {{ "Not downloaded"|trans }}
-                            </label>
-                        </div>
+                            <div class="form-check">
+                                <input class="form-check-input" {% if app.request.get("not_downloaded") == 1%}checked="checked"{% endif%} type="checkbox" value="1" name="not_downloaded" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    {{ "Not downloaded"|trans }}
+                                </label>
+                            </div>
                         {% endif %}
                         <div class="form-check">
                             <input class="form-check-input" {% if app.request.get("only_ranked") == 1%}checked="checked"{% endif%} type="checkbox" value="1" name="only_ranked" id="only_ranked">
@@ -182,8 +146,7 @@
             </div>
         </div>
     </div>
+    </div>
+
 {% endblock %}
 
-    {% block javascripts %}
-        {{ parent()}}
-    {% endblock %}

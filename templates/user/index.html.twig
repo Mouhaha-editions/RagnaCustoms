@@ -135,28 +135,10 @@
             <div class="row">
                 <div class="col-md-6">
                     <h2>{{ "recently played"|trans }}</h2>
-                    <table class="table songs recently-played">
-                        <tr>
-                            <th>{{ "Song title"|trans }}</th>
-                            <th class="">{{ "Difficulty"|trans }}</th>
-                            <th class="">{{ "Distance"|trans }}</th>
-                            <th class="">{{ "Score"|trans }}</th>
-                            <th class="">{{ "Date"|trans }}</th>
-                            <th class="">{{ "Stats"|trans }}</th>
-                            <th></th>
-                        </tr>
-                        {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
-                        {% for score in pagination.entities %}
-                            {% include 'songs/partial/song_row_recently_played.html.twig' with {score:score} %}
-                        {% endfor %}
-                    </table>
-                    {% include 'widget/paginate.html.twig' with {pagination:pagination} %}
+                   <a href="{{ url('recently_played') }}">We moved it here!</a>
                 </div>
                 <div class="col-md-6">
-                    <h2>{{ "Score History"|trans }}</h2>
-                    <canvas  id="UserChart" style="width:100%;height:450px;"></canvas >
-                    <small>{{ "Click on <i class='fas fa-chart-line'></i> to see the history of the song."|trans|raw }}{% if not is_granted('ROLE_PREMIUM_LVL1') %}You only can see you 6 last sessions, as premium member you will be able to see the 20 last sessions{% endif %}</small>
-                </div>
+                   </div>
             </div>
         </div>
     </div>

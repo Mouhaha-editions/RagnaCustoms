@@ -35,7 +35,7 @@
                     </tr>
                     <tr>
                         <td>note (nb vote):</td>
-                        <td>{{ song.countVotes is not null and song.countVotes >0 ? (song.totalVotes/song.countVotes)|round(2):"0.00" }} ({{ song.countVotes is not null and song.countVotes >0 ? song.countVotes :0 }})
+                        <td>{{ song.voteAverage|round(2, "floor") }} ({{ song.countVotes is not null and song.countVotes >0 ? song.countVotes :0 }})
                         </td>
                     </tr>
                     <tr>
