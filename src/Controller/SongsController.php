@@ -574,7 +574,6 @@ class SongsController extends AbstractController
     private function reformatSubFolderName(Song $song, KernelInterface $kernel)
     {
         $zipFile = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip";
-//        var songDir = $"{songInfo.Name.Slug()}{songInfo.Author.Slug()}{songInfo.Mapper.Slug()}";
         $oldFolderName = $this->slugify($song->getName());
         $newFolderName = $this->slugify($song->getName()).$this->slugify($song->getAuthorName()).$this->slugify($song->getLevelAuthorName());
 
