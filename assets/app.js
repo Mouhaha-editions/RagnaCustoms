@@ -12,7 +12,6 @@ import './bootstrap';
 // registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
 import { createApp } from 'vue';
-import App from './components/Demo.vue';
 import SongSmallPreview from './components/SmallSongList.vue';
 
 createApp(SongSmallPreview).mount('.list-songs');

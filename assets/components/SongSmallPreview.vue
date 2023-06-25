@@ -29,22 +29,7 @@
             {{ song.mapper.fullname }}
           </span></a>
       </div>
-      <div class="up_down_vote" id="up_down_vote_2017">
-        <div><a style="text-decoration:none" data-toggle="tooltip" title="" class="ajax-link"
-                data-success-action="replace" data-replace-selector="#up_down_vote_2017" href="#"
-                data-url="/song-vote/upvote/2017" data-original-title="Upvote this song">
-          <i class="text-grey fas fa-arrow-up"></i>
-          7
-        </a></div>
-        <div>
-          <a style="text-decoration:none" data-toggle="tooltip" class="ajax-link" data-success-action="replace"
-             data-replace-selector="#up_down_vote_2017" title="" href="#" data-url="/song-vote/downvote/2017"
-             data-original-title="Downvote this song">
-            <i class="text-grey fas fa-arrow-down"></i>
-            0
-          </a>
-        </div>
-      </div>
+    <UpDownVote song-id="{{ songId }}}"></UpDownVote>
 
       <div class="pt-3">
         <a href="#" data-toggle="modal" data-target="#previewSong" data-refresh="true"
@@ -68,9 +53,11 @@
 
 <script>
 import axios from "axios";
+import UpDownVote from "./Tools/UpDownVote";
 
 export default {
   name: "SongSmallPreview",
+  components: {UpDownVote},
   props: ['song-id'],
   setup(props) {
     // this.songId = props["song-id"];
