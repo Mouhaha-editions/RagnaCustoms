@@ -164,7 +164,7 @@
         {% endfor %}
     {% endfor %}
     <div id="snow"></div>
-
+    {% block body_no_swup %}
     <main id="swup">
         <div id="{{ app.request.attributes.get('_route') }}">
             {% block body %}
@@ -172,6 +172,7 @@
             {% endblock %}
         </div>
     </main>
+    {% endblock %}
 
     {% block endBody %}
         <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"

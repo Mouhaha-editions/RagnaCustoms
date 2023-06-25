@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomePageController!{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-lg-4">
+        <h2 class="shiny-text">{{ "Top Rated"|trans }} <small>{{ "last %days% days"|trans|replace({"%days%":30}) }}</small></h2>
+
+        <div id="app-vue" class="list-songs">
+
+    </div>
+    </div>
+</div>
+
+{% endblock %}

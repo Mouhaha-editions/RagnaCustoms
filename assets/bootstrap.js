@@ -9,4 +9,3 @@ export const app = startStimulusApp(require.context(
 
 
 //import './styles/bootstrap.scss';
-

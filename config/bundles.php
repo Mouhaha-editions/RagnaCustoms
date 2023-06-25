@@ -21,9 +21,10 @@ return [
     Tetranz\Select2EntityBundle\TetranzSelect2EntityBundle::class => ['all' => true],
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
     EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle::class => ['all' => true],
-    Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
     Sentry\SentryBundle\SentryBundle::class => ['all' => true],
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
     ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle::class => ['all' => true],
     Karser\Recaptcha3Bundle\KarserRecaptcha3Bundle::class => ['all' => true],
+    Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
+    Symfony\UX\Vue\VueBundle::class => ['all' => true],
 ];

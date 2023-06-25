@@ -208,7 +208,7 @@ class Song
         return $this;
     }
 
-    public function getMapper()
+    public function getMapper(): string
     {
         return $this->user->getMapperName() ?? $this->user->getUsername();
     }
@@ -445,7 +445,7 @@ class Song
         $this->moderated = $moderated;
     }
 
-    public function getUser(): ?UserInterface
+    public function getUser(): UserInterface|Utilisateur|null
     {
         return $this->user;
     }
@@ -988,6 +988,7 @@ class Song
     {
         return StatisticService::dateDiplayer($this->getLastDateUpload());
     }
+
 
     public function __api()
     {

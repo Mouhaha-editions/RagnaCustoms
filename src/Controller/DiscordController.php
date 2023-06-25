@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Utilisateur;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
-use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use GuzzleHttp\Client;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,10 +17,6 @@ use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 
 class DiscordController extends AbstractController
 {
-    /**
-     * @return Response
-     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
-     */
     #[Route(path: '/discord-link', name: 'discord_link')]
     public function Discord(ManagerRegistry $doctrine): Response
     {
@@ -27,27 +25,26 @@ class DiscordController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-
         $provider = new Discord([
-            'clientId' => $this->getParameter('discord_client_id'),
+            'clientId'     => $this->getParameter('discord_client_id'),
             'clientSecret' => $this->getParameter('discord_client_secret'),
-            'redirectUri' => $this->generateUrl("discord_link", [], UrlGenerator::ABSOLUTE_URL)
+            'redirectUri'  => $this->generateUrl("discord_link", [], UrlGenerator::ABSOLUTE_URL)
         ]);
-        if (!isset($_GET['code'])) {
 
+        if (!isset($_GET['code'])) {
             // Step 1. Get authorization code
             $options = [
                 'scope' => [
                     'identify',
                     'email',
-                    'guilds'
+                    'guilds.members.read'
                 ]
             ];
             $authUrl = $provider->getAuthorizationUrl($options);
             $_SESSION['oauth2state'] = $provider->getState();
-            header('Location: ' . $authUrl);
 
-        // Check given state against previously stored one to mitigate CSRF attack
+            return $this->redirect($authUrl);
+            // Check given state against previously stored one to mitigate CSRF attack
         } elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
 
             unset($_SESSION['oauth2state']);
@@ -66,11 +63,36 @@ class DiscordController extends AbstractController
 
                 /** @var Utilisateur $user */
                 $user = $this->getUser();
-                $user->setDiscordUsername($DiscordUser->getUsername()."#".$DiscordUser->getDiscriminator());
+                $user->setDiscordUsername($DiscordUser->getUsername() . "#" . $DiscordUser->getDiscriminator());
                 $user->setDiscordId($DiscordUser->getId());
                 $user->setDiscordEmail($DiscordUser->getEmail());
+                $user->setAuthToken($token->getToken());
+                $user->setAuthTokenRefresh($token->getRefreshToken());
 
                 $doctrine->getManager()->flush();
+                $client = new Client();
+
+                $response = $client->request('GET', "https://discord.com/api/v9/guilds/824960946404327450/members/{$user->getDiscordId()}", [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $user->getAuthToken(),
+                        'Accept' => 'application/json'
+                    ]
+                ]);
+
+
+                if ($response->getStatusCode() === 200) {
+                    $memberData = json_decode($response->getBody(), true);
+                    $roles = $memberData['roles'];
+
+                    $x = in_array('helping viking', $roles);
+                    // Faites ce que vous voulez avec les informations sur les rôles de l'utilisateur
+                    foreach ($roles as $roleId) {
+                        // Vous pouvez récupérer les détails du rôle en effectuant une autre requête à l'API Discord
+                        // GET /guilds/{guild_id}/roles/{role_id}
+                    }
+                }
+
+
                 $this->addFlash('success', 'Account linked with Discord');
             } catch (Exception $e) {
 
@@ -81,29 +103,29 @@ class DiscordController extends AbstractController
         }
         return $this->redirectToRoute('user');
     }
-    /**
-     * @var ClientRegistry
-     */
-    private $clientRegistry;
-
-    /**
-     * DiscordOAuthController constructor.
-     *
-     * @param ClientRegistry $clientRegistry
-     */
-    public function __construct(ClientRegistry $clientRegistry)
-    {
-        $this->clientRegistry = $clientRegistry;
-    }
 
     /**
      * @return Response
      */
-    #[Route(name: 'discord_redirect_authorization', path: 'redirect_authorization')]
+    #[Route('/discord/redirect-auth', name: 'discord_redirect_authorization')]
     public function redirectAuthorizationAction(): Response
     {
-        return $this->clientRegistry->getClient('discord')
-            ->redirect(['identify', 'email', 'guilds']);
+        $provider = new Discord([
+            'clientId'     => $this->getParameter('discord_client_id'),
+            'clientSecret' => $this->getParameter('discord_client_secret'),
+            'redirectUri'  => $this->generateUrl("discord_link", [], UrlGenerator::ABSOLUTE_URL)
+        ]);
+
+        $options = [
+            'scope' => [
+                'identify',
+                'email',
+                'guilds'
+            ]
+        ];
+        $authUrl = $provider->getAuthorizationUrl($options);
+        $_SESSION['oauth2state'] = $provider->getState();
+        return $this->redirect($authUrl);
     }
 
     /**
@@ -115,10 +137,7 @@ class DiscordController extends AbstractController
         // empty as authenticator will handle the request
     }
 
-    /**
-     * @return Response
-     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
-     */
+
     #[Route(path: '/discord-link', name: 'discord_check')]
     public function DiscordCheck(ManagerRegistry $doctrine): Response
     {
@@ -127,14 +146,13 @@ class DiscordController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-
         $provider = new Discord([
-            'clientId' => $this->getParameter('discord_client_id'),
+            'clientId'     => $this->getParameter('discord_client_id'),
             'clientSecret' => $this->getParameter('discord_client_secret'),
-            'redirectUri' => $this->generateUrl("discord_link", [], UrlGenerator::ABSOLUTE_URL)
+            'redirectUri'  => $this->generateUrl("discord_link", [], UrlGenerator::ABSOLUTE_URL)
         ]);
-        if (!isset($_GET['code'])) {
 
+        if (!isset($_GET['code'])) {
             // Step 1. Get authorization code
             $options = [
                 'scope' => [
@@ -166,7 +184,7 @@ class DiscordController extends AbstractController
 
                 /** @var Utilisateur $user */
                 $user = $this->getUser();
-                $user->setDiscordUsername($DiscordUser->getUsername()."#".$DiscordUser->getDiscriminator());
+                $user->setDiscordUsername($DiscordUser->getUsername() . "#" . $DiscordUser->getDiscriminator());
                 $user->setDiscordId($DiscordUser->getId());
                 $user->setDiscordEmail($DiscordUser->getEmail());
 

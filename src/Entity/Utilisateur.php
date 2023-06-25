@@ -161,6 +161,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastApiAttempt = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $auth_token = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $auth_token_refresh = null;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -1312,5 +1318,29 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getSongs()->filter(function (Song $song) {
             return $song->isRanked();
         });
+    }
+
+    public function getAuthToken(): ?string
+    {
+        return $this->auth_token;
+    }
+
+    public function setAuthToken(?string $auth_token): static
+    {
+        $this->auth_token = $auth_token;
+
+        return $this;
+    }
+
+    public function getAuthTokenRefresh(): ?string
+    {
+        return $this->auth_token_refresh;
+    }
+
+    public function setAuthTokenRefresh(string $auth_token_refresh): static
+    {
+        $this->auth_token_refresh = $auth_token_refresh;
+
+        return $this;
     }
 }

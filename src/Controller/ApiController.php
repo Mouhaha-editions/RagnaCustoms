@@ -14,6 +14,7 @@ use App\Repository\SongCategoryRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
+use App\Service\SongService;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -121,11 +122,19 @@ class ApiController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/api/song/details/{id}', name: 'api_song_detail')]
+    public function songDetail(Request $request, Song $song, SongService $songService): Response
+    {
+        return new JsonResponse($songService->apiRender($song));
+    }
+
     #[Route(path: '/api/song/{id}', name: 'api_song')]
     public function song(Request $request, Song $song): Response
     {
         return new JsonResponse($song->__api());
     }
+
+
 
     /**
      * @param Request $request

@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\DifficultyRank;
-use App\Entity\FollowMapper;
 use App\Entity\Notification;
 use App\Entity\Overlay;
 use App\Entity\Score;
@@ -175,7 +174,7 @@ class SongService
                     $song->setYoutubeLink($form->get('youtubeLink')->getData());
                 }
             }
-            $this->process($unzippableFile,$unzipFolder, $song, $isWip);
+            $this->process($unzippableFile, $unzipFolder, $song, $isWip);
             if ($form !== null) {
                 $this->emulatorFileDispatcher($song, true);
                 $this->coverOptimisation($song);
@@ -189,31 +188,7 @@ class SongService
 
     }
 
-    public function processFileWithoutForm(Request $request,Song $song)
-    {
-        try {
-            $folder = $this->kernel->getProjectDir() . "/public/tmp-song/";
-            $unzipFolder = $folder . uniqid();
-            @mkdir($unzipFolder);
-            if ($request->files->get('file') != null) {
-                $file = $request->files->get('file');
-                $file->move($unzipFolder, $file->getClientOriginalName());
-                $unzippableFile = $unzipFolder . "/" . $file->getClientOriginalName();
-            } else {
-                return false;
-            }
-            $this->process($unzippableFile, $unzipFolder,$song, true);
-            $this->emulatorFileDispatcher($song, true);
-            $this->coverOptimisation($song);
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        } finally {
-            $this->rrmdir($unzipFolder);
-        }
-        return true;
-    }
-    
-    private function process(string $unzippableFile,string $unzipFolder, Song $song, bool $isWip = false)
+    private function process(string $unzippableFile, string $unzipFolder, Song $song, bool $isWip = false)
     {
         $allowedFiles = [
             'preview.ogg',
@@ -256,7 +231,7 @@ class SongService
             $this->rrmdir($unzipFolder);
             throw new Exception("WTF? I can't read your info.dat please check the file encoding.");
         }
-        if(!file_exists($unzipFolder."/".$json->_coverImageFilename)){
+        if (!file_exists($unzipFolder . "/" . $json->_coverImageFilename)) {
             throw new Exception("The cover name doesn't match to the name in the info.dat.");
         }
         $allowedFiles[] = $json->_coverImageFilename;
@@ -272,7 +247,7 @@ class SongService
             throw new Exception("Cover have to be a square.");
         }
 
-        $new =  $song->getId() == null || $isWip != $song->getWip();
+        $new = $song->getId() == null || $isWip != $song->getWip();
         if ($song->isRanked()) {
             $this->rrmdir($unzipFolder);
             throw new Exception("This song is ranked, you can't update it for now, please contact us.");
@@ -286,8 +261,12 @@ class SongService
         $songName = trim($json->_songName);
         $authorName = $json->_songAuthorName;
         $existingSong = $this->em->getRepository(Song::class)
-        ->findOneBy(['name'=>$songName,'authorName'=>$authorName,'user'=>$song->getUser()]);
-        if($existingSong != null  && $new == true && $isWip == false){
+                                 ->findOneBy([
+                                     'name'       => $songName,
+                                     'authorName' => $authorName,
+                                     'user'       => $song->getUser()
+                                 ]);
+        if ($existingSong != null && $new == true && $isWip == false) {
             throw new Exception("You already uploaded this song, please edit the last upload.");
         }
         $song->setVersion($json->_version);
@@ -644,7 +623,7 @@ class SongService
 
                 if (!$getpreview) {
                     $ffprobe = FFProbe::create([
-                        'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+                        'ffmpeg.binaries'  => '/usr/bin/ffmpeg',
                         'ffprobe.binaries' => '/usr/bin/ffprobe'
                     ]);
                     $probe = $ffprobe->format($songfile);
@@ -718,6 +697,30 @@ class SongService
                 }
             }
         }
+    }
+
+    public function processFileWithoutForm(Request $request, Song $song)
+    {
+        try {
+            $folder = $this->kernel->getProjectDir() . "/public/tmp-song/";
+            $unzipFolder = $folder . uniqid();
+            @mkdir($unzipFolder);
+            if ($request->files->get('file') != null) {
+                $file = $request->files->get('file');
+                $file->move($unzipFolder, $file->getClientOriginalName());
+                $unzippableFile = $unzipFolder . "/" . $file->getClientOriginalName();
+            } else {
+                return false;
+            }
+            $this->process($unzippableFile, $unzipFolder, $song, true);
+            $this->emulatorFileDispatcher($song, true);
+            $this->coverOptimisation($song);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        } finally {
+            $this->rrmdir($unzipFolder);
+        }
+        return true;
     }
 
     private function wannadev_crc32($str)
@@ -1176,7 +1179,7 @@ class SongService
 
     public function sendNewNotification(Song $song)
     {
-        if($song->getActive() === true && $song->getProgrammationDate()<=new DateTime()) {
+        if ($song->getActive() === true && $song->getProgrammationDate() <= new DateTime()) {
             $user = $song->getUser();
             $this->discordService->sendNewSongMessage($song);
             foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
@@ -1192,6 +1195,36 @@ class SongService
             $song->setIsNotificationDone(true);
             $this->em->flush();
         }
+    }
+
+    public function apiRender(Song $song)
+    {
+        return [
+            "id"        => $song->getId(),
+            "fullname"  => $song->getName(),
+            "isRanked"  => $song->isRanked(),
+            "hash"      => $song->getNewGuid(),
+            "ragnabeat" => $song->getInfoDatFile(),
+            "author"    => [
+                'fullname' => $song->getAuthorName(),
+                'url'      => $this->router->generate('song_library', ['search' => 'artist:' . $song->getAuthorName()])
+            ],
+            "mapper"    => [
+                'fullname' => $song->getLevelAuthorName(),
+                'url'      => $this->router->generate('mapper_profile', ['username' => $song->getMapper()])
+            ],
+            "levels"    => $song
+                ->getSongDifficulties()
+                ->map(function (SongDifficulty $sd) {
+                    return [
+                        'rank'  => $sd->getDifficultyRank()->getLevel(),
+                        'color' => $sd->getDifficultyRank()->getColor()
+                    ];
+                })
+                ->toArray(),
+            "cover"     => $song->getCover()
+        ];
+
     }
 }
 
