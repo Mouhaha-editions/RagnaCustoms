@@ -242,7 +242,7 @@ class SongsController extends AbstractController
 
             switch ($request->get('mapped_for')) {
                 case 2:
-                    $qb->andWhere('(s.bestPlatform = \'%1%\')');
+                    $qb->andWhere('(s.bestPlatform LIKE \'%1%\')');
                     $filters[] = "Mapped for flat";
                     break;
                 case 1 :
