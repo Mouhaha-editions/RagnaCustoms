@@ -22,7 +22,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 #[ORM\Table(name: 'score')]
 #[ORM\UniqueConstraint(name: 'user_difficulty_2', columns: [
     'user_id',
-    'song_difficulty_id'
+    'song_difficulty_id',
+    'plateform'
 ])]
 #[ORM\Entity(repositoryClass: ScoreRepository::class)]
 class Score
@@ -53,7 +54,7 @@ class Score
     private $missed;
     #[ORM\Column(type: 'integer', nullable: true)]
     private $percentageOfPerfects;
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private $plateform;
     #[ORM\Column(type: 'float', nullable: true)]
     private $rawPP;
