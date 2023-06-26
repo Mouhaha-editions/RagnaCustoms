@@ -238,15 +238,15 @@ class SongsController extends AbstractController
             }
         }
 
-        if ($request->get('mapped_for', null) !== null) {
+        if ($request->get('mapped_for') !== null) {
 
             switch ($request->get('mapped_for')) {
-                case 1:
-                    $qb->andWhere('(s.bestPlatform = 1)');
+                case 2:
+                    $qb->andWhere('(s.bestPlatform = \'%1%\')');
                     $filters[] = "Mapped for flat";
                     break;
-                case 0 :
-                    $qb->andWhere('(s.bestPlatform = 0)');
+                case 1 :
+                    $qb->andWhere('(s.bestPlatform LIKE \'%0%\')');
                     $filters[] = "Mapped for VR";
                     break;
             }

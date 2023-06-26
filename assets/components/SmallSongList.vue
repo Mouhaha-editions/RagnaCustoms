@@ -2,12 +2,6 @@
 
 <SongSmallPreview :song-id="songs[0]" ></SongSmallPreview>
   <table class="featured-table table table-sm">
-    <tr>
-      <th>{{ "Song"|trans }}</th>
-      <th>{{ "Mapper"|trans }}</th>
-      <th>{{ "Rating"|trans }}</th>
-      <th></th>
-    </tr>
 <SongSmallListPreview v-for="key in songs.length-1"  :song-id="songs[key]"></SongSmallListPreview>
   </table>
 

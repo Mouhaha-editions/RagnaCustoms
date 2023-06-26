@@ -72,10 +72,10 @@
                                 class="form-control form-control-sm">
                             <option
                                     value="">{{ "Any"|trans }}</option>
-                            <option {% if  app.request.get('mapped_for', null) is same as 0 %}selected="selected"{% endif %}
-                                    value="0">{{ "VR"|trans }}</option>
-                            <option {% if  app.request.get('mapped_for', null) is same as 1 %}selected="selected"{% endif %}
-                                    value="1">{{ "Flat"|trans }}</option>
+                            <option {% if  app.request.get('mapped_for', null) == 1 %}selected="selected"{% endif %}
+                                    value="1">{{ "VR"|trans }}</option>
+                            <option {% if  app.request.get('mapped_for', null) == 2 %}selected="selected"{% endif %}
+                                    value="2">{{ "Flat"|trans }}</option>
 
                         </select>
                     </div>
