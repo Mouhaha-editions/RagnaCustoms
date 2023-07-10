@@ -22,7 +22,7 @@ $(document).on('click', ".copy-clipboard", function () {
         t.tooltip('hide')
             .attr('data-original-title', title)
             .tooltip('show')
-    }, 1000);
+    }, 500);
 
     return false;
 });

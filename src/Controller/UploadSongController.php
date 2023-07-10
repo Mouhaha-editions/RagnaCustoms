@@ -138,6 +138,7 @@ class UploadSongController extends AbstractController
                     if (empty($song->getBestPlatform())) {
                         throw new Exception('Please choose at least one platform');
                     }
+
                     $this->addFlash('success', str_replace(
                         [
                             "%song%",
@@ -153,6 +154,7 @@ class UploadSongController extends AbstractController
                     $em = $doctrine->getManager();
                     $em->persist($song);
                     $em->flush();
+
                     return new JsonResponse([
                         'error'        => false,
                         'goto'         => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),

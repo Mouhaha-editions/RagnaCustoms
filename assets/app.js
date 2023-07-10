@@ -9,39 +9,45 @@
 import './styles/app.scss';
 import './bootstrap';
 
-$(function(){
+function clearTootips(){
+    $('[data-toggle=tooltip]').tooltip('hide');
+}
+
+$(function () {
 
 
- let openWithClick = false;
- $(document).on('click','.circle .center', function(e) {
-  e.preventDefault();
-   openWithClick = true;
-   if(!$(this).closest('.circle').is('.open')) {
-    $('.circle').removeClass('open');
-   }else{
-    openWithClick = false;
-   }
-  $(this).closest('.circle').toggleClass('open');
-  return false;
- });
+    let openWithClick = false;
+    $(document).on('click', '.circle .center', function (e) {
+        e.preventDefault();
+        openWithClick = true;
+        if (!$(this).closest('.circle').is('.open')) {
+            $('.circle').removeClass('open');
+        } else {
+            openWithClick = false;
+        }
+        $(this).closest('.circle').toggleClass('open');
+        clearTootips();
+        return false;
+    });
 
- $(document).on('mouseenter','.circle .center', function(e) {
-  e.preventDefault();
-  if(openWithClick){
-   return;
-  }
-  $(this).closest('.circle').addClass('open');
-  return false;
- });
+    $(document).on('mouseenter', '.circle .center', function (e) {
+        e.preventDefault();
+        if (openWithClick) {
+            return;
+        }
+        $(this).closest('.circle').addClass('open');
+        return false;
+    });
 
- $(document).on('mouseleave','.circle', function(e) {
-  e.preventDefault();
-  if(openWithClick){
-   return;
-  }
-  $(this).removeClass('open');
-  return false;
- });
- })
+    $(document).on('mouseleave', '.circle', function (e) {
+        e.preventDefault();
+        clearTootips();
+        if (openWithClick) {
+            return;
+        }
+        $(this).removeClass('open');
+        return false;
+    });
+})
 
 
