@@ -12,16 +12,14 @@ function copyToClipboard(str) {
 
 $(document).on('click', ".copy-clipboard", function () {
     let t = $(this);
-    let title = t.attr('original-title');
+    let title = t.attr('data-original-title');
     copyToClipboard($(this).data('to-copy'));
     t.tooltip('hide')
         .attr('data-original-title', "copied !")
         .tooltip('show')
     setTimeout(function () {
-        // t.tooltip('toggleEnabled');
-        t.tooltip('hide')
-            .attr('data-original-title', title)
-            .tooltip('show')
+        t.attr('data-original-title', title)
+            .tooltip('hide')
     }, 500);
 
     return false;
