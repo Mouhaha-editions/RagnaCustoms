@@ -9,9 +9,39 @@
 import './styles/app.scss';
 import './bootstrap';
 
-// registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
+$(function(){
 
-import { createApp } from 'vue';
-import SongSmallPreview from './components/SmallSongList.vue';
 
-createApp(SongSmallPreview).mount('.list-songs');
+ let openWithClick = false;
+ $(document).on('click','.circle .center', function(e) {
+  e.preventDefault();
+   openWithClick = true;
+   if(!$(this).closest('.circle').is('.open')) {
+    $('.circle').removeClass('open');
+   }else{
+    openWithClick = false;
+   }
+  $(this).closest('.circle').toggleClass('open');
+  return false;
+ });
+
+ $(document).on('mouseenter','.circle .center', function(e) {
+  e.preventDefault();
+  if(openWithClick){
+   return;
+  }
+  $(this).closest('.circle').addClass('open');
+  return false;
+ });
+
+ $(document).on('mouseleave','.circle', function(e) {
+  e.preventDefault();
+  if(openWithClick){
+   return;
+  }
+  $(this).removeClass('open');
+  return false;
+ });
+ })
+
+

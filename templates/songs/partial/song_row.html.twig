@@ -1,11 +1,18 @@
 <tr>
     <td>
         <div class="d-flex ">
-            <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" class="small-cover"
-                                                                     alt="cover"/></a>
+            <a href="{{ url('song_detail',{slug:song.slug}) }}">
+
+                <img src="{{ song.cover }}" class="small-cover"
+                                                                     alt="cover"/>
+            </a>
             <div class="song pl-1">
                 <div class="title"><a
                             href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.wip ? "[WIP] ":"" }}{{ song|raw }}</a>
+                    {% set downloaded = downloadsService.alreadyDownloaded(song) %}
+                    {% if downloaded %}
+                        <small class="small"><i data-toggle="tooltip" title="already downloaded" class="fas fa-check"></i></small>
+                    {% endif %}
                 </div>
                 <div class="author"><a
                             href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
@@ -14,8 +21,10 @@
         </div>
     </td>
     <td>
-    {% if song.hasBestPlatform(0) %}<i class="fas fa-vr-cardboard" data-toggle="tooltip" title="Mapped for VR"></i>{% endif %}
-    {% if song.hasBestPlatform(1) %}<i class="fas fa-desktop" data-toggle="tooltip" title="Mapped for flat"></i>{% endif %}
+        {% if song.hasBestPlatform(0) %}<i class="fas fa-vr-cardboard" data-toggle="tooltip"
+                                           title="Mapped for VR"></i>{% endif %}
+        {% if song.hasBestPlatform(1) %}<i class="fas fa-desktop" data-toggle="tooltip"
+                                           title="Mapped for flat"></i>{% endif %}
     </td>
     <td>
         <div class="level-list">
@@ -28,6 +37,9 @@
                 </div>
             {% endfor %}
         </div>
+    </td>
+    <td>
+        {{ song.beatsPerMinute }}
     </td>
     <td>
         <div class="mapper">
@@ -50,43 +62,8 @@
     {#        <td class="text-right">{{ song.scores|length }}</td> #}
     {#    {% endif %} #}
     <td class="download">
-        {% set downloaded = downloadsService.alreadyDownloaded(song) %}
-        <div class="on-hover">
-            <div class="big-buttons d-none">
-                <a data-no-swup="true" href="ragnac://install/{{ song.id }}" class="one-click"><i
-                            class="fas fa-download"></i><br/>1
-                    click</a>
-                <a data-no-swup="true" href="{{ url("song_direct_download",{id:song.id}) }}" class="ddl text-uppercase"><i
-                            class="fas fa-download"></i><br/>Zip</a>
-            </div>
-            <a data-toggle="tooltip" href="#" title="Click to copy !rc code"
-               data-to-copy="!rc {{ song.id }}" class="copy-clipboard mr-1 btn-twitch">
-                <i class="fab fa-twitch" style="color:#bf94ff"></i>
-            </a>
-            <a href="#"
-               data-toggle="modal"
-               data-target="#previewSong"
-               data-refresh="true"
-               data-url="{{ url("partial_preview_song",{id:song.id}) }}"
-               class="ajax-load preview-popup">
-                <i class="fas fa-play-circle"></i>
-            </a>
-
-            <a href="#"
-                    {#                title="File size: {{ songService.fileSize(song) }}" #}
-               class="open-download-buttons text-success ml-1">
-                <i class="fas fa-download"></i>
-            </a>
-        </div>
-
-        <div class="non-hover">
-            {% if downloaded %}
-                <i class="fas fa-check"></i>
-            {% endif %}
+        <div style="width:40px;height:40px;position:absolute; top:-20px;">
+            {% include 'song_partial/circle_button.html.twig' with {song:song} %}
         </div>
     </td>
-
-
 </tr>
-
-

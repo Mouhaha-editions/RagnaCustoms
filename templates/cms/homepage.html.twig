@@ -4,7 +4,7 @@
 
 {% block body %}
     <header>
-        <div class="container">
+        <div {{ stimulus_controller('homepage') }} class="container">
             <div class="row">
                 <div class="col-lg-8">
                     <h1>Search over <span class="song-counter">{{ songService.count() }}</span> custom songs for<br/>

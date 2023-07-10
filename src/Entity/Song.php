@@ -92,7 +92,7 @@ class Song
     private $songDifficulties;
     #[ORM\OneToMany(targetEntity: SongHash::class, mappedBy: 'Song')]
     private $songHashes;
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $subName;
     #[ORM\Column(type: 'integer', nullable: true)]
     private $timeOffset;
@@ -189,7 +189,7 @@ class Song
         return $this->subName;
     }
 
-    public function setSubName(string $subName): self
+    public function setSubName(?string $subName): self
     {
         $this->subName = $subName;
 

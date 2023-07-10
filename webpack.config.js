@@ -78,7 +78,7 @@ Encore
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
-     .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
+    //  .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
 
     // uncomment if you use React
     //.enableReactPreset()

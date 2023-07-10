@@ -239,7 +239,6 @@ class SongsController extends AbstractController
         }
 
         if ($request->get('mapped_for') !== null) {
-
             switch ($request->get('mapped_for')) {
                 case 2:
                     $qb->andWhere('(s.bestPlatform LIKE \'%1%\')');

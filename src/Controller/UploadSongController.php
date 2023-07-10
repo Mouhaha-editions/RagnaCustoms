@@ -117,6 +117,12 @@ class UploadSongController extends AbstractController
                     throw new Exception('Select on which version your map is planed to be played (VR and/or Viking On Tour)');
                 }
 
+                if (!empty($song->getYoutubeLink())) {
+                    if (!preg_match("/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v\=)?\w+(&ab_channel=[a-zA-Z0-9_-]{1,})?$/", $song->getYoutubeLink())) {
+                        throw new Exception('This is not a youtube link, please edit it');
+                    }
+                }
+
                 $song_request = $form->get('song_request')->getData();
 
                 if ($song_request != null) {
@@ -132,13 +138,18 @@ class UploadSongController extends AbstractController
                     if (empty($song->getBestPlatform())) {
                         throw new Exception('Please choose at least one platform');
                     }
-                    $this->addFlash('success', str_replace([
-                        "%song%",
-                        "%artist%"
-                    ], [
-                        $song->getName(),
-                        $song->getAuthorName()
-                    ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
+                    $this->addFlash('success', str_replace(
+                        [
+                            "%song%",
+                            "%artist%"
+                        ],
+                        [
+                            $song->getName(),
+                            $song->getAuthorName()
+                        ],
+                        $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!"
+                        )
+                    ));
                     $em = $doctrine->getManager();
                     $em->persist($song);
                     $em->flush();
