@@ -7,12 +7,10 @@ use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
 use App\Service\StatisticService;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class StatistiqueController extends AbstractController
@@ -44,14 +42,11 @@ class StatistiqueController extends AbstractController
             return $scoreHistory->getSongDifficulty()->getSong() === $song;
         });
 
-        $pages = [
-            'Sessions' => [],
-            //            'Hit Delta Times' => [],
-        ];
+        $page = [];
 
         /** @var ScoreHistory $history */
         foreach ($histories as $history) {
-            $pages['Sessions'][] = ([
+            $page[] = ([
                 'Song'            => $history->getSongDifficulty(),
                 'Plateform'       => $history->getPlateform(),
                 'Date'            => $history->getCreatedAt()->format('Y-m-d H:i'),
@@ -63,65 +58,29 @@ class StatistiqueController extends AbstractController
                 'Missed'          => $history->getMissed(),
                 'Hit Delta Times' => json_encode($statisticService->getFullDatasetByScorehistory($history))
             ]);
-//            $pages['Hit Delta Times'][] = array_merge([
-//                'Song'      => $history->getSongDifficulty(),
-//                'Plateform' => $history->getPlateform(),
-//                'Date'       => $history->getCreatedAt()->format('Y-m-d H:i'),
-//            ], json_decode(json_decode(($history->getExtra())))->HitDeltaTimes);
         }
-        $spreadsheet = new Spreadsheet();
-        $i = 0;
-        foreach ($pages as $pageName => $data) {
-            $sheet = $spreadsheet->createSheet($i);
-            $sheet->setTitle($pageName);
-            $row = 1;
-            $i++;
+        $response = new StreamedResponse();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $song->getSlug() . '.csv"');
+        $response->setCallback(function () use ($page) {
+            $output = fopen('php://output', 'w');
 
-            // Écrire les en-têtes de colonne
-            $column = 1;
-            foreach (array_keys($data[0]) as $header) {
-                $cellAddress = $this->columnToLetter($column) . $row;
-                $sheet->setCellValue($cellAddress, $header);
-                $column++;
+            // Écrire l'en-tête CSV
+            fputcsv($output, array_keys($page[0]));
+
+            // Écrire les lignes de données
+            foreach ($page as $row) {
+                fputcsv($output, $row);
             }
 
-            // Écrire les données
-            $row++;
-            foreach ($data as $item) {
-                $column = 1;
-                foreach ($item as $value) {
-                    $cellAddress = $this->columnToLetter($column) . $row;
-                    $sheet->setCellValue($cellAddress, $value);
-                    $column++;
-                }
-                $row++;
-            }
-
-            // Ajuster la largeur des colonnes
-            foreach ($sheet->getRowIterator() as $row) {
-                foreach ($row->getCellIterator() as $cell) {
-                    $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
-                }
-            }
-        }
-
-        $spreadsheet->setActiveSheetIndex(0);
-        $writer = new Csv($spreadsheet);
-        ob_start();
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $song->getSlug().'.csv'
-        ));
-
-        $writer->save('php://output');
-        $response->setContent(ob_get_clean());
+            fclose($output);
+        });
 
         return $response;
     }
 
-// Fonction pour convertir le numéro de colonne en notation alphabétique
+
+    // Fonction pour convertir le numéro de colonne en notation alphabétique
     private function columnToLetter($column)
     {
         $letter = '';
