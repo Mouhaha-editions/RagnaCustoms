@@ -112,7 +112,7 @@ class StatistiqueController extends AbstractController
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'data.csv'
+            $song->getSlug().'.csv'
         ));
 
         $writer->save('php://output');
