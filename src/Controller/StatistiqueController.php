@@ -8,7 +8,7 @@ use App\Entity\Song;
 use App\Entity\Utilisateur;
 use App\Service\StatisticService;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,30 +45,32 @@ class StatistiqueController extends AbstractController
         });
 
         $pages = [
-            'Sessions'        => [],
-            'Hit Delta Times' => [],
+            'Sessions' => [],
+            //            'Hit Delta Times' => [],
         ];
 
         /** @var ScoreHistory $history */
         foreach ($histories as $history) {
-            $pages['Sessions'][] = array_merge([
-                'Song'       => $history->getSongDifficulty(),
-                'Plateform'  => $history->getPlateform(),
-                'Date'       => $history->getCreatedAt()->format('Y-m-d H:i'),
-                'Distance'   => $history->getScoreDisplay(),
-                'Score'      => $history->getRawPP(),
-                'Half combo' => $history->getComboBlue(),
-                'Full combo' => $history->getComboYellow(),
-                'Hit'        => $history->getHit(),
-                'Missed'     => $history->getMissed(),
+            $pages['Sessions'][] = ([
+                'Song'            => $history->getSongDifficulty(),
+                'Plateform'       => $history->getPlateform(),
+                'Date'            => $history->getCreatedAt()->format('Y-m-d H:i'),
+                'Distance'        => $history->getScoreDisplay(),
+                'Score'           => $history->getRawPP(),
+                'Half combo'      => $history->getComboBlue(),
+                'Full combo'      => $history->getComboYellow(),
+                'Hit'             => $history->getHit(),
+                'Missed'          => $history->getMissed(),
+                'Hit Delta Times' => json_encode($statisticService->getFullDatasetByScorehistory($history))
             ]);
-            $pages['Hit Delta Times'][] = array_merge([
-                'Song'      => $history->getSongDifficulty(),
-                'Plateform' => $history->getPlateform(),
-            ], json_decode(json_decode(($history->getExtra())))->HitDeltaTimes);
+//            $pages['Hit Delta Times'][] = array_merge([
+//                'Song'      => $history->getSongDifficulty(),
+//                'Plateform' => $history->getPlateform(),
+//                'Date'       => $history->getCreatedAt()->format('Y-m-d H:i'),
+//            ], json_decode(json_decode(($history->getExtra())))->HitDeltaTimes);
         }
         $spreadsheet = new Spreadsheet();
-        $i=0;
+        $i = 0;
         foreach ($pages as $pageName => $data) {
             $sheet = $spreadsheet->createSheet($i);
             $sheet->setTitle($pageName);
@@ -104,13 +106,13 @@ class StatistiqueController extends AbstractController
         }
 
         $spreadsheet->setActiveSheetIndex(0);
-        $writer = new Xlsx($spreadsheet);
+        $writer = new Csv($spreadsheet);
         ob_start();
         $response = new Response();
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'data.xlsx'
+            'data.csv'
         ));
 
         $writer->save('php://output');
