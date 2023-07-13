@@ -1,6 +1,6 @@
 {% import "songs/macros/song.html.twig" as song_macro %}
 {% set song = score.songDifficulty.song %}
-<tr >
+<tr>
     <td>
         <div class="d-flex ">
             <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" alt="cover"/></a>
@@ -16,10 +16,12 @@
     <td>
         <div class="level-list">
             {% set diff = score.songDifficulty %}
-                <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">
-                    {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
-                    <span >{{ diff.difficultyRank.level }}</span>
-                </div>
+            <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                 style="background-color:#{{ diff.difficultyRank.color }};">
+                {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked"
+                                         style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                <span>{{ diff.difficultyRank.level }}</span>
+            </div>
         </div>
     </td>
     <td>
@@ -27,31 +29,39 @@
         {{ scoreService.leaderboardPositionWithOrdinalSuffix(app.user, diff, '0') }}
     </td>
     <td>
-            {{ score.scoreDisplay }} 
+        {{ score.scoreDisplay }}
     </td>
     <td>
         {{ score.rawPP }}
     </td>
     <td class="text-grey">
-        {{ score.timeAgoShort}}&nbsp;
+        {{ score.timeAgoShort }}&nbsp;
     </td>
     <td>
         {{ song_macro.stats(score) }}
     </td>
-<td style="vertical-align: middle">
-    {% if is_granted('ROLE_USER') and app.user == score.user %}
-        <i data-toggle="modal" data-target="#ScatterView" data-backdrop="true" data-keyboard="true"
-                  class="fas fa-magnifying-glass scatter-open-score-history" style="cursor: pointer"
-                  data-title="{{ song.name }} - lvl {{ diff.difficultyRank.level }}"
-                  data-score="{{ score.id }}"></i>&nbsp;
+    <td style="vertical-align: middle">
+        {% if is_granted('ROLE_USER') and app.user == score.user %}
+            <i data-toggle="modal" data-target="#ScatterView" data-backdrop="true" data-keyboard="true"
+               class="fas fa-magnifying-glass scatter-open-score-history" style="cursor: pointer"
+               data-title="{{ song.name }} - lvl {{ diff.difficultyRank.level }}"
+               data-score="{{ score.id }}"></i>&nbsp;
 
-        <i data-toggle="modal" data-target="#SessionHistoryView" data-backdrop="true" data-keyboard="true"
-           class="fas  fa-chart-line session-open-score-history" style="cursor: pointer"
-           data-title="{{ song.name }} - lvl {{ diff.difficultyRank.level }}"
-           data-song-difficulty="{{ score.songDifficulty.id }}"></i>
+            <i data-toggle="modal" data-target="#SessionHistoryView" data-backdrop="true" data-keyboard="true"
+               class="fas  fa-chart-line session-open-score-history" style="cursor: pointer"
+               data-title="{{ song.name }} - lvl {{ diff.difficultyRank.level }}"
+               data-song-difficulty="{{ score.songDifficulty.id }}"></i>
+            &nbsp;
+            <a href="{{ url('app_download_score_history',{id:song.id}) }}"
+               data-title="Downloads all stats for {{ song.name }}"
+               data-toggle="tooltip"
+               class="text-warning"
+                data-no-swup="true">
+                <i class="fa-solid fa-file-export"></i>
+            </a>
 
-    {% endif %}
-</td>
+        {% endif %}
+    </td>
 </tr>
 
 
