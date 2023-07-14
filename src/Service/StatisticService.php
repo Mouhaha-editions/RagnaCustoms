@@ -288,6 +288,7 @@ class StatisticService
     {
         $json = json_decode(file_get_contents($song_file));
         $notes = $json->_notes;
+        $datasets=[];
         for ($i = 0; $i < count($raw_data); $i++) {
             if ($raw_data[$i] == -1000) {
                 $raw_data[$i] = -100;
