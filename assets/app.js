@@ -22,14 +22,16 @@ $(function () {
 if(
     !searchElt.val().includes('mapper:') &&
     !searchElt.val().includes('title:') &&
+    !searchElt.val().includes('desc:') &&
     !searchElt.val().includes('genre:') &&
-    !searchElt.val().includes('author:')
+    !searchElt.val().includes('artist:')
 ){
     searchElt.val(prefix+searchElt.val());
 }
         searchElt.val(searchElt.val().replace('mapper:',prefix));
         searchElt.val(searchElt.val().replace('genre:',prefix));
-        searchElt.val(searchElt.val().replace('author:',prefix));
+        searchElt.val(searchElt.val().replace('artist:',prefix));
+        searchElt.val(searchElt.val().replace('desc:',prefix));
         searchElt.val(searchElt.val().replace('title:',prefix));
         searchElt.closest('div').find('i').text($(this).text())
     });

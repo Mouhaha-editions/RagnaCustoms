@@ -2,7 +2,6 @@
 {% for song in songs %}
     <div class="d-flex ">
         <a href="{{ url('song_detail',{slug:song.slug}) }}">
-
             <img src="{{ song.cover }}" class="small-cover" alt="cover"/>
         </a>
         <div class="song pl-1">
