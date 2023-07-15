@@ -281,13 +281,7 @@ class UploadSongController extends AbstractController
                         $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
-                case 'genre':
-                    if (count($exp) >= 2) {
-                        $qb
-                            ->leftJoin('s.songCategories','c')
-                            ->andWhere('(c.label LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
-                    }
-                    break;
+
                 case 'artist':
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
