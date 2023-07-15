@@ -70,16 +70,16 @@ class UploadSongController extends AbstractController
                 'label_html' => true,
                 'help'       => "sorry for now it's based on UTC+1 (french time) "
             ])->add("zipFile", FileType::class, [
-                    "mapped"      => false,
-                    "required"    => $song->getId() == null,
-                    "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
-                    "constraints" => [
-                        new File([
-                            'maxSize'        => '15M',
-                            'maxSizeMessage' => 'You can upload up to 50Mo with a premium account Tier 2',
-                        ])
-                    ]
-                ]);
+                "mapped"      => false,
+                "required"    => $song->getId() == null,
+                "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
+                "constraints" => [
+                    new File([
+                        'maxSize'        => '15M',
+                        'maxSizeMessage' => 'You can upload up to 50Mo with a premium account Tier 2',
+                    ])
+                ]
+            ]);
         } else if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
             $form->add("zipFile", FileType::class, [
                 "mapped"      => false,
@@ -138,12 +138,12 @@ class UploadSongController extends AbstractController
                     }
 
                     $this->addFlash('success', str_replace([
-                            "%song%",
-                            "%artist%"
-                        ], [
-                            $song->getName(),
-                            $song->getAuthorName()
-                        ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
+                        "%song%",
+                        "%artist%"
+                    ], [
+                        $song->getName(),
+                        $song->getAuthorName()
+                    ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
                     $em = $doctrine->getManager();
                     $em->persist($song);
                     $em->flush();
@@ -266,12 +266,7 @@ class UploadSongController extends AbstractController
     #[Route(path: '/upload/song', name: 'upload_song')]
     public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
     {
-        $qb = $songRepository->createQueryBuilder('s')
-                             ->select('s')
-                             ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
-                             ->where('s.user = :user')
-                             ->andWhere("s.isDeleted != true")
-                             ->setParameter('user', $this->getUser())->orderBy('s.name', 'DESC');
+        $qb = $songRepository->createQueryBuilder('s')->select('s')->leftJoin('s.categoryTags', 't')->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')->where('s.user = :user')->andWhere("s.isDeleted != true")->setParameter('user', $this->getUser())->orderBy('s.name', 'DESC');
 
         if ($request->get('search', null)) {
             $exp = explode(':', $request->get('search'));
@@ -281,12 +276,7 @@ class UploadSongController extends AbstractController
                         $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
-                case 'genre':
-                    if (count($exp) >= 2) {
-                        $qb
-                            ->andWhere('(t.label LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
-                    }
-                    break;
+
                 case 'artist':
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
@@ -300,6 +290,11 @@ class UploadSongController extends AbstractController
                 case 'desc':
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.description LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
+                case 'genre':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(t.label LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
                 default:
