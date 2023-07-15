@@ -172,10 +172,10 @@ class SongsController extends AbstractController
             }
         }
 
+        $qb->leftJoin('s.categoryTags', 't');
 
         $categories = $request->get('downloads_filter_categories', null);
         if ($categories != null) {
-            $qb->leftJoin('s.categoryTags', 't');
 
             $cats = [];
             foreach ($categories as $k => $v) {
@@ -285,6 +285,12 @@ class SongsController extends AbstractController
 //                            ->setParameter('category', $exp[1] == "" ? null : $exp[1]);
 //                    }
 //                    break;
+                case 'genre':
+                    if (count($exp) >= 2) {
+                        $qb
+                            ->andWhere('(t.label LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
                 case 'artist':
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');

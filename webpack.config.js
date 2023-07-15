@@ -25,7 +25,7 @@ Encore
 
     // .addEntry('app', './assets/app.js')
 
-    // .addStyleEntry('homepage', './assets/styles/pages/homepage.scss')
+    .addStyleEntry('playlist', './assets/styles/pages/playlist.scss')
     // .addStyleEntry('login', './assets/styles/pages/login.scss')
     // .addStyleEntry('leaderboard', './assets/styles/pages/leaderboard.scss')
     // .addStyleEntry('register', './assets/styles/pages/register.scss')

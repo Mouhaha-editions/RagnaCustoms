@@ -12,7 +12,11 @@
 @import 'pages/song_detail';
 @import 'pages/song_library';
 @import 'pages/song_upload';
-body{ overflow-x: hidden;}
+
+body {
+  overflow-x: hidden;
+}
+
 #user_profile {
   .darker {
     background: rgba(0, 0, 0, 0.21);
@@ -191,7 +195,7 @@ header {
 }
 
 .be-patreon {
-  margin-top:18px;
+  margin-top: 18px;
   font-size: 18px;
   line-height: 20px;
   text-shadow: 0 0 8px black;
@@ -212,6 +216,7 @@ header {
     }
   }
 }
+
 #home {
   .be-patreon {
     margin-top: 18px;
@@ -239,7 +244,7 @@ header {
 
 
 .be-twitch {
-  margin-top:18px;
+  margin-top: 18px;
   font-size: 18px;
   line-height: 20px;
   text-shadow: 0 0 8px black;
@@ -290,6 +295,17 @@ a.disabled {
   text-fill-color: transparent;
   transition: color 200ms linear;
 }
+.select2-selection{
+  background: #414141 !important;
+  color:#fff !important;
+  border:none !important;
+
+}
+textarea{
+  background: #414141 !important;
+  color:#fff !important;
+  border:none !important;
+}
 
 .shiny-text:hover {
   background-position: left center;
@@ -298,10 +314,10 @@ a.disabled {
 }
 
 .circle a {
-    font-size: 14px;
-    text-decoration: none;
-    outline: 0;
-  }
+  font-size: 14px;
+  text-decoration: none;
+  outline: 0;
+}
 
 .circle .ring a {
   font-size: 16px;
@@ -313,82 +329,86 @@ a.disabled {
   height: 100px;
   position: relative;
   width: 100px;
-  z-index:100;
+  z-index: 100;
 }
-   .ring {
-    height: 100px;
-    position: relative;
-    width: 100px;
-    z-index:100;
-  }
-  .circle.open{
-    z-index:1000;
-  }
-  .circle {
-    margin: 0 auto;
-  }
 
-  .ring {
-    background-color: rgba(0,0,0,0.5);
-    border-radius: 50%;
-    opacity: 0;
+.ring {
+  height: 100px;
+  position: relative;
+  width: 100px;
+  z-index: 100;
+}
 
-    -webkit-transform-origin: 50% 50%;
-    -moz-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
+.circle.open {
+  z-index: 1000;
+}
 
-    -webkit-transform: scale(0.1) rotate(-270deg);
-    -moz-transform: scale(0.1) rotate(-270deg);
-    -transform: scale(0.1) rotate(-270deg);
+.circle {
+  margin: 0 auto;
+}
 
-    -webkit-transition: all 0.4s ease-out;
-    -moz-transition: all 0.4s ease-out;
-    transition: all 0.4s ease-out;
-  }
+.ring {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  opacity: 0;
 
-  .open .ring {
-    opacity: 1;
+  -webkit-transform-origin: 50% 50%;
+  -moz-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
 
-    -webkit-transform: scale(1) rotate(0);
-    -moz-transform: scale(1) rotate(0);
-    transform: scale(1) rotate(0);
-  }
+  -webkit-transform: scale(0.1) rotate(-270deg);
+  -moz-transform: scale(0.1) rotate(-270deg);
+  -transform: scale(0.1) rotate(-270deg);
 
-  .center {
-    //background-color: rgba(255,255,255,0.3);
-    border-radius: 50%;
-    //border: 2px solid #ffffff;
-    bottom: 0;
-    color: white;
-    height: 30px;
-    left: 0;
-    line-height: 30px;
-    margin: auto;
-    position: absolute;
-    right: 0;
-    text-align: center;
-    top: 0;
-    width: 30px;
-    z-index:200;
-    -webkit-transition: all 0.4s ease-out;
-    -moz-transition: all 0.4s ease-out;
-    transition: all 0.4s ease-out;
-  }
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
+}
 
-  .open .center {
-    border-color: #aaaaaa;
-  }
+.open .ring {
+  opacity: 1;
 
-  .menuItem {
-    border-radius: 50%;
-    color: #eeeeee;
-    display: block;
-    height: 20px;
-    line-height: 20px;
-    margin-left: -10px;
-    margin-top: -10px;
-    position: absolute;
-    text-align: center;
-    width: 20px;
-    z-index:101;
-  }
+  -webkit-transform: scale(1) rotate(0);
+  -moz-transform: scale(1) rotate(0);
+  transform: scale(1) rotate(0);
+}
+
+.center {
+  //background-color: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  //border: 2px solid #ffffff;
+  bottom: 0;
+  color: white;
+  height: 30px;
+  left: 0;
+  line-height: 30px;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  width: 30px;
+  z-index: 200;
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
+}
+
+.open .center {
+  border-color: #aaaaaa;
+}
+
+.menuItem {
+  border-radius: 50%;
+  color: #eeeeee;
+  display: block;
+  height: 20px;
+  line-height: 20px;
+  margin-left: -10px;
+  margin-top: -10px;
+  position: absolute;
+  text-align: center;
+  width: 20px;
+  z-index: 101;
+}
+

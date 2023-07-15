@@ -1,39 +1,67 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}My playlists{% endblock %}
-
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('playlist') }}
+{% endblock %}
 {% block body %}
-<div class="row">
-    <div class="col-12">
-        <h1>{{ "All your playlists"|trans }}</h1>
-        <table class="table table-sm">
-            <tr>
-                <th>{{ "Label"|trans }}</th>
-                <th>{{ "Songs"|trans }}</th>
-                <th>{{ "Public"|trans }}</th>
-                <th></th>
-            </tr>
-{% for playlist in playlists %}
-    <tr>
-        <th>{{ playlist.label }}</th>
-        <th>{{ playlist.songs|length }}</th>
-        <th>{{ playlist.isPublic?"<i class='fas fa-check text-success'></i>":"<i class='fas fa-close text-danger'></i>" }}</th>
-        <th>
-            <a href="{{ url("playlist_show",{id:playlist.id}) }}"><i class="fas fa-eye"></i></a>
-            <a class="text-info"  href="{{ url("playlist_edit",{id:playlist.id}) }}"><i class="fas fa-edit"></i></a>
-            <a class="text-danger"
-               data-confirm="{{ "You are going to delete a playlist, do you want to continue?" }}"
-               href="{{ url("playlist_delete",{id:playlist.id}) }}"><i class="fas fa-trash"></i></a>
-        </th>
-    </tr>
-    {% else %}
-    <tr>
-        <td>{{ "No playlist for now"|trans }}</td>
-    </tr>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mt-4 mb-4">{{ "All your playlists"|trans }}</h1>
+            </div>
+            {% for playlist in playlists %}
+                <div class="col-md-3">
+                    <div class="playlist">
+                        <div class="header">
+                            {% for song in playlist.songs %}
+                                {% if loop.index <= 6 %}
+                                    <img src="{{ song.cover }}" alt="{{ song.name }}" class="img-fluid"
+                                    >
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="header-overlay"></div>
+
+                        <div class="title">
+                            <h2>{{ playlist.label }}</h2>
+                        </div>
+                        <div class="count">{{ playlist.songs|length }}
+                            {{ playlist.isPublic?"<i class='fas fa-check text-success' data-toggle='tooltip' title='public'></i>":"<i class='fas fa-close text-danger'  data-toggle='tooltip' title='private'></i>" }}
+                        </div>
+
+                        <div class="resume">
+                            <table class="table table-condensed">
+                                <tbody>
+                                {% for song in playlist.songs %}
+                                    <tr>
+                                        <td class="p-1">
+                                            {{ song.name }}
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td>No song</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="buttons btn-group">
+                            <a href="{{ url("playlist_show",{id:playlist.id}) }}" class="btn btn-success"><i class="fas fa-eye"></i></a>
+                            <a class=" btn btn-info" href="{{ url("playlist_edit",{id:playlist.id}) }}"><i
+                                        class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger" data-no-swup="true"
+                               data-confirm="{{ "You are going to delete a playlist, do you want to continue?" }}"
+                               href="{{ url("playlist_delete",{id:playlist.id}) }}"><i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-        </table>
+        </div>
     </div>
-</div>
-
-
 {% endblock %}

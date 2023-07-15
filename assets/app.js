@@ -15,6 +15,24 @@ function clearTootips(){
 
 $(function () {
 
+    $(document).on('click','[data-search-prefix]', function(){
+        let prefix = $(this).data('search-prefix');
+        let searchElt = $("#search");
+
+if(
+    !searchElt.val().includes('mapper:') &&
+    !searchElt.val().includes('title:') &&
+    !searchElt.val().includes('genre:') &&
+    !searchElt.val().includes('author:')
+){
+    searchElt.val(prefix+searchElt.val());
+}
+        searchElt.val(searchElt.val().replace('mapper:',prefix));
+        searchElt.val(searchElt.val().replace('genre:',prefix));
+        searchElt.val(searchElt.val().replace('author:',prefix));
+        searchElt.val(searchElt.val().replace('title:',prefix));
+        searchElt.closest('div').find('i').text($(this).text())
+    });
 
     let openWithClick = false;
     $(document).on('click', '.circle .center', function (e) {

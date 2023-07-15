@@ -7,11 +7,16 @@
      <meta property="og:title" content="{{ playlist.label }}, a {{ playlist.user.username }}'s Playlist | RagnaCustoms.com"/>
  {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('playlist') }}
+{% endblock %}
+
 {% block body %}
+    <div class="content">
     <div class="row">
         <div class="col-12">
-            <h1 class="text-center">{{ "Your playlist"|trans }}Your playlist</h1>
-
+            <h1 class="mt-3 mb-3">{{ "Edit your playlist"|trans }}</h1>
         </div>
     </div>
     {{ form_start(form) }}
@@ -26,8 +31,8 @@
         </div>
     </div>
     {{ form_end(form) }}
+    {% include "songs/partial/song_row_div.html.twig" with {songs:playlist.songs, edit:true, playlist:playlist} %}
     </div>
-    {% include "songs/partial/song_row_div.html.twig" with {songs:songs, edit:true, playlist:playlist} %}
 {% endblock %}
 
 {% block title %}

@@ -12,6 +12,16 @@
                     </h1>
                     <form method="GET" action="{{ url('song_library') }}" class=" search-and-filter">
                         <div class="input-group">
+                            <button class="btn btn-primary dropdown-toggle" style='border-radius: 0!important;'
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">by <i>Anything</i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-search-prefix='' href="#">Anything</a>
+                                <a class="dropdown-item" data-search-prefix='author:' href="#">Author</a>
+                                <a class="dropdown-item" data-search-prefix='title:' href="#">Title</a>
+                                <a class="dropdown-item" data-search-prefix='mapper:' href="#">Mapper</a>
+                                <a class="dropdown-item" data-search-prefix='genre:' href="#">Genre</a>
+                            </div>
                             <input type="text" value="{{ app.request.get('search') }}"
                                    class="form-control form-control-lg"
                                    placeholder="{{ "Search an artist, title, mapper or genre"|trans }}" name="search"
@@ -20,6 +30,7 @@
                                     class="btn">{{ "Search"|trans }}</button>
                         </div>
                     </form>
+
                     <a href="{{ url('song_library') }}"
                        class="header-link float-right">{{ "Advanced search"|trans }}</a>
                 </div>
@@ -34,29 +45,30 @@
         </div>
     </header>
     <div class="container homepage" {{ stimulus_controller('homepage') }}>
-{#        <div class="row">#}
-{#            <div class="col-12">#}
-{#                <h2>{{ "Advent calendar"|trans }} <small>{{ "by Watsu "|trans }}</small></h2>#}
-{#                <div class="d-flex calendar">#}
-{#                    {% set lastindex = 1 %}#}
-{#                    {% for song in songService.getAdventCalendar() %}#}
-{#                        <div class="advent"><a href="{{ url('song_detail',{slug:song.slug}) }}"><img#}
-{#                                        src="{{ song.cover }}" class="small-cover" width="70px;" alt="cover"/><span#}
-{#                                        class="num">{{ loop.index }}</span></a></div>#}
-{#                        {% set lastindex = loop.index %}#}
-{#                    {% endfor %}#}
-{#                    {% if lastindex <= 24  %}#}
-{#                    <div class="advent"><span#}
-{#                                    class="num">...</span></div>#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
+        {#        <div class="row"> #}
+        {#            <div class="col-12"> #}
+        {#                <h2>{{ "Advent calendar"|trans }} <small>{{ "by Watsu "|trans }}</small></h2> #}
+        {#                <div class="d-flex calendar"> #}
+        {#                    {% set lastindex = 1 %} #}
+        {#                    {% for song in songService.getAdventCalendar() %} #}
+        {#                        <div class="advent"><a href="{{ url('song_detail',{slug:song.slug}) }}"><img #}
+        {#                                        src="{{ song.cover }}" class="small-cover" width="70px;" alt="cover"/><span #}
+        {#                                        class="num">{{ loop.index }}</span></a></div> #}
+        {#                        {% set lastindex = loop.index %} #}
+        {#                    {% endfor %} #}
+        {#                    {% if lastindex <= 24  %} #}
+        {#                    <div class="advent"><span #}
+        {#                                    class="num">...</span></div> #}
+        {#                    {% endif %} #}
+        {#                </div> #}
+        {#            </div> #}
+        {#        </div> #}
 
 
         <div class="row">
             <div class="col-lg-4">
-                <h2 class="shiny-text">{{ "Top Rated"|trans }} <small>{{ "last %days% days"|trans|replace({"%days%":30}) }}</small></h2>
+                <h2 class="shiny-text">{{ "Top Rated"|trans }}
+                    <small>{{ "last %days% days"|trans|replace({"%days%":30}) }}</small></h2>
                 {{ render(controller("\\App\\Controller\\SongPartialController::topRated",{lastXDays:30})) }}
             </div>
             <div class="col-lg-4">

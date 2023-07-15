@@ -1,18 +1,28 @@
 {% extends 'base.html.twig' %}
  {% block metas %}
-     <meta name="description" value="{{ playlist.description}}">
-     <meta property="og:description" value="{{ playlist.description}}">
+     <meta name="description" value="{{ playlist.description }}">
+     <meta property="og:description" value="{{ playlist.description }}">
      <meta property="og:url" content="{{ url('playlist_show',{id:playlist.id}) }}"/>
      <meta property="og:type" content="website"/>
      <meta property="og:title" content="{{ playlist.label }}, a {{ user.username }}'s Playlist | RagnaCustoms.com"/>
  {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('playlist') }}
+{% endblock %}
+
 
 {% block body %}
     <div class="row">
         <div class="col-12">
             <h1 class="text-center">{{ playlist.label }}, a {{ playlist.user.username }}'s Playlist</h1>
             <form method="post" class="text-center">
-            <button data-toggle="tooltips" title="{{ "Download playlist with the app"|trans }}" type="submit" name="onclick_dl" value="42" class="btn btn-sm btn-danger" data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}" ><i class="fas fa-download"></i> download the playlist</button>
+                <button data-toggle="tooltips" title="{{ "Download playlist with the app"|trans }}" type="submit"
+                        name="onclick_dl" value="42" class="btn btn-sm btn-danger"
+                        data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}">
+                    <i class="fas fa-download"></i> download the playlist
+                </button>
             </form>
             <p>{{ playlist.description }}</p>
         </div>
