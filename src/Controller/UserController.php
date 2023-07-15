@@ -131,6 +131,7 @@ class UserController extends AbstractController
         $filters = [];
         $qb = $scoreRepository
             ->createQueryBuilder('score')
+            ->leftJoin('s.categoryTags', 't')
             ->leftJoin('score.songDifficulty','song_difficulties')
             ->leftJoin('song_difficulties.song','s')
             ->where('score.user = :user')
@@ -275,8 +276,13 @@ class UserController extends AbstractController
                         $qb->andWhere('(s.description LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
+                case 'genre':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(t.label LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
                 default:
-                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $request->get('search', null) . '%');
+                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string OR t.label LIKE :search_string)')->setParameter('search_string', '%' . $request->get('search', null) . '%');
             }
         }
 
@@ -364,7 +370,8 @@ class UserController extends AbstractController
     {
         $qb = $doctrine->getRepository(Song::class)
                        ->createQueryBuilder("s")
-                       ->where('s.user = :user')
+            ->leftJoin('s.categoryTags', 't')
+            ->where('s.user = :user')
                        ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')
                        ->setParameter('now', new DateTime())
                        ->setParameter('user', $utilisateur)
@@ -502,8 +509,13 @@ class UserController extends AbstractController
                         $qb->andWhere('(s.description LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
                     }
                     break;
+                case 'genre':
+                    if (count($exp) >= 2) {
+                        $qb->andWhere('(t.label LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                    }
+                    break;
                 default:
-                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $request->get('search', null) . '%');
+                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string OR t.label LIKE :search_string)')->setParameter('search_string', '%' . $request->get('search', null) . '%');
             }
         }
         $qb->andWhere("s.isDeleted != true");
