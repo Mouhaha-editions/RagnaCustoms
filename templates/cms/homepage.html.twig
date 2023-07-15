@@ -12,19 +12,18 @@
                     </h1>
                     <form method="GET" action="{{ url('song_library') }}" class=" search-and-filter">
                         <div class="input-group">
-                            <button class="btn btn-primary dropdown-toggle" type="button" style='border-radius: 0!important;'
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">by <i>Anything</i>
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" data-search-prefix='' href="#">Anything</a>
-                                <a class="dropdown-item" data-search-prefix='artist:' href="#">Artist</a>
-                                <a class="dropdown-item" data-search-prefix='title:' href="#">Title</a>
-                                <a class="dropdown-item" data-search-prefix='mapper:' href="#">Mapper</a>
-                                <a class="dropdown-item" data-search-prefix='genre:' href="#">Genre</a>
-                            </div>
+                            <span class="input-group-text" style="background:#414141FF; font-size:24px; color:#fff;border:none;border-radius:0!important;">Search by</span>
+                            <select name="searchBy" class="" style="font-size:24px;">
+                                <option class="dropdown-item" value='' href="#">Anything</option>
+                                <option class="dropdown-item" value='artist' href="#">Artist</option>
+                                <option class="dropdown-item" value='title' href="#">Title</option>
+                                <option class="dropdown-item" value='mapper' href="#">Mapper</option>
+                                <option class="dropdown-item" value='genre' href="#">Genre</option>
+                            </select>
+
                             <input type="text" value="{{ app.request.get('search') }}"
                                    class="form-control form-control-lg"
-                                   placeholder="{{ "Search an artist, title, mapper or genre"|trans }}" name="search"
+                                   placeholder="{{ "Enter your search ... "|trans }}" name="search"
                                    id="search">
                             <button type="submit" name="search_btn" value="1"
                                     class="btn">{{ "Search"|trans }}</button>
