@@ -3,7 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Vote;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -12,7 +11,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\VarDumper\VarDumper;
 
 class VoteCrudController extends AbstractCrudController
 {
@@ -35,7 +33,10 @@ class VoteCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        $crud->setDefaultSort(['id' => "DESC"]);
+        $crud
+            ->setSearchFields(['song.name', 'song.user.username', 'user.username'])
+            ->setPaginatorPageSize(60)
+            ->setDefaultSort(['id' => "DESC"]);
         return $crud;
     }
 
@@ -45,7 +46,7 @@ class VoteCrudController extends AbstractCrudController
             TextField::new('id')->hideOnForm()->hideOnIndex(),
             DateTimeField::new('createdAt'),
             TextField::new('user'),
-            TextField::new('song.mapper','Mapper'),
+            TextField::new('song.user', 'Mapper'),
             TextField::new('song'),
             NumberField::new('funFactor'),
             NumberField::new('rhythm'),
