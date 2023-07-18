@@ -34,7 +34,7 @@ class VoteCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->setSearchFields(['song.name', 'song.user.username', 'user.username'])
+            ->setSearchFields(['song.name', 'song.user.username', 'user.username', 'song.user.mapper_name'])
             ->setPaginatorPageSize(60)
             ->setDefaultSort(['id' => "DESC"]);
         return $crud;
@@ -46,7 +46,7 @@ class VoteCrudController extends AbstractCrudController
             TextField::new('id')->hideOnForm()->hideOnIndex(),
             DateTimeField::new('createdAt'),
             TextField::new('user'),
-            TextField::new('song.user', 'Mapper'),
+            TextField::new('song.mapper', 'Mapper'),
             TextField::new('song'),
             NumberField::new('funFactor'),
             NumberField::new('rhythm'),
