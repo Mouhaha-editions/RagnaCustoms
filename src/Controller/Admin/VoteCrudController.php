@@ -45,6 +45,7 @@ class VoteCrudController extends AbstractCrudController
             TextField::new('id')->hideOnForm()->hideOnIndex(),
             DateTimeField::new('createdAt'),
             TextField::new('user'),
+            TextField::new('song.mapper','Mapper'),
             TextField::new('song'),
             NumberField::new('funFactor'),
             NumberField::new('rhythm'),
