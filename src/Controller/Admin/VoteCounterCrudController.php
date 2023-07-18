@@ -30,8 +30,8 @@ class VoteCounterCrudController extends AbstractCrudController
         return [
             DateTimeField::new('createdAt'),
             TextField::new('user'),
-            TextField::new('song.name', 'Song'),
             TextField::new('song.mapper','Mapper'),
+            TextField::new('song.name', 'Song'),
             BooleanField::new('votesIndc'),
         ];
     }

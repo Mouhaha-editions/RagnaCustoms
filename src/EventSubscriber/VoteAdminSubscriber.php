@@ -48,9 +48,14 @@ class VoteAdminSubscriber implements EventSubscriberInterface
             $this->songRepository->add($song);
         }
         if ($entity instanceof VoteCounter) {
-//            if($entity->getVotesIndc() > 0){
-//
-//            }
+                $song = $entity->getSong();
+                $user = $entity->getUser();
+            if($entity->getVotesIndc() > 0){
+                $this->voteService->toggleUpVote($song, $user);
+            }else{
+                $this->voteService->toggleDownVote($song, $user);
+            }
+                $this->songRepository->add($song);
         }
     }
 
