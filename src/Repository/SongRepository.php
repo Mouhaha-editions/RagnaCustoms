@@ -43,6 +43,7 @@ class SongRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+
     public function remove(Song $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);

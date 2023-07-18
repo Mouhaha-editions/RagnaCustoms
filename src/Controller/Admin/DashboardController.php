@@ -7,6 +7,7 @@ use App\Entity\SongCategory;
 use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
 use App\Entity\Vote;
+use App\Entity\VoteCounter;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -35,6 +36,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToCrud('Feedback', 'fa fa-list', Vote::class)->setPermission('ROLE_MODERATOR');
+        yield MenuItem::linkToCrud('Up/down votes', 'fa fa-up', VoteCounter::class)->setPermission('ROLE_MODERATOR');
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home')->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToCrud('Song', 'fa fa-music', Song::class)->setPermission('ROLE_MODERATOR');
         yield MenuItem::linkToCrud('SongCategory', 'fa fa-music', SongCategory::class)->setPermission('ROLE_MODERATOR');
