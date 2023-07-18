@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -22,7 +23,9 @@ class SongCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        $crud->setDefaultSort(['id'=>"DESC"]);
+        $crud
+            ->setSearchFields(['name','user.mapper_name', 'user.username'])
+            ->setDefaultSort(['id'=>"DESC"]);
         return $crud;
     }
 
@@ -36,6 +39,8 @@ class SongCrudController extends AbstractCrudController
             ChoiceField::new('bestPlatform')->setChoices(['vr'=>'0','flat'=>'1']),
             BooleanField::new('isWip'),
             TextEditorField::new('description'),
+            DateTimeField::new('lastDateUpload'),
+            DateTimeField::new('programmationDate'),
         ];
     }
 
