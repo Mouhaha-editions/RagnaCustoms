@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
@@ -17,7 +16,6 @@ use App\Repository\UtilisateurRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
-use GuzzleHttp\Client;
 use Patreon\API;
 use Patreon\OAuth;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -27,13 +25,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Wohali\OAuth2\Client\Provider\Discord;
 
 class UserController extends AbstractController
 {
-
     #[Route(path: '/user/more-stats', name: 'more_stat')]
     public function moreStats(Request $request, ScoreHistoryRepository $scoreHistoryRepository): Response
     {

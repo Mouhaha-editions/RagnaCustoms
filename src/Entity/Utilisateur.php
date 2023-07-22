@@ -167,6 +167,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $auth_token_refresh = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $ipAddress = null;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -1340,6 +1343,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAuthTokenRefresh(string $auth_token_refresh): static
     {
         $this->auth_token_refresh = $auth_token_refresh;
+
+        return $this;
+    }
+
+    public function getIpAddress(): ?string
+    {
+        return $this->ipAddress;
+    }
+
+    public function setIpAddress(?string $ipAddress): static
+    {
+        $this->ipAddress = $ipAddress;
 
         return $this;
     }
