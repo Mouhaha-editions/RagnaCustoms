@@ -2,26 +2,40 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Utilisateur;
+use App\Security\AccountNotVerifiedAuthenticationException;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 
 class LocaleSubscriber implements EventSubscriberInterface
 {
     private $defaultLocale;
 
-    public function __construct(string $defaultLocale = 'en')
-    {
+    public function __construct(
+        string $defaultLocale = 'en',
+        private readonly TokenStorageInterface $tokenStorage
+    ) {
         $this->defaultLocale = $defaultLocale;
     }
 
-    public function onEventSubscriberInterface($event)
+    public static function getSubscribedEvents()
     {
-        // ...
+        return [
+            // must be registered before (i.e. with a higher priority than) the default Locale listener
+            KernelEvents::REQUEST => [['onKernelRequest', 20]],
+            CheckPassportEvent::class => 'onCheckPassport',
+        ];
     }
+
     public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
+
         if (!$request->hasPreviousSession()) {
             return;
         }
@@ -35,12 +49,14 @@ class LocaleSubscriber implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public function onCheckPassport(CheckPassportEvent $event)
     {
-        return [
-            // must be registered before (i.e. with a higher priority than) the default Locale listener
-            KernelEvents::REQUEST => [['onKernelRequest', 20]],
-        ];
+        /** @var Utilisateur $user */
+        $user = $event->getPassport()->getUser();
+
+        if (!$user->isVerified()) {
+            throw new AccountNotVerifiedAuthenticationException();
+        }
     }
 
 

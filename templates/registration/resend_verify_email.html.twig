@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Verify Email{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="login-form mt-4 p-4">
+                <h1 class="h3 mb-3 font-weight-normal">Verify your Email</h1>
+
+                {% if done %}
+                <div class="alert alert-success">A new email was sent, please check your mailbox.</div>
+                {% endif %}
+
+                <small>
+                    A verification email was sent - please click it to enable your account before logging in.
+                </small>
+
+                {% if not done %}
+                    <form action="" method="post">
+                        <label>Username or Email</label><br/>
+                        <input type="text" id="username" class="form-control" name="username" value=""
+                               placeholder=""><br/>
+                        <button type="submit" class="btn btn-primary">Re-send Email</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

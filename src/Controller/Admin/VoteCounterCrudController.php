@@ -36,7 +36,7 @@ class VoteCounterCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->setSearchFields(['song.name', 'song.user.username', 'user.username'])
+            ->setSearchFields(['song.name', 'song.user', 'user.username'])
             ->setPaginatorPageSize(60)
             ->setDefaultSort(['updatedAt'=>"DESC"]);
         return $crud;

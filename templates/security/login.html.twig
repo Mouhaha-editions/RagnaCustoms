@@ -11,7 +11,6 @@
                 <h1 class="mt-5">{{ "Sign Into"|trans }}</h1>
                 <img src="{{ asset('apps/RC.png') }}" alt="Ragnacustoms.com"/>
                 <div class="widget-box text-left">
-
                     <form method="post" class="form">
                         {% if error %}
                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
