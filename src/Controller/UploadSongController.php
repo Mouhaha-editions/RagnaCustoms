@@ -116,7 +116,7 @@ class UploadSongController extends AbstractController
                 }
 
                 if (!empty($song->getYoutubeLink())) {
-                    if (!preg_match("/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v\=)?\w+(&ab_channel=[a-zA-Z0-9_-]{1,})?$/", $song->getYoutubeLink())) {
+                    if (!preg_match("/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(.*)$/", $song->getYoutubeLink())) {
                         throw new Exception('This is not a youtube link, please edit it');
                     }
                 }
