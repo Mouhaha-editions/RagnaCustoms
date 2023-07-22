@@ -28,7 +28,7 @@ class SongType extends AbstractType
         $entity = $builder->getData();
         $builder
             ->add('description', null, [
-                'help'      => "you can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description",
+                'help'      => "You can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description",
                 'help_html' => true
             ])
             ->add('youtubeLink', TextType::class, [
@@ -40,7 +40,7 @@ class SongType extends AbstractType
                 "class"                => SongCategory::class,
                 'remote_route'         => 'api_song_categories',
                 'multiple'             => true,
-                "label"                => "Categories",
+                "label"                => "Genre",
                 'primary_key'          => 'id',
                 'text_property'        => 'label',
                 'minimum_input_length' => 0,
@@ -80,8 +80,8 @@ class SongType extends AbstractType
             ])
             ->add('bestPlatform', ChoiceType::class, [
                 'choices'  => [
-                    'Vr'   => 0,
-                    'Viking On Tour' => 1,
+                    'VR'   => 0,
+                    'Viking on Tour' => 1,
                 ],
                 'required' => true,
                 'multiple' => true,

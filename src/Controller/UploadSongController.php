@@ -68,7 +68,7 @@ class UploadSongController extends AbstractController
                 'input'      => "datetime",
                 "empty_data" => '',
                 'label_html' => true,
-                'help'       => "sorry for now it's based on UTC+1 (french time) "
+                'help'       => "Sorry for now it's based on UTC+1 (french time) "
             ])->add("zipFile", FileType::class, [
                 "mapped"      => false,
                 "required"    => $song->getId() == null,
