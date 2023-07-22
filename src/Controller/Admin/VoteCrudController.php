@@ -26,7 +26,8 @@ class VoteCrudController extends AbstractCrudController
             // ...
             // (the same permission is granted to the action on all pages)
             ->setPermission(Action::EDIT, 'ROLE_MODERATOR')
-            ->setPermission(Action::DELETE, 'ROLE_ADMIN')
+            ->setPermission(Action::DELETE, 'ROLE_MODERATOR')
+            ->setPermission(Action::BATCH_DELETE, 'ROLE_ADMIN')
             // you can set permissions for built-in actions in the same way
             ->setPermission(Action::NEW, 'ROLE_ADMIN');
     }
