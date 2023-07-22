@@ -21,7 +21,7 @@ class UtilisateurCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->setSearchFields(['username','email', 'mapper_name', 'ip_address'])
+            ->setSearchFields(['username','email', 'mapper_name', 'ipAddress'])
             ->setDefaultSort(['id'=>"DESC"]);
         return $crud;
     }
