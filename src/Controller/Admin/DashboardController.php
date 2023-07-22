@@ -40,7 +40,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home')->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToCrud('Song', 'fa fa-music', Song::class)->setPermission('ROLE_MODERATOR');
         yield MenuItem::linkToCrud('SongCategory', 'fa fa-music', SongCategory::class)->setPermission('ROLE_MODERATOR');
-        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', Utilisateur::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', Utilisateur::class)->setPermission('ROLE_MODERATOR');
         yield MenuItem::linkToCrud('Difficulties', 'fa fa-star', SongDifficulty::class)->setPermission('ROLE_ADMIN');
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
