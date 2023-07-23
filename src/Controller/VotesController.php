@@ -75,6 +75,15 @@ class VotesController extends AbstractController
                 ])
             ]);
         }
+//
+//        if (!$voteService->canReview($song, $this->getUser())) {
+//            return new JsonResponse([
+//                "error" => true,
+//                "errorMessage" => $translator->trans("You need to play the song first!"),
+//                "response" => $translator->trans("Custom song not found!"),
+//            ]);
+//        }
+
         if ($song->getWip()) {
             return new JsonResponse([
                 "error" => true,
