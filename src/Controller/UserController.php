@@ -126,9 +126,9 @@ class UserController extends AbstractController
         $filters = [];
         $qb = $scoreRepository
             ->createQueryBuilder('score')
-            ->leftJoin('s.categoryTags', 't')
             ->leftJoin('score.songDifficulty','song_difficulties')
             ->leftJoin('song_difficulties.song','s')
+            ->leftJoin('s.categoryTags', 't')
             ->where('score.user = :user')
             ->setParameter('user', $user);
 

@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\NotificationRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -14,6 +13,7 @@ class Notification
     const STATE_READ = 1;
 
     use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -22,7 +22,7 @@ class Notification
     private $message;
     #[ORM\Column(type: 'integer')]
     private $state = self::STATE_UNREAD;
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'notifications')]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, cascade: ['persist', 'remove'], inversedBy: 'notifications')]
     private $user;
 
     public function getId(): ?int
