@@ -7,7 +7,7 @@
         <div {{ stimulus_controller('homepage') }} class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1>Search over <span class="song-counter">{{ songService.count() }}</span> custom songs for<br/>
+                    <h1>Search over <span class="song-counter">{{ songService.count(false) }}</span> custom songs for<br/>
                         Ragnarock VR on Steam and Meta Quest
                     </h1>
                     <form method="GET" action="{{ url('song_library') }}" class=" search-and-filter">
