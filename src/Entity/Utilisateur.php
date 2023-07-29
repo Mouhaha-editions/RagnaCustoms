@@ -750,7 +750,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getSongsAvailable(): Collection
     {
         return $this->songs->filter(function (Song $song) {
-            return !$song->isWip() && $song->isModerated() && $song->getActive() && !$song->isDeleted() && $song->getProgrammationDate() <= new \DateTime();
+            return $song->isAvailable();
         });
     }
 

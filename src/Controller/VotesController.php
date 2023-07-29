@@ -24,39 +24,50 @@ class VotesController extends AbstractController
     #[Route(path: '/upvote/{id}', name: '_upvote')]
     public function toggleUpVote(VoteService $voteService, Song $song, TranslatorInterface $translator)
     {
-        // not connected
-        if (!$this->isGranted('ROLE_USER')) {
+        if (!$song->isAvailable()) {
+            $this->addFlash('danger', $translator->trans("Song not available for vote"));
+        } elseif (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("Login to vote"));
         } else {
             $voteService->toggleUpVote($song, $this->getUser());
         }
-        return new JsonResponse(['result' => $this->renderView('songs/partial/downupvote.html.twig', ['song' => $song,])]);
+        return new JsonResponse(
+            ['result' => $this->renderView('songs/partial/downupvote.html.twig', ['song' => $song,])]
+        );
     }
 
     #[Route(path: '/downvote/{id}', name: '_downvote')]
     public function toggleDownVote(VoteService $voteService, Song $song, TranslatorInterface $translator)
     {
-        // not connected
-        if (!$this->isGranted('ROLE_USER')) {
+        if (!$song->isAvailable()) {
+            $this->addFlash('danger', $translator->trans("Song not available for vote"));
+        } elseif (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("Login to vote"));
         } else {
             $voteService->toggleDownVote($song, $this->getUser());
         }
-        return new JsonResponse(['result' => $this->renderView('songs/partial/downupvote.html.twig', ['song' => $song])]);
+
+        return new JsonResponse(['result' => $this->renderView('songs/partial/downupvote.html.twig', ['song' => $song])]
+        );
     }
 
     /**
-     * @param Request $request
-     * @param Song $song
-     * @param VoteRepository $voteRepository
-     * @param TranslatorInterface $translator
+     * @param  Request  $request
+     * @param  Song  $song
+     * @param  VoteRepository  $voteRepository
+     * @param  TranslatorInterface  $translator
      * @return Response
      */
     #[Route(path: '/review/{id}', name: '_review')]
-    public function songReview(Request        $request, Song $song,ManagerRegistry $doctrine,
-                               VoteRepository $voteRepository, TranslatorInterface $translator,
-                               VoteService    $voteService, DiscordService $discordService): Response
-    {
+    public function songReview(
+        Request $request,
+        Song $song,
+        ManagerRegistry $doctrine,
+        VoteRepository $voteRepository,
+        TranslatorInterface $translator,
+        VoteService $voteService,
+        DiscordService $discordService
+    ): Response {
         if ($song == null) {
             return new JsonResponse([
                 "error" => true,
@@ -131,7 +142,8 @@ class VotesController extends AbstractController
             $vote->setFlow(null);
             $voteService->addScore($song, $vote);
 
-            if ($vote->getFeedback() != null && !empty($vote->getFeedback()) && $vote->getFeedback() !== $voteBefore->getFeedback()) {
+            if ($vote->getFeedback() != null && !empty($vote->getFeedback()) && $vote->getFeedback(
+                ) !== $voteBefore->getFeedback()) {
                 $discordService->sendFeedback($vote);
                 $vote->setIsModerated(false);
             }

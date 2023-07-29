@@ -1069,4 +1069,9 @@ class Song
     {
         return in_array($search, $this->bestPlatform);
     }
+
+    public function isAvailable()
+    {
+        return !$this->isWip() && $this->isModerated() && $this->getActive() && !$this->isDeleted() && $this->getProgrammationDate() <= new \DateTime();
+    }
 }
