@@ -1015,7 +1015,7 @@ class Song
         return $this->converted;
     }
 
-    public function isIsDeleted(): ?bool
+    public function isDeleted(): ?bool
     {
         return $this->isDeleted;
     }

@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\PlaylistRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -13,6 +13,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Playlist
 {
     use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -50,6 +51,16 @@ class Playlist
     public function getSongs(): Collection
     {
         return $this->songs;
+    }
+
+    /**
+     * @return Collection|Song[]
+     */
+    public function getSongsAvailable(): Collection
+    {
+        return $this->songs->filter(function (Song $song) {
+            return !$song->isWip() && $song->isModerated() && $song->getActive() && !$song->isDeleted() && $song->getProgrammationDate() <= new DateTime();
+        });
     }
 
     public function addSong(Song $song): self

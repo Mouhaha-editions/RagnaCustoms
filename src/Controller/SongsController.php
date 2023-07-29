@@ -45,9 +45,9 @@ class SongsController extends AbstractController
 
 
     /**
-     * @param Request $request
-     * @param Song $song
-     * @param TranslatorInterface $translator
+     * @param  Request  $request
+     * @param  Song  $song
+     * @param  TranslatorInterface  $translator
      * @return JsonResponse
      */
     #[Route(path: '/song/playlist/{id}', name: 'song_playlist')]
@@ -59,26 +59,26 @@ class SongsController extends AbstractController
     ) {
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
-                "error"        => true,
+                "error" => true,
                 "errorMessage" => $translator->trans("You need an account!"),
-                "response"     => $translator->trans("You need an account!"),
+                "response" => $translator->trans("You need an account!"),
             ]);
         }
 
         if ($song == null) {
             return new JsonResponse([
-                "error"        => true,
+                "error" => true,
                 "errorMessage" => $translator->trans("Song not found!"),
-                "response"     => $translator->trans("Song not found!"),
+                "response" => $translator->trans("Song not found!"),
 
             ]);
         }
 
         $form = $this->createForm(AddPlaylistFormType::class, $this->getUser(), [
             'attr' => [
-                'class'    => "form ajax-form",
-                'method'   => "post",
-                "action"   => $this->generateUrl("song_playlist", ["id" => $song->getId()]),
+                'class' => "form ajax-form",
+                'method' => "post",
+                "action" => $this->generateUrl("song_playlist", ["id" => $song->getId()]),
                 "data-url" => $this->generateUrl("song_playlist", ["id" => $song->getId()])
             ]
         ]);
@@ -92,9 +92,9 @@ class SongsController extends AbstractController
                 $label = trim($form->get('newPlaylist')->getData());
                 if ($label == null || empty($label)) {
                     return new JsonResponse([
-                        "error"        => true,
+                        "error" => true,
                         "errorMessage" => $translator->trans("Playlist have to be named!"),
-                        "response"     => $translator->trans("Playlist have to be named!"),
+                        "response" => $translator->trans("Playlist have to be named!"),
 
                     ]);
                 }
@@ -107,26 +107,26 @@ class SongsController extends AbstractController
             foreach ($playlist->getSongs() as $psong) {
                 if ($song->getId() === $psong->getId()) {
                     return new JsonResponse([
-                        "error"        => true,
+                        "error" => true,
                         "errorMessage" => $translator->trans("Song already in playlist!"),
-                        "response"     => $translator->trans("Song already in playlist!"),
+                        "response" => $translator->trans("Song already in playlist!"),
                     ]);
                 }
             }
             $playlist->addSong($song);
             $em->flush();
             return new JsonResponse([
-                "error"        => false,
+                "error" => false,
                 "errorMessage" => "You need an account!",
-                "response"     => "<div class='alert alert-success'>" . $translator->trans("Song added!") . "</div>",
+                "response" => "<div class='alert alert-success'>".$translator->trans("Song added!")."</div>",
 
             ]);
         }
 
         return new JsonResponse([
-            "error"        => false,
+            "error" => false,
             "errorMessage" => false,
-            "response"     => $this->renderView("songs/partial/form_playlist.html.twig", [
+            "response" => $this->renderView("songs/partial/form_playlist.html.twig", [
                 'form' => $form->createView(),
                 'song' => $song,
             ]),
@@ -134,9 +134,9 @@ class SongsController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param SongCategoryRepository $categoryRepository
-     * @param PaginationService $paginationService
+     * @param  Request  $request
+     * @param  SongCategoryRepository  $categoryRepository
+     * @param  PaginationService  $paginationService
      * @return Response
      */
     #[Route(path: '/song-library', name: 'song_library')]
@@ -273,8 +273,8 @@ class SongsController extends AbstractController
 
         $qb->andWhere('s.moderated = true');
         $qb->andWhere('s.active = true')->andWhere(
-                '(s.programmationDate <= :now OR s.programmationDate IS NULL)'
-            )->setParameter('now', new DateTime());
+            '(s.programmationDate <= :now OR s.programmationDate IS NULL)'
+        )->setParameter('now', new DateTime());
         //get the 'type' param (added for ajax search)
         $type = $request->get('type', null);
         //check if this is an ajax request
@@ -295,14 +295,14 @@ class SongsController extends AbstractController
                 }
             }
 
-            $filters[] = "search: \"" . implode(' -> ',$exp) . "\"";
+            $filters[] = "search: \"".implode(' -> ', $exp)."\"";
 
             switch ($exp[0]) {
                 case 'mapper':
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter(
                             'search_string',
-                            '%' . $exp[1] . '%'
+                            '%'.$exp[1].'%'
                         );
                     }
                     break;
@@ -315,16 +315,16 @@ class SongsController extends AbstractController
                 case 'genre':
                     if (count($exp) >= 2) {
                         $qb->andWhere('(t.label LIKE :search_string)')->setParameter(
-                                'search_string',
-                                '%' . $exp[1] . '%'
-                            );
+                            'search_string',
+                            '%'.$exp[1].'%'
+                        );
                     }
                     break;
                 case 'artist':
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter(
                             'search_string',
-                            '%' . $exp[1] . '%'
+                            '%'.$exp[1].'%'
                         );
                     }
                     break;
@@ -332,7 +332,7 @@ class SongsController extends AbstractController
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.name LIKE :search_string)')->setParameter(
                             'search_string',
-                            '%' . $exp[1] . '%'
+                            '%'.$exp[1].'%'
                         );
                     }
                     break;
@@ -340,14 +340,14 @@ class SongsController extends AbstractController
                     if (count($exp) >= 2) {
                         $qb->andWhere('(s.description LIKE :search_string)')->setParameter(
                             'search_string',
-                            '%' . $exp[1] . '%'
+                            '%'.$exp[1].'%'
                         );
                     }
                     break;
                 default:
                     $qb->andWhere(
                         '(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string OR t.label LIKE :search_string)'
-                    )->setParameter('search_string', '%' . $request->get('search', null) . '%');
+                    )->setParameter('search_string', '%'.$request->get('search', null).'%');
             }
         }
         $qb->andWhere("s.isDeleted != true");
@@ -363,7 +363,7 @@ class SongsController extends AbstractController
             $em->persist($list);
             $em->flush();
 
-            return $this->redirect("ragnac://list/" . $list->getId());
+            return $this->redirect("ragnac://list/".$list->getId());
         }
 
         switch ($request->get('order_by', null)) {
@@ -392,9 +392,9 @@ class SongsController extends AbstractController
 
         return $this->render('songs/song_library.html.twig', [
             'controller_name' => 'SongsController',
-            'songs'           => $pagination,
-            'filters'         => $filters,
-            'categories'      => $categories
+            'songs' => $pagination,
+            'filters' => $filters,
+            'categories' => $categories
         ]);
     }
 
@@ -419,8 +419,8 @@ class SongsController extends AbstractController
         $this->reformatSubFolderName($song, $kernel);
 
         return $this->RestrictedDownload(
-            $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip",
-            $song->getId() . ".zip"
+            $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip",
+            $song->getId().".zip"
         );
 
 //        $response = new Response($fileContent);
@@ -435,9 +435,9 @@ class SongsController extends AbstractController
 
     private function reformatSubFolderName(Song $song, KernelInterface $kernel)
     {
-        $zipFile = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip";
+        $zipFile = $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip";
         $oldFolderName = $this->slugify($song->getName());
-        $newFolderName = $this->slugify($song->getName()) . $this->slugify($song->getAuthorName()) . $this->slugify(
+        $newFolderName = $this->slugify($song->getName()).$this->slugify($song->getAuthorName()).$this->slugify(
                 $song->getLevelAuthorName()
             );
 
@@ -445,10 +445,10 @@ class SongsController extends AbstractController
         if ($zip->open($zipFile) === true) {
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
-                if (preg_match('#^' . $oldFolderName . '\/(.*)$#', $filename)) {
+                if (preg_match('#^'.$oldFolderName.'\/(.*)$#', $filename)) {
                     $zip->renameIndex(
                         $i,
-                        preg_replace('#^' . $oldFolderName . '\/(.*)$#', $newFolderName . '/$1', $filename)
+                        preg_replace('#^'.$oldFolderName.'\/(.*)$#', $newFolderName.'/$1', $filename)
                     );
                 }
             }
@@ -512,23 +512,23 @@ class SongsController extends AbstractController
         }
         if ($grantedService->isGranted($user, 'ROLE_PREMIUM_LVL1')) {
             $fileContent = file_get_contents(
-                $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"
+                $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip"
             );
 
             $response = new Response($fileContent);
-            $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $song->getId() . '.zip');
+            $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $song->getId().'.zip');
             $response->headers->set('Content-Disposition', $disposition);
             $response->headers->set('Content-type', "application/octet-stream");
             $response->headers->set('Content-Transfer-Encoding', "binary");
             $response->headers->set(
                 'Content-Length',
-                filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip")
+                filesize($kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip")
             );
 
             return $response;
         } else {
-            $file = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"; // Nom du fichier
-            return $this->RestrictedDownload($file, $song->getId() . ".zip");
+            $file = $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip"; // Nom du fichier
+            return $this->RestrictedDownload($file, $song->getId().".zip");
         }
     }
 
@@ -550,24 +550,24 @@ class SongsController extends AbstractController
         $this->reformatSubFolderName($song, $kernel);
         if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
             $fileContent = file_get_contents(
-                $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"
+                $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip"
             );
             $response = new Response($fileContent);
             $disposition = HeaderUtils::makeDisposition(
                 HeaderUtils::DISPOSITION_ATTACHMENT,
-                $this->cleanName($song->getName()) . '.zip'
+                $this->cleanName($song->getName()).'.zip'
             );
             $response->headers->set('Content-Disposition', $disposition);
             $response->headers->set('Content-type', "application/octet-stream");
             $response->headers->set('Content-Transfer-Encoding', "binary");
             $response->headers->set(
                 'Content-Length',
-                filesize($kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip")
+                filesize($kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip")
             );
             return $response;
         } else {
-            $file = $kernel->getProjectDir() . "/public/songs-files/" . $song->getId() . ".zip"; // Nom du fichier
-            return $this->RestrictedDownload($file, $this->cleanName($song->getName()) . ".zip");
+            $file = $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip"; // Nom du fichier
+            return $this->RestrictedDownload($file, $this->cleanName($song->getName()).".zip");
         }
     }
 
@@ -614,9 +614,15 @@ class SongsController extends AbstractController
         DiscordService $discordService,
         ?Song $song = null
     ) {
-        if ($song == null || $song->getProgrammationDate() == null || $song->getProgrammationDate() >= new DateTime(
-            ) || (!$song->isModerated() && !$this->isGranted('ROLE_ADMIN') && $song->getUser() != $this->getUser(
-                )) || $song->getIsDeleted()) {
+        if ($song == null
+            || $song->getIsDeleted()
+            || (
+                ($song->getProgrammationDate() == null
+                    || $song->getProgrammationDate() >= new DateTime()
+                    || !$song->isModerated())
+                && !$this->isGranted('ROLE_ADMIN')
+                && $song->getUser() !== $this->getUser()
+            )) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
         }
@@ -649,18 +655,18 @@ class SongsController extends AbstractController
         foreach ($song->getSongDifficulties() as $difficulty) {
             $level = $difficulty->getDifficultyRank()->getLevel();
             $scores = $doctrine->getRepository(Score::class)->createQueryBuilder('s')->select(
-                    's, MAX(s.score) AS HIDDEN max_score'
-                )->where('s.songDifficulty = :diff')->setParameter('diff', $difficulty)->groupBy('s.user')->addOrderBy(
-                    'max_score',
-                    'DESC'
-                );
+                's, MAX(s.score) AS HIDDEN max_score'
+            )->where('s.songDifficulty = :diff')->setParameter('diff', $difficulty)->groupBy('s.user')->addOrderBy(
+                'max_score',
+                'DESC'
+            );
 
             $pagination = $paginationService->setDefaults(30)->process($scores, $request);
             $levels [] = [
-                "level"      => $level,
+                "level" => $level,
                 "difficulty" => $difficulty,
-                "color"      => $difficulty->getDifficultyRank()->getColor(),
-                'scores'     => $pagination
+                "color" => $difficulty->getDifficultyRank()->getColor(),
+                'scores' => $pagination
             ];
 
             if ($pagination->isPartial()) {
@@ -671,8 +677,8 @@ class SongsController extends AbstractController
         }
 
         return $this->render('songs/detail.html.twig', [
-            'song'         => $song,
-            'levels'       => $levels,
+            'song' => $song,
+            'levels' => $levels,
             "feedbackForm" => $feedbackForm->createView()
         ]);
     }

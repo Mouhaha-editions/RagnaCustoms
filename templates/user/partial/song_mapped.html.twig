@@ -13,7 +13,7 @@
                                                                     class="avatar big-rounded mb-4 img-fluid"
                                                                     alt="{{ user.mapperName??user.username }}"/>
                 <div class="stats d-flex justify-content-between small">
-                    <span>{{ "%songs_length% songs mapped"|trans|replace({"%songs_length%":user.songs|length}) }}</span>
+                    <span>{{ "%songs_length% songs mapped"|trans|replace({"%songs_length%":user.songsAvailable|length}) }}</span>
                     <span class="text-right">{{ "%total_downloads% downloads"|trans|replace({"%total_downloads%":mapperService.totalDownloads(user)|number_format(0,',')}) }}</span>
                 </div>
                 {#                <a class="btn btn-lg btn-info btn-block" #}

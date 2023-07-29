@@ -744,6 +744,16 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         });
     }
 
+    /**
+     * @return Collection|Song[]
+     */
+    public function getSongsAvailable(): Collection
+    {
+        return $this->songs->filter(function (Song $song) {
+            return !$song->isWip() && $song->isModerated() && $song->getActive() && !$song->isDeleted() && $song->getProgrammationDate() <= new \DateTime();
+        });
+    }
+
     public function getPreferedGenre($top = 3)
     {
         $genres = [];
