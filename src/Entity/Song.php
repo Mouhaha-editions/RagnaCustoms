@@ -1072,6 +1072,6 @@ class Song
 
     public function isAvailable()
     {
-        return !$this->isWip() && $this->isModerated() && $this->getActive() && !$this->isDeleted() && $this->getProgrammationDate() <= new \DateTime();
+        return !$this->isWip() && $this->isModerated() && $this->getActive() && !$this->isDeleted() && $this->getProgrammationDate() != null && $this->getProgrammationDate() <= new \DateTime();
     }
 }
