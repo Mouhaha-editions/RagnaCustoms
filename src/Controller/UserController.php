@@ -367,7 +367,7 @@ class UserController extends AbstractController
                        ->createQueryBuilder("s")
             ->leftJoin('s.categoryTags', 't')
             ->where('s.user = :user')
-                       ->andWhere('(s.programmationDate <= :now OR s.programmationDate IS NULL)')
+                       ->andWhere('(s.programmationDate <= :now AND s.programmationDate IS NOT NULL)')
                        ->setParameter('now', new DateTime())
                        ->setParameter('user', $utilisateur)
                        ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')

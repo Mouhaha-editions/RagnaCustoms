@@ -273,7 +273,7 @@ class SongsController extends AbstractController
 
         $qb->andWhere('s.moderated = true');
         $qb->andWhere('s.active = true')->andWhere(
-            '(s.programmationDate <= :now OR s.programmationDate IS NULL)'
+            '(s.programmationDate <= :now AND s.programmationDate IS NOT NULL)'
         )->setParameter('now', new DateTime());
         //get the 'type' param (added for ajax search)
         $type = $request->get('type', null);
