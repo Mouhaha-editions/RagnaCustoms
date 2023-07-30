@@ -19,7 +19,7 @@
                 <div class="d-flex ">
                     <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" class="small-cover" alt="cover"/></a>
                     <div class="song pl-1">
-                        <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song.name }}</a>
+                        <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song|raw }}</a>
                             {% set downloaded = downloadsService.alreadyDownloaded(song) %}
                             {% if downloaded %}
                                 <small class="small"><i data-toggle="tooltip" title="already downloaded" class="fas fa-check"></i></small>
