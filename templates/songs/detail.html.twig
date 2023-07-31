@@ -70,7 +70,7 @@
                         </h2>
                         <div class="tags">
                             {% for category in song.categoryTags %}
-                                <span>{{ category.label }}</span>
+                                <a class='btn btn-sm btn-tag' href="{{ url('song_library',{search:'genre:'~category.label}) }}">{{ category.label }}</a>
                             {% endfor %}
                         </div>
                         <div class="mt-3 mb-3">

@@ -412,3 +412,12 @@ textarea{
   z-index: 101;
 }
 
+.btn-tag{
+  background:#3c3c3c;
+  color:#fff;
+  font-size:12px;
+  &:hover{
+    background: #2f2f2f;
+    color:#fff;
+  }
+}
