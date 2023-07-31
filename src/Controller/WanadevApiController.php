@@ -40,8 +40,7 @@ class WanadevApiController extends AbstractController
         ScoreService $scoreService,
         RankedScoresRepository $rankedScoresRepository,
         ScoreRepository $scoreRepository,
-        ScoreHistoryRepository $scoreHistoryRepository,
-        $onlyMe = true
+        ScoreHistoryRepository $scoreHistoryRepository
     ): Response {
         return $this->score(
             $request,
@@ -54,8 +53,7 @@ class WanadevApiController extends AbstractController
             $scoreService,
             $rankedScoresRepository,
             $scoreRepository,
-            $scoreHistoryRepository,
-            false
+            $scoreHistoryRepository
         );
     }
 
@@ -74,8 +72,7 @@ class WanadevApiController extends AbstractController
         ScoreService $scoreService,
         RankedScoresRepository $rankedScoresRepository,
         ScoreRepository $scoreRepository,
-        ScoreHistoryRepository $scoreHistoryRepository,
-        $onlyMe = true
+        ScoreHistoryRepository $scoreHistoryRepository
     ): Response {
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
@@ -264,7 +261,7 @@ class WanadevApiController extends AbstractController
             }
 
             $score = $scoreQb->getQuery()->getOneOrNullResult();
-            $rankingScoreService->archive($newScore);
+            $scoreService->archive($newScore);
 
             if ($score == null || $score->getScore() <= $newScore->getScore()) {
                 //le nouveau score est meilleur
@@ -276,11 +273,12 @@ class WanadevApiController extends AbstractController
             } else {
                 $score->setSession($newScore->getSession());
             }
+
             $user->setCredits($user->getCredits() + 1);
             $em->flush();
 
             //calculation of the ponderate PP scores
-            if ($score->isRankable()) {
+            if ($newScore->isRankable()) {
                 $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user);
                 //insert/update of the score into ranked_scores
                 $rankedScore = $rankedScoresRepository->findOneBy(['user' => $user]);
