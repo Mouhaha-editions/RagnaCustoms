@@ -146,7 +146,7 @@ class WanadevApiController extends AbstractController
             $em->flush();
 
             //calculation of the ponderate PP scores
-            if ($score->isRankable()) {
+            if ($newScore->isRankable()) {
                 $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user);
                 //insert/update of the score into ranked_scores
                 $rankedScore = $rankedScoresRepository->findOneBy([
