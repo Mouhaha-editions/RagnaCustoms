@@ -2,31 +2,43 @@
 {{ form_start(form) }}
 <div class="row">
     <div class="col-12">
-{% if error is not null %}
-<div class="alert alert-danger">{{ error }}</div>
-{% endif %}
+        {% if error is not null %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
     </div>
-
-
     <div class="col-md-6">
         {{ form_row(form.zipFile) }}
-        {{ form_row(form.bestPlatform) }}
         {{ form_row(form.categoryTags) }}
         {{ form_row(form.description) }}
-        {{ form_row(form.youtubeLink) }}
     </div>
     <div class="col-md-6">
+        {{ form_row(form.bestPlatform,{attr:{class:'pb-2'}}) }}
+        {{ form_row(form.youtubeLink) }}
         {% if is_granted("ROLE_PREMIUM_LVL2") %}
-        {{ form_row(form.programmationDate) }}
+            {{ form_row(form.programmationDate) }}
         {% endif %}
-        {{ form_row(form.song_request) }}
-        {{ form_row(form.wip) }}
-        {{ form_row(form.isExplicit) }}
-        {{ form_row(form.converted) }}
-
     </div>
     <div class="col-12">
-<small style="font-size: 12px;">By uploading your map, you acknowledge that you agree to our <a data-no-swup="true" href="/doc/TOS.pdf">Terms of Service.</a></small>
+    <div class="d-flex justify-content-center" style="font-size:18px;">
+    <div class="pl-2 pr-3">
+    {{ form_row(form.wip) }}
+    </div>
+    <div class="pl-2 pr-3">
+        {{ form_row(form.isExplicit) }}
+    </div>
+    <div class="pl-2 pr-3">
+        {{ form_row(form.converted) }}
+    </div>
+        <div class="pl-2 pr-3">
+            {{ form_row(form.active) }}
+
+        </div></div>
+    <div class="col-12 text-center">
+        <small style="font-size: 12px;">By uploading your map, you acknowledge that you agree to our <a
+                    data-no-swup="true" href="/doc/TOS.pdf">Terms of Service.</a></small>
+    </div>
+    <div class="col-12 text-center">
+        {{ form_row(form.save) }}
     </div>
 </div>
 {{ form_end(form) }}
