@@ -397,6 +397,11 @@ class Score
 
     public function isRankable()
     {
-        return $this->getSongDifficulty()->isRanked() && !in_array(strtolower($this->getPlateform()), ['steam_flat','mobile','android','ios']);
+        return $this->getSongDifficulty()->isRanked() && $this->isVR();
+    }
+
+    private function isVR()
+    {
+        return  in_array(strtolower($this->getPlateform()), ['steam','viveport','oculus','pico']);
     }
 }
