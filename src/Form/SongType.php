@@ -62,7 +62,7 @@ class SongType extends AbstractType
             ->add('bestPlatform', ChoiceType::class, [
                 'choices' => [
                     'VR' => 0,
-                    'Viking on Tour' => 1,
+                    'Vikings on Tour' => 1,
                 ],
                 'required' => true,
                 'multiple' => true,
