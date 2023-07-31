@@ -7,6 +7,7 @@ use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreRepository;
+use App\Service\RankingScoreService;
 use App\Service\ScoreService;
 use Doctrine\Persistence\ManagerRegistry;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -89,15 +90,9 @@ class ScoreController extends AbstractController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param ScoreService $scoreService
-     * @param RankedScoresRepository $rankedScoresRepository
-     * @return Response
-     */
     #[Route(path: '/ranking/toggle/{id}', name: 'rank_toggle')]
     public function toggleRankScore(Request                $request,
-                                    ScoreService           $scoreService,
+                                    RankingScoreService           $rankingScoreService,
                                     ManagerRegistry        $doctrine,
                                     ScoreRepository        $scoreRepository,
                                     RankedScoresRepository $rankedScoresRepository,
@@ -125,14 +120,14 @@ class ScoreController extends AbstractController
                 $score->setRawPP(0);
             } else {
                 //calcul du rawPP + definir car on est ranked
-                $score->setRawPP($scoreService->calculateRawPP($score));
+                $score->setRawPP($rankingScoreService->calculateRawPP($score));
             }
             //update of the score into ranked_scores
             $rankedScore = $rankedScoresRepository->findOneBy([
                 'user' => $user
             ]);
             if ($rankedScore != null) {
-                $totalPondPPScore = $scoreService->calculateTotalPondPPScore($scoreRepository, $user);
+                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user);
                 $rankedScore->setTotalPPScore($totalPondPPScore);
             }
 

@@ -56,9 +56,16 @@ class RankingScoreService
     public function calculateTotalPondPPScore(Utilisateur $user)
     {
         $totalPP = 0;
-        $scores = $this->scoreRepository->createQueryBuilder('score')->leftJoin('score.songDifficulty', 'diff')->where('score.user = :user')->andWhere('diff.isRanked = true')->setParameter('user', $user)->addOrderBy('score.rawPP', 'desc')->getQuery()->getResult();
-
+        $scores = $this->scoreRepository
+            ->createQueryBuilder('score')
+            ->leftJoin('score.songDifficulty', 'diff')
+            ->where('score.user = :user')
+            ->andWhere('diff.isRanked = true')
+            ->setParameter('user', $user)
+            ->addOrderBy('score.rawPP', 'desc')
+            ->getQuery()->getResult();
         $index = 0;
+
         foreach ($scores as $score) {
             $rawPPScore = $score->getRawPP();
             $pondPPScore = $rawPPScore * pow(0.965, $index);

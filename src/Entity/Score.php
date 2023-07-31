@@ -392,6 +392,11 @@ class Score
 
     public function getPlateformIcon()
     {
-        return in_array(strtolower($this->plateform), ['steam_flat']) ? 'fa-desktop' : 'fa-vr-cardboard';
+        return in_array(strtolower($this->plateform), ['steam_flat']) ? 'fa-gamepad' : 'fa-vr-cardboard';
+    }
+
+    public function isRankable()
+    {
+        return $this->getSongDifficulty()->isRanked() && !in_array(strtolower($this->getPlateform()), ['steam_flat','mobile','android','ios']);
     }
 }
