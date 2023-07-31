@@ -128,7 +128,7 @@ class Score
     }
 
     /**
-     * @param float|null $rawPP
+     * @param  float|null  $rawPP
      * @return $this
      */
     public function setRawPP(?float $rawPP): self
@@ -147,31 +147,12 @@ class Score
     }
 
     /**
-     * @param float|null $weightedPP
+     * @param  float|null  $weightedPP
      * @return $this
      */
     public function setWeightedPP(?float $weightedPP): self
     {
         $this->weightedPP = $weightedPP;
-
-        return $this;
-    }
-
-    /**
-     * @return SongDifficulty|null
-     */
-    public function getSongDifficulty(): ?SongDifficulty
-    {
-        return $this->songDifficulty;
-    }
-
-    /**
-     * @param SongDifficulty|null $SongDifficulty
-     * @return $this
-     */
-    public function setSongDifficulty(?SongDifficulty $SongDifficulty): self
-    {
-        $this->songDifficulty = $SongDifficulty;
 
         return $this;
     }
@@ -185,7 +166,7 @@ class Score
     }
 
     /**
-     * @param mixed $percentageOfPerfects
+     * @param  mixed  $percentageOfPerfects
      */
     public function setPercentageOfPerfects($percentageOfPerfects): void
     {
@@ -201,7 +182,7 @@ class Score
     }
 
     /**
-     * @param mixed $comboBlue
+     * @param  mixed  $comboBlue
      */
     public function setComboBlue($comboBlue): void
     {
@@ -217,7 +198,7 @@ class Score
     }
 
     /**
-     * @param mixed $comboYellow
+     * @param  mixed  $comboYellow
      */
     public function setComboYellow($comboYellow): void
     {
@@ -233,7 +214,7 @@ class Score
     }
 
     /**
-     * @param mixed $missed
+     * @param  mixed  $missed
      */
     public function setMissed($missed): void
     {
@@ -249,7 +230,7 @@ class Score
     }
 
     /**
-     * @param mixed $hit
+     * @param  mixed  $hit
      */
     public function setHit($hit): void
     {
@@ -265,7 +246,7 @@ class Score
     }
 
     /**
-     * @param mixed $hitPercentage
+     * @param  mixed  $hitPercentage
      */
     public function setHitPercentage($hitPercentage): void
     {
@@ -281,7 +262,7 @@ class Score
     }
 
     /**
-     * @param mixed $hitDeltaAverage
+     * @param  mixed  $hitDeltaAverage
      */
     public function setHitDeltaAverage($hitDeltaAverage): void
     {
@@ -297,7 +278,7 @@ class Score
     }
 
     /**
-     * @param mixed $extra
+     * @param  mixed  $extra
      */
     public function setExtra($extra): void
     {
@@ -313,7 +294,7 @@ class Score
     }
 
     /**
-     * @param mixed $session
+     * @param  mixed  $session
      */
     public function setSession($session): void
     {
@@ -329,7 +310,7 @@ class Score
     }
 
     /**
-     * @param mixed $dateRagnarock
+     * @param  mixed  $dateRagnarock
      */
     public function setDateRagnarock($dateRagnarock): void
     {
@@ -345,7 +326,7 @@ class Score
     }
 
     /**
-     * @param mixed $userRagnarock
+     * @param  mixed  $userRagnarock
      */
     public function setUserRagnarock($userRagnarock): void
     {
@@ -361,11 +342,26 @@ class Score
     }
 
     /**
-     * @param mixed $country
+     * @param  mixed  $country
      */
     public function setCountry($country): void
     {
         $this->country = $country;
+    }
+
+    public function getTimeAgoShort()
+    {
+        return StatisticService::dateDiplayerShort($this->createdAt);
+    }
+
+    public function getPlateformIcon()
+    {
+        return $this->isVr() ? 'fa-vr-cardboard' : 'fa-gamepad';
+    }
+
+    public function isVR(): bool
+    {
+        return in_array(strtolower($this->getPlateform()), ['steam', 'viveport', 'oculus', 'pico']);
     }
 
     /**
@@ -377,22 +373,11 @@ class Score
     }
 
     /**
-     * @param mixed $plateform
+     * @param  mixed  $plateform
      */
     public function setPlateform($plateform): void
     {
         $this->plateform = $plateform;
-    }
-
-
-    public function getTimeAgoShort()
-    {
-        return StatisticService::dateDiplayerShort($this->createdAt);
-    }
-
-    public function getPlateformIcon()
-    {
-        return in_array(strtolower($this->plateform), ['steam_flat']) ? 'fa-gamepad' : 'fa-vr-cardboard';
     }
 
     public function isRankable()
@@ -400,8 +385,22 @@ class Score
         return $this->getSongDifficulty()->isRanked() && $this->isVR();
     }
 
-    private function isVR()
+    /**
+     * @return SongDifficulty|null
+     */
+    public function getSongDifficulty(): ?SongDifficulty
     {
-        return  in_array(strtolower($this->getPlateform()), ['steam','viveport','oculus','pico']);
+        return $this->songDifficulty;
+    }
+
+    /**
+     * @param  SongDifficulty|null  $SongDifficulty
+     * @return $this
+     */
+    public function setSongDifficulty(?SongDifficulty $SongDifficulty): self
+    {
+        $this->songDifficulty = $SongDifficulty;
+
+        return $this;
     }
 }

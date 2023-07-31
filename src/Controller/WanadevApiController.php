@@ -26,7 +26,7 @@ use function Sentry\configureScope;
 
 class WanadevApiController extends AbstractController
 {
-
+    const VR_PLATEFORM = ['Steam', 'Viveport', 'Oculus', 'Pico'];
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}', name: 'wd_api_score_simple_get', methods: ['GET', 'POST'])]
     public function scoreSimple(
@@ -121,12 +121,12 @@ class WanadevApiController extends AbstractController
                 ->setParameter('user', $user)
                 ->andWhere('s.songDifficulty = :songDifficulty')
                 ->setParameter('songDifficulty', $songDiff)
-                ->setParameter('plateform', 'Steam_Flat');
+                ->setParameter('plateform', self::VR_PLATEFORM);
 
-            if (in_array($newScore->getPlateform(), ['Steam_Flat'])) {
-                $scoreQb->andWhere('s.plateform = :plateform');
+            if ($newScore->isVR()) {
+                $scoreQb->andWhere('s.plateform IN (:plateform)');
             } else {
-                $scoreQb->andWhere('s.plateform != :plateform');
+                $scoreQb->andWhere('s.plateform NOT IN (:plateform)');
             }
 
             $score = $scoreQb->getQuery()->getOneOrNullResult();
@@ -252,12 +252,12 @@ class WanadevApiController extends AbstractController
                 ->setParameter('user', $user)
                 ->andWhere('s.songDifficulty = :songDifficulty')
                 ->setParameter('songDifficulty', $songDiff)
-                ->setParameter('plateform', 'Steam_Flat');
+                ->setParameter('plateform', self::VR_PLATEFORM);
 
-            if (in_array($newScore->getPlateform(), ['Steam_Flat'])) {
-                $scoreQb->andWhere('s.plateform = :plateform');
+            if ($newScore->isVR()) {
+                $scoreQb->andWhere('s.plateform IN (:plateform)');
             } else {
-                $scoreQb->andWhere('s.plateform != :plateform');
+                $scoreQb->andWhere('s.plateform NOT IN (:plateform)');
             }
 
             $score = $scoreQb->getQuery()->getOneOrNullResult();
