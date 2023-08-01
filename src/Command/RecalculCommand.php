@@ -35,8 +35,11 @@ class RecalculCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $users = $this->utilisateurRepository->findAll();
+        $j= 0;
+        $cUsers = count($users);
         foreach ($users as $user) {
-            echo "start: ".$user->getUsername()."\r\n";
+            $j++;
+            echo "start: ".$user->getUsername()." (".$j."/".$cUsers.")\r\n";
             $scores = $user->getScores()->filter(function(Score $score){
                 return $score->isRankable() ;
             });
@@ -48,22 +51,21 @@ class RecalculCommand extends Command
                 echo "score: ".($i)."/".count($scores)."\r\n";
                 $rawPP = $this->rankingScoreService->calculateRawPP($score);
                 $score->setRawPP($rawPP);
-
-                $this->rankingScoreService->calculateRawPP($score);
-
-                $totalPondPPScore = $this->rankingScoreService->calculateTotalPondPPScore($user);
-                //insert/update of the score into ranked_scores
-                $rankedScore = $this->rankedScoresRepository->findOneBy([
-                    'user' => $user
-                ]);
-
-                if ($rankedScore == null) {
-                    $rankedScore = new RankedScores();
-                    $rankedScore->setUser($user);
-                    $this->entityManager->persist($rankedScore);
-                }
-                $rankedScore->setTotalPPScore($totalPondPPScore);
             }
+            $this->entityManager->flush();
+
+            $totalPondPPScore = $this->rankingScoreService->calculateTotalPondPPScore($user);
+            //insert/update of the score into ranked_scores
+            $rankedScore = $this->rankedScoresRepository->findOneBy([
+                'user' => $user
+            ]);
+
+            if ($rankedScore == null) {
+                $rankedScore = new RankedScores();
+                $rankedScore->setUser($user);
+                $this->entityManager->persist($rankedScore);
+            }
+            $rankedScore->setTotalPPScore($totalPondPPScore);
             echo "save: ".$user->getUsername()."\r\n";
             $this->entityManager->flush();
             echo "end: ".$user->getUsername()."\r\n";
