@@ -76,14 +76,18 @@ class WanadevApiController extends AbstractController
     ): Response {
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
+
         if ($user == null) {
             return new JsonResponse("NOK USER", 400);
         }
+
         configureScope(function (Scope $scope) use ($user): void {
             $scope->setUser(['username' => $user->getUsername()]);
         });
+
         /** @var SongDifficulty $songDiff */
         $songDiff = $songDifficultyRepository->findOneBy(['wanadevHash' => $hash]);
+
         if ($songDiff == null) {
             return new JsonResponse("NOK DIFF", 400);
         }
@@ -91,7 +95,6 @@ class WanadevApiController extends AbstractController
         if ($request->isMethod("post")) {
             $data = json_decode($request->getContent(), true);
             $em = $doctrine->getManager();
-
             $newScore = new Score();
             $newScore->setUser($user);
             $newScore->setSongDifficulty($songDiff);
@@ -109,6 +112,7 @@ class WanadevApiController extends AbstractController
             $newScore->setMissed($data['stats']['Missed']);
             $newScore->setExtra(json_encode($data['extra']));
             $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
+
             if ($newScore->isRankable()) {
                 $rawPP = $rankingScoreService->calculateRawPP($newScore);
                 $newScore->setRawPP($rawPP);
@@ -158,6 +162,7 @@ class WanadevApiController extends AbstractController
                     $rankedScore->setUser($user);
                     $em->persist($rankedScore);
                 }
+
                 $rankedScore->setTotalPPScore($totalPondPPScore);
             }
             $em->flush();

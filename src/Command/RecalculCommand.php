@@ -11,7 +11,9 @@ use App\Repository\UtilisateurRepository;
 use App\Service\RankingScoreService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class RecalculCommand extends Command
@@ -29,21 +31,34 @@ class RecalculCommand extends Command
 
     protected function configure(): void
     {
+        $this
+            ->addOption('username', 'u',InputOption::VALUE_OPTIONAL, 'The username of the user.')
+            ->addOption('user-id', 'u-id',InputOption::VALUE_OPTIONAL, 'The Id of the user.');
         // ...
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $users = $this->utilisateurRepository->findAll();
-        $j= 0;
+        $username = $input->getOption('username');
+        $user_id = $input->getOption('user-id');
+
+        if ($username) {
+            $users = $this->utilisateurRepository->findBy(['username' => $username]);
+        } elseif ($user_id) {
+            $users = $this->utilisateurRepository->findBy(['id' => $user_id]);
+        } else {
+            $users = $this->utilisateurRepository->findAll();
+        }
+
+        $j = 0;
         $cUsers = count($users);
         foreach ($users as $user) {
             $j++;
             echo "start: ".$user->getUsername()." (".$j."/".$cUsers.")\r\n";
-            $scores = $user->getScores()->filter(function(Score $score){
-                return $score->isRankable() ;
+            $scores = $user->getScores()->filter(function (Score $score) {
+                return $score->isRankable();
             });
-                echo "scores: ".count($scores)."\r\n";
+            echo "scores: ".count($scores)."\r\n";
             /** @var Score $score */
             $i = 0;
             foreach ($scores as $score) {
