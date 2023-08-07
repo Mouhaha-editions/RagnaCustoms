@@ -72,9 +72,6 @@ services:
             - '@App\Service\ScoreService'
             - '@router'
 
-    App\Service\ScoreService:
-        arguments: [ '@doctrine.orm.entity_manager','@kernel' ]
-
     App\EventListener\ExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
