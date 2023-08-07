@@ -56,10 +56,23 @@ class ScoreController extends AbstractController
         $qb = $rankedScoresRepository->createQueryBuilder('rs')->leftJoin('rs.user', 'u')
                                      ->leftJoin('u.country', 'c')->where('u.country = :country')
                                      ->setParameter('country', $country)
-                                     ->orderBy("rs.totalPPScore", "DESC");
+
+            ->andWhere('rs.plateform = :vr')
+            ->setParameter('flat', 'vr')
+            ->orderBy("rs.totalPPScore", "DESC");
         $scores = $pagination->setDefaults(25)->process($qb, $request);
+
+        $qb = $rankedScoresRepository->createQueryBuilder('rs')->leftJoin('rs.user', 'u')
+            ->leftJoin('u.country', 'c')->where('u.country = :country')
+            ->setParameter('country', $country)
+            ->andWhere('rs.plateform = :flat')
+            ->setParameter('flat', 'flat')
+            ->orderBy("rs.totalPPScore", "DESC");
+        $scoresFlat = $pagination->setDefaults(25)->process($qb, $request);
+
         return $this->render('score/global_ranking.html.twig', [
             'scores'  => $scores,
+            'scoresFlat'  => $scoresFlat,
             'country' => $country
         ]);
     }
