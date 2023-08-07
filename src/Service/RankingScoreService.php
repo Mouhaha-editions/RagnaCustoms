@@ -34,21 +34,7 @@ class RankingScoreService
                 $rawPP = $this->calculateRawPP($score);
                 $score->setRawPP($rawPP);
                 $this->scoreRepository->add($score);
-
-                $totalPondPPScore = $this->calculateTotalPondPPScore($score->getUser(), $score->isVR());
-                //insert/update of the score into ranked_scores
-                $rankedScore = $this->rankedScoresRepository->findOneBy([
-                    'user' => $score->getUser(),
-                    'plateform' => $score->isVR() ? 'vr' : 'flat'
-                ]);
-
-                if ($rankedScore == null) {
-                    $rankedScore = new RankedScores();
-                    $rankedScore->setUser($score->getUser());
-                    $rankedScore->setPlateform($score->isVR() ? 'vr' : 'flat');
-                }
-                $rankedScore->setTotalPPScore($totalPondPPScore);
-                $this->rankedScoresRepository->add($rankedScore);
+                $this->calculateTotalPondPPScore($score->getUser(), $score->isVR());
             }
         }
     }
