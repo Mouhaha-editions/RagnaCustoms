@@ -46,7 +46,7 @@
 
                             </td>
                             <td class="text-right">{{ score.totalPPScore|round(2) }} PP</td>
-                            <td class="text-right"><span>{{ rankingScoreService.countRanked(score.user, false) }}</span></td>
+                            <td class="text-right"><span>{{ rankingScoreService.countRanked(score.user) }}</span></td>
                             <td class="text-right"><span>{{ score.timeAgoShort() }}</span></td>
                         </tr>
                     {% endfor %}
@@ -96,7 +96,7 @@
 
                             </td>
                             <td class="text-right">{{ score.totalPPScore|round(2) }} PP</td>
-                            <td class="text-right"><span>{{ rankingScoreService.countRanked(score.user) }}</span></td>
+                            <td class="text-right"><span>{{ rankingScoreService.countRanked(score.user, false) }}</span></td>
                             <td class="text-right"><span>{{ score.timeAgoShort() }}</span></td>
                         </tr>
                     {% endfor %}
