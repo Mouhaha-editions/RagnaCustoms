@@ -53,15 +53,20 @@ class RecalculCommand extends Command
 
         $j = 0;
         $cUsers = count($users);
-        foreach ($users as $user) {
+        foreach ($users as $k=>$user) {
             $j++;
             echo "start: ".$user->getUsername()." (".$j."/".$cUsers.")\r\n";
-            $scores = $user->getScores()->filter(function (Score $score) {
-                return $score->isRankable();
+            $scores = $user->getScores()->filter(function (Score $score) use($plateform) {
+                return $score->isRankable() && (($plateform == 'vr' && $score->isVR()) || ($plateform == 'flat' && !$score->isVR())) ;
             });
             echo "scores: ".count($scores)."\r\n";
             /** @var Score $score */
             $i = 0;
+
+            if($scores->count() == 0){
+                unset($users[$k]);
+                continue;
+            }
 
             foreach ($scores as $score) {
                 $i++;
@@ -88,6 +93,7 @@ class RecalculCommand extends Command
             echo "save: ".$user->getUsername()."\r\n";
             $this->entityManager->flush();
             echo "end: ".$user->getUsername()."\r\n";
+            unset($users[$k]);
         }
 
         return Command::SUCCESS;
