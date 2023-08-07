@@ -125,7 +125,7 @@ class WanadevApiController extends AbstractController
                 ->setParameter('user', $user)
                 ->andWhere('s.songDifficulty = :songDifficulty')
                 ->setParameter('songDifficulty', $songDiff)
-                ->andWhere('score.plateform IS NOT NULL')
+                ->andWhere('s.plateform IS NOT NULL')
                 ->setParameter('plateform', self::VR_PLATEFORM);
 
             if ($newScore->isVR()) {
