@@ -72,7 +72,7 @@
                     {% for score in scoresFlat.entities %}
                         <tr {% if is_granted('ROLE_USER') and score.user.username == app.user.username %}class="text-success"
                             id="{{ score.user.username }}" {% else %}id="{{ score.user.username }}"{% endif %}>
-                            <td>{{ loop.index+((scores.current-1)*25) }}</td>
+                            <td>{{ loop.index+((scoresFlat.current-1)*25) }}</td>
                             <td>
                                 {#                                <a href="{{ url("user_profile",{username:score.user.username}) }}"> #}
                                 {#                                    <img style="border-radius:15px;width:30px;margin-right:10px;" #}
