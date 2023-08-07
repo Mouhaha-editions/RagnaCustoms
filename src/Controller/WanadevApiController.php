@@ -125,6 +125,7 @@ class WanadevApiController extends AbstractController
                 ->setParameter('user', $user)
                 ->andWhere('s.songDifficulty = :songDifficulty')
                 ->setParameter('songDifficulty', $songDiff)
+                ->andWhere('score.plateform IS NOT NULL')
                 ->setParameter('plateform', self::VR_PLATEFORM);
 
             if ($newScore->isVR()) {
@@ -153,7 +154,7 @@ class WanadevApiController extends AbstractController
             if ($newScore->isRankable()) {
                 $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user, $newScore->isVR());
                 //insert/update of the score into ranked_scores
-                $plateform = $newScore->isVR()?'vr':'flat';
+                $plateform = $newScore->isVR() ? 'vr' : 'flat';
                 $rankedScore = $rankedScoresRepository->findOneBy([
                     'user' => $user,
                     'plateform' => $plateform
@@ -260,7 +261,8 @@ class WanadevApiController extends AbstractController
                 ->setParameter('user', $user)
                 ->andWhere('s.songDifficulty = :songDifficulty')
                 ->setParameter('songDifficulty', $songDiff)
-                ->setParameter('plateform', self::VR_PLATEFORM);
+                ->setParameter('plateform', self::VR_PLATEFORM)
+                ->andWhere('score.plateform IS NOT NULL');
 
             if ($newScore->isVR()) {
                 $scoreQb->andWhere('s.plateform IN (:plateform)');

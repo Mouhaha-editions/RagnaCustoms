@@ -76,7 +76,8 @@ class RankingScoreService
             ->where('score.user = :user')
             ->andWhere('diff.isRanked = true')
             ->setParameter('user', $user)
-            ->addOrderBy('score.rawPP', 'desc');
+            ->addOrderBy('score.rawPP', 'desc')
+            ->andWhere('score.plateform IS NOT NULL');
 
         if ($isVr) {
             $qb->andWhere('score.plateform IN (:plateform) ')
