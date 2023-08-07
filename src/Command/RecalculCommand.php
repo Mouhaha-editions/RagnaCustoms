@@ -75,9 +75,13 @@ class RecalculCommand extends Command
             }
 
             $this->entityManager->flush();
-
             $totalPondPPScore = $this->rankingScoreService->calculateTotalPondPPScore($user, $plateform == 'vr');
-            //insert/update of the score into ranked_scores
+
+            if($totalPondPPScore == 0){
+                unset($users[$k]);
+                continue;
+            }
+
             $rankedScore = $this->rankedScoresRepository->findOneBy([
                 'user' => $user,
                 'plateform' => $plateform
