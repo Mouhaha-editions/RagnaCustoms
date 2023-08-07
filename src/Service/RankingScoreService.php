@@ -100,7 +100,7 @@ class RankingScoreService
         return round($totalPP, 2);
     }
 
-    public function countRanked(Utilisateur $user, bool $isVr)
+    public function countRanked(Utilisateur $user, bool $isVr = true)
     {
         $qb = $this->scoreRepository->createQueryBuilder("s")
             ->select('COUNT(s) as count')
