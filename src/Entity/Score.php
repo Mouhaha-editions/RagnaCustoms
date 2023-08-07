@@ -382,7 +382,7 @@ class Score
 
     public function isRankable()
     {
-        return $this->getSongDifficulty()->isRanked() && $this->isVR();
+        return $this->getSongDifficulty()->isRanked();
     }
 
     /**

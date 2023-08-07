@@ -11,7 +11,6 @@ use App\Repository\UtilisateurRepository;
 use App\Service\RankingScoreService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,7 +32,8 @@ class RecalculCommand extends Command
     {
         $this
             ->addOption('username', 'u',InputOption::VALUE_OPTIONAL, 'The username of the user.')
-            ->addOption('user-id', 'u-id',InputOption::VALUE_OPTIONAL, 'The Id of the user.');
+            ->addOption('user-id', 'u-id',InputOption::VALUE_OPTIONAL, 'The Id of the user.')
+            ->addOption('plateform', 'p',InputOption::VALUE_OPTIONAL, 'plateform to calculate vr(default) or flat.');
         // ...
     }
 
@@ -41,6 +41,7 @@ class RecalculCommand extends Command
     {
         $username = $input->getOption('username');
         $user_id = $input->getOption('user-id');
+        $plateform = $input->getOption('plateform') ?? 'vr';
 
         if ($username) {
             $users = $this->utilisateurRepository->findBy(['username' => $username]);
@@ -61,23 +62,26 @@ class RecalculCommand extends Command
             echo "scores: ".count($scores)."\r\n";
             /** @var Score $score */
             $i = 0;
+
             foreach ($scores as $score) {
                 $i++;
                 echo "score: ".($i)."/".count($scores)."\r\n";
-                $rawPP = $this->rankingScoreService->calculateRawPP($score);
-                $score->setRawPP($rawPP);
+                $this->rankingScoreService->calculateRawPP($score);
             }
+
             $this->entityManager->flush();
 
-            $totalPondPPScore = $this->rankingScoreService->calculateTotalPondPPScore($user);
+            $totalPondPPScore = $this->rankingScoreService->calculateTotalPondPPScore($user, $plateform == 'vr');
             //insert/update of the score into ranked_scores
             $rankedScore = $this->rankedScoresRepository->findOneBy([
-                'user' => $user
+                'user' => $user,
+                'plateform' => $plateform
             ]);
 
             if ($rankedScore == null) {
                 $rankedScore = new RankedScores();
                 $rankedScore->setUser($user);
+                $rankedScore->setPlateform($plateform);
                 $this->entityManager->persist($rankedScore);
             }
             $rankedScore->setTotalPPScore($totalPondPPScore);

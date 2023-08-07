@@ -34,6 +34,9 @@ class RankedScores
     #[ORM\Column(type: 'float', nullable: true)]
     private $totalPPScore;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $plateform = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -66,5 +69,17 @@ class RankedScores
     public function getTimeAgoShort()
     {
       return StatisticService::dateDiplayerShort($this->updatedAt);
+    }
+
+    public function getPlateform(): ?string
+    {
+        return $this->plateform;
+    }
+
+    public function setPlateform(?string $plateform): static
+    {
+        $this->plateform = $plateform;
+
+        return $this;
     }
 }

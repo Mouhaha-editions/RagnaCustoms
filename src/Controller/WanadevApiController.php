@@ -151,15 +151,18 @@ class WanadevApiController extends AbstractController
 
             //calculation of the ponderate PP scores
             if ($newScore->isRankable()) {
-                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user);
+                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user, $newScore->isVR());
                 //insert/update of the score into ranked_scores
+                $plateform = $newScore->isVR()?'vr':'flat';
                 $rankedScore = $rankedScoresRepository->findOneBy([
-                    'user' => $user
+                    'user' => $user,
+                    'plateform' => $plateform
                 ]);
 
                 if ($rankedScore == null) {
                     $rankedScore = new RankedScores();
                     $rankedScore->setUser($user);
+                    $rankedScore->setPlateform($plateform);
                     $em->persist($rankedScore);
                 }
 
@@ -284,13 +287,18 @@ class WanadevApiController extends AbstractController
 
             //calculation of the ponderate PP scores
             if ($newScore->isRankable()) {
-                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user);
+                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user, $newScore->isVR());
                 //insert/update of the score into ranked_scores
-                $rankedScore = $rankedScoresRepository->findOneBy(['user' => $user]);
+                $rankedScore = $rankedScoresRepository->findOneBy([
+                    'user' => $user,
+                    'plateform' => $newScore->isVR() ? 'vr' : 'flat'
+
+                ]);
 
                 if ($rankedScore == null) {
                     $rankedScore = new RankedScores();
                     $rankedScore->setUser($user);
+                    $rankedScore->setPlateform($score->isVR() ? 'vr' : 'flat');
                     $em->persist($rankedScore);
                 }
 

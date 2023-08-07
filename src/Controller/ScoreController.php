@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Country;
+use App\Entity\Score;
 use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Repository\RankedScoresRepository;
@@ -83,61 +84,32 @@ class ScoreController extends AbstractController
             }
         }
 
-        $qb = $rankedScoresRepository->createQueryBuilder('rs')->orderBy("rs.totalPPScore", "DESC");
+        $qb = $rankedScoresRepository->createQueryBuilder('rs')
+            ->where('rs.plateform = :vr')
+            ->setParameter("vr", 'vr')
+            ->orderBy("rs.totalPPScore", "DESC");
         $scores = $pagination->setDefaults(25)->process($qb, $request);
-        return $this->render('score/global_ranking.html.twig', [
-            'scores' => $scores,
-        ]);
-    }
 
-    #[Route(path: '/ranking/toggle/{id}', name: 'rank_toggle')]
-    public function toggleRankScore(Request                $request,
-                                    RankingScoreService           $rankingScoreService,
-                                    ManagerRegistry        $doctrine,
-                                    ScoreRepository        $scoreRepository,
-                                    RankedScoresRepository $rankedScoresRepository,
-                                    SongDifficulty         $songDifficulty): Response
-    {
-
-        $em = $doctrine->getManager();
-
-        //unrank or rank the song
-        $songDifficulty->setIsRanked(!$songDifficulty->isRanked());
-        $em->flush();
-
-        //get the score of everyone on this song
-        $scores = $scoreRepository->createQueryBuilder('score')
-                                  ->where('score.songDifficulty = :diff')
-                                  ->setParameter('diff', $songDifficulty)
-                                  ->getQuery()->getResult();
-
-        //if we rank then calculate the raw PP of the song
-        //if we unrank then reset the raw PP score of the song
-        foreach ($scores as $score) {
-
-            $user = $score->getUser();
-            if (!$score->getSongDifficulty()->isRanked()) {
-                $score->setRawPP(0);
+        if ($request->get('findme_flat', null)) {
+            $scoreFlat = $scoreService->getGeneralLeaderboardPosition($this->getUser(), false);
+            if ($scoreFlat == null) {
+                $this->addFlash("danger", "No score found");
+                return $this->redirectToRoute("score_global_ranking");
             } else {
-                //calcul du rawPP + definir car on est ranked
-                $score->setRawPP($rankingScoreService->calculateRawPP($score));
+                return $this->redirect($this->generateUrl("score_global_ranking") . "?ppage2=" . ceil($scoreFlat / 25) . "#" . $this->getUser()->getUsername());
             }
-            //update of the score into ranked_scores
-            $rankedScore = $rankedScoresRepository->findOneBy([
-                'user' => $user
-            ]);
-            if ($rankedScore != null) {
-                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user);
-                $rankedScore->setTotalPPScore($totalPondPPScore);
-            }
-
         }
 
-        $em->flush();
+        $qb = $rankedScoresRepository->createQueryBuilder('rs')
+            ->where('rs.plateform = :flat')
+            ->setParameter('flat', 'flat')
+            ->orderBy('rs.totalPPScore', 'DESC');
+        $scoresFlat = $pagination->setDefaults(25)->process($qb, $request);
 
-        return new JsonResponse(['result' => $songDifficulty->isRanked() ? '<i class="fas fa-star"></i> ranked' : '<i class="far fa-star"></i> not r.']);
 
+        return $this->render('score/global_ranking.html.twig', [
+            'scores' => $scores,
+            'scoresFlat'=> $scoresFlat
+        ]);
     }
-
-
 }
