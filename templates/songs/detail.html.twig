@@ -70,7 +70,8 @@
                         </h2>
                         <div class="tags">
                             {% for category in song.categoryTags %}
-                                <a class='btn btn-sm btn-tag' href="{{ url('song_library',{search:'genre:'~category.label}) }}">{{ category.label }}</a>
+                                <a class='btn btn-sm btn-tag'
+                                   href="{{ url('song_library',{search:'genre:'~category.label}) }}">{{ category.label }}</a>
                             {% endfor %}
                         </div>
                         <div class="mt-3 mb-3">
@@ -144,7 +145,7 @@
                                         {{ macro_vote.ratingDisplayLabel("Readability"|trans,song.readabilityAverage) }}
                                     </div>
                                     <div>
-{#                                        {% if voteService.canReview(song, app.user) %}#}
+                                        {#                                        {% if voteService.canReview(song, app.user) %} #}
                                         <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-1 mb-2 song-review"
                                                 data-toggle="modal"
                                                 data-target="#reviewSong"
@@ -152,10 +153,10 @@
                                                 data-url="{{ url('song_vote_review',{id:song.id}) }}"
                                                 data-song-id="{{ song.id }}"
                                         >{{ "Submit rating"|trans }}</button>
-{#                                        {% else %}#}
-{#                                            <button class="btn btn-block btn-warning btn-sm mt-1 mb-2 disabled"#}
-{#                                            >{{ "Play the song first"|trans }}</button>#}
-{#                                        {% endif %}#}
+                                        {#                                        {% else %} #}
+                                        {#                                            <button class="btn btn-block btn-warning btn-sm mt-1 mb-2 disabled" #}
+                                        {#                                            >{{ "Play the song first"|trans }}</button> #}
+                                        {#                                        {% endif %} #}
                                         <button class="btn btn-block btn-sm mt-1 mb-2 song-feedback"
                                         >{{ "Read Feedback"|trans }} ({{ feedbacks|length }})
                                         </button>
@@ -189,11 +190,11 @@
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div class="container-fluid">
             <div class="row pt-2">
-                <div class="col-md-3" id="ragna_{{ song.id }}_detail"
+                <div class="col-lg-2 pl-lg-5" id="ragna_{{ song.id }}_detail"
                      data-file="{{ song.infoDatFile }}" {{ stimulus_target('song-detail', 'info') }}>
-                    <h3>{{ "Preview"|trans }}</h3>
+                    <h3 class="text-center">{{ "Preview"|trans }}</h3>
                     <div id="ragna-beat-diffs"></div>
                     <div id="ragna-beat-buttons"></div>
                     <div id="ragna-beat-sounds" class="text-center"></div>
@@ -209,9 +210,9 @@
                     <div class="text-center">New player by <b>Ratzee</b></div>
 
                 </div>
-                <div class="col-md-5">
+                <div class="col-lg-4 offset-lg-1">
                     <h3>
-                        {{ "Leaderboard"|trans }}
+                        {{ "Leaderboard VR"|trans }}
                     </h3>
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         {% for level in levels %}
@@ -248,7 +249,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         {% if is_granted('ROLE_USER') %}
-                                            <span class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-')}) }}</span>
+                                            <span class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', true)}) }}</span>
                                         {% endif %}
                                         <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
                                             <tr>
@@ -256,12 +257,11 @@
                                                 <th>{{ "player"|trans }}</th>
                                                 <th class="text-right">{{ "distance"|trans }}</th>
                                                 <th class="text-right">{{ "PP"|trans }}</th>
-                                                <th class="text-right">{{ "Perfects (%)" }}</th>
+                                                <th class="text-right">{{ "Perfects" }}</th>
                                                 <th class="text-right">{{ "Time Set" }}</th>
-                                                <th class="text-right">{{ "More Stats" }}</th>
-                                                <th class="text-right"></th>
+                                                <th class="text-right" colspan="2">{{ "More Stats" }}</th>
                                             </tr>
-                                            {% include 'songs/partial/leaderboard.html.twig' with {level:level} %}
+                                            {% include 'songs/partial/leaderboard.html.twig' with {level:level, type: 'scores'} %}
                                         </table>
 
                                     </div>
@@ -272,16 +272,82 @@
 
 
                 </div>
-                <div class="col-md-4">
-                    <h3>{{ "Similar songs"|trans }}</h3>
+                <div class="col-lg-4">
+                    <h3>
+                        {{ "Leaderboard VoT"|trans }}
+                    </h3>
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        {% for level in levels %}
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link {% if loop.index == 1 %}active{% endif %}"
+                                   id="pills-level-{{ level['level'] }}"
+                                   data-toggle="pill"
+                                   href="#pills-leaderboard-{{ level['level'] }}-flat"
+                                   role="tab"
+                                   aria-controls="pills-leaderboard-{{ level['level'] }}-flat"
+                                   style="background-color:#{{ level['color'] }};"
+                                >level {{ level['level'] }} </a>
+                                {# {% if is_granted('ROLE_MODERATOR') %}<a class="ajax-link" #}
+                                {#                                   id="ranked-{{ level['difficulty'].id }}" #}
+                                {#                                   data-replace-selector="#ranked-{{ level['difficulty'].id }}" #}
+                                {#                                        data-success-action="replace-html" #}
+                                {#                                        data-url="{{ url("rank_toggle",{id: level['difficulty'].id })  }}" #}
+                                {#                                        href="#"> #}
+                                {#                                    {% if level['difficulty'].isRanked %} #}
+                                {#                                        <i class="fas fa-star"></i> ranked #}
+                                {#                                    {% else %} #}
+                                {#                                        <i class="far fa-star"></i> not r. #}
+                                {#                                    {% endif %} #}
+                                {#                                </a> #}
+                                {#                                 {% endif %} #}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content leaderboards" id="pills-tabContent">
+                        {% for level in levels %}
+                            <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
+                                 id="pills-leaderboard-{{ level['level'] }}-flat" role="tabpanel"
+                                 aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
+                                <div class="row">
+                                    <div class="col-12">
+                                        {% if is_granted('ROLE_USER') %}
+                                            <span class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false)}) }}</span>
+                                        {% endif %}
+                                        <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
+                                            <tr>
+                                                <th class="text-right">#</th>
+                                                <th>{{ "player"|trans }}</th>
+                                                <th class="text-right">{{ "distance"|trans }}</th>
+                                                <th class="text-right">{{ "PP"|trans }}</th>
+                                                <th class="text-right">{{ "Perfects" }}</th>
+                                                <th class="text-right">{{ "Time Set" }}</th>
+                                                <th class="text-right" colspan="2">{{ "More Stats" }}</th>
+                                            </tr>
+                                            {% include 'songs/partial/leaderboard.html.twig' with {level:level, type: 'scoresFlat'} %}
+                                        </table>
 
-                    {% include "song_partial/index.html.twig" with {songs:songService.similarSongs(song),bigOneDisabled:true} %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
 
                 </div>
+                <div class="col-md-12">
+                    <h3>{{ "Similar songs"|trans }}</h3>
+
+                </div>
+                {% import "songs/macros/song.html.twig" as macro_song %}
+                {% for song in songService.similarSongs(song, 8) %}
+                    <div class="col-lg-3 mb-5">
+                        {{ macro_song.featuredBox(song) }}
+                    </div>
+                {% endfor %}
             </div>
         </div>
-
     </div>
+    <div class="p-5"></div>
     <script type="application/ld+json">
                     {
                         "@context": "https://schema.org",
@@ -295,6 +361,7 @@
                             "ratingValue": "{{ song.voteAverage|round(2, "floor") }}"
                         }
                     }
+
 
 
 

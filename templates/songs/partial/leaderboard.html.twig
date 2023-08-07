@@ -1,14 +1,13 @@
 {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
 {% import "songs/macros/song.html.twig" as macro_song %}
-{% for score in level['scores'].entities %}
+{% for score in level[type].entities %}
 
     <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-warning"{% endif %}>
-        <td class="text-left">{{ scoreService.leaderboardPositionWithOrdinalSuffix(score.user, score.songDifficulty) }}</td>
+        <td class="text-left">{{ scoreService.leaderboardPositionWithOrdinalSuffix(score.user, score.songDifficulty, '-', type == 'scores') }}</td>
         <td>{{ score.user.username }}</td>
-        <td class="text-right">{{ score.scoreDisplay }} <i data-toggle='tooltip' title="{{ score.plateform }}"
-                                                           class="fas {{ score.plateformIcon }}"></i></td>
-        <td class="text-right">{{ score.rawPP }}</td>
-        <td class="text-right">{{ score.percentageOfPerfects }}</td>
+        <td class="text-right">{{ score.scoreDisplay }}</td>
+        <td class="text-right">{{ score.rawPP|round(3) }}</td>
+        <td class="text-right">{{ score.percentageOfPerfects }}%</td>
         <td class="text-right">{{ score.timeAgoShort() }}</td>
         <td class="text-right">
             {{ macro_song.statsZipped(score) }}
@@ -23,12 +22,12 @@
     </tr>
 {% else %}
     <tr>
-        <td colspan="3">{{ "no score for now"|trans }}</td>
+        <td colspan="7">{{ "no score for now"|trans }}</td>
     </tr>
 {% endfor %}
 <tr class="see-more-delete">
     <td colspan="8" class="text-center ">
-        {{ macro_pagination.seeMore(level['scores'],"see more"|trans,'btn btn-xs btn-outline-warning',{"parent":"#table-leaderboard-" ~level['level'] ,"remove":"#see",'do_not_remove': true}) }}
+        {{ macro_pagination.seeMore(level[type],"see more"|trans,'btn btn-xs btn-outline-warning',{"parent":"#table-leaderboard-" ~level['level']~(type == 'scores' ? '': '-flat') ,"remove":"#see",'do_not_remove': true}) }}
     </td>
 </tr>
 

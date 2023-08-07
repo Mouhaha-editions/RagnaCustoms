@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Controller\WanadevApiController;
 use App\Entity\Country;
 use App\Entity\RankedScores;
 use App\Entity\Score;
@@ -104,9 +105,9 @@ class ScoreService
             $qb->leftJoin('u.country', 'c')->andWhere('c.id = :country')->setParameter('country', $country);
         }
 
-        if($isVr){
+        if ($isVr) {
             $qb->andWhere('r.plateform = \'vr\'');
-        }else{
+        } else {
             $qb->andWhere('r.plateform = \'flat\'');
         }
 
@@ -127,10 +128,10 @@ class ScoreService
             ->setParameter('my_score', $mine->getTotalPPScore())
             ->setParameter('me', $user)
             ->groupBy('s.user');
-        if($isVr){
-            $qb2->andWhere('r.plateform = \'vr\'');
-        }else{
-            $qb2->andWhere('r.plateform = \'flat\'');
+        if ($isVr) {
+            $qb2->andWhere('s.plateform = \'vr\'');
+        } else {
+            $qb2->andWhere('s.plateform = \'flat\'');
         }
 
         if ($country) {
@@ -173,25 +174,49 @@ class ScoreService
         $this->em->flush();
     }
 
-    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user)
+    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user, bool $isVr = true)
     {
-        $scores = $this->em->getRepository(Score::class)->createQueryBuilder("s")->where(
-            "s.songDifficulty = :diff "
-        )->setParameter('diff', $songDiff)->orderBy('s.score', "DESC")->setMaxResults(5)->setFirstResult(0)->getQuery(
-        )->getResult();
+        $qb = $this->em->getRepository(Score::class)
+            ->createQueryBuilder("s")
+            ->where("s.songDifficulty = :diff")
+            ->setParameter('diff', $songDiff)
+            ->orderBy('s.score', "DESC")
+            ->setMaxResults(5)
+            ->setFirstResult(0)
+            ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+
+        if ($isVr) {
+            $qb->andWhere('s.plateform IN (:vr)');
+        } else {
+            $qb->andWhere('s.plateform NOT IN (:vr)');
+        }
+
+        $scores = $qb->getQuery()->getResult();
         $results = [];
         foreach ($scores as $k => $score) {
             $results[] = $this->getFormattedRank($score, $k + 1);
         }
-        $place = $this->getLeaderboardPosition($user, $songDiff);
+        $place = $this->getLeaderboardPosition($user, $songDiff, '-', $isVr);
         $score = null;
         if ($place > 5) {
-            $score = $this->em->getRepository(Score::class)->createQueryBuilder("s")->where(
-                "s.songDifficulty = :diff "
-            )->andWhere("s.user = :user ")->setParameter('diff', $songDiff)->setParameter('user', $user)->orderBy(
-                's.score',
-                "DESC"
-            )->setMaxResults(1)->setFirstResult(0)->getQuery()->getOneOrNullResult();
+            $qb = $this->em->getRepository(Score::class)
+                ->createQueryBuilder("s")
+                ->where('s.songDifficulty = :diff')
+                ->andWhere('s.user = :user')
+                ->setParameter('diff', $songDiff)
+                ->setParameter('user', $user)
+                ->orderBy('s.score', "DESC")
+                ->setMaxResults(1)
+                ->setFirstResult(0)
+                ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+
+            if ($isVr) {
+                $qb->andWhere('s.plateform IN (:vr)');
+            } else {
+                $qb->andWhere('s.plateform NOT IN (:vr)');
+            }
+
+            $score = $qb->getQuery()->getOneOrNullResult();
             $results[] = $this->getFormattedRank($score, $place);
         }
 
@@ -221,32 +246,62 @@ class ScoreService
         ];
     }
 
-    public function getLeaderboardPosition(UserInterface $user, SongDifficulty $songDifficulty, $default = '-')
-    {
-        $mine = $this->em->getRepository(Score::class)->findOneBy([
-            'user' => $user,
-            'songDifficulty' => $songDifficulty
-        ], ["score" => "Desc"]);
+    public function getLeaderboardPosition(
+        UserInterface $user,
+        SongDifficulty $songDifficulty,
+        $default = '-',
+        bool $isVr = true
+    ) {
+        $qb = $this->em
+            ->getRepository(Score::class)
+            ->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->andWhere('s.songDifficulty = :songDifficulty')
+            ->setParameter('user', $user)
+            ->setParameter('songDifficulty', $songDifficulty)
+            ->setParameter('vr', WanadevApiController::VR_PLATEFORM)
+            ->orderBy('s.score', 'DESC');
+
+        if ($isVr) {
+            $qb->andWhere('s.plateform IN (:vr)');
+        } else {
+            $qb->andWhere('s.plateform NOT IN (:vr)');
+        }
+
+        $mine = $qb->getQuery()->getOneOrNullResult();
+
         if ($mine == null) {
             return $default;
         }
-        return count(
-                $this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where(
-                    's.score > :my_score'
-                )->andWhere('s.songDifficulty = :difficulty')->andWhere('s.user != :me')->setParameter(
-                    'my_score',
-                    $mine->getScore()
-                )->setParameter('difficulty', $songDifficulty)->setParameter('me', $user)->groupBy('s.user')->getQuery(
-                )->getResult()
-            ) + 1;
+
+        $qb = $this->em->getRepository(Score::class)
+            ->createQueryBuilder("s")
+            ->select('s.id')
+            ->where('s.score > :my_score')
+            ->andWhere('s.songDifficulty = :difficulty')
+            ->andWhere('s.user != :me')
+            ->setParameter('my_score', $mine->getScore())
+            ->setParameter('difficulty', $songDifficulty)
+            ->setParameter('me', $user)
+            ->setParameter('vr', WanadevApiController::VR_PLATEFORM)
+            ->groupBy('s.user');
+
+        if ($isVr) {
+            $qb->andWhere('s.plateform IN (:vr)');
+        } else {
+            $qb->andWhere('s.plateform NOT IN (:vr)');
+        }
+
+        return count($qb->getQuery()->getResult()) + 1;
     }
 
     public function getLeaderboardPositionWithOrdinalSuffix(
         UserInterface $user,
         SongDifficulty $songDifficulty,
-        $default = '-'
+        $default = '-',
+        bool $isVr = true
     ) {
-        return $this->getOrdinalSuffix($this->getLeaderboardPosition($user, $songDifficulty, $default));
+        return $this->getOrdinalSuffix($this->getLeaderboardPosition($user, $songDifficulty, $default, $isVr));
     }
 
     function getOrdinalSuffix($number)

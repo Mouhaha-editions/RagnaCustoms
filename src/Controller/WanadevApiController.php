@@ -91,19 +91,20 @@ class WanadevApiController extends AbstractController
         if ($songDiff == null) {
             return new JsonResponse("NOK DIFF", 400);
         }
+        $data = json_decode($request->getContent(), true);
+        $plateform = $data['platform'] ?? "Steam";
+        $isVR = in_array($plateform, self::VR_PLATEFORM);
 
         if ($request->isMethod("post")) {
-            $data = json_decode($request->getContent(), true);
             $em = $doctrine->getManager();
             $newScore = new Score();
             $newScore->setUser($user);
             $newScore->setSongDifficulty($songDiff);
             $newScore->setScore($data['score']);
-//            $newScore->setDateRagnarock($data['created_at']);
             $newScore->setSession($data['session']);
             $newScore->setCountry($data['country']);
             $newScore->setUserRagnarock($data['user']);
-            $newScore->setPlateform($data['platform'] ?? "");
+            $newScore->setPlateform($plateform);
             $newScore->setComboBlue($data['stats']['ComboBlue']);
             $newScore->setComboYellow($data['stats']['ComboYellow']);
             $newScore->setHit($data['stats']['Hit']);
@@ -125,10 +126,9 @@ class WanadevApiController extends AbstractController
                 ->setParameter('user', $user)
                 ->andWhere('s.songDifficulty = :songDifficulty')
                 ->setParameter('songDifficulty', $songDiff)
-                ->andWhere('s.plateform IS NOT NULL')
                 ->setParameter('plateform', self::VR_PLATEFORM);
 
-            if ($newScore->isVR()) {
+            if ($isVR) {
                 $scoreQb->andWhere('s.plateform IN (:plateform)');
             } else {
                 $scoreQb->andWhere('s.plateform NOT IN (:plateform)');
@@ -154,7 +154,7 @@ class WanadevApiController extends AbstractController
             if ($newScore->isRankable()) {
                 $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user, $newScore->isVR());
                 //insert/update of the score into ranked_scores
-                $plateform = $newScore->isVR() ? 'vr' : 'flat';
+                $plateform = $isVR ? 'vr' : 'flat';
                 $rankedScore = $rankedScoresRepository->findOneBy([
                     'user' => $user,
                     'plateform' => $plateform
@@ -187,11 +187,11 @@ class WanadevApiController extends AbstractController
             return new JsonResponse([
                 "rank" => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
                 "score" => $newScore->getScore(),
-                "ranking" => $scoreService->getTop5Wanadev($songDiff, $user)
+                "ranking" => $scoreService->getTop5Wanadev($songDiff, $user, $isVR)
             ], 200, ["content-type" => "application/json"]);
         }
 
-        return new JsonResponse($scoreService->getTop5Wanadev($songDiff, $user), 200, [
+        return new JsonResponse($scoreService->getTop5Wanadev($songDiff, $user, $isVR), 200, [
             "content-type" => "application/json",
             "my-custom-key" => "abcdefghijklmnop"
         ]);
@@ -216,20 +216,25 @@ class WanadevApiController extends AbstractController
     ): Response {
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
+
         if ($user == null) {
-            return new JsonResponse("NOK USER", 400);
+            return new JsonResponse('NOK USER', 400);
         }
+
         configureScope(function (Scope $scope) use ($user): void {
             $scope->setUser(['username' => $user->getUsername()]);
         });
         /** @var SongDifficulty $songDiff */
         $songDiff = $songDifficultyRepository->findOneBy(['wanadevHash' => $hash]);
         if ($songDiff == null) {
-            return new JsonResponse("NOK DIFF", 400);
+            return new JsonResponse('NOK DIFF', 400);
         }
 
-        if ($request->isMethod("post")) {
-            $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
+        $plateform = $data['platform'] ?? "Steam";
+        $isVR = in_array($plateform, self::VR_PLATEFORM);
+
+        if ($request->isMethod('post')) {
             $em = $doctrine->getManager();
 
             $newScore = new Score();
@@ -240,7 +245,7 @@ class WanadevApiController extends AbstractController
             $newScore->setSession($data['session']);
             $newScore->setCountry($data['country']);
             $newScore->setUserRagnarock($data['user']);
-            $newScore->setPlateform($data['platform'] ?? "");
+            $newScore->setPlateform($plateform);
             $newScore->setComboBlue($data['stats']['ComboBlue']);
             $newScore->setComboYellow($data['stats']['ComboYellow']);
             $newScore->setHit($data['stats']['Hit']);
@@ -293,14 +298,13 @@ class WanadevApiController extends AbstractController
                 //insert/update of the score into ranked_scores
                 $rankedScore = $rankedScoresRepository->findOneBy([
                     'user' => $user,
-                    'plateform' => $newScore->isVR() ? 'vr' : 'flat'
-
+                    'plateform' => $isVR ? 'vr' : 'flat'
                 ]);
 
                 if ($rankedScore == null) {
                     $rankedScore = new RankedScores();
                     $rankedScore->setUser($user);
-                    $rankedScore->setPlateform($score->isVR() ? 'vr' : 'flat');
+                    $rankedScore->setPlateform($isVR ? 'vr' : 'flat');
                     $em->persist($rankedScore);
                 }
 
@@ -325,7 +329,7 @@ class WanadevApiController extends AbstractController
                 [
                     "rank" => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
                     "score" => $newScore->getScore(),
-                    "ranking" => $scoreService->getTop5Wanadev($songDiff, $user)
+                    "ranking" => $scoreService->getTop5Wanadev($songDiff, $user, $isVR)
                 ],
                 200,
                 ["content-type" => "application/json"]
@@ -333,7 +337,7 @@ class WanadevApiController extends AbstractController
         }
 
         return new JsonResponse(
-            $scoreService->getTop5Wanadev($songDiff, $user),
+            $scoreService->getTop5Wanadev($songDiff, $user, $isVR),
             200,
             [
                 "content-type" => "application/json",

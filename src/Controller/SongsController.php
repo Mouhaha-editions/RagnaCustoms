@@ -539,8 +539,9 @@ class SongsController extends AbstractController
         KernelInterface $kernel,
         DownloadService $downloadService
     ) {
-        if (!$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate(
-            ) > new DateTime()) {
+        if (!$song->isModerated()
+            || $song->getProgrammationDate() == null
+            || $song->getProgrammationDate() > new DateTime()) {
             return new Response("Not available now", 403);
         }
         $em = $doctrine->getManager();
@@ -654,24 +655,41 @@ class SongsController extends AbstractController
 
         foreach ($song->getSongDifficulties() as $difficulty) {
             $level = $difficulty->getDifficultyRank()->getLevel();
-            $scores = $doctrine->getRepository(Score::class)->createQueryBuilder('s')->select(
-                's, MAX(s.score) AS HIDDEN max_score'
-            )->where('s.songDifficulty = :diff')->setParameter('diff', $difficulty)->groupBy('s.user')->addOrderBy(
-                'max_score',
-                'DESC'
-            );
+            $scores = $doctrine
+                ->getRepository(Score::class)
+                ->createQueryBuilder('s')
+                ->select('s, MAX(s.score) AS HIDDEN max_score')
+                ->where('s.songDifficulty = :diff')
+                ->setParameter('diff', $difficulty)
+                ->groupBy('s.user')
+                ->addOrderBy('max_score', 'DESC')
+                ->setParameter('type', WanadevApiController::VR_PLATEFORM);
+            $scoresFlat = clone $scores;
+            $scores->andWhere('s.plateform IN (:type)');
+            $scoresFlat->andWhere('s.plateform NOT IN (:type)');
 
             $pagination = $paginationService->setDefaults(30)->process($scores, $request);
+            $paginationFlat = $paginationService->setDefaults(30)->process($scoresFlat, $request);
+
             $levels [] = [
                 "level" => $level,
                 "difficulty" => $difficulty,
                 "color" => $difficulty->getDifficultyRank()->getColor(),
-                'scores' => $pagination
+                'scores' => $pagination,
+                'scoresFlat' => $paginationFlat
             ];
 
             if ($pagination->isPartial()) {
                 return $this->render('songs/partial/leaderboard.html.twig', [
                     'level' => array_pop($levels),
+                    'type'=>'scores',
+                ]);
+            }
+
+            if ($paginationFlat->isPartial()) {
+                return $this->render('songs/partial/leaderboard.html.twig', [
+                    'level' => array_pop($levels),
+                    'type'=>'scoresFlat',
                 ]);
             }
         }

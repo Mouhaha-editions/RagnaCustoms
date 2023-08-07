@@ -31,7 +31,9 @@
                 <div class="col-md-3">
                     <div class="mini-box">
                         <div class="numeric">
-                            #{{ scoreService.generalLeaderboardPosition(user)??" -" }}</div>
+                            <i class="fas fa-vr-cardboard" style="font-size:14px;"></i> #{{ scoreService.generalLeaderboardPosition(user, null, true)??" -" }}
+                            <i class="fas fa-gamepad" style="font-size:14px;"></i> #{{ scoreService.generalLeaderboardPosition(user, null, false)??" -" }}
+                        </div>
                         <div class="text">{{ "Global rank"|trans }}</div>
                     </div>
                 </div>
