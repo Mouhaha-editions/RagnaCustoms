@@ -119,7 +119,7 @@ class WanadevApiController extends AbstractController
                 $rankingScoreService->calculateTotalPondPPScore($user, $isVR);
             }
 
-            $scoreService->updateSessions($user, $songDiff, $newScore->getSession());
+            $scoreService->updateSessions($user, $songDiff, $isVR, $newScore->getSession());
 
             return new JsonResponse(
                 [

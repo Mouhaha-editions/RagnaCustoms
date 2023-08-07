@@ -12,7 +12,6 @@ use App\Entity\Utilisateur;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class ScoreService
@@ -320,7 +319,7 @@ class ScoreService
         } elseif ($number % 10 === 3) {
             return $number.'rd';
         }
-        
+
         return $number.'th';
     }
 
@@ -336,29 +335,45 @@ class ScoreService
             ) + 1;
     }
 
-    public function updateSessions(Utilisateur $user, SongDifficulty $songDiff, string $session)
+    public function updateSessions(Utilisateur $user, SongDifficulty $songDiff, bool $isVR, string $session)
     {
-        $scores = $this->scoreHistoryRepository
+        $qb = $this->scoreHistoryRepository
             ->createQueryBuilder('s')
             ->where('s.user = :user')
             ->setParameter('user', $user)
             ->andWhere('s.songDifficulty = :songDifficulty')
             ->setParameter('songDifficulty', $songDiff)
-            ->getQuery()->getResult();
+            ->setParameter('plateformVr', WanadevApiController::VR_PLATEFORM);
+
+        if ($isVR) {
+            $qb->andWhere('s.plateform IN (:plateformVr)');
+        } else {
+            $qb->andWhere('s.plateform NOT IN (:plateformVr)');
+        }
+
+        $histories = $qb->getQuery()->getResult();
 
         /** @var ScoreHistory $history */
-        foreach ($scores as $history) {
+        foreach ($histories as $history) {
             $history->setSession($session);
             $this->scoreHistoryRepository->add($history);
         }
 
-        $scores = $this->scoreRepository
+        $qb = $this->scoreRepository
             ->createQueryBuilder('s')
             ->where('s.user = :user')
             ->setParameter('user', $user)
             ->andWhere('s.songDifficulty = :songDifficulty')
             ->setParameter('songDifficulty', $songDiff)
-            ->getQuery()->getResult();
+            ->setParameter('plateformVr', WanadevApiController::VR_PLATEFORM);
+
+        if ($isVR) {
+            $qb->andWhere('s.plateform IN (:plateformVr)');
+        } else {
+            $qb->andWhere('s.plateform NOT IN (:plateformVr)');
+        }
+
+        $scores = $qb->getQuery()->getResult();
 
         foreach ($scores as $score) {
             $score->setSession($session);
