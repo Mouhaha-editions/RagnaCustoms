@@ -120,7 +120,7 @@ class RankingScoreService
         }
 
         $res = $qb->getQuery()->getArrayResult();
-        return $res[0]['count'];
+        return $res ? $res[0]['count'] : 0;
     }
 
     public function timeAgoShort(Utilisateur $user)
