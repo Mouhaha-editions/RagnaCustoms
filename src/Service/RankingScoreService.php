@@ -100,16 +100,26 @@ class RankingScoreService
         return round($totalPP, 2);
     }
 
-    public function countRanked(Utilisateur $user)
+    public function countRanked(Utilisateur $user, bool $isVr)
     {
-        $res = $this->scoreRepository->createQueryBuilder("s")
+        $qb = $this->scoreRepository->createQueryBuilder("s")
             ->select('COUNT(s) as count')
             ->where('s.user = :user')
             ->andWhere('s.rawPP IS NOT NULL')
             ->andWhere('s.rawPP != 0')
             ->setParameter('user', $user)
             ->groupBy('s.user')
-            ->getQuery()->getArrayResult();
+            ;
+
+        if($isVr){
+            $qb->andWhere('s.plateform IN (:vr)')
+                ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+        }else{
+            $qb->andWhere('s.plateform NOT IN (:vr)')
+                ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+        }
+
+        $res = $qb->getQuery()->getArrayResult();
         return $res[0]['count'];
     }
 
