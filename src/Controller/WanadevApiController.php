@@ -30,29 +30,23 @@ class WanadevApiController extends AbstractController
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}', name: 'wd_api_score_simple_get', methods: ['GET', 'POST'])]
     public function scoreSimple(
         Request $request,
-        ManagerRegistry $doctrine,
         string $apiKey,
         string $hash,
         SongDifficultyRepository $songDifficultyRepository,
         UtilisateurRepository $utilisateurRepository,
         RankingScoreService $rankingScoreService,
         ScoreService $scoreService,
-        RankedScoresRepository $rankedScoresRepository,
         ScoreRepository $scoreRepository,
-        ScoreHistoryRepository $scoreHistoryRepository
     ): Response {
         return $this->score(
             $request,
-            $doctrine,
             $apiKey,
             $hash,
             $songDifficultyRepository,
             $utilisateurRepository,
             $rankingScoreService,
             $scoreService,
-            $rankedScoresRepository,
             $scoreRepository,
-            $scoreHistoryRepository
         );
     }
 
@@ -62,16 +56,13 @@ class WanadevApiController extends AbstractController
     ])]
     public function score(
         Request $request,
-        ManagerRegistry $doctrine,
         string $apiKey,
         string $hash,
         SongDifficultyRepository $songDifficultyRepository,
         UtilisateurRepository $utilisateurRepository,
         RankingScoreService $rankingScoreService,
         ScoreService $scoreService,
-        RankedScoresRepository $rankedScoresRepository,
         ScoreRepository $scoreRepository,
-        ScoreHistoryRepository $scoreHistoryRepository
     ): Response {
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
@@ -95,7 +86,6 @@ class WanadevApiController extends AbstractController
         $isVR = in_array($plateform, self::VR_PLATEFORM);
 
         if ($request->isMethod('post')) {
-            $em = $doctrine->getManager();
             $newScore = $this->setNewScoreWithData($user, $songDiff, $data);
 
             if ($newScore->isRankable()) {
@@ -104,11 +94,12 @@ class WanadevApiController extends AbstractController
             }
 
             $score = $scoreRepository->getOneByUserDiffVrOrNot($user, $songDiff, $isVR);
+
             $scoreService->archive($newScore);
             $user->setCredits($user->getCredits() + 1);
             $utilisateurRepository->add($user);
 
-            if ($score && $score->getScore() <= $newScore->getScore()) {
+            if ($score == null || $score->getScore() <= $newScore->getScore()) {
                 //le nouveau score est meilleur
                 $scoreRepository->remove($score);
                 $scoreRepository->add($newScore);
@@ -170,29 +161,23 @@ class WanadevApiController extends AbstractController
     ])]
     public function scoreboard(
         Request $request,
-        ManagerRegistry $doctrine,
         string $apiKey,
         string $hash,
         SongDifficultyRepository $songDifficultyRepository,
         UtilisateurRepository $utilisateurRepository,
         RankingScoreService $rankingScoreService,
         ScoreService $scoreService,
-        RankedScoresRepository $rankedScoresRepository,
         ScoreRepository $scoreRepository,
-        ScoreHistoryRepository $scoreHistoryRepository
     ): Response {
         return $this->score(
             $request,
-            $doctrine,
             $apiKey,
             $hash,
             $songDifficultyRepository,
             $utilisateurRepository,
             $rankingScoreService,
             $scoreService,
-            $rankedScoresRepository,
             $scoreRepository,
-            $scoreHistoryRepository
         );
     }
 }
