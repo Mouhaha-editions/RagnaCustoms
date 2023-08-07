@@ -94,14 +94,16 @@ class WanadevApiController extends AbstractController
             }
 
             $score = $scoreRepository->getOneByUserDiffVrOrNot($user, $songDiff, $isVR);
-
             $scoreService->archive($newScore);
             $user->setCredits($user->getCredits() + 1);
             $utilisateurRepository->add($user);
 
             if ($score == null || $score->getScore() <= $newScore->getScore()) {
                 //le nouveau score est meilleur
-                $scoreRepository->remove($score);
+                if($score) {
+                    $scoreRepository->remove($score);
+                }
+
                 $scoreRepository->add($newScore);
             }
 
