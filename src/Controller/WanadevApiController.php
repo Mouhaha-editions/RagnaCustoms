@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\RankedScores;
 use App\Entity\Score;
 use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
@@ -78,123 +77,91 @@ class WanadevApiController extends AbstractController
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
 
         if ($user == null) {
-            return new JsonResponse("NOK USER", 400);
+            return new JsonResponse('NOK USER', 400);
         }
 
         configureScope(function (Scope $scope) use ($user): void {
             $scope->setUser(['username' => $user->getUsername()]);
         });
 
-        /** @var SongDifficulty $songDiff */
         $songDiff = $songDifficultyRepository->findOneBy(['wanadevHash' => $hash]);
 
         if ($songDiff == null) {
-            return new JsonResponse("NOK DIFF", 400);
+            return new JsonResponse('NOK DIFF', 400);
         }
+
         $data = json_decode($request->getContent(), true);
-        $plateform = $data['platform'] ?? "Steam";
+        $plateform = $data['platform'] ?? 'Steam';
         $isVR = in_array($plateform, self::VR_PLATEFORM);
 
-        if ($request->isMethod("post")) {
+        if ($request->isMethod('post')) {
             $em = $doctrine->getManager();
-            $newScore = new Score();
-            $newScore->setUser($user);
-            $newScore->setSongDifficulty($songDiff);
-            $newScore->setScore($data['score']);
-            $newScore->setSession($data['session']);
-            $newScore->setCountry($data['country']);
-            $newScore->setUserRagnarock($data['user']);
-            $newScore->setPlateform($plateform);
-            $newScore->setComboBlue($data['stats']['ComboBlue']);
-            $newScore->setComboYellow($data['stats']['ComboYellow']);
-            $newScore->setHit($data['stats']['Hit']);
-            $newScore->setHitDeltaAverage($data['stats']['HitDeltaAverage']);
-            $newScore->setHitPercentage($data['stats']['HitPercentage']);
-            $newScore->setMissed($data['stats']['Missed']);
-            $newScore->setExtra(json_encode($data['extra']));
-            $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
+            $newScore = $this->setNewScoreWithData($user, $songDiff, $data);
 
             if ($newScore->isRankable()) {
                 $rawPP = $rankingScoreService->calculateRawPP($newScore);
                 $newScore->setRawPP($rawPP);
             }
 
-            /** @var Score $score */
-            $scoreQb = $scoreRepository
-                ->createQueryBuilder('s')
-                ->where('s.user = :user')
-                ->setParameter('user', $user)
-                ->andWhere('s.songDifficulty = :songDifficulty')
-                ->setParameter('songDifficulty', $songDiff)
-                ->setParameter('plateform', self::VR_PLATEFORM);
-
-            if ($isVR) {
-                $scoreQb->andWhere('s.plateform IN (:plateform)');
-            } else {
-                $scoreQb->andWhere('s.plateform NOT IN (:plateform)');
-            }
-
-            $score = $scoreQb->getQuery()->getOneOrNullResult();
+            $score = $scoreRepository->getOneByUserDiffVrOrNot($user, $songDiff, $isVR);
             $scoreService->archive($newScore);
-
-            if ($score == null || $score->getScore() <= $newScore->getScore()) {
-                //le nouveau score est meilleur
-                if ($score != null) {
-                    $em->remove($score);
-                    $em->flush();
-                }
-                $em->persist($newScore);
-            } else {
-                $score->setSession($newScore->getSession());
-            }
             $user->setCredits($user->getCredits() + 1);
-            $em->flush();
+            $utilisateurRepository->add($user);
+
+            if ($score && $score->getScore() <= $newScore->getScore()) {
+                //le nouveau score est meilleur
+                $scoreRepository->remove($score);
+                $scoreRepository->add($newScore);
+            }
 
             //calculation of the ponderate PP scores
             if ($newScore->isRankable()) {
-                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user, $newScore->isVR());
-                //insert/update of the score into ranked_scores
-                $plateform = $isVR ? 'vr' : 'flat';
-                $rankedScore = $rankedScoresRepository->findOneBy([
-                    'user' => $user,
-                    'plateform' => $plateform
-                ]);
-
-                if ($rankedScore == null) {
-                    $rankedScore = new RankedScores();
-                    $rankedScore->setUser($user);
-                    $rankedScore->setPlateform($plateform);
-                    $em->persist($rankedScore);
-                }
-
-                $rankedScore->setTotalPPScore($totalPondPPScore);
-            }
-            $em->flush();
-            $histories = $scoreHistoryRepository
-                ->createQueryBuilder('s')
-                ->where('s.user = :user')
-                ->setParameter('user', $user)
-                ->andWhere('s.songDifficulty = :songDifficulty')
-                ->setParameter('songDifficulty', $songDiff)
-                ->getQuery()
-                ->getResult();
-
-            foreach ($histories as $history) {
-                $history->setSession($newScore->getSession());
-                $em->flush();
+                $rankingScoreService->calculateTotalPondPPScore($user, $isVR);
             }
 
-            return new JsonResponse([
-                "rank" => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
-                "score" => $newScore->getScore(),
-                "ranking" => $scoreService->getTop5Wanadev($songDiff, $user, $isVR)
-            ], 200, ["content-type" => "application/json"]);
+            $scoreService->updateSessions($user, $songDiff, $newScore->getSession());
+
+            return new JsonResponse(
+                [
+                    'rank' => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
+                    'score' => $newScore->getScore(),
+                    'ranking' => $scoreService->getTop5Wanadev($songDiff, $user, $isVR)
+                ],
+                200,
+                ['content-type' => 'application/json']
+            );
         }
 
-        return new JsonResponse($scoreService->getTop5Wanadev($songDiff, $user, $isVR), 200, [
-            "content-type" => "application/json",
-            "my-custom-key" => "abcdefghijklmnop"
-        ]);
+        return new JsonResponse(
+            $scoreService->getTop5Wanadev($songDiff, $user, $isVR),
+            200,
+            [
+                'content-type' => 'application/json',
+                'my-custom-key' => 'abcdefghijklmnop'
+            ]
+        );
+    }
+
+    private function setNewScoreWithData(Utilisateur $user, SongDifficulty $songDiff, mixed $data): Score
+    {
+        $plateform = $data['platform'] ?? 'Steam';
+        $newScore = new Score();
+        $newScore->setUser($user);
+        $newScore->setSongDifficulty($songDiff);
+        $newScore->setScore($data['score']);
+        $newScore->setSession($data['session']);
+        $newScore->setCountry($data['country']);
+        $newScore->setUserRagnarock($data['user']);
+        $newScore->setPlateform($plateform);
+        $newScore->setComboBlue($data['stats']['ComboBlue']);
+        $newScore->setComboYellow($data['stats']['ComboYellow']);
+        $newScore->setHit($data['stats']['Hit']);
+        $newScore->setHitDeltaAverage($data['stats']['HitDeltaAverage']);
+        $newScore->setHitPercentage($data['stats']['HitPercentage']);
+        $newScore->setMissed($data['stats']['Missed']);
+        $newScore->setExtra(json_encode($data['extra']));
+        $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
+        return $newScore;
     }
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}/board', name: 'wd_api_score_get_new', methods: [
@@ -214,135 +181,18 @@ class WanadevApiController extends AbstractController
         ScoreRepository $scoreRepository,
         ScoreHistoryRepository $scoreHistoryRepository
     ): Response {
-        /** @var Utilisateur $user */
-        $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
-
-        if ($user == null) {
-            return new JsonResponse('NOK USER', 400);
-        }
-
-        configureScope(function (Scope $scope) use ($user): void {
-            $scope->setUser(['username' => $user->getUsername()]);
-        });
-        /** @var SongDifficulty $songDiff */
-        $songDiff = $songDifficultyRepository->findOneBy(['wanadevHash' => $hash]);
-        if ($songDiff == null) {
-            return new JsonResponse('NOK DIFF', 400);
-        }
-
-        $data = json_decode($request->getContent(), true);
-        $plateform = $data['platform'] ?? "Steam";
-        $isVR = in_array($plateform, self::VR_PLATEFORM);
-
-        if ($request->isMethod('post')) {
-            $em = $doctrine->getManager();
-
-            $newScore = new Score();
-            $newScore->setUser($user);
-            $newScore->setSongDifficulty($songDiff);
-            $newScore->setScore($data['score']);
-//            $newScore->setDateRagnarock($data['created_at']);
-            $newScore->setSession($data['session']);
-            $newScore->setCountry($data['country']);
-            $newScore->setUserRagnarock($data['user']);
-            $newScore->setPlateform($plateform);
-            $newScore->setComboBlue($data['stats']['ComboBlue']);
-            $newScore->setComboYellow($data['stats']['ComboYellow']);
-            $newScore->setHit($data['stats']['Hit']);
-            $newScore->setHitDeltaAverage($data['stats']['HitDeltaAverage']);
-            $newScore->setHitPercentage($data['stats']['HitPercentage']);
-            $newScore->setMissed($data['stats']['Missed']);
-            $newScore->setExtra(json_encode($data['extra']));
-            $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
-            if ($newScore->isRankable()) {
-                $rawPP = $rankingScoreService->calculateRawPP($newScore);
-                $newScore->setRawPP($rawPP);
-            }
-
-            /** @var Score $score */
-            $scoreQb = $scoreRepository
-                ->createQueryBuilder('s')
-                ->where('s.user = :user')
-                ->setParameter('user', $user)
-                ->andWhere('s.songDifficulty = :songDifficulty')
-                ->setParameter('songDifficulty', $songDiff)
-                ->setParameter('plateform', self::VR_PLATEFORM)
-                ->andWhere('s.plateform IS NOT NULL');
-
-            if ($newScore->isVR()) {
-                $scoreQb->andWhere('s.plateform IN (:plateform)');
-            } else {
-                $scoreQb->andWhere('s.plateform NOT IN (:plateform)');
-            }
-
-            $score = $scoreQb->getQuery()->getOneOrNullResult();
-            $scoreService->archive($newScore);
-
-            if ($score == null || $score->getScore() <= $newScore->getScore()) {
-                //le nouveau score est meilleur
-                if ($score != null) {
-                    $em->remove($score);
-                    $em->flush();
-                }
-                $em->persist($newScore);
-            } else {
-                $score->setSession($newScore->getSession());
-            }
-
-            $user->setCredits($user->getCredits() + 1);
-            $em->flush();
-
-            //calculation of the ponderate PP scores
-            if ($newScore->isRankable()) {
-                $totalPondPPScore = $rankingScoreService->calculateTotalPondPPScore($user, $newScore->isVR());
-                //insert/update of the score into ranked_scores
-                $rankedScore = $rankedScoresRepository->findOneBy([
-                    'user' => $user,
-                    'plateform' => $isVR ? 'vr' : 'flat'
-                ]);
-
-                if ($rankedScore == null) {
-                    $rankedScore = new RankedScores();
-                    $rankedScore->setUser($user);
-                    $rankedScore->setPlateform($isVR ? 'vr' : 'flat');
-                    $em->persist($rankedScore);
-                }
-
-                $rankedScore->setTotalPPScore($totalPondPPScore);
-            }
-
-            $em->flush();
-            $histories = $scoreHistoryRepository
-                ->createQueryBuilder('s')
-                ->where('s.user = :user')
-                ->setParameter('user', $user)
-                ->andWhere('s.songDifficulty = :songDifficulty')
-                ->setParameter('songDifficulty', $songDiff)
-                ->getQuery()->getResult();
-
-            foreach ($histories as $history) {
-                $history->setSession($newScore->getSession());
-                $em->flush();
-            }
-
-            return new JsonResponse(
-                [
-                    "rank" => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
-                    "score" => $newScore->getScore(),
-                    "ranking" => $scoreService->getTop5Wanadev($songDiff, $user, $isVR)
-                ],
-                200,
-                ["content-type" => "application/json"]
-            );
-        }
-
-        return new JsonResponse(
-            $scoreService->getTop5Wanadev($songDiff, $user, $isVR),
-            200,
-            [
-                "content-type" => "application/json",
-                "my-custom-key" => "abcdefghijklmnop"
-            ]
+        return $this->score(
+            $request,
+            $doctrine,
+            $apiKey,
+            $hash,
+            $songDifficultyRepository,
+            $utilisateurRepository,
+            $rankingScoreService,
+            $scoreService,
+            $rankedScoresRepository,
+            $scoreRepository,
+            $scoreHistoryRepository
         );
     }
 }

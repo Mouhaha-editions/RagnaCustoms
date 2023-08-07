@@ -65,6 +65,7 @@ class RankingSongsController extends AbstractController
 
                 $rankingScoreService->calculateForSong($song);
             }
+
             $this->addFlash('success', 'Songs ranked or unranked');
 
             return $this->redirectToRoute('ranking_song');

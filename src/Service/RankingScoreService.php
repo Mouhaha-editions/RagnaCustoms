@@ -66,7 +66,7 @@ class RankingScoreService
         return round($rawPP, 2);
     }
 
-    public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true)
+    public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true): bool
     {
         $totalPP = 0;
         $index = 0;
@@ -93,12 +93,31 @@ class RankingScoreService
             $rawPPScore = $score->getRawPP();
             $pondPPScore = $rawPPScore * pow(0.965, $index);
             $totalPP = $totalPP + $pondPPScore;
-            //register the weighted PP score
             $score->setWeightedPP(round($pondPPScore, 2));
             $index++;
         }
 
-        return round($totalPP, 2);
+        $totalPondPPScore = round($totalPP, 2);
+        $this->saveRankedScore($user, $totalPondPPScore, $isVr);
+        
+        return true;
+    }
+
+    private function saveRankedScore(Utilisateur $user, float $totalPondPPScore, bool $isVr): void
+    {
+        $rankedScore = $this->rankedScoresRepository->findOneBy([
+            'user' => $user,
+            'plateform' => $isVr ? 'vr' : 'flat'
+        ]);
+
+        if ($rankedScore == null) {
+            $rankedScore = new RankedScores();
+            $rankedScore->setUser($user);
+            $rankedScore->setPlateform($isVr ? 'vr' : 'flat');
+        }
+
+        $rankedScore->setTotalPPScore($totalPondPPScore);
+        $this->rankedScoresRepository->add($rankedScore);
     }
 
     public function countRanked(Utilisateur $user, bool $isVr = true)
@@ -109,13 +128,12 @@ class RankingScoreService
             ->andWhere('s.rawPP IS NOT NULL')
             ->andWhere('s.rawPP != 0')
             ->setParameter('user', $user)
-            ->groupBy('s.user')
-            ;
+            ->groupBy('s.user');
 
-        if($isVr){
+        if ($isVr) {
             $qb->andWhere('s.plateform IN (:vr)')
                 ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
-        }else{
+        } else {
             $qb->andWhere('s.plateform NOT IN (:vr)')
                 ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
         }

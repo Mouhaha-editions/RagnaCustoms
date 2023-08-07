@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Controller\WanadevApiController;
 use App\Entity\Score;
+use App\Entity\SongDifficulty;
+use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -20,6 +23,7 @@ class ScoreRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Score::class);
     }
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException
@@ -42,5 +46,27 @@ class ScoreRepository extends ServiceEntityRepository
         if ($flush) {
             $this->_em->flush();
         }
+    }
+
+    public function getOneByUserDiffVrOrNot(
+        Utilisateur $user,
+        SongDifficulty $songDiff,
+        bool $isVR
+    ): ?Score {
+        $qb = $this
+            ->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->setParameter('user', $user)
+            ->andWhere('s.songDifficulty = :songDifficulty')
+            ->setParameter('songDifficulty', $songDiff)
+            ->setParameter('plateformVr', WanadevApiController::VR_PLATEFORM);
+
+        if ($isVR) {
+            $qb->andWhere('s.plateform IN (:plateformVr)');
+        } else {
+            $qb->andWhere('s.plateform NOT IN (:plateformVr)');
+        }
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

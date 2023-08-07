@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\WanadevApiController;
 use App\Repository\ScoreRepository;
 use App\Service\StatisticService;
 use Doctrine\ORM\Mapping as ORM;
@@ -359,9 +360,12 @@ class Score
         return $this->isVr() ? 'fa-vr-cardboard' : 'fa-gamepad';
     }
 
+    /**
+     * @deprecated use WanadevApiController::VR_PLATEFORM list instead
+     */
     public function isVR(): bool
     {
-        return in_array(strtolower($this->getPlateform()), ['steam', 'viveport', 'oculus', 'pico']);
+        return in_array($this->getPlateform(),WanadevApiController::VR_PLATEFORM);
     }
 
     /**
