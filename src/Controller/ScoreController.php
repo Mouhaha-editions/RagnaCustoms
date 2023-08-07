@@ -113,7 +113,7 @@ class ScoreController extends AbstractController
         $scores = $pagination->setDefaults(25)->process($qb, $request);
 
         if ($request->get('findme_flat', null)) {
-            $scoreFlat = $scoreService->getGeneralLeaderboardPosition($this->getUser(), false);
+            $scoreFlat = $scoreService->getGeneralLeaderboardPosition($this->getUser(), null,false);
             if ($scoreFlat == null) {
                 $this->addFlash("danger", "No score found");
                 return $this->redirectToRoute("score_global_ranking");
