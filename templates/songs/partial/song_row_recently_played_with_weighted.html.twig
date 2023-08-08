@@ -26,7 +26,7 @@
             {{ score.scoreDisplay }} 
     </td>
     <td>
-        {{ score.rawPP }} <small>{{ score.weightedPP }}</small>
+        {{ score.rawPP|round(2) }} <small>{{ score.weightedPP }}</small>
     </td>
     <td class="text-grey">
         {{ score.timeAgoShort}}&nbsp;
