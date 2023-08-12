@@ -11,6 +11,7 @@ use App\Repository\UtilisateurRepository;
 use App\Service\RankingScoreService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -50,16 +51,17 @@ class RecalculCommand extends Command
         } else {
             $users = $this->utilisateurRepository->findAll();
         }
-
+        $cUsers = count($users);
+$section1 = $output->section();
+$section2 = $output->section();
+        $userProgress = new ProgressBar($section1, $cUsers);
         $j = 0;
         $cUsers = count($users);
         foreach ($users as $k=>$user) {
             $j++;
-            echo "start: ".$user->getUsername()." (".$j."/".$cUsers.")\r\n";
             $scores = $user->getScores()->filter(function (Score $score) use($plateform) {
                 return $score->isRankable() && (($plateform == 'vr' && $score->isVR()) || ($plateform == 'flat' && !$score->isVR())) && $score->getPlateform() != null;
             });
-            echo "scores: ".count($scores)."\r\n";
             /** @var Score $score */
             $i = 0;
 
@@ -67,21 +69,22 @@ class RecalculCommand extends Command
                 unset($users[$k]);
                 continue;
             }
+            $scoreProgress = new ProgressBar($section2, $scores->count());
 
             foreach ($scores as $score) {
                 $i++;
-                echo "score: ".($i)."/".count($scores)."\r\n";
                 $this->rankingScoreService->calculateRawPP($score);
+                $scoreProgress->advance();
             }
-
             $this->entityManager->flush();
             $this->rankingScoreService->calculateTotalPondPPScore($user, $plateform == 'vr');
+            $scoreProgress->finish();
 
-            echo "save: ".$user->getUsername()."\r\n";
-            $this->entityManager->flush();
-            echo "end: ".$user->getUsername()."\r\n";
             unset($users[$k]);
+            $userProgress->advance();
+
         }
+        $userProgress->finish();
 
         return Command::SUCCESS;
     }
