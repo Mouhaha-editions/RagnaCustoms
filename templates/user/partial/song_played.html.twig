@@ -56,6 +56,8 @@
                     </div>
                 </div>
             </div>
+
+            {% if user.scores|length > 0 %}
             <div class="graph mt-4">
                 <div>
                     {% set totalDistance = statisticService.getTotalDistance(user)/100 %}
@@ -81,9 +83,8 @@
                         <div class="clearfix"></div>
                     </div>
                 </div>
-
             </div>
-
+            {% endif %}
         </div>
     </div>
 {% endblock %}
