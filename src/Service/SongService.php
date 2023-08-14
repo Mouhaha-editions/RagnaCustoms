@@ -945,7 +945,7 @@ class SongService
             ->setFirstResult(0)->setMaxResults(1);
 
         $qb->andWhere(
-            $qb->expr()->orX(
+            $qb->expr()->andX(
                $qb->expr()->lte('s.programmationDate',':now'),
                $qb->expr()->isNotNull('s.programmationDate')
             )
