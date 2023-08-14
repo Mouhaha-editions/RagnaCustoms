@@ -8,16 +8,14 @@
 
 {% block body %}
     <div {{ stimulus_controller('song-upload') }}  class="container">
-        <div class="row pt-5">
-            <div class="col-md-10 text-left">
-                <h1 class="">
-                    {{ "My uploads"|trans }}
-                </h1>
-
+        <div id="song-list" class="row mt-3">
+            <div class="col-md-3">
+                {% include 'user/partial/_left_part_user.html.twig' %}
             </div>
-        </div>
-        <div id="song-list" class="row">
-            <div class="col-md-10">
+            <div class="col-md-7">
+                <h2 class="">
+                    {{ "My uploads"|trans }}
+                </h2>
                 <table class="featured-table-lg table table-sm">
                     <tr>
                         <th><a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":"s.name", "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"

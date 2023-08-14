@@ -170,6 +170,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $ipAddress = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CustomEvent::class, orphanRemoval: true)]
+    private Collection $customEvents;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CustomEventParticipation::class, orphanRemoval: true)]
+    private Collection $customEventParticipations;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -185,6 +191,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->followedMappers = new ArrayCollection();
         $this->followers = new ArrayCollection();
         $this->notifications = new ArrayCollection();
+        $this->customEvents = new ArrayCollection();
+        $this->customEventParticipations = new ArrayCollection();
     }
 
     public function __toString()
@@ -1365,6 +1373,66 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIpAddress(?string $ipAddress): static
     {
         $this->ipAddress = $ipAddress;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CustomEvent>
+     */
+    public function getCustomEvents(): Collection
+    {
+        return $this->customEvents;
+    }
+
+    public function addCustomEvent(CustomEvent $customEvent): static
+    {
+        if (!$this->customEvents->contains($customEvent)) {
+            $this->customEvents->add($customEvent);
+            $customEvent->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomEvent(CustomEvent $customEvent): static
+    {
+        if ($this->customEvents->removeElement($customEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($customEvent->getUser() === $this) {
+                $customEvent->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CustomEventParticipation>
+     */
+    public function getCustomEventParticipations(): Collection
+    {
+        return $this->customEventParticipations;
+    }
+
+    public function addCustomEventParticipation(CustomEventParticipation $customEventParticipation): static
+    {
+        if (!$this->customEventParticipations->contains($customEventParticipation)) {
+            $this->customEventParticipations->add($customEventParticipation);
+            $customEventParticipation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomEventParticipation(CustomEventParticipation $customEventParticipation): static
+    {
+        if ($this->customEventParticipations->removeElement($customEventParticipation)) {
+            // set the owning side to null (unless already changed)
+            if ($customEventParticipation->getUser() === $this) {
+                $customEventParticipation->setUser(null);
+            }
+        }
 
         return $this;
     }

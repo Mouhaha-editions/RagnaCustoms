@@ -8,12 +8,16 @@
 {% block body %}
     <div class="container">
 
-        <div class="row">
-            <div class="col-12">
-                <h1 class="mt-4 mb-4">{{ "All your playlists"|trans }}</h1>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                {% include 'user/partial/_left_part_user.html.twig' %}
             </div>
+            <div class="col-9">
+                <h2 >{{ "All your playlists"|trans }}</h2>
+                <div class="row">
             {% for playlist in playlists %}
                 <div class="col-md-3">
+
                     <div class="playlist">
                         <div class="header">
                             {% for song in playlist.songs %}

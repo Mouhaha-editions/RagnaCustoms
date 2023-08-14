@@ -1,0 +1,59 @@
+<div class="d-flex">
+    <div style="max-width:75px;">
+        <img src="{{ app.user.gravatar }}" {{ stimulus_target('user', 'img') }}
+             class="img-fluid big-rounded" alt="Your profile picture"/>
+
+    </div>
+    <div class="p-2">
+        <h4 class="username">{{ membershipService.displayUsername(app.user, false)|raw }}</h4>
+
+        <div class="mt-1">
+            <label class="m-0">Membership:</label>
+            {% if is_granted('ROLE_PREMIUM_LVL3') %}<b class="text-warning">Tier 3</b>
+            {% elseif is_granted('ROLE_PREMIUM_LVL2') %}<b class="text-warning">Tier 2</b>
+            {% elseif is_granted('ROLE_PREMIUM_LVL1') %}<b class="text-warning">Tier 1</b>
+            {% else %}None <small><a href="{{ url('user_applications') }}">Get
+                    one</a></small>{% endif %}
+        </div>
+    </div>
+</div>
+<hr class="border-grey"/>
+<div class="info flex-fill">
+    <table class="table-sm table-condensed">
+        <tr>
+            <td>{{ app.user.scores|length }}</td>
+            <td>{{ "Scores uploaded"|trans }}</td>
+        </tr>
+        <tr>
+            <td>{{ app.user.votes|length }}</td>
+            <td>{{ "Songs rated"|trans }}</td>
+
+        </tr>
+        <tr>
+            <td>{{ app.user.songs|length }}</td>
+            <td>{{ "Songs mapped"|trans }}</td>
+        </tr>
+        <tr>
+            <td>{{ app.user.credits??0 }}</td>
+            <td>{{ "credits"|trans }}</td>
+        </tr>
+    </table>
+</div>
+<hr/>
+<ul class="user-menu list-group list-group-flush no-bg">
+    <li class="list-group-item no-bg pl-0 {% if app.request.get('_route') == 'recently_played' %}activated{% endif %}">
+        <i class="fas fa-music"></i> <a href="{{ url('recently_played') }}">Recently played</a>
+    </li>
+    <li class="list-group-item no-bg pl-0 {% if app.request.get('_route') == 'upload_song' %}activated{% endif %}">
+        <i class="fas fa-upload"></i> <a href="{{ url('upload_song') }}">My uploads</a>
+    </li>
+    <li class="list-group-item no-bg pl-0 {% if app.request.get('_route') == 'playlist' %}activated{% endif %}">
+        <i class="fas fa-list"></i> <a href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a>
+    </li>
+    <li class="list-group-item no-bg pl-0 {% if app.request.get('_route') == 'notifications_setting' %}activated{% endif %}">
+        <i class="fas fa-envelope"></i> <a href="{{ url('notifications_setting') }}">{{ "Emails & Notifications"|trans }}</a>
+    </li>
+    <li class="list-group-item no-bg pl-0 {% if app.request.get('_route') == 'user' %}activated{% endif %}">
+        <i class="fas fa-cogs"></i> <a href="{{ url('user') }}">Account settings</a>
+    </li>
+</ul>

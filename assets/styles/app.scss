@@ -421,3 +421,22 @@ textarea{
     color:#fff;
   }
 }
+
+.no-bg{
+  background: transparent!important;
+}
+
+.user-menu li{
+  a {
+    color: #fff;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  &:hover, &.activated{
+    color:#0d5aa7;
+    a{
+      color:#0d5aa7;
+    }
+  }
+}

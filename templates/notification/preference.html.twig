@@ -4,16 +4,17 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 {% block body %}
     <div {{ stimulus_controller('notifications') }} class="container">
-        <div class="row pt-5">
-            <div class="col-md-10 text-left">
-                <h1 class="">
-                    {{ "Emails & Notifications"|trans }}
-                </h1>
-
+        <div class="row mt-3">
+            <div class="col-md-3">
+                {% include 'user/partial/_left_part_user.html.twig' %}
             </div>
-        </div>
+            <div class="col-md-9 text-left">
+
         {{ form_start(form) }}
         <div id="song-list" class="row">
+            <div class="col-12"><h2 class="">
+                {{ "Emails & Notifications"|trans }}
+                </h2></div>
             <div class="col-md-6">
                 {{ form_row(form.emailPreference) }}
                 <button type="submit" class="btn btn-sm btn-info"><i class="fas fa-floppy-disk"></i> save</button>

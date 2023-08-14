@@ -121,22 +121,8 @@
                                 {{ app.user.username }}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="{{ url('upload_song') }}">{{ "my uploads"|trans }}</a>
-                                <hr class="m-1"/>
-                                <a class="dropdown-item" href="{{ url('user') }}">{{ "My account"|trans }}</a>
-                                <a class="dropdown-item" href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a>
-                                <a class="dropdown-item" href="{{ url('recently_played') }}">
-                                    {{ "Recently played"|trans }}
-                                </a>
-                                <a class="dropdown-item" href="{{ url('user_applications') }}">
-                                    {{ "Applications"|trans }}
-                                </a>
-                                <hr class="m-1"/>
-                                <a class="dropdown-item"
-                                   href="{{ url('notifications_setting') }}">{{ "Emails & Notifications"|trans }}</a>
 
-                                {#                            <a class="dropdown-item" #}
-                                {#                               href="{{ url('playlist') }}">{{ "My playlists"|trans }}</a> #}
+                                <a class="dropdown-item" href="{{ url('recently_played') }}">{{ "My account"|trans }}</a>
 
                                 <hr class="m-1"/>
                                 <a data-no-swup='true' class="dropdown-item" href="{{ url('app_logout') }}">{{ "Logout"|trans }}</a>
