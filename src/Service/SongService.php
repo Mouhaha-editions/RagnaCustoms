@@ -947,7 +947,7 @@ class SongService
         $qb->andWhere(
             $qb->expr()->orX(
                $qb->expr()->lte('s.programmationDate',':now'),
-               $qb->expr()->isNull('s.programmationDate')
+               $qb->expr()->isNotNull('s.programmationDate')
             )
         )
         ->setParameter('now', new DateTime());
