@@ -14,44 +14,51 @@
 
 
 {% block body %}
-    <div class="row">
-        <div class="col-12">
-            <h1 class="text-center">{{ playlist.label }}, a {{ playlist.user.username }}'s Playlist</h1>
-            <form method="post" class="text-center">
-                <button data-toggle="tooltips" title="{{ "Download playlist with the app"|trans }}" type="submit"
-                        name="onclick_dl" value="42" class="btn btn-sm btn-danger"
-                        data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}">
-                    <i class="fas fa-download"></i> download the playlist
-                </button>
-            </form>
-            <p>{{ playlist.description }}</p>
-        </div>
-    </div>
-
-    <div class="songs p-4">
-        <h2>Songs</h2>
+    <div class="container-fluid" {{ stimulus_controller('playlist') }}>
         <div class="row">
-            {% for song in playlist.songs %}
-                <div class="col-md-2">
-                    <div class="d-flex align-items-center">
-                        <a href="{{ url('song_detail',{slug:song.slug}) }}">
-                            <img src="{{ song.cover }}" class="small-cover" alt="cover" style="width:75px;"/>
-                        </a>
-                        <div class="song pl-1">
-                            <div class="title text-warning">
-                                {{ song|raw }}
+            <div class="col-12">
+                <h1 class="text-center">{{ playlist.label }}, a {{ playlist.user.username }}'s Playlist</h1>
+                <form method="post" class="text-center">
+                    <button data-toggle="tooltips" title="{{ "Download playlist with the app"|trans }}" type="submit"
+                            name="onclick_dl" value="42" class="btn btn-sm btn-danger"
+                            data-confirm="{{ "You are going to download a lot of custom songs and it can take a while, do you want to continue?"|trans }}">
+                        <i class="fas fa-download"></i> download the playlist
+                    </button>
+                </form>
+                <p>{{ playlist.description }}</p>
+            </div>
+        </div>
+
+        <div class="songs p-4">
+            <h2>Songs</h2>
+            <div class="row">
+                {% for song in playlist.songs %}
+                    <div class="col-md-3 pr-5">
+                        <div class="row mb-2"  style="border:1px solid #3c3c3c">
+                            <div class="col-3 pl-0">
+                                <a href="{{ url('song_detail',{slug:song.slug}) }}">
+                                    <img src="{{ song.cover }}" class="small-cover" alt="cover" style="width:95px;"/>
+                                </a>
                             </div>
-                            <div class="author">
-                                {{ song.authorName }}
+                            <div class="col-6 song pl-1 pt-3">
+                                <div class="title text-warning">
+                                    {{ song|raw }}
+                                </div>
+                                <div class="author">
+                                    {{ song.authorName }}
+                                </div>
+                            </div>
+                            <div style="width:50px; height:50px;">
+                                <div style="">
+                                    {% include 'song_partial/circle_button.html.twig' with {song:song} %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <hr class="m-1"/>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block title %}

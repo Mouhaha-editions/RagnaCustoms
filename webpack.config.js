@@ -21,10 +21,6 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
-    .addEntry('overlay_editor', './assets/js/pages/overlay_editor.js')
-
-    // .addEntry('app', './assets/app.js')
-
     .addStyleEntry('playlist', './assets/styles/pages/playlist.scss')
     // .addStyleEntry('login', './assets/styles/pages/login.scss')
     // .addStyleEntry('leaderboard', './assets/styles/pages/leaderboard.scss')
