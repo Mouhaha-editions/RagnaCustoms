@@ -2,11 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use App\Enum\EAvailablePlatform;
-use App\Filter\SimpleSearchFilter;
 use App\Repository\SongRepository;
 use App\Service\StatisticService;
 use DateTime;
@@ -18,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SongRepository::class)]
 class Song
@@ -118,7 +112,7 @@ class Song
     private $youtubeLink;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $programmationDate = null;
+    private ?DateTimeInterface $programmationDate = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $isNotificationDone = false;
@@ -146,6 +140,18 @@ class Song
         return $votes->isEmpty() ? null : $votes->first();
     }
 
+    public function getUser(): UserInterface|Utilisateur|null
+    {
+        return $this->user;
+    }
+
+    public function setUser(?UserInterface $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
     public function isReviewedBy(?UserInterface $user): bool
     {
         $votes = $this->votes->filter(function (Vote $vote) use ($user) {
@@ -156,20 +162,32 @@ class Song
 
     public function isPublished()
     {
-        return $this->programmationDate != null && $this->programmationDate  <= new DateTime() && !$this->isWip();
-}
-    /**
-     * @return Collection|SongDifficulty[]
-     */
-    public function getSongDifficulties(): Collection
+        return $this->programmationDate != null && $this->programmationDate <= new DateTime() && !$this->isWip();
+    }
+
+    public function isWip(): ?bool
     {
-        return $this->songDifficulties;
+        return $this->wip;
+    }
+
+    public function getWip(): ?bool
+    {
+        return $this->wip;
+    }
+
+    public function setWip(?bool $wip): self
+    {
+        $this->wip = $wip;
+
+        return $this;
     }
 
     public function __toString()
     {
-        return $this->getName().($this->getConverted() == true ? " <small data-toggle='tooltip' title='Converted' class='badge badge-danger'>C</small>":"").
-            ($this->getIsExplicit() ?" <small data-toggle='tooltip' title='Explicit content' class='badge badge-warning'>E</small>":"");
+        return $this->getName().($this->getConverted(
+            ) == true ? " <small data-toggle='tooltip' title='Converted' class='badge badge-danger'>C</small>" : "").
+            ($this->getIsExplicit(
+            ) ? " <small data-toggle='tooltip' title='Explicit content' class='badge badge-warning'>E</small>" : "");
     }
 
     public function getName(): ?string
@@ -180,6 +198,30 @@ class Song
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getConverted(): ?bool
+    {
+        return $this->converted;
+    }
+
+    public function setConverted(?bool $converted): self
+    {
+        $this->converted = $converted;
+
+        return $this;
+    }
+
+    public function getIsExplicit(): ?bool
+    {
+        return $this->isExplicit;
+    }
+
+    public function setIsExplicit(?bool $isExplicit): self
+    {
+        $this->isExplicit = $isExplicit;
 
         return $this;
     }
@@ -196,33 +238,9 @@ class Song
         return $this;
     }
 
-    public function getAuthorName(): ?string
-    {
-        return $this->authorName;
-    }
-
-    public function setAuthorName(string $authorName): self
-    {
-        $this->authorName = $authorName;
-
-        return $this;
-    }
-
     public function getMapper(): string
     {
         return $this->user->getMapperName() ?? $this->user->getUsername();
-    }
-
-    public function getLevelAuthorName(): ?string
-    {
-        return $this->levelAuthorName;
-    }
-
-    public function setLevelAuthorName(string $levelAuthorName): self
-    {
-        $this->levelAuthorName = $levelAuthorName;
-
-        return $this;
     }
 
     public function getBeatsPerMinute(): ?float
@@ -289,7 +307,7 @@ class Song
     {
         $min = floor($this->approximativeDuration / 60);
         $sec = $this->approximativeDuration - $min * 60;
-        return $min . "m " . $sec . "s";
+        return $min."m ".$sec."s";
     }
 
     public function getApproximativeDurationMin(): ?string
@@ -429,34 +447,6 @@ class Song
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isModerated(): bool
-    {
-        return $this->moderated;
-    }
-
-    /**
-     * @param bool $moderated
-     */
-    public function setModerated(bool $moderated): void
-    {
-        $this->moderated = $moderated;
-    }
-
-    public function getUser(): UserInterface|Utilisateur|null
-    {
-        return $this->user;
-    }
-
-    public function setUser(?UserInterface $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function addVote(Vote $vote): self
     {
         if (!$this->votes->contains($vote)) {
@@ -477,15 +467,6 @@ class Song
         }
 
         return $this;
-    }
-
-    public function getSongDifficultiesStr(): string
-    {
-        $diff = [];
-        foreach ($this->getSongDifficulties() as $difficulty) {
-            $diff[] = $difficulty->getDifficultyRank()->getLevel();
-        }
-        return join(', ', $diff);
     }
 
     public function getVoteAverage()
@@ -559,28 +540,6 @@ class Song
         $this->lastDateUpload = $lastDateUpload;
 
         return $this;
-    }
-
-    public function getConverted(): ?bool
-    {
-        return $this->converted;
-    }
-
-    public function setConverted(?bool $converted): self
-    {
-        $this->converted = $converted;
-
-        return $this;
-    }
-
-    public function isRanked(): bool
-    {
-        foreach ($this->getSongDifficulties() as $diff) {
-            if ($diff->isRanked()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public function getFunFactorAverage(): ?float
@@ -717,42 +676,6 @@ class Song
         return $this;
     }
 
-    public function getInfoDatFile(): ?string
-    {
-        return $this->infoDatFile;
-    }
-
-    public function setInfoDatFile(?string $infoDatFile): self
-    {
-        $this->infoDatFile = $infoDatFile;
-
-        return $this;
-    }
-
-    public function getNewGuid(): ?string
-    {
-        return $this->newGuid;
-    }
-
-    public function setNewGuid(?string $newGuid): self
-    {
-        $this->newGuid = $newGuid;
-
-        return $this;
-    }
-
-    public function getActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    public function setActive(?bool $active): self
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
     public function addSongHash(SongHash $songHash): self
     {
         if (!$this->songHashes->contains($songHash)) {
@@ -771,18 +694,6 @@ class Song
                 $songHash->setSong(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getWip(): ?bool
-    {
-        return $this->wip;
-    }
-
-    public function setWip(?bool $wip): self
-    {
-        $this->wip = $wip;
 
         return $this;
     }
@@ -817,6 +728,11 @@ class Song
     }
 
     public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function isDeleted(): ?bool
     {
         return $this->isDeleted;
     }
@@ -867,22 +783,10 @@ class Song
         return $this;
     }
 
-    public function getIsExplicit(): ?bool
-    {
-        return $this->isExplicit;
-    }
-
-    public function setIsExplicit(?bool $isExplicit): self
-    {
-        $this->isExplicit = $isExplicit;
-
-        return $this;
-    }
-
     public function hasCover(): bool
     {
-        $cover = "/covers/" . $this->getId() . '.webp';
-        if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
+        $cover = "/covers/".$this->getId().'.webp';
+        if (!file_exists(__DIR__."/../../public/".$cover)) {
             return false;
         }
         return true;
@@ -893,19 +797,13 @@ class Song
         return $this->id;
     }
 
-    public function getCoverImageExtension(): ?string
-    {
-        $file = explode(".", $this->coverImageFileName);
-        return "." . end($file);
-    }
-
     public function getCover(): string
     {
-        $cover = "/covers/" . $this->getId() .".webp";
-        if (!file_exists(__DIR__ . "/../../public/" . $cover)) {
+        $cover = "/covers/".$this->getId().".webp";
+        if (!file_exists(__DIR__."/../../public/".$cover)) {
             $cover = $this->getPlaceholder();
         }
-        return $cover . "?t=" . date('dmYH');
+        return $cover."?t=".date('dmYH');
     }
 
     public function getPlaceholder(): string
@@ -989,7 +887,6 @@ class Song
         return StatisticService::dateDiplayer($this->getLastDateUpload());
     }
 
-
     public function __api()
     {
         return [
@@ -1005,9 +902,85 @@ class Song
         ];
     }
 
-    public function isActive(): ?bool
+    public function isRanked(): bool
     {
-        return $this->active;
+        foreach ($this->getSongDifficulties() as $diff) {
+            if ($diff->isRanked()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return Collection|SongDifficulty[]
+     */
+    public function getSongDifficulties(): Collection
+    {
+        return $this->songDifficulties;
+    }
+
+    public function getNewGuid(): ?string
+    {
+        return $this->newGuid;
+    }
+
+    public function setNewGuid(?string $newGuid): self
+    {
+        $this->newGuid = $newGuid;
+
+        return $this;
+    }
+
+    public function getInfoDatFile(): ?string
+    {
+        return $this->infoDatFile;
+    }
+
+    public function setInfoDatFile(?string $infoDatFile): self
+    {
+        $this->infoDatFile = $infoDatFile;
+
+        return $this;
+    }
+
+    public function getAuthorName(): ?string
+    {
+        return $this->authorName;
+    }
+
+    public function setAuthorName(string $authorName): self
+    {
+        $this->authorName = $authorName;
+
+        return $this;
+    }
+
+    public function getLevelAuthorName(): ?string
+    {
+        return $this->levelAuthorName;
+    }
+
+    public function setLevelAuthorName(string $levelAuthorName): self
+    {
+        $this->levelAuthorName = $levelAuthorName;
+
+        return $this;
+    }
+
+    public function getSongDifficultiesStr(): string
+    {
+        $diff = [];
+        foreach ($this->getSongDifficulties() as $difficulty) {
+            $diff[] = $difficulty->getDifficultyRank()->getLevel();
+        }
+        return join(', ', $diff);
+    }
+
+    public function getCoverImageExtension(): ?string
+    {
+        $file = explode(".", $this->coverImageFileName);
+        return ".".end($file);
     }
 
     public function isConverted(): ?bool
@@ -1015,31 +988,9 @@ class Song
         return $this->converted;
     }
 
-    public function isDeleted(): ?bool
-    {
-        return $this->isDeleted;
-    }
-
     public function isIsExplicit(): ?bool
     {
         return $this->isExplicit;
-    }
-
-    public function isWip(): ?bool
-    {
-        return $this->wip;
-    }
-
-    public function getProgrammationDate(): ?\DateTimeInterface
-    {
-        return $this->programmationDate;
-    }
-
-    public function setProgrammationDate(?\DateTimeInterface $programmationDate): self
-    {
-        $this->programmationDate = $programmationDate;
-
-        return $this;
     }
 
     public function isIsNotificationDone(): ?bool
@@ -1065,6 +1016,7 @@ class Song
 
         return $this;
     }
+
     public function hasBestPlatform($search): bool
     {
         return in_array($search, $this->bestPlatform);
@@ -1072,6 +1024,52 @@ class Song
 
     public function isAvailable()
     {
-        return !$this->isWip() && $this->isModerated() && $this->getActive() && !$this->isDeleted() && $this->getProgrammationDate() != null && $this->getProgrammationDate() <= new \DateTime();
+        return !$this->isWip() && $this->isModerated() && $this->getActive() && !$this->isDeleted(
+            ) && $this->getProgrammationDate() != null && $this->getProgrammationDate() <= new DateTime();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isModerated(): bool
+    {
+        return $this->moderated;
+    }
+
+    /**
+     * @param  bool  $moderated
+     */
+    public function setModerated(bool $moderated): void
+    {
+        $this->moderated = $moderated;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(?bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getProgrammationDate(): ?DateTimeInterface
+    {
+        return $this->programmationDate;
+    }
+
+    public function setProgrammationDate(?DateTimeInterface $programmationDate): self
+    {
+        $this->programmationDate = $programmationDate;
+
+        return $this;
     }
 }

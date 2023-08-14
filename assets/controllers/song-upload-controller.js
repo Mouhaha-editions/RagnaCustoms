@@ -13,6 +13,7 @@ export default class extends Controller {
     ragna = null;
 
     connect() {
+        $("[data-toggle=tooltip]").tooltip();
         $('.select2entity[data-autostart="true"]').select2entity();
         $('.select2').select2();
         $(document).on('mousedown','.switch',function(){
