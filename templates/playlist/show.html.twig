@@ -33,11 +33,11 @@
             <h2>Songs</h2>
             <div class="row">
                 {% for song in playlist.songs %}
-                    <div class="col-md-3 pr-5">
+                    <div class="col-md-3">
                         <div class="row mb-2"  style="border:1px solid #3c3c3c">
                             <div class="col-3 pl-0">
                                 <a href="{{ url('song_detail',{slug:song.slug}) }}">
-                                    <img src="{{ song.cover }}" class="small-cover" alt="cover" style="width:95px;"/>
+                                    <img src="{{ song.cover }}" class="small-cover img-fluid" alt="cover"/>
                                 </a>
                             </div>
                             <div class="col-6 song pl-1 pt-3">
