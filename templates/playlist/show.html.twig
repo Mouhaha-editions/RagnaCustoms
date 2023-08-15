@@ -17,7 +17,8 @@
     <div class="container-fluid" {{ stimulus_controller('playlist') }}>
         <div class="row">
             <div class="col-12">
-                <h1 class="text-center">{{ playlist.label }}, a {{ playlist.user.username }}'s Playlist</h1>
+                <h1 class="text-center">{{ playlist.label }}</h1>
+                <h2 class="text-center">a {{ playlist.user.username }}'s Playlist</h2>
                 <form method="post" class="text-center">
                     <button data-toggle="tooltips" title="{{ "Download playlist with the app"|trans }}" type="submit"
                             name="onclick_dl" value="42" class="btn btn-sm btn-danger"
