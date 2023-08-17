@@ -84,8 +84,8 @@ class WanadevApiController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
-        $plateform = $data['platform'] ?? 'Steam';
-        $isVR = in_array($plateform, self::VR_PLATEFORM);
+        $plateform = $data['platform'] ?? $currentPlateform ?? 'Steam';
+        $isVr = in_array($plateform, self::VR_PLATEFORM);
 
         if ($currentPlateform) {
             $returnArray = [$currentPlateform, ... explode('|', trim($request->query->get('platform'),'|'))];
@@ -101,7 +101,7 @@ class WanadevApiController extends AbstractController
                 $newScore->setRawPP($rawPP);
             }
 
-            $score = $scoreRepository->getOneByUserDiffVrOrNot($user, $songDiff, $isVR);
+            $score = $scoreRepository->getOneByUserDiffVrOrNot($user, $songDiff, $isVr);
             $scoreService->archive($newScore);
             $user->setCredits($user->getCredits() + 1);
             $utilisateurRepository->add($user);
@@ -117,10 +117,10 @@ class WanadevApiController extends AbstractController
 
             //calculation of the ponderate PP scores
             if ($newScore->isRankable()) {
-                $rankingScoreService->calculateTotalPondPPScore($user, $isVR);
+                $rankingScoreService->calculateTotalPondPPScore($user, $isVr);
             }
 
-            $scoreService->updateSessions($user, $songDiff, $isVR, $newScore->getSession());
+            $scoreService->updateSessions($user, $songDiff, $isVr, $newScore->getSession());
 
             return new JsonResponse(
                 [
@@ -134,7 +134,7 @@ class WanadevApiController extends AbstractController
         }
 
         return new JsonResponse(
-            $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVR),
+            $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr),
             200,
             [
                 'content-type' => 'application/json',
