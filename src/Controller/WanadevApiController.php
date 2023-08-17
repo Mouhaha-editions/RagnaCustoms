@@ -26,6 +26,59 @@ use function Sentry\configureScope;
 class WanadevApiController extends AbstractController
 {
     const VR_PLATEFORM = ['Steam', 'Viveport', 'Oculus', 'Pico', 'PS5'];
+    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/search', name: 'wd_api_score_search_friends', methods: ['GET', 'POST'])]
+    public function searchFriend(
+        Request $request,
+        string $apiKey,
+        string $hash,
+        SongDifficultyRepository $songDifficultyRepository,
+        UtilisateurRepository $utilisateurRepository,
+        RankingScoreService $rankingScoreService,
+        ScoreService $scoreService,
+        ScoreRepository $scoreRepository,
+    ): Response {
+        return new JsonResponse([
+                [
+                    "platform" => "Steam",
+                    "user" => "00",
+                    "score" => 0,
+                    "created_at" => null,
+                    "session" => "RagnarockSession0",
+                    "pseudo" => "Not Available now",
+                    "country" => "en",
+                    "stats" => [
+                        "ComboBlue" => 0,
+                        "ComboYellow" => 0,
+                        "Hit" => 0,
+                        "HitDeltaAverage" => 0,
+                        "HitPercentage" => 0,
+                        "Missed" => 0,
+                        "PercentageOfPerfects" => 0
+                    ],
+                    "rank" => 1
+                ],
+            [
+                "platform" => "Steam",
+                "user" => "00",
+                "score" => 0,
+                "created_at" => null,
+                "session" => "RagnarockSession0",
+                "pseudo" => "but soon we hope",
+                "country" => "en",
+                "stats" => [
+                    "ComboBlue" => 0,
+                    "ComboYellow" => 0,
+                    "Hit" => 0,
+                    "HitDeltaAverage" => 0,
+                    "HitPercentage" => 0,
+                    "Missed" => 0,
+                    "PercentageOfPerfects" => 0
+                ],
+                "rank" => 2
+            ],
+
+        ]);
+    }
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}', name: 'wd_api_score_simple_get', methods: ['GET', 'POST'])]
     public function scoreSimple(
