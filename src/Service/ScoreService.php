@@ -213,7 +213,9 @@ class ScoreService
             }
 
             $score = $qb->getQuery()->getOneOrNullResult();
-            $results[] = $this->getFormattedRank($score, $place);
+            if($score != null) {
+                $results[] = $this->getFormattedRank($score, $place);
+            }
         }
 
         return $results;

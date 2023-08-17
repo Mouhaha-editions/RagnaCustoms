@@ -88,9 +88,9 @@ class WanadevApiController extends AbstractController
         $isVR = in_array($plateform, self::VR_PLATEFORM);
 
         if ($currentPlateform) {
-            $returnArray = [$currentPlateform, ... explode('|', $request->query->get('platform'))];
+            $returnArray = [$currentPlateform, ... explode('|', trim($request->query->get('platform'),'|'))];
         } else {
-            $returnArray = explode('|', $request->query->get('platform'));
+            $returnArray = explode('|', trim($request->query->get('platform'),'|'));
         }
 
         if ($request->isMethod('post')) {
