@@ -77,7 +77,9 @@ class WanadevApiController extends AbstractController
                 "rank" => 2
             ],
 
-        ]);
+        ],
+            200,
+            ['content-type' => 'application/json']);
     }
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}', name: 'wd_api_score_simple_get', methods: ['GET', 'POST'])]
