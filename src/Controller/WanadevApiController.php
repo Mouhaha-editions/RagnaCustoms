@@ -40,10 +40,10 @@ class WanadevApiController extends AbstractController
         return new JsonResponse([
                 [
                     "platform" => "Steam",
-                    "user" => "001",
+                    "user" => "0002dea43c65412cab0d54832acd2f5f",
                     "score" => 2,
                     "created_at" => null,
-                    "session" => "RagnarockSession0",
+                    "session" => "0002dea43c65412cab0d54832acd2f5f",
                     "pseudo" => "Not Available now",
                     "country" => "en",
                     "stats" => [
@@ -59,10 +59,10 @@ class WanadevApiController extends AbstractController
                 ],
             [
                 "platform" => "Steam",
-                "user" => "002",
+                "user" => "0002dea43c65412cab0d54832acd2ff5",
                 "score" => 1,
                 "created_at" => null,
-                "session" => "RagnarockSession02",
+                "session" => "0002dea43c65412cab0d54832acd2ff5",
                 "pseudo" => "but soon we hope",
                 "country" => "en",
                 "stats" => [
