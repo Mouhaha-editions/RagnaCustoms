@@ -4,7 +4,10 @@
 
     <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-warning"{% endif %}>
         <td class="text-left">{{ scoreService.leaderboardPositionWithOrdinalSuffix(score.user, score.songDifficulty, '-', type == 'scores') }}</td>
-        <td>{{ score.user.username }}</td>
+        <td>
+            <a href="{{ url("user_profile",{username:score.user.username}) }}"
+               class="ml-1 text-level-9">{{ membershipService.displayUsername(score.user)|raw }}</a>
+        </td>
         <td class="text-right">{{ score.scoreDisplay }}</td>
         <td class="text-right">{{ score.rawPP|round(3) }}</td>
         <td class="text-right">{{ score.percentageOfPerfects }}%</td>

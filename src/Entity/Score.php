@@ -357,12 +357,9 @@ class Score
 
     public function getPlateformIcon()
     {
-        return $this->isVr() ? 'fa-vr-cardboard' : 'fa-gamepad';
+        return in_array($this->getPlateform(),WanadevApiController::VR_PLATEFORM) ? 'fa-vr-cardboard' : 'fa-gamepad';
     }
 
-    /**
-     * @deprecated use WanadevApiController::VR_PLATEFORM list instead
-     */
     public function isVR(): bool
     {
         return in_array($this->getPlateform(),WanadevApiController::VR_PLATEFORM);

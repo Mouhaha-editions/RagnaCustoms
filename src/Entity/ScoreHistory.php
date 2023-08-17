@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\WanadevApiController;
 use App\Repository\ScoreHistoryRepository;
 use App\Service\StatisticService;
 use Doctrine\DBAL\Types\Types;
@@ -348,5 +349,15 @@ class ScoreHistory
         $this->hitAccuracy = $hitAccuracy;
 
         return $this;
+    }
+
+    public function getPlateformIcon()
+    {
+        return in_array($this->getPlateform(),WanadevApiController::VR_PLATEFORM) ? 'fa-vr-cardboard' : 'fa-gamepad';
+    }
+
+    public function isVR(): bool
+    {
+        return in_array($this->getPlateform(),WanadevApiController::VR_PLATEFORM);
     }
 }
