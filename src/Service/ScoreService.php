@@ -171,7 +171,7 @@ class ScoreService
         $this->em->flush();
     }
 
-    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user, bool $isVr = true)
+    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user, array $returnPlatforms = [], bool $isVr = true)
     {
         $qb = $this->em->getRepository(Score::class)
             ->createQueryBuilder('s')
@@ -179,13 +179,11 @@ class ScoreService
             ->setParameter('diff', $songDiff)
             ->orderBy('s.score', 'DESC')
             ->setMaxResults(5)
-            ->setFirstResult(0)
-            ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+            ->setFirstResult(0);
 
-        if ($isVr) {
-            $qb->andWhere('s.plateform IN (:vr)');
-        } else {
-            $qb->andWhere('s.plateform NOT IN (:vr)');
+        if (!empty($returnPlatforms)) {
+            $qb->andWhere('s.plateform IN (:vr)')
+                ->setParameter('vr', $returnPlatforms);
         }
 
         $scores = $qb->getQuery()->getResult();

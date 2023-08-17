@@ -25,7 +25,7 @@ use function Sentry\configureScope;
 
 class WanadevApiController extends AbstractController
 {
-    const VR_PLATEFORM = ['Steam', 'Viveport', 'Oculus', 'Pico'];
+    const VR_PLATEFORM = ['Steam', 'Viveport', 'Oculus', 'Pico', 'PS5'];
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}', name: 'wd_api_score_simple_get', methods: ['GET', 'POST'])]
     public function scoreSimple(
@@ -42,6 +42,7 @@ class WanadevApiController extends AbstractController
             $request,
             $apiKey,
             $hash,
+            null,
             $songDifficultyRepository,
             $utilisateurRepository,
             $rankingScoreService,
@@ -50,7 +51,7 @@ class WanadevApiController extends AbstractController
         );
     }
 
-    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}', name: 'wd_api_score_get', methods: [
+    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/{currentPlateform}/{oseftootoo}', name: 'wd_api_score_get', methods: [
         'GET',
         'POST'
     ])]
@@ -58,6 +59,7 @@ class WanadevApiController extends AbstractController
         Request $request,
         string $apiKey,
         string $hash,
+        ?string $currentPlateform,
         SongDifficultyRepository $songDifficultyRepository,
         UtilisateurRepository $utilisateurRepository,
         RankingScoreService $rankingScoreService,
@@ -84,6 +86,12 @@ class WanadevApiController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $plateform = $data['platform'] ?? 'Steam';
         $isVR = in_array($plateform, self::VR_PLATEFORM);
+
+        if ($currentPlateform) {
+            $returnArray = [$currentPlateform, ... explode('|', $request->query->get('platform'))];
+        } else {
+            $returnArray = explode('|', $request->query->get('platform'));
+        }
 
         if ($request->isMethod('post')) {
             $newScore = $this->setNewScoreWithData($user, $songDiff, $data);
@@ -118,7 +126,7 @@ class WanadevApiController extends AbstractController
                 [
                     'rank' => $scoreService->getTheoricalRank($songDiff, $newScore->getScore()),
                     'score' => $newScore->getScore(),
-                    'ranking' => $scoreService->getTop5Wanadev($songDiff, $user, $isVR)
+                    'ranking' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr)
                 ],
                 200,
                 ['content-type' => 'application/json']
@@ -126,7 +134,7 @@ class WanadevApiController extends AbstractController
         }
 
         return new JsonResponse(
-            $scoreService->getTop5Wanadev($songDiff, $user, $isVR),
+            $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVR),
             200,
             [
                 'content-type' => 'application/json',
@@ -157,7 +165,7 @@ class WanadevApiController extends AbstractController
         return $newScore;
     }
 
-    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/{oseftoo}/{oseftootoo}/board', name: 'wd_api_score_get_new', methods: [
+    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/{currentPlateform}/{oseftootoo}/board', name: 'wd_api_score_get_new', methods: [
         'GET',
         'POST'
     ])]
@@ -165,6 +173,7 @@ class WanadevApiController extends AbstractController
         Request $request,
         string $apiKey,
         string $hash,
+        string $currentPlateform,
         SongDifficultyRepository $songDifficultyRepository,
         UtilisateurRepository $utilisateurRepository,
         RankingScoreService $rankingScoreService,
@@ -175,6 +184,7 @@ class WanadevApiController extends AbstractController
             $request,
             $apiKey,
             $hash,
+            $currentPlateform,
             $songDifficultyRepository,
             $utilisateurRepository,
             $rankingScoreService,
