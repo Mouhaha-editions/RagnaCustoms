@@ -205,13 +205,11 @@ class ScoreService
                 ->setParameter('user', $user)
                 ->orderBy('s.score', 'DESC')
                 ->setMaxResults(1)
-                ->setFirstResult(0)
-                ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+                ->setFirstResult(0);
 
-            if ($isVr) {
-                $qb->andWhere('s.plateform IN (:vr)');
-            } else {
-                $qb->andWhere('s.plateform NOT IN (:vr)');
+            if (!empty($returnPlatforms)) {
+                $qb->andWhere('s.plateform IN (:vr)')
+                    ->setParameter('vr', $returnPlatforms);
             }
 
             $score = $qb->getQuery()->getOneOrNullResult();
