@@ -37,105 +37,47 @@ class WanadevApiController extends AbstractController
         ScoreService $scoreService,
         ScoreRepository $scoreRepository,
     ): Response {
-        return new JsonResponse( [
+        return new JsonResponse(['results'=>[
                 [
-                    "platform" => "Pico",
-                    "user" => "0002fdcf0d35449ca61f591403a8bf6a",
-                    "score" => 39292,
+                    "platform" => "Steam",
+                    "user" => "0002dea43c65412cab0d54832acd2f5f",
+                    "score" => 2,
                     "created_at" => null,
-                    "session" => "4AC548A389CB43A0BC0684EEFABCD3F2",
-                    "pseudo" => "Not available for now",
-                    "country" => "fr",
+                    "session" => "0002dea43c65412cab0d54832acd2f5f",
+                    "pseudo" => "Not Available now",
+                    "country" => "en",
                     "stats" => [
-                        "ComboBlue" => 1,
-                        "ComboYellow" => 1,
-                        "Hit" => 82,
-                        "HitDeltaAverage" => -1,
-                        "HitPercentage" => 100,
+                        "ComboBlue" => 0,
+                        "ComboYellow" => 0,
+                        "Hit" => 0,
+                        "HitDeltaAverage" => 0,
+                        "HitPercentage" => 0,
                         "Missed" => 0,
-                        "PercentageOfPerfects" => 85
+                        "PercentageOfPerfects" => 0
                     ],
                     "rank" => 1
                 ],
-                [
-                    "platform" => "Steam",
-                    "user" => "0002d964d72e41f1951e1ca912be2757",
-                    "score" => 38906,
-                    "created_at" => null,
-                    "session" => "6F40BFED46DC0821E3EF89BA2E29587B",
-                    "pseudo" => "But we hope soon",
-                    "country" => "de",
-                    "stats" => [
-                        "ComboBlue" => 1,
-                        "ComboYellow" => 1,
-                        "Hit" => 82,
-                        "HitDeltaAverage" => -3,
-                        "HitPercentage" => 100,
-                        "Missed" => 0,
-                        "PercentageOfPerfects" => 82
-                    ],
-                    "rank" => 2
+            [
+                "platform" => "Steam",
+                "user" => "0002dea43c65412cab0d54832acd2f5f",
+                "score" => 1,
+                "created_at" => null,
+                "session" => "0002dea43c65412cab0d54832acd2ff",
+                "pseudo" => "but soon we hope",
+                "country" => "en",
+                "stats" => [
+                    "ComboBlue" => 0,
+                    "ComboYellow" => 0,
+                    "Hit" => 0,
+                    "HitDeltaAverage" => 0,
+                    "HitPercentage" => 0,
+                    "Missed" => 0,
+                    "PercentageOfPerfects" => 0
                 ],
-                [
-                    "platform" => "Steam",
-                    "user" => "0002175bc9164be6bf4460b13a80e83d",
-                    "score" => 37746,
-                    "created_at" => null,
-                    "session" => "82E672564DE56C8DF4637987AB20BF67",
-                    "pseudo" => "Vivahawaii",
-                    "country" => "fr",
-                    "stats" => [
-                        "ComboBlue" => 1,
-                        "ComboYellow" => 1,
-                        "Hit" => 82,
-                        "HitDeltaAverage" => -4,
-                        "HitPercentage" => 100,
-                        "Missed" => 0,
-                        "PercentageOfPerfects" => 71
-                    ],
-                    "rank" => 3
-                ],
-                [
-                    "platform" => "Steam",
-                    "user" => "0002548b723147b2b64725876a18e459",
-                    "score" => 37617,
-                    "created_at" => null,
-                    "session" => "037CF2B447D872A75BD11FAE91C07B67",
-                    "pseudo" => "MoreMandy",
-                    "country" => "es",
-                    "stats" => [
-                        "ComboBlue" => 1,
-                        "ComboYellow" => 1,
-                        "Hit" => 82,
-                        "HitDeltaAverage" => 0,
-                        "HitPercentage" => 100,
-                        "Missed" => 0,
-                        "PercentageOfPerfects" => 70
-                    ],
-                    "rank" => 4
-                ],
-                [
-                    "platform" => "Oculus",
-                    "user" => "0002e7b6547e4b9d807d52f26136293a",
-                    "score" => 36844,
-                    "created_at" => null,
-                    "session" => "28DC78E2BC754C54876684EB2769D707",
-                    "pseudo" => "bloculusmonster",
-                    "country" => "en",
-                    "stats" => [
-                        "ComboBlue" => 1,
-                        "ComboYellow" => 1,
-                        "Hit" => 82,
-                        "HitDeltaAverage" => -4,
-                        "HitPercentage" => 100,
-                        "Missed" => 0,
-                        "PercentageOfPerfects" => 62
-                    ],
-                    "rank" => 5
-                ]
-            ]
+                "rank" => 2
+            ],
 
-        ,
+        ]],
             200,
             ['content-type' => 'application/json']);
     }
