@@ -38,63 +38,6 @@ class WanadevApiController extends AbstractController
         ScoreService $scoreService,
         ScoreRepository $scoreRepository,
     ): Response {
-        return new JsonResponse([
-            'results' => [
-                [
-                    "platform" => "Steam",
-                    "user" => "0002dea43c65412cab0d54832acd2f5f",
-                    "score" => 2,
-                    "created_at" => null,
-                    "session" => "0002dea43c65412cab0d54832acd2f5f",
-                    "pseudo" => "Not Available now",
-                    "country" => "en",
-                    "stats" => [
-                        "ComboBlue" => 0,
-                        "ComboYellow" => 0,
-                        "Hit" => 0,
-                        "HitDeltaAverage" => 0,
-                        "HitPercentage" => 0,
-                        "Missed" => 0,
-                        "PercentageOfPerfects" => 0
-                    ],
-                    "rank" => 1
-                ],
-                [
-                    "platform" => "Steam",
-                    "user" => "0002dea43c65412cab0d54832acd2f5f",
-                    "score" => 1,
-                    "created_at" => null,
-                    "session" => "0002dea43c65412cab0d54832acd2ff",
-                    "pseudo" => "but soon we hope",
-                    "country" => "en",
-                    "stats" => [
-                        "ComboBlue" => 0,
-                        "ComboYellow" => 0,
-                        "Hit" => 0,
-                        "HitDeltaAverage" => 0,
-                        "HitPercentage" => 0,
-                        "Missed" => 0,
-                        "PercentageOfPerfects" => 0
-                    ],
-                    "rank" => 2
-                ],
-            ]
-        ],
-            200,
-            ['content-type' => 'application/json']);
-    }
-
-    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}', name: 'wd_api_score_simple_get', methods: ['GET', 'POST'])]
-    public function scoreSimple(
-        Request $request,
-        string $apiKey,
-        string $hash,
-        SongDifficultyRepository $songDifficultyRepository,
-        UtilisateurRepository $utilisateurRepository,
-        RankingScoreService $rankingScoreService,
-        ScoreService $scoreService,
-        ScoreRepository $scoreRepository,
-    ): Response {
         return $this->score(
             $request,
             $apiKey,
@@ -105,6 +48,7 @@ class WanadevApiController extends AbstractController
             $rankingScoreService,
             $scoreService,
             $scoreRepository,
+            true
         );
     }
 
@@ -122,6 +66,7 @@ class WanadevApiController extends AbstractController
         RankingScoreService $rankingScoreService,
         ScoreService $scoreService,
         ScoreRepository $scoreRepository,
+        bool $friendsOnly = false
     ): Response {
         /** @var Utilisateur $user */
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
@@ -148,6 +93,12 @@ class WanadevApiController extends AbstractController
             $returnArray = [$currentPlateform, ... explode('|', trim($request->query->get('platform'), '|'))];
         } else {
             $returnArray = explode('|', trim($request->query->get('platform'), '|'));
+        }
+
+        foreach($returnArray AS $k=>$ret){
+            if(empty($ret)){
+                unset ($returnArray[$k]);
+            }
         }
 
         if ($request->isMethod('post')) {
@@ -181,7 +132,7 @@ class WanadevApiController extends AbstractController
 
             return new JsonResponse(
                 [
-                    'rank' => $scoreService->getTheoricalRank($songDiff, $newScore->getScore(), $returnArray),
+                    'rank' => $scoreService->getTheoricalRank($songDiff, $newScore->getScore(), $returnArray, $friendsOnly),
                     'score' => $newScore->getScore(),
                     'ranking' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr)
                 ],
@@ -191,7 +142,7 @@ class WanadevApiController extends AbstractController
         }
 
         return new JsonResponse(
-            $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr),
+            $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr, $friendsOnly),
             200,
             [
                 'content-type' => 'application/json',
@@ -220,6 +171,30 @@ class WanadevApiController extends AbstractController
         $newScore->setExtra(json_encode($data['extra']));
         $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
         return $newScore;
+    }
+
+    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}', name: 'wd_api_score_simple_get', methods: ['GET', 'POST'])]
+    public function scoreSimple(
+        Request $request,
+        string $apiKey,
+        string $hash,
+        SongDifficultyRepository $songDifficultyRepository,
+        UtilisateurRepository $utilisateurRepository,
+        RankingScoreService $rankingScoreService,
+        ScoreService $scoreService,
+        ScoreRepository $scoreRepository,
+    ): Response {
+        return $this->score(
+            $request,
+            $apiKey,
+            $hash,
+            null,
+            $songDifficultyRepository,
+            $utilisateurRepository,
+            $rankingScoreService,
+            $scoreService,
+            $scoreRepository,
+        );
     }
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/{currentPlateform}/{oseftootoo}/board', name: 'wd_api_score_get_new', methods: [

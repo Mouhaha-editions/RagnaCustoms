@@ -9,6 +9,7 @@ use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
+use App\Repository\FriendRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,8 @@ class ScoreService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly ScoreRepository $scoreRepository,
-        private readonly ScoreHistoryRepository $scoreHistoryRepository
+        private readonly ScoreHistoryRepository $scoreHistoryRepository,
+        private readonly FriendRepository $friendRepository
     ) {
     }
 
@@ -171,7 +173,7 @@ class ScoreService
         $this->em->flush();
     }
 
-    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user, array $returnPlatforms = [], bool $isVr = true)
+    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user, array $returnPlatforms = [], bool $isVr = true, bool $friendsOnly = false)
     {
         $qb = $this->em->getRepository(Score::class)
             ->createQueryBuilder('s')
@@ -184,6 +186,18 @@ class ScoreService
         if (!empty($returnPlatforms)) {
             $qb->andWhere('s.plateform IN (:vr)')
                 ->setParameter('vr', $returnPlatforms);
+        }
+
+        if($friendsOnly){
+            $friends = [$user];
+            $friendRequests = $this->friendRepository->getMine($user);;
+
+            foreach ($friendRequests as $friendRequest) {
+                $friends[] = $friendRequest->getOther($user);
+            }
+
+            $qb->andWhere('s.user IN (:friends)')
+                ->setParameter('friends', $friends);
         }
 
         $scores = $qb->getQuery()->getResult();
