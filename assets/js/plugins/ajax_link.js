@@ -33,7 +33,10 @@ $(document).on("click", ".ajax-link", function () {
             }
         },
         error: function (data) {
-            alert('Erreur lors de la requete');
+            if (data.error) {
+                alert(data.errorMessage);
+                return;
+            }
         }
     });
     return false;

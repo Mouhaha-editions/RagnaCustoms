@@ -131,7 +131,7 @@
                             </div>
                         </li>
                         <li class="nav-item pt-1">
-                            <a href="{{ url('app_notification') }}" class="nav-link">
+                            <a href="{{ url('app_notification') }}" class="nav-link" data-toggle="tooltip" title="Notifications">
                                 {% if app.user.unreadNotifications|length > 0 %}
                                     <i class="fas fa-bell"></i>
                                     <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border  rounded-circle"></span>
@@ -140,6 +140,16 @@
                                 {% endif %}
                             </a>
                         </li>
+                        <li class="nav-item pt-1">
+                        <a href="{{ url('app_friend_list') }}" class="nav-link" data-toggle="tooltip" title="Friends">
+                            {% if app.user.waitingRequests|length > 0 %}
+                                <i class="fas fa-users"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border  rounded-circle"></span>
+                            {% else %}
+                                <i class="fas fa-users"></i>
+                            {% endif %}
+                        </a>
+                    </li>
                     {% endif %}
                     {# <li><span class="p-3 mt-3 snowflake-toggle" title="click to toggle" style="cursor:pointer"><i class="fas fa-snowflake mt-3"></i></span></li> #}
                 </ul>

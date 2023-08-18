@@ -5,14 +5,11 @@ namespace App\Controller;
 use App\Entity\Score;
 use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
-use App\Repository\RankedScoresRepository;
-use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\RankingScoreService;
 use App\Service\ScoreService;
-use Doctrine\Persistence\ManagerRegistry;
 use Sentry\State\Scope;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,7 +23,11 @@ use function Sentry\configureScope;
 class WanadevApiController extends AbstractController
 {
     const VR_PLATEFORM = ['Steam', 'Viveport', 'Oculus', 'Pico', 'PS5'];
-    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/search', name: 'wd_api_score_search_friends', methods: ['GET', 'POST'])]
+
+    #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/search', name: 'wd_api_score_search_friends', methods: [
+        'GET',
+        'POST'
+    ])]
     public function searchFriend(
         Request $request,
         string $apiKey,
@@ -37,7 +38,8 @@ class WanadevApiController extends AbstractController
         ScoreService $scoreService,
         ScoreRepository $scoreRepository,
     ): Response {
-        return new JsonResponse(['results'=>[
+        return new JsonResponse([
+            'results' => [
                 [
                     "platform" => "Steam",
                     "user" => "0002dea43c65412cab0d54832acd2f5f",
@@ -57,27 +59,27 @@ class WanadevApiController extends AbstractController
                     ],
                     "rank" => 1
                 ],
-            [
-                "platform" => "Steam",
-                "user" => "0002dea43c65412cab0d54832acd2f5f",
-                "score" => 1,
-                "created_at" => null,
-                "session" => "0002dea43c65412cab0d54832acd2ff",
-                "pseudo" => "but soon we hope",
-                "country" => "en",
-                "stats" => [
-                    "ComboBlue" => 0,
-                    "ComboYellow" => 0,
-                    "Hit" => 0,
-                    "HitDeltaAverage" => 0,
-                    "HitPercentage" => 0,
-                    "Missed" => 0,
-                    "PercentageOfPerfects" => 0
+                [
+                    "platform" => "Steam",
+                    "user" => "0002dea43c65412cab0d54832acd2f5f",
+                    "score" => 1,
+                    "created_at" => null,
+                    "session" => "0002dea43c65412cab0d54832acd2ff",
+                    "pseudo" => "but soon we hope",
+                    "country" => "en",
+                    "stats" => [
+                        "ComboBlue" => 0,
+                        "ComboYellow" => 0,
+                        "Hit" => 0,
+                        "HitDeltaAverage" => 0,
+                        "HitPercentage" => 0,
+                        "Missed" => 0,
+                        "PercentageOfPerfects" => 0
+                    ],
+                    "rank" => 2
                 ],
-                "rank" => 2
-            ],
-
-        ]],
+            ]
+        ],
             200,
             ['content-type' => 'application/json']);
     }
@@ -143,9 +145,9 @@ class WanadevApiController extends AbstractController
         $isVr = in_array($plateform, self::VR_PLATEFORM);
 
         if ($currentPlateform) {
-            $returnArray = [$currentPlateform, ... explode('|', trim($request->query->get('platform'),'|'))];
+            $returnArray = [$currentPlateform, ... explode('|', trim($request->query->get('platform'), '|'))];
         } else {
-            $returnArray = explode('|', trim($request->query->get('platform'),'|'));
+            $returnArray = explode('|', trim($request->query->get('platform'), '|'));
         }
 
         if ($request->isMethod('post')) {
@@ -163,7 +165,7 @@ class WanadevApiController extends AbstractController
 
             if ($score == null || $score->getScore() <= $newScore->getScore()) {
                 //le nouveau score est meilleur
-                if($score) {
+                if ($score) {
                     $scoreRepository->remove($score);
                 }
 

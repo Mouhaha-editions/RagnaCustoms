@@ -9,30 +9,62 @@
     <div class=row>
         <div class="col-md-3">
             <div class="user-picture">
-                <img {{ stimulus_target('mapper-profile', 'img') }} src="{{ user.gravatar }}"
-                                                                    class="avatar big-rounded mb-4 img-fluid"
-                                                                    alt="{{ user.username }}"/>
-                {% if user.songs|length > 0 %}<a class="btn btn-lg btn-warning btn-block"
-                                                 href="{{ url('mapper_profile', {username:user.username}) }}">{{ "View mapper profile"|trans }}</a>{% endif %}
+                <img {{ stimulus_target('mapper-profile', 'img') }}
+                        src="{{ user.gravatar }}"
+                        class="avatar big-rounded mb-4 img-fluid"
+                        alt="{{ user.username }}"/>
+                {% if user.songs|length > 0 %}
+                    <a class="btn btn-lg btn-warning btn-block"
+                       href="{{ url('mapper_profile', {username:user.username}) }}">
+                        {{ "View mapper profile"|trans }}
+                    </a>
+                {% endif %}
+
+                <div class="friend-request">
+                {% include 'user/partial/friend_request.html.twig' with {user:user} %}
+                </div>
             </div>
         </div>
         <div class="col-md-5 ">
-            <div class="username"><h2>{% if user.country is not null %}<img
-                        src="https://flagcdn.com/24x18/{{ user.country.twoLetters|lower }}.png" alt="{{ user.country }}"
-                        title="{{ user.country }}">
-                    {% endif %}{{ membershipService.displayUsername(user)|raw }}</h2></div>
-            <div class="tags">
-                {% if user.songs|length > 0 %}<span title="Has released at least one map" data-toogle="tooltip">{{ "Mapper"|trans }}</span>{% endif %}
-{#                {% if user.certified|length > 0 %}<span>{{ "Certified"|trans }}</span>{% endif %}#}
-                {% if user.rankedSong|length > 0  %}<span title="Has at least one ranked map" data-toogle="tooltip">{{ "Ranked"|trans }}</span>{% endif %}
-                {% if grantedService.isGranted(user, 'ROLE_MODERATOR')  %}<span title="Is a good guy" data-toogle="tooltip">{{ "Staff"|trans }}</span>{% endif %}
+            <div class="username">
+                <h2>
+                    {% if user.country is not null %}
+                        <img
+                                src="https://flagcdn.com/24x18/{{ user.country.twoLetters|lower }}.png"
+                                alt="{{ user.country }}"
+                                title="{{ user.country }}">
+                    {% endif %}
+                    {{ membershipService.displayUsername(user)|raw }}
+                </h2>
             </div>
+            <div class="tags">
+                {% if user.songs|length > 0 %}
+                    <span title="Has released at least one map" data-toogle="tooltip">
+                    {{ "Mapper"|trans }}
+                    </span>
+                {% endif %}
+                {#                {% if user.certified|length > 0 %}<span>{{ "Certified"|trans }}</span>{% endif %} #}
+                {% if user.rankedSong|length > 0 %}
+                    <span title="Has at least one ranked map" data-toogle="tooltip">
+                        {{ "Ranked"|trans }}
+                    </span>
+                {% endif %}
+
+                {% if grantedService.isGranted(user, 'ROLE_MODERATOR') %}
+                    <span title="Is a good guy" data-toogle="tooltip">
+                        {{ "Staff"|trans }}
+                    </span>
+                {% endif %}
+            </div>
+
             <div class="row mt-3">
                 <div class="col-md-3">
                     <div class="mini-box">
                         <div class="numeric">
-                            <i class="fas fa-vr-cardboard" style="font-size:14px;"></i> #{{ scoreService.generalLeaderboardPosition(user, null, true)??" -" }}
-                            <i class="fas fa-gamepad" style="font-size:14px;"></i> #{{ scoreService.generalLeaderboardPosition(user, null, false)??" -" }}
+                            <i class="fas fa-vr-cardboard" style="font-size:14px;"></i>
+                            #{{ scoreService.generalLeaderboardPosition(user, null, true)??" -" }}
+                            <i class="fas fa-gamepad" style="font-size:14px;"></i>
+                            #{{ scoreService.generalLeaderboardPosition(user, null, false)??" -" }}
                         </div>
                         <div class="text">{{ "Global rank"|trans }}</div>
                     </div>
@@ -58,33 +90,37 @@
             </div>
 
             {% if user.scores|length > 0 %}
-            <div class="graph mt-4">
-                <div>
-                    {% set totalDistance = statisticService.getTotalDistance(user)/100 %}
-                    <div class="label">{{ "Distance"|trans }}</div>
-                    <div class="total-bar">{{ totalDistance|number_format(2,'.',',') }}m</div>
-                    <div class="avg">
-                        <div class="avg-bar"
-                             style="width:50%">{{ (totalDistance/user.scores|length)|number_format(2,'.',',') }}
-                            m
+                <div class="graph mt-4">
+                    <div>
+                        {% set totalDistance = statisticService.getTotalDistance(user)/100 %}
+                        <div class="label">{{ "Distance"|trans }}</div>
+                        <div class="total-bar">{{ totalDistance|number_format(2,'.',',') }}m</div>
+                        <div class="avg">
+                            <div class="avg-bar"
+                                 style="width:50%">{{ (totalDistance/user.scores|length)|number_format(2,'.',',') }}
+                                m
+                            </div>
+                            <div class="avg-text">{{ "avg. per song"|trans }}</div>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="avg-text">{{ "avg. per song"|trans }}</div>
-                        <div class="clearfix"></div>
+                    </div>
+                    <div>
+                        <div class="label">{{ "Notes hit"|trans }}</div>
+                        <div class="total-bar">{{ statisticService.totalNotesHit(user)|number_format(0,'.',',') }}</div>
+                        <div class="avg">
+                            {% set avg2 = (statisticService.totalNotesHit(user)/user.scores|length) %}
+                            <div class="avg-bar"
+                                 style="width:50%;">{{ avg2|number_format(0,'.',',') }}</div>
+                            <div class="avg-text">{{ "avg. per song"|trans }}</div>
+                            <div class="clearfix"></div>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <div class="label">{{ "Notes hit"|trans }}</div>
-                    <div class="total-bar">{{ statisticService.totalNotesHit(user)|number_format(0,'.',',') }}</div>
-                    <div class="avg">
-                        {% set avg2 = (statisticService.totalNotesHit(user)/user.scores|length) %}
-                        <div class="avg-bar"
-                             style="width:50%;">{{ avg2|number_format(0,'.',',') }}</div>
-                        <div class="avg-text">{{ "avg. per song"|trans }}</div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-            </div>
             {% endif %}
+
+        </div>
+        <div class="col-md-4 text-right">
+
         </div>
     </div>
 {% endblock %}

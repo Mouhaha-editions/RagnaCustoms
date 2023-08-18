@@ -1,7 +1,7 @@
 {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
 {% import "songs/macros/song.html.twig" as macro_song %}
-{% for score in level[type].entities %}
 
+{% for score in level[type].entities %}
     <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-warning"{% endif %}>
         <td class="text-left">{{ scoreService.leaderboardPositionWithOrdinalSuffix(score.user, score.songDifficulty, '-', type == 'scores') }}</td>
         <td>
@@ -17,9 +17,13 @@
         </td>
         <td>
             {% if (is_granted('ROLE_USER') and app.user == score.user) or is_granted('ROLE_MODERATOR') %}
-                <small><i data-toggle="modal" data-target="#ScatterView"
-                          class="fas fa-magnifying-glass scatter-open-score" style="font-size:10px;cursor: pointer"
-                          data-score="{{ score.id }}"></i></small>
+                <small>
+                    <i data-toggle="modal"
+                       data-target="#ScatterView"
+                       class="fas fa-magnifying-glass scatter-open-score"
+                       style="font-size:10px;cursor: pointer"
+                       data-score="{{ score.id }}"></i>
+                </small>
             {% endif %}
         </td>
     </tr>

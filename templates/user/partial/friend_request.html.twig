@@ -1,0 +1,36 @@
+{% if is_granted('ROLE_USER') and (app.user != user and app.user.isFriendWith(user) != constant('\\App\\Entity\\Friend::STATE_REFUSED')) -%}
+    {%- if app.user.isFriendWith(user) == constant('\\App\\Entity\\Friend::STATE_NOT_REQUESTED') -%}
+        <a href="#"
+           data-url="{{ url('app_friend_request',{id:user.id}) }}"
+           data-replace-selector=".friend-request"
+           data-toggle="tooltip"
+           title="Send friend request"
+           data-success-action="replace-html"
+           data-no-swup="true"
+           class="btn btn-info btn-sm ajax-link">
+            <i class="fas fa-user-plus"></i>
+        </a>
+    {%- elseif app.user.isFriendWith(user) == constant('\\App\\Entity\\Friend::STATE_REQUESTED') -%}
+        <a href="#"
+           data-url="{{ url('app_friend_request_remove',{id:user.id}) }}"
+           data-toggle="tooltip"
+           data-replace-selector=".friend-request"
+           data-success-action="replace-html"
+           data-no-swup="true"
+           title="Remove friend request"
+           class="btn btn-danger ajax-link btn-sm">
+            <i class="fas fa-user-minus"></i>
+        </a>
+    {%- elseif app.user.isFriendWith(user) == constant('\\App\\Entity\\Friend::STATE_ACCEPTED') -%}
+        <a href="#"
+           data-url="{{ url('app_friend_request_remove',{id:user.id}) }}"
+           data-toggle="tooltip"
+           data-replace-selector=".friend-request"
+           data-success-action="replace-html"
+           data-no-swup="true"
+           title="Remove friend request"
+           class="btn btn-success ajax-link btn-sm">
+            <i class="fas fa-user-check"></i>
+        </a>
+    {%- endif -%}
+{%- endif %}
