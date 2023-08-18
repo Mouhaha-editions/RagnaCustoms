@@ -95,8 +95,8 @@ class WanadevApiController extends AbstractController
             $returnArray = explode('|', trim($request->query->get('platform'), '|'));
         }
 
-        foreach($returnArray AS $k=>$ret){
-            if(empty($ret)){
+        foreach ($returnArray as $k => $ret) {
+            if (empty($ret)) {
                 unset ($returnArray[$k]);
             }
         }
@@ -132,12 +132,29 @@ class WanadevApiController extends AbstractController
 
             return new JsonResponse(
                 [
-                    'rank' => $scoreService->getTheoricalRank($songDiff, $newScore->getScore(), $returnArray, $friendsOnly),
+                    'rank' => $scoreService->getTheoricalRank(
+                        $songDiff,
+                        $newScore->getScore(),
+                        $returnArray,
+                        $friendsOnly
+                    ),
                     'score' => $newScore->getScore(),
-                    'ranking' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr)
+                    'ranking' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr),
+                    'result' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr)
                 ],
                 200,
                 ['content-type' => 'application/json']
+            );
+        }
+
+        if ($friendsOnly) {
+            return new JsonResponse(
+                ['result' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr, $friendsOnly)],
+                200,
+                [
+                    'content-type' => 'application/json',
+                    'my-custom-key' => 'abcdefghijklmnop'
+                ]
             );
         }
 
