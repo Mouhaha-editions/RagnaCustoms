@@ -151,8 +151,7 @@ class WanadevApiController extends AbstractController
                     'rank' => $scoreService->getTheoricalRank(
                         $songDiff,
                         $newScore->getScore(),
-                        $returnArray,
-                        $friendsOnly
+                        $returnArray
                     ),
                     'score' => $newScore->getScore(),
                     'ranking' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr),
