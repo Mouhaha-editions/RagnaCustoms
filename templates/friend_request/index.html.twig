@@ -15,20 +15,31 @@
                 <h2>{{ "All your friends"|trans }}</h2>
                 <table class="table table table-sm table-striped table-condensed">
                     <thead>
-                    <tr>
-                        <th style="width:25px;"></th>
-                        <th>Friend</th>
-                    </tr>
+                        <tr>
+                            <th style="width:25px;"></th>
+                            <th>Friend</th>
+                            <th>Vr</th>
+                            <th>VoT</th>
+                        </tr>
                     </thead>
                     <tbody>
                     {% for friend in friends.entities %}
+                        {% set friendUser = friend.other(app.user) %}
                         <tr>
                             <td>
-                                <a href="{{ url('app_friend_request_refuse',{id:friend.id}) }}" data-toggle="tooltip" title="Remove friend" data-no-swup="true" class="text-danger" data-confirm="Are you sure ?"><i class="fas fa-times"></i></a>
+                                <a href="{{ url('app_friend_request_refuse',{id:friend.id}) }}" data-toggle="tooltip"
+                                   title="Remove friend" data-no-swup="true" class="text-danger"
+                                   data-confirm="Are you sure ?"><i class="fas fa-times"></i></a>
                             </td>
                             <td>
-                                <a href="{{ url("user_profile",{username:friend.other(app.user).username}) }}"
-                                   class="ml-1 text-level-9">{{ membershipService.displayUsername(friend.other(app.user))|raw }}</a>
+                                <a href="{{ url("user_profile",{username:friendUser.username}) }}"
+                                   class="ml-1 text-level-9">{{ membershipService.displayUsername(friendUser)|raw }}</a>
+                            </td>
+                            <td>
+                                {{scoreService.getOrdinalSuffix(scoreService.generalLeaderboardPosition(friendUser, null, true)) }}
+                            </td>
+                            <td>
+                                {{ scoreService.getOrdinalSuffix(scoreService.generalLeaderboardPosition(friendUser, null, false)) }}
                             </td>
                         </tr>
                     {% else %}
@@ -38,37 +49,43 @@
                     {% endfor %}
                     </tbody>
                 </table>
+                {% include 'widget/paginate.html.twig' with {pagination:friends} %}
+
             </div>
             <div class="col-4">
                 <h2>{{ "Friend requests"|trans }}</h2>
-                    <table class="table table-sm table-striped table-condensed">
-                        <thead>
+                <table class="table table-sm table-striped table-condensed">
+                    <thead>
+                    <tr>
+                        <th style="width:50px;"></th>
+                        <th>Friend</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for friend in app.user.waitingRequests %}
                         <tr>
-                            <th style="width:50px;"></th>
-                            <th>Friend</th>
+                            <td class="text-right">
+                                <a href="{{ url('app_friend_request_refuse',{id:friend.id}) }}" data-toggle="tooltip"
+                                   title="Refuse request" data-no-swup="true" class="text-danger"
+                                   data-confirm="Are you sure ?"><i class="fas fa-times"></i></a>
+                                <a href="{{ url('app_friend_request_accept',{id:friend.id}) }}" data-toggle="tooltip"
+                                   title="Accept request" data-no-swup="true" class="text-success"><i
+                                            class="fas fa-check"></i></a>
+                            </td>
+                            <td>
+                                <a href="{{ url("user_profile",{username:friend.other(app.user).username}) }}"
+                                   class="ml-1 text-level-9">{{ membershipService.displayUsername(friend.other(app.user))|raw }}</a>
+                            </td>
+
+
                         </tr>
-                        </thead>
-                        <tbody>
-                        {% for friend in app.user.waitingRequests %}
-                            <tr>
-                                <td class="text-right">
-                                    <a href="{{ url('app_friend_request_refuse',{id:friend.id}) }}" data-toggle="tooltip" title="Refuse request" data-no-swup="true" class="text-danger" data-confirm="Are you sure ?"><i class="fas fa-times"></i></a>
-                                    <a href="{{ url('app_friend_request_accept',{id:friend.id}) }}" data-toggle="tooltip" title="Accept request" data-no-swup="true" class="text-success"><i class="fas fa-check"></i></a>
-                                </td>
-                                <td>
-                                    <a href="{{ url("user_profile",{username:friend.other(app.user).username}) }}"
-                                       class="ml-1 text-level-9">{{ membershipService.displayUsername(friend.other(app.user))|raw }}</a>
-                                </td>
-
-
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="2">No waiting friend</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                    {% else %}
+                        <tr>
+                            <td colspan="2">No waiting friend</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

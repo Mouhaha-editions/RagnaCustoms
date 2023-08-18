@@ -92,7 +92,6 @@ class WanadevApiController extends AbstractController
 
         if(isset($data['query']) && isset($data['query']['queries'])){
             $friendsOnly = true;
-
             foreach($data['query']['queries'][0]['queries'] AS $query){
               $friendOfMine[] = $query['query']['value'];
             }
