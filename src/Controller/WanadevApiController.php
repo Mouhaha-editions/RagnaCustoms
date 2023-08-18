@@ -156,7 +156,7 @@ class WanadevApiController extends AbstractController
                     ),
                     'score' => $newScore->getScore(),
                     'ranking' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr),
-                    'result' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr)
+                    'results' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr)
                 ],
                 200,
                 ['content-type' => 'application/json']
@@ -165,7 +165,7 @@ class WanadevApiController extends AbstractController
 
         if ($friendsOnly) {
             return new JsonResponse(
-                ['result' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr, $friendsOnly, $friendOfMine)],
+                ['results' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr, $friendsOnly, $friendOfMine)],
                 200,
                 [
                     'content-type' => 'application/json',
