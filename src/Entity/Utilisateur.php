@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Enum\EEmail;
 use App\Enum\ENotification;
 use App\Repository\UtilisateurRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -159,7 +160,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $countApiAttempt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $lastApiAttempt = null;
+    private ?DateTimeInterface $lastApiAttempt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $auth_token = null;
@@ -175,6 +176,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: CustomEventParticipation::class, orphanRemoval: true)]
     private Collection $customEventParticipations;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Friend::class, orphanRemoval: true)]
+    private Collection $friendRequests;
+
+    #[ORM\OneToMany(mappedBy: 'friend', targetEntity: Friend::class, orphanRemoval: true)]
+    private Collection $friends;
 
     public function __construct()
     {
@@ -193,16 +200,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->notifications = new ArrayCollection();
         $this->customEvents = new ArrayCollection();
         $this->customEventParticipations = new ArrayCollection();
+        $this->friendRequests = new ArrayCollection();
+        $this->friends = new ArrayCollection();
     }
 
     public function __toString()
     {
         return $this->username;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     /**
@@ -274,7 +278,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getGravatar(): ?string
     {
         $size = 600;
-        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=" . urlencode("https://ragnacustoms.com/apps/runes.png") . "&s=" . $size;
+        return "https://www.gravatar.com/avatar/".md5(strtolower(trim($this->email)))."?d=".urlencode(
+                "https://ragnacustoms.com/apps/runes.png"
+            )."&s=".$size;
     }
 
     public function isVerified(): bool
@@ -470,6 +476,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->mailingNewSong;
     }
 
+    public function isMailingNewSong(): ?bool
+    {
+        return $this->mailingNewSong;
+    }
+
     public function setMailingNewSong(bool $mailingNewSong): self
     {
         $this->mailingNewSong = $mailingNewSong;
@@ -514,6 +525,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function getEnableEmailNotification(): ?bool
+    {
+        return $this->enableEmailNotification;
+    }
+
+    public function isEnableEmailNotification(): ?bool
     {
         return $this->enableEmailNotification;
     }
@@ -713,7 +729,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param SongRequest $songRequest
+     * @param  SongRequest  $songRequest
      * @return bool
      */
     public function getWantedToo(SongRequest $songRequest): bool
@@ -853,7 +869,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param mixed $discordUsername
+     * @param  mixed  $discordUsername
      */
     public function setDiscordUsername($discordUsername): void
     {
@@ -869,7 +885,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param mixed $discordId
+     * @param  mixed  $discordId
      */
     public function setDiscordId($discordId): void
     {
@@ -885,7 +901,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param mixed $discordEmail
+     * @param  mixed  $discordEmail
      */
     public function setDiscordEmail($discordEmail): void
     {
@@ -920,18 +936,22 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         if ($followers < 1000) {
             // Anything less than a million
             $n_format = number_format($followers);
-        } else if ($followers < 1000000 / 1000) {
-            // Anything less than a million
-            $n_format = number_format($followers, 1) . 'K';
-        } else if ($followers < 1000000000) {
-            // Anything less than a billion
-            $n_format = number_format($followers / 1000000, 1) . 'M';
         } else {
-            // At least a billion
-            $n_format = number_format($followers / 1000000000, 1) . 'B';
+            if ($followers < 1000000 / 1000) {
+                // Anything less than a million
+                $n_format = number_format($followers, 1).'K';
+            } else {
+                if ($followers < 1000000000) {
+                    // Anything less than a billion
+                    $n_format = number_format($followers / 1000000, 1).'M';
+                } else {
+                    // At least a billion
+                    $n_format = number_format($followers / 1000000000, 1).'B';
+                }
+            }
         }
 
-        return $n_format . " follower" . ($n_format > 1 ? "s" : "");
+        return $n_format." follower".($n_format > 1 ? "s" : "");
     }
 
     /**
@@ -1008,6 +1028,30 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         });
     }
 
+    public function hasNotificationPreference(ENotification $event)
+    {
+        return in_array($event, $this->getNotificationPreferences());
+    }
+
+    public function getNotificationPreferences()
+    {
+        return $this->getNotificationPreference() == null ? ENotification::cases() : unserialize(
+            $this->getNotificationPreference()
+        );
+    }
+
+    public function getNotificationPreference(): ?string
+    {
+        return $this->NotificationPreference;
+    }
+
+    public function setNotificationPreference(string $NotificationPreference): self
+    {
+        $this->NotificationPreference = $NotificationPreference;
+
+        return $this;
+    }
+
     public function addNotification(Notification $notification): self
     {
         if (!$this->notifications->contains($notification)) {
@@ -1045,9 +1089,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->notifications;
     }
 
-    public function getEmailPreference(): ?string
+    public function hasEmailPreference(ENotification $event)
     {
-        return $this->EmailPreference;
+        return in_array($event, $this->getEmailPreferences());
     }
 
     public function getEmailPreferences()
@@ -1055,38 +1099,16 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getEmailPreference() == null ? EEmail::cases() : unserialize($this->getEmailPreference());
     }
 
+    public function getEmailPreference(): ?string
+    {
+        return $this->EmailPreference;
+    }
+
     public function setEmailPreference(?string $EmailPreference): self
     {
         $this->EmailPreference = $EmailPreference;
 
         return $this;
-    }
-
-    public function getNotificationPreferences()
-    {
-        return $this->getNotificationPreference() == null ? ENotification::cases() : unserialize($this->getNotificationPreference());
-    }
-
-    public function getNotificationPreference(): ?string
-    {
-        return $this->NotificationPreference;
-    }
-
-    public function setNotificationPreference(string $NotificationPreference): self
-    {
-        $this->NotificationPreference = $NotificationPreference;
-
-        return $this;
-    }
-
-    public function hasEmailPreference(ENotification $event)
-    {
-        return in_array($event, $this->getEmailPreferences());
-    }
-
-    public function hasNotificationPreference(ENotification $event)
-    {
-        return in_array($event, $this->getNotificationPreferences());
     }
 
     public function getPatreonAccessToken(): ?string
@@ -1134,7 +1156,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param mixed $patreonData
+     * @param  mixed  $patreonData
      */
     public function setPatreonData($patreonData): self
     {
@@ -1151,7 +1173,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param mixed $usernameColor
+     * @param  mixed  $usernameColor
      * @return Utilisateur
      */
     public function setUsernameColor($usernameColor)
@@ -1187,7 +1209,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param mixed $twitchAccessToken
+     * @param  mixed  $twitchAccessToken
      * @return Utilisateur
      */
     public function setTwitchAccessToken($twitchAccessToken)
@@ -1205,7 +1227,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param mixed $twitchRefreshToken
+     * @param  mixed  $twitchRefreshToken
      * @return Utilisateur
      */
     public function setTwitchRefreshToken($twitchRefreshToken)
@@ -1223,7 +1245,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param mixed $twitchUser
+     * @param  mixed  $twitchUser
      * @return Utilisateur
      */
     public function setTwitchUser($twitchUser)
@@ -1241,18 +1263,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param mixed $twitchData
+     * @param  mixed  $twitchData
      * @return Utilisateur
      */
     public function setTwitchData($twitchData)
     {
         $this->twitchData = $twitchData;
         return $this;
-    }
-
-    public function isEnableEmailNotification(): ?bool
-    {
-        return $this->enableEmailNotification;
     }
 
     public function isIsMapper(): ?bool
@@ -1273,11 +1290,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function isIsVerified(): ?bool
     {
         return $this->isVerified;
-    }
-
-    public function isMailingNewSong(): ?bool
-    {
-        return $this->mailingNewSong;
     }
 
     /**
@@ -1322,12 +1334,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLastApiAttempt(): ?\DateTimeInterface
+    public function getLastApiAttempt(): ?DateTimeInterface
     {
         return $this->lastApiAttempt;
     }
 
-    public function setLastApiAttempt(?\DateTimeInterface $lastApiAttempt): self
+    public function setLastApiAttempt(?DateTimeInterface $lastApiAttempt): self
     {
         $this->lastApiAttempt = $lastApiAttempt;
 
@@ -1435,5 +1447,106 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function addFriendRequest(Friend $friendRequest): static
+    {
+        if (!$this->friendRequests->contains($friendRequest)) {
+            $this->friendRequests->add($friendRequest);
+            $friendRequest->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriendRequest(Friend $friendRequest): static
+    {
+        if ($this->friendRequests->removeElement($friendRequest)) {
+            // set the owning side to null (unless already changed)
+            if ($friendRequest->getUser() === $this) {
+                $friendRequest->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Friend>|Friend[]
+     */
+    public function getFriends(): Collection
+    {
+        return $this->friends;
+    }
+
+    public function addFriend(Friend $friend): static
+    {
+        if (!$this->friends->contains($friend)) {
+            $this->friends->add($friend);
+            $friend->setFriend($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriend(Friend $friend): static
+    {
+        if ($this->friends->removeElement($friend)) {
+            // set the owning side to null (unless already changed)
+            if ($friend->getFriend() === $this) {
+                $friend->setFriend(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /** @return Collection<int, Friend>|Friend[] */
+    public function getWaitingRequests(): Collection
+    {
+        return $this->getFriends()->filter(function(Friend $friend){
+           return $friend->getState() === Friend::STATE_REQUESTED;
+        });
+
+    }
+
+    public function isFriendWith(Utilisateur $requestedUser)
+    {
+        $friendRequest = $this->getFriendRequests()
+            ->filter(
+                function (Friend $friend) use ($requestedUser) {
+                    return  $friend->getFriend()->getId() == $requestedUser->getId();
+                }
+            );
+
+        if ($friendRequest->count() >= 1){
+            return $friendRequest->first()->getState();
+        }
+
+        $friends = $this->getFriends()
+            ->filter(
+                function (Friend $friend) use ($requestedUser) {
+                    return $friend->getUser()->getId() == $requestedUser->getId();
+                }
+            );
+
+        if ($friends->count() >= 1){
+            return $friends->first()->getState();
+        }
+
+        return Friend::STATE_NOT_REQUESTED;
+    }
+
+    /**
+     * @return Collection<int, Friend>|Friend[]
+     */
+    public function getFriendRequests(): Collection
+    {
+        return $this->friendRequests;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 }
