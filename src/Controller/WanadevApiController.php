@@ -10,6 +10,7 @@ use App\Repository\SongDifficultyRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\RankingScoreService;
 use App\Service\ScoreService;
+use Psr\Log\LoggerInterface;
 use Sentry\State\Scope;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -86,13 +87,28 @@ class WanadevApiController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
+        $friendOfMine = [];
+        $plateforms = [];
+
+        if(isset($data['query']) && isset($data['query']['queries'])){
+            $friendsOnly = true;
+
+            foreach($data['query']['queries'][0]['queries'] AS $query){
+              $friendOfMine[] = $query['query']['value'];
+            }
+
+            foreach($data['query']['queries'][1]['queries'] AS $query){
+                $plateforms[] = $query['query']['value'];
+            }
+        }
+
         $plateform = $data['platform'] ?? $currentPlateform ?? 'Steam';
         $isVr = in_array($plateform, self::VR_PLATEFORM);
 
         if ($currentPlateform) {
-            $returnArray = [$currentPlateform, ... explode('|', trim($request->query->get('platform'), '|'))];
+            $returnArray = [$currentPlateform, ... explode('|', trim($request->query->get('platform'), '|')), ...$plateforms];
         } else {
-            $returnArray = explode('|', trim($request->query->get('platform'), '|'));
+            $returnArray = [...explode('|', trim($request->query->get('platform'), '|')), ...$plateforms];
         }
 
         foreach ($returnArray as $k => $ret) {
@@ -101,7 +117,7 @@ class WanadevApiController extends AbstractController
             }
         }
 
-        if ($request->isMethod('post')) {
+        if ($request->isMethod('post') && !$friendsOnly) {
             $newScore = $this->setNewScoreWithData($user, $songDiff, $data);
 
             if ($newScore->isRankable()) {
@@ -149,7 +165,7 @@ class WanadevApiController extends AbstractController
 
         if ($friendsOnly) {
             return new JsonResponse(
-                ['result' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr, $friendsOnly)],
+                ['result' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr, $friendsOnly, $friendOfMine)],
                 200,
                 [
                     'content-type' => 'application/json',

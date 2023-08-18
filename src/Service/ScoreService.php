@@ -173,7 +173,7 @@ class ScoreService
         $this->em->flush();
     }
 
-    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user, array $returnPlatforms = [], bool $isVr = true, bool $friendsOnly = false)
+    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user, array $returnPlatforms = [], bool $isVr = true, bool $friendsOnly = false, array $friendOfMine = [])
     {
         $qb = $this->em->getRepository(Score::class)
             ->createQueryBuilder('s')
