@@ -220,7 +220,7 @@ class ScoreService
 
         $both = $vr && $flat;
 
-        $place = $this->getLeaderboardPosition($user, $songDiff, '-', $both, $isVr);
+        $place = $this->getLeaderboardPosition($user, $songDiff, '-', $both, $isVr, $friendsOnly);
         $score = null;
 
         if ($place > 5) {
@@ -237,6 +237,11 @@ class ScoreService
             if (!empty($returnPlatforms)) {
                 $qb->andWhere('s.plateform IN (:vr)')
                     ->setParameter('vr', $returnPlatforms);
+            }
+
+            if($friendsOnly){
+                $qb->andWhere('s.user IN (:friends)')
+                    ->setParameter('friends', $friends);
             }
 
             $score = $qb->getQuery()->getOneOrNullResult();
@@ -276,7 +281,8 @@ class ScoreService
         SongDifficulty $songDifficulty,
         $default = '-',
         bool $both = true,
-        bool $isVr = true
+        bool $isVr = true,
+        bool $friendsOnly = false,
     ) {
         $qb = $this->em
             ->getRepository(Score::class)
@@ -296,6 +302,17 @@ class ScoreService
                     ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
             }
 
+        if($friendsOnly){
+            $friends = [$user];
+            $friendRequests = $this->friendRepository->getMine($user);;
+
+            foreach ($friendRequests as $friendRequest) {
+                $friends[] = $friendRequest->getOther($user);
+            }
+
+            $qb->andWhere('s.user IN (:friends)')
+                ->setParameter('friends', $friends);
+        }
 
         $mine = $qb->getQuery()->getOneOrNullResult();
 
@@ -324,6 +341,11 @@ class ScoreService
                     ->setParameter('vr', WanadevApiController::VR_PLATEFORM)
                 ;
             }
+        }
+
+        if($friendsOnly){
+            $qb->andWhere('s.user IN (:friends)')
+                ->setParameter('friends', $friends);
         }
 
         return count($qb->getQuery()->getResult()) + 1;
