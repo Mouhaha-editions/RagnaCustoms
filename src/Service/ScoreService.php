@@ -173,8 +173,14 @@ class ScoreService
         $this->em->flush();
     }
 
-    public function getTop5Wanadev(SongDifficulty $songDiff, UserInterface $user, array $returnPlatforms = [], bool $isVr = true, bool $friendsOnly = false, array $friendOfMine = [])
-    {
+    public function getTop5Wanadev(
+        SongDifficulty $songDiff,
+        UserInterface $user,
+        array $returnPlatforms = [],
+        bool $isVr = true,
+        bool $friendsOnly = false,
+        array $friendsRagnarock = []
+    ) {
         $qb = $this->em->getRepository(Score::class)
             ->createQueryBuilder('s')
             ->where('s.songDifficulty = :diff')
@@ -188,15 +194,21 @@ class ScoreService
                 ->setParameter('vr', $returnPlatforms);
         }
 
-        if($friendsOnly){
+        if ($friendsOnly) {
             $friends = [$user];
-            $friendRequests = $this->friendRepository->getMine($user);;
+            $friendRequests = $this->friendRepository->getMine($user);
 
             foreach ($friendRequests as $friendRequest) {
                 $friends[] = $friendRequest->getOther($user);
             }
 
-            $qb->andWhere('s.user IN (:friends)')
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    's.user IN (:friends)',
+                    's.userRagnarock IN (:friends_ragnarock)',
+                )
+            )
+                ->setParameter('friends_ragnarock', $friendsRagnarock)
                 ->setParameter('friends', $friends);
         }
 
@@ -220,7 +232,7 @@ class ScoreService
 
         $both = $vr && $flat;
 
-        $place = $this->getLeaderboardPosition($user, $songDiff, '-', $both, $isVr, $friendsOnly);
+        $place = $this->getLeaderboardPosition($user, $songDiff, '-', $both, $isVr, $friendsOnly, $friendsRagnarock);
         $score = null;
 
         if ($place > 5) {
@@ -239,13 +251,19 @@ class ScoreService
                     ->setParameter('vr', $returnPlatforms);
             }
 
-            if($friendsOnly){
-                $qb->andWhere('s.user IN (:friends)')
+            if ($friendsOnly) {
+                $qb->andWhere(
+                    $qb->expr()->orX(
+                        's.user IN (:friends)',
+                        's.userRagnarock IN (:friends_ragnarock)',
+                    )
+                )
+                    ->setParameter('friends_ragnarock', $friendsRagnarock)
                     ->setParameter('friends', $friends);
             }
 
             $score = $qb->getQuery()->getOneOrNullResult();
-            if($score != null) {
+            if ($score != null) {
                 $results[] = $this->getFormattedRank($score, $place);
             }
         }
@@ -283,6 +301,7 @@ class ScoreService
         bool $both = true,
         bool $isVr = true,
         bool $friendsOnly = false,
+        array $friendsRagnarock = [],
     ) {
         $qb = $this->em
             ->getRepository(Score::class)
@@ -294,23 +313,29 @@ class ScoreService
             ->orderBy('s.score', 'DESC');
 
 
-            if ($isVr) {
-                $qb->andWhere('s.plateform IN (:vr)')
-                    ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
-            } else {
-                $qb->andWhere('s.plateform NOT IN (:vr)')
-                    ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
-            }
+        if ($isVr) {
+            $qb->andWhere('s.plateform IN (:vr)')
+                ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+        } else {
+            $qb->andWhere('s.plateform NOT IN (:vr)')
+                ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+        }
 
-        if($friendsOnly){
+        if ($friendsOnly) {
             $friends = [$user];
-            $friendRequests = $this->friendRepository->getMine($user);;
+            $friendRequests = $this->friendRepository->getMine($user);
 
             foreach ($friendRequests as $friendRequest) {
                 $friends[] = $friendRequest->getOther($user);
             }
 
-            $qb->andWhere('s.user IN (:friends)')
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    's.user IN (:friends)',
+                    's.userRagnarock IN (:friends_ragnarock)',
+                )
+            )
+                ->setParameter('friends_ragnarock', $friendsRagnarock)
                 ->setParameter('friends', $friends);
         }
 
@@ -334,17 +359,21 @@ class ScoreService
         if (!$both) {
             if ($isVr) {
                 $qb->andWhere('s.plateform IN (:vr)')
-                    ->setParameter('vr', WanadevApiController::VR_PLATEFORM)
-                ;
+                    ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
             } else {
                 $qb->andWhere('s.plateform NOT IN (:vr)')
-                    ->setParameter('vr', WanadevApiController::VR_PLATEFORM)
-                ;
+                    ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
             }
         }
 
-        if($friendsOnly){
-            $qb->andWhere('s.user IN (:friends)')
+        if ($friendsOnly) {
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    's.user IN (:friends)',
+                    's.userRagnarock IN (:friends_ragnarock)',
+                )
+            )
+                ->setParameter('friends_ragnarock', $friendsRagnarock)
                 ->setParameter('friends', $friends);
         }
 
@@ -357,7 +386,7 @@ class ScoreService
         $default = '-',
         bool $isVr = true
     ) {
-        return $this->getOrdinalSuffix($this->getLeaderboardPosition($user, $songDifficulty, $default,false, $isVr));
+        return $this->getOrdinalSuffix($this->getLeaderboardPosition($user, $songDifficulty, $default, false, $isVr));
     }
 
     function getOrdinalSuffix($number)
