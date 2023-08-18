@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\FriendRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: FriendRepository::class)]
 class Friend
@@ -62,7 +63,7 @@ class Friend
         return $this;
     }
 
-    public function getOther(Utilisateur $user)
+    public function getOther(UserInterface $user)
     {
         return $this->getUser() === $user ? $this->getFriend() : $this->getUser();
     }

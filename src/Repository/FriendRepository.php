@@ -5,9 +5,11 @@ namespace App\Repository;
 use App\Entity\Friend;
 use App\Entity\Notification;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Friend>
@@ -46,5 +48,23 @@ class FriendRepository extends ServiceEntityRepository
         if ($flush) {
             $this->_em->flush();
         }
+    }
+
+    /**
+     * @return Friend[]
+     */
+    public function getMine(?UserInterface $user): array
+    {
+        $qb = $this->createQueryBuilder('f')
+        ->leftJoin('f.user', 'user')
+        ->leftJoin('f.friend', 'friend')
+        ->andWhere('f.state = :accepted')
+        ->setParameter('accepted', Friend::STATE_ACCEPTED);
+        $qb
+            ->andWhere($qb->expr()->orX('user.id = :user', 'friend.id  = :user'))
+            ->setParameter('user', $user)
+            ->orderBy('IF(user.id = :user, friend.username, user.username)', 'ASC');
+
+        return $qb->getQuery()->getResult();
     }
 }

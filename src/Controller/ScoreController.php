@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Country;
 use App\Entity\Song;
+use App\Repository\FriendRepository;
 use App\Repository\RankedScoresRepository;
 use App\Service\ScoreService;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -91,7 +92,8 @@ class ScoreController extends AbstractController
         Request $request,
         PaginationService $pagination,
         ScoreService $scoreService,
-        RankedScoresRepository $rankedScoresRepository
+        RankedScoresRepository $rankedScoresRepository,
+        FriendRepository $friendRepository
     ): Response {
         if ($request->get('findme', null)) {
             $score = $scoreService->getGeneralLeaderboardPosition($this->getUser());
@@ -106,14 +108,27 @@ class ScoreController extends AbstractController
             }
         }
 
+        $friends = [$this->getUser()];
+        $friendRequests = $friendRepository->getMine($this->getUser());
+
+        foreach ($friendRequests as $friendRequest) {
+            $friends[] = $friendRequest->getOther($this->getUser());
+        }
+
         $qb = $rankedScoresRepository->createQueryBuilder('rs')
             ->where('rs.plateform = :vr')
             ->setParameter("vr", 'vr')
             ->orderBy("rs.totalPPScore", "DESC");
+
+        if ($request->query->get('only_friend_of_mine')) {
+            $qb->andWhere('rs.user IN (:friends)')
+                ->setParameter('friends', $friends);
+        }
+
         $scores = $pagination->setDefaults(25)->process($qb, $request);
 
         if ($request->get('findme_flat', null)) {
-            $scoreFlat = $scoreService->getGeneralLeaderboardPosition($this->getUser(), null,false);
+            $scoreFlat = $scoreService->getGeneralLeaderboardPosition($this->getUser(), null, false);
             if ($scoreFlat == null) {
                 $this->addFlash("danger", "No score found");
                 return $this->redirectToRoute("score_global_ranking");
@@ -129,8 +144,13 @@ class ScoreController extends AbstractController
             ->where('rs.plateform = :flat')
             ->setParameter('flat', 'flat')
             ->orderBy('rs.totalPPScore', 'DESC');
-        $scoresFlat = $pagination->setDefaults(25)->process($qb, $request);
 
+        if ($request->query->get('only_friend_of_mine')) {
+            $qb->andWhere('rs.user IN (:friends)')
+                ->setParameter('friends', $friends);
+        }
+
+        $scoresFlat = $pagination->setDefaults(25)->process($qb, $request);
 
         return $this->render('score/global_ranking.html.twig', [
             'scores' => $scores,
