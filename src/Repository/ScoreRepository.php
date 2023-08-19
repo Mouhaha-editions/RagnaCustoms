@@ -30,7 +30,10 @@ class ScoreRepository extends ServiceEntityRepository
      */
     public function add(Score $entity, bool $flush = true): void
     {
-        $this->_em->persist($entity);
+        if (!$entity->getId()) {
+            $this->_em->persist($entity);
+        }
+
         if ($flush) {
             $this->_em->flush();
         }

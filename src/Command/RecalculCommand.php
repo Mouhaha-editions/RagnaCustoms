@@ -6,7 +6,9 @@ namespace App\Command;
 
 use App\Entity\RankedScores;
 use App\Entity\Score;
+use App\Entity\Utilisateur;
 use App\Repository\RankedScoresRepository;
+use App\Repository\ScoreRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\RankingScoreService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,6 +25,7 @@ class RecalculCommand extends Command
     public function __construct(
         private EntityManagerInterface $entityManager,
         private RankingScoreService $rankingScoreService,
+        private ScoreRepository $scoreRepository,
         private RankedScoresRepository $rankedScoresRepository,
         private UtilisateurRepository $utilisateurRepository
     ) {
@@ -44,46 +47,35 @@ class RecalculCommand extends Command
         $user_id = $input->getOption('user-id');
         $plateform = $input->getOption('plateform') ?? 'vr';
 
+        $qb = $this->utilisateurRepository
+            ->createQueryBuilder('u')
+            ->leftJoin('u.scores','score')
+            ->andWhere('score.id IS NOT NULL');
+
         if ($username) {
-            $users = $this->utilisateurRepository->findBy(['username' => $username]);
+            $qb->andWhere('u.username = :username')
+            ->setParameter('username',$username);
         } elseif ($user_id) {
-            $users = $this->utilisateurRepository->findBy(['id' => $user_id]);
-        } else {
-            $users = $this->utilisateurRepository->findAll();
+            $qb->andWhere('u.id = :id')
+                ->setParameter('id',$user_id);
         }
+
+        $users = $qb->getQuery()->getResult();
+
         $cUsers = count($users);
-$section1 = $output->section();
-$section2 = $output->section();
-        $userProgress = new ProgressBar($section1, $cUsers);
-        $j = 0;
-        $cUsers = count($users);
+        $section1 = $output->section();
+        $section2 = $output->section();
+        $userProgress = new ProgressBar($section1, $cUsers,1/100);
+        /**
+         * @var Utilisateur $user
+         */
+        //39209
         foreach ($users as $k=>$user) {
-            $j++;
-            $scores = $user->getScores()->filter(function (Score $score) use($plateform) {
-                return $score->isRankable() && (($plateform == 'vr' && $score->isVR()) || ($plateform == 'flat' && !$score->isVR())) && $score->getPlateform() != null;
-            });
-            /** @var Score $score */
-            $i = 0;
-
-            if($scores->count() == 0){
-                unset($users[$k]);
-                continue;
-            }
-            $scoreProgress = new ProgressBar($section2, $scores->count());
-
-            foreach ($scores as $score) {
-                $i++;
-                $this->rankingScoreService->calculateRawPP($score);
-                $scoreProgress->advance();
-            }
-            $this->entityManager->flush();
             $this->rankingScoreService->calculateTotalPondPPScore($user, $plateform == 'vr');
-            $scoreProgress->finish();
-
             unset($users[$k]);
             $userProgress->advance();
-
         }
+
         $userProgress->finish();
 
         return Command::SUCCESS;

@@ -9,18 +9,17 @@ use App\Entity\Song;
 use App\Entity\Utilisateur;
 use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RankingScoreService
 {
-
-
-    private RankedScoresRepository $rankedScoresRepository;
-    private ScoreRepository $scoreRepository;
-
-    public function __construct(ScoreRepository $scoreRepository, RankedScoresRepository $rankedScoresRepository)
+    public function __construct(
+        private ScoreRepository $scoreRepository,
+        private EntityManagerInterface $entityManager,
+        private RankedScoresRepository $rankedScoresRepository,
+    )
     {
-        $this->scoreRepository = $scoreRepository;
-        $this->rankedScoresRepository = $rankedScoresRepository;
+
     }
 
     public function calculateForSong(Song $song)
@@ -90,13 +89,16 @@ class RankingScoreService
 
         $scores = $qb->getQuery()->getResult();
 
-        foreach ($scores as $score) {
-            $rawPPScore = $score->getRawPP();
+        foreach ($scores as $k => $score) {
+            $rawPPScore = $this->calculateRawPP($score);
             $pondPPScore = $rawPPScore * pow(0.965, $index);
             $totalPP = $totalPP + $pondPPScore;
             $score->setWeightedPP(round($pondPPScore, 2));
+            $this->scoreRepository->add($score);
+            unset($scores[$k]);
             $index++;
         }
+
 
         $totalPondPPScore = round($totalPP, 2);
         $this->saveRankedScore($user, $totalPondPPScore, $isVr);
@@ -119,6 +121,7 @@ class RankingScoreService
 
         $rankedScore->setTotalPPScore($totalPondPPScore);
         $this->rankedScoresRepository->add($rankedScore);
+        unset($rankedScore);
     }
 
     public function countRanked(Utilisateur $user, bool $isVr = true)
