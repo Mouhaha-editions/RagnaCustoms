@@ -89,10 +89,14 @@ class RankingScoreService
 
         $scores = $qb->getQuery()->getResult();
 
+        /**
+         * @var Score $score
+         */
         foreach ($scores as $k => $score) {
             $rawPPScore = $this->calculateRawPP($score);
             $pondPPScore = $rawPPScore * pow(0.965, $index);
             $totalPP = $totalPP + $pondPPScore;
+            $score->setRawPP($rawPPScore);
             $score->setWeightedPP(round($pondPPScore, 2));
             $this->scoreRepository->add($score);
             unset($scores[$k]);
