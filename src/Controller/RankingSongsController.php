@@ -68,8 +68,8 @@ class RankingSongsController extends AbstractController
 
             $this->addFlash('success', 'Songs ranked or unranked');
 
-            return $this->redirectToRoute('ranking_song');
         }
+            return $this->redirectToRoute('ranking_song');
     }
 
 
