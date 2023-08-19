@@ -56,11 +56,6 @@ class SongDifficulty
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $song;
 
-
-    #[Groups("read")]
-    #[ORM\Column(type: 'decimal', precision: 20, scale: 6, nullable: true)]
-    private $claw_difficulty;
-
     #[Groups("read")]
     #[ORM\Column(type: 'float', nullable: false)]
     private $theoricalMaxScore;
@@ -178,18 +173,6 @@ class SongDifficulty
     public function setNotePerSecond(?float $NotePerSecond): self
     {
         $this->NotePerSecond = $NotePerSecond;
-
-        return $this;
-    }
-
-    public function getClawDifficulty(): ?string
-    {
-        return $this->claw_difficulty;
-    }
-
-    public function setClawDifficulty($claw_difficulty): self
-    {
-        $this->claw_difficulty = $claw_difficulty;
 
         return $this;
     }
