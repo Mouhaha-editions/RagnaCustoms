@@ -17,9 +17,7 @@ class RankingScoreService
         private ScoreRepository $scoreRepository,
         private EntityManagerInterface $entityManager,
         private RankedScoresRepository $rankedScoresRepository,
-    )
-    {
-
+    ) {
     }
 
     public function calculateForSong(Song $song)
@@ -40,30 +38,25 @@ class RankingScoreService
 
     public function calculateRawPP(Score $score)
     {
-       $userScore = $score->getScore() / 100;
-       $duration = $score->getSongDifficulty()->getSong()->getApproximativeDuration();
-       $perfects = $score->getPercentageOfPerfects();
-       $notesCount = $score->getSongDifficulty()->getNotesCount();
-       $YellowCombos = $score->getComboYellow();
-       $blueCombos = $score->getComboBlue();
+        $duration = $score->getSongDifficulty()->getSong()->getApproximativeDuration();
+        $perfects = $score->getPercentageOfPerfects();
+        $notesCount = $score->getSongDifficulty()->getNotesCount();
+        $YellowCombos = $score->getComboYellow();
+        $blueCombos = $score->getComboBlue();
+        $combos = 2 * $YellowCombos + $blueCombos;
+        $songLevel = $score->getSongDifficulty()->getDifficultyRank()->getLevel();
+        // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
+        // it is ponderated by the song level
 
-       $combos = 2*$YellowCombos + $blueCombos;
+        $scoreSongLevel = $songLevel ** ($perfects / 170);
+        $scoreNoteCount = $notesCount ** ($perfects / 150);
+        $scoreCombos = ($combos * $duration) ** ($perfects / 150);
 
-       $songLevel = $score->getSongDifficulty()->getDifficultyRank()->getLevel();
-       $maxSongScore = $score->getSongDifficulty()->getTheoricalMaxScore();
-       // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
-       // it is ponderated by the song level
+        $rawPP = ((($scoreSongLevel * $scoreNoteCount) + $scoreCombos) / $duration) * 300;
 
-       $scoreCombos = ($combos*$duration)**($perfects/100);
-       $scoreSongLevel = $songLevel**($perfects/100);
-       $scoreNoteCount = $notesCount**($perfects/100);
+        $score->setRawPP($rawPP);
 
-       $rawPP = ((($scoreSongLevel * $scoreNoteCount) + $scoreCombos)/$duration)*20;
-
-
-       $score->setRawPP($rawPP);
-
-       return round($rawPP, 2);
+        return round($rawPP, 2);
     }
 
     public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true): bool
@@ -106,7 +99,7 @@ class RankingScoreService
 
         $totalPondPPScore = round($totalPP, 2);
         $this->saveRankedScore($user, $totalPondPPScore, $isVr);
-        
+
         return true;
     }
 
