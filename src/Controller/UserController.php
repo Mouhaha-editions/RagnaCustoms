@@ -307,9 +307,11 @@ class UserController extends AbstractController
             case 'score':
                 $qb->orderBy("s.rawPP", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
-            default:
             case 'date':
                 $qb->orderBy("s.createdAt", "DESC");
+                break;
+            default:
+                $qb->orderBy("s.rawPP", "desc");
                 break;
         }
 
