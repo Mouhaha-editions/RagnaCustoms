@@ -127,7 +127,7 @@ class Playlist
         return $this;
     }
 
-    public function isIsPublic(): ?bool
+    public function isPublic(): ?bool
     {
         return $this->isPublic;
     }

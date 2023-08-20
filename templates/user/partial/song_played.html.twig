@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-5 ">
+        <div class="col-md-8 ">
             <div class="username">
                 <h2>
                     {% if user.country is not null %}
@@ -58,30 +58,37 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="mini-box">
                         <div class="numeric">
                             <i class="fas fa-vr-cardboard" style="font-size:14px;"></i>
                             #{{ scoreService.generalLeaderboardPosition(user, null, true)??" -" }}
+                        </div>
+                        <div class="text">{{ "VR rank"|trans }}</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mini-box">
+                        <div class="numeric">
                             <i class="fas fa-gamepad" style="font-size:14px;"></i>
                             #{{ scoreService.generalLeaderboardPosition(user, null, false)??" -" }}
                         </div>
-                        <div class="text">{{ "Global rank"|trans }}</div>
+                        <div class="text">{{ "VoT rank"|trans }}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="mini-box">
                         <div class="numeric">{{ user.scoreHistories|length }}</div>
                         <div class="text">{{ "Songs played"|trans }}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="mini-box">
                         <div class="numeric">{{ user.songs|length }}</div>
                         <div class="text">{{ "Songs mapped"|trans }}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="mini-box">
                         <div class="numeric">{{ user.votes|length }}</div>
                         <div class="text">{{ "Reviews send"|trans }}</div>
@@ -157,7 +164,51 @@
         </div>
         <div class="col-md-6">
             <h2>{{ "Public playlist"|trans }}</h2>
-            <p>soon</p>
+            <div class="row">
+            {% for playlist in user.publicPlaylists %}
+                <div class="col-md-6 mb-4">
+                    <div class="playlist">
+                        <div class="header">
+                            {% for song in playlist.songs %}
+                                {% if loop.index <= 6 %}
+                                    <img src="{{ song.cover }}" alt="{{ song.name }}" class="img-fluid"
+                                    >
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="header-overlay"></div>
+
+                        <div class="title">
+                            <h2>{{ playlist.label }}</h2>
+                        </div>
+                        <div class="count">{{ playlist.songs|length }}
+                        </div>
+
+                        <div class="resume">
+                            <table class="table table-condensed">
+                                <tbody>
+                                {% for song in playlist.songs %}
+                                    <tr>
+                                        <td class="p-1">
+                                            {{ song.name }}
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td>No song</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="buttons btn-group">
+                            <a href="{{ url("playlist_show",{id:playlist.id}) }}" class="btn btn-success"><i class="fas fa-eye"></i></a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}

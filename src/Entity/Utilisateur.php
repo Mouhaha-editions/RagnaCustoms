@@ -580,14 +580,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Playlist[]
-     */
-    public function getPlaylists(): Collection
-    {
-        return $this->playlists;
-    }
-
     public function addPlaylist(Playlist $playlist): self
     {
         if (!$this->playlists->contains($playlist)) {
@@ -1471,14 +1463,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Friend>|Friend[]
-     */
-    public function getFriends(): Collection
-    {
-        return $this->friends;
-    }
-
     public function addFriend(Friend $friend): static
     {
         if (!$this->friends->contains($friend)) {
@@ -1504,10 +1488,17 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /** @return Collection<int, Friend>|Friend[] */
     public function getWaitingRequests(): Collection
     {
-        return $this->getFriends()->filter(function(Friend $friend){
-           return $friend->getState() === Friend::STATE_REQUESTED;
+        return $this->getFriends()->filter(function (Friend $friend) {
+            return $friend->getState() === Friend::STATE_REQUESTED;
         });
+    }
 
+    /**
+     * @return Collection<int, Friend>|Friend[]
+     */
+    public function getFriends(): Collection
+    {
+        return $this->friends;
     }
 
     public function isFriendWith(Utilisateur $requestedUser)
@@ -1515,11 +1506,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $friendRequest = $this->getFriendRequests()
             ->filter(
                 function (Friend $friend) use ($requestedUser) {
-                    return  $friend->getFriend()->getId() == $requestedUser->getId();
+                    return $friend->getFriend()->getId() == $requestedUser->getId();
                 }
             );
 
-        if ($friendRequest->count() >= 1){
+        if ($friendRequest->count() >= 1) {
             return $friendRequest->first()->getState();
         }
 
@@ -1530,7 +1521,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 }
             );
 
-        if ($friends->count() >= 1){
+        if ($friends->count() >= 1) {
             return $friends->first()->getState();
         }
 
@@ -1548,5 +1539,20 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPublicPlaylists()
+    {
+        return $this->getPlaylists()->filter(function (Playlist $playlist) {
+            return $playlist->isPublic();
+        });
+    }
+
+    /**
+     * @return Collection|Playlist[]
+     */
+    public function getPlaylists(): Collection
+    {
+        return $this->playlists;
     }
 }
