@@ -172,7 +172,7 @@ class RankingScoreService
                 ->andWhere('sd.difficultyRank = :sameRank')
                 ->setParameter('sameRank', $songDifficulty->getDifficultyRank())
                 ->orderBy('s.updatedAt', 'desc')
-                ->setFirstResult(0)->setMaxResults(50)
+                ->setFirstResult(0)->setMaxResults(10)
                 ->getQuery()->getResult();
 
             if ($scores) {
