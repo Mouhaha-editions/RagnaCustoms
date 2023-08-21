@@ -447,3 +447,11 @@ textarea{
     right: 25px;
   }
 }
+
+.one-line{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
+  overflow: hidden
+}

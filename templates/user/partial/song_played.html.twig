@@ -34,7 +34,7 @@
                                 alt="{{ user.country }}"
                                 title="{{ user.country }}">
                     {% endif %}
-                    {{ membershipService.displayUsername(user)|raw }}
+                    {{ membershipService.displayUsername(user, false)|raw }}
                 </h2>
             </div>
             <div class="tags">
@@ -140,7 +140,7 @@
             {% import "widget/order_link.html.twig" as macro_order %}
             <table class="table songs recently-played">
                 <tr>
-                    <th>{{ "Song title"|trans }}</th>
+                    <th  style="width:250px;">{{ "Song title"|trans }}</th>
                     <th class="">{{ "Difficulty"|trans }}</th>
                     <th class=""></th>
                     <th class="">{{ "Distance"|trans }}</th>

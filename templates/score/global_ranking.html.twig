@@ -39,7 +39,7 @@
                                 {% endif %}
                                 {% if score.user.isPublic %}
                                     <a href="{{ url("user_profile",{username:score.user.username}) }}"
-                                       class="ml-1 text-level-9">{{ membershipService.displayUsername(score.user)|raw }}</a>
+                                       class="ml-1 text-level-9">{{ membershipService.displayUsername(score.user, false)|raw }}</a>
                                 {% else %}
                                     &nbsp;{{ score.user.username }}
                                 {% endif %}
@@ -89,7 +89,7 @@
                                 {% endif %}
                                 {% if score.user.isPublic %}
                                     <a href="{{ url("user_profile",{username:score.user.username}) }}"
-                                       class="ml-1 text-level-9">{{ membershipService.displayUsername(score.user)|raw }}</a>
+                                       class="ml-1 text-level-9">{{ membershipService.displayUsername(score.user, false)|raw }}</a>
                                 {% else %}
                                     &nbsp;{{ score.user.username }}
                                 {% endif %}

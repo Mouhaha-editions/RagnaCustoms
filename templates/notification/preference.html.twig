@@ -3,12 +3,12 @@
 {% block title %}RagnaCustoms.com, Custom song library{% endblock %}
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 {% block body %}
-    <div {{ stimulus_controller('notifications') }} class="container">
+    <div {{ stimulus_controller('notifications') }} class="container-fluid">
         <div class="row mt-3">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 {% include 'user/partial/_left_part_user.html.twig' %}
             </div>
-            <div class="col-md-9 text-left">
+            <div class="col-md-10 text-left">
 
         {{ form_start(form) }}
         <div id="song-list" class="row">

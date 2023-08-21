@@ -5,13 +5,13 @@
     {{ parent() }}
 {% endblock %}
 {% block body %}
-    <div class="container">
+    <div class="container-fluid">
 
         <div class="row mt-3">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 {% include 'user/partial/_left_part_user.html.twig' %}
             </div>
-            <div class="col-5">
+            <div class="col-6">
                 <h2>{{ "All your friends"|trans }}</h2>
                 <table class="table table table-sm table-striped table-condensed">
                     <thead>
@@ -33,7 +33,7 @@
                             </td>
                             <td>
                                 <a href="{{ url("user_profile",{username:friendUser.username}) }}"
-                                   class="ml-1 text-level-9">{{ membershipService.displayUsername(friendUser)|raw }}</a>
+                                   class="ml-1 text-level-9">{{ membershipService.displayUsername(friendUser, false)|raw }}</a>
                             </td>
                             <td>
                                 {{scoreService.getOrdinalSuffix(scoreService.generalLeaderboardPosition(friendUser, null, true)) }}
@@ -74,7 +74,7 @@
                             </td>
                             <td>
                                 <a href="{{ url("user_profile",{username:friend.other(app.user).username}) }}"
-                                   class="ml-1 text-level-9">{{ membershipService.displayUsername(friend.other(app.user))|raw }}</a>
+                                   class="ml-1 text-level-9">{{ membershipService.displayUsername(friend.other(app.user), false)|raw }}</a>
                             </td>
 
 

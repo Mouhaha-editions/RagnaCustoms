@@ -43,7 +43,7 @@
     </td>
     <td>
         <div class="mapper">
-            <a href="{{ url('mapper_profile', {username:song.user.username}) }}">{{ membershipService.displayMappername(song.user)|raw }}</a>
+            <a href="{{ url('mapper_profile', {username:song.user.username}) }}">{{ membershipService.displayMappername(song.user, false)|raw }}</a>
         </div>
     </td>
     <td class="small-col  pt-2 pb-2">{% include 'songs/partial/downupvote.html.twig' with {song:song} %}</td>

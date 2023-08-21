@@ -33,7 +33,7 @@
             </td>
             <td>
                 <div class="mapper"><a
-                            href="{{ url('mapper_profile', {username:song.user.username}) }}">{{ membershipService.displayMappername(song.user)|raw }}</a>
+                            href="{{ url('mapper_profile', {username:song.user.username}) }}">{{ membershipService.displayMappername(song.user, false)|raw }}</a>
                 </div>
                 <div class="level-list">
                     {% for diff in song.songDifficulties %}

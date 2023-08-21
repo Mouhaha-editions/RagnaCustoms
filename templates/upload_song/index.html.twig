@@ -7,12 +7,12 @@
     {% endblock %}
 
 {% block body %}
-    <div {{ stimulus_controller('song-upload') }}  class="container">
+    <div {{ stimulus_controller('song-upload') }}  class="container-fluid">
         <div id="song-list" class="row mt-3">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 {% include 'user/partial/_left_part_user.html.twig' %}
             </div>
-            <div class="col-md-7">
+            <div class="col-md-8">
                 <h2 class="">
                     {{ "My uploads"|trans }}
                 </h2>

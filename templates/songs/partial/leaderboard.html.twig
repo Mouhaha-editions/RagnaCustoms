@@ -6,7 +6,7 @@
         <td class="text-left">{{ scoreService.leaderboardPositionWithOrdinalSuffix(score.user, score.songDifficulty, '-', type == 'scores') }}</td>
         <td>
             <a href="{{ url("user_profile",{username:score.user.username}) }}"
-               class="ml-1 text-level-9">{{ membershipService.displayUsername(score.user)|raw }}</a>
+               class="ml-1 text-level-9">{{ membershipService.displayUsername(score.user, false)|raw }}</a>
         </td>
         <td class="text-right">{{ score.scoreDisplay }}</td>
         <td class="text-right">{{ score.rawPP|round(3) }}</td>

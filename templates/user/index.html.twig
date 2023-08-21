@@ -5,14 +5,14 @@
 {% block body %}
     <div {{ stimulus_controller('user') }} {{ stimulus_target('user', 'background') }}>
         <div class="darker">
-            <div class="container">
+            <div class="container-fluid">
                 {{ form_start(form) }}
                 <div class="row mt-3">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                      {% include 'user/partial/_left_part_user.html.twig' %}
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-5">
 
                         <div class="{% if not is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %}"><i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Username color
                             : {{ form_widget(form.usernameColor) }}

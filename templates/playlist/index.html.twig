@@ -5,13 +5,13 @@
     {{ parent() }}
 {% endblock %}
 {% block body %}
-    <div class="container">
+    <div class="container-fluid">
 
         <div class="row mt-3">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 {% include 'user/partial/_left_part_user.html.twig' %}
             </div>
-            <div class="col-9">
+            <div class="col-10">
                 <h2 >{{ "All your playlists"|trans }}</h2>
                 <div class="row">
             {% for playlist in playlists %}
