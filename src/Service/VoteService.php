@@ -3,8 +3,8 @@
 namespace App\Service;
 
 use App\Entity\Song;
-use App\Entity\Vote;
 use App\Entity\Utilisateur;
+use App\Entity\Vote;
 use App\Entity\VoteCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -38,7 +38,8 @@ class VoteService
     private function getMoyenne(Vote $vote)
     {
         if ($vote->getFlow() > 0) {
-            return ($vote->getFlow() + $vote->getLevelQuality() + $vote->getFunFactor() + $vote->getRhythm() + $vote->getReadability() + $vote->getPatternQuality()) / 6;
+            return ($vote->getFlow() + $vote->getLevelQuality() + $vote->getFunFactor() + $vote->getRhythm(
+                    ) + $vote->getReadability() + $vote->getPatternQuality()) / 6;
         }
         return ($vote->getFunFactor() + $vote->getRhythm() + $vote->getReadability() + $vote->getPatternQuality()) / 4;
     }
@@ -51,12 +52,11 @@ class VoteService
 
     /**
      * add one upvote to the song, a remove one down vote if needed
-     * @param Song $song
-     * @param UserInterface|null $user
+     * @param  Song  $song
+     * @param  UserInterface|null  $user
      */
     public function toggleUpVote(Song $song, ?UserInterface $user)
     {
-
         /**check if the user already voted this song (if he is in vote_counter table)*/
         $UserSongVoteCounter = $song->isVoteCounterBy($user);
 
@@ -132,10 +132,10 @@ class VoteService
         $this->em->flush();
     }
 
-    public function canUpDownVote(Song $song, UserInterface $user): bool
+    public function canUpDownVote(Song $song, Utilisateur $user): bool
     {
-        foreach($song->getSongDifficulties() AS $diff){
-            if($user->hasPlayed($diff)){
+        foreach ($song->getSongDifficulties() as $diff) {
+            if ($user->hasPlayed($diff)) {
                 return true;
             }
         }
@@ -145,8 +145,8 @@ class VoteService
 
     public function canReview(Song $song, UserInterface $user): bool
     {
-        foreach($song->getSongDifficulties() AS $diff){
-            if($user->hasPlayed($diff)){
+        foreach ($song->getSongDifficulties() as $diff) {
+            if ($user->hasPlayed($diff)) {
                 return true;
             }
         }
