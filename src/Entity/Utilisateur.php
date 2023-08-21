@@ -852,6 +852,16 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return false;
     }
 
+    public function playedPlateform(SongDifficulty $difficulty, bool $vr = true)
+    {
+        foreach ($this->getScores() as $score) {
+            if ($score->getSongDifficulty() === $difficulty && $score->isVR() == $vr) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @return mixed
      */
@@ -1554,5 +1564,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPlaylists(): Collection
     {
         return $this->playlists;
+    }
+
+    public function scorePlateform(SongDifficulty $songDifficulty, mixed $isVR)
+    {
+        return $this->getScores()->filter(function (Score $score) use ($songDifficulty, $isVR) {
+            return $score->getSongDifficulty() === $songDifficulty && $score->isVR() == $isVR;
+        })->first();
     }
 }

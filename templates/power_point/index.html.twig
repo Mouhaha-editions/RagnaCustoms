@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+                        {% import "songs/macros/song.html.twig" as song_macro %}
+
+{% block title %}PowerPoint{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col-md-2">
+                {% include 'user/partial/_left_part_user.html.twig' %}
+            </div>
+            <div class="col-md-5">
+                {% if app.request.get('vr') is null and app.request.get('vot') is null %}
+                    <a class="btn btn-info" href="?vr=1">Look for VR</a> or
+                    <a class="btn btn-info" href="?vot=1">Look for VoT</a>
+
+                {% else %}
+                    <h2>Ranked difficulty played</h2>
+                    <small>Ordinated alphabetically</small>
+                    <table class="table songs recently-played table-sm">
+                        <tr>
+                            <th>
+                                Title
+                            </th>
+                            <th class="">{{ "Difficulty"|trans }}</th>
+                            <th class="">
+                                Pp
+                            </th>
+                            <th class="">{{ "Stats"|trans }}</th>
+                        </tr>
+                        {% for diff in played %}
+                            {% set song = diff.song %}
+                            {% set score = scoreService.getScore(diff, user, app.request.get('vr',false)) %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex ">
+                                        <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}"
+                                                                                                 alt="cover"/></a>
+                                        <div class="song pl-1">
+                                            <div class="title one-line"><a
+                                                        href="{{ url('song_detail',{slug:song.slug}) }}">{{ song|raw }}</a>
+                                            </div>
+                                            <div class="author">
+                                                <a href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">
+                                                    {{ song.authorName }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="level-list">
+                                        <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                                             style="background-color:#{{ diff.difficultyRank.color }};">
+                                            {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip"
+                                                                     title="Ranked"
+                                                                     style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                                            <span>{{ diff.difficultyRank.level }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    {{ score.rawPP }}
+                                </td>
+
+                                <td>
+                                    {{ song_macro.statsPP(score) }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+            </div>
+            <div class="col-md-5">
+                {% if app.request.get('vr') or app.request.get('vot') %}
+                    <h2>Ranked difficulty not played</h2>
+                    <small>PP are estimated with the ass, need work on it</small>
+                    <table class="table songs recently-played table-sm">
+                        <tr>
+                            <th>
+                                Title
+                            </th>
+                            <th class="">{{ "Difficulty"|trans }}</th>
+                            <th class="">
+                                Pp
+                            </th>
+                            <th class="">{{ "Stats"|trans }}</th>
+                        </tr>
+                        {% for diff in notPlayed %}
+                            {% set song = diff.song %}
+                            {% set score = rankingScoreService.imagine(diff, user, app.request.get('vr',false)) %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex ">
+                                        <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}"
+                                                                                                 alt="cover"/></a>
+                                        <div class="song pl-1">
+                                            <div class="title one-line"><a
+                                                        href="{{ url('song_detail',{slug:song.slug}) }}">{{ song|raw }}</a>
+                                            </div>
+                                            <div class="author">
+                                                <a href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">
+                                                    {{ song.authorName }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="level-list">
+                                        <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                                             style="background-color:#{{ diff.difficultyRank.color }};">
+                                            {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip"
+                                                                     title="Ranked"
+                                                                     style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                                            <span>{{ diff.difficultyRank.level }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ score.rawPP }}
+                                </td>
+                                <td>
+                                    {{ song_macro.statsPP(score) }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

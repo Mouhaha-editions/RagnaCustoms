@@ -472,5 +472,10 @@ class ScoreService
             $this->scoreRepository->add($score);
         }
     }
+
+    public function getScore(SongDifficulty $songDifficulty, Utilisateur $user, $isVR = false)
+    {
+        return $user->scorePlateform($songDifficulty, $isVR);
+    }
 }
 

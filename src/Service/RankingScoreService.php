@@ -6,16 +6,18 @@ use App\Controller\WanadevApiController;
 use App\Entity\RankedScores;
 use App\Entity\Score;
 use App\Entity\Song;
+use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
 use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use DateTime;
 
 class RankingScoreService
 {
+    private static $fakeStats = [];
+
     public function __construct(
         private ScoreRepository $scoreRepository,
-        private EntityManagerInterface $entityManager,
         private RankedScoresRepository $rankedScoresRepository,
     ) {
     }
@@ -157,4 +159,86 @@ class RankingScoreService
             ->getQuery()->getOneOrNullResult();
         return StatisticService::dateDiplayerShort($res->getUpdatedAt());
     }
+
+    public function imagine(SongDifficulty $songDifficulty, Utilisateur $user, $isVR = false): Score
+    {
+        if (empty(self::$fakeStats[$songDifficulty->getDifficultyRank()->getId()])) {
+            $perfect = 100;
+            $comboBlue = 0;
+            $comboYellow = $this->yellowComboMax($songDifficulty);
+
+            $scores = $this->scoreRepository->createQueryBuilder('s')
+                ->leftJoin('s.songDifficulty', 'sd')
+                ->andWhere('sd.difficultyRank = :sameRank')
+                ->setParameter('sameRank', $songDifficulty->getDifficultyRank())
+                ->orderBy('s.updatedAt', 'desc')
+                ->setFirstResult(0)->setMaxResults(50)
+                ->getQuery()->getResult();
+
+            if ($scores) {
+                $yellows = [];
+                $blues = [];
+                $perfects = [];
+                /** @var Score $tmpScore */
+                foreach ($scores as $tmpScore) {
+                    $yellows[] = $tmpScore->getComboYellow();
+                    $blues[] = $tmpScore->getComboBlue();
+                    $perfects[] = $tmpScore->getPercentageOfPerfects();
+                }
+
+                $perfect = floor(array_sum($perfects) / count($perfects));
+                $comboBlue = floor(array_sum($blues) / count($blues));
+                $comboYellow = floor(array_sum($yellows) / count($yellows));
+                self::$fakeStats[$songDifficulty->getDifficultyRank()->getId()] = [
+                    'b' => $comboBlue,
+                    'y' => $comboYellow,
+                    'p' => $perfect
+                ];
+            }
+        } else {
+            $comboBlue = self::$fakeStats[$songDifficulty->getDifficultyRank()->getId()]['b'];
+            $comboYellow = self::$fakeStats[$songDifficulty->getDifficultyRank()->getId()]['y'];
+            $perfect = self::$fakeStats[$songDifficulty->getDifficultyRank()->getId()]['p'];
+        }
+
+        $score = new Score();
+        $score->setUser($user);
+        $score->setSongDifficulty($songDifficulty);
+        $score->setPercentageOfPerfects($perfect);
+        $score->setComboBlue($comboBlue);
+        $score->setComboYellow($comboYellow);
+        $score->setHitPercentage(100);
+        $score->setRawPP($this->calculateRawPP($score));
+        $score->setCreatedAt(new DateTime());
+        $score->setUpdatedAt(new DateTime());
+        $score->setDateRagnarock(new DateTime());
+
+        return $score;
+    }
+
+    public function yellowComboMax(SongDifficulty $diff): int
+    {
+        // we consider that no note were missed
+        $miss = 0;
+        // We consider that none blue combo is used
+        $maxBlueCombo = 0;
+        // base speed of the boat given by Wanadev
+        $baseSpeed = 17.18;
+        $duration = $diff->getSong()->getApproximativeDuration();
+        $noteCount = $diff->getNotesCount();
+
+        //calculation of the theorical number of yellow combos
+        $consumedNotes = 0;
+        $combo = 0;
+        $maxYellowCombo = 0;
+        while ($consumedNotes <= $noteCount) {
+            $combo = $combo + 1;
+            $consumedNotes = $consumedNotes + (2 * (15 + 10 * $combo));
+
+            $maxYellowCombo = $combo - 1;
+        }
+
+        return $maxYellowCombo;
+    }
+
 }

@@ -6,8 +6,10 @@
             <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" alt="cover"/></a>
             <div class="song pl-1">
                 <div class="title one-line"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song|raw }}</a></div>
-                <div class="author"><a
-                            href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
+                <div class="author">
+                    <a href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">
+                        {{ song.authorName }}
+                    </a>
                 </div>
             </div>
         </div>
@@ -28,7 +30,6 @@
         <i class="fas {{ score.plateformIcon }}"></i>
     </td>
     <td>
-
         {{ scoreService.leaderboardPositionWithOrdinalSuffix(app.user, diff, '0', score.isVR) }}
     </td>
     <td>
