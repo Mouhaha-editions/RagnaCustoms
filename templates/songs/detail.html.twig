@@ -145,18 +145,18 @@
                                         {{ macro_vote.ratingDisplayLabel("Readability"|trans,song.readabilityAverage) }}
                                     </div>
                                     <div>
-                                        {#                                        {% if voteService.canReview(song, app.user) %} #}
-                                        <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-1 mb-2 song-review"
-                                                data-toggle="modal"
-                                                data-target="#reviewSong"
-                                                data-refresh="true"
-                                                data-url="{{ url('song_vote_review',{id:song.id}) }}"
-                                                data-song-id="{{ song.id }}"
-                                        >{{ "Submit rating"|trans }}</button>
-                                        {#                                        {% else %} #}
-                                        {#                                            <button class="btn btn-block btn-warning btn-sm mt-1 mb-2 disabled" #}
-                                        {#                                            >{{ "Play the song first"|trans }}</button> #}
-                                        {#                                        {% endif %} #}
+                                        {% if voteService.canReview(song, app.user) %}
+                                            <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-1 mb-2 song-review"
+                                                    data-toggle="modal"
+                                                    data-target="#reviewSong"
+                                                    data-refresh="true"
+                                                    data-url="{{ url('song_vote_review',{id:song.id}) }}"
+                                                    data-song-id="{{ song.id }}"
+                                            >{{ "Submit rating"|trans }}</button>
+                                        {% else %}
+                                            <button class="btn btn-block btn-warning btn-sm mt-1 mb-2 disabled"
+                                            >{{ "Play the song first"|trans }}</button>
+                                        {% endif %}
                                         <button class="btn btn-block btn-sm mt-1 mb-2 song-feedback"
                                         >{{ "Read Feedback"|trans }} ({{ feedbacks|length }})
                                         </button>
@@ -361,6 +361,7 @@
                             "ratingValue": "{{ song.voteAverage|round(2, "floor") }}"
                         }
                     }
+
 
 
 
