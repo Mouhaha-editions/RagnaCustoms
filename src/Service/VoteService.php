@@ -132,11 +132,13 @@ class VoteService
         $this->em->flush();
     }
 
-    public function canUpDownVote(Song $song, Utilisateur $user): bool
+    public function canUpDownVote(Song $song, ?Utilisateur $user): bool
     {
-        foreach ($song->getSongDifficulties() as $diff) {
-            if ($user->hasPlayed($diff)) {
-                return true;
+        if($user) {
+            foreach ($song->getSongDifficulties() as $diff) {
+                if ($user->hasPlayed($diff)) {
+                    return true;
+                }
             }
         }
 
