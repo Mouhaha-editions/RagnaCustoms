@@ -28,6 +28,8 @@ class VotesController extends AbstractController
             $this->addFlash('danger', $translator->trans("Song not available for vote"));
         } elseif (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("Login to vote"));
+        } elseif (!$voteService->canUpDownVote($song, $this->getUser())) {
+            $this->addFlash('danger', $translator->trans("Play the song first"));
         } else {
             $voteService->toggleUpVote($song, $this->getUser());
         }
@@ -43,6 +45,8 @@ class VotesController extends AbstractController
             $this->addFlash('danger', $translator->trans("Song not available for vote"));
         } elseif (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("Login to vote"));
+        } elseif (!$voteService->canUpDownVote($song, $this->getUser())) {
+            $this->addFlash('danger', $translator->trans("Play the song first"));
         } else {
             $voteService->toggleDownVote($song, $this->getUser());
         }

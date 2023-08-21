@@ -1,11 +1,12 @@
 <div class="up_down_vote" id="up_down_vote_{{ song.id }}">
     {% set voteCounter = song.isVoteCounterBy(app.user) %}
-    {% if not is_granted('ROLE_USER') or not song.isAvailable %}
-{#        or not voteService.canUpDownVote(song, app.user)#}
-        <i style="color:grey;opacity:0.5" class="fas fa-arrow-up"></i>
+    {% set upvotePosible = voteService.canUpDownVote(song, app.user) %}
+    {% if not is_granted('ROLE_USER') or not song.isAvailable or not upvotePosible %}
+
+        <i style="color:grey;opacity:0.5" class="fas fa-arrow-up" {% if not upvotePosible %}data-toggle="tooltip" title="Play the song first"{% endif %}></i>
         {{ song.voteUp }}
 {#        <span>&nbsp;</span>#}
-        <i style="color:grey;opacity:0.5" class="fas fa-arrow-down"></i>
+        <i style="color:grey;opacity:0.5" class="fas fa-arrow-down" {% if not upvotePosible %}data-toggle="tooltip" title="Play the song first"{% endif %}></i>
         {{ song.voteDown }}
 
     {% else %}
