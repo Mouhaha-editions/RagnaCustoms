@@ -134,7 +134,7 @@ class VoteService
 
     public function canUpDownVote(Song $song, ?Utilisateur $user): bool
     {
-        if($user) {
+        if ($user) {
             foreach ($song->getSongDifficulties() as $diff) {
                 if ($user->hasPlayed($diff)) {
                     return true;
@@ -145,11 +145,13 @@ class VoteService
         return false;
     }
 
-    public function canReview(Song $song, UserInterface $user): bool
+    public function canReview(Song $song, ?Utilisateur $user): bool
     {
-        foreach ($song->getSongDifficulties() as $diff) {
-            if ($user->hasPlayed($diff)) {
-                return true;
+        if ($user) {
+            foreach ($song->getSongDifficulties() as $diff) {
+                if ($user->hasPlayed($diff)) {
+                    return true;
+                }
             }
         }
 
