@@ -117,8 +117,6 @@ class DiscordService
 
     public function sendWipSongMessage(Song $song)
     {
-        $timestamp = date("c", strtotime("now"));
-
         $json_data = json_encode([
             // Message
 //            "content" => "Hi vikings, there is a new map",
@@ -154,10 +152,10 @@ class DiscordService
 //                    "color" => "'".hexdec("3366ff")."'",
 
                     // Footer
-//                    "footer" => [
-//                        "text" => "GitHub.com/Mo45",
-//                        "icon_url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=375"
-//                    ],
+                    "footer" => [
+                        "text" => $song->getAuthorName().'\'s profile',
+                        "icon_url" =>  "https://ragnacustoms.com/mapper-profile/".$song->getUser()->getUsername()
+                    ],
 
                     // Image to send
                     "image" => [
@@ -253,10 +251,10 @@ class DiscordService
 //                    "color" => "'".hexdec("3366ff")."'",
 
                     // Footer
-//                    "footer" => [
-//                        "text" => "GitHub.com/Mo45",
-//                        "icon_url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=375"
-//                    ],
+                    "footer" => [
+                        "text" => $song->getAuthorName().'\'s profile',
+                        "icon_url" =>  "https://ragnacustoms.com/mapper-profile/".$song->getUser()->getUsername()
+                    ],
 
                     // Image to send
                     "image" => [
@@ -352,10 +350,10 @@ class DiscordService
 //                    "color" => "'".hexdec("3366ff")."'",
 
                     // Footer
-//                    "footer" => [
-//                        "text" => "GitHub.com/Mo45",
-//                        "icon_url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=375"
-//                    ],
+                    "footer" => [
+                        "text" => $song->getAuthorName().'\'s profile',
+                        "icon_url" =>  "https://ragnacustoms.com/mapper-profile/".$song->getUser()->getUsername()
+                    ],
 
                     // Image to send
                     "image" => [
@@ -438,6 +436,7 @@ class DiscordService
         $resp = curl_exec($ch);
         curl_close($ch);
     }
+
     public function deletedSong(Song $song)
     {
         $json_data = json_encode([
@@ -515,10 +514,10 @@ class DiscordService
 //                    "color" => "'".hexdec("3366ff")."'",
 
                     // Footer
-//                    "footer" => [
-//                        "text" => "GitHub.com/Mo45",
-//                        "icon_url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=375"
-//                    ],
+                    "footer" => [
+                        "text" => $song->getAuthorName().'\'s profile',
+                        "icon_url" =>  "https://ragnacustoms.com/mapper-profile/".$song->getUser()->getUsername()
+                    ],
 
                     // Image to send
                     "image" => [

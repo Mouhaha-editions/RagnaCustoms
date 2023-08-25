@@ -20,14 +20,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class NotificationController extends AbstractController
 {
     #[Route('/notification', name: 'app_notification')]
-    public function index(Request $request, TranslatorInterface $translator, PaginationService $paginationService, NotificationRepository $notificationRepository): Response
-    {
+    public function index(
+        Request $request,
+        TranslatorInterface $translator,
+        PaginationService $paginationService,
+        NotificationRepository $notificationRepository
+    ): Response {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('home');
         }
 
-        $qb = $notificationRepository->createQueryBuilder('n')->where('n.user = :user')->setParameter('user', $this->getUser())->orderBy('n.createdAt', 'DESC');
+        $qb = $notificationRepository->createQueryBuilder('n')->where('n.user = :user')->setParameter(
+            'user',
+            $this->getUser()
+        )->orderBy('n.createdAt', 'DESC');
 
         $notifications = $paginationService->process($qb, $request);
         return $this->render('notification/index.html.twig', [
@@ -36,8 +43,13 @@ class NotificationController extends AbstractController
     }
 
     #[Route('/notifications/setting', name: 'notifications_setting')]
-    public function notificationSetting(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, PaginationService $paginationService, NotificationRepository $notificationRepository): Response
-    {
+    public function notificationSetting(
+        Request $request,
+        TranslatorInterface $translator,
+        ManagerRegistry $doctrine,
+        PaginationService $paginationService,
+        NotificationRepository $notificationRepository
+    ): Response {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('home');
@@ -55,11 +67,11 @@ class NotificationController extends AbstractController
             'multiple' => true,
             'expanded' => true,
         ])->add('notificationPreference', EnumType::class, [
-                'class' => ENotification::class,
-                "choice_label" => "label",
-                'multiple' => true,
-                'expanded' => true,
-            ]);
+            'class' => ENotification::class,
+            "choice_label" => "label",
+            'multiple' => true,
+            'expanded' => true,
+        ]);
 
         $form = $form->getForm();
 
@@ -71,14 +83,17 @@ class NotificationController extends AbstractController
             $this->addFlash('success', "Your preferences are saved!");
         }
 
-        return $this->renderForm('notification/preference.html.twig', [
-            'form' => $form
+        return $this->render('notification/preference.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 
     #[Route('/notification/toggle/read/{id}', name: 'notification_toggle_read')]
-    public function notification_toggle_read(Notification $notification, ManagerRegistry $doctrine, TranslatorInterface $translator)
-    {
+    public function notification_toggle_read(
+        Notification $notification,
+        ManagerRegistry $doctrine,
+        TranslatorInterface $translator
+    ) {
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 "error" => true,
@@ -88,6 +103,7 @@ class NotificationController extends AbstractController
                 ])
             ]);
         }
+
         if ($this->getUser() !== $notification->getUser()) {
             return new JsonResponse([
                 "error" => true,
@@ -98,7 +114,10 @@ class NotificationController extends AbstractController
             ]);
         }
 
-        $notification->setState($notification->getState() == Notification::STATE_UNREAD ? Notification::STATE_READ : Notification::STATE_UNREAD);
+        $notification->setState(
+            $notification->getState(
+            ) == Notification::STATE_UNREAD ? Notification::STATE_READ : Notification::STATE_UNREAD
+        );
         $doctrine->getManager()->flush();
         return new JsonResponse([
             "error" => false,
@@ -110,16 +129,22 @@ class NotificationController extends AbstractController
     }
 
     #[Route('/notification/toggle/read-all', name: 'notification_read_all')]
-    public function notification_readAll(ManagerRegistry $doctrine, TranslatorInterface $translator, NotificationRepository $notificationRepository)
-    {
+    public function notification_readAll(
+        ManagerRegistry $doctrine,
+        TranslatorInterface $translator,
+        NotificationRepository $notificationRepository
+    ) {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('app_notification');
         }
-        foreach ($notificationRepository->findBy([
-            'user' => $this->getUser(),
-            'state' => Notification::STATE_UNREAD
-        ]) as $notification) {
+
+        foreach (
+            $notificationRepository->findBy([
+                'user' => $this->getUser(),
+                'state' => Notification::STATE_UNREAD
+            ]) as $notification
+        ) {
             $notification->setState(Notification::STATE_READ);
         }
 
@@ -128,12 +153,16 @@ class NotificationController extends AbstractController
     }
 
     #[Route('/notification/toggle/delete/{id}', name: 'notification_delete')]
-    public function notification_delete(Notification $notification, TranslatorInterface $translator, NotificationRepository $notificationRepository)
-    {
+    public function notification_delete(
+        Notification $notification,
+        TranslatorInterface $translator,
+        NotificationRepository $notificationRepository
+    ) {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
             return $this->redirectToRoute('app_notification');
         }
+
         if ($this->getUser() !== $notification->getUser()) {
             $this->addFlash('danger', $translator->trans("You are not the owners!"));
             return $this->redirectToRoute('app_notification');
