@@ -128,7 +128,7 @@ class NotificationController extends AbstractController
     }
 
     #[Route('/notification/toggle/delete/{id}', name: 'notification_delete')]
-    public function notification_delete(Notification $notification, ManagerRegistry $doctrine, TranslatorInterface $translator)
+    public function notification_delete(Notification $notification, TranslatorInterface $translator, NotificationRepository $notificationRepository)
     {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
@@ -139,8 +139,7 @@ class NotificationController extends AbstractController
             return $this->redirectToRoute('app_notification');
         }
 
-        $doctrine->getManager()->remove($notification);
-        $doctrine->getManager()->flush();
+        $notificationRepository->remove($notification, true);
         return $this->redirectToRoute('app_notification');
     }
 }

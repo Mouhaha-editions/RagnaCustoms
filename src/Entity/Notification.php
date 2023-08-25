@@ -22,7 +22,7 @@ class Notification
     private $message;
     #[ORM\Column(type: 'integer')]
     private $state = self::STATE_UNREAD;
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class, cascade: ['persist', 'remove'], inversedBy: 'notifications')]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, cascade: ['persist'], inversedBy: 'notifications')]
     private $user;
 
     public function getId(): ?int
