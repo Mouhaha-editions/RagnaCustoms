@@ -622,7 +622,7 @@ class SongsController extends AbstractController
                     || $song->getProgrammationDate() >= new DateTime()
                     || !$song->isModerated())
                 && !$this->isGranted('ROLE_ADMIN')
-                && $song->getUser() !== $this->getUser()
+                && !$song->getMappers()->contains($this->getUser())
             )) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
             return $this->redirectToRoute('home');
