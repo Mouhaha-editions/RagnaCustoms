@@ -92,8 +92,6 @@ class Song
     private $timeOffset;
     #[ORM\Column(type: 'float', nullable: true)]
     private $totalVotes;
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'songs')]
-    private $user;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $version;
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -120,6 +118,9 @@ class Song
     #[ORM\Column(nullable: true)]
     private ?array $bestPlatform = [];
 
+    #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'songsMapped')]
+    private Collection $mappers;
+
 
     public function __construct()
     {
@@ -130,6 +131,7 @@ class Song
         $this->playlists = new ArrayCollection();
         $this->voteCounters = new ArrayCollection();
         $this->categoryTags = new ArrayCollection();
+        $this->mappers = new ArrayCollection();
     }
 
     public function isVoteCounterBy(?UserInterface $user)
@@ -138,18 +140,6 @@ class Song
             return $voteCounter->getUser() === $user;
         });
         return $votes->isEmpty() ? null : $votes->first();
-    }
-
-    public function getUser(): UserInterface|Utilisateur|null
-    {
-        return $this->user;
-    }
-
-    public function setUser(?UserInterface $user): self
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function isReviewedBy(?UserInterface $user): bool
@@ -236,11 +226,6 @@ class Song
         $this->subName = $subName;
 
         return $this;
-    }
-
-    public function getMapper(): string
-    {
-        return $this->user->getMapperName() ?? $this->user->getUsername();
     }
 
     public function getBeatsPerMinute(): ?float
@@ -896,7 +881,7 @@ class Song
             "Hash" => $this->getNewGuid(),
             "Ragnabeat" => $this->getInfoDatFile(),
             "Author" => $this->getAuthorName(),
-            "Mapper" => $this->getLevelAuthorName(),
+            "Mapper" => $this->getMappersNames(),
             "Difficulties" => $this->getSongDifficultiesStr(),
             "CoverImageExtension" => $this->getCoverImageExtension(),
         ];
@@ -1071,5 +1056,39 @@ class Song
         $this->programmationDate = $programmationDate;
 
         return $this;
+    }
+
+    public function addMapper(Utilisateur|UserInterface $mapper): static
+    {
+        if (!$this->mappers->contains($mapper)) {
+            $this->mappers->add($mapper);
+        }
+
+        return $this;
+    }
+
+    public function removeMapper(Utilisateur|UserInterface $mapper): static
+    {
+        $this->mappers->removeElement($mapper);
+
+        return $this;
+    }
+
+    public function getMappersNames(): string
+    {
+        return implode(
+            ', ',
+            $this->getMappers()->map(function (Utilisateur $mapper) {
+                return $mapper->getMapperName();
+            })->toArray()
+        );
+    }
+
+    /**
+     * @return Collection<int, Utilisateur>
+     */
+    public function getMappers(): Collection
+    {
+        return $this->mappers;
     }
 }

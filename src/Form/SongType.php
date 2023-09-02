@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Song;
 use App\Entity\SongCategory;
+use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -43,6 +44,7 @@ class SongType extends AbstractType
 
                 'required' => true
             ])
+
             ->add('approximativeDuration', HiddenType::class, [
                 "label" => "Duration (in sec) ",
                 "help" => "leave empty on first upload",

@@ -40,9 +40,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id;
     #[ORM\Column(type: 'text', nullable: true)]
-    private $EmailPreference;
+    private string $emailPreference;
     #[ORM\Column(type: 'text', nullable: true)]
     private $NotificationPreference;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -120,9 +120,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private $songRequestVotes;
     #[ORM\OneToMany(targetEntity: SongRequest::class, mappedBy: 'requestedBy', orphanRemoval: true)]
     private $songRequests;
-    #[ORM\OneToMany(targetEntity: Song::class, mappedBy: 'user')]
-    #[ORM\OrderBy(['updatedAt' => 'desc'])]
-    private $songs;
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $steamCommunityId;
     #[Groups("read")]
@@ -183,9 +181,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'friend', targetEntity: Friend::class, orphanRemoval: true)]
     private Collection $friends;
 
+    #[ORM\ManyToMany(targetEntity: Song::class, mappedBy: 'mappers')]
+    #[ORM\OrderBy(['updatedAt' => 'desc'])]
+    private Collection $songsMapped;
+
     public function __construct()
     {
-        $this->songs = new ArrayCollection();
         $this->votes = new ArrayCollection();
         $this->downloadCounters = new ArrayCollection();
         $this->scores = new ArrayCollection();
@@ -202,6 +203,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->customEventParticipations = new ArrayCollection();
         $this->friendRequests = new ArrayCollection();
         $this->friends = new ArrayCollection();
+        $this->songsMapped = new ArrayCollection();
     }
 
     public function __toString()
@@ -291,28 +293,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
-    public function addSong(Song $song): self
-    {
-        if (!$this->songs->contains($song)) {
-            $this->songs[] = $song;
-            $song->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSong(Song $song): self
-    {
-        if ($this->songs->removeElement($song)) {
-            // set the owning side to null (unless already changed)
-            if ($song->getUser() === $this) {
-                $song->setUser(null);
-            }
-        }
 
         return $this;
     }
@@ -742,7 +722,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getAvgRating()
     {
         $songsRating = [];
-        foreach ($this->getSongs() as $song) {
+        foreach ($this->getSongsMapped() as $song) {
             if (!$song->getWip() && $song->getVoteAverage() > 0) {
                 $songsRating[] = $song->getVoteAverage();
             }
@@ -755,7 +735,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getSongs(): Collection
     {
-        return $this->songs->filter(function (Song $s) {
+        return $this->songsMapped->filter(function (Song $s) {
             return !$s->getIsDeleted();
         });
     }
@@ -765,7 +745,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getSongsAvailable(): Collection
     {
-        return $this->songs->filter(function (Song $song) {
+        return $this->songsMapped->filter(function (Song $song) {
             return $song->isAvailable();
         });
     }
@@ -773,7 +753,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPreferedGenre($top = 3)
     {
         $genres = [];
-        foreach ($this->getSongs() as $song) {
+        foreach ($this->getSongsMapped() as $song) {
             foreach ($song->getCategoryTags() as $categoryTag) {
                 if (isset($genres[$categoryTag->getLabel()])) {
                     $genres[$categoryTag->getLabel()] += 1;
@@ -1091,7 +1071,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->notifications;
     }
 
-    public function hasEmailPreference(ENotification $event)
+    public function hasEmailPreference(ENotification $event): bool
     {
         return in_array($event, $this->getEmailPreferences());
     }
@@ -1103,12 +1083,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getEmailPreference(): ?string
     {
-        return $this->EmailPreference;
+        return $this->emailPreference;
     }
 
-    public function setEmailPreference(?string $EmailPreference): self
+    public function setEmailPreference(?string $emailPreference): self
     {
-        $this->EmailPreference = $EmailPreference;
+        $this->emailPreference = $emailPreference;
 
         return $this;
     }
@@ -1350,7 +1330,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRankedSong()
     {
-        return $this->getSongs()->filter(function (Song $song) {
+        return $this->getSongsMapped()->filter(function (Song $song) {
             return $song->isRanked();
         });
     }
@@ -1571,5 +1551,32 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getScores()->filter(function (Score $score) use ($songDifficulty, $isVR) {
             return $score->getSongDifficulty() === $songDifficulty && $score->isVR() == $isVR;
         })->first();
+    }
+
+    /**
+     * @return Collection<int, Song>
+     */
+    public function getSongsMapped(): Collection
+    {
+        return $this->songsMapped;
+    }
+
+    public function addSongsMapped(Song $songsMapped): static
+    {
+        if (!$this->songsMapped->contains($songsMapped)) {
+            $this->songsMapped->add($songsMapped);
+            $songsMapped->addMapper($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSongsMapped(Song $songsMapped): static
+    {
+        if ($this->songsMapped->removeElement($songsMapped)) {
+            $songsMapped->removeMapper($this);
+        }
+
+        return $this;
     }
 }

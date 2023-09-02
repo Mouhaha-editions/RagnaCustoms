@@ -32,9 +32,8 @@
                 </div>
             </td>
             <td>
-                <div class="mapper"><a
-                            href="{{ url('mapper_profile', {username:song.user.username}) }}">{{ membershipService.displayMappername(song.user, false)|raw }}</a>
-                </div>
+                {% include 'songs/partial/mappers.html.twig' with {song:song} %}
+
                 <div class="level-list">
                     {% for diff in song.songDifficulties %}
                         <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">

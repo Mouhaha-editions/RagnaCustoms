@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Song;
 use App\Entity\SongRequest;
+use App\Entity\Utilisateur;
 use App\Form\SongType;
 use App\Repository\SongRepository;
 use App\Service\DiscordService;
@@ -23,6 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class UploadSongController extends AbstractController
 {
@@ -39,7 +41,7 @@ class UploadSongController extends AbstractController
 
         $song = new Song();
         $song->setProgrammationDate(new DateTime());
-        $song->setUser($this->getUser());
+        $song->addMapper($this->getUser());
 
         return $this->edit($request, $song, $doctrine, $translator, $songService, $scoreService);
     }
@@ -47,21 +49,37 @@ class UploadSongController extends AbstractController
     #[Route(path: '/upload/song/edit/{id}', name: 'edit_song')]
     public function edit(Request $request, Song $song, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
     {
-        if ($song->getUser() != $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+        if (!$song->getMappers()->contains($this->getUser())) {
             return new JsonResponse([
                 'error'        => true,
                 'errorMessage' => $translator->trans("This Custom song is not your's"),
                 'response'     => ""
             ]);
         }
-
+//        $song->removeMapper($this->getUser());
         $form = $this->createForm(SongType::class, $song, [
             'method' => "post",
             'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
         ]);
 
         if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
-            $form->add('programmationDate', DateTimeType::class, [
+            $form
+                ->add('mappers', Select2EntityType::class, [
+                    "class" => Utilisateur::class,
+                    'remote_route' => 'api_mapper',
+                    'multiple' => true,
+                    "label" => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Mapper(s)',
+                    'primary_key' => 'id',
+                    'text_property' => 'mapperName',
+                    'minimum_input_length' => 0,
+                    'allow_clear' => true,
+                    'label_html' => true,
+                    'delay' => 250,
+                    'placeholder' => 'Enter mapper name (he/she need to publish at least one map to appear)',
+                    'help' => 'Be carefull others mappers get same rights as you on the song',
+                    'required' => false
+                ])
+                ->add('programmationDate', DateTimeType::class, [
                 'label'      => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
                 'widget'     => 'single_text',
                 'required'   => true,
@@ -69,7 +87,8 @@ class UploadSongController extends AbstractController
                 "empty_data" => '',
                 'label_html' => true,
                 'help'       => "Sorry for now it's based on UTC+1 (french time) "
-            ])->add("zipFile", FileType::class, [
+            ])
+                ->add("zipFile", FileType::class, [
                 "mapped"      => false,
                 "required"    => $song->getId() == null,
                 "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
@@ -110,6 +129,7 @@ class UploadSongController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isSubmitted()) {
+            $song->addMapper($this->getUser());
             try {
                 if (!count($song->getBestPlatform())) {
                     throw new Exception('Select on which version your map is planed to be played (VR and/or Viking On Tour)');
@@ -203,7 +223,7 @@ class UploadSongController extends AbstractController
     #[Route(path: '/upload/song/delete/{id}', name: 'delete_song')]
     public function delete(Song $song, EntityManagerInterface $em, DiscordService $discordService)
     {
-        if ($song->getUser() === $this->getUser() && !$song->isRanked()) {
+        if ($song->getMappers()->contains($this->getUser()) && !$song->isRanked()) {
 
             $songFile = $this->getParameter('kernel.project_dir') . "/public/songs-files/";
             $ragnaBeat = $this->getParameter('kernel.project_dir') . "/public/ragna-beat/";
@@ -234,7 +254,7 @@ class UploadSongController extends AbstractController
     #[Route(path: '/upload/song/toggle/{id}', name: 'upload_song_toggle')]
     public function toggleSong(Request $request, Song $song, SongRepository $songRepository)
     {
-        if ($song->getUser() != $this->getUser()) {
+        if (!$song->getMappers()->contains($this->getUser())) {
             return new JsonResponse([
                 'success' => false,
                 'message' => "This is not YOUR song"
@@ -260,8 +280,9 @@ class UploadSongController extends AbstractController
         $qb = $songRepository->createQueryBuilder('s')
             ->select('s')
             ->leftJoin('s.categoryTags', 't')
+            ->leftJoin('s.mappers', 'm')
             ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
-            ->where('s.user = :user')
+            ->where('m.id = :user')
             ->andWhere("s.isDeleted != true")
             ->setParameter('user', $this->getUser())
             ->groupBy('s.id')
@@ -373,7 +394,7 @@ class UploadSongController extends AbstractController
     {
         try {
             $song = new Song();
-            $song->setUser($this->getUser());
+            $song->addMapper($this->getUser());
             $song->setActive(true);
             $songService->processFileWithoutForm($request, $song);
         } catch (Exception $e) {

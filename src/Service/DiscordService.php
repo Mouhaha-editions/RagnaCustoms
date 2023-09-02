@@ -151,11 +151,6 @@ class DiscordService
                     // Embed left border color in HEX
 //                    "color" => "'".hexdec("3366ff")."'",
 
-                    // Footer
-                    "footer" => [
-                        "text" => $song->getAuthorName().'\'s profile',
-                        "icon_url" =>  "https://ragnacustoms.com/mapper-profile/".$song->getUser()->getUsername()
-                    ],
 
                     // Image to send
                     "image" => [
@@ -250,11 +245,6 @@ class DiscordService
                     // Embed left border color in HEX
 //                    "color" => "'".hexdec("3366ff")."'",
 
-                    // Footer
-                    "footer" => [
-                        "text" => $song->getAuthorName().'\'s profile',
-                        "icon_url" =>  "https://ragnacustoms.com/mapper-profile/".$song->getUser()->getUsername()
-                    ],
 
                     // Image to send
                     "image" => [
@@ -349,11 +339,6 @@ class DiscordService
                     // Embed left border color in HEX
 //                    "color" => "'".hexdec("3366ff")."'",
 
-                    // Footer
-                    "footer" => [
-                        "text" => $song->getAuthorName().'\'s profile',
-                        "icon_url" =>  "https://ragnacustoms.com/mapper-profile/".$song->getUser()->getUsername()
-                    ],
 
                     // Image to send
                     "image" => [
@@ -412,8 +397,8 @@ class DiscordService
                     "url" => "https://ragnacustoms.com/admin",
                     "fields" => [
                         [
-                            "name" => "Mapper",
-                            "value" => $song->getUser()->getUsername(),
+                            "name" => "Mappers",
+                            "value" => $song->getMappersNames(),
                             "inline" => true
                         ]
                     ],
@@ -450,8 +435,8 @@ class DiscordService
                     "url" => "https://ragnacustoms.com/admin",
                     "fields" => [
                         [
-                            "name" => "Mapper",
-                            "value" => $song->getUser()->getUsername(),
+                            "name" => "Mapper(s)",
+                            "value" => $song->getMappersNames(),
                             "inline" => true
                         ]
                     ],
@@ -513,11 +498,7 @@ class DiscordService
                     // Embed left border color in HEX
 //                    "color" => "'".hexdec("3366ff")."'",
 
-                    // Footer
-                    "footer" => [
-                        "text" => $song->getAuthorName().'\'s profile',
-                        "icon_url" =>  "https://ragnacustoms.com/mapper-profile/".$song->getUser()->getUsername()
-                    ],
+
 
                     // Image to send
                     "image" => [

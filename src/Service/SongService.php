@@ -129,7 +129,8 @@ class SongService
         return $this->em->getRepository(Song::class)
             ->createQueryBuilder('s')
             ->where('s.lastDateUpload BETWEEN \'2022-12-01\' AND \'2022-12-26\' ')
-            ->andWhere('s.user = :user')
+            ->leftJoin('s.mappers','m')
+            ->where('m.id = :user')
             ->setParameter('user', 29)
             ->getQuery()->getResult();
     }
@@ -268,12 +269,18 @@ class SongService
         $songName = trim($json->_songName);
         $authorName = $json->_songAuthorName;
         $existingSong = $this->em->getRepository(Song::class)
-            ->findOneBy([
+            ->createQueryBuilder('s')
+            ->distinct()
+            ->leftJoin('s.mappers','m')
+            ->andWhere('s.name = :name')
+            ->andWhere('s.authorName = :authorName')
+            ->andWhere('m.id IN (:users)')
+            ->setParameters([
                 'name' => $songName,
                 'authorName' => $authorName,
-                'user' => $song->getUser()
-            ]);
-        if ($existingSong != null && $new == true && $isWip == false) {
+                'users' => $song->getMappers()
+            ])->getQuery()->getResult();
+        if ($existingSong != null && $new === true) {
             throw new Exception("You already uploaded this song, please edit the last upload.");
         }
         $song->setVersion($json->_version);

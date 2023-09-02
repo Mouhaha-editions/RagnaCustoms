@@ -14,9 +14,13 @@
     <div class="col-md-6">
         {{ form_row(form.bestPlatform,{attr:{class:'pb-2'}}) }}
         {{ form_row(form.youtubeLink) }}
+
         {% if is_granted("ROLE_PREMIUM_LVL2") %}
             {{ form_row(form.programmationDate) }}
+            {{ form_row(form.mappers) }}
         {% endif %}
+
+
     </div>
     <div class="col-12">
     <div class="d-flex justify-content-center" style="font-size:18px;">

@@ -27,8 +27,7 @@
                 <a href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
             </div>
             <div class="mapper pb-3 one-line">
-                <a href="{{ url('mapper_profile', {username:song.user.username}) }}">
-                    {{ membershipService.displayMappername(song.user, false)|raw }}</a>
+               {% include 'songs/partial/mappers.html.twig' with {song:song} %}
             </div>
             {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
 

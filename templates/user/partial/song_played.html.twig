@@ -13,7 +13,7 @@
                         src="{{ user.gravatar }}"
                         class="avatar big-rounded mb-4 img-fluid"
                         alt="{{ user.username }}"/>
-                {% if user.songs|length > 0 %}
+                {% if user.songsMapped|length > 0 %}
                     <a class="btn btn-lg btn-warning btn-block"
                        href="{{ url('mapper_profile', {username:user.username}) }}">
                         {{ "View mapper profile"|trans }}
@@ -38,7 +38,7 @@
                 </h2>
             </div>
             <div class="tags">
-                {% if user.songs|length > 0 %}
+                {% if user.songsAvailable|length > 0 %}
                     <span title="Has released at least one map" data-toogle="tooltip">
                     {{ "Mapper"|trans }}
                     </span>
@@ -84,7 +84,7 @@
                 </div>
                 <div class="col-md-2">
                     <div class="mini-box">
-                        <div class="numeric">{{ user.songs|length }}</div>
+                        <div class="numeric">{{ user.songsAvailable|length }}</div>
                         <div class="text">{{ "Songs mapped"|trans }}</div>
                     </div>
                 </div>
