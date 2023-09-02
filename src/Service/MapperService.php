@@ -31,7 +31,7 @@ class MapperService
             ->where('m.id = :user')
             ->andWhere('s.isDeleted != 1')
             ->setParameter('user', $user)
-            ->groupBy("s.user")
+            ->groupBy("m.id")
             ->getQuery()->getOneOrNullResult();
         return $res != null ? array_pop($res):0;
     }
