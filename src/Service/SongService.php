@@ -129,7 +129,7 @@ class SongService
         return $this->em->getRepository(Song::class)
             ->createQueryBuilder('s')
             ->where('s.lastDateUpload BETWEEN \'2022-12-01\' AND \'2022-12-26\' ')
-            ->leftJoin('s.mappers','m')
+            ->leftJoin('s.mappers', 'm')
             ->where('m.id = :user')
             ->setParameter('user', 29)
             ->getQuery()->getResult();
@@ -271,7 +271,7 @@ class SongService
         $existingSong = $this->em->getRepository(Song::class)
             ->createQueryBuilder('s')
             ->distinct()
-            ->leftJoin('s.mappers','m')
+            ->leftJoin('s.mappers', 'm')
             ->andWhere('s.name = :name')
             ->andWhere('s.authorName = :authorName')
             ->andWhere('m.id IN (:users)')
@@ -980,19 +980,22 @@ class SongService
     public function sendNewNotification(Song $song)
     {
         if ($song->getActive() === true && $song->getProgrammationDate() <= new DateTime()) {
-            $user = $song->getUser();
-            $this->discordService->sendNewSongMessage($song);
-            foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
-                $notification = new Notification();
-                $notification->setUser($follower->getUser());
-                $notification->setMessage(
-                    "New song : <a href='".
-                    $this->router->generate('song_detail', ['slug' => $song->getSlug()])."'>".
-                    $song->getName()."</a> by <a href='".
-                    $this->router->generate('mapper_profile', ['username' => $user->getUsername()])."'>".
-                    $user->getMapperName()."</a>"
-                );
-                $this->em->persist($notification);
+            foreach ($song->getMappers() as $user) {
+
+                $this->discordService->sendNewSongMessage($song);
+
+                foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
+                    $notification = new Notification();
+                    $notification->setUser($follower->getUser());
+                    $notification->setMessage(
+                        "New song : <a href='".
+                        $this->router->generate('song_detail', ['slug' => $song->getSlug()])."'>".
+                        $song->getName()."</a> by <a href='".
+                        $this->router->generate('mapper_profile', ['username' => $user->getUsername()])."'>".
+                        $user->getMapperName()."</a>"
+                    );
+                    $this->em->persist($notification);
+                }
             }
             $song->setIsNotificationDone(true);
             $this->em->flush();
