@@ -44,7 +44,7 @@ class MapperService
             ->where('m.id = :user')
             ->andWhere('s.isDeleted != 1')
             ->setParameter('user', $user)
-            ->groupBy("s.user")
+            ->groupBy("m.id")
             ->getQuery()->getOneOrNullResult();
         return $res != null ? array_pop($res):0;
     }
@@ -57,7 +57,7 @@ class MapperService
             ->where('m.id = :user')
             ->andWhere('s.isDeleted != 1')
             ->setParameter('user', $user)
-            ->groupBy("s.user")
+            ->groupBy("m.id")
             ->getQuery()->getOneOrNullResult();
         return $res != null ? array_pop($res):0;
     }
@@ -72,7 +72,7 @@ class MapperService
             ->andWhere('s.wip != 1')
             ->andWhere('s.countVotes != 0')
             ->setParameter('user', $user)
-            ->groupBy("s.user")
+            ->groupBy("m.id")
             ->getQuery()->getOneOrNullResult();
         return $res != null ? array_pop($res):0;
     }
@@ -87,7 +87,7 @@ class MapperService
             ->andWhere('s.isDeleted != 1')
             ->andWhere('s.countVotes != 0')
             ->setParameter('user', $user)
-            ->groupBy("s.user")
+            ->groupBy("m.id")
             ->getQuery()->getOneOrNullResult();
         return $res != null ? array_pop($res):0;
     }
@@ -102,7 +102,7 @@ class MapperService
             ->andWhere('s.isDeleted != 1')
             ->andWhere('s.countVotes != 0')
             ->setParameter('user', $user)
-            ->groupBy("s.user")
+            ->groupBy("m.id")
             ->getQuery()->getOneOrNullResult();
         return $res != null ? array_pop($res):0;
     }
@@ -116,7 +116,7 @@ class MapperService
             ->andWhere('s.isDeleted != 1')
             ->andWhere('s.countVotes != 0')
             ->setParameter('user', $user)
-            ->groupBy("s.user")
+            ->groupBy("m.id")
             ->getQuery()->getOneOrNullResult();
         return $res != null ? array_pop($res):0;
     }
@@ -130,7 +130,7 @@ class MapperService
             ->andWhere('s.isDeleted != 1')
             ->andWhere('s.countVotes != 0')
             ->setParameter('user', $user)
-            ->groupBy("s.user")
+            ->groupBy("m.id")
             ->getQuery()->getOneOrNullResult();
         return $res != null ? array_pop($res):0;
     }
