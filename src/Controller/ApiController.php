@@ -349,21 +349,28 @@ class ApiController extends AbstractController
     #[Route(path: '/api/mapper', name: 'api_mapper')]
     public function mappers(Request $request, UtilisateurRepository $utilisateurRepository)
     {
-        $data = $utilisateurRepository
-            ->createQueryBuilder("u")
-            ->select("u.id AS id, u.mapper_name AS text")
-            ->distinct()
-            ->leftJoin('u.songsMapped','s')
-            ->where('u.mapper_name LIKE :search')
-            ->setParameter('search', $request->get('q').'%')
-            ->andWhere('s.isDeleted = false')
-            ->andWhere('s.wip = false')
-            ->andWhere('s.moderated = true')
-            ->andWhere('s.active = true')
-            ->orderBy('u.mapper_name')
-            ->getQuery()->getArrayResult();
+        if (strlen($request->get('q')) >= 2) {
+            $data = $utilisateurRepository
+                ->createQueryBuilder("u")
+                ->select("u.id AS id, u.mapper_name AS text")
+                ->distinct()
+                ->leftJoin('u.songsMapped', 's')
+                ->where('u.mapper_name LIKE :search')
+                ->setParameter('search', $request->get('q').'%')
+                ->andWhere('s.isDeleted = false')
+                ->andWhere('s.wip = false')
+                ->andWhere('s.moderated = true')
+                ->andWhere('s.active = true')
+                ->orderBy('u.mapper_name')
+                ->getQuery()->getArrayResult();
+
+            return new JsonResponse([
+                'results' => $data
+            ]);
+        }
+
         return new JsonResponse([
-            'results' => $data
+            'results' => []
         ]);
     }
 }

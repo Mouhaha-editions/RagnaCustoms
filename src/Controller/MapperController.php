@@ -20,7 +20,7 @@ class MapperController extends AbstractController
     {
         /** @var Utilisateur[] $mappers */
         $qb = $utilisateurRepository->createQueryBuilder("u")
-            ->leftJoin('u.songs', 's')
+            ->leftJoin('u.songsMapped', 's')
             ->select('u,COUNT(s) AS HIDDEN count_song')
             ->where('u.isMapper = 1')
             ->andWhere('s.id IS NOT NULL')
