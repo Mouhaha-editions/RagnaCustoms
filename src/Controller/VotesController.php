@@ -108,7 +108,7 @@ class VotesController extends AbstractController
             ]);
         }
 
-        if ($song->getUser() == $this->getUser()) {
+        if ($song->getMappers()->contains($this->getUser())) {
             return new JsonResponse([
                 "error" => true,
                 "errorMessage" => $translator->trans("You need an account!"),
@@ -118,10 +118,12 @@ class VotesController extends AbstractController
                 ])
             ]);
         }
+
         $vote = $voteRepository->findOneBy([
             'song' => $song,
             'user' => $this->getUser()
         ]);
+
         if ($vote == null) {
             $vote = new Vote();
             $vote->setUser($this->getUser());

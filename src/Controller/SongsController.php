@@ -602,6 +602,7 @@ class SongsController extends AbstractController
                 ]
             );
         }
+
         return new Response('');
     }
 
