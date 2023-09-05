@@ -114,8 +114,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: ScoreHistory::class, mappedBy: 'user', orphanRemoval: true)]
     #[ORM\OrderBy(['updatedAt' => 'desc'])]
     private $scoreHistories;
+
     #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'user')]
     private $scores;
+
+    #[ORM\OneToMany(targetEntity: RankedScores::class, mappedBy: 'user')]
+    private Collection $rankedScores;
+
     #[ORM\OneToMany(targetEntity: SongRequestVote::class, mappedBy: 'user', orphanRemoval: true)]
     private $songRequestVotes;
     #[ORM\OneToMany(targetEntity: SongRequest::class, mappedBy: 'requestedBy', orphanRemoval: true)]
@@ -190,6 +195,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->votes = new ArrayCollection();
         $this->downloadCounters = new ArrayCollection();
         $this->scores = new ArrayCollection();
+        $this->rankedScores = new ArrayCollection();
         $this->scoreHistories = new ArrayCollection();
         $this->playlists = new ArrayCollection();
         $this->songRequests = new ArrayCollection();
@@ -812,6 +818,21 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 yield $score;
             }
         }
+    }
+
+
+    public function getPPFlat()
+    {
+       return $this->rankedScores->filter(function (RankedScores $r){
+            return $r->getPlateform() == 'flat';
+        })->first()?->getTotalPPScore();
+    }
+
+    public function getPPVR()
+    {
+        return $this->rankedScores->filter(function (RankedScores $r){
+            return $r->getPlateform() == 'vr';
+        })->first()?->getTotalPPScore();
     }
 
     /**

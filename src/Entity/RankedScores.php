@@ -27,7 +27,7 @@ class RankedScores
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'scores')]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'rankedScores')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 

@@ -95,6 +95,25 @@
                     </div>
                 </div>
             </div>
+            <div class="row mt-3">
+                <div class="col-md-2">
+                    <div class="mini-box">
+                        <div class="numeric">
+                            {{ user.getPPVR?? "-" }}
+                        </div>
+                        <div class="text">{{ "VR PP"|trans }}</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mini-box">
+                        <div class="numeric">
+                            {{ user.getPPFlat?? "-" }}
+                        </div>
+                        <div class="text">{{ "VoT PP"|trans }}</div>
+                    </div>
+                </div>
+
+            </div>
 
             {% if user.scores|length > 0 %}
                 <div class="graph mt-4">
