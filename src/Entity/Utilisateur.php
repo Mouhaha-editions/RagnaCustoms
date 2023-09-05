@@ -42,7 +42,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private ?int $id;
     #[ORM\Column(type: 'text', nullable: true)]
-    private string $emailPreference;
+    private ?string $emailPreference = null;
     #[ORM\Column(type: 'text', nullable: true)]
     private $NotificationPreference;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
