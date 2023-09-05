@@ -37,6 +37,10 @@ $(function () {
         return false;
     });
 
+    $(document).on('click', 'a', function (e) {
+        $(window).scrollTop({top:0, behavior: 'smooth'});
+    });
+
     $(document).on('mouseleave', '.circle', function (e) {
         e.preventDefault();
         clearTootips();
