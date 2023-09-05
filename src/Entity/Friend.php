@@ -24,11 +24,11 @@ class Friend
 
     #[ORM\ManyToOne(inversedBy: 'friendRequests')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?utilisateur $user = null;
+    private ?Utilisateur $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'friends')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?utilisateur $friend = null;
+    private ?Utilisateur $friend = null;
 
     #[ORM\Column]
     private ?int $state = null;
@@ -38,24 +38,24 @@ class Friend
         return $this->id;
     }
 
-    public function getUser(): ?utilisateur
+    public function getUser(): ?Utilisateur
     {
         return $this->user;
     }
 
-    public function setUser(?utilisateur $user): static
+    public function setUser(?Utilisateur $user): static
     {
         $this->user = $user;
         $this->user->addFriendRequest($this);
         return $this;
     }
 
-    public function getFriend(): ?utilisateur
+    public function getFriend(): ?Utilisateur
     {
         return $this->friend;
     }
 
-    public function setFriend(?utilisateur $friend): static
+    public function setFriend(?Utilisateur $friend): static
     {
         $this->friend = $friend;
         $this->friend->addFriend($this);
