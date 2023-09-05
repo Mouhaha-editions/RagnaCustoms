@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use ApiPlatform\Api\UrlGeneratorInterface;
 use App\Entity\Playlist;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
