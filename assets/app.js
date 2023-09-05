@@ -9,12 +9,40 @@
 import './styles/app.scss';
 import './bootstrap';
 
-function clearTootips(){
+function clearTootips() {
     $('[data-toggle=tooltip]').tooltip('hide');
 }
 
+function selectPills(hash) {
+    let regex = /-flat$/;
+    console.log('NOT flat', $("a[href=\"#" + hash + "\"]").not('.active'));
+
+}
+
+let firstLoadDone = false;
+
 $(function () {
     let openWithClick = false;
+
+    let hash = window.location.hash.replace('#', '').replace('-flat', '');
+    let regex = /^pills-leaderboard-(\d{1,3})$/;
+
+    $(document).on('click', "a[href^=\"#pills-leaderboard\"]", function () {
+        let hash = $(this).attr('href').replace('#', '').replace('-flat', '');
+
+        if (!$("a[href=\"#" + hash + "\"]").is('.active')) {
+            $("a[href=\"#" + hash + "\"]").trigger('click');
+        }
+
+        if (!$("a[href=\"#" + hash + "-flat\"]").is('.active')) {
+            $("a[href=\"#" + hash + "-flat\"]").trigger('click');
+        }
+    });
+
+    if (regex.test(hash)) {
+        $("a[href=\"#" + hash + "\"]").trigger('click');
+    }
+
     $(document).on('click', '.circle .center', function (e) {
         e.preventDefault();
         openWithClick = true;
@@ -38,7 +66,11 @@ $(function () {
     });
 
     $(document).on('click', 'a', function (e) {
-        $(window).scrollTop({top:0, behavior: 'smooth'});
+        let firstCharacter = $(this).attr('href').charAt(0);
+
+        if (firstCharacter !== '#') {
+            $(window).scrollTop({top: 0, behavior: 'smooth'});
+        }
     });
 
     $(document).on('mouseleave', '.circle', function (e) {
