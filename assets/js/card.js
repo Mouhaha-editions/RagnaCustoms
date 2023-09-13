@@ -12,6 +12,6 @@ $(document).on('mousemove', '.card', function (e) {
     $(this).css({transform: `perspective(${clientWidth}px) rotateX(${rotateY}deg) rotateY(${rotateX}deg) scale3d(1, 1, 1)`});
 });
 
-// $(document).on('mouseleave', '.card', function (e) {
-//     $(this).css({transform: `perspective(${e.currentTarget.clientWidth}px) rotateX(0deg) rotateY(0deg)`});
-// });
+$(document).on('mouseleave', '.card', function (e) {
+    $(this).css({transform: `perspective(${e.currentTarget.clientWidth}px) rotateX(0deg) rotateY(0deg)`});
+});
