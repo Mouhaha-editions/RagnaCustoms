@@ -1,0 +1,15 @@
+.card {
+  background:transparent;
+  max-width: 100%;
+  margin: auto;
+  height: auto;
+  position: relative;
+  transition: transform 0.1s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Slight parallax effect on hover */
+.card:hover .content {
+  transform: translateZ(2px);
+}

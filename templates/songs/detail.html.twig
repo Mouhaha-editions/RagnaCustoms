@@ -21,10 +21,12 @@
                     {#                                                     class="back-button "><i #}
                     {#                                    class="fas fa-arrow-left"></i> {{ "Back"|trans }}</a></div> #}
                     <div class="col-md-3">
-                        <div class="figure">
-                            <img {{ stimulus_target('song-detail', 'img') }} src="{{ song.cover }}"
-                                                                             class="img-fluid"
-                                                                             alt="{{ song.name }}"/>
+                        <div class="figure card">
+
+                            <img {{ stimulus_target('song-detail', 'img') }}
+                                    src="{{ song.cover }}"
+                                    class="img-fluid"
+                                    alt="{{ song.name }}"/>
 
                             <div class="level-list">
                                 {% for diff in song.songDifficulties %}
@@ -46,7 +48,7 @@
                                 <i class="fas fa-clock"></i> {{ song.approximativeDurationMin }}
                             </div>
                             <div>
-                                <i class="fas fa-drum"></i> {{ song.beatsPerMinute|round }}
+                                <i class="fas fa-drum"></i> {{ song.beatsPerMinute|number_format(2)+0 }}
                             </div>
                         </div>
                         <div class="download-buttons">
@@ -110,7 +112,7 @@
                         </div>
                         <div class="mt-3">
                             <div class="label">{{ "Mapped by"|trans }}</div>
-                           {% include 'songs/partial/mappers.html.twig' with {song:song} %}
+                            {% include 'songs/partial/mappers.html.twig' with {song:song} %}
                         </div>
                         <div class="mt-3">
                             <div class="label">{{ "Description"|trans }}</div>
@@ -359,6 +361,7 @@
                             "ratingValue": "{{ song.voteAverage|round(2, "floor") }}"
                         }
                     }
+
 
 
 

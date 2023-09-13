@@ -2,9 +2,10 @@
     <td>
         <div class="d-flex ">
             <a href="{{ url('song_detail',{slug:song.slug}) }}">
-
-                <img src="{{ song.cover }}" class="small-cover"
-                     alt="cover"/>
+                <div class="card">
+                    <img src="{{ song.cover }}" class="small-cover"
+                         alt="cover"/>
+                </div>
             </a>
             <div class="song pl-1">
                 <div class="title"><a
