@@ -24,7 +24,7 @@ class SongCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->setSearchFields(['name','user.mapper_name', 'user.username'])
+            ->setSearchFields(['name','users.mapper_name', 'users.username'])
             ->setDefaultSort(['id'=>"DESC"]);
         return $crud;
     }
@@ -34,7 +34,7 @@ class SongCrudController extends AbstractCrudController
         return [
             IdField::new('id'),
             TextField::new('name'),
-            TextField::new('user', 'Mapper'),
+            ArrayField::new('mappers', 'mapper'),
             BooleanField::new('isModerated'),
             ChoiceField::new('bestPlatform')->setChoices(['vr'=>'0','flat'=>'1']),
             BooleanField::new('isWip'),

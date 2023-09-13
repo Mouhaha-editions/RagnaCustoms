@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -47,7 +48,7 @@ class VoteCrudController extends AbstractCrudController
             TextField::new('id')->hideOnForm()->hideOnIndex(),
             DateTimeField::new('createdAt'),
             TextField::new('user'),
-            TextField::new('song.mapper', 'Mapper'),
+            ArrayField::new('song.mappers', 'Mapper'),
             TextField::new('song'),
             NumberField::new('funFactor'),
             NumberField::new('rhythm'),
