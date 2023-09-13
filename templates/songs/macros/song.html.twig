@@ -1,7 +1,7 @@
 {% macro featuredBox(song) %}
     <div class="featured-box row">
         <div class="col-6 pr-0">
-            <figure  class="card">
+            <figure class="card">
                 <a href="{{ url('song_detail',{slug:song.slug}) }}">
                     <img src="{{ song.cover }}" class="img-fluid shiny" alt="cover"/>
                 </a>

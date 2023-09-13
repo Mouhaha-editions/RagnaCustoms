@@ -1,11 +1,12 @@
 const THRESHOLD = 15;
 
 $(document).on('mousemove', '.card', function (e) {
-    let {offsetX, offsetY, currentTarget} = e;
-    let {clientWidth, clientHeight, offsetLeft, offsetTop} = currentTarget;
+    let {clientX, clientY, currentTarget} = e;
+    let {clientWidth, clientHeight} = currentTarget;
+    let {left, top} = currentTarget.getBoundingClientRect();
 
-    let horizontal = (offsetX - offsetLeft) / clientWidth;
-    let vertical = (offsetY - offsetTop) / clientHeight;
+    let horizontal = (clientX - left) / clientWidth;
+    let vertical = (clientY - top) / clientHeight;
     let rotateX = (THRESHOLD / 2 - horizontal * THRESHOLD).toFixed(2);
     let rotateY = (vertical * THRESHOLD - THRESHOLD / 2).toFixed(2);
 
