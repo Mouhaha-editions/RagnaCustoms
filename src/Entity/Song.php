@@ -941,16 +941,22 @@ class Song
         return $this;
     }
 
-    public function getLevelAuthorName(): ?string
+    public function getMappersNames(): string
     {
-        return $this->levelAuthorName;
+        return implode(
+            ', ',
+            $this->getMappers()->map(function (Utilisateur $mapper) {
+                return $mapper->getMapperName();
+            })->toArray()
+        );
     }
 
-    public function setLevelAuthorName(string $levelAuthorName): self
+    /**
+     * @return Collection<int, Utilisateur>
+     */
+    public function getMappers(): Collection
     {
-        $this->levelAuthorName = $levelAuthorName;
-
-        return $this;
+        return $this->mappers;
     }
 
     public function getSongDifficultiesStr(): string
@@ -966,6 +972,18 @@ class Song
     {
         $file = explode(".", $this->coverImageFileName);
         return ".".end($file);
+    }
+
+    public function getLevelAuthorName(): ?string
+    {
+        return $this->levelAuthorName;
+    }
+
+    public function setLevelAuthorName(string $levelAuthorName): self
+    {
+        $this->levelAuthorName = $levelAuthorName;
+
+        return $this;
     }
 
     public function isConverted(): ?bool
@@ -1074,21 +1092,8 @@ class Song
         return $this;
     }
 
-    public function getMappersNames(): string
+    public function getAuthors()
     {
-        return implode(
-            ', ',
-            $this->getMappers()->map(function (Utilisateur $mapper) {
-                return $mapper->getMapperName();
-            })->toArray()
-        );
-    }
-
-    /**
-     * @return Collection<int, Utilisateur>
-     */
-    public function getMappers(): Collection
-    {
-        return $this->mappers;
+        return explode(',', $this->getAuthorName());
     }
 }

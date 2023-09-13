@@ -24,7 +24,7 @@
                 <a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song|raw }}</a>
             </div>
             <div class="author pb-3 one-line">
-                <a href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
+                {% include 'songs/partial/artists.html.twig' with {song : song} %}
             </div>
             <div class="mapper pb-3 one-line">
                {% include 'songs/partial/mappers.html.twig' with {song:song} %}

@@ -25,9 +25,7 @@
                                 <small class="small"><i data-toggle="tooltip" title="already downloaded" class="fas fa-check"></i></small>
                             {% endif %}
                         </div>
-                        <div class="author"><a
-                                    href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
-                        </div>
+                        {% include 'songs/partial/artists.html.twig' with {song : song} %}
                     </div>
                 </div>
             </td>

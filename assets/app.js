@@ -67,8 +67,9 @@ $(function () {
 
     $(document).on('click', 'a', function (e) {
         let firstCharacter = $(this).attr('href').charAt(0);
+        let exception = $(this).data('no-scroll') || $(this).data('no-swup');
 
-        if (firstCharacter !== '#') {
+        if (firstCharacter !== '#' && !exception) {
             $(window).scrollTop({top: 0, behavior: 'smooth'});
         }
     });

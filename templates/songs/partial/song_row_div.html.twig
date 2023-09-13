@@ -9,9 +9,7 @@
             <div class="title text-warning">
                 {{ song|raw }}
             </div>
-            <div class="author">
-                {{ song.authorName }}
-            </div>
+            {% include 'songs/partial/artists.html.twig' with {song : song} %}
         </div>
     </div>
     <hr class="m-1"/>

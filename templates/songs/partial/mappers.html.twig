@@ -1,8 +1,8 @@
 <div class="mapper">
     {% for mapper in song.mappers %}
-        {% if loop.index > 1 %},&nbsp;{% endif %}
+        {%- if loop.index > 1 -%},&nbsp;{%- endif -%}
         <a href="{{ url('mapper_profile', {username:mapper.username}) }}">
-            {{ membershipService.displayMappername(mapper, false)|raw }}
+            {{- membershipService.displayMappername(mapper, false)|raw -}}
         </a>
     {% endfor %}
 </div>

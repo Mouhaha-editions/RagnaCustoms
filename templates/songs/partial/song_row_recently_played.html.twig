@@ -6,11 +6,8 @@
             <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" alt="cover"/></a>
             <div class="song pl-1">
                 <div class="title one-line"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song|raw }}</a></div>
-                <div class="author">
-                    <a href="{{ url('song_library') }}?search=artist%3A{{ song.authorName|url_encode }}">
-                        {{ song.authorName }}
-                    </a>
-                </div>
+                {% include 'songs/partial/artists.html.twig' with {song : song} %}
+
             </div>
         </div>
     </td>

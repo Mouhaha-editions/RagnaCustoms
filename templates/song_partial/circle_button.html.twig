@@ -3,12 +3,14 @@
         <a data-toggle="tooltip"
            title="1 click download"
            data-no-swup="true"
+           data-no-scroll="true"
            href="ragnac://install/{{ song.id }}"
            class="menuItem text-info one-click fas fa-download fa-2x">
         </a>
         <a data-toggle="tooltip"
            title="Download zip file"
            data-no-swup="true"
+           data-no-scroll="true"
            href="{{ url("song_direct_download",{id:song.id}) }}"
            class="ddl text-success text-uppercase menuItem fas fa-file-zipper fa-2x">
         </a>
@@ -16,12 +18,14 @@
         <a data-toggle="tooltip"
            title="Click to copy !rc code"
            href="#"
+           data-no-scroll="true"
            data-to-copy="!rc {{ song.id }}" class="copy-clipboard mr-1 btn-twitch fab fa-twitch fa-2x menuItem" style="color:#bf94ff">
         </a>
         <a href="#"
            data-toggle="modal"
            data-target="#previewSong"
            data-refresh="true"
+           data-no-scroll="true"
            data-url="{{ url("partial_preview_song",{id:song.id}) }}"
            class="ajax-load preview-popup fas fa-play-circle fa-2x menuItem">
         </a>
