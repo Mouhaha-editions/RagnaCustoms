@@ -823,16 +823,28 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPPFlat()
     {
-       return $this->rankedScores->filter(function (RankedScores $r){
+        $scores = $this->rankedScores->filter(function (RankedScores $r) {
             return $r->getPlateform() == 'flat';
-        })->first()?->getTotalPPScore();
+        });
+
+        if ($scores->count() == 0) {
+            return null;
+        }
+
+        return $scores->first()->getTotalPPScore();
     }
 
     public function getPPVR()
     {
-        return $this->rankedScores->filter(function (RankedScores $r){
+        $scores = $this->rankedScores->filter(function (RankedScores $r) {
             return $r->getPlateform() == 'vr';
-        })->first()?->getTotalPPScore();
+        });
+
+        if ($scores->count() == 0) {
+            return null;
+        }
+
+        return $scores->first()->getTotalPPScore();
     }
 
     /**
