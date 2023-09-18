@@ -347,10 +347,12 @@ class SongsController extends AbstractController
                     break;
                 default:
                     $qb->andWhere(
-                        $qb->expr()->orX('s.name LIKE :search_string'),
-                        $qb->expr()->orX('s.authorName LIKE :search_string'),
-                        $qb->expr()->orX('s.description LIKE :search_string'),
-                        $qb->expr()->orX('t.label LIKE :search_string')
+                        $qb->expr()->orX(
+                            's.name LIKE :search_string',
+                            's.authorName LIKE :search_string',
+                            's.description LIKE :search_string',
+                            't.label LIKE :search_string'
+                        )
                     )->setParameter('search_string', '%'.$request->get('search', null).'%');
             }
         }
@@ -687,14 +689,14 @@ class SongsController extends AbstractController
             if ($pagination->isPartial()) {
                 return $this->render('songs/partial/leaderboard.html.twig', [
                     'level' => array_pop($levels),
-                    'type'=>'scores',
+                    'type' => 'scores',
                 ]);
             }
 
             if ($paginationFlat->isPartial()) {
                 return $this->render('songs/partial/leaderboard.html.twig', [
                     'level' => array_pop($levels),
-                    'type'=>'scoresFlat',
+                    'type' => 'scoresFlat',
                 ]);
             }
         }
