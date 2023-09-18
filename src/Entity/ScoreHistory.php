@@ -246,7 +246,7 @@ class ScoreHistory
 
     public function getHumanUpdatedAt(): ?string
     {
-        return StatisticService::dateDisplayer($this->createdAt);
+        return StatisticService::dateDisplay($this->createdAt);
     }
 
     /**
@@ -331,12 +331,12 @@ class ScoreHistory
 
     public function getTimeAgo()
     {
-        return StatisticService::dateDisplayer($this->getCreatedAt());
+        return StatisticService::dateDisplay($this->getCreatedAt());
     }
 
     public function getTimeAgoShort()
     {
-       return StatisticService::dateDisplayerShort($this->getCreatedAt());
+       return StatisticService::dateDisplayedShort($this->getCreatedAt());
     }
 
     public function getHitAccuracy(): ?string

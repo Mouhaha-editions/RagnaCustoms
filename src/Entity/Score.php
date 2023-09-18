@@ -112,12 +112,12 @@ class Score
 
     public function getHumanUpdatedAt(): ?string
     {
-        return StatisticService::dateDisplayer($this->createdAt);
+        return StatisticService::dateDisplay($this->createdAt);
     }
 
     public function getTimeAgo(): string
     {
-        return StatisticService::dateDisplayer($this->createdAt);
+        return StatisticService::dateDisplay($this->createdAt);
     }
 
     /**
@@ -352,7 +352,7 @@ class Score
 
     public function getTimeAgoShort()
     {
-        return StatisticService::dateDisplayerShort($this->createdAt);
+        return StatisticService::dateDisplayedShort($this->createdAt);
     }
 
     public function getPlateformIcon()

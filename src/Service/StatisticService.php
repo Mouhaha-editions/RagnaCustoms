@@ -28,7 +28,7 @@ class StatisticService
         $this->em = $em;
     }
 
-    public static function dateDisplayer(?DateTimeInterface $date = null)
+    public static function dateDisplay(?DateTimeInterface $date = null): string
     {
         if (!$date) {
             return 'soon';
@@ -69,7 +69,7 @@ class StatisticService
         return '99999 seconds';
     }
 
-    public static function dateDisplayerShort(?DateTimeInterface $date = null)
+    public static function dateDisplayedShort(?DateTimeInterface $date = null)
     {
         if (!$date) {
             return 'soon';
