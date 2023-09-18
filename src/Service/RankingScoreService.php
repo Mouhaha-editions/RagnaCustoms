@@ -157,7 +157,7 @@ class RankingScoreService
             ->orderBy("s.updatedAt", 'Desc')
             ->setFirstResult(0)->setMaxResults(1)
             ->getQuery()->getOneOrNullResult();
-        return StatisticService::dateDiplayerShort($res->getUpdatedAt());
+        return StatisticService::dateDisplayerShort($res->getUpdatedAt());
     }
 
     public function imagine(SongDifficulty $songDifficulty, Utilisateur $user, $isVR = false): Score

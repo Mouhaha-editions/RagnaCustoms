@@ -68,7 +68,7 @@ class RankedScores
 
     public function getTimeAgoShort()
     {
-      return StatisticService::dateDiplayerShort($this->updatedAt);
+      return StatisticService::dateDisplayerShort($this->updatedAt);
     }
 
     public function getPlateform(): ?string

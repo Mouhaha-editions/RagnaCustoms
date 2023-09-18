@@ -28,9 +28,83 @@ class StatisticService
         $this->em = $em;
     }
 
+    public static function dateDisplayer(?DateTimeInterface $date = null)
+    {
+        if (!$date) {
+            return 'soon';
+        }
+
+        $difference = $date->diff(new DateTime(), true);
+
+        $etime = date_create('@0')->add($difference)->getTimestamp();
+
+        if ($etime < 1) {
+            return '0 seconds';
+        }
+
+        $a = array(
+            365 * 24 * 60 * 60 => 'year',
+            30 * 24 * 60 * 60 => 'month',
+            24 * 60 * 60 => 'day',
+            60 * 60 => 'hour',
+            60 => 'minute',
+            1 => 'second'
+        );
+        $a_plural = array(
+            'year' => 'years',
+            'month' => 'months',
+            'day' => 'days',
+            'hour' => 'hours',
+            'minute' => 'minutes',
+            'second' => 'seconds'
+        );
+
+        foreach ($a as $secs => $str) {
+            $d = $etime / $secs;
+            if ($d >= 1) {
+                $r = round($d);
+                return $r.' '.($r > 1 ? $a_plural[$str] : $str).' ago';
+            }
+        }
+        return '99999 seconds';
+    }
+
+    public static function dateDisplayerShort(?DateTimeInterface $date = null)
+    {
+        if (!$date) {
+            return 'soon';
+        }
+
+        $difference = $date->diff(new DateTime(), true);
+
+        $etime = date_create('@0')->add($difference)->getTimestamp();
+
+        if ($etime < 1) {
+            return '0 seconds';
+        }
+
+        $a = array(
+            365 * 24 * 60 * 60 => 'y',
+            30 * 24 * 60 * 60 => 'mo',
+            24 * 60 * 60 => 'd',
+            60 * 60 => 'h',
+            60 => 'm',
+            1 => 's'
+        );
+
+        foreach ($a as $secs => $str) {
+            $d = $etime / $secs;
+            if ($d >= 1) {
+                $r = round($d);
+                return $r.$str.' ago';
+            }
+        }
+        return '99999 seconds';
+    }
+
     public function getLastXDays($days = 30)
     {
-        $first = (new DateTime())->modify("-" . $days . " days");
+        $first = (new DateTime())->modify("-".$days." days");
         $days = [];
         while ($first <= new DateTime()) {
             $days[] = $first->format('Y-m-d');
@@ -41,18 +115,18 @@ class StatisticService
 
     public function getDownloadsLastXDays($days, Song $song)
     {
-        $first = (new DateTime())->modify("-" . $days . " days");
+        $first = (new DateTime())->modify("-".$days." days");
         $data = [];
         $i = 0;
         while ($first <= new DateTime()) {
             $result = $this->em->getRepository(DownloadCounter::class)->createQueryBuilder("d")
-                               ->select('COUNT(d) AS nb')
-                               ->where("d.song = :song")
-                               ->andWhere("d.createdAt LIKE :date")
-                               ->setParameter('song', $song)
-                               ->setParameter('date', $first->format('Y-m-d') . "%")
-                               ->setFirstResult(0)->setMaxResults(1)
-                               ->getQuery()->getOneOrNullResult();
+                ->select('COUNT(d) AS nb')
+                ->where("d.song = :song")
+                ->andWhere("d.createdAt LIKE :date")
+                ->setParameter('song', $song)
+                ->setParameter('date', $first->format('Y-m-d')."%")
+                ->setFirstResult(0)->setMaxResults(1)
+                ->getQuery()->getOneOrNullResult();
             $first->modify("+1 day");
 
             if ($i == 0) {
@@ -65,24 +139,22 @@ class StatisticService
         return $data;
     }
 
-
     public function getPlayedLastXDays($days, Song $song)
     {
-
         $hashes = $song->getHashes();
 
-        $first = (new DateTime())->modify("-" . $days . " days");
+        $first = (new DateTime())->modify("-".$days." days");
         $data = [];
         $i = 0;
         while ($first <= new DateTime()) {
             $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
-                               ->select('COUNT(d) AS nb')
-                               ->where("d.hash IN (:hashes)")
-                               ->andWhere("d.createdAt LIKE :date")
-                               ->setParameter('hashes', $hashes)
-                               ->setParameter('date', $first->format('Y-m-d') . "%")
-                               ->setFirstResult(0)->setMaxResults(1)
-                               ->getQuery()->getOneOrNullResult();
+                ->select('COUNT(d) AS nb')
+                ->where("d.hash IN (:hashes)")
+                ->andWhere("d.createdAt LIKE :date")
+                ->setParameter('hashes', $hashes)
+                ->setParameter('date', $first->format('Y-m-d')."%")
+                ->setFirstResult(0)->setMaxResults(1)
+                ->getQuery()->getOneOrNullResult();
             $first->modify("+1 day");
             if ($i == 0) {
                 $data[] = $result['nb'];
@@ -90,7 +162,6 @@ class StatisticService
                 $data[] = $data[$i - 1] + $result['nb'];
             }
             $i++;
-
         }
         return $data;
     }
@@ -105,15 +176,15 @@ class StatisticService
     {
         if (self::$StatisticsOnScoreHistory == null || count(self::$StatisticsOnScoreHistory) == 0) {
             $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
-                               ->select('SUM(d.score) AS distance')
-                               ->addSelect('SUM(d.hit) AS count_notes_hit')
-                               ->addSelect('SUM(d.missed) AS count_notes_missed')
-                               ->addSelect('0 AS count_notes_not_processed')
-                               ->where("d.user = :user")
-                               ->setParameter('user', $user)
-                               ->groupBy('d.user')
-                               ->setFirstResult(0)->setMaxResults(1)
-                               ->getQuery()->getOneOrNullResult();
+                ->select('SUM(d.score) AS distance')
+                ->addSelect('SUM(d.hit) AS count_notes_hit')
+                ->addSelect('SUM(d.missed) AS count_notes_missed')
+                ->addSelect('0 AS count_notes_not_processed')
+                ->where("d.user = :user")
+                ->setParameter('user', $user)
+                ->groupBy('d.user')
+                ->setFirstResult(0)->setMaxResults(1)
+                ->getQuery()->getOneOrNullResult();
             if ($result != null) {
                 foreach ($result as $k => $v) {
                     self::$StatisticsOnScoreHistory[$k] = $v ?? 0;
@@ -140,81 +211,11 @@ class StatisticService
         return self::$StatisticsOnScoreHistory['count_notes_not_processed'] ?? 0;
     }
 
-    public static function dateDiplayer(DateTimeInterface $date)
-    {
-
-        $difference = $date->diff(new DateTime(), true);
-
-        $etime = date_create('@0')->add($difference)->getTimestamp();
-
-        if ($etime < 1) {
-            return '0 seconds';
-        }
-
-        $a = array(
-            365 * 24 * 60 * 60 => 'year',
-            30 * 24 * 60 * 60  => 'month',
-            24 * 60 * 60       => 'day',
-            60 * 60            => 'hour',
-            60                 => 'minute',
-            1                  => 'second'
-        );
-        $a_plural = array(
-            'year'   => 'years',
-            'month'  => 'months',
-            'day'    => 'days',
-            'hour'   => 'hours',
-            'minute' => 'minutes',
-            'second' => 'seconds'
-        );
-
-        foreach ($a as $secs => $str) {
-            $d = $etime / $secs;
-            if ($d >= 1) {
-                $r = round($d);
-                return $r . ' ' . ($r > 1 ? $a_plural[$str] : $str) . ' ago';
-            }
-        }
-        return '99999 seconds';
-
-    }
-
-    public static function dateDiplayerShort(DateTimeInterface $date)
-    {
-
-        $difference = $date->diff(new DateTime(), true);
-
-        $etime = date_create('@0')->add($difference)->getTimestamp();
-
-        if ($etime < 1) {
-            return '0 seconds';
-        }
-
-        $a = array(
-            365 * 24 * 60 * 60 => 'y',
-            30 * 24 * 60 * 60  => 'mo',
-            24 * 60 * 60       => 'd',
-            60 * 60            => 'h',
-            60                 => 'm',
-            1                  => 's'
-        );
-
-        foreach ($a as $secs => $str) {
-            $d = $etime / $secs;
-            if ($d >= 1) {
-                $r = round($d);
-                return $r . $str . ' ago';
-            }
-        }
-        return '99999 seconds';
-
-    }
-
     /** idealement travailler avec une interface plutot que deux faire deux methodes */
     public function getScatterDataSetsByScore(?Score $sh)
     {
         $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
-        $song_file = "../public/" . $sh->getSongDifficulty()->getDifficultyFile();
+        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
         return $this->getScatterDatasets($raw_data, $song_file);
     }
 
@@ -233,18 +234,18 @@ class StatisticService
         }
         $datasets = [
             [
-                "label"                => "miss",
-                "data"                 => [],
+                "label" => "miss",
+                "data" => [],
                 'pointBackgroundColor' => '#f55142'
             ],
             [
-                "label"                => "ok",
-                "data"                 => [],
+                "label" => "ok",
+                "data" => [],
                 'pointBackgroundColor' => '#42c8f5'
             ],
             [
-                "label"                => "perfect",
-                "data"                 => [],
+                "label" => "perfect",
+                "data" => [],
                 'pointBackgroundColor' => '#42f581'
 
             ]
@@ -265,7 +266,6 @@ class StatisticService
             } else {
                 $datasets[2]['data'][] = $note;
             }
-
         }
         return (['datasets' => $datasets]);
     }
@@ -273,14 +273,14 @@ class StatisticService
     public function getScatterDataSetsByScorehistory(?ScoreHistory $sh)
     {
         $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
-        $song_file = "../public/" . $sh->getSongDifficulty()->getDifficultyFile();
+        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
         return $this->getScatterDatasets($raw_data, $song_file);
     }
 
     public function getFullDatasetByScorehistory(?ScoreHistory $sh)
     {
         $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
-        $song_file = "../public/" . $sh->getSongDifficulty()->getDifficultyFile();
+        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
         return $this->getFullDataset($raw_data, $song_file);
     }
 
@@ -288,7 +288,7 @@ class StatisticService
     {
         $json = json_decode(file_get_contents($song_file));
         $notes = $json->_notes;
-        $datasets=[];
+        $datasets = [];
         for ($i = 0; $i < count($raw_data); $i++) {
             if ($raw_data[$i] == -1000) {
                 $raw_data[$i] = -100;

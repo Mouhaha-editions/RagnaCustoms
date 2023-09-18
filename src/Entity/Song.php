@@ -869,7 +869,7 @@ class Song
      */
     public function getTimeAgo(): string
     {
-        return StatisticService::dateDiplayer($this->getLastDateUpload());
+        return StatisticService::dateDisplayer($this->getLastDateUpload());
     }
 
     public function __api()
