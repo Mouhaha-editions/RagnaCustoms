@@ -115,7 +115,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OrderBy(['updatedAt' => 'desc'])]
     private $scoreHistories;
 
-    #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'user',fetch: 'EAGER')]
     private $scores;
 
     #[ORM\OneToMany(targetEntity: RankedScores::class, mappedBy: 'user')]
@@ -737,6 +737,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return Collection<int, Song>
+     */
+    public function getSongsMapped(): Collection
+    {
+        return $this->songsMapped;
+    }
+
+    /**
      * @return Collection|Song[]
      */
     public function getSongs(): Collection
@@ -820,6 +828,35 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         }
     }
 
+    /**
+     * @return Collection|Score[]
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function getAvgPerfect(?int $lvl = null): ?int
+    {
+        $scores = $this->getScores();
+        $sum = 0;
+
+        if ($lvl) {
+            $scores = $scores->filter(function (Score $score) use ($lvl) {
+                return $score->getSongDifficulty()->getDifficultyRank()->getLevel() == $lvl;
+            });
+        }
+
+        if ($scores->count() === 0) {
+            return null;
+        }
+
+        foreach ($scores as $score) {
+            $sum += $score->getHitPercentage();
+        }
+
+        return $sum / $scores->count();
+    }
 
     public function getPPFlat()
     {
@@ -845,14 +882,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $scores->first()->getTotalPPScore();
-    }
-
-    /**
-     * @return Collection|Score[]
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
     }
 
     public function hasPlayed(SongDifficulty $difficulty)
@@ -1584,14 +1613,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getScores()->filter(function (Score $score) use ($songDifficulty, $isVR) {
             return $score->getSongDifficulty() === $songDifficulty && $score->isVR() == $isVR;
         })->first();
-    }
-
-    /**
-     * @return Collection<int, Song>
-     */
-    public function getSongsMapped(): Collection
-    {
-        return $this->songsMapped;
     }
 
     public function addSongsMapped(Song $songsMapped): static

@@ -21,7 +21,7 @@
                 {% endif %}
 
                 <div class="friend-request">
-                {% include 'user/partial/friend_request.html.twig' with {user:user} %}
+                    {% include 'user/partial/friend_request.html.twig' with {user:user} %}
                 </div>
             </div>
         </div>
@@ -112,37 +112,53 @@
                         <div class="text">{{ "VoT PP"|trans }}</div>
                     </div>
                 </div>
-
-            </div>
-
-            {% if user.scores|length > 0 %}
-                <div class="graph mt-4">
-                    <div>
-                        {% set totalDistance = statisticService.getTotalDistance(user)/100 %}
-                        <div class="label">{{ "Distance"|trans }}</div>
-                        <div class="total-bar">{{ totalDistance|number_format(2,'.',',') }}m</div>
-                        <div class="avg">
-                            <div class="avg-bar"
-                                 style="width:50%">{{ (totalDistance/user.scores|length)|number_format(2,'.',',') }}
-                                m
-                            </div>
-                            <div class="avg-text">{{ "avg. per song"|trans }}</div>
-                            <div class="clearfix"></div>
+                <div class="col-md-2">
+                    <div class="mini-box">
+                        <div class="numeric">
+                            {{ user.avgPerfect?? "-" }}
                         </div>
-                    </div>
-                    <div>
-                        <div class="label">{{ "Notes hit"|trans }}</div>
-                        <div class="total-bar">{{ statisticService.totalNotesHit(user)|number_format(0,'.',',') }}</div>
-                        <div class="avg">
-                            {% set avg2 = (statisticService.totalNotesHit(user)/user.scores|length) %}
-                            <div class="avg-bar"
-                                 style="width:50%;">{{ avg2|number_format(0,'.',',') }}</div>
-                            <div class="avg-text">{{ "avg. per song"|trans }}</div>
-                            <div class="clearfix"></div>
-                        </div>
+                        <div class="text">{{ "Average perfects %"|trans }}</div>
                     </div>
                 </div>
-            {% endif %}
+            </div>
+            <hr/>
+            <h4 class="mt-3">Average perfects / diff</h4>
+            <div class="d-flex justify-content-around">
+                {% for i in 1..10 %}
+                    <div class="text-center">
+                        <div>Diff {{ i }}</div>
+                        <div>{{ user.avgPerfect(i)?? "-" }}%</div>
+                    </div>
+                {% endfor %}
+            </div>
+            {#            {% if user.scores|length > 0 %} #}
+            {#                <div class="graph mt-4"> #}
+            {#                    <div> #}
+            {#                        {% set totalDistance = statisticService.getTotalDistance(user)/100 %} #}
+            {#                        <div class="label">{{ "Distance"|trans }}</div> #}
+            {#                        <div class="total-bar">{{ totalDistance|number_format(2,'.',',') }}m</div> #}
+            {#                        <div class="avg"> #}
+            {#                            <div class="avg-bar" #}
+            {#                                 style="width:50%">{{ (totalDistance/user.scores|length)|number_format(2,'.',',') }} #}
+            {#                                m #}
+            {#                            </div> #}
+            {#                            <div class="avg-text">{{ "avg. per song"|trans }}</div> #}
+            {#                            <div class="clearfix"></div> #}
+            {#                        </div> #}
+            {#                    </div> #}
+            {#                    <div> #}
+            {#                        <div class="label">{{ "Notes hit"|trans }}</div> #}
+            {#                        <div class="total-bar">{{ statisticService.totalNotesHit(user)|number_format(0,'.',',') }}</div> #}
+            {#                        <div class="avg"> #}
+            {#                            {% set avg2 = (statisticService.totalNotesHit(user)/user.scores|length) %} #}
+            {#                            <div class="avg-bar" #}
+            {#                                 style="width:50%;">{{ avg2|number_format(0,'.',',') }}</div> #}
+            {#                            <div class="avg-text">{{ "avg. per song"|trans }}</div> #}
+            {#                            <div class="clearfix"></div> #}
+            {#                        </div> #}
+            {#                    </div> #}
+            {#                </div> #}
+            {#            {% endif %} #}
 
         </div>
         <div class="col-md-4 text-right">
@@ -159,7 +175,7 @@
             {% import "widget/order_link.html.twig" as macro_order %}
             <table class="table songs recently-played">
                 <tr>
-                    <th  style="width:250px;">{{ "Song title"|trans }}</th>
+                    <th style="width:250px;">{{ "Song title"|trans }}</th>
                     <th class="">{{ "Difficulty"|trans }}</th>
                     <th class=""></th>
                     <th class="">{{ "Distance"|trans }}</th>
@@ -185,49 +201,50 @@
         <div class="col-md-6">
             <h2>{{ "Public playlist"|trans }}</h2>
             <div class="row">
-            {% for playlist in user.publicPlaylists %}
-                <div class="col-md-6 mb-4">
-                    <div class="playlist">
-                        <div class="header">
-                            {% for song in playlist.songs %}
-                                {% if loop.index <= 6 %}
-                                    <img src="{{ song.cover }}" alt="{{ song.name }}" class="img-fluid"
-                                    >
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        <div class="header-overlay"></div>
-
-                        <div class="title">
-                            <h2>{{ playlist.label }}</h2>
-                        </div>
-                        <div class="count">{{ playlist.songs|length }}
-                        </div>
-
-                        <div class="resume">
-                            <table class="table table-condensed">
-                                <tbody>
+                {% for playlist in user.publicPlaylists %}
+                    <div class="col-md-6 mb-4">
+                        <div class="playlist">
+                            <div class="header">
                                 {% for song in playlist.songs %}
-                                    <tr>
-                                        <td class="p-1">
-                                            {{ song.name }}
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td>No song</td>
-                                    </tr>
+                                    {% if loop.index <= 6 %}
+                                        <img src="{{ song.cover }}" alt="{{ song.name }}" class="img-fluid"
+                                        >
+                                    {% endif %}
                                 {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                            </div>
+                            <div class="header-overlay"></div>
 
-                        <div class="buttons btn-group">
-                            <a href="{{ url("playlist_show",{id:playlist.id}) }}" class="btn btn-success"><i class="fas fa-eye"></i></a>
+                            <div class="title">
+                                <h2>{{ playlist.label }}</h2>
+                            </div>
+                            <div class="count">{{ playlist.songs|length }}
+                            </div>
+
+                            <div class="resume">
+                                <table class="table table-condensed">
+                                    <tbody>
+                                    {% for song in playlist.songs %}
+                                        <tr>
+                                            <td class="p-1">
+                                                {{ song.name }}
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td>No song</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="buttons btn-group">
+                                <a href="{{ url("playlist_show",{id:playlist.id}) }}" class="btn btn-success"><i
+                                            class="fas fa-eye"></i></a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
             </div>
         </div>
     </div>
