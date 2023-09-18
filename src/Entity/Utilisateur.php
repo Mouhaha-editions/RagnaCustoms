@@ -115,7 +115,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OrderBy(['updatedAt' => 'desc'])]
     private $scoreHistories;
 
-    #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'user',fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'user')]
     private $scores;
 
     #[ORM\OneToMany(targetEntity: RankedScores::class, mappedBy: 'user')]
