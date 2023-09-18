@@ -5,11 +5,10 @@ namespace App\Command;
 
 
 use App\Entity\Song;
-use App\Entity\SongDifficulty;
 use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Service\SongService;
-use Intervention\Image\ImageManagerStatic as Image;
+use DateTime;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -50,14 +49,17 @@ class SongPublishCommand extends Command
             ->andWhere("s.wip = 0")
             ->andWhere("s.isNotificationDone = 0")
             ->andWhere("s.programmationDate <= :now")
-            ->setParameter('now', new \DateTime())
+            ->setParameter('now', new DateTime())
             ->getQuery()->getResult();
         /** @var Song $song */
         foreach ($songs as $song) {
-            $song->setLastDateUpload(new \DateTime());
-            $this->songService->sendNewNotification($song);
+            if ($song->getLastDateUpload() === null) {
+                $this->songService->sendNewNotification($song);
+            }
+
+            $song->setLastDateUpload(new DateTime());
             $this->songRepository->add($song);
-            echo $song->getName() . "\r\n";
+            echo $song->getName()."\r\n";
         }
 
         return Command::SUCCESS;

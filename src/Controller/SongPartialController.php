@@ -21,7 +21,7 @@ class SongPartialController extends AbstractController
     public function latestSongs(SongRepository $songRepository): Response
     {
         $songs = $songRepository->createQueryBuilder("s")
-            ->orderBy("s.programmationDate", 'DESC')
+            ->orderBy("s.lastDateUpload", 'DESC')
             ->addOrderBy("s.createdAt", 'DESC')
             ->where('s.isDeleted != true')
             ->andWhere('(s.programmationDate <= :now )')

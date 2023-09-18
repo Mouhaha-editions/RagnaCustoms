@@ -55,7 +55,7 @@ class Song
     private $isDeleted = false;
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $isExplicit;
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $lastDateUpload;
     #[ORM\Column(type: 'string', length: 255)]
     private $levelAuthorName;

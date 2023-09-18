@@ -29,13 +29,18 @@ use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 class UploadSongController extends AbstractController
 {
     #[Route(path: '/upload/song/new', name: 'new_song')]
-    public function new(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
-    {
+    public function new(
+        Request $request,
+        TranslatorInterface $translator,
+        ManagerRegistry $doctrine,
+        SongService $songService,
+        ScoreService $scoreService
+    ) {
         if (!$this->isGranted("ROLE_USER")) {
             return new JsonResponse([
-                'error'        => true,
+                'error' => true,
                 'errorMessage' => $translator->trans("You need to be connected"),
-                'response'     => ""
+                'response' => ""
             ]);
         }
 
@@ -47,19 +52,26 @@ class UploadSongController extends AbstractController
     }
 
     #[Route(path: '/upload/song/edit/{id}', name: 'edit_song')]
-    public function edit(Request $request, Song $song, ManagerRegistry $doctrine, TranslatorInterface $translator, SongService $songService, ScoreService $scoreService)
-    {
+    public function edit(
+        Request $request,
+        Song $song,
+        ManagerRegistry $doctrine,
+        TranslatorInterface $translator,
+        SongService $songService,
+        ScoreService $scoreService
+    ) {
         if (!$song->getMappers()->contains($this->getUser())) {
             return new JsonResponse([
-                'error'        => true,
+                'error' => true,
                 'errorMessage' => $translator->trans("This Custom song is not your's"),
-                'response'     => ""
+                'response' => ""
             ]);
         }
 //        $song->removeMapper($this->getUser());
         $form = $this->createForm(SongType::class, $song, [
             'method' => "post",
-            'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]) : $this->generateUrl('new_song')
+            'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]
+            ) : $this->generateUrl('new_song')
         ]);
 
         if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
@@ -80,49 +92,51 @@ class UploadSongController extends AbstractController
                     'required' => false
                 ])
                 ->add('programmationDate', DateTimeType::class, [
-                'label'      => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
-                'widget'     => 'single_text',
-                'required'   => true,
-                'input'      => "datetime",
-                "empty_data" => '',
-                'label_html' => true,
-                'help'       => "Sorry for now it's based on UTC+1 (french time) "
-            ])
+                    'label' => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
+                    'widget' => 'single_text',
+                    'required' => true,
+                    'input' => "datetime",
+                    "empty_data" => '',
+                    'label_html' => true,
+                    'help' => "Sorry for now it's based on UTC+1 (french time) "
+                ])
                 ->add("zipFile", FileType::class, [
-                "mapped"      => false,
-                "required"    => $song->getId() == null,
-                "help"        => "Upload a .zip file (max 15Mo) containing all the files for the map.",
-                "constraints" => [
-                    new File([
-                        'maxSize'        => '15M',
-                        'maxSizeMessage' => 'You can upload up to 50Mo with a premium account Tier 2',
-                    ])
-                ]
-            ]);
-        } else if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
-            $form->add("zipFile", FileType::class, [
-                "mapped"      => false,
-                "required"    => $song->getId() == null,
-                "help"        => "Upload a .zip file (max 10Mo) containing all the files for the map, upgrade your Premium member Tier 2 to upload more.",
-                "constraints" => [
-                    new File([
-                        'maxSize'        => '10M',
-                        'maxSizeMessage' => 'You can upload up to 10Mo with a premium account Tier 1',
-                    ])
-                ]
-            ]);
+                    "mapped" => false,
+                    "required" => $song->getId() == null,
+                    "help" => "Upload a .zip file (max 15Mo) containing all the files for the map.",
+                    "constraints" => [
+                        new File([
+                            'maxSize' => '15M',
+                            'maxSizeMessage' => 'You can upload up to 50Mo with a premium account Tier 2',
+                        ])
+                    ]
+                ]);
         } else {
-            $form->add("zipFile", FileType::class, [
-                "mapped"      => false,
-                "required"    => $song->getId() == null,
-                "help"        => "Upload a .zip file (max 8Mo) containing all the files for the map.",
-                "constraints" => [
-                    new File([
-                        'maxSize'        => '8M',
-                        'maxSizeMessage' => 'You can upload up to 8Mo without a premium account',
-                    ])
-                ]
-            ]);
+            if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
+                $form->add("zipFile", FileType::class, [
+                    "mapped" => false,
+                    "required" => $song->getId() == null,
+                    "help" => "Upload a .zip file (max 10Mo) containing all the files for the map, upgrade your Premium member Tier 2 to upload more.",
+                    "constraints" => [
+                        new File([
+                            'maxSize' => '10M',
+                            'maxSizeMessage' => 'You can upload up to 10Mo with a premium account Tier 1',
+                        ])
+                    ]
+                ]);
+            } else {
+                $form->add("zipFile", FileType::class, [
+                    "mapped" => false,
+                    "required" => $song->getId() == null,
+                    "help" => "Upload a .zip file (max 8Mo) containing all the files for the map.",
+                    "constraints" => [
+                        new File([
+                            'maxSize' => '8M',
+                            'maxSizeMessage' => 'You can upload up to 8Mo without a premium account',
+                        ])
+                    ]
+                ]);
+            }
         }
 
         $isWip = $song->getWip();
@@ -132,11 +146,16 @@ class UploadSongController extends AbstractController
             $song->addMapper($this->getUser());
             try {
                 if (!count($song->getBestPlatform())) {
-                    throw new Exception('Select on which version your map is planed to be played (VR and/or Viking On Tour)');
+                    throw new Exception(
+                        'Select on which version your map is planed to be played (VR and/or Viking On Tour)'
+                    );
                 }
 
                 if (!empty($song->getYoutubeLink())) {
-                    if (!preg_match("/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(.*)$/", $song->getYoutubeLink())) {
+                    if (!preg_match(
+                        "/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(.*)$/",
+                        $song->getYoutubeLink()
+                    )) {
                         throw new Exception('This is not a youtube link, please edit it');
                     }
                 }
@@ -148,25 +167,28 @@ class UploadSongController extends AbstractController
                         throw new Exception('Please choose at least one platform');
                     }
 
-                    $this->addFlash('success', str_replace([
-                        "%song%",
-                        "%artist%"
-                    ], [
-                        $song->getName(),
-                        $song->getAuthorName()
-                    ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
+                    $this->addFlash(
+                        'success',
+                        str_replace([
+                            "%song%",
+                            "%artist%"
+                        ], [
+                            $song->getName(),
+                            $song->getAuthorName()
+                        ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!"))
+                    );
                     $em = $doctrine->getManager();
                     $em->persist($song);
                     $em->flush();
 
                     return new JsonResponse([
-                        'error'        => false,
-                        'goto'         => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
-                        'reload'       => true,
+                        'error' => false,
+                        'goto' => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
+                        'reload' => true,
                         'errorMessage' => null,
-                        'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
-                            'form'  => $form->createView(),
-                            'song'  => $song,
+                        'response' => $this->renderView('upload_song/partial/edit.html.twig', [
+                            'form' => $form->createView(),
+                            'song' => $song,
                             "error" => null
                         ])
                     ]);
@@ -175,33 +197,36 @@ class UploadSongController extends AbstractController
                 if ($songService->processFile($form, $song, $isWip)) {
                     /** @var ?SongRequest $song_request */
                     $doctrine->getManager()->flush();
-                    $this->addFlash('success', str_replace([
-                        "%song%",
-                        "%artist%"
-                    ], [
-                        $song->getName(),
-                        $song->getAuthorName()
-                    ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!")));
+                    $this->addFlash(
+                        'success',
+                        str_replace([
+                            "%song%",
+                            "%artist%"
+                        ], [
+                            $song->getName(),
+                            $song->getAuthorName()
+                        ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!"))
+                    );
 
                     return new JsonResponse([
-                        'error'        => false,
-                        'goto'         => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
-                        'reload'       => true,
+                        'error' => false,
+                        'goto' => $this->generateUrl('song_detail', ['slug' => $song->getSlug()]),
+                        'reload' => true,
                         'errorMessage' => null,
-                        'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
-                            'form'  => $form->createView(),
-                            'song'  => $song,
+                        'response' => $this->renderView('upload_song/partial/edit.html.twig', [
+                            'form' => $form->createView(),
+                            'song' => $song,
                             "error" => null
                         ])
                     ]);
                 }
             } catch (Exception $e) {
                 return new JsonResponse([
-                    'error'        => true,
+                    'error' => true,
                     'errorMessage' => $e->getMessage(),
-                    'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
-                        'form'  => $form->createView(),
-                        'song'  => $song,
+                    'response' => $this->renderView('upload_song/partial/edit.html.twig', [
+                        'form' => $form->createView(),
+                        'song' => $song,
                         "error" => $e->getMessage()
                     ])
                 ]);
@@ -209,12 +234,12 @@ class UploadSongController extends AbstractController
         }
 
         return new JsonResponse([
-            'error'        => false,
-            "goto"         => $this->redirectToRoute("upload_song"),
+            'error' => false,
+            "goto" => $this->redirectToRoute("upload_song"),
             'errorMessage' => "",
-            'response'     => $this->renderView('upload_song/partial/edit.html.twig', [
-                'form'  => $form->createView(),
-                'song'  => $song,
+            'response' => $this->renderView('upload_song/partial/edit.html.twig', [
+                'form' => $form->createView(),
+                'song' => $song,
                 "error" => null
             ])
         ]);
@@ -224,21 +249,20 @@ class UploadSongController extends AbstractController
     public function delete(Song $song, EntityManagerInterface $em, DiscordService $discordService)
     {
         if ($song->getMappers()->contains($this->getUser()) && !$song->isRanked()) {
-
-            $songFile = $this->getParameter('kernel.project_dir') . "/public/songs-files/";
-            $ragnaBeat = $this->getParameter('kernel.project_dir') . "/public/ragna-beat/";
-            $cover = $this->getParameter('kernel.project_dir') . "/public/covers/";
+            $songFile = $this->getParameter('kernel.project_dir')."/public/songs-files/";
+            $ragnaBeat = $this->getParameter('kernel.project_dir')."/public/ragna-beat/";
+            $cover = $this->getParameter('kernel.project_dir')."/public/covers/";
             $infoDatFile = explode("/", $song->getInfoDatFile());
             $ragnaBeat .= $infoDatFile[2];
-            $files = glob($ragnaBeat . "/*"); // get all file names
+            $files = glob($ragnaBeat."/*"); // get all file names
             foreach ($files as $file) { // iterate files
                 if (is_file($file)) {
                     @unlink($file); // delete file
                 }
             }
             @rmdir($ragnaBeat);
-            @unlink($songFile . $song->getId() . ".zip");
-            @unlink($cover . $song->getId() . $song->getCoverImageExtension());
+            @unlink($songFile.$song->getId().".zip");
+            @unlink($cover.$song->getId().$song->getCoverImageExtension());
 
             $discordService->deletedSong($song);
             $em->remove($song);
@@ -246,7 +270,6 @@ class UploadSongController extends AbstractController
 
             return new JsonResponse(['success' => true]);
         } else {
-
             return new JsonResponse(['success' => false]);
         }
     }
@@ -275,8 +298,11 @@ class UploadSongController extends AbstractController
     }
 
     #[Route(path: '/upload/song', name: 'upload_song')]
-    public function index(Request $request, SongRepository $songRepository, PaginationService $paginationService): Response
-    {
+    public function index(
+        Request $request,
+        SongRepository $songRepository,
+        PaginationService $paginationService
+    ): Response {
         $qb = $songRepository->createQueryBuilder('s')
             ->select('s')
             ->leftJoin('s.categoryTags', 't')
@@ -293,32 +319,43 @@ class UploadSongController extends AbstractController
             switch ($exp[0]) {
                 case 'mapper':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter(
+                            'search_string',
+                            '%'.$exp[1].'%'
+                        );
                     }
                     break;
 
                 case 'artist':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter(
+                            'search_string',
+                            '%'.$exp[1].'%'
+                        );
                     }
                     break;
                 case 'title':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.name LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.name LIKE :search_string)')->setParameter('search_string', '%'.$exp[1].'%');
                     }
                     break;
                 case 'desc':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.description LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(s.description LIKE :search_string)')->setParameter(
+                            'search_string',
+                            '%'.$exp[1].'%'
+                        );
                     }
                     break;
                 case 'genre':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(t.label LIKE :search_string)')->setParameter('search_string', '%' . $exp[1] . '%');
+                        $qb->andWhere('(t.label LIKE :search_string)')->setParameter('search_string', '%'.$exp[1].'%');
                     }
                     break;
                 default:
-                    $qb->andWhere('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string OR t.label LIKE :search_string)')->setParameter('search_string', '%' . $request->get('search', null) . '%');
+                    $qb->andWhere(
+                        '(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string OR t.label LIKE :search_string)'
+                    )->setParameter('search_string', '%'.$request->get('search', null).'%');
             }
         }
 
@@ -348,7 +385,9 @@ class UploadSongController extends AbstractController
 
     function remove_utf8_bom($text)
     {
-        return $this->stripUtf16Le($this->stripUtf16Be($this->stripUtf8Bom($text)));//mb_convert_encoding($text, 'UTF-8', 'UCS-2LE');
+        return $this->stripUtf16Le(
+            $this->stripUtf16Be($this->stripUtf8Bom($text))
+        );//mb_convert_encoding($text, 'UTF-8', 'UCS-2LE');
     }
 
     function stripUtf16Le($string)
@@ -372,10 +411,10 @@ class UploadSongController extends AbstractController
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . "/" . $object)) {
-                        $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
+                    if (is_dir($dir.DIRECTORY_SEPARATOR.$object) && !is_link($dir."/".$object)) {
+                        $this->rrmdir($dir.DIRECTORY_SEPARATOR.$object);
                     } else {
-                        unlink($dir . DIRECTORY_SEPARATOR . $object);
+                        unlink($dir.DIRECTORY_SEPARATOR.$object);
                     }
                 }
             }
@@ -384,27 +423,36 @@ class UploadSongController extends AbstractController
     }
 
     #[Route(path: '/upload/song/new-multi', name: 'new_song_multi')]
-    public function indexV2(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
-    {
+    public function indexV2(
+        Request $request,
+        TranslatorInterface $translator,
+        ManagerRegistry $doctrine,
+        SongService $songService,
+        ScoreService $scoreService
+    ) {
         return $this->render('upload_song/index_multi.html.twig');
     }
 
     #[Route(path: '/upload/bundle/song/add', name: 'bundle_song')]
-    public function bundleUpload(Request $request, TranslatorInterface $translator, ManagerRegistry $doctrine, SongService $songService, ScoreService $scoreService)
-    {
+    public function bundleUpload(
+        Request $request,
+        TranslatorInterface $translator,
+        ManagerRegistry $doctrine,
+        SongService $songService,
+        ScoreService $scoreService
+    ) {
         try {
             $song = new Song();
             $song->addMapper($this->getUser());
             $song->setActive(true);
             $songService->processFileWithoutForm($request, $song);
         } catch (Exception $e) {
-
             return new Response($e->getMessage(), 500);
         }
 
         return new JsonResponse([
             "success" => true,
-            'cover'   => $song->getCover()
+            'cover' => $song->getCover()
         ]);
     }
 }

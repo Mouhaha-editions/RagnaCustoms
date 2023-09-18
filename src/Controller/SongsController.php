@@ -228,21 +228,21 @@ class SongsController extends AbstractController
         if ($request->get('downloads_submitted_date', null)) {
             switch ($request->get('downloads_submitted_date')) {
                 case 1:
-                    $qb->andWhere('(s.programmationDate >= :last7days)')->setParameter(
+                    $qb->andWhere('(s.lastDateUpload >= :last7days)')->setParameter(
                         'last7days',
                         (new DateTime())->modify('-7 days')
                     );
                     $filters[] = "last 7 days";
                     break;
                 case 2 :
-                    $qb->andWhere('(s.programmationDate >= :last15days)')->setParameter(
+                    $qb->andWhere('(s.lastDateUpload >= :last15days)')->setParameter(
                         'last15days',
                         (new DateTime())->modify('-15 days')
                     );
                     $filters[] = "last 15 days";
                     break;
                 case 3 :
-                    $qb->andWhere('(s.programmationDate >= :last45days)')->setParameter(
+                    $qb->andWhere('(s.lastDateUpload >= :last45days)')->setParameter(
                         'last45days',
                         (new DateTime())->modify('-45 days')
                     );
@@ -265,16 +265,17 @@ class SongsController extends AbstractController
         }
 
         if ($request->get('not_downloaded', 0) > 0 && $this->isGranted('ROLE_USER')) {
-            $qb->leftJoin("s.downloadCounters", 'download_counters')->addSelect(
-                "SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user"
-            )->andHaving("count_download_user = 0")->setParameter('user', $this->getuser());
+            $qb->leftJoin("s.downloadCounters", 'download_counters')
+                ->addSelect("SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user")
+                ->andHaving("count_download_user = 0")
+                ->setParameter('user', $this->getuser());
             $filters[] = "not downloaded";
         }
 
         $qb->andWhere('s.moderated = true');
-        $qb->andWhere('s.active = true')->andWhere(
-            '(s.programmationDate <= :now AND s.programmationDate IS NOT NULL)'
-        )->setParameter('now', new DateTime());
+        $qb->andWhere('s.active = true')
+            ->andWhere('(s.programmationDate <= :now AND s.programmationDate IS NOT NULL)')
+            ->setParameter('now', new DateTime());
         //get the 'type' param (added for ajax search)
         $type = $request->get('type', null);
         //check if this is an ajax request
@@ -346,7 +347,10 @@ class SongsController extends AbstractController
                     break;
                 default:
                     $qb->andWhere(
-                        '(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string OR t.label LIKE :search_string)'
+                        $qb->expr()->orX('s.name LIKE :search_string'),
+                        $qb->expr()->orX('s.authorName LIKE :search_string'),
+                        $qb->expr()->orX('s.description LIKE :search_string'),
+                        $qb->expr()->orX('t.label LIKE :search_string')
                     )->setParameter('search_string', '%'.$request->get('search', null).'%');
             }
         }
@@ -371,7 +375,7 @@ class SongsController extends AbstractController
                 $qb->orderBy("s.downloads", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             case 'upload_date':
-                $qb->orderBy("s.programmationDate", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                $qb->orderBy("s.lastDateUpload", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             case 'name':
                 $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
@@ -380,7 +384,7 @@ class SongsController extends AbstractController
                 $qb->orderBy("rating", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             default:
-                $qb->orderBy("s.programmationDate", "DESC");
+                $qb->orderBy("s.lastDateUpload", "DESC");
                 break;
         }
 

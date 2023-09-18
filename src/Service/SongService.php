@@ -285,7 +285,6 @@ class SongService
         }
         $song->setVersion($json->_version);
         $song->setName($songName);
-        $song->setLastDateUpload(new DateTime());
         if (!isset($json->_songSubName)) {
             throw new Exception("\"_songSubName\" is missing in the info.dat file!");
         }
