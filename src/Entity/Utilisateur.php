@@ -852,7 +852,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         foreach ($scores as $score) {
-            $sum += $score->getHitPercentage();
+            $sum += $score->getPercentageOfPerfects();
         }
 
         return $sum / $scores->count();
