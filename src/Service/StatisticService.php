@@ -50,14 +50,14 @@ class StatisticService
             60 => 'minute',
             1 => 'second'
         );
-        $a_plural = array(
+        $a_plural = [
             'year' => 'years',
             'month' => 'months',
             'day' => 'days',
             'hour' => 'hours',
             'minute' => 'minutes',
             'second' => 'seconds'
-        );
+        ];
 
         foreach ($a as $secs => $str) {
             $d = $etime / $secs;
