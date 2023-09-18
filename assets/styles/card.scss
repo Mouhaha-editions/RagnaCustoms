@@ -7,9 +7,18 @@
   transition: transform 0.1s ease;
   transform-style: preserve-3d;
   will-change: transform;
+  overflow: hidden;
+  border-radius:5px;
 }
 
 /* Slight parallax effect on hover */
 .card:hover .content {
   transform: translateZ(2px);
+}
+
+.card .glow{
+  background : radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 50%);
+  opacity: 0.25;
+  border-radius: 50%;
+  position:absolute;
 }
