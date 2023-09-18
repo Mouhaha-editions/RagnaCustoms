@@ -455,4 +455,57 @@ textarea{
   display: block;
   overflow: hidden
 }
+
+.level-1 {
+  background: $level1;
+  border:2px solid darken($level1,10%);
+  color:#000000;
+}
+
+.level-2 {
+  background: $level2;
+  border:2px solid darken($level2,10%);
+  color:#000000;
+}
+
+.level-3 {
+  background: $level3;
+  border:2px solid darken($level3,10%);
+}
+
+.level-4 {
+  background: $level4;
+  border:2px solid darken($level4,10%);
+}
+
+.level-5 {
+  background: $level5;
+  border:2px solid darken($level5,10%);
+}
+
+.level-6 {
+  background: $level6;
+  border:2px solid darken($level6,10%);
+}
+
+.level-7 {
+  background: $level7;
+  border:2px solid darken($level7,10%);
+}
+
+.level-8 {
+  background: $level8;
+  border:2px solid darken($level8,10%);
+}
+
+.level-9 {
+  background: $level9;
+  border:2px solid darken($level9,10%);
+}
+
+.level-10 {
+  background: $level10;
+  border:2px solid darken($level10,10%);
+}
+
 @import 'card.scss';

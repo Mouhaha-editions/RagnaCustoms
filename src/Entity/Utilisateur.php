@@ -843,7 +843,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
         if ($lvl) {
             $scores = $scores->filter(function (Score $score) use ($lvl) {
-                return $score->getSongDifficulty()->getDifficultyRank()->getLevel() == $lvl;
+                return $score->getSongDifficulty()->getDifficultyRank()->getId() == $lvl;
             });
         }
 
