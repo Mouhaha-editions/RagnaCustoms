@@ -1,6 +1,6 @@
 const THRESHOLD = 15;
 
-$(document).on('mousemove', '.card', function (e) {
+$(document).on('mousemove', '.card-cover', function (e) {
     let {clientX, clientY, currentTarget} = e;
     let {clientWidth, clientHeight} = currentTarget;
     let {left, top} = currentTarget.getBoundingClientRect();
@@ -21,7 +21,7 @@ $(document).on('mousemove', '.card', function (e) {
     $(this).css({transform: `perspective(${clientWidth}px) rotateX(${rotateY}deg) rotateY(${rotateX}deg) scale3d(1, 1, 1)`});
 });
 
-$(document).on('mouseleave', '.card', function (e) {
+$(document).on('mouseleave', '.card-cover', function (e) {
     $(this).css({transform: `perspective(${e.currentTarget.clientWidth}px) rotateX(0deg) rotateY(0deg)`});
     $(this).find('.glow').remove();
 

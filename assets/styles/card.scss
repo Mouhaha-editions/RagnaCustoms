@@ -1,4 +1,4 @@
-.card {
+.card-cover {
   background:transparent;
   max-width: 100%;
   margin: auto;
@@ -12,11 +12,11 @@
 }
 
 /* Slight parallax effect on hover */
-.card:hover .content {
+.card-cover:hover .content {
   transform: translateZ(2px);
 }
 
-.card .glow{
+.card-cover .glow{
   background : radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 50%);
   opacity: 0.25;
   border-radius: 50%;
