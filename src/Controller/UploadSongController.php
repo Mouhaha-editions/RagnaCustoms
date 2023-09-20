@@ -354,20 +354,26 @@ class UploadSongController extends AbstractController
                     break;
                 default:
                     $qb->andWhere(
-                        '(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string OR t.label LIKE :search_string)'
-                    )->setParameter('search_string', '%'.$request->get('search', null).'%');
+                        $qb->expr()->orX(
+                            's.name LIKE :search_string',
+                            's.authorName LIKE :search_string',
+                            's.description LIKE :search_string',
+                            's.levelAuthorName LIKE :search_string',
+                            't.label LIKE :search_string',
+                        )
+                    )->setParameter('search_string', '%'.$request->get('search').'%');
             }
         }
 
         if ($request->get('order_by') && in_array($request->get('order_by'), [
-                's.programmationDate',
+                's.createdAt',
                 'rating',
                 's.downloads',
                 's.name'
             ], true)) {
             $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
         } else {
-            $qb->orderBy("s.programmationDate", "desc");
+            $qb->orderBy("s.createdAt", "desc");
         }
 
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
