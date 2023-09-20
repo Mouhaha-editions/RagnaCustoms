@@ -366,14 +366,22 @@ class UploadSongController extends AbstractController
         }
 
         if ($request->get('order_by') && in_array($request->get('order_by'), [
-                's.createdAt',
+                's.programmationDate',
                 'rating',
                 's.downloads',
                 's.name'
             ], true)) {
-            $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
+
+            if ($request->get('order_by') === 's.programmationDate') {
+                $qb->orderBy(
+                    "IF(s.programmationDate IS NULL,s.createdAt,s.programmationDate)",
+                    $request->get('order_sort', 'asc')
+                );
+            } else {
+                $qb->orderBy($request->get('order_by'), $request->get('order_sort', 'asc'));
+            }
         } else {
-            $qb->orderBy("s.createdAt", "desc");
+            $qb->orderBy("IF(s.programmationDate IS NULL,s.createdAt,s.programmationDate)", "desc");
         }
 
         $pagination = $paginationService->setDefaults(30)->process($qb, $request);
