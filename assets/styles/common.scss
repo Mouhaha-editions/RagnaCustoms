@@ -785,8 +785,8 @@ a.back-button {
 
 img.big-rounded {
   border-radius: 12px;
-  box-shadow: 0 0 10px rgb(0 0 0 / 50%);
-  background: $bg;
+  box-shadow: none;
+  background: transparent;
 }
 
 .small-cover {
