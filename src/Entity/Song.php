@@ -181,7 +181,7 @@ class Song
         }
 
         if($this->isWip()){
-            $return .= " <small data-toggle='tooltip' title='Explicit content' class='badge badge-info'>W</small>";
+            $return .= " <small data-toggle='tooltip' title='Work in progress' class='badge badge-info'>W</small>";
         }
 
         if($this->getIsExplicit()){
