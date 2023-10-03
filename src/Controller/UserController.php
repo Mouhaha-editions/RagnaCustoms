@@ -576,7 +576,13 @@ class UserController extends AbstractController
                     break;
                 default:
                     $qb->andWhere(
-                        '(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR m.mapper_name LIKE :search_string OR t.label LIKE :search_string)'
+                        $qb->expr()->orX(
+                            's.name LIKE :search_string',
+                            's.authorName LIKE :search_string',
+                            's.description LIKE :search_string',
+                            'm.mapper_name LIKE :search_string',
+                            't.label LIKE :search_string'
+                        )
                     )->setParameter('search_string', '%'.$request->get('search', null).'%');
             }
         }
