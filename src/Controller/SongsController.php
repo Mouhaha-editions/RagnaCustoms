@@ -152,6 +152,7 @@ class SongsController extends AbstractController
         )->groupBy("s.id");
 
         $qb->leftJoin('s.songDifficulties', 'song_difficulties');
+        $qb->leftJoin('s.mappers', 'm');
 
         if ($request->get('only_ranked', null) != null) {
             $qb->andWhere("song_difficulties.isRanked = true");
@@ -301,7 +302,7 @@ class SongsController extends AbstractController
             switch ($exp[0]) {
                 case 'mapper':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter(
+                        $qb->andWhere('(m.mapper_name LIKE :search_string)')->setParameter(
                             'search_string',
                             '%'.$exp[1].'%'
                         );
@@ -351,6 +352,7 @@ class SongsController extends AbstractController
                             's.name LIKE :search_string',
                             's.authorName LIKE :search_string',
                             's.description LIKE :search_string',
+                            'm.mapper_name LIKE :search_string',
                             't.label LIKE :search_string'
                         )
                     )->setParameter('search_string', '%'.$request->get('search', null).'%');

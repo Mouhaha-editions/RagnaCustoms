@@ -542,7 +542,7 @@ class UserController extends AbstractController
             switch ($exp[0]) {
                 case 'mapper':
                     if (count($exp) >= 2) {
-                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter(
+                        $qb->andWhere('(m.mapper_name LIKE :search_string)')->setParameter(
                             'search_string',
                             '%'.$exp[1].'%'
                         );
@@ -576,7 +576,7 @@ class UserController extends AbstractController
                     break;
                 default:
                     $qb->andWhere(
-                        '(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string OR t.label LIKE :search_string)'
+                        '(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR m.mapper_name LIKE :search_string OR t.label LIKE :search_string)'
                     )->setParameter('search_string', '%'.$request->get('search', null).'%');
             }
         }

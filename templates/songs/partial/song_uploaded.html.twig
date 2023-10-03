@@ -45,7 +45,6 @@
     {#        <td class="text-right">{{ song.scores|length }}</td>#}
     {#    {% endif %}#}
     <td class="text-center">
-
         {% if song.programmationDate|date('Y-m-d H:i') > 'now'|date('Y-m-d H:i') and song.active %}
             <i class='far fa-clock text-warning' data-toggle="tooltip" title="Publishing on {{ song.programmationDate|date('Y-m-d H:i') }}"></i>
         {% else %}
