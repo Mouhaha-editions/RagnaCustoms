@@ -888,3 +888,12 @@ table tr {
 .more-stat{
   cursor: pointer;
 }
+
+.author{
+  a:hover{
+    text-decoration: underline;
+  }
+  a{
+    text-decoration:none;
+  }
+}

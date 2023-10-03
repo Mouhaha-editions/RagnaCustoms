@@ -67,9 +67,9 @@
                     </div>
                     <div class="col-md-7">
                         <h1 class="force-default text-warning">{{ song|raw }}</h1>
-                        <h2 class="force-default"><a
-                                    href="{{ url("song_library") }}?search=artist%3A{{ song.authorName|url_encode }}">{{ song.authorName }}</a>
-                        </h2>
+                        <h2 class="force-default">
+                            {% include 'songs/partial/artists.html.twig' %}
+                           </h2>
                         <div class="tags">
                             {% for category in song.categoryTags %}
                                 <a class='btn btn-sm btn-tag'
