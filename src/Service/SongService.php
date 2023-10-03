@@ -65,18 +65,20 @@ class SongService
         $songHash = $this->em->getRepository(SongHash::class)->findOneBy(['hash' => $feedback->getHash()]);
         if ($songHash != null) {
             $song = $songHash->getSong();
-            $mapper = $song->getUser();
+            $mappers = $song->getMappers();
 
-            $email = (new Email())->from('contact@ragnacustoms.com')->to($mapper->getEmail())->addBcc(
-                "pierrick.pobelle@gmail.com"
-            )->subject('[Ragnacustoms.com] New feedback for '.$song->getName().'!');
+            foreach ($mappers as $mapper) {
+                $email = (new Email())->from('contact@ragnacustoms.com')->to($mapper->getEmail())->addBcc(
+                    "pierrick.pobelle@gmail.com"
+                )->subject('[Ragnacustoms.com] New feedback for '.$song->getName().'!');
 
-            $email->html(
-                "Hi ".$mapper->getUsername().",<br/>You get a new feedback for ".$song->getName(
-                )."!<br/><br/>You can read it at https://ragnacustoms.com/song/detail/".$song->getId(
-                )."#feedback<br/><br/>See you soon,<br/> The Staff"
-            );
-            $this->mailer->send($email);
+                $email->html(
+                    "Hi ".$mapper->getUsername().",<br/>You get a new feedback for ".$song->getName(
+                    )."!<br/><br/>You can read it at https://ragnacustoms.com/song/detail/".$song->getId(
+                    )."#feedback<br/><br/>See you soon,<br/> The Staff"
+                );
+                $this->mailer->send($email);
+            }
         }
     }
 

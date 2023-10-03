@@ -22,8 +22,7 @@ class VoteAdminSubscriber implements EventSubscriberInterface
         public SongService $songService,
         public VoteService $voteService,
         public SongRepository $songRepository,
-    )
-    {
+    ) {
     }
 
     /**
@@ -48,14 +47,14 @@ class VoteAdminSubscriber implements EventSubscriberInterface
             $this->songRepository->add($song);
         }
         if ($entity instanceof VoteCounter) {
-                $song = $entity->getSong();
-                $user = $entity->getUser();
-            if($entity->getVotesIndc() > 0){
+            $song = $entity->getSong();
+            $user = $entity->getUser();
+            if ($entity->getVotesIndc() > 0) {
                 $this->voteService->toggleUpVote($song, $user);
-            }else{
+            } else {
                 $this->voteService->toggleDownVote($song, $user);
             }
-                $this->songRepository->add($song);
+            $this->songRepository->add($song);
         }
     }
 
@@ -66,8 +65,10 @@ class VoteAdminSubscriber implements EventSubscriberInterface
         if ($entity instanceof Vote) {
             $song = $entity->getSong();
 
-            if ($song->getUser()->getEnableEmailNotification() && $entity->getIsModerated()) {
-                $this->songService->newFeedbackForMapper($entity);
+            foreach ($song->getMappers() as $user) {
+                if ($user->getEnableEmailNotification() && $entity->getIsModerated()) {
+                    $this->songService->newFeedbackForMapper($entity);
+                }
             }
         }
     }
