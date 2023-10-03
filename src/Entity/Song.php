@@ -174,10 +174,21 @@ class Song
 
     public function __toString()
     {
-        return $this->getName().($this->getConverted(
-            ) == true ? " <small data-toggle='tooltip' title='Converted' class='badge badge-danger'>C</small>" : "").
-            ($this->getIsExplicit(
-            ) ? " <small data-toggle='tooltip' title='Explicit content' class='badge badge-warning'>E</small>" : "");
+        $return = $this->getName();
+
+        if($this->getConverted()){
+            $return .= " <small data-toggle='tooltip' title='Converted' class='badge badge-danger'>C</small>";
+        }
+
+        if($this->isWip()){
+            $return .= " <small data-toggle='tooltip' title='Explicit content' class='badge badge-info'>W</small>";
+        }
+
+        if($this->getIsExplicit()){
+            $return .= " <small data-toggle='tooltip' title='Explicit content' class='badge badge-warning'>E</small>";
+        }
+
+        return $return;
     }
 
     public function getName(): ?string

@@ -139,7 +139,7 @@ class DiscordService
             "embeds" => [
                 [
                     // Embed Title
-                    "title" => "[WIP] ".$song->getName()." by ".$song->getAuthorName(),
+                    "title" => "[W] ".$song->getName()." by ".$song->getAuthorName(),
 
                     // Embed Type
                     "type" => "rich",
