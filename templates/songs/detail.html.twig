@@ -69,7 +69,7 @@
                         <h1 class="force-default text-warning">{{ song|raw }}</h1>
                         <h2 class="force-default">
                             {% include 'songs/partial/artists.html.twig' %}
-                           </h2>
+                        </h2>
                         <div class="tags">
                             {% for category in song.categoryTags %}
                                 <a class='btn btn-sm btn-tag'
@@ -256,7 +256,9 @@
                                                 <th class="text-right">#</th>
                                                 <th>{{ "player"|trans }}</th>
                                                 <th class="text-right">{{ "distance"|trans }}</th>
-                                                <th class="text-right">{{ "PP"|trans }}</th>
+                                                {% if level.difficulty.isRanked %}
+                                                    <th class="text-right">{{ "PP"|trans }}</th>
+                                                {% endif %}
                                                 <th class="text-right">{{ "Perfects" }}</th>
                                                 <th class="text-right">{{ "Time Set" }}</th>
                                                 <th class="text-right" colspan="2">{{ "More Stats" }}</th>
@@ -318,7 +320,9 @@
                                                 <th class="text-right">#</th>
                                                 <th>{{ "player"|trans }}</th>
                                                 <th class="text-right">{{ "distance"|trans }}</th>
+                                                {% if level.difficulty.isRanked %}
                                                 <th class="text-right">{{ "PP"|trans }}</th>
+                                                {% endif %}
                                                 <th class="text-right">{{ "Perfects" }}</th>
                                                 <th class="text-right">{{ "Time Set" }}</th>
                                                 <th class="text-right" colspan="2">{{ "More Stats" }}</th>
@@ -361,6 +365,7 @@
                             "ratingValue": "{{ song.voteAverage|round(2, "floor") }}"
                         }
                     }
+
 
 
 

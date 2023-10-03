@@ -9,7 +9,9 @@
                class="ml-1 text-level-9">{{ membershipService.displayUsername(score.user, false)|raw }}</a>
         </td>
         <td class="text-right">{{ score.scoreDisplay }}</td>
-        <td class="text-right">{{ score.rawPP|round(3) }}</td>
+        {% if level.difficulty.isRanked %}
+            <td class="text-right">{{ score.rawPP|round(3) }}</td>
+        {% endif %}
         <td class="text-right">{{ score.percentageOfPerfects }}%</td>
         <td class="text-right">{{ score.timeAgoShort() }}</td>
         <td class="text-right">
