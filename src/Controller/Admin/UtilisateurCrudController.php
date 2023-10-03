@@ -59,7 +59,7 @@ class UtilisateurCrudController extends AbstractCrudController
             CountryField::new('country.twoLetters', 'Pays'),
             TextField::new('mapperName'),
             DateTimeField::new('createdAt'),
-            BooleanField::new('verified'),
+            BooleanField::new('isVerified'),
         ];
     }
 

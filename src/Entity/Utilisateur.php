@@ -79,8 +79,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private $isPatreon;
     #[ORM\Column(type: 'boolean')]
     private $isPublic = true;
+
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $mailingNewSong = false;
     #[ORM\Column(type: 'text', nullable: true)]
