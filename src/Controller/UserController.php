@@ -37,7 +37,7 @@ class UserController extends AbstractController
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 'success' => false,
-                'datasets' => null
+                'datasets' => null,
             ], 400);
         }
         /** @var Utilisateur $utilisateur */
@@ -97,7 +97,7 @@ class UserController extends AbstractController
 
         return new JsonResponse([
             'success' => true,
-            'datasets' => ['datasets' => $data]
+            'datasets' => ['datasets' => $data],
         ], 200);
     }
 
@@ -107,16 +107,17 @@ class UserController extends AbstractController
         if (!$this->isGranted('ROLE_USER')) {
             return new JsonResponse([
                 'success' => false,
-                'value' => null
+                'value' => null,
             ], 400);
         }
         /** @var Utilisateur $user */
         $user = $this->getUser();
         $user->setApiKey(md5(date('y-m-dH:i').rand(9000, 100000000).$user->getUsername()));
         $userRepository->add($user);
+
         return new JsonResponse([
             'success' => true,
-            'value' => $user->getApiKey()
+            'value' => $user->getApiKey(),
         ], 200);
     }
 
@@ -322,6 +323,7 @@ class UserController extends AbstractController
     ): Response {
         if ($this->getUser() !== $utilisateur && !$utilisateur->getIsPublic()) {
             $this->addFlash('warning', "This profile is not public.");
+
             return $this->redirectToRoute('home');
         }
 
@@ -356,7 +358,7 @@ class UserController extends AbstractController
         )->setParameter('search', '%'.$request->get('q').'%')->orderBy('sc.label')->getQuery()->getArrayResult();
 
         return new JsonResponse([
-            'results' => $data
+            'results' => $data,
         ]);
     }
 
@@ -406,7 +408,6 @@ class UserController extends AbstractController
         Request $request,
         ManagerRegistry $doctrine,
         Utilisateur $utilisateur,
-        SongRepository $songRepository,
         PaginationService $pagination
     ): Response {
         $qb = $doctrine->getRepository(Song::class)
@@ -419,7 +420,6 @@ class UserController extends AbstractController
             ->setParameter('user', $utilisateur)
             ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
             ->groupBy("s.id");
-
 
         if ($request->get('display_wip', null) != null) {
             $qb->andWhere("s.wip = true");
@@ -575,30 +575,21 @@ class UserController extends AbstractController
                     }
                     break;
                 default:
-                    $qb->andWhere(
-                        $qb->expr()->orX(
-                            's.name LIKE :search_string',
-                            's.authorName LIKE :search_string',
-                            's.description LIKE :search_string',
-                            'm.mapper_name LIKE :search_string',
-                            't.label LIKE :search_string'
-                        )
-                    )->setParameter('search_string', '%'.$request->get('search', null).'%');
+                    $searchString = explode(' ', $request->get('search'));
+                    foreach ($searchString as $key => $search) {
+                        $qb->andWhere(
+                            $qb->expr()->orX(
+                                's.name LIKE :search_string'.$key,
+                                's.authorName LIKE :search_string'.$key,
+                                's.description LIKE :search_string'.$key,
+                                'm.mapper_name LIKE :search_string'.$key,
+                                't.label LIKE :search_string'.$key
+                            )
+                        )->setParameter('search_string'.$key, '%'.$search.'%');
+                    }
             }
         }
         $qb->andWhere("s.isDeleted != true");
-
-        if ($request->get('onclick_dl')) {
-            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
-            return $this->redirect(
-                "ragnac://install/".implode(
-                    '-',
-                    array_map(function ($id) {
-                        return array_pop($id);
-                    }, $ids)
-                )
-            );
-        }
 
         switch ($request->get('order_by', null)) {
             case 'downloads':
@@ -610,6 +601,9 @@ class UserController extends AbstractController
             case 'name':
                 $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
+            case 'bpm':
+                $qb->orderBy("s.beatsPerMinute", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
             case 'rating':
                 $qb->orderBy("rating", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
@@ -618,6 +612,18 @@ class UserController extends AbstractController
                 break;
         }
 
+        if ($request->get('onclick_dl')) {
+            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
+
+            return $this->redirect(
+                "ragnac://install/".implode(
+                    '-',
+                    array_map(function ($id) {
+                        return array_pop($id);
+                    }, $ids)
+                )
+            );
+        }
         //$pagination = null;
         //if($ajaxRequest || $request->get('ppage1')) {
         $songs = $pagination->setDefaults(15)->process($qb, $request);
@@ -626,7 +632,7 @@ class UserController extends AbstractController
             'controller_name' => 'UserController',
             'user' => $utilisateur,
             'categories' => $categories,
-            'songs' => $songs
+            'songs' => $songs,
         ]);
     }
 
@@ -723,6 +729,7 @@ class UserController extends AbstractController
     ): Response {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
+
             return $this->redirectToRoute('home');
         }
 
@@ -765,7 +772,7 @@ class UserController extends AbstractController
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
             'pagination' => $pagination,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 }

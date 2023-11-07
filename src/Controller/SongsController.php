@@ -45,9 +45,10 @@ class SongsController extends AbstractController
 
 
     /**
-     * @param  Request  $request
-     * @param  Song  $song
-     * @param  TranslatorInterface  $translator
+     * @param Request $request
+     * @param Song $song
+     * @param TranslatorInterface $translator
+     *
      * @return JsonResponse
      */
     #[Route(path: '/song/playlist/{id}', name: 'song_playlist')]
@@ -79,8 +80,8 @@ class SongsController extends AbstractController
                 'class' => "form ajax-form",
                 'method' => "post",
                 "action" => $this->generateUrl("song_playlist", ["id" => $song->getId()]),
-                "data-url" => $this->generateUrl("song_playlist", ["id" => $song->getId()])
-            ]
+                "data-url" => $this->generateUrl("song_playlist", ["id" => $song->getId()]),
+            ],
         ]);
 
         $form->handleRequest($request);
@@ -115,6 +116,7 @@ class SongsController extends AbstractController
             }
             $playlist->addSong($song);
             $em->flush();
+
             return new JsonResponse([
                 "error" => false,
                 "errorMessage" => "You need an account!",
@@ -134,9 +136,10 @@ class SongsController extends AbstractController
     }
 
     /**
-     * @param  Request  $request
-     * @param  SongCategoryRepository  $categoryRepository
-     * @param  PaginationService  $paginationService
+     * @param Request $request
+     * @param SongCategoryRepository $categoryRepository
+     * @param PaginationService $paginationService
+     *
      * @return Response
      */
     #[Route(path: '/song-library', name: 'song_library')]
@@ -158,6 +161,7 @@ class SongsController extends AbstractController
             $qb->andWhere("song_difficulties.isRanked = true");
             $filters[] = "only ranked";
         }
+
         if ($request->get('downloads_filter_difficulties', null)) {
             $qb->leftJoin('song_difficulties.difficultyRank', 'rank');
             switch ($request->get('downloads_filter_difficulties')) {
@@ -182,8 +186,8 @@ class SongsController extends AbstractController
         }
 
         $qb->leftJoin('s.categoryTags', 't');
-
         $categories = $request->get('downloads_filter_categories', null);
+
         if ($categories != null) {
             $cats = [];
             foreach ($categories as $k => $v) {
@@ -278,7 +282,7 @@ class SongsController extends AbstractController
             ->andWhere('(s.programmationDate <= :now AND s.programmationDate IS NOT NULL)')
             ->setParameter('now', new DateTime());
         //get the 'type' param (added for ajax search)
-        $type = $request->get('type', null);
+        $type = $request->get('type');
         //check if this is an ajax request
         $ajaxRequest = $type == 'ajax';
         //remove the 'type' parameter so pagination does not break
@@ -287,7 +291,7 @@ class SongsController extends AbstractController
         }
 
 
-        if ($request->get('search', null)) {
+        if ($request->get('search')) {
             $exp = explode(':', $request->get('search'));
 
             if (count($exp) == 1) {
@@ -347,18 +351,42 @@ class SongsController extends AbstractController
                     }
                     break;
                 default:
-                    $qb->andWhere(
-                        $qb->expr()->orX(
-                            's.name LIKE :search_string',
-                            's.authorName LIKE :search_string',
-                            's.description LIKE :search_string',
-                            'm.mapper_name LIKE :search_string',
-                            't.label LIKE :search_string'
-                        )
-                    )->setParameter('search_string', '%'.$request->get('search', null).'%');
+                    $searchString = explode(' ', $request->get('search'));
+                    foreach ($searchString as $key => $search) {
+                        $qb->andWhere(
+                            $qb->expr()->orX(
+                                's.name LIKE :search_string'.$key,
+                                's.authorName LIKE :search_string'.$key,
+                                's.description LIKE :search_string'.$key,
+                                'm.mapper_name LIKE :search_string'.$key,
+                                't.label LIKE :search_string'.$key
+                            )
+                        )->setParameter('search_string'.$key, '%'.$search.'%');
+                    }
             }
         }
         $qb->andWhere("s.isDeleted != true");
+
+        switch ($request->get('order_by', null)) {
+            case 'downloads':
+                $qb->orderBy("s.downloads", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'upload_date':
+                $qb->orderBy("s.lastDateUpload", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'name':
+                $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'bpm':
+                $qb->orderBy("s.beatsPerMinute", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'rating':
+                $qb->orderBy("rating", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            default:
+                $qb->orderBy("s.lastDateUpload", "DESC");
+                break;
+        }
 
         if ($request->get('oneclick_dl')) {
             $songs = $qb->getQuery()->getResult();
@@ -374,24 +402,6 @@ class SongsController extends AbstractController
             return $this->redirect("ragnac://list/".$list->getId());
         }
 
-        switch ($request->get('order_by', null)) {
-            case 'downloads':
-                $qb->orderBy("s.downloads", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            case 'upload_date':
-                $qb->orderBy("s.lastDateUpload", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            case 'name':
-                $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            case 'rating':
-                $qb->orderBy("rating", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            default:
-                $qb->orderBy("s.lastDateUpload", "DESC");
-                break;
-        }
-
         $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
 
         $categories = $categoryRepository->createQueryBuilder("c")->leftJoin("c.songs", 's')->where(
@@ -402,7 +412,7 @@ class SongsController extends AbstractController
             'controller_name' => 'SongsController',
             'songs' => $pagination,
             'filters' => $filters,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -492,8 +502,10 @@ class SongsController extends AbstractController
                 }
                 fclose($fd);
             });
+
             return $response;
         }
+
         return new Response("ERROR", 400);
     }
 
@@ -536,6 +548,7 @@ class SongsController extends AbstractController
             return $response;
         } else {
             $file = $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip"; // Nom du fichier
+
             return $this->RestrictedDownload($file, $song->getId().".zip");
         }
     }
@@ -573,9 +586,11 @@ class SongsController extends AbstractController
                 'Content-Length',
                 filesize($kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip")
             );
+
             return $response;
         } else {
             $file = $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip"; // Nom du fichier
+
             return $this->RestrictedDownload($file, $this->cleanName($song->getName()).".zip");
         }
     }
@@ -603,10 +618,11 @@ class SongsController extends AbstractController
                 }
             }
             $em->flush();
+
             return new JsonResponse(
                 [
                     'result' => $songDifficulty->isRanked(
-                    ) ? '<i class="fas fa-star"></i> ranked' : '<i class="far fa-star"></i> not r.'
+                    ) ? '<i class="fas fa-star"></i> ranked' : '<i class="far fa-star"></i> not r.',
                 ]
             );
         }
@@ -634,6 +650,7 @@ class SongsController extends AbstractController
                 && !$song->getMappers()->contains($this->getUser())
             )) {
             $this->addFlash('warning', $translator->trans("This custom song is not available for now"));
+
             return $this->redirectToRoute('home');
         }
 
@@ -685,7 +702,7 @@ class SongsController extends AbstractController
                 "difficulty" => $difficulty,
                 "color" => $difficulty->getDifficultyRank()->getColor(),
                 'scores' => $pagination,
-                'scoresFlat' => $paginationFlat
+                'scoresFlat' => $paginationFlat,
             ];
 
             if ($pagination->isPartial()) {
@@ -706,7 +723,7 @@ class SongsController extends AbstractController
         return $this->render('songs/detail.html.twig', [
             'song' => $song,
             'levels' => $levels,
-            "feedbackForm" => $feedbackForm->createView()
+            "feedbackForm" => $feedbackForm->createView(),
         ]);
     }
 

@@ -49,7 +49,7 @@
         </div>
     </td>
     <td>
-        {{ song.beatsPerMinute }}
+        {{ song.beatsPerMinute|round }}
     </td>
     <td>
         {% include 'songs/partial/mappers.html.twig' with {song:song} %}

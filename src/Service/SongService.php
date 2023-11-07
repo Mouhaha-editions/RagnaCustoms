@@ -467,22 +467,24 @@ class SongService
                             );
                         }
                     } else {
-                        /** @var FollowMapper $follower */
-                        foreach (
-                            $user->getFollowersNotifiable(
-                                ENotification::Followed_mapper_update_map_wip
-                            ) as $follower
-                        ) {
-                            $this->notificationService->send(
-                                $follower->getUser(),
-                                "Song edit : <a href='".$this->router->generate(
-                                    'song_detail',
-                                    ['slug' => $song->getSlug()]
-                                )."'>[WIP] ".$song->getName()."</a> by <a href='".$this->router->generate(
-                                    'mapper_profile',
-                                    ['username' => $user->getUsername()]
-                                )."'>".$user->getMapperName()."</a>"
-                            );
+                        if($song->isPublished()) {
+                            /** @var FollowMapper $follower */
+                            foreach (
+                                $user->getFollowersNotifiable(
+                                    ENotification::Followed_mapper_update_map_wip
+                                ) as $follower
+                            ) {
+                                $this->notificationService->send(
+                                    $follower->getUser(),
+                                    "Song edit : <a href='".$this->router->generate(
+                                        'song_detail',
+                                        ['slug' => $song->getSlug()]
+                                    )."'>[WIP] ".$song->getName()."</a> by <a href='".$this->router->generate(
+                                        'mapper_profile',
+                                        ['username' => $user->getUsername()]
+                                    )."'>".$user->getMapperName()."</a>"
+                                );
+                            }
                         }
                     }
                 }
