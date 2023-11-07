@@ -78,7 +78,7 @@ class UploadSongController extends AbstractController
             "class" => Utilisateur::class,
             'remote_route' => 'api_mapper',
             'multiple' => true,
-            "label" => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Mapper(s)',
+            "label" => 'Mapper(s)',
             'primary_key' => 'id',
             'text_property' => 'mapperName',
             'minimum_input_length' => 0,
