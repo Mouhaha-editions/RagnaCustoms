@@ -40,7 +40,7 @@ class UploadSongController extends AbstractController
             return new JsonResponse([
                 'error' => true,
                 'errorMessage' => $translator->trans("You need to be connected"),
-                'response' => ""
+                'response' => "",
             ]);
         }
 
@@ -64,33 +64,34 @@ class UploadSongController extends AbstractController
             return new JsonResponse([
                 'error' => true,
                 'errorMessage' => $translator->trans("This Custom song is not your's"),
-                'response' => ""
+                'response' => "",
             ]);
         }
 //        $song->removeMapper($this->getUser());
         $form = $this->createForm(SongType::class, $song, [
             'method' => "post",
             'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]
-            ) : $this->generateUrl('new_song')
+            ) : $this->generateUrl('new_song'),
+        ]);
+
+        $form->add('mappers', Select2EntityType::class, [
+            "class" => Utilisateur::class,
+            'remote_route' => 'api_mapper',
+            'multiple' => true,
+            "label" => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Mapper(s)',
+            'primary_key' => 'id',
+            'text_property' => 'mapperName',
+            'minimum_input_length' => 0,
+            'allow_clear' => true,
+            'label_html' => true,
+            'delay' => 250,
+            'placeholder' => 'Enter mapper name (he/she need to publish at least one map to appear)',
+            'help' => 'Be carefull others mappers get same rights as you on the song',
+            'required' => false,
         ]);
 
         if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
             $form
-                ->add('mappers', Select2EntityType::class, [
-                    "class" => Utilisateur::class,
-                    'remote_route' => 'api_mapper',
-                    'multiple' => true,
-                    "label" => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Mapper(s)',
-                    'primary_key' => 'id',
-                    'text_property' => 'mapperName',
-                    'minimum_input_length' => 0,
-                    'allow_clear' => true,
-                    'label_html' => true,
-                    'delay' => 250,
-                    'placeholder' => 'Enter mapper name (he/she need to publish at least one map to appear)',
-                    'help' => 'Be carefull others mappers get same rights as you on the song',
-                    'required' => false
-                ])
                 ->add('programmationDate', DateTimeType::class, [
                     'label' => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
                     'widget' => 'single_text',
@@ -98,7 +99,7 @@ class UploadSongController extends AbstractController
                     'input' => "datetime",
                     "empty_data" => '',
                     'label_html' => true,
-                    'help' => "Sorry for now it's based on UTC+1 (french time) "
+                    'help' => "Sorry for now it's based on UTC+1 (french time) ",
                 ])
                 ->add("zipFile", FileType::class, [
                     "mapped" => false,
@@ -108,8 +109,8 @@ class UploadSongController extends AbstractController
                         new File([
                             'maxSize' => '15M',
                             'maxSizeMessage' => 'You can upload up to 50Mo with a premium account Tier 2',
-                        ])
-                    ]
+                        ]),
+                    ],
                 ]);
         } else {
             if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
@@ -121,8 +122,8 @@ class UploadSongController extends AbstractController
                         new File([
                             'maxSize' => '10M',
                             'maxSizeMessage' => 'You can upload up to 10Mo with a premium account Tier 1',
-                        ])
-                    ]
+                        ]),
+                    ],
                 ]);
             } else {
                 $form->add("zipFile", FileType::class, [
@@ -133,8 +134,8 @@ class UploadSongController extends AbstractController
                         new File([
                             'maxSize' => '8M',
                             'maxSizeMessage' => 'You can upload up to 8Mo without a premium account',
-                        ])
-                    ]
+                        ]),
+                    ],
                 ]);
             }
         }
@@ -171,10 +172,10 @@ class UploadSongController extends AbstractController
                         'success',
                         str_replace([
                             "%song%",
-                            "%artist%"
+                            "%artist%",
                         ], [
                             $song->getName(),
-                            $song->getAuthorName()
+                            $song->getAuthorName(),
                         ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!"))
                     );
                     $em = $doctrine->getManager();
@@ -189,8 +190,8 @@ class UploadSongController extends AbstractController
                         'response' => $this->renderView('upload_song/partial/edit.html.twig', [
                             'form' => $form->createView(),
                             'song' => $song,
-                            "error" => null
-                        ])
+                            "error" => null,
+                        ]),
                     ]);
                 }
 
@@ -201,10 +202,10 @@ class UploadSongController extends AbstractController
                         'success',
                         str_replace([
                             "%song%",
-                            "%artist%"
+                            "%artist%",
                         ], [
                             $song->getName(),
-                            $song->getAuthorName()
+                            $song->getAuthorName(),
                         ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!"))
                     );
 
@@ -216,8 +217,8 @@ class UploadSongController extends AbstractController
                         'response' => $this->renderView('upload_song/partial/edit.html.twig', [
                             'form' => $form->createView(),
                             'song' => $song,
-                            "error" => null
-                        ])
+                            "error" => null,
+                        ]),
                     ]);
                 }
             } catch (Exception $e) {
@@ -227,8 +228,8 @@ class UploadSongController extends AbstractController
                     'response' => $this->renderView('upload_song/partial/edit.html.twig', [
                         'form' => $form->createView(),
                         'song' => $song,
-                        "error" => $e->getMessage()
-                    ])
+                        "error" => $e->getMessage(),
+                    ]),
                 ]);
             }
         }
@@ -240,8 +241,8 @@ class UploadSongController extends AbstractController
             'response' => $this->renderView('upload_song/partial/edit.html.twig', [
                 'form' => $form->createView(),
                 'song' => $song,
-                "error" => null
-            ])
+                "error" => null,
+            ]),
         ]);
     }
 
@@ -280,14 +281,14 @@ class UploadSongController extends AbstractController
         if (!$song->getMappers()->contains($this->getUser())) {
             return new JsonResponse([
                 'success' => false,
-                'message' => "This is not YOUR song"
+                'message' => "This is not YOUR song",
             ]);
         }
 
         if ($song->getCategoryTags()->count() == 0) {
             return new JsonResponse([
                 'success' => false,
-                'message' => "You need at least 1 category for this song"
+                'message' => "You need at least 1 category for this song",
             ]);
         }
 
@@ -369,7 +370,7 @@ class UploadSongController extends AbstractController
                 's.programmationDate',
                 'rating',
                 's.downloads',
-                's.name'
+                's.name',
             ], true)) {
 
             if ($request->get('order_by') === 's.programmationDate') {
@@ -388,12 +389,12 @@ class UploadSongController extends AbstractController
 
         if ($pagination->isPartial()) {
             return $this->render('upload_song/partial/uploaded_song_row.html.twig', [
-                'songs' => $pagination
+                'songs' => $pagination,
             ]);
         }
 
         return $this->render('upload_song/index.html.twig', [
-            'songs' => $pagination
+            'songs' => $pagination,
         ]);
     }
 
@@ -466,7 +467,7 @@ class UploadSongController extends AbstractController
 
         return new JsonResponse([
             "success" => true,
-            'cover' => $song->getCover()
+            'cover' => $song->getCover(),
         ]);
     }
 }

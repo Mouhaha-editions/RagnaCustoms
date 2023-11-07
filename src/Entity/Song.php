@@ -531,7 +531,7 @@ class Song
         return $this->lastDateUpload;
     }
 
-    public function setLastDateUpload(DateTimeInterface $lastDateUpload): self
+    public function setLastDateUpload(?DateTimeInterface $lastDateUpload): self
     {
         $this->lastDateUpload = $lastDateUpload;
 

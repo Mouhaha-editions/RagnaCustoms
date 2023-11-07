@@ -51,6 +51,12 @@ class SongCategory
         return $this->id;
     }
 
+    public function __toString()
+    {
+        return $this->getLabel();
+
+    }
+
     public function getLabel(): ?string
     {
         return $this->label;
