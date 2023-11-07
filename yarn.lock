@@ -11280,10 +11280,10 @@ tar@^6.0.2, tar@^6.1.13, tar@^6.1.2:
     mkdirp "^1.0.3"
     yallist "^4.0.0"
 
-tarteaucitronjs@^1.9.5:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/tarteaucitronjs/-/tarteaucitronjs-1.12.0.tgz#abcf7634037771a14fb7f7474070cfb704dcbe49"
-  integrity sha512-iS+gxawPM8rS+6irOR4BCuTVaXU7eLb0bvm/CTkisj98eraaFlUMUktKFu4yL1kn/tY1lYmcz97hL6MmSBLOlw==
+tarteaucitronjs@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/tarteaucitronjs/-/tarteaucitronjs-1.14.0.tgz#fefe00f81cbce821ccc872bad041903ce087554a"
+  integrity sha512-NjuzYq6gvoEdzSH9aO2+N3fJdjJ0tdtwrWT8vLYVHoPjoPMha29h5ULN3dHx8VPG1anzZzlBSczVHSe0h1IRpQ==
 
 telejson@^7.0.3:
   version "7.1.0"
