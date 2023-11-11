@@ -49,7 +49,7 @@
   "dependencies": {
     "@swup/matomo-plugin": "^1.0.0",
     "@swup/progress-plugin": "^1.1.2",
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "bootstrap": "^4",
     "chart.js": "^3.5.0",
     "color.js": "^1.2.0",
