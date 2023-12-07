@@ -192,6 +192,8 @@ body {
 
 header {
   transition: background-image 2s;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .be-patreon {
