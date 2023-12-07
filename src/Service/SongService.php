@@ -83,7 +83,8 @@ class SongService
     }
 
     /**
-     * @param  Song  $song
+     * @param Song $song
+     *
      * @return int
      * @throws NonUniqueResultException
      */
@@ -104,8 +105,9 @@ class SongService
     }
 
     /**
-     * @param  Utilisateur|null  $user
-     * @param  Song  $song
+     * @param Utilisateur|null $user
+     * @param Song $song
+     *
      * @return Collection|Vote[]
      */
     public function getVotePublicOrMine(?Utilisateur $user, Song $song)
@@ -123,6 +125,7 @@ class SongService
         $size = filesize($this->kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip");
         $sz = 'BKMGTP';
         $factor = floor((strlen($size) - 1) / 3);
+
         return sprintf("%.2f", $size / pow(1024, $factor)).@$sz[$factor];
     }
 
@@ -138,9 +141,10 @@ class SongService
     }
 
     /**
-     * @param  FormInterface  $form
-     * @param  Song  $song
-     * @param  bool  $isWip
+     * @param FormInterface $form
+     * @param Song $song
+     * @param bool $isWip
+     *
      * @return bool
      * @throws Exception
      */
@@ -195,6 +199,7 @@ class SongService
         } finally {
             $this->rrmdir($unzipFolder);
         }
+
         return true;
     }
 
@@ -280,7 +285,7 @@ class SongService
             ->setParameters([
                 'name' => $songName,
                 'authorName' => $authorName,
-                'users' => $song->getMappers()
+                'users' => $song->getMappers(),
             ])->getQuery()->getResult();
         if ($existingSong != null && $new === true) {
             throw new Exception("You already uploaded this song, please edit the last upload.");
@@ -420,7 +425,7 @@ class SongService
         $source = $this->kernel->getProjectDir()."/public/covers/".$song->getId().$song->getCoverImageExtension();
         if (in_array(strtolower($song->getCoverImageExtension()), [
             '.jpg',
-            '.jpeg'
+            '.jpeg',
         ])) {
             $image = imagecreatefromjpeg($source);
             imagewebp($image, $this->kernel->getProjectDir()."/public/covers/".$song->getId().".webp");
@@ -448,7 +453,7 @@ class SongService
             if ($song->getWip()) {
                 /** @var Utilisateur $user */
                 foreach ($song->getMappers() as $user) {
-                    if ($new) {
+                    if ($new && $song->isPublished()) {
                         /** @var FollowMapper $follower */
                         foreach (
                             $user->getFollowersNotifiable(
@@ -467,7 +472,7 @@ class SongService
                             );
                         }
                     } else {
-                        if($song->isPublished()) {
+                        if ($song->isPublished()) {
                             /** @var FollowMapper $follower */
                             foreach (
                                 $user->getFollowersNotifiable(
@@ -489,7 +494,7 @@ class SongService
                     }
                 }
                 $this->discordService->sendWipSongMessage($song);
-            } elseif ($new) {
+            } elseif ($new && $song->isPublished()) {
                 /** @var FollowMapper $follower */
                 foreach ($song->getMappers() as $user) {
                     foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
@@ -504,18 +509,22 @@ class SongService
                     }
                 }
             } else {
-                $this->discordService->sendUpdatedSongMessage($song);
-                foreach ($song->getMappers() as $user) {
-                    /** @var FollowMapper $follower */
-                    foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map) as $follower) {
-                        $this->notificationService->send(
-                            $follower->getUser(),
-                            "Song edit : <a href='".
-                            $this->router->generate('song_detail', ['slug' => $song->getSlug()])."'>".
-                            $song->getName()."</a> by <a href='".
-                            $this->router->generate('mapper_profile', ['username' => $user->getUsername()])."'>".
-                            $user->getMapperName()."</a>"
-                        );
+                if ($song->isPublished()) {
+                    $this->discordService->sendUpdatedSongMessage($song);
+                    foreach ($song->getMappers() as $user) {
+                        /** @var FollowMapper $follower */
+                        foreach ($user->getFollowersNotifiable(
+                            ENotification::Followed_mapper_update_map
+                        ) as $follower) {
+                            $this->notificationService->send(
+                                $follower->getUser(),
+                                "Song edit : <a href='".
+                                $this->router->generate('song_detail', ['slug' => $song->getSlug()])."'>".
+                                $song->getName()."</a> by <a href='".
+                                $this->router->generate('mapper_profile', ['username' => $user->getUsername()])."'>".
+                                $user->getMapperName()."</a>"
+                            );
+                        }
                     }
                 }
             }
@@ -689,7 +698,7 @@ class SongService
                 if (!$getpreview) {
                     $ffprobe = FFProbe::create([
                         'ffmpeg.binaries' => '/usr/bin/ffmpeg',
-                        'ffprobe.binaries' => '/usr/bin/ffprobe'
+                        'ffprobe.binaries' => '/usr/bin/ffprobe',
                     ]);
                     $probe = $ffprobe->format($songfile);
                     $durationMp3 = (int)($probe->get('duration') / 2);
@@ -714,6 +723,7 @@ class SongService
         }
         sort($md5s);
         $str = implode('', $md5s);
+
         return md5($str);
     }
 
@@ -784,6 +794,7 @@ class SongService
         } finally {
             $this->rrmdir($unzipFolder);
         }
+
         return true;
     }
 
@@ -841,7 +852,7 @@ class SongService
                 );
                 $diff = $this->em->getRepository(SongDifficulty::class)->findOneBy([
                     'song' => $song,
-                    'difficultyRank' => $rank
+                    'difficultyRank' => $rank,
                 ]);
                 if ($diff == null) {
                     echo $song->getName()." ".$rank->getLevel()." non trouvée\r\n";
@@ -858,10 +869,12 @@ class SongService
 
             $this->em->flush();
             $this->rrmdir($unzipFolder);
+
             return true;
         } catch (Exception $error) {
             echo "\r\n[Erreur]".$song->getName().": ".$error->getMessage()."\r\n\r\n";
         }
+
         return false;
     }
 
@@ -956,6 +969,7 @@ class SongService
         }
 
         $songs = $qb->getQuery()->getOneOrNullResult();
+
         return $songs['count'];
     }
 
@@ -976,11 +990,12 @@ class SongService
     {
         $mine = $this->em->getRepository(Score::class)->findOneBy([
             'user' => $user,
-            'songDifficulty' => $songDifficulty
+            'songDifficulty' => $songDifficulty,
         ]);
         if ($mine == null) {
             return "-";
         }
+
         return count(
                 $this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where(
                     's.rawPP > :my_score'
@@ -1026,22 +1041,22 @@ class SongService
             "ragnabeat" => $song->getInfoDatFile(),
             "author" => [
                 'fullname' => $song->getAuthorName(),
-                'url' => $this->router->generate('song_library', ['search' => 'artist:'.$song->getAuthorName()])
+                'url' => $this->router->generate('song_library', ['search' => 'artist:'.$song->getAuthorName()]),
             ],
             "mapper" => [
                 'fullname' => $song->getLevelAuthorName(),
-                'url' => $this->router->generate('mapper_profile', ['username' => $song->getMapper()])
+                'url' => $this->router->generate('mapper_profile', ['username' => $song->getMapper()]),
             ],
             "levels" => $song
                 ->getSongDifficulties()
                 ->map(function (SongDifficulty $sd) {
                     return [
                         'rank' => $sd->getDifficultyRank()->getLevel(),
-                        'color' => $sd->getDifficultyRank()->getColor()
+                        'color' => $sd->getDifficultyRank()->getColor(),
                     ];
                 })
                 ->toArray(),
-            "cover" => $song->getCover()
+            "cover" => $song->getCover(),
         ];
     }
 
@@ -1303,7 +1318,7 @@ class SongService
             0xb40bbe37,
             0xc30c8ea1,
             0x5a05df1b,
-            0x2d02ef8d
+            0x2d02ef8d,
         );
 
         $CRC = 0xFFFFFFFF;
