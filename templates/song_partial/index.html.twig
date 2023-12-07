@@ -26,7 +26,7 @@
                         <div class="title"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song|raw }}</a>
                             {% set downloaded = downloadsService.alreadyDownloaded(song) %}
                             {% if downloaded %}
-                                <small class="small"><i data-toggle="tooltip" title="already downloaded" class="fas fa-check"></i></small>
+                                <small class="small"><i data-toggle="tooltip" title="Already downloaded" class="fas fa-check"></i></small>
                             {% endif %}
                         </div>
                         {% include 'songs/partial/artists.html.twig' with {song : song} %}

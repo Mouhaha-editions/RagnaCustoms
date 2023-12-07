@@ -116,9 +116,11 @@
                         </div>
                         <div class="mt-3">
                             <div class="label">{{ "Description"|trans }}</div>
-                            <div class="description">   {% apply markdown_to_html %}
-                                    {{ song.description is not null ? song.description|nl2br : "no description for now"|trans }}
-                                {% endapply %}</div>
+                            <div class="description">
+                                {% apply markdown_to_html %}
+                                    {{ song.description is not null ? song.description|striptags|nl2br : "no description for now"|trans }}
+                                {% endapply %}
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -207,7 +209,7 @@
                         <span class="max">00:00</span>
                     </div>
 
-                    <div class="text-center">player by <b>Ratzee</b></div>
+                    <div class="text-center">Player by <b>Ratzee</b></div>
 
                 </div>
                 <div class="col-lg-4 offset-lg-1">
