@@ -56,7 +56,7 @@ class SongCrudController extends AbstractCrudController
             BooleanField::new('isWip')->setColumns('col-4'),
             BooleanField::new('isModerated')->setColumns('col-4'),
             ChoiceField::new('bestPlatform')->setLabel('Mapped for')
-                ->setChoices(['VR'=>'0','VOT'=>'1'])->allowMultipleChoices()->renderExpanded()->setColumns('col-6'),
+                ->setChoices(['VR'=>'0','VOT'=>'1'])->allowMultipleChoices()->renderExpanded()->setColumns('col-12'),
             DateTimeField::new('lastDateUpload')->setColumns('col-6'),
             DateTimeField::new('programmationDate')->setColumns('col-6'),
             DateTimeField::new('slug')->setHelp('verifier que le nouveau slug n\'existe pas déjà')->setColumns('col-12'),
