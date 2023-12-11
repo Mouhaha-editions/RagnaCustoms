@@ -40,15 +40,16 @@ class SongCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('name'),
-            AssociationField::new('mappers')
-                ->hideOnForm(),
+            AssociationField::new('mappers'),
             AssociationField::new('categoryTags'),
             TextEditorField::new('description'),
+            TextEditorField::new('youtubeLink'),
             DateTimeField::new('lastDateUpload'),
             DateTimeField::new('programmationDate'),
             BooleanField::new('isModerated'),
-            // ChoiceField::new('bestPlatform')
-            //     ->setChoices(['vr'=>'0','flat'=>'1']),
+            BooleanField::new('isConverted'),
+            ChoiceField::new('bestPlatform')
+                ->setChoices(['VR'=>'0','VOT'=>'1']),
             BooleanField::new('isWip'),
         ];
     }
