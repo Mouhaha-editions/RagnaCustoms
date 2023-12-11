@@ -41,19 +41,25 @@ class SongCrudController extends AbstractCrudController
         return [
             FormField::addPanel('Base')->setCssClass('col-6'),
             IdField::new('id')->hideOnForm()->setColumns('col-12'),
-            TextField::new('name')->setColumns('col-12'),
+            TextField::new('name')->setColumns('col-6'),
+            TextField::new('authorName')->setColumns('col-6'),
+            TextField::new('beatsPerMinute')->setColumns('col-4'),
+            TextField::new('approximativeDuration')->setColumns('col-4'),
+            TextField::new('environmentName')->setColumns('col-4'),
+            TextField::new('authorName')->setColumns('col-6'),
             AssociationField::new('mappers')->setColumns('col-12'),
             AssociationField::new('categoryTags')->setColumns('col-12'),
             TextEditorField::new('description')->setColumns('col-12'),
             TextField::new('youtubeLink')->setColumns('col-12'),
             FormField::addPanel('Base')->setCssClass('col-6'),
-            BooleanField::new('isConverted')->setColumns('col-6'),
-            ChoiceField::new('bestPlatform')
+            BooleanField::new('isConverted')->setColumns('col-4'),
+            BooleanField::new('isWip')->setColumns('col-4'),
+            BooleanField::new('isModerated')->setColumns('col-4'),
+            ChoiceField::new('bestPlatform')->setLabel('Mapped for')
                 ->setChoices(['VR'=>'0','VOT'=>'1'])->allowMultipleChoices()->renderExpanded()->setColumns('col-6'),
-            BooleanField::new('isWip')->setColumns('col-6'),
-            BooleanField::new('isModerated')->setColumns('col-6'),
             DateTimeField::new('lastDateUpload')->setColumns('col-6'),
             DateTimeField::new('programmationDate')->setColumns('col-6'),
+            DateTimeField::new('slug')->setHelp('verifier que le nouveau slug n\'existe pas déjà')->setColumns('col-12'),
         ];
     }
 
