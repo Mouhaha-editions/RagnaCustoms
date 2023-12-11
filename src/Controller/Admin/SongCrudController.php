@@ -44,7 +44,9 @@ class SongCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm()->setColumns('col-12'),
             TextField::new('name')->setColumns('col-6'),
             TextField::new('authorName')->setColumns('col-6'),
-            AssociationField::new('mappers')->setColumns('col-12'),
+            AssociationField::new('mappers')->setColumns('col-12')->formatValue(function ($value,Song $entity) {
+                return implode(', ',$entity->getMappers()->toArray());
+            }),
             TextEditorField::new('description')->setColumns('col-12'),
             TextField::new('youtubeLink')->setColumns('col-12')->hideOnIndex(),
             FormField::addPanel('Part 2')->setCssClass('col-6'),
