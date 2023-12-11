@@ -47,13 +47,13 @@ class SongCrudController extends AbstractCrudController
             TextEditorField::new('description')->setColumns('col-12'),
             TextField::new('youtubeLink')->setColumns('col-12'),
             FormField::addPanel('Base')->setCssClass('col-6'),
-            BooleanField::new('isConverted')->setColumns('col-12'),
+            BooleanField::new('isConverted')->setColumns('col-6'),
             ChoiceField::new('bestPlatform')
-                ->setChoices(['VR'=>'0','VOT'=>'1'])->allowMultipleChoices()->renderExpanded()->setColumns('col-12'),
-            BooleanField::new('isWip')->setColumns('col-12'),
-            DateTimeField::new('lastDateUpload')->setColumns('col-12'),
-            DateTimeField::new('programmationDate')->setColumns('col-12'),
-            BooleanField::new('isModerated')->setColumns('col-12'),
+                ->setChoices(['VR'=>'0','VOT'=>'1'])->allowMultipleChoices()->renderExpanded()->setColumns('col-6'),
+            BooleanField::new('isWip')->setColumns('col-6'),
+            BooleanField::new('isModerated')->setColumns('col-6'),
+            DateTimeField::new('lastDateUpload')->setColumns('col-6'),
+            DateTimeField::new('programmationDate')->setColumns('col-6'),
         ];
     }
 
