@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -39,19 +40,20 @@ class SongCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addPanel('Base')->setCssClass('col-6'),
+            FormField::addPanel('Part 1')->setCssClass('col-6'),
             IdField::new('id')->hideOnForm()->setColumns('col-12'),
             TextField::new('name')->setColumns('col-6'),
             TextField::new('authorName')->setColumns('col-6'),
-            TextField::new('beatsPerMinute')->setColumns('col-4'),
-            TextField::new('approximativeDuration')->setColumns('col-4'),
-            TextField::new('environmentName')->setColumns('col-4'),
+
             TextField::new('authorName')->setColumns('col-6'),
             AssociationField::new('mappers')->setColumns('col-12'),
-            AssociationField::new('categoryTags')->setColumns('col-12'),
             TextEditorField::new('description')->setColumns('col-12'),
             TextField::new('youtubeLink')->setColumns('col-12'),
-            FormField::addPanel('Base')->setCssClass('col-6'),
+            FormField::addPanel('Part 2')->setCssClass('col-6'),
+            AssociationField::new('categoryTags')->setColumns('col-12'),
+            NumberField::new('beatsPerMinute')->setColumns('col-4'),
+            NumberField::new('approximativeDuration')->setColumns('col-4'),
+            TextField::new('environmentName')->setColumns('col-4'),
             BooleanField::new('isConverted')->setColumns('col-4'),
             BooleanField::new('isWip')->setColumns('col-4'),
             BooleanField::new('isModerated')->setColumns('col-4'),
@@ -59,9 +61,9 @@ class SongCrudController extends AbstractCrudController
                 ->setChoices(['VR'=>'0','VOT'=>'1'])
                 ->allowMultipleChoices()
                 ->renderExpanded()
-                ->setColumns('col-12'),
-            DateTimeField::new('lastDateUpload')->setColumns('col-6'),
-            DateTimeField::new('programmationDate')->setColumns('col-6'),
+                ->setColumns('col-4'),
+            DateTimeField::new('lastDateUpload')->setColumns('col-4'),
+            DateTimeField::new('programmationDate')->setColumns('col-4'),
             TextField::new('slug')->setHelp('verifier que le nouveau slug n\'existe pas déjà')->setColumns('col-12'),
         ];
     }
