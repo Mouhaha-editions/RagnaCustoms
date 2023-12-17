@@ -27,25 +27,25 @@ export default class extends Controller {
         $("#utilisateur_usernameColor").on('input', function () {
             $(".username span").css({"color": $(this).val()});
         });
-        $("#utilisateur_usernameColor").on('change', function () {
-            let form = $(".username").closest('form');
-            let formData = form.serialize();
-
-            $.ajax({
-                type: "POST",
-                url: form.attr('action'),
-                data: formData
-            });
-        });
-        $("form[name=\"utilisateur\"] input,form[name=\"utilisateur\"] select,form[name=\"utilisateur\"] textarea").on('change', function () {
-            let form = $(this).closest('form');
-            let formData = form.serialize();
-            $.ajax({
-                type: "POST",
-                url: form.attr('action'),
-                data: formData
-            });
-        });
+        // $("#utilisateur_usernameColor").on('change', function () {
+        //     let form = $(".username").closest('form');
+        //     let formData = form.serialize();
+        //
+        //     $.ajax({
+        //         type: "POST",
+        //         url: form.attr('action'),
+        //         data: formData
+        //     });
+        // });
+        // $("form[name=\"utilisateur\"] input,form[name=\"utilisateur\"] select,form[name=\"utilisateur\"] textarea").on('change', function () {
+        //     let form = $(this).closest('form');
+        //     let formData = form.serialize();
+        //     $.ajax({
+        //         type: "POST",
+        //         url: form.attr('action'),
+        //         data: formData
+        //     });
+        // });
         $(".reset-api-key").on('click', function () {
             console.log("furet")
             if (confirm('You are going to change your api key, are you sure to continue ? ')) {

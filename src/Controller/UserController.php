@@ -26,6 +26,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -724,6 +725,7 @@ class UserController extends AbstractController
         TranslatorInterface $translator,
         UtilisateurRepository $utilisateurRepository,
         ScoreHistoryRepository $scoreHistoryRepository,
+        UserPasswordHasherInterface $passwordEncoder,
         PaginationService $paginationService
     ): Response {
         if (!$this->isGranted('ROLE_USER')) {
@@ -741,8 +743,33 @@ class UserController extends AbstractController
         /** @var Utilisateur $user */
         $user = $this->getUser();
         $form = $this->createForm(UtilisateurType::class, $user);
+        $previousUsername = $this->getUser()->getUserIdentifier();
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            if($previousUsername !== $user->getUsername()){
+                $exists = $utilisateurRepository->findBy(['username' => $user->getUsername()]);
+
+                if ($exists) {
+                    $this->addFlash('danger', 'This username is already used by someone else!');
+                    $user->setUsername($previousUsername);
+                }
+            }
+
+            if($form->has('currentPassword')){
+                if($passwordEncoder->isPasswordValid($user, $form->get('currentPassword')->getData())) {
+                    // Encode the plain password, and set it.
+                    $encodedPassword = $passwordEncoder->hashPassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    );
+
+                    $user->setPassword($encodedPassword);
+                }else{
+                    $this->addFlash('danger','Wrong current password. your password isn\'t changed');
+                }
+            }
+
             if (!$this->isGranted('ROLE_PREMIUM_LVL2')) {
                 $user->setUsernameColor("#ffffff");
             }

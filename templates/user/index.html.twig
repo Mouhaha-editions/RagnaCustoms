@@ -13,11 +13,6 @@
                     </div>
 
                     <div class="col-md-5">
-
-                        <div class="{% if not is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %}"><i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Username color
-                            : {{ form_widget(form.usernameColor) }}
-                        </div>
-
                         <label for="ApiKey" class="col-form-label">{{ "Your API key"|trans }} </label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -35,9 +30,29 @@
                                 here</a> to auto-set your API key"|trans|raw }}
                             </small>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">{{ form_row(form.username) }}</div>
+                            <div class="col-md-6">
+                                <div class="{% if not is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %} pt-4 pb-2"><i
+                                        data-toggle="tooltip" title="premium feature"
+                                        class="fas fa-gavel text-warning"></i> Username color : {{ form_widget(form.usernameColor) }}
+                                </div>
+                            </div>
+                        </div>
 
-                        {{ form_row(form.country) }}
+                        <div class="row">
+                                <div class="col-md-6"> {{ form_row(form.currentPassword) }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6"> {{ form_row(form.plainPassword.first) }}</div>
+
+                            <div class="col-md-6"> {{ form_row(form.plainPassword.second) }}</div>
+
+                        </div>
+
+
                         {{ form_row(form.email) }}
+                        {{ form_row(form.country) }}
 
                         <div class="mt-2">
                             <div class="float-right">
