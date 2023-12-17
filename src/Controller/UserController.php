@@ -457,7 +457,6 @@ class UserController extends AbstractController
 
         $categories = $request->get('downloads_filter_categories', null);
         if ($categories != null) {
-            $qb->leftJoin('s.categoryTags', 't');
             foreach ($categories as $k => $v) {
                 $qb->andWhere("t.id = :tag$k")->setParameter("tag$k", $v);
             }
