@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Song;
 use App\Entity\Vote;
+use App\Enum\ENotification;
 use App\Form\VoteType;
 use App\Repository\VoteRepository;
 use App\Service\DiscordService;
+use App\Service\NotificationService;
 use App\Service\VoteService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +24,7 @@ class VotesController extends AbstractController
 {
 
     #[Route(path: '/upvote/{id}', name: '_upvote')]
-    public function toggleUpVote(VoteService $voteService, Song $song, TranslatorInterface $translator)
+    public function toggleUpVote(VoteService $voteService, Song $song, TranslatorInterface $translator, NotificationService $notificationService)
     {
         if (!$song->isAvailable()) {
             $this->addFlash('danger', $translator->trans("Song not available for vote"));
@@ -31,6 +33,12 @@ class VotesController extends AbstractController
         } elseif (!$voteService->canUpDownVote($song, $this->getUser())) {
             $this->addFlash('danger', $translator->trans("Play the song first"));
         } else {
+
+            foreach($song->getMappers() AS $mapper){
+                if($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)){
+                    $notificationService->send($mapper,'You get an up/down vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
+                }
+            }
             $voteService->toggleUpVote($song, $this->getUser());
         }
         return new JsonResponse(
@@ -39,7 +47,7 @@ class VotesController extends AbstractController
     }
 
     #[Route(path: '/downvote/{id}', name: '_downvote')]
-    public function toggleDownVote(VoteService $voteService, Song $song, TranslatorInterface $translator)
+    public function toggleDownVote(VoteService $voteService, Song $song, TranslatorInterface $translator, NotificationService $notificationService)
     {
         if (!$song->isAvailable()) {
             $this->addFlash('danger', $translator->trans("Song not available for vote"));
@@ -48,6 +56,11 @@ class VotesController extends AbstractController
         } elseif (!$voteService->canUpDownVote($song, $this->getUser())) {
             $this->addFlash('danger', $translator->trans("Play the song first"));
         } else {
+            foreach($song->getMappers() AS $mapper){
+                if($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)){
+                    $notificationService->send($mapper,'You get an up/down vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
+                }
+            }
             $voteService->toggleDownVote($song, $this->getUser());
         }
 

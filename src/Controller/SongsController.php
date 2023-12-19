@@ -671,9 +671,15 @@ class SongsController extends AbstractController
             $em->flush();
             $discordService->sendFeedback($feedback);
 
-            foreach($song->getMappers() AS $mapper){
-                if($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)){
-                    $notificationService->send($mapper,'You get a new feedback on <a href="'.$this->generateUrl('song_detail', $song->getSlug()).'">'.$song->getName()."</a>");
+            foreach ($song->getMappers() as $mapper) {
+                if ($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)) {
+                    $notificationService->send(
+                        $mapper,
+                        'You get a new feedback on <a href="'.$this->generateUrl(
+                            'song_detail',
+                            ['slug' => $song->getSlug()]
+                        ).'">'.$song->getName()."</a>"
+                    );
                 }
             }
 
