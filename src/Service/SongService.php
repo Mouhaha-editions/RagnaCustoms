@@ -1356,6 +1356,7 @@ class SongService
         @unlink($this->kernel->getProjectDir()."/public/songs-file/".$song->getId().'.zip');
         //remove song
         $this->em->remove($song);
+        $this->em->flush();
     }
 }
 
