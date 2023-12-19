@@ -28,6 +28,7 @@ class NotificationController extends AbstractController
     ): Response {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
+
             return $this->redirectToRoute('home');
         }
 
@@ -37,6 +38,7 @@ class NotificationController extends AbstractController
         )->orderBy('n.createdAt', 'DESC');
 
         $notifications = $paginationService->process($qb, $request);
+
         return $this->render('notification/index.html.twig', [
             'notifications' => $notifications,
         ]);
@@ -52,6 +54,7 @@ class NotificationController extends AbstractController
     ): Response {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
+
             return $this->redirectToRoute('home');
         }
         /** @var Utilisateur $user */
@@ -61,21 +64,23 @@ class NotificationController extends AbstractController
             "notificationPreference" => $user->getNotificationPreferences(),
         ];
 
-        $form = $this->createFormBuilder($data)->add('emailPreference', EnumType::class, [
-            'class' => EEmail::class,
-            "choice_label" => "label",
-            'multiple' => true,
-            'expanded' => true,
-        ])->add('notificationPreference', EnumType::class, [
-            'class' => ENotification::class,
-            "choice_label" => "label",
-            'multiple' => true,
-            'expanded' => true,
-        ]);
+        $form = $this->createFormBuilder($data)
+            ->add('emailPreference', EnumType::class, [
+                'class' => EEmail::class,
+                "choice_label" => "label",
+                'multiple' => true,
+                'expanded' => true,
+            ])
+            ->add('notificationPreference', EnumType::class, [
+                'class' => ENotification::class,
+                "choice_label" => "label",
+                'multiple' => true,
+                'expanded' => true,
+            ]);
 
         $form = $form->getForm();
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setEmailPreference(serialize($form->get('emailPreference')->getData()));
             $user->setNotificationPreference(serialize($form->get('notificationPreference')->getData()));
@@ -84,7 +89,7 @@ class NotificationController extends AbstractController
         }
 
         return $this->render('notification/preference.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -99,8 +104,8 @@ class NotificationController extends AbstractController
                 "error" => true,
                 "errorMessage" => $translator->trans("You need an account!"),
                 "result" => $this->renderView('notification/partial/buttons.html.twig', [
-                    "notification" => $notification
-                ])
+                    "notification" => $notification,
+                ]),
             ]);
         }
 
@@ -109,8 +114,8 @@ class NotificationController extends AbstractController
                 "error" => true,
                 "errorMessage" => $translator->trans("You are not the owners!"),
                 "result" => $this->renderView('notification/partial/buttons.html.twig', [
-                    "notification" => $notification
-                ])
+                    "notification" => $notification,
+                ]),
             ]);
         }
 
@@ -119,12 +124,13 @@ class NotificationController extends AbstractController
             ) == Notification::STATE_UNREAD ? Notification::STATE_READ : Notification::STATE_UNREAD
         );
         $doctrine->getManager()->flush();
+
         return new JsonResponse([
             "error" => false,
             "errorMessage" => "",
             "result" => $this->renderView('notification/partial/buttons.html.twig', [
-                "notification" => $notification
-            ])
+                "notification" => $notification,
+            ]),
         ]);
     }
 
@@ -136,19 +142,21 @@ class NotificationController extends AbstractController
     ) {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
+
             return $this->redirectToRoute('app_notification');
         }
 
         foreach (
             $notificationRepository->findBy([
                 'user' => $this->getUser(),
-                'state' => Notification::STATE_UNREAD
+                'state' => Notification::STATE_UNREAD,
             ]) as $notification
         ) {
             $notification->setState(Notification::STATE_READ);
         }
 
         $doctrine->getManager()->flush();
+
         return $this->redirectToRoute('app_notification');
     }
 
@@ -160,15 +168,18 @@ class NotificationController extends AbstractController
     ) {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
+
             return $this->redirectToRoute('app_notification');
         }
 
         if ($this->getUser() !== $notification->getUser()) {
             $this->addFlash('danger', $translator->trans("You are not the owners!"));
+
             return $this->redirectToRoute('app_notification');
         }
 
         $notificationRepository->remove($notification, true);
+
         return $this->redirectToRoute('app_notification');
     }
 }
