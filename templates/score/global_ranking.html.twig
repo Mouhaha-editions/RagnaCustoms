@@ -1,5 +1,13 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}Leaderboard {{ parent() }}{% endblock %}
+   {% block metas %}
+     <meta name="description" content="Look at your score and compare with friends">
+     <meta property="og:url" content="https://ragnacustoms.com"/>
+     <meta property="og:type" content="website"/>
+     <meta property="og:title" content="Leaderboard {{ parent() }}"/>
+     <meta property="og:description" content="Look at your score and compare with friends"/>
+     <meta property="og:image" content="https://ragnacustoms.com/apps/logo.webp?noel"/>
+   {% endblock %}
 
 {% block body %}
     <div {{ stimulus_controller('leaderboard') }} id="leaderboard" class="container">

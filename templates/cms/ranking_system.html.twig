@@ -1,7 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}RagnaCustoms.com, Ranking system{% endblock %}
-
+{% block title %}Ranking system {{ parent() }}{% endblock %}
+   {% block metas %}
+       <meta name="description" content="RagnaCustoms.com, Ranking system">
+       <meta property="og:url" content="https://ragnacustoms.com"/>
+       <meta property="og:type" content="website"/>
+       <meta property="og:title" content="RagnaCustoms.com, Ranking system"/>
+       <meta property="og:description" content="RagnaCustoms.com, Ranking system"/>
+       <meta property="og:image" content="https://ragnacustoms.com/apps/logo.webp?noel"/>
+   {% endblock %}
 {% block body %}
 <div class="container">
     <div class="row">

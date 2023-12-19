@@ -138,10 +138,10 @@ $(function () {
         return false;
     });
 
-    toggle_snow();
     $(document).on('click','.snowflake-toggle',function(){
         toggle_snow();
     })
+
     $("[data-toggle=tooltip]").tooltip();
     let maxBg = 21;
     let currentBg = Math.floor(Math.random() * maxBg-1) +1;

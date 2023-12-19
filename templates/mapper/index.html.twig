@@ -1,5 +1,14 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Mappers {{ parent() }}{% endblock %}
+   {% block metas %}
+       <meta name="description" content="Mappers">
+       <meta property="og:url" content="https://ragnacustoms.com"/>
+       <meta property="og:type" content="website"/>
+       <meta property="og:title" content="Mappers {{ parent() }}"/>
+       <meta property="og:description" content="Mappers"/>
+       <meta property="og:image" content="https://ragnacustoms.com/apps/logo.webp?noel"/>
+   {% endblock %}
 
 {% block body %}
     <div {{ stimulus_controller('mappers') }} class="container" id="mappers">
