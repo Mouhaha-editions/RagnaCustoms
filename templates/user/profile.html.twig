@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ "%username%'s profile"|trans|replace({"%username%":user.username}) }} {{ parent() }}{% endblock %}
    {% block metas %}
-       <meta name="description" content="{{ "%username%'s profile"|trans|replace({"%username%":user.username}) }} {{ parent() }}">
+       <meta name="description" content="{{ "%username%'s profile"|trans|replace({"%username%":user.username}) }}">
        <meta property="og:url" content="https://ragnacustoms.com"/>
        <meta property="og:type" content="website"/>
-       <meta property="og:title" content="{{ "%username%'s profile"|trans|replace({"%username%":user.username}) }} {{ parent() }}}"/>
-       <meta property="og:description" content="{{ "%username%'s profile"|trans|replace({"%username%":user.username}) }} {{ parent() }}"/>
+       <meta property="og:title" content="{{ "%username%'s profile"|trans|replace({"%username%":user.username}) }}"/>
+       <meta property="og:description" content="{{ "%username%'s profile"|trans|replace({"%username%":user.username}) }}"/>
        <meta property="og:image" content="https://ragnacustoms.com/apps/logo.webp?noel"/>
    {% endblock %}
 
