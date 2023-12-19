@@ -8,6 +8,7 @@ use App\Entity\Song;
 use App\Entity\SongDifficulty;
 use App\Entity\SongTemporaryList;
 use App\Entity\Vote;
+use App\Enum\ENotification;
 use App\Form\AddPlaylistFormType;
 use App\Form\VoteType;
 use App\Repository\DownloadCounterRepository;
@@ -16,6 +17,7 @@ use App\Repository\UtilisateurRepository;
 use App\Service\DiscordService;
 use App\Service\DownloadService;
 use App\Service\GrantedService;
+use App\Service\NotificationService;
 use App\Service\ScoreService;
 use App\Service\SongService;
 use DateTime;
@@ -638,6 +640,7 @@ class SongsController extends AbstractController
         SongService $songService,
         PaginationService $paginationService,
         DiscordService $discordService,
+        NotificationService $notificationService,
         ?Song $song = null
     ) {
         if ($song == null
@@ -667,6 +670,13 @@ class SongsController extends AbstractController
             $em->persist($feedback);
             $em->flush();
             $discordService->sendFeedback($feedback);
+
+            foreach($song->getMappers() AS $mapper){
+                if($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)){
+                    $notificationService->send($mapper,'You get a new feedback on <a href="'.$this->generateUrl('song_detail', $song->getSlug()).'">'.$song->getName()."</a>");
+                }
+            }
+
             $feedback = new Vote();
             $feedback->setSong($song);
             $feedback->setHash($song->getNewGuid());

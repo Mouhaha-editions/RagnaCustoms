@@ -28,8 +28,8 @@ enum ENotification: int
             self::Followed_mapper_update_map => 'Map update from followed mapper(s)',
             self::Followed_mapper_update_map_wip => '"Work in progress" map update from followed mapper(s)',
 //            self::Mapper_stats_report => 'Stats for your account (weekly downloads, followers, feedback, ...)',
-            self::Mapper_new_feedback => "New feedback on your map (soon)",
-            self::Mapper_new_up_down_vote => "New up/down vote on your map (soon)",
+            self::Mapper_new_feedback => "New feedback on your map",
+            self::Mapper_new_up_down_vote => "New up/down vote on your map",
             self::Mapper_new_follower => "New follower (soon)",
         };
     }
