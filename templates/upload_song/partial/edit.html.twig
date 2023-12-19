@@ -14,10 +14,10 @@
     <div class="col-md-6">
         {{ form_row(form.bestPlatform,{attr:{class:'pb-2'}}) }}
         {{ form_row(form.youtubeLink) }}
+        {{ form_row(form.mappers) }}
 
         {% if is_granted("ROLE_PREMIUM_LVL2") %}
             {{ form_row(form.programmationDate) }}
-            {{ form_row(form.mappers) }}
         {% endif %}
 
 

@@ -160,6 +160,7 @@ class SongService
             $folder = $this->kernel->getProjectDir()."/public/tmp-song/";
             $unzipFolder = $folder.uniqid();
             @mkdir($unzipFolder);
+
             if ($form != null) {
                 $file = $form->get('zipFile')->getData();
                 $file->move($unzipFolder, $file->getClientOriginalName());
@@ -181,6 +182,7 @@ class SongService
                 }
                 $song->setDescription($form->get('description')->getData());
             }
+
             if ($form != null && $form->get('youtubeLink')->getData() != null) {
                 if (preg_match(
                     '~(?:https?://)?(?:www.)?(?:youtube.com|youtu.be)/(?:watch\?v=)?([^\s]+)~',
@@ -189,7 +191,9 @@ class SongService
                     $song->setYoutubeLink($form->get('youtubeLink')->getData());
                 }
             }
+
             $this->process($unzippableFile, $unzipFolder, $song, $isWip);
+
             if ($form !== null) {
                 $this->emulatorFileDispatcher($song, true);
                 $this->coverOptimisation($song);
