@@ -32,13 +32,15 @@ class VotesController extends AbstractController
         } elseif (!$voteService->canUpDownVote($song, $this->getUser())) {
             $this->addFlash('danger', $translator->trans("Play the song first"));
         } else {
+            $voteService->toggleUpVote($song, $this->getUser());
 
             foreach($song->getMappers() AS $mapper){
                 if($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)){
-                    $notificationService->send($mapper,'You get an up/down vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
+                    $UserSongVoteCounter = $song->isVoteCounterBy($this->getUser());
+                    if(!$UserSongVoteCounter){break;}
+                    $notificationService->send($mapper,'You get '.($UserSongVoteCounter->getVotesIndc() ? 'an Up-': 'a Down-').'vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
                 }
             }
-            $voteService->toggleUpVote($song, $this->getUser());
         }
         return new JsonResponse(
             ['result' => $this->renderView('songs/partial/downupvote.html.twig', ['song' => $song,])]
@@ -55,13 +57,15 @@ class VotesController extends AbstractController
         } elseif (!$voteService->canUpDownVote($song, $this->getUser())) {
             $this->addFlash('danger', $translator->trans("Play the song first"));
         } else {
+            $voteService->toggleDownVote($song, $this->getUser());
+
             foreach($song->getMappers() AS $mapper){
                 if($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)){
-                    $notificationService->send($mapper,'You get an up/down vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
+                    $UserSongVoteCounter = $song->isVoteCounterBy($this->getUser());
+                    if(!$UserSongVoteCounter){break;}
+                    $notificationService->send($mapper,'You get '.($UserSongVoteCounter->getVotesIndc() ? 'an Up-': 'a Down-').'vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
                 }
             }
-
-            $voteService->toggleDownVote($song, $this->getUser());
         }
 
         return new JsonResponse(['result' => $this->renderView('songs/partial/downupvote.html.twig', ['song' => $song])]

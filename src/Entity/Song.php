@@ -134,7 +134,7 @@ class Song
         $this->mappers = new ArrayCollection();
     }
 
-    public function isVoteCounterBy(?UserInterface $user)
+    public function isVoteCounterBy(?UserInterface $user) : ?VoteCounter
     {
         $votes = $this->voteCounters->filter(function (VoteCounter $voteCounter) use ($user) {
             return $voteCounter->getUser() === $user;
