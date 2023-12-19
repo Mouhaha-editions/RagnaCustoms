@@ -199,6 +199,7 @@ class SongService
                 $this->coverOptimisation($song);
             }
         } catch (Exception $e) {
+            $this->cleanUp($song);
             throw new Exception($e->getMessage());
         } finally {
             $this->rrmdir($unzipFolder);
@@ -329,24 +330,31 @@ class SongService
             $jsonContent = file_get_contents($unzipFolder."/".$difficulty->_beatmapFilename);
             $fcrc = Fcrc::StrCrc32($jsonContent);
 
-            $rank = $this->em->getRepository(DifficultyRank::class)->findOneBy(["level" => $difficulty->_difficultyRank]
-            );
+            $rank = $this->em
+                ->getRepository(DifficultyRank::class)
+                ->findOneBy(["level" => $difficulty->_difficultyRank]);
             $diff = null;
             if ($song->getId() !== null) {
                 /** @var SongDifficulty $diff */
-                $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where(
-                    'sd.wanadevHash = :fcrc'
-                )->setParameter('fcrc', $fcrc)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery(
-                )->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
+                $diff = $this->em->getRepository(SongDifficulty::class)
+                    ->createQueryBuilder('sd')
+                    ->where('sd.wanadevHash = :fcrc')
+                    ->setParameter('fcrc', $fcrc)
+                    ->andWhere('sd.song = :song')
+                    ->setParameter('song', $song)
+                    ->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
                 if ($diff != null && $diff->getDifficultyRank() === $rank) {
                     unset($previousDiffs[$diff->getId()]);
                     $allowedFiles[] = $difficulty->_beatmapFilename;
                     continue;
                 } else {
-                    $diff = $this->em->getRepository(SongDifficulty::class)->createQueryBuilder('sd')->where(
-                        'sd.difficultyRank = :rank'
-                    )->setParameter('rank', $rank)->andWhere('sd.song = :song')->setParameter('song', $song)->getQuery(
-                    )->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
+                    $diff = $this->em->getRepository(SongDifficulty::class)
+                        ->createQueryBuilder('sd')
+                        ->where('sd.difficultyRank = :rank')
+                        ->setParameter('rank', $rank)
+                        ->andWhere('sd.song = :song')
+                        ->setParameter('song', $song)
+                        ->getQuery()->setMaxResults(1)->setFirstResult(0)->getOneOrNullResult();
                 }
             }
             if ($diff == null) {
@@ -426,44 +434,41 @@ class SongService
             $this->kernel->getProjectDir()."/public/covers/".$song->getId().$song->getCoverImageExtension()
         );
 
-        $source = $this->kernel->getProjectDir()."/public/covers/".$song->getId().$song->getCoverImageExtension();
-        if (in_array(strtolower($song->getCoverImageExtension()), [
-            '.jpg',
-            '.jpeg',
-        ])) {
-            $image = imagecreatefromjpeg($source);
-            imagewebp($image, $this->kernel->getProjectDir()."/public/covers/".$song->getId().".webp");
-            unlink($source);
-            imagedestroy($image);
-        } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.gif'])) {
-            $image = imagecreatefromgif($source);
-            imagewebp($image, $this->kernel->getProjectDir()."/public/covers/".$song->getId().".webp");
-            unlink($source);
-            imagedestroy($image);
-        } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.png'])) {
-            $image = imagecreatefrompng($source);
-            imagewebp($image, $this->kernel->getProjectDir()."/public/covers/".$song->getId().".webp");
-            unlink($source);
-            imagedestroy($image);
-        } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.webp'])) {
-        } else {
-            throw new Exception("Your cover not a gif or a jpg or a png");
+        try {
+            $source = $this->kernel->getProjectDir()."/public/covers/".$song->getId().$song->getCoverImageExtension();
+            if (in_array(strtolower($song->getCoverImageExtension()), ['.jpg', '.jpeg',])) {
+                $image = imagecreatefromjpeg($source);
+                imagewebp($image, $this->kernel->getProjectDir()."/public/covers/".$song->getId().".webp");
+                unlink($source);
+                imagedestroy($image);
+            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.gif'])) {
+                $image = imagecreatefromgif($source);
+                imagewebp($image, $this->kernel->getProjectDir()."/public/covers/".$song->getId().".webp");
+                unlink($source);
+                imagedestroy($image);
+            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.png'])) {
+                $image = imagecreatefrompng($source);
+                imagewebp($image, $this->kernel->getProjectDir()."/public/covers/".$song->getId().".webp");
+                unlink($source);
+                imagedestroy($image);
+            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.webp'])) {
+            } else {
+                throw new Exception("Your cover not a gif or a jpg or a png");
+            }
+        } catch (\Exception $e) {
+            throw new Exception("The image cover is in the wrong format. Please verify it's a native ".$song->getCoverImageExtension());
         }
-
         if (!$song->hasCover()) {
             $song->setWip(true);
         }
+
         if ($this->kernel->getEnvironment() != "dev") {
             if ($song->getWip()) {
                 /** @var Utilisateur $user */
                 foreach ($song->getMappers() as $user) {
                     if ($new && $song->isPublished()) {
                         /** @var FollowMapper $follower */
-                        foreach (
-                            $user->getFollowersNotifiable(
-                                ENotification::Followed_mapper_new_map_wip
-                            ) as $follower
-                        ) {
+                        foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map_wip) as $follower) {
                             $this->notificationService->send(
                                 $follower->getUser(),
                                 "New song : <a href='".$this->router->generate(
@@ -478,11 +483,7 @@ class SongService
                     } else {
                         if ($song->isPublished()) {
                             /** @var FollowMapper $follower */
-                            foreach (
-                                $user->getFollowersNotifiable(
-                                    ENotification::Followed_mapper_update_map_wip
-                                ) as $follower
-                            ) {
+                            foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map_wip) as $follower) {
                                 $this->notificationService->send(
                                     $follower->getUser(),
                                     "Song edit : <a href='".$this->router->generate(
@@ -794,6 +795,7 @@ class SongService
             $this->emulatorFileDispatcher($song, true);
             $this->coverOptimisation($song);
         } catch (Exception $e) {
+            $this->cleanUp($song);
             throw new Exception($e->getMessage());
         } finally {
             $this->rrmdir($unzipFolder);
@@ -1001,13 +1003,17 @@ class SongService
         }
 
         return count(
-                $this->em->getRepository(Score::class)->createQueryBuilder("s")->select('s.id')->where(
-                    's.rawPP > :my_score'
-                )->andWhere('s.songDifficulty = :difficulty')->andWhere('s.user != :me')->setParameter(
-                    'my_score',
-                    $mine->getRawPP()
-                )->setParameter('difficulty', $songDifficulty)->setParameter('me', $user)->groupBy('s.user')->getQuery(
-                )->getResult()
+                $this->em->getRepository(Score::class)
+                    ->createQueryBuilder("s")
+                    ->select('s.id')
+                    ->where('s.rawPP > :my_score')
+                    ->andWhere('s.songDifficulty = :difficulty')
+                    ->andWhere('s.user != :me')
+                    ->setParameter('my_score', $mine->getRawPP())
+                    ->setParameter('difficulty', $songDifficulty)
+                    ->setParameter('me', $user)
+                    ->groupBy('s.user')
+                    ->getQuery()->getResult()
             ) + 1;
     }
 
@@ -1340,6 +1346,16 @@ class SongService
 
 
         return $CRC ^ 0xFFFFFFFF;
+    }
+
+    private function cleanUp(Song $song)
+    {
+        //remove cover
+        @unlink($this->kernel->getProjectDir()."/public/covers/".$song->getId().$song->getCoverImageExtension());
+        //remove zip
+        @unlink($this->kernel->getProjectDir()."/public/songs-file/".$song->getId().'.zip');
+        //remove song
+        $this->em->remove($song);
     }
 }
 
