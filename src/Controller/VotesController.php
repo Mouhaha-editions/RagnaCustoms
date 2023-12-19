@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-
 #[Route(path: '/song-vote', name: 'song_vote')]
 class VotesController extends AbstractController
 {
@@ -61,6 +60,7 @@ class VotesController extends AbstractController
                     $notificationService->send($mapper,'You get an up/down vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
                 }
             }
+
             $voteService->toggleDownVote($song, $this->getUser());
         }
 
@@ -83,6 +83,7 @@ class VotesController extends AbstractController
         VoteRepository $voteRepository,
         TranslatorInterface $translator,
         VoteService $voteService,
+        NotificationService $notificationService,
         DiscordService $discordService
     ): Response {
         if ($song == null) {
@@ -164,6 +165,12 @@ class VotesController extends AbstractController
             if ($vote->getFeedback() != null && !empty($vote->getFeedback()) && $vote->getFeedback(
                 ) !== $voteBefore->getFeedback()) {
                 $discordService->sendFeedback($vote);
+                foreach($song->getMappers() AS $mapper){
+                    if($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)){
+                        $notificationService->send($mapper,'You get a review on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
+                    }
+                }
+
                 $vote->setIsModerated(false);
             }
             $em->persist($vote);
