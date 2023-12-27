@@ -1007,7 +1007,7 @@ class Song
         return $this->isExplicit;
     }
 
-    public function isIsNotificationDone(): ?bool
+    public function isNotificationDone(): ?bool
     {
         return $this->isNotificationDone;
     }

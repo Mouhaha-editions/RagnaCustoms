@@ -247,27 +247,11 @@ class UploadSongController extends AbstractController
     }
 
     #[Route(path: '/upload/song/delete/{id}', name: 'delete_song')]
-    public function delete(Song $song, EntityManagerInterface $em, DiscordService $discordService)
+    public function delete(Song $song, EntityManagerInterface $em, DiscordService $discordService, SongService $songService)
     {
         if ($song->getMappers()->contains($this->getUser()) && !$song->isRanked()) {
-            $songFile = $this->getParameter('kernel.project_dir')."/public/songs-files/";
-            $ragnaBeat = $this->getParameter('kernel.project_dir')."/public/ragna-beat/";
-            $cover = $this->getParameter('kernel.project_dir')."/public/covers/";
-            $infoDatFile = explode("/", $song->getInfoDatFile());
-            $ragnaBeat .= $infoDatFile[2];
-            $files = glob($ragnaBeat."/*"); // get all file names
-            foreach ($files as $file) { // iterate files
-                if (is_file($file)) {
-                    @unlink($file); // delete file
-                }
-            }
-            @rmdir($ragnaBeat);
-            @unlink($songFile.$song->getId().".zip");
-            @unlink($cover.$song->getId().$song->getCoverImageExtension());
-
+            $songService->cleanUp($song);
             $discordService->deletedSong($song);
-            $em->remove($song);
-            $em->flush();
 
             return new JsonResponse(['success' => true]);
         } else {

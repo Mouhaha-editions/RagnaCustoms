@@ -308,7 +308,7 @@ class DiscordService
 
     public function sendUpdatedSongMessage(Song $song)
     {
-        if (!$song->isIsNotificationDone()) {
+        if (!$song->isNotificationDone()) {
             return 0;
         }
         $timestamp = date("c", strtotime("now"));

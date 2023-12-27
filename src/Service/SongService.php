@@ -199,7 +199,9 @@ class SongService
                 $this->coverOptimisation($song);
             }
         } catch (Exception $e) {
-            $this->cleanUp($song);
+            if (!$song->isNotificationDone()) {
+                $this->cleanUp($song);
+            }
             throw new Exception($e->getMessage());
         } finally {
             $this->rrmdir($unzipFolder);
@@ -795,7 +797,10 @@ class SongService
             $this->emulatorFileDispatcher($song, true);
             $this->coverOptimisation($song);
         } catch (Exception $e) {
-            $this->cleanUp($song);
+            if (!$song->isNotificationDone()) {
+                $this->cleanUp($song);
+            }
+
             throw new Exception($e->getMessage());
         } finally {
             $this->rrmdir($unzipFolder);
@@ -1348,13 +1353,25 @@ class SongService
         return $CRC ^ 0xFFFFFFFF;
     }
 
-    private function cleanUp(Song $song)
+    public function cleanUp(Song $song)
     {
-        //remove cover
+        // remove ragnabeat
+        $ragnaBeat = $this->kernel->getProjectDir()."/public/ragna-beat/";
+        $infoDatFile = explode("/", $song->getInfoDatFile());
+        $ragnaBeat .= $infoDatFile[2];
+        $files = glob($ragnaBeat."/*"); // get all file names
+        foreach ($files as $file) { // iterate files
+            if (is_file($file)) {
+                @unlink($file); // delete file
+            }
+        }
+        @rmdir($ragnaBeat);
+
+        // remove cover
         @unlink($this->kernel->getProjectDir()."/public/covers/".$song->getId().$song->getCoverImageExtension());
-        //remove zip
+        // remove zip
         @unlink($this->kernel->getProjectDir()."/public/songs-file/".$song->getId().'.zip');
-        //remove song
+        // remove song
         $this->em->remove($song);
         $this->em->flush();
     }
