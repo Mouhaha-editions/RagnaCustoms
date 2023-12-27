@@ -150,7 +150,7 @@ class Song
         return count($votes) > 0;
     }
 
-    public function isPublished()
+    public function isPublished(): bool
     {
         return $this->programmationDate != null && $this->programmationDate <= new DateTime() && !$this->isWip();
     }
@@ -1012,7 +1012,7 @@ class Song
         return $this->isNotificationDone;
     }
 
-    public function setIsNotificationDone(?bool $isNotificationDone): self
+    public function setNotificationDone(?bool $isNotificationDone): self
     {
         $this->isNotificationDone = $isNotificationDone;
 

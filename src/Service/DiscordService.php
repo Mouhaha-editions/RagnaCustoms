@@ -378,7 +378,7 @@ class DiscordService
 
 
         $ch = curl_init($this->webhookUrlUpdate);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-type: application/json']);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
@@ -394,7 +394,6 @@ class DiscordService
         $json_data = json_encode([
             "username" => "RagnaCustoms",
             "content" => "**New feedback for ".$song->getName()."**",
-
             "embeds" => [
                 [
                     "title" => "Feedback content :",
