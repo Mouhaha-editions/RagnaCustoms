@@ -1105,6 +1105,13 @@ class SongService
             ->select('count(v)')
             ->where('v.song = s.id')
             ->andWhere('v.user = :user');
+
+        $qbMapper = $this->songRepository
+            ->createQueryBuilder('s2')
+            ->innerJoin('s2.mappers','mapper')
+            ->select('count(s2)')
+            ->where('s2.id = s.id')
+            ->andWhere('mapper.id = :user');
 try {
     $res = $this->songRepository->createQueryBuilder('s')
         ->select('s')
@@ -1112,6 +1119,7 @@ try {
         ->leftJoin('s.songDifficulties', 'diff')
         ->leftJoin('diff.scoreHistories', 'score')
         ->andWhere($this->em->getExpressionBuilder()->eq('('.$qb->getDQL().')','0'))
+        ->andWhere($this->em->getExpressionBuilder()->eq('('.$qbMapper->getDQL().')','0'))
         ->andWhere('score.user = :user')
         ->setParameter('user', $user)
         ->orderBy('score.updatedAt', 'DESC')
