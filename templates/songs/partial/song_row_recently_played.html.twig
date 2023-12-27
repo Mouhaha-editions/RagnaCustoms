@@ -11,7 +11,9 @@
             </div>
         </div>
     </td>
-
+<td>
+    {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
+</td>
     <td>
         <div class="level-list">
             {% set diff = score.songDifficulty %}
