@@ -1,3 +1,44 @@
+{% macro voteItBox(song) %}
+    <div class="featured-box row">
+        <div class="col-6 pr-0">
+                <a href="{{ url('song_detail',{slug:song.slug}) }}">
+            <figure class="card-cover">
+                    <img src="{{ song.cover }}" class="img-fluid shiny" alt="cover"/>
+                <div class="level-list">
+                    {% for diff in song.songDifficulties %}
+                        <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                             style="background-color:#{{ diff.difficultyRank.color }};">
+                            {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked"
+                                                     style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                            <span>{{ diff.difficultyRank.level }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </figure>
+                </a>
+        </div>
+        <div class="col-6">
+            <div class="title one-line">
+                <a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song|raw }}</a>
+            </div>
+            <div class="author pb-2 one-line">
+                {% include 'songs/partial/artists.html.twig' with {song : song} %}
+            </div>
+            <div class="mapper pb-2 one-line">
+               {% include 'songs/partial/mappers.html.twig' with {song:song} %}
+            </div>
+            {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
+
+            <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-3 mb-2 song-review"
+                    data-toggle="modal"
+                    data-target="#reviewSong"
+                    data-refresh="true"
+                    data-url="{{ url('song_vote_review',{id:song.id}) }}"
+                    data-song-id="{{ song.id }}"
+            >{{ "Write a review"|trans }}</button>
+        </div>
+    </div>
+{% endmacro %}
 {% macro featuredBox(song) %}
     <div class="featured-box row">
         <div class="col-6 pr-0">

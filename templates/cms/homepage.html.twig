@@ -3,131 +3,149 @@
 {% block title %}RagnaCustoms.com, Your favorites custom songs for Ragnarock VR{% endblock %}
 
 {% block body %}
-    <header>
-        <div {{ stimulus_controller('homepage') }} class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <h1>Search over <span class="song-counter">{{ songService.count(false) }}</span> custom songs for<br/>
-                        Ragnarock VR on Steam and Meta Quest
-                    </h1>
-                    <form method="GET" action="{{ url('song_library') }}" class=" search-and-filter">
-                        <div class="input-group">
-                            <span class="input-group-text" style="background:#414141FF; font-size:24px; color:#fff;border:none;border-radius:0!important;">Search by</span>
-                            <select name="searchBy" class="" style="font-size:24px;">
-                                <option class="dropdown-item" value='' href="#">Anything</option>
-                                <option class="dropdown-item" value='artist' href="#">Artist</option>
-                                <option class="dropdown-item" value='title' href="#">Title</option>
-                                <option class="dropdown-item" value='mapper' href="#">Mapper</option>
-                                <option class="dropdown-item" value='genre' href="#">Genre</option>
-                            </select>
+  <header>
+    <div {{ stimulus_controller('homepage') }} class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <h1>Search over <span class="song-counter">{{ songService.count(false) }}</span> custom songs for<br/>
+            Ragnarock VR on Steam and Meta Quest
+          </h1>
+          <form method="GET" action="{{ url('song_library') }}" class=" search-and-filter">
+            <div class="input-group">
+              <span class="input-group-text"
+                    style="background:#414141FF; font-size:19px; color:#fff;border:none;border-radius:0!important;">Search by</span>
+              <select name="searchBy" class="" style="font-size:19px;">
+                <option class="dropdown-item" value='' href="#">Anything</option>
+                <option class="dropdown-item" value='artist' href="#">Artist</option>
+                <option class="dropdown-item" value='title' href="#">Title</option>
+                <option class="dropdown-item" value='mapper' href="#">Mapper</option>
+                <option class="dropdown-item" value='genre' href="#">Genre</option>
+              </select>
 
-                            <input type="text" value="{{ app.request.get('search') }}"
-                                   class="form-control form-control-lg"
-                                   placeholder="{{ "Enter your search ... "|trans }}" name="search"
-                                   id="search">
-                            <button type="submit" name="search_btn" value="1"
-                                    class="btn">{{ "Search"|trans }}</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="be-patreon col-md-4 text-center pt-5">
-                    {{ "Enjoying RagnaCustoms?"|trans }}<br/>
-                    {{ "Help us with hosting fees"|trans }}
-                    <br/>
-                    <a class="pt-2" href="https://www.patreon.com/bePatron?u=6877976" target="_blank"><i
-                                class="fab fa-patreon"></i> {{ "Become a Patron!"|trans }}</a>
-                </div>
+              <input type="text" value="{{ app.request.get('search') }}"
+                     class="form-control form-control-lg"
+                     placeholder="{{ "Enter your search ... "|trans }}" name="search"
+                     id="search">
+              <button type="submit" name="search_btn" value="1"
+                      class="btn">{{ "Search"|trans }}</button>
             </div>
+          </form>
         </div>
-    </header>
-    <div class="container homepage" {{ stimulus_controller('homepage') }}>
-        {#        <div class="row"> #}
-        {#            <div class="col-12"> #}
-        {#                <h2>{{ "Advent calendar"|trans }} <small>{{ "by Watsu "|trans }}</small></h2> #}
-        {#                <div class="d-flex calendar"> #}
-        {#                    {% set lastindex = 1 %} #}
-        {#                    {% for song in songService.getAdventCalendar() %} #}
-        {#                        <div class="advent"><a href="{{ url('song_detail',{slug:song.slug}) }}"><img #}
-        {#                                        src="{{ song.cover }}" class="small-cover" width="70px;" alt="cover"/><span #}
-        {#                                        class="num">{{ loop.index }}</span></a></div> #}
-        {#                        {% set lastindex = loop.index %} #}
-        {#                    {% endfor %} #}
-        {#                    {% if lastindex <= 24  %} #}
-        {#                    <div class="advent"><span #}
-        {#                                    class="num">...</span></div> #}
-        {#                    {% endif %} #}
-        {#                </div> #}
-        {#            </div> #}
-        {#        </div> #}
+        <div class="be-patreon col-md-4 text-center pt-35">
+          {{ "Enjoying RagnaCustoms?"|trans }}<br/>
+          {{ "Help us with hosting fees"|trans }}
+          <br/>
+          <a class="pt-2" href="https://www.patreon.com/bePatron?u=6877976" target="_blank"><i
+                class="fab fa-patreon"></i> {{ "Become a Patron!"|trans }}</a>
+        </div>
+      </div>
+      {% if is_granted('ROLE_USER') %}
+      {% set songs = songService.getLastPlayedToVote(app.user) %}
+      {% if songs|length > 0 %}
+      <div class="row mt-5 vote-it">
+        <div class="col-12">
+          <h4 style="">You played it, vote for it</h4>
+        </div>
+        {% import "songs/macros/song.html.twig" as macro_song %}
 
-        <div class="row">
-            <div class="col-lg-4">
-                <h2 class="shiny-text">{{ "Top Rated"|trans }}
-                    <small>{{ "last %days% days"|trans|replace({"%days%":30}) }}</small></h2>
-                {{ render(controller("\\App\\Controller\\SongPartialController::topRated",{lastXDays:30})) }}
-            </div>
-            <div class="col-lg-4">
-                <h2 class="shiny-text">{{ "Latest Songs"|trans }}</h2>
-                {{ render(controller("\\App\\Controller\\SongPartialController::latestSongs")) }}
-            </div>
-            <div class="col-lg-4">
-                <h2 class="shiny-text">{{ "Last Played"|trans }}</h2>
-                {{ render(controller("\\App\\Controller\\SongPartialController::lastPlayed")) }}
-            </div>
-        </div>
+        {% for song in songs %}
+          <div class="col-3">
+            {{ macro_song.voteItBox(song) }}
+          </div>
+        {% endfor %}
     </div>
-    <section class="discord pt-5 pb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <iframe src="https://discord.com/widget?id=824960946404327450&theme=dark" style="margin:auto"
-                            width="350" height="500" allowtransparency="true" frameborder="0"
-                            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
-                </div>
-                <div class="col-md-6">
-                    <h2 class="mb-5">Join the Community</h2>
-                    <p class="m-0">We are regularly looking for new talents who want to help the community!</p>
-                    <p class="m-0">We are looking for the following:</p>
-                    <ul class="m-0">
-                        <li class="m-0">Developers</li>
-                        <li class="m-0">Graphic</li>
-                        <li class="m-0">Designers</li>
-                        <li class="m-0">Event coordinators</li>
-                        <li class="m-0">Streamers</li>
-                    </ul>
-                    <p class="m-0">Find us on <b>Discord</b> to learn more!</p>
-                </div>
-            </div>
+    {% endif %}
+    {% endif %}
+    </div>
+  </header>
+  <div class="container homepage" {{ stimulus_controller('homepage') }}>
+    {#        <div class="row"> #}
+    {#            <div class="col-12"> #}
+    {#                <h2>{{ "Advent calendar"|trans }} <small>{{ "by Watsu "|trans }}</small></h2> #}
+    {#                <div class="d-flex calendar"> #}
+    {#                    {% set lastindex = 1 %} #}
+    {#                    {% for song in songService.getAdventCalendar() %} #}
+    {#                        <div class="advent"><a href="{{ url('song_detail',{slug:song.slug}) }}"><img #}
+    {#                                        src="{{ song.cover }}" class="small-cover" width="70px;" alt="cover"/><span #}
+    {#                                        class="num">{{ loop.index }}</span></a></div> #}
+    {#                        {% set lastindex = loop.index %} #}
+    {#                    {% endfor %} #}
+    {#                    {% if lastindex <= 24  %} #}
+    {#                    <div class="advent"><span #}
+    {#                                    class="num">...</span></div> #}
+    {#                    {% endif %} #}
+    {#                </div> #}
+    {#            </div> #}
+    {#        </div> #}
+
+    <div class="row">
+      <div class="col-lg-4">
+        <h2 class="shiny-text">{{ "Top Rated"|trans }}
+          <small>{{ "last %days% days"|trans|replace({"%days%":30}) }}</small></h2>
+        {{ render(controller("\\App\\Controller\\SongPartialController::topRated",{lastXDays:30})) }}
+      </div>
+      <div class="col-lg-4">
+        <h2 class="shiny-text">{{ "Latest Songs"|trans }}</h2>
+        {{ render(controller("\\App\\Controller\\SongPartialController::latestSongs")) }}
+      </div>
+      <div class="col-lg-4">
+        <h2 class="shiny-text">{{ "Last Played"|trans }}</h2>
+        {{ render(controller("\\App\\Controller\\SongPartialController::lastPlayed")) }}
+      </div>
+    </div>
+  </div>
+  <section class="discord pt-5 pb-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <iframe src="https://discord.com/widget?id=824960946404327450&theme=dark" style="margin:auto"
+                  width="350" height="500" allowtransparency="true" frameborder="0"
+                  sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
         </div>
-    </section>
-    <section class="faq pt-5 pb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h2>Frequently Asked Questions</h2>
-                    <div class="pl-5">
-                        <p>Q: Can I play custom songs on the Quest 2 version?<br/>
-                            A: Yes! Read our <a
-                                    href="{{ url('getting_started') }}#:~:text=How%20do%20I%20install%20custom%20songs%20on%20the%20Oculus%20Quest%20version%20of%20Ragnarock%3F">Getting
-                                Started Guide</a> to learn more.</p>
-                        <p>Q: How do I upload my scores for custom songs?<br/>
-                            A: You must have to edit the .ini file for Ragnarock VR. Read how to do this on our <a
-                                    href="{{ url('getting_started') }}#:~:text=How%20do%20I%20upload%20scores%20to%20RagnaCustoms%3F">Getting
-                                Started Guide</a>.</p>
-                        <p>Q: What are credits and how do they work?<br/>
-                            A: Credits are used to request custom songs from our mapping community. Read more here.</p>
-                        <p>Q: How do I map custom songs in Ragnarock VR?<br/>
-                            A: You can download Edda by PKBeam <a href="https://pkbeam.github.io/Edda/"
-                                                                  rel="noreferrer">here</a> to learn how to map customs
-                            songs.</p>
-                    </div>
-                </div>
-            </div>
+        <div class="col-md-6">
+          <h2 class="mb-5">Join the Community</h2>
+          <p class="m-0">We are regularly looking for new talents who want to help the community!</p>
+          <p class="m-0">We are looking for the following:</p>
+          <ul class="m-0">
+            <li class="m-0">Developers</li>
+            <li class="m-0">Graphic</li>
+            <li class="m-0">Designers</li>
+            <li class="m-0">Event coordinators</li>
+            <li class="m-0">Streamers</li>
+          </ul>
+          <p class="m-0">Find us on <b>Discord</b> to learn more!</p>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
+  <section class="faq pt-5 pb-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h2>Frequently Asked Questions</h2>
+          <div class="pl-5">
+            <p>Q: Can I play custom songs on the Quest 2 version?<br/>
+              A: Yes! Read our <a
+                  href="{{ url('getting_started') }}#:~:text=How%20do%20I%20install%20custom%20songs%20on%20the%20Oculus%20Quest%20version%20of%20Ragnarock%3F">Getting
+                Started Guide</a> to learn more.</p>
+            <p>Q: How do I upload my scores for custom songs?<br/>
+              A: You must have to edit the .ini file for Ragnarock VR. Read how to do this on our <a
+                  href="{{ url('getting_started') }}#:~:text=How%20do%20I%20upload%20scores%20to%20RagnaCustoms%3F">Getting
+                Started Guide</a>.</p>
+            <p>Q: What are credits and how do they work?<br/>
+              A: Credits are used to request custom songs from our mapping community. Read more here.</p>
+            <p>Q: How do I map custom songs in Ragnarock VR?<br/>
+              A: You can download Edda by PKBeam <a href="https://pkbeam.github.io/Edda/"
+                                                    rel="noreferrer">here</a> to learn how to map customs
+              songs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
 
 
     {% block javascripts %}
-        {{ parent() }}
+      {{ parent() }}
     {% endblock %}

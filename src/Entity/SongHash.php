@@ -17,7 +17,7 @@ class SongHash
 
     #[ORM\ManyToOne(targetEntity: Song::class, inversedBy: 'songHashes')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private $Song;
+    private $song;
 
     #[ORM\Column(type: 'integer')]
     private $version;
@@ -32,12 +32,12 @@ class SongHash
 
     public function getSong(): ?Song
     {
-        return $this->Song;
+        return $this->song;
     }
 
-    public function setSong(?Song $Song): self
+    public function setSong(?Song $song): self
     {
-        $this->Song = $Song;
+        $this->song = $song;
 
         return $this;
     }

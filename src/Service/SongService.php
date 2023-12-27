@@ -13,8 +13,11 @@ use App\Entity\SongHash;
 use App\Entity\SongRequest;
 use App\Entity\Utilisateur;
 use App\Entity\Vote;
+use App\Entity\VoteCounter;
 use App\Enum\ENotification;
+use App\Repository\SongRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -43,7 +46,8 @@ class SongService
         private readonly DiscordService $discordService,
         private readonly ScoreService $scoreService,
         private readonly UrlGeneratorInterface $router,
-        private readonly NotificationService $notificationService
+        private readonly NotificationService $notificationService,
+        private readonly SongRepository $songRepository
     ) {
     }
 
@@ -1092,6 +1096,33 @@ class SongService
         // remove song
         $this->em->remove($song);
         $this->em->flush();
+    }
+
+    public function getLastPlayedToVote(Utilisateur $user)
+    {
+        $qb = $this->em->getRepository(VoteCounter::class)
+            ->createQueryBuilder('v')
+            ->select('count(v)')
+            ->where('v.song = s.id')
+            ->andWhere('v.user = :user');
+try {
+    $res = $this->songRepository->createQueryBuilder('s')
+        ->select('s')
+        ->distinct('s')
+        ->leftJoin('s.songDifficulties', 'diff')
+        ->leftJoin('diff.scoreHistories', 'score')
+        ->andWhere($this->em->getExpressionBuilder()->eq('('.$qb->getDQL().')','0'))
+        ->andWhere('score.user = :user')
+        ->setParameter('user', $user)
+        ->orderBy('score.updatedAt', 'DESC')
+        ->setFirstResult(0)
+        ->setMaxResults(4)
+        ->getQuery()->getResult();
+
+    return $res;
+}catch (\Exception $e){
+    VarDumper::dump($e);
+}
     }
 }
 
