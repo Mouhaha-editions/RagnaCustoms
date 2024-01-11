@@ -7,7 +7,6 @@ use App\Service\StatisticService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\VarDumper\VarDumper;
 
 class CmsController extends AbstractController
 {
@@ -30,8 +29,10 @@ class CmsController extends AbstractController
     }
 
     #[Route(path: '/', name: 'home')]
-    public function homepage(ScoreHistoryRepository $scoreHistoryRepository, StatisticService $statisticService): Response
-    {
+    public function homepage(
+        ScoreHistoryRepository $scoreHistoryRepository,
+        StatisticService $statisticService
+    ): Response {
         return $this->render('cms/homepage.html.twig');
     }
 }

@@ -1,43 +1,27 @@
 <?php
 
-
 namespace App\Command;
 
-
 use App\Entity\Song;
-use App\Repository\SongDifficultyRepository;
 use App\Repository\SongRepository;
 use App\Service\SongService;
 use DateTime;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
+#[AsCommand(name: 'song:publish')]
 class SongPublishCommand extends Command
 {
-    protected static $defaultName = 'song:publish';
-    /**
-     * @var KernelInterface
-     */
-    private $kernel;
-    /**
-     * @var SongDifficultyRepository
-     */
-    private $songDifficultyRepository;
-    /**
-     * @var SongRepository
-     */
-    private $songRepository;
-    /**
-     * @var SongService
-     */
-    private $songService;
+    private SongRepository $songRepository;
+    private SongService $songService;
 
     public function __construct(SongService $songService, SongRepository $songRepository)
     {
         $this->songService = $songService;
         $this->songRepository = $songRepository;
+
         return parent::__construct();
     }
 
@@ -51,6 +35,7 @@ class SongPublishCommand extends Command
             ->andWhere("s.programmationDate <= :now")
             ->setParameter('now', new DateTime())
             ->getQuery()->getResult();
+
         /** @var Song $song */
         foreach ($songs as $song) {
             if ($song->getLastDateUpload() === null) {

@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Enum\EEmail;
 use App\Enum\ENotification;
 use App\Repository\UtilisateurRepository;
@@ -18,17 +17,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(
-    collectionOperations: [
-        //   "get",
-        //        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
-    ],
-    itemOperations: [
-        "get",
-        //        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
-    ],
-    normalizationContext: ['groups' => ['read']],
-)]
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'Username already used')]
 #[UniqueEntity(fields: ['email'], message: 'Email already used')]
@@ -101,7 +89,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private $notifications;
     #[ORM\OneToOne(targetEntity: Overlay::class, mappedBy: 'user', cascade: [
         'persist',
-        'remove'
+        'remove',
     ])]
     private $overlay;
     /**
@@ -267,7 +255,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -288,6 +276,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getGravatar(): ?string
     {
         $size = 600;
+
         return "https://www.gravatar.com/avatar/".md5(strtolower(trim($this->email)))."?d=".urlencode(
                 "https://ragnacustoms.com/apps/runes.png"
             )."&s=".$size;
@@ -623,6 +612,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 return $request;
             }
         }
+
         return null;
     }
 
@@ -709,7 +699,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param  SongRequest  $songRequest
+     * @param SongRequest $songRequest
+     *
      * @return bool
      */
     public function getWantedToo(SongRequest $songRequest): bool
@@ -735,6 +726,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 $songsRating[] = $song->getVoteAverage();
             }
         }
+
         return count($songsRating) > 0 ? number_format(array_sum($songsRating) / count($songsRating), 2) : "No rating!";
     }
 
@@ -781,6 +773,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         arsort($genres);
         $real_genres = array_keys($genres);
         $real_genres = array_slice($real_genres, 0, $top);
+
         return implode(", ", $real_genres);
     }
 
@@ -860,6 +853,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $sum / $scores->count();
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getPPFlat()
     {
         $scores = $this->rankedScores->filter(function (RankedScores $r) {
@@ -893,6 +891,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 return true;
             }
         }
+
         return false;
     }
 
@@ -903,6 +902,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 return true;
             }
         }
+
         return false;
     }
 
@@ -915,7 +915,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param  mixed  $discordUsername
+     * @param mixed $discordUsername
      */
     public function setDiscordUsername($discordUsername): void
     {
@@ -931,7 +931,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param  mixed  $discordId
+     * @param mixed $discordId
      */
     public function setDiscordId($discordId): void
     {
@@ -947,7 +947,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param  mixed  $discordEmail
+     * @param mixed $discordEmail
      */
     public function setDiscordEmail($discordEmail): void
     {
@@ -1202,11 +1202,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param  mixed  $patreonData
+     * @param mixed $patreonData
      */
     public function setPatreonData($patreonData): self
     {
         $this->patreonData = $patreonData;
+
         return $this;
     }
 
@@ -1219,12 +1220,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param  mixed  $usernameColor
+     * @param mixed $usernameColor
+     *
      * @return Utilisateur
      */
     public function setUsernameColor($usernameColor)
     {
         $this->usernameColor = $usernameColor;
+
         return $this;
     }
 
@@ -1232,6 +1235,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->roles[] = $string;
         $this->roles = array_unique($this->roles);
+
         return $this;
     }
 
@@ -1243,6 +1247,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 break;
             }
         }
+
         return $this;
     }
 
@@ -1255,12 +1260,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param  mixed  $twitchAccessToken
+     * @param mixed $twitchAccessToken
+     *
      * @return Utilisateur
      */
     public function setTwitchAccessToken($twitchAccessToken)
     {
         $this->twitchAccessToken = $twitchAccessToken;
+
         return $this;
     }
 
@@ -1273,12 +1280,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param  mixed  $twitchRefreshToken
+     * @param mixed $twitchRefreshToken
+     *
      * @return Utilisateur
      */
     public function setTwitchRefreshToken($twitchRefreshToken)
     {
         $this->twitchRefreshToken = $twitchRefreshToken;
+
         return $this;
     }
 
@@ -1291,12 +1300,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param  mixed  $twitchUser
+     * @param mixed $twitchUser
+     *
      * @return Utilisateur
      */
     public function setTwitchUser($twitchUser)
     {
         $this->twitchUser = $twitchUser;
+
         return $this;
     }
 
@@ -1309,12 +1320,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param  mixed  $twitchData
+     * @param mixed $twitchData
+     *
      * @return Utilisateur
      */
     public function setTwitchData($twitchData)
     {
         $this->twitchData = $twitchData;
+
         return $this;
     }
 
@@ -1588,11 +1601,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFriendRequests(): Collection
     {
         return $this->friendRequests;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getPublicPlaylists()

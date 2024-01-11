@@ -6,6 +6,7 @@ use App\Entity\Song;
 use App\Entity\SongRequest;
 use App\Entity\Utilisateur;
 use App\Form\SongType;
+use App\Form\UtilisateurAutocompleteField;
 use App\Repository\SongRepository;
 use App\Service\DiscordService;
 use App\Service\ScoreService;
@@ -74,21 +75,6 @@ class UploadSongController extends AbstractController
             ) : $this->generateUrl('new_song'),
         ]);
 
-        $form->add('mappers', Select2EntityType::class, [
-            "class" => Utilisateur::class,
-            'remote_route' => 'api_mapper',
-            'multiple' => true,
-            "label" => 'Mapper(s)',
-            'primary_key' => 'id',
-            'text_property' => 'mapperName',
-            'minimum_input_length' => 0,
-            'allow_clear' => true,
-            'label_html' => true,
-            'delay' => 250,
-            'placeholder' => 'Enter mapper name (he/she need to publish at least one map to appear)',
-            'help' => 'Be carefull others mappers get same rights as you on the song',
-            'required' => false,
-        ]);
 
         if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
             $form

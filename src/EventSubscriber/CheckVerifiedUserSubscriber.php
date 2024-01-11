@@ -30,7 +30,7 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface
 
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             LoginFailureEvent::class => 'onLoginFailure',
@@ -38,7 +38,7 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         /** @var Utilisateur $user */
         $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
@@ -57,7 +57,7 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface
 
     }
 
-    public function onLoginFailure(LoginFailureEvent $event)
+    public function onLoginFailure(LoginFailureEvent $event): void
     {
         if (!$event->getException() instanceof AccountNotVerifiedAuthenticationException) {
             return;

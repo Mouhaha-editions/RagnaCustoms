@@ -28,7 +28,7 @@ class VoteAdminSubscriber implements EventSubscriberInterface
     /**
      * @inheritDoc
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             AfterEntityUpdatedEvent::class => ['sendMail'],
@@ -36,7 +36,7 @@ class VoteAdminSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function beforeDelete(BeforeEntityDeletedEvent $event)
+    public function beforeDelete(BeforeEntityDeletedEvent $event): void
     {
         /** @var Vote $entity */
         $entity = $event->getEntityInstance();
@@ -58,7 +58,7 @@ class VoteAdminSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function sendMail(AfterEntityUpdatedEvent $event)
+    public function sendMail(AfterEntityUpdatedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 

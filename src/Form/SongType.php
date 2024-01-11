@@ -7,16 +7,16 @@ use App\Entity\SongCategory;
 use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class SongType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Song $entity */
         $entity = $builder->getData();
@@ -30,21 +30,8 @@ class SongType extends AbstractType
                 "attr" => ["placeholder " => "https://youtu..."],
                 'required' => false
             ])
-            ->add('categoryTags', Select2EntityType::class, [
-                "class" => SongCategory::class,
-                'remote_route' => 'api_song_categories',
-                'multiple' => true,
-                "label" => "Genre",
-                'primary_key' => 'id',
-                'text_property' => 'label',
-                'minimum_input_length' => 0,
-                'allow_clear' => true,
-                'delay' => 250,
-                'placeholder' => 'Select a category, or more ..',
-
-                'required' => true
-            ])
-
+            ->add('categoryTags', SongCategoryAutocompleteField::class)
+            ->add('mappers', UtilisateurAutocompleteField::class)
             ->add('approximativeDuration', HiddenType::class, [
                 "label" => "Duration (in sec) ",
                 "help" => "leave empty on first upload",
@@ -77,7 +64,7 @@ class SongType extends AbstractType
             ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-info btn-lg btn-block']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Song::class,

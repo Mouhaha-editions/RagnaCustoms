@@ -38,13 +38,7 @@ services:
     Pkshetlie\PaginationBundle\Service\:
         resource: '../vendor/pkshetlie/pagination-bundle/Service'
         tags: ['pkshetlie.pagination']
-    App\Service\GoogleAnalyticsService:
-        arguments:
-            $file: '../Ragnacustoms-ec54cc8bdcad.json'
-            $viewId: '%env(resolve:GOOGLE_VIEW_ID)%'
-    App\Service\MatomoService:
-        arguments:
-            $apiKey: '%env(resolve:MATOMO_API_KEY)%'
+
 
     App\Service\DiscordService:
         arguments:
@@ -54,23 +48,6 @@ services:
             $webhookModerator: '%env(resolve:DISCORD_WEBHOOK_MODERATOR)%'
             $webhookRequest: '%env(resolve:DISCORD_WEBHOOK_REQUEST)%'
             $webhookRanked: '%env(resolve:DISCORD_WEBHOOK_RANKED)%'
-
-    App\EventSubscriber\LocaleSubscriber:
-        arguments: [ '%kernel.default_locale%' ]
-
-    App\Service\DownloadService:
-        arguments: [ '@security.helper','@request_stack','@doctrine.orm.entity_manager' ]
-    App\Service\MapperService:
-        arguments: [ '@doctrine.orm.entity_manager' ]
-
-    App\Service\SongService:
-        arguments:
-            - '@kernel'
-            - '@doctrine.orm.entity_manager'
-            - '@mailer'
-            - '@App\Service\DiscordService'
-            - '@App\Service\ScoreService'
-            - '@router'
 
     App\EventListener\ExceptionListener:
         tags:

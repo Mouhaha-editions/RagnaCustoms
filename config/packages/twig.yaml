@@ -10,10 +10,8 @@ twig:
         rankingScoreService: '@App\Service\RankingScoreService'
         songService: '@App\Service\SongService'
         statisticService: '@App\Service\StatisticService'
-        matomoService: '@App\Service\MatomoService'
         membershipService: '@App\Service\MembershipService'
         grantedService: '@App\Service\GrantedService'
         voteService: '@App\Service\VoteService'
     form_themes:
         - 'form/rating_type.html.twig'
-        - '@TetranzSelect2Entity/Form/fields.html.twig'

@@ -10,22 +10,15 @@ use App\Entity\Utilisateur;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
+
 
 class StatisticService
 {
-    /** @var array */
-    private static $StatisticsOnScoreHistory;
-    protected $em;
-    protected $requestStack;
-    private $security;
+    private static array $StatisticsOnScoreHistory;
 
-    public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em)
-    {
-        $this->security = $security;
-        $this->requestStack = $requestStack;
-        $this->em = $em;
+    public function __construct(
+        private readonly EntityManagerInterface $em
+    ) {
     }
 
     public static function dateDisplay(?DateTimeInterface $date = null): string
@@ -48,7 +41,7 @@ class StatisticService
             24 * 60 * 60 => 'day',
             60 * 60 => 'hour',
             60 => 'minute',
-            1 => 'second'
+            1 => 'second',
         );
         $a_plural = [
             'year' => 'years',
@@ -56,20 +49,22 @@ class StatisticService
             'day' => 'days',
             'hour' => 'hours',
             'minute' => 'minutes',
-            'second' => 'seconds'
+            'second' => 'seconds',
         ];
 
         foreach ($a as $secs => $str) {
             $d = $etime / $secs;
             if ($d >= 1) {
                 $r = round($d);
+
                 return $r.' '.($r > 1 ? $a_plural[$str] : $str).' ago';
             }
         }
+
         return '99999 seconds';
     }
 
-    public static function dateDisplayedShort(?DateTimeInterface $date = null)
+    public static function dateDisplayedShort(?DateTimeInterface $date = null): string
     {
         if (!$date) {
             return 'soon';
@@ -89,20 +84,22 @@ class StatisticService
             24 * 60 * 60 => 'd',
             60 * 60 => 'h',
             60 => 'm',
-            1 => 's'
+            1 => 's',
         );
 
         foreach ($a as $secs => $str) {
             $d = $etime / $secs;
             if ($d >= 1) {
                 $r = round($d);
+
                 return $r.$str.' ago';
             }
         }
+
         return '99999 seconds';
     }
 
-    public function getLastXDays($days = 30)
+    public function getLastXDays($days = 30): array
     {
         $first = (new DateTime())->modify("-".$days." days");
         $days = [];
@@ -110,10 +107,11 @@ class StatisticService
             $days[] = $first->format('Y-m-d');
             $first->modify("+1 day");
         }
+
         return $days;
     }
 
-    public function getDownloadsLastXDays($days, Song $song)
+    public function getDownloadsLastXDays($days, Song $song): array
     {
         $first = (new DateTime())->modify("-".$days." days");
         $data = [];
@@ -136,10 +134,11 @@ class StatisticService
             }
             $i++;
         }
+
         return $data;
     }
 
-    public function getPlayedLastXDays($days, Song $song)
+    public function getPlayedLastXDays($days, Song $song): array
     {
         $hashes = $song->getHashes();
 
@@ -163,16 +162,18 @@ class StatisticService
             }
             $i++;
         }
+
         return $data;
     }
 
     public function getTotalDistance(Utilisateur $user)
     {
         $this->getStatisticsScoreHistory($user);
+
         return self::$StatisticsOnScoreHistory['distance'] ?? 0;
     }
 
-    public function getStatisticsScoreHistory(Utilisateur $user)
+    public function getStatisticsScoreHistory(Utilisateur $user): void
     {
         if (self::$StatisticsOnScoreHistory == null || count(self::$StatisticsOnScoreHistory) == 0) {
             $result = $this->em->getRepository(ScoreHistory::class)->createQueryBuilder("d")
@@ -193,33 +194,37 @@ class StatisticService
         }
     }
 
-    public function getTotalNotesMissed(Utilisateur $user)
+    public function getTotalNotesMissed(Utilisateur $user): int
     {
         $this->getStatisticsScoreHistory($user);
+
         return self::$StatisticsOnScoreHistory['count_notes_missed'] ?? 0;
     }
 
-    public function getTotalNotesHit(Utilisateur $user)
+    public function getTotalNotesHit(Utilisateur $user): int
     {
         $this->getStatisticsScoreHistory($user);
+
         return self::$StatisticsOnScoreHistory['count_notes_hit'] ?? 0;
     }
 
-    public function getTotalNotesNotProcessed(Utilisateur $user)
+    public function getTotalNotesNotProcessed(Utilisateur $user): int
     {
         $this->getStatisticsScoreHistory($user);
+
         return self::$StatisticsOnScoreHistory['count_notes_not_processed'] ?? 0;
     }
 
-    /** idealement travailler avec une interface plutot que deux faire deux methodes */
-    public function getScatterDataSetsByScore(?Score $sh)
+    /** Idéalement travailler avec une interface plutôt que deux faire deux méthodes */
+    public function getScatterDataSetsByScore(?Score $sh): array
     {
         $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
         $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
+
         return $this->getScatterDatasets($raw_data, $song_file);
     }
 
-    private function getScatterDatasets($raw_data, string $song_file)
+    private function getScatterDatasets($raw_data, string $song_file): array
     {
         $json = json_decode(file_get_contents($song_file));
         $notes = $json->_notes;
@@ -236,19 +241,19 @@ class StatisticService
             [
                 "label" => "miss",
                 "data" => [],
-                'pointBackgroundColor' => '#f55142'
+                'pointBackgroundColor' => '#f55142',
             ],
             [
                 "label" => "ok",
                 "data" => [],
-                'pointBackgroundColor' => '#42c8f5'
+                'pointBackgroundColor' => '#42c8f5',
             ],
             [
                 "label" => "perfect",
                 "data" => [],
-                'pointBackgroundColor' => '#42f581'
+                'pointBackgroundColor' => '#42f581',
 
-            ]
+            ],
         ];
         foreach ($df as $k => $note) {
             $note['x'] = $note['_time'];
@@ -267,20 +272,23 @@ class StatisticService
                 $datasets[2]['data'][] = $note;
             }
         }
+
         return (['datasets' => $datasets]);
     }
 
-    public function getScatterDataSetsByScorehistory(?ScoreHistory $sh)
+    public function getScatterDataSetsByScorehistory(?ScoreHistory $sh): array
     {
         $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
         $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
+
         return $this->getScatterDatasets($raw_data, $song_file);
     }
 
-    public function getFullDatasetByScorehistory(?ScoreHistory $sh)
+    public function getFullDatasetByScorehistory(?ScoreHistory $sh): array
     {
         $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
         $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
+
         return $this->getFullDataset($raw_data, $song_file);
     }
 
@@ -310,6 +318,7 @@ class StatisticService
             unset($note['_cutDirection']);
             $datasets['data'][] = $note;
         }
+
         return $datasets;
     }
 

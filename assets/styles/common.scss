@@ -1,4 +1,7 @@
 @import 'variables';
+
+$input-bg: rgb(65, 65, 65);
+$input-color: #fff;
 @import "~bootstrap";
 @import "~select2/dist/css/select2.min.css";
 @import 'ragna-beat.scss';
@@ -6,6 +9,22 @@
 @import '~dropzone/dist/basic.css';
 @import '~dropzone/dist/dropzone.css';
 
+.ts-dropdown{
+  background-color: $input-bg;
+  color:#ffffff;
+  .highlight{
+    background-color: rgba(10, 83, 190, 0.35)!important;
+  }
+}
+
+.ts-wrapper.multi .ts-control > div{
+  background: #235886;
+  color:#fff;
+  border: 1px solid #1388EE;
+}
+.ts-wrapper.plugin-remove_button:not(.rtl) .item .remove{
+  border-left: 1px solid #1388EE;
+}
 #main {
   background-position: -3000px;
   transition: all ease 3s 0s;

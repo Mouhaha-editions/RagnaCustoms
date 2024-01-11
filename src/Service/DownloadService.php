@@ -5,23 +5,14 @@ namespace App\Service;
 use App\Entity\DownloadCounter;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
-use App\Entity\Vote;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class DownloadService
 {
-    protected $em;
-    protected $requestStack;
-    private $security;
-
-    public function __construct(Security $security, RequestStack $requestStack, EntityManagerInterface $em)
+    public function __construct(private readonly Security $security, private readonly EntityManagerInterface $em)
     {
-        $this->security = $security;
-        $this->requestStack = $requestStack;
-        $this->em = $em;
     }
 
     public function alreadyDownloaded(Song $song): bool
@@ -32,12 +23,14 @@ class DownloadService
             $dl = $user->getDownloadCounters()->filter(function (DownloadCounter $downloadCounter) use ($song) {
                 return $downloadCounter->getSong() === $song;
             });
+
             return $dl->count() >= 1;
         }
+
         return false;
     }
 
-    public function addOne(Song $song, $apiKey = null)
+    public function addOne(Song $song, $apiKey = null): void
     {
         if ($apiKey == null) {
             if (!$this->security->isGranted('ROLE_USER')) {
@@ -51,7 +44,11 @@ class DownloadService
         if ($user == null) {
             return;
         }
-        $dlu = $this->em->getRepository(DownloadCounter::class)->createQueryBuilder('dc')->where('dc.song = :song')->andWhere('(dc.user = :user)')->setParameter('user', $user)->setParameter('song', $song)->setFirstResult(0)->setMaxResults(1)->getQuery()->getOneOrNullResult();
+        $dlu = $this->em->getRepository(DownloadCounter::class)->createQueryBuilder('dc')->where(
+            'dc.song = :song'
+        )->andWhere('(dc.user = :user)')->setParameter('user', $user)->setParameter('song', $song)->setFirstResult(
+            0
+        )->setMaxResults(1)->getQuery()->getOneOrNullResult();
         if ($dlu == null) {
             $dlu = new DownloadCounter();
             $dlu->setSong($song);

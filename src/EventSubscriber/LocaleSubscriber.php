@@ -14,16 +14,13 @@ use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 
 class LocaleSubscriber implements EventSubscriberInterface
 {
-    private $defaultLocale;
 
     public function __construct(
-        string $defaultLocale = 'en',
-        private readonly TokenStorageInterface $tokenStorage
+        private readonly string $defaultLocale = 'en'
     ) {
-        $this->defaultLocale = $defaultLocale;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             // must be registered before (i.e. with a higher priority than) the default Locale listener
@@ -32,7 +29,7 @@ class LocaleSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -49,7 +46,7 @@ class LocaleSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function onCheckPassport(CheckPassportEvent $event)
+    public function onCheckPassport(CheckPassportEvent $event): void
     {
         /** @var Utilisateur $user */
         $user = $event->getPassport()->getUser();

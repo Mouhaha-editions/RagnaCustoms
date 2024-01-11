@@ -3,7 +3,6 @@ import 'jquery'
 const Swal = require('sweetalert2/dist/sweetalert2.js');
 
 import 'select2/dist/js/select2.full.min';
-require('../../public/bundles/tetranzselect2entity/js/select2entity');
 require('../js/base');
 require('../js/plugins/ajax_link');
 require('../js/plugins/rating');

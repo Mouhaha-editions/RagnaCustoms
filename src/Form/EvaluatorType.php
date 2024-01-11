@@ -18,7 +18,7 @@ use function React\Partial\placeholder;
 
 class EvaluatorType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Song $entity */
         $entity = $builder->getData();
@@ -31,7 +31,7 @@ class EvaluatorType extends AbstractType
             ->add('check', SubmitType::class, ['attr' => ['class' => 'btn btn-success']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
         ]);

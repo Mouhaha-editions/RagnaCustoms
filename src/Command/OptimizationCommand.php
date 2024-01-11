@@ -1,34 +1,21 @@
 <?php
 
-
 namespace App\Command;
-
 
 use Exception;
 use Intervention\Image\ImageManagerStatic as Image;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+#[AsCommand(name: 'opti:covers')]
 class OptimizationCommand extends Command
 {
-    protected static $defaultName = 'opti:covers';
-    /**
-     * @var KernelInterface
-     */
-    private $kernel;
-
-    public function __construct(KernelInterface $kernel)
+    public function __construct(private readonly KernelInterface $kernel)
     {
-        $this->kernel = $kernel;
-
         return parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        // ...
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

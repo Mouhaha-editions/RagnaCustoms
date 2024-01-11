@@ -10,16 +10,13 @@ use App\Repository\SongDifficultyRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\RankingScoreService;
 use App\Service\ScoreService;
-use Psr\Log\LoggerInterface;
 use Sentry\State\Scope;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 use function Sentry\configureScope;
-
 
 class WanadevApiController extends AbstractController
 {
@@ -27,7 +24,7 @@ class WanadevApiController extends AbstractController
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/search', name: 'wd_api_score_search_friends', methods: [
         'GET',
-        'POST'
+        'POST',
     ])]
     public function searchFriend(
         Request $request,
@@ -55,7 +52,7 @@ class WanadevApiController extends AbstractController
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/{currentPlateform}/{oseftootoo}', name: 'wd_api_score_get', methods: [
         'GET',
-        'POST'
+        'POST',
     ])]
     public function score(
         Request $request,
@@ -90,13 +87,13 @@ class WanadevApiController extends AbstractController
         $friendOfMine = [];
         $plateforms = [];
 
-        if(isset($data['query']) && isset($data['query']['queries'])){
+        if (isset($data['query']) && isset($data['query']['queries'])) {
             $friendsOnly = true;
-            foreach($data['query']['queries'][0]['queries'] AS $query){
-              $friendOfMine[] = $query['query']['value'];
+            foreach ($data['query']['queries'][0]['queries'] as $query) {
+                $friendOfMine[] = $query['query']['value'];
             }
 
-            foreach($data['query']['queries'][1]['queries'] AS $query){
+            foreach ($data['query']['queries'][1]['queries'] as $query) {
                 $plateforms[] = $query['query']['value'];
             }
         }
@@ -105,7 +102,11 @@ class WanadevApiController extends AbstractController
         $isVr = in_array($plateform, self::VR_PLATEFORM);
 
         if ($currentPlateform) {
-            $returnArray = [$currentPlateform, ... explode('|', trim($request->query->get('platform'), '|')), ...$plateforms];
+            $returnArray = [
+                $currentPlateform,
+                ... explode('|', trim($request->query->get('platform'), '|')),
+                ...$plateforms,
+            ];
         } else {
             $returnArray = [...explode('|', trim($request->query->get('platform'), '|')), ...$plateforms];
         }
@@ -154,7 +155,7 @@ class WanadevApiController extends AbstractController
                     ),
                     'score' => $newScore->getScore(),
                     'ranking' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr),
-                    'results' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr)
+                    'results' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr),
                 ],
                 200,
                 ['content-type' => 'application/json']
@@ -163,11 +164,20 @@ class WanadevApiController extends AbstractController
 
         if ($friendsOnly) {
             return new JsonResponse(
-                ['results' => $scoreService->getTop5Wanadev($songDiff, $user, $returnArray, $isVr, $friendsOnly, $friendOfMine)],
+                [
+                    'results' => $scoreService->getTop5Wanadev(
+                        $songDiff,
+                        $user,
+                        $returnArray,
+                        $isVr,
+                        $friendsOnly,
+                        $friendOfMine
+                    ),
+                ],
                 200,
                 [
                     'content-type' => 'application/json',
-                    'my-custom-key' => 'abcdefghijklmnop'
+                    'my-custom-key' => 'abcdefghijklmnop',
                 ]
             );
         }
@@ -177,7 +187,7 @@ class WanadevApiController extends AbstractController
             200,
             [
                 'content-type' => 'application/json',
-                'my-custom-key' => 'abcdefghijklmnop'
+                'my-custom-key' => 'abcdefghijklmnop',
             ]
         );
     }
@@ -201,6 +211,7 @@ class WanadevApiController extends AbstractController
         $newScore->setMissed($data['stats']['Missed']);
         $newScore->setExtra(json_encode($data['extra']));
         $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
+
         return $newScore;
     }
 
@@ -230,7 +241,7 @@ class WanadevApiController extends AbstractController
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/{currentPlateform}/{oseftootoo}/board', name: 'wd_api_score_get_new', methods: [
         'GET',
-        'POST'
+        'POST',
     ])]
     public function scoreboard(
         Request $request,

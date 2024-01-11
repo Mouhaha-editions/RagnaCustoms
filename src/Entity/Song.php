@@ -84,7 +84,7 @@ class Song
     #[ORM\OneToMany(targetEntity: SongDifficulty::class, mappedBy: 'song', cascade: ['remove'])]
     #[ORM\OrderBy(['difficultyRank' => 'asc'])]
     private $songDifficulties;
-    #[ORM\OneToMany(targetEntity: SongHash::class, mappedBy: 'Song')]
+    #[ORM\OneToMany(targetEntity: SongHash::class, mappedBy: 'song')]
     private $songHashes;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $subName;
