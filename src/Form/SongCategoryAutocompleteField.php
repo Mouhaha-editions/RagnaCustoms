@@ -13,7 +13,7 @@ use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 #[AsEntityAutocompleteField]
 class SongCategoryAutocompleteField extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'class' => SongCategory::class,
@@ -23,7 +23,7 @@ class SongCategoryAutocompleteField extends AbstractType
             'required' => true,
 
             'query_builder' => function(SongCategoryRepository $songCategoryRepository) {
-                return $songCategoryRepository->createQueryBuilder('songCategory');
+                return $songCategoryRepository->createQueryBuilder('songCategory')->orderBy('songCategory.label','ASC');
             },
             //'security' => 'ROLE_SOMETHING',
         ]);

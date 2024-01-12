@@ -18,12 +18,6 @@ class UtilisateurAutocompleteField extends AbstractType
     {
         $resolver->setDefaults([
             'class' => Utilisateur::class,
-            'multiple' => true,
-            'autocomplete'=>true,
-            "label" => 'Mapper(s)',
-            'placeholder' => 'Enter mapper name (he/she need to publish at least one map to appear)',
-            'help' => 'Be carefull others mappers get same rights as you on the song',
-            'required' => false,
             'filter_query' => function (QueryBuilder $qb, string $query, EntityRepository $repository) {
                 if (!$query) {
                     return;
@@ -38,14 +32,24 @@ class UtilisateurAutocompleteField extends AbstractType
                     ->createQueryBuilder("u")
                     ->distinct()
                     ->leftJoin('u.songsMapped', 's')
-                    // ->where('u.mapper_name LIKE :search')
-                    // ->setParameter('search', $request->get('q').'%')
                     ->andWhere('s.isDeleted = false')
                     ->andWhere('s.wip = false')
                     ->andWhere('s.moderated = true')
                     ->andWhere('s.active = true')
-                    ->orderBy('u.mapper_name');
+                    ->orderBy('u.mapper_name', 'ASC');
             },
+            'tom_select_options' => [
+                'openOnFocus'=>false,
+                'placeholder'=>'Enter mapper name (he/she need to publish at least one map to appear)',
+                'hidePlaceholder'=>true,
+            ],
+            'multiple' => true,
+            // 'autocomplete'=>true,
+            "label" => 'Mapper(s)',
+            'placeholder' => 'Enter mapper name (he/she need to publish at least one map to appear)',
+            'help' => 'Be carefull others mappers get same rights as you on the song',
+            'required' => false,
+
             //'security' => 'ROLE_SOMETHING',
         ]);
     }

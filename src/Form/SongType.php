@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Song;
 use App\Entity\SongCategory;
 use App\Entity\Utilisateur;
+use App\Repository\SongCategoryRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -30,7 +32,17 @@ class SongType extends AbstractType
                 "attr" => ["placeholder " => "https://youtu..."],
                 'required' => false
             ])
-            ->add('categoryTags', SongCategoryAutocompleteField::class)
+            ->add('categoryTags', EntityType::class,[
+                'class' => SongCategory::class,
+                'multiple' => true,
+                "label" => "Genre",
+                'placeholder' => 'Select a category, or more ..',
+                'required' => true,
+                'autocomplete'=>true,
+                'query_builder' => function(SongCategoryRepository $songCategoryRepository) {
+                    return $songCategoryRepository->createQueryBuilder('songCategory')->orderBy('songCategory.label','ASC');
+                },
+            ])
             ->add('mappers', UtilisateurAutocompleteField::class)
             ->add('approximativeDuration', HiddenType::class, [
                 "label" => "Duration (in sec) ",
