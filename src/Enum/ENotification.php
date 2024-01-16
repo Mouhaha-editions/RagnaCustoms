@@ -21,7 +21,7 @@ enum ENotification: int
     public function label(): string
     {
         return match ($this) {
-            // self::General_new_map => 'New map on RagnaCustoms (soon)',
+             self::General_new_map => 'New map on RagnaCustoms (soon)',
 //            self::General_stats_report => 'Weekly stats from RagnaCustoms',
             self::Followed_mapper_new_map => 'New map from followed mapper(s)',
             self::Followed_mapper_new_map_wip => 'New "Work in progress" map from followed mapper(s)',
@@ -30,7 +30,7 @@ enum ENotification: int
 //            self::Mapper_stats_report => 'Stats for your account (weekly downloads, followers, feedback, ...)',
             self::Mapper_new_feedback => "New feedback on your map",
             self::Mapper_new_up_down_vote => "New up/down vote on your map",
-            self::Mapper_new_follower => "New follower (soon)",
+            self::Mapper_new_follower => "New follower (soon)"
         };
     }
 }

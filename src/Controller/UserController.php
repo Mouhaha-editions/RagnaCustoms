@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use ApiPlatform\Api\UrlGeneratorInterface;
-use App\Entity\Playlist;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
 use App\Entity\Utilisateur;
@@ -13,7 +11,6 @@ use App\Repository\CountryRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongCategoryRepository;
-use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -747,7 +744,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if($previousUsername !== $user->getUsername()){
+            if ($previousUsername !== $user->getUsername()) {
                 $exists = $utilisateurRepository->findBy(['username' => $user->getUsername()]);
 
                 if ($exists) {
@@ -756,8 +753,8 @@ class UserController extends AbstractController
                 }
             }
 
-            if($form->has('currentPassword')){
-                if($passwordEncoder->isPasswordValid($user, $form->get('currentPassword')->getData())) {
+            if ($form->has('currentPassword') && !empty($form->get('currentPassword')->getData())) {
+                if ($passwordEncoder->isPasswordValid($user, $form->get('currentPassword')->getData())) {
                     // Encode the plain password, and set it.
                     $encodedPassword = $passwordEncoder->hashPassword(
                         $user,
@@ -765,8 +762,8 @@ class UserController extends AbstractController
                     );
 
                     $user->setPassword($encodedPassword);
-                }else{
-                    $this->addFlash('danger','Wrong current password. your password isn\'t changed');
+                } else {
+                    $this->addFlash('danger', 'Wrong current password. your password isn\'t changed');
                 }
             }
 
