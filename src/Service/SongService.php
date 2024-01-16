@@ -17,7 +17,6 @@ use App\Entity\VoteCounter;
 use App\Enum\ENotification;
 use App\Repository\SongRepository;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -430,36 +429,58 @@ class SongService
             $zip->close();
         }
 
+        $coverDir = $this->kernel->getProjectDir()."/public/covers/";
         @copy($theZip, $finalFolder.$song->getId().".zip");
         @copy(
             $unzipFolder."/".$json->_coverImageFilename,
-            $this->kernel->getProjectDir()."/public/covers/".$song->getId().$song->getCoverImageExtension()
+            $coverDir.$song->getId().$song->getCoverImageExtension()
         );
 
+        $extension = strtolower($song->getCoverImageExtension());
+        $source = $coverDir.$song->getId().$song->getCoverImageExtension();
+
         try {
-            $source = $this->kernel->getProjectDir()."/public/covers/".$song->getId().$song->getCoverImageExtension();
-            if (in_array(strtolower($song->getCoverImageExtension()), ['.jpg', '.jpeg',])) {
+            if (in_array($extension, ['.jpg', '.jpeg',])) {
+                if (mime_content_type($source) !== 'image/jpeg') {
+                    throw new Exception(
+                        "The image cover is in the wrong format. Please verify it's a native ".$extension
+                    );
+                }
+
                 $image = imagecreatefromjpeg($source);
-                imagewebp($image, $this->kernel->getProjectDir()."/public/covers/".$song->getId().".webp");
+                imagewebp($image, $coverDir.$song->getId().".webp");
                 unlink($source);
                 imagedestroy($image);
-            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.gif'])) {
+            } elseif (in_array($extension, ['.gif'])) {
+                if (mime_content_type($source) !== 'image/gif') {
+                    throw new Exception(
+                        "The image cover is in the wrong format. Please verify it's a native ".$extension
+                    );
+                }
+
                 $image = imagecreatefromgif($source);
-                imagewebp($image, $this->kernel->getProjectDir()."/public/covers/".$song->getId().".webp");
+                imagewebp($image, $coverDir.$song->getId().".webp");
                 unlink($source);
                 imagedestroy($image);
-            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.png'])) {
+            } elseif (in_array($extension, ['.png'])) {
+                if (mime_content_type($source) !== 'image/png') {
+                    throw new Exception(
+                        "The image cover is in the wrong format. Please verify it's a native ".$extension
+                    );
+                }
+
                 $image = imagecreatefrompng($source);
-                imagewebp($image, $this->kernel->getProjectDir()."/public/covers/".$song->getId().".webp");
+                imagewebp($image, $coverDir.$song->getId().".webp");
                 unlink($source);
                 imagedestroy($image);
-            } elseif (in_array(strtolower($song->getCoverImageExtension()), ['.webp'])) {
+            } elseif (in_array($extension, ['.webp'])) {
             } else {
                 throw new Exception("Your cover not a gif or a jpg or a png");
             }
         } catch (\Exception $e) {
-            throw new Exception("The image cover is in the wrong format. Please verify it's a native ".$song->getCoverImageExtension());
+            throw new Exception("The image cover is in the wrong format. Please verify it's a native ".$extension);
         }
+
         if (!$song->hasCover()) {
             $song->setWip(true);
         }
@@ -470,7 +491,9 @@ class SongService
                 foreach ($song->getMappers() as $user) {
                     if ($new && $song->isPublished()) {
                         /** @var FollowMapper $follower */
-                        foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map_wip) as $follower) {
+                        foreach ($user->getFollowersNotifiable(
+                            ENotification::Followed_mapper_new_map_wip
+                        ) as $follower) {
                             $this->notificationService->send(
                                 $follower->getUser(),
                                 "New song : <a href='".$this->router->generate(
@@ -485,7 +508,9 @@ class SongService
                     } else {
                         if ($song->isPublished()) {
                             /** @var FollowMapper $follower */
-                            foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_update_map_wip) as $follower) {
+                            foreach ($user->getFollowersNotifiable(
+                                ENotification::Followed_mapper_update_map_wip
+                            ) as $follower) {
                                 $this->notificationService->send(
                                     $follower->getUser(),
                                     "Song edit : <a href='".$this->router->generate(
@@ -778,6 +803,29 @@ class SongService
                 }
             }
         }
+    }
+
+    public function cleanUp(Song $song)
+    {
+        // remove ragnabeat
+        $ragnaBeat = $this->kernel->getProjectDir()."/public/ragna-beat/";
+        $infoDatFile = explode("/", $song->getInfoDatFile());
+        $ragnaBeat .= $infoDatFile[2];
+        $files = glob($ragnaBeat."/*"); // get all file names
+        foreach ($files as $file) { // iterate files
+            if (is_file($file)) {
+                @unlink($file); // delete file
+            }
+        }
+        @rmdir($ragnaBeat);
+
+        // remove cover
+        @unlink($this->kernel->getProjectDir()."/public/covers/".$song->getId().$song->getCoverImageExtension());
+        // remove zip
+        @unlink($this->kernel->getProjectDir()."/public/songs-file/".$song->getId().'.zip');
+        // remove song
+        $this->em->remove($song);
+        $this->em->flush();
     }
 
     public function processFileWithoutForm(Request $request, Song $song)
@@ -1075,29 +1123,6 @@ class SongService
         ];
     }
 
-    public function cleanUp(Song $song)
-    {
-        // remove ragnabeat
-        $ragnaBeat = $this->kernel->getProjectDir()."/public/ragna-beat/";
-        $infoDatFile = explode("/", $song->getInfoDatFile());
-        $ragnaBeat .= $infoDatFile[2];
-        $files = glob($ragnaBeat."/*"); // get all file names
-        foreach ($files as $file) { // iterate files
-            if (is_file($file)) {
-                @unlink($file); // delete file
-            }
-        }
-        @rmdir($ragnaBeat);
-
-        // remove cover
-        @unlink($this->kernel->getProjectDir()."/public/covers/".$song->getId().$song->getCoverImageExtension());
-        // remove zip
-        @unlink($this->kernel->getProjectDir()."/public/songs-file/".$song->getId().'.zip');
-        // remove song
-        $this->em->remove($song);
-        $this->em->flush();
-    }
-
     public function getLastPlayedToVote(Utilisateur $user)
     {
         $qb = $this->em->getRepository(VoteCounter::class)
@@ -1108,29 +1133,29 @@ class SongService
 
         $qbMapper = $this->songRepository
             ->createQueryBuilder('s2')
-            ->innerJoin('s2.mappers','mapper')
+            ->innerJoin('s2.mappers', 'mapper')
             ->select('count(s2)')
             ->where('s2.id = s.id')
             ->andWhere('mapper.id = :user');
-try {
-    $res = $this->songRepository->createQueryBuilder('s')
-        ->select('s')
-        ->distinct('s')
-        ->leftJoin('s.songDifficulties', 'diff')
-        ->leftJoin('diff.scoreHistories', 'score')
-        ->andWhere($this->em->getExpressionBuilder()->eq('('.$qb->getDQL().')','0'))
-        ->andWhere($this->em->getExpressionBuilder()->eq('('.$qbMapper->getDQL().')','0'))
-        ->andWhere('score.user = :user')
-        ->setParameter('user', $user)
-        ->orderBy('score.updatedAt', 'DESC')
-        ->setFirstResult(0)
-        ->setMaxResults(4)
-        ->getQuery()->getResult();
+        try {
+            $res = $this->songRepository->createQueryBuilder('s')
+                ->select('s')
+                ->distinct('s')
+                ->leftJoin('s.songDifficulties', 'diff')
+                ->leftJoin('diff.scoreHistories', 'score')
+                ->andWhere($this->em->getExpressionBuilder()->eq('('.$qb->getDQL().')', '0'))
+                ->andWhere($this->em->getExpressionBuilder()->eq('('.$qbMapper->getDQL().')', '0'))
+                ->andWhere('score.user = :user')
+                ->setParameter('user', $user)
+                ->orderBy('score.updatedAt', 'DESC')
+                ->setFirstResult(0)
+                ->setMaxResults(4)
+                ->getQuery()->getResult();
 
-    return $res;
-}catch (\Exception $e){
-    VarDumper::dump($e);
-}
+            return $res;
+        } catch (\Exception $e) {
+            VarDumper::dump($e);
+        }
     }
 }
 
