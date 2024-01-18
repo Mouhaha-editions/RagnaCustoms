@@ -12,6 +12,7 @@ use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongCategoryRepository;
 use App\Repository\UtilisateurRepository;
+use App\Service\SearchService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
@@ -124,182 +125,19 @@ class UserController extends AbstractController
         Request $request,
         PaginationService $paginationService,
         ScoreHistoryRepository $scoreRepository,
-        SongCategoryRepository $songCategoryRepository
+        SongCategoryRepository $songCategoryRepository,
+        SearchService $searchService
     ): Response {
         $user = $this->getUser();
-        $filters = [];
+
         $qb = $scoreRepository
             ->createQueryBuilder('score')
             ->leftJoin('score.songDifficulty', 'song_difficulties')
-            ->leftJoin('song_difficulties.song', 's')
-            ->leftJoin('s.categoryTags', 't')
+            ->leftJoin('song_difficulties.song', 'song')
             ->where('score.user = :user')
             ->setParameter('user', $user);
 
-        switch ($request->get('order_by', null)) {
-            case 'score':
-                $qb->orderBy("score.rawPP", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            case 'name':
-                $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            case 'date':
-                $qb->orderBy("score.createdAt", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            default:
-                $qb->orderBy("score.createdAt", "desc");
-                break;
-        }
-
-        if ($request->get('only_ranked', null) != null) {
-            $qb->andWhere("song_difficulties.isRanked = true");
-            $filters[] = "only ranked";
-        }
-
-        if ($request->get('downloads_filter_difficulties', null)) {
-            $qb->leftJoin('song_difficulties.difficultyRank', 'rank');
-            switch ($request->get('downloads_filter_difficulties')) {
-                case 1:
-                    $qb->andWhere('rank.level BETWEEN 1 and 3');
-                    $filters[] = "lvl 1 to 3";
-
-                    break;
-                case 2 :
-                    $qb->andWhere('rank.level BETWEEN 4 and 7');
-                    $filters[] = "lvl 4 to 7";
-                    break;
-                case 3 :
-                    $qb->andWhere('rank.level BETWEEN 8 and 10');
-                    $filters[] = "lvl 8 to 10";
-                    break;
-                case 6 :
-                    $qb->andWhere('rank.level > 10');
-                    $filters[] = "lvl over 10";
-                    break;
-            }
-        }
-
-        $categories = $request->get('downloads_filter_categories', null);
-
-        if ($categories != null) {
-            $cats = [];
-            foreach ($categories as $k => $v) {
-                $qb->andWhere("t.id = :tag$k")->setParameter("tag$k", $v);
-                $cats[] = $v;
-            }
-            $filters[] = "categories spécifiques";
-        }
-
-        if ($request->get('converted_maps', null)) {
-            switch ($request->get('converted_maps')) {
-                case 1:
-                    $qb->andWhere('(s.converted = false OR s.converted IS NULL)');
-                    $filters[] = "hide converted";
-                    break;
-                case 2 :
-                    $qb->andWhere('s.converted = true');
-                    $filters[] = "only converted";
-
-                    break;
-            }
-        }
-
-        if ($request->get('wip_maps', null)) {
-            switch ($request->get('wip_maps')) {
-                case 1:
-                    //with
-                    $filters[] = "display W.I.P.";
-                    break;
-                case 2 :
-                    //only
-                    $qb->andWhere('s.wip = true');
-                    $filters[] = "only W.I.P.";
-                    break;
-                default:
-                    $qb->andWhere('s.wip != true');
-                    break;
-            }
-        } else {
-            $qb->andWhere('s.wip != true');
-        }
-
-        if ($request->get('downloads_submitted_date', null)) {
-            switch ($request->get('downloads_submitted_date')) {
-                case 1:
-                    $qb->andWhere('(s.programmationDate >= :last7days)')->setParameter(
-                        'last7days',
-                        (new DateTime())->modify('-7 days')
-                    );
-                    $filters[] = "last 7 days";
-                    break;
-                case 2 :
-                    $qb->andWhere('(s.programmationDate >= :last15days)')->setParameter(
-                        'last15days',
-                        (new DateTime())->modify('-15 days')
-                    );
-                    $filters[] = "last 15 days";
-                    break;
-                case 3 :
-                    $qb->andWhere('(s.programmationDate >= :last45days)')->setParameter(
-                        'last45days',
-                        (new DateTime())->modify('-45 days')
-                    );
-                    $filters[] = "last 45 days";
-                    break;
-            }
-        }
-        if ($request->get('search', null)) {
-            $exp = explode(':', $request->get('search'));
-            $filters[] = "search: \"".$request->get('search')."\"";
-
-            switch ($exp[0]) {
-                case 'mapper':
-                    if (count($exp) >= 2) {
-                        $qb->andWhere('(s.levelAuthorName LIKE :search_string)')->setParameter(
-                            'search_string',
-                            '%'.$exp[1].'%'
-                        );
-                    }
-                    break;
-//                case 'category':
-//                    if (count($exp) >= 1) {
-//                        $qb->andWhere('(s.songCategory = :category)')
-//                            ->setParameter('category', $exp[1] == "" ? null : $exp[1]);
-//                    }
-//                    break;
-                case 'artist':
-                    if (count($exp) >= 2) {
-                        $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter(
-                            'search_string',
-                            '%'.$exp[1].'%'
-                        );
-                    }
-                    break;
-                case 'title':
-                    if (count($exp) >= 2) {
-                        $qb->andWhere('(s.name LIKE :search_string)')->setParameter('search_string', '%'.$exp[1].'%');
-                    }
-                    break;
-                case 'desc':
-                    if (count($exp) >= 2) {
-                        $qb->andWhere('(s.description LIKE :search_string)')->setParameter(
-                            'search_string',
-                            '%'.$exp[1].'%'
-                        );
-                    }
-                    break;
-                case 'genre':
-                    if (count($exp) >= 2) {
-                        $qb->andWhere('(t.label LIKE :search_string)')->setParameter('search_string', '%'.$exp[1].'%');
-                    }
-                    break;
-                default:
-                    $qb->andWhere(
-                        '(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.description LIKE :search_string OR s.levelAuthorName LIKE :search_string OR t.label LIKE :search_string)'
-                    )->setParameter('search_string', '%'.$request->get('search', null).'%');
-            }
-        }
-
+        $filters = $searchService->baseSearchQb($qb, $request);
         $pagination = $paginationService->setDefaults(65)->process($qb, $request);
 
         return $this->render('user/recently_played.html.twig', [
@@ -405,211 +243,22 @@ class UserController extends AbstractController
         Request $request,
         ManagerRegistry $doctrine,
         Utilisateur $utilisateur,
-        PaginationService $pagination
+        PaginationService $pagination,
+        SearchService $searchService,
+        SongCategoryRepository $categoryRepository
     ): Response {
         $qb = $doctrine->getRepository(Song::class)
-            ->createQueryBuilder("s")
-            ->leftJoin('s.categoryTags', 't')
-            ->leftJoin('s.mappers', 'm')
-            ->where('m.id = :user')
-            ->andWhere('(s.programmationDate <= :now AND s.programmationDate IS NOT NULL)')
+            ->createQueryBuilder("song")
+            ->andWhere('mapper.id = :user')
             ->setParameter('now', new DateTime())
             ->setParameter('user', $utilisateur)
-            ->addSelect('s.voteUp - s.voteDown AS HIDDEN rating')
-            ->groupBy("s.id");
+            ->addSelect('song.voteUp - song.voteDown AS HIDDEN rating')
+            ->groupBy("song.id");
 
-        if ($request->get('display_wip', null) != null) {
-            $qb->andWhere("s.wip = true");
-        } else {
-            $qb->andWhere("s.wip != true");
-        }
+        $searchService->baseSearchQb($qb, $request);
 
-        $qb->leftJoin('s.songDifficulties', 'song_difficulties');
-
-        if ($request->get('only_ranked', null) != null) {
-            $qb->andWhere("song_difficulties.isRanked = true");
-        }
-        if ($request->get('downloads_filter_difficulties', null)) {
-            $qb->leftJoin('song_difficulties.difficultyRank', 'rank');
-            switch ($request->get('downloads_filter_difficulties')) {
-                case 1:
-                    $qb->andWhere('rank.level BETWEEN 1 and 3');
-                    break;
-                case 2 :
-                    $qb->andWhere('rank.level BETWEEN 4 and 7');
-                    break;
-                case 3 :
-                    $qb->andWhere('rank.level BETWEEN 8 and 10');
-                    break;
-                case 6 :
-                    $qb->andWhere('rank.level > 10');
-                    break;
-
-                case 5 :
-                    $wip = true;
-                    break;
-            }
-        }
-
-
-        $categories = $request->get('downloads_filter_categories', null);
-        if ($categories != null) {
-            foreach ($categories as $k => $v) {
-                $qb->andWhere("t.id = :tag$k")->setParameter("tag$k", $v);
-            }
-        }
-
-        if ($request->get('downloads_filter_order', null)) {
-            switch ($request->get('downloads_filter_order')) {
-                case 1:
-                    $qb->orderBy('s.voteUp - s.voteDown', 'DESC');
-                    break;
-                case 2 :
-                    $qb->orderBy('s.approximativeDuration', 'DESC');
-                    break;
-
-                case 4 :
-                    $qb->orderBy('s.name', 'ASC');
-                    break;
-                case 5 :
-                    $qb->orderBy('s.downloads', 'DESC');
-                    break;
-                case 3:
-                default:
-                    $qb->orderBy('s.lastDateUpload', 'DESC');
-                    break;
-            }
-        } else {
-            $qb->orderBy('s.createdAt', 'DESC');
-        }
-
-
-        if ($request->get('converted_maps', null)) {
-            switch ($request->get('converted_maps')) {
-                case 1:
-                    $qb->andWhere('(s.converted = false OR s.converted IS NULL)');
-                    break;
-                case 2 :
-                    $qb->andWhere('s.converted = true');
-                    break;
-            }
-        }
-
-        if ($request->get('downloads_submitted_date', null)) {
-            switch ($request->get('downloads_submitted_date')) {
-                case 1:
-                    $qb->andWhere('(s.programmationDate >= :last7days)')->setParameter(
-                        'last7days',
-                        (new DateTime())->modify('-7 days')
-                    );
-                    break;
-                case 2 :
-                    $qb->andWhere('(s.programmationDate >= :last15days)')->setParameter(
-                        'last15days',
-                        (new DateTime())->modify('-15 days')
-                    );
-                    break;
-                case 3 :
-                    $qb->andWhere('(s.programmationDate >= :last45days)')->setParameter(
-                        'last45days',
-                        (new DateTime())->modify('-45 days')
-                    );
-                    break;
-            }
-        }
-        if ($request->get('not_downloaded', 0) > 0 && $this->isGranted('ROLE_USER')) {
-            $qb->leftJoin("s.downloadCounters", 'download_counters')->addSelect(
-                "SUM(IF(download_counters.user = :user,1,0)) AS HIDDEN count_download_user"
-            )->andHaving("count_download_user = 0")->setParameter('user', $this->getuser());
-        }
-        $qb->andWhere('s.moderated = true');
-
-        //get the 'type' param (added for ajax search)
-        $type = $request->get('type', null);
-        //check if this is an ajax request
-        $ajaxRequest = $type == 'ajax';
-        //remove the 'type' parameter so pagination does not break
-        if ($ajaxRequest) {
-            $request->query->remove('type');
-        }
-
-        if ($request->get('search', null)) {
-            $exp = explode(':', $request->get('search'));
-            switch ($exp[0]) {
-                case 'mapper':
-                    if (count($exp) >= 2) {
-                        $qb->andWhere('(m.mapper_name LIKE :search_string)')->setParameter(
-                            'search_string',
-                            '%'.$exp[1].'%'
-                        );
-                    }
-                    break;
-                case 'artist':
-                    if (count($exp) >= 2) {
-                        $qb->andWhere('(s.authorName LIKE :search_string)')->setParameter(
-                            'search_string',
-                            '%'.$exp[1].'%'
-                        );
-                    }
-                    break;
-                case 'title':
-                    if (count($exp) >= 2) {
-                        $qb->andWhere('(s.name LIKE :search_string)')->setParameter('search_string', '%'.$exp[1].'%');
-                    }
-                    break;
-                case 'desc':
-                    if (count($exp) >= 2) {
-                        $qb->andWhere('(s.description LIKE :search_string)')->setParameter(
-                            'search_string',
-                            '%'.$exp[1].'%'
-                        );
-                    }
-                    break;
-                case 'genre':
-                    if (count($exp) >= 2) {
-                        $qb->andWhere('(t.label LIKE :search_string)')->setParameter('search_string', '%'.$exp[1].'%');
-                    }
-                    break;
-                default:
-                    $searchString = explode(' ', $request->get('search'));
-                    foreach ($searchString as $key => $search) {
-                        $qb->andWhere(
-                            $qb->expr()->orX(
-                                's.name LIKE :search_string'.$key,
-                                's.authorName LIKE :search_string'.$key,
-                                's.description LIKE :search_string'.$key,
-                                'm.mapper_name LIKE :search_string'.$key,
-                                't.label LIKE :search_string'.$key
-                            )
-                        )->setParameter('search_string'.$key, '%'.$search.'%');
-                    }
-            }
-        }
-        $qb->andWhere("s.isDeleted != true");
-
-        switch ($request->get('order_by', null)) {
-            case 'downloads':
-                $qb->orderBy("s.downloads", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            case 'upload_date':
-                $qb->orderBy("s.programmationDate", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            case 'name':
-                $qb->orderBy("s.name", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            case 'bpm':
-                $qb->orderBy("s.beatsPerMinute", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            case 'rating':
-                $qb->orderBy("rating", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
-                break;
-            default:
-                $qb->orderBy("s.createdAt", "DESC");
-                break;
-        }
-
-        if ($request->get('onclick_dl')) {
-            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
+        if ($request->get('oneclick_dl')) {
+            $ids = $qb->select('song.id')->getQuery()->getArrayResult();
 
             return $this->redirect(
                 "ragnac://install/".implode(
@@ -620,9 +269,16 @@ class UserController extends AbstractController
                 )
             );
         }
-        //$pagination = null;
-        //if($ajaxRequest || $request->get('ppage1')) {
+
         $songs = $pagination->setDefaults(15)->process($qb, $request);
+        $categories = $categoryRepository
+            ->createQueryBuilder("c")
+            ->leftJoin("c.songs", 's')
+            ->where('c.isOnlyForAdmin != true')
+            ->andWhere("s.id is not null")
+            ->orderBy('c.label')
+            ->getQuery()
+            ->getResult();
 
         return $this->render('user/partial/song_mapped.html.twig', [
             'controller_name' => 'UserController',
@@ -637,9 +293,7 @@ class UserController extends AbstractController
     {
         $this->PatreonAction($request, $userRepo);
 
-        return $this->render('user/application.html.twig', [
-
-        ]);
+        return $this->render('user/application.html.twig', []);
     }
 
     private function PatreonAction(Request $request, UtilisateurRepository $userRepo)

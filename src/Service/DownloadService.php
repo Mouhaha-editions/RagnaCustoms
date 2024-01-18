@@ -9,9 +9,9 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class DownloadService
+readonly class DownloadService
 {
-    public function __construct(private readonly Security $security, private readonly EntityManagerInterface $em)
+    public function __construct(private Security $security, private EntityManagerInterface $em)
     {
     }
 

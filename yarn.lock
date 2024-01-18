@@ -13135,7 +13135,7 @@ token-stream@1.0.0:
   resolved "https://registry.yarnpkg.com/token-stream/-/token-stream-1.0.0.tgz#cc200eab2613f4166d27ff9afc7ca56d49df6eb4"
   integrity sha512-VSsyNPPW74RpHwR8Fc21uubwHY7wMDeJLys2IX5zJNih+OnAnaifKHo+1LHT7DAdloQ7apeaaWg8l7qnf/TnEg==
 
-tom-select@^2.2.2:
+tom-select@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tom-select/-/tom-select-2.3.1.tgz#df338d9082874cd0bceb3bee87ed0184447c47f1"
   integrity sha512-QS4vnOcB6StNGqX4sGboGXL2fkhBF2gIBB+8Hwv30FZXYPn0CyYO8kkdATRvwfCTThxiR4WcXwKJZ3cOmtI9eg==

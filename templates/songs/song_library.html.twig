@@ -78,7 +78,7 @@
               <option {% if  app.request.get('mapped_for', null) == 1 %}selected="selected"{% endif %}
                       value="1">{{ "VR"|trans }}</option>
               <option {% if  app.request.get('mapped_for', null) == 2 %}selected="selected"{% endif %}
-                      value="2">{{ "Flat"|trans }}</option>
+                      value="2">{{ "Viking on Tour"|trans }}</option>
 
             </select>
           </div>
@@ -120,7 +120,7 @@
             <label for="downloads-category">{{ "Genre"|trans }}</label>
             <select data-placeholder="All" id="downloads-category" data-allow-clear="true"
                     data-tags="false" name="downloads_filter_categories[]"
-                    class="form-control form-control-sm select2" multiple="true">
+                    class="form-control form-control-sm tom-select" multiple="true">
               {% for category in categories %}
                 <option
                     {% if category.id in app.request.get('downloads_filter_categories') %}selected="selected"{% endif %}

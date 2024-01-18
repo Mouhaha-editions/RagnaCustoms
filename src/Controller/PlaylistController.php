@@ -44,13 +44,13 @@ class PlaylistController extends AbstractController
             $this->addFlash("warning", "This playlist is not public");
             return $this->redirectToRoute('home');
         }
-        $qb = $songRepository->createQueryBuilder("s")
-            ->leftJoin("s.playlists", 'playlist')
+        $qb = $songRepository->createQueryBuilder('song')
+            ->leftJoin('song.playlists', 'playlist')
             ->where('playlist = :playlist')
             ->setParameter("playlist", $playlist)
-            ->addOrderBy('s.name');
-        if ($request->get('onclick_dl')) {
-            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
+            ->addOrderBy('song.name');
+        if ($request->get('oneclick_dl')) {
+            $ids = $qb->select('song.id')->getQuery()->getArrayResult();
             return $this->redirect("ragnac://install/" . implode('-', array_map(function ($id) {
                     return array_pop($id);
                 }, $ids)));
@@ -106,13 +106,13 @@ class PlaylistController extends AbstractController
             $this->addFlash('success',"Playlist edited!");
         }
 
-        $qb = $songRepository->createQueryBuilder("s")
-            ->leftJoin("s.playlists", 'playlist')
+        $qb = $songRepository->createQueryBuilder("song")
+            ->leftJoin("song.playlists", 'playlist')
             ->where('playlist = :playlist')
             ->setParameter("playlist", $playlist)
-            ->addOrderBy('s.name');
-        if ($request->get('onclick_dl')) {
-            $ids = $qb->select('s.id')->getQuery()->getArrayResult();
+            ->addOrderBy('song.name');
+        if ($request->get('oneclick_dl')) {
+            $ids = $qb->select('song.id')->getQuery()->getArrayResult();
             return $this->redirect("ragnac://install/" . implode('-', array_map(function ($id) {
                     return array_pop($id);
                 }, $ids)));
