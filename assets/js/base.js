@@ -352,4 +352,6 @@ let settings = {
     hidePlaceholder: true,
     plugins: ['remove_button']
 };
-new TomSelect('.tom-select',settings);
+if($('.tom-select')) {
+    new TomSelect('.tom-select', settings);
+}
