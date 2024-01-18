@@ -5,7 +5,6 @@ const Swal = require('sweetalert2/dist/sweetalert2.js');
 import Swup from 'swup';
 import "./PureSnow";
 import SwupMatomoPlugin from '@swup/matomo-plugin';
-import TomSelect from "tom-select";
 
 const swup = new Swup({
     plugins: [new SwupMatomoPlugin()]
@@ -344,6 +343,9 @@ $(document).on('click', ".ajax-modal-form", function () {
     return false;
 
 });
+
+
+import TomSelect from "tom-select";
 
 let settings = {
     hideSelected: true,
