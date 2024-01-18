@@ -34,7 +34,7 @@ class RankingSongsController extends AbstractController
                 return ($song->isRanked() ? "[R] " : "").$song->getName()." - ".$song->getAuthorName();
             },
             "attr" => [
-                'class' => "select2"
+                'class' => "tom-select"
             ],
             "query_builder" => function (SongRepository $er) {
                 return $er->createQueryBuilder('s')

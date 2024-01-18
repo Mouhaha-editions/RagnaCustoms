@@ -50,7 +50,6 @@ function loadForm(content) {
                 if (data.error === true || data.success === false) {
                     $("#form-edit").html(data.response);
                     loadForm(data.response);
-                    $('.select2entity').select2entity();
 
                 } else {
                     tt.closest(tt.data('replace-selector')).html(data.response);
@@ -74,7 +73,6 @@ $(document).on('click', ".ajax-modal-form", function () {
         url: t.attr('href'),
         success: function (data) {
             loadForm(data.response);
-            $('.select2entity').select2entity();
         }
     });
     return false;

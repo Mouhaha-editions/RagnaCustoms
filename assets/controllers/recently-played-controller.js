@@ -4,8 +4,6 @@ import 'jquery'
 import Chart from 'chart.js/auto';
 import {getRelativePosition} from 'chart.js/helpers';
 
-import 'select2/dist/js/select2.full.min';
-
 require('../js/base');
 require('../js/plugins/ajax_link');
 require('../js/plugins/rating');

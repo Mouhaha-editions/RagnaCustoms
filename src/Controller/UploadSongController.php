@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class UploadSongController extends AbstractController
 {

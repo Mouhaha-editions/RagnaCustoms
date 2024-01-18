@@ -2,7 +2,6 @@ import {Controller} from '@hotwired/stimulus';
 import 'jquery'
 const Swal = require('sweetalert2/dist/sweetalert2.js');
 
-import 'select2/dist/js/select2.full.min';
 require('../js/base');
 require('../js/plugins/ajax_link');
 require('../js/plugins/rating');
@@ -13,8 +12,6 @@ export default class extends Controller {
 
     connect() {
         $("[data-toggle=tooltip]").tooltip();
-        $('.select2entity[data-autostart="true"]').select2entity();
-        $('.select2').select2();
         $(document).on('mousedown','.switch',function(){
             let enabled = $(this).find('.enable-song').is(':checked');
             if(!enabled){

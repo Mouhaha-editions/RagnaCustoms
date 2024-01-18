@@ -1,7 +1,6 @@
 import {Controller} from '@hotwired/stimulus';
 import 'jquery'
 import Dropzone from "dropzone";
-import 'select2/dist/js/select2.full.min';
 require('../js/base');
 require('../js/plugins/ajax_link');
 require('../js/plugins/rating');

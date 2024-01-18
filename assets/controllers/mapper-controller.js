@@ -3,7 +3,6 @@ import {average} from 'color.js'
 import 'jquery'
 import {RagnaBeat} from "../js/ragna-beat/ragnabeat";
 
-import 'select2/dist/js/select2.full.min';
 
 require('../js/base');
 require('../js/plugins/ajax_link');
