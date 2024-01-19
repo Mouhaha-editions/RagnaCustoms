@@ -743,7 +743,7 @@ class SongService
                 $zip->close();
             }
         } catch (Exception $e) {
-            VarDumper::dump($song->getId());
+            VarDumper::dump($e);
         }
     }
 
