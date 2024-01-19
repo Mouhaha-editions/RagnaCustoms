@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class UtilisateurCrudController extends AbstractCrudController
@@ -45,6 +46,7 @@ class UtilisateurCrudController extends AbstractCrudController
     {
         return [
             TextField::new('username'),
+            BooleanField::new('avatarDisabled'),
             TextField::new('ip_address'),
             ChoiceField::new('roles')
                 ->allowMultipleChoices()
@@ -58,6 +60,7 @@ class UtilisateurCrudController extends AbstractCrudController
             TextField::new('email'),
             CountryField::new('country.twoLetters', 'Pays'),
             TextField::new('mapperName'),
+            TextareaField::new('mapperDescription'),
             DateTimeField::new('createdAt'),
             BooleanField::new('isVerified'),
         ];
