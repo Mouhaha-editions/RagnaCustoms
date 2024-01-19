@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -45,10 +46,11 @@ class UtilisateurCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('username'),
-            BooleanField::new('avatarDisabled'),
-            TextField::new('ip_address'),
-            ChoiceField::new('roles')
+            FormField::addPanel('User part')->setCssClass('col-6'),
+            TextField::new('username')->setColumns('col-12'),
+            TextField::new('email')->setColumns('col-12'),
+            TextField::new('ip_address')->hideOnForm(),
+            ChoiceField::new('roles')->setColumns('col-12')
                 ->allowMultipleChoices()
                 ->setChoices([
                     'ROLE_USER' => 'ROLE_USER',
@@ -57,12 +59,13 @@ class UtilisateurCrudController extends AbstractCrudController
                     'ROLE_PREMIUM_LVL2' => 'ROLE_PREMIUM_LVL2',
                     'ROLE_PREMIUM_LVL1' => 'ROLE_PREMIUM_LVL1',
                 ]),
-            TextField::new('email'),
-            CountryField::new('country.twoLetters', 'Pays'),
-            TextField::new('mapperName'),
-            TextareaField::new('mapperDescription'),
-            DateTimeField::new('createdAt'),
-            BooleanField::new('isVerified'),
+            CountryField::new('country.twoLetters', 'Pays')->hideOnForm(),
+            BooleanField::new('avatarDisabled')->setColumns('col-4'),
+            DateTimeField::new('createdAt')->setColumns('col-4')->hideOnForm(),
+            BooleanField::new('isVerified')->setColumns('col-4'),
+            FormField::addPanel('Mapper part')->setCssClass('col-6'),
+            TextField::new('mapperName')->setColumns('col-12'),
+            TextareaField::new('mapperDescription')->setColumns('col-12'),
         ];
     }
 
