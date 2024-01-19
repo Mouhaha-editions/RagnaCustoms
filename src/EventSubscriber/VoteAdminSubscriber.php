@@ -12,7 +12,6 @@ use App\Service\VoteService;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityDeletedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\VarDumper\VarDumper;
 
 class VoteAdminSubscriber implements EventSubscriberInterface
 {

@@ -33,7 +33,6 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\VarDumper\VarDumper;
 use ZipArchive;
 
 class SongService
@@ -743,7 +742,7 @@ class SongService
                 $zip->close();
             }
         } catch (Exception $e) {
-            VarDumper::dump($e);
+            /** @todo put a sentry error  */
         }
     }
 
@@ -1154,7 +1153,7 @@ class SongService
 
             return $res;
         } catch (\Exception $e) {
-            VarDumper::dump($e);
+            /** @todo put a sentry error */
         }
     }
 }

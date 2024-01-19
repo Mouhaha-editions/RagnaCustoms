@@ -2,25 +2,15 @@
 
 namespace App\Service;
 
-use App\Entity\DownloadCounter;
 use App\Entity\Song;
-use App\Entity\Utilisateur;
 use App\Entity\Vote;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\VarDumper\VarDumper;
 
-class MapperService
+readonly class MapperService
 {
-
-    protected $em;
-
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(protected EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
     public function getTotalDownloads(UserInterface $user)
