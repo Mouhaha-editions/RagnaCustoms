@@ -445,7 +445,7 @@ class SongsController extends AbstractController
                 if ($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)) {
                     $notificationService->send(
                         $mapper,
-                        'You get a new feedback on <a href="'.$this->generateUrl(
+                        'You got a new feedback on <a href="'.$this->generateUrl(
                             'song_detail',
                             ['slug' => $song->getSlug()]
                         ).'">'.$song->getName()."</a>"

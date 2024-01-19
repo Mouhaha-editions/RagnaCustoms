@@ -75,7 +75,7 @@ class SongService
                 )->subject('[Ragnacustoms.com] New feedback for '.$song->getName().'!');
 
                 $email->html(
-                    "Hi ".$mapper->getUsername().",<br/>You get a new feedback for ".$song->getName(
+                    "Hi ".$mapper->getUsername().",<br/>You got a new feedback for ".$song->getName(
                     )."!<br/><br/>You can read it at https://ragnacustoms.com/song/detail/".$song->getId(
                     )."#feedback<br/><br/>See you soon,<br/> The Staff"
                 );
