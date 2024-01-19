@@ -40,7 +40,7 @@ class SongHashRepository extends ServiceEntityRepository
     {
         /** @var SongHash $hash */
         $hash = $this->createQueryBuilder('s')
-            ->andWhere('s.Song = :song')
+            ->andWhere('s.song = :song')
             ->setParameter('song', $song)
             ->orderBy('s.version', 'desc')
             ->getQuery()
