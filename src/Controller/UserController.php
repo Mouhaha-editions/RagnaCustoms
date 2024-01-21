@@ -291,7 +291,7 @@ class UserController extends AbstractController
     }
 
     #[Route(path: '/user/app-and-premium', name: 'user_applications')]
-    public function ApplicationsAndPremium(Request $request, UtilisateurRepository $userRepo)
+    public function ApplicationsAndPremium(Request $request, UtilisateurRepository $userRepo): Response
     {
         $this->PatreonAction($request, $userRepo);
 

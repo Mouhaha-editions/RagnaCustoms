@@ -69,10 +69,10 @@ class ApiController extends AbstractController
             $user->setLastApiAttempt(new DateTime());
             $utilisateurRepository->add($user);
 
-            return new Response("", 400);
+            return new Response("Wrong credential #2", Response::HTTP_FORBIDDEN);
         }
 
-        return new Response('', 400);
+        return new Response('Wrong credential #1', Response::HTTP_FORBIDDEN);
     }
 
     #[Route(path: '/api/song/check-updates', name: 'api_song_check_updates')]
