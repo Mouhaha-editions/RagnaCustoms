@@ -157,16 +157,17 @@ class SongsController extends AbstractController
         $filters = $searchService->baseSearchQb($qb, $request);
 
         if ($request->get('oneclick_dl')) {
-            $ids = $qb->select('song.id')->getQuery()->getArrayResult();
+            $songs = $qb->getQuery()->getResult();
+            $list = new SongTemporaryList();
 
-            return $this->redirect(
-                "ragnac://install/".implode(
-                    '-',
-                    array_map(function ($id) {
-                        return array_pop($id);
-                    }, $ids)
-                )
-            );
+            $em = $doctrine->getManager();
+            foreach ($songs as $song) {
+                $list->addSong($song);
+            }
+            $em->persist($list);
+            $em->flush();
+
+            return $this->redirect("ragnac://list/".$list->getId());
         }
 
         $pagination = $paginationService->setDefaults($this->paginate)->process($qb, $request);
