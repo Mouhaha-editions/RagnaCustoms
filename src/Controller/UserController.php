@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
+use App\Entity\SongTemporaryList;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use App\Helper\ChartJsDataSet;
@@ -258,16 +259,17 @@ class UserController extends AbstractController
         $searchService->baseSearchQb($qb, $request);
 
         if ($request->get('oneclick_dl')) {
-            $ids = $qb->select('song.id')->getQuery()->getArrayResult();
+            $songs = $qb->getQuery()->getResult();
+            $list = new SongTemporaryList();
 
-            return $this->redirect(
-                "ragnac://install/".implode(
-                    '-',
-                    array_map(function ($id) {
-                        return array_pop($id);
-                    }, $ids)
-                )
-            );
+            $em = $doctrine->getManager();
+            foreach ($songs as $song) {
+                $list->addSong($song);
+            }
+            $em->persist($list);
+            $em->flush();
+
+            return $this->redirect("ragnac://list/".$list->getId());
         }
 
         $songs = $pagination->setDefaults(15)->process($qb, $request);
