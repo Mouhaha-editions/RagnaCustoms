@@ -255,6 +255,7 @@ class UserController extends AbstractController
             ->setParameter('user', $utilisateur)
             ->addSelect('song.voteUp - song.voteDown AS HIDDEN rating')
             ->groupBy("song.id");
+        $qb->leftJoin('song.songDifficulties', 'song_difficulties');
 
         $searchService->baseSearchQb($qb, $request);
 
@@ -408,7 +409,7 @@ class UserController extends AbstractController
                 }
             }
 
-            if ($form->has('currentPassword') && !empty($form->get('currentPassword')->getData())) {
+            if ($form->has('currentPassword') && !empty($form->get('currentPassword')->getData()) &&  !empty($form->get('plainPassword')->getData())) {
                 if ($passwordEncoder->isPasswordValid($user, $form->get('currentPassword')->getData())) {
                     // Encode the plain password, and set it.
                     $encodedPassword = $passwordEncoder->hashPassword(

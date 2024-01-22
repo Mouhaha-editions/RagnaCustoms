@@ -809,7 +809,7 @@ class SongService
         // remove ragnabeat
         $ragnaBeat = $this->kernel->getProjectDir()."/public/ragna-beat/";
         $infoDatFile = explode("/", $song->getInfoDatFile());
-        $ragnaBeat .= $infoDatFile[2];
+        $ragnaBeat .= $infoDatFile[2] ?? '';
         $files = glob($ragnaBeat."/*"); // get all file names
         foreach ($files as $file) { // iterate files
             if (is_file($file)) {
