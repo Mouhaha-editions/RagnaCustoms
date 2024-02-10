@@ -237,6 +237,7 @@ class WanadevApiController extends AbstractController
         RankingScoreService $rankingScoreService,
         ScoreService $scoreService,
         ScoreRepository $scoreRepository,
+        LoggerInterface $logger
     ): Response {
         return $this->score(
             $request,
@@ -248,6 +249,7 @@ class WanadevApiController extends AbstractController
             $rankingScoreService,
             $scoreService,
             $scoreRepository,
+            $logger
         );
     }
 
@@ -265,6 +267,7 @@ class WanadevApiController extends AbstractController
         RankingScoreService $rankingScoreService,
         ScoreService $scoreService,
         ScoreRepository $scoreRepository,
+        LoggerInterface $logger
     ): Response {
         return $this->score(
             $request,
@@ -276,6 +279,7 @@ class WanadevApiController extends AbstractController
             $rankingScoreService,
             $scoreService,
             $scoreRepository,
+            $logger
         );
     }
 }
