@@ -8,6 +8,7 @@ use App\Repository\FriendRepository;
 use App\Repository\RankedScoresRepository;
 use App\Service\ScoreService;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ScoreController extends AbstractController
 {
-    /**
-     * @return void
-     */
     #[Route(path: '/score/stats/{id}', name: 'score_stats')]
-    public function getStats(Song $song)
+    public function getStats(Song $song, LoggerInterface $logger): Response
     {
+        return new Response('',Response::HTTP_NOT_FOUND);
     }
 
     /**

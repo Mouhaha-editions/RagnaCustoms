@@ -10,6 +10,7 @@ use App\Repository\SongDifficultyRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\RankingScoreService;
 use App\Service\ScoreService;
+use Psr\Log\LoggerInterface;
 use Sentry\State\Scope;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,6 +36,7 @@ class WanadevApiController extends AbstractController
         RankingScoreService $rankingScoreService,
         ScoreService $scoreService,
         ScoreRepository $scoreRepository,
+        LoggerInterface $logger
     ): Response {
         return $this->score(
             $request,
@@ -46,6 +48,7 @@ class WanadevApiController extends AbstractController
             $rankingScoreService,
             $scoreService,
             $scoreRepository,
+            $logger,
             true
         );
     }
@@ -64,6 +67,7 @@ class WanadevApiController extends AbstractController
         RankingScoreService $rankingScoreService,
         ScoreService $scoreService,
         ScoreRepository $scoreRepository,
+        LoggerInterface $logger,
         bool $friendsOnly = false
     ): Response {
         /** @var Utilisateur $user */
@@ -84,6 +88,14 @@ class WanadevApiController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
+
+        $logger->debug('Score from a user', [
+            'user' => $user->getUsername(),
+            'data' => $data,
+            'hash' => $hash,
+            'pltameform' => $currentPlateform,
+        ]);
+
         $friendOfMine = [];
         $plateforms = [];
 
