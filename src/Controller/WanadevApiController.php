@@ -89,11 +89,11 @@ class WanadevApiController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        $logger->debug('Score from a user', [
+        $logger->error('Score from a user', [
             'user' => $user->getUsername(),
             'data' => $data,
             'hash' => $hash,
-            'pltameform' => $currentPlateform,
+            'platform' => $currentPlateform,
         ]);
 
         $friendOfMine = [];
