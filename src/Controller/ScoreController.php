@@ -19,7 +19,7 @@ class ScoreController extends AbstractController
     #[Route(path: '/score/stats/{id}', name: 'score_stats')]
     public function getStats(Song $song, LoggerInterface $logger): Response
     {
-        $logger->error('Stat score');
+        // $logger->error('Stat score');
         return new Response('',Response::HTTP_NOT_FOUND);
     }
 
