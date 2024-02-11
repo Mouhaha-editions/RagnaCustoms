@@ -14,7 +14,7 @@ services:
     Sentry\Monolog\Handler:
         arguments:
             $hub: '@Sentry\State\HubInterface'
-            $level: !php/const Monolog\Logger::ERROR
+            $level: !php/const Monolog\Logger::DEBUG
 monolog:
     handlers:
         sentry:
