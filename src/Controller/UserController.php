@@ -9,6 +9,7 @@ use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use App\Helper\ChartJsDataSet;
 use App\Repository\CountryRepository;
+use App\Repository\DownloadCounterRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongCategoryRepository;
@@ -16,6 +17,7 @@ use App\Repository\UtilisateurRepository;
 use App\Service\SearchService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Patreon\API;
 use Patreon\OAuth;
@@ -409,7 +411,11 @@ class UserController extends AbstractController
                 }
             }
 
-            if ($form->has('currentPassword') && !empty($form->get('currentPassword')->getData()) &&  !empty($form->get('plainPassword')->getData())) {
+            if ($form->has('currentPassword') && !empty($form->get('currentPassword')->getData()) && !empty(
+                $form->get(
+                    'plainPassword'
+                )->getData()
+                )) {
                 if ($passwordEncoder->isPasswordValid($user, $form->get('currentPassword')->getData())) {
                     // Encode the plain password, and set it.
                     $encodedPassword = $passwordEncoder->hashPassword(
@@ -453,5 +459,35 @@ class UserController extends AbstractController
             'pagination' => $pagination,
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route(path: '/user/downloads', name: 'app_downloads_list')]
+    public function downloads(
+        Request $request,
+        PaginationService $paginationService,
+        DownloadCounterRepository $downloadCounterRepository
+    ): Response {
+        $qb = $downloadCounterRepository
+            ->createQueryBuilder('d')
+            ->leftJoin('d.song', 's')
+            ->where('d.user = :user')
+            ->setParameter('user', $this->getUser())
+            ->orderBy('d.updatedAt', "desc");
+        $pagination = $paginationService->setDefaults(50)->process($qb, $request);
+
+        return $this->render('user/downloads.html.twig', [
+            'controller_name' => 'UserController',
+            'pagination' => $pagination,
+        ]);
+    }
+
+    #[Route(path: '/user/downloads/clear', name: 'app_downloads_list_clear')]
+    public function downloadsClear(EntityManagerInterface $entityManager): Response {
+        $entityManager->createQuery('DELETE FROM App\Entity\DownloadCounter d  WHERE d.user = :user')
+            ->setParameter('user', $this->getUser())
+            ->execute();
+        $this->addFlash('success', 'Download history cleared!');
+
+        return $this->redirectToRoute('app_downloads_list');
     }
 }

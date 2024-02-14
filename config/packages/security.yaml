@@ -53,6 +53,6 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_MODERATOR }
         - { path: ^/ranking-song/, roles: ROLE_MODERATOR }
-        - { path: ^/upload, roles: ROLE_USER }
+        - { path: ^/user/downloads, roles: ROLE_USER }
         - { path: ^/playlists, roles: ROLE_USER }
         - { path: ^/recently-played, roles: ROLE_USER }

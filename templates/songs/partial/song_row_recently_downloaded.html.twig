@@ -1,0 +1,70 @@
+{% set song = entity.song %}
+<tr>
+    <td>
+        <div class="d-flex ">
+            <a href="{{ url('song_detail',{slug:song.slug}) }}">
+                <div class="card-cover">
+                    <img src="{{ song.cover }}" class="small-cover"
+                         alt="cover"/>
+                </div>
+            </a>
+            <div class="song pl-1">
+                <div class="title"><a
+                        href="{{ url('song_detail',{slug:song.slug}) }}">{{ song|raw }}</a>
+                    {% set downloaded = downloadsService.alreadyDownloaded(song) %}
+                    {% if downloaded %}
+                        <small class="small"><i data-toggle="tooltip" title="Already downloaded"
+                                                class="fas fa-check"></i></small>
+                    {% endif %}
+                </div>
+                {% include 'songs/partial/artists.html.twig' with {song : song} %}
+            </div>
+        </div>
+    </td>
+    <td>
+        {% if song.hasBestPlatform(0) %}
+            <i class="fas fa-vr-cardboard"
+               data-toggle="tooltip"
+               title="Mapped for VR"></i>
+        {% endif %}
+        {% if song.hasBestPlatform(1) %}
+            <i class="fas fa-gamepad"
+               data-toggle="tooltip"
+               title="Mapped for Vikings on Tour"></i>
+        {% endif %}
+    </td>
+    <td>
+        <div class="level-list">
+            {% for diff in song.songDifficulties %}
+                <div class='level {% if diff.isRanked %}is-ranked{% endif %} {% if app.request.get('alreadyplayed') is not null and is_granted('ROLE_USER') and app.user.hasPlayed(diff) %}disabled{% endif %}'
+                     style="background-color:#{{ diff.difficultyRank.color }};">
+                    {% if diff.isRanked %}
+                        <i class="fas fa-star"
+                           data-toggle="tooltip"
+                           title="Ranked"
+                           style="color:#{{ diff.difficultyRank.color }};"></i>
+                    {% endif %}
+                    <span>{{ diff.difficultyRank.level }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </td>
+    <td>
+        {{ song.beatsPerMinute|round }}
+    </td>
+    <td>
+        {% include 'songs/partial/mappers.html.twig' with {song:song} %}
+    </td>
+    <td class="small-col  pt-2 pb-2">{% include 'songs/partial/downupvote.html.twig' with {song:song} %}</td>
+
+    <td class="table-column padded text-center song-vote-content-{{ song.id }}">
+        {% include 'songs/partial/vote_small.html.twig' with {song:song} %}
+    </td>
+
+    <td class="text-right text-grey">
+        {{ entity.getTimeAgo }}&nbsp;
+    </td>
+
+
+
+</tr>

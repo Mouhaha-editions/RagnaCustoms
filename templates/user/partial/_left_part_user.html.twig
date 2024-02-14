@@ -44,8 +44,11 @@
     <li class="list-group-item no-bg pl-0 {% if app.request.get('_route') == 'recently_played' %}activated{% endif %}">
         <i class="fas fa-music"></i> <a href="{{ url('recently_played') }}">Recently played</a>
     </li>
+    <li class="list-group-item no-bg pl-0 {% if app.request.get('_route') == 'app_downloads_list' %}activated{% endif %}">
+        <i class="fas fa-download"></i> <a href="{{ url('app_downloads_list') }}">My downloads</a>
+    </li>
     <li class="list-group-item no-bg pl-0 {% if app.request.get('_route') == 'app_friend_list' %}activated{% endif %}">
-        <i class="fas fa-upload"></i> <a href="{{ url('app_friend_list') }}">My friends</a>
+        <i class="fas fa-users"></i> <a href="{{ url('app_friend_list') }}">My friends</a>
     </li>
     <li class="list-group-item no-bg pl-0 {% if app.request.get('_route') == 'upload_song' %}activated{% endif %}">
         <i class="fas fa-upload"></i> <a href="{{ url('upload_song') }}">My uploads</a>

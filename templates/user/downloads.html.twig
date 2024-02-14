@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+  Downloads {{ parent() }}
+{% endblock %}
+{% block body %}
+  <div {{ stimulus_controller('downloads') }}>
+    <div class="container-fluid">
+      <div class="row mt-3">
+        <div class="col-md-2">
+          {% include 'user/partial/_left_part_user.html.twig' %}
+        </div>
+        <div class="col-md-8">
+          <h2>{{ "Downloads"|trans }}</h2>
+          {% import "widget/order_link.html.twig" as macro_order %}
+          <table class="table songs recently-played">
+            <tr>
+              <th>
+                {{ "Song"|trans }}
+                {#                {{ macro_order.order_link("Title","name") }} #}
+              </th>
+              <th></th>
+              <th class="">{{ "Difficulties"|trans }}</th>
+              <th class=""></th>
+              <th class="">{{ "Mapper"|trans }}</th>
+              <th class="">{{ "up/down votes"|trans }}</th>
+              <th class="">{{ 'Feedback'|trans }}</th>
+              <th class="text-right">
+                {{ "Last download"|trans }}
+              </th>
+            </tr>
+            {% import "@Pagination/Pagination/macro.twig" as macro_pagination %}
+            {% for entity in pagination.entities %}
+              {% include 'songs/partial/song_row_recently_downloaded.html.twig' with {entity:entity} %}
+            {% endfor %}
+          </table>
+          {% include 'widget/paginate.html.twig' with {pagination:pagination} %}
+        </div>
+        <div class="col-md-2 pt-5">
+          <a class="btn btn-danger" data-no-swup='true' data-confirm="You are going to delete all your history of downloads, continue?" href="{{ url('app_downloads_list_clear') }}">Clear my history</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+

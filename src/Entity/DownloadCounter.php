@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\DownloadCounterRepository;
+use App\Service\StatisticService;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -50,5 +51,10 @@ class DownloadCounter
     public function getUser(): ?UserInterface
     {
         return $this->user;
+    }
+
+    public function getTimeAgo(): string
+    {
+        return StatisticService::dateDisplay($this->getUpdatedAt());
     }
 }
