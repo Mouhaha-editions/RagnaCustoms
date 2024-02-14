@@ -127,7 +127,8 @@
                         {% set feedbacks = songService.getVotePublicOrMine(app.user,song) %}
                         <div id="feedback-and-rating">
                             <div id="rating-box">
-                                <div class="label">{{ "Rating" }}</div>
+                                <div class="label">{{ "Rating"|trans }} <i class="fas fa-check {% if songService.isFeedbackDone(app.user, song) %}text-success{% else %}{% endif %}" data-toggle="tooltip" title="{% if songService.isFeedbackDone(app.user, song) %}feedback done{% else %}No feedback from you{% endif %}"></i></div>
+
                                 {% if song.wip %}
                                     <div class="rating-up">
                                         <span class="text-danger">{{ "Not available when the song is in \"WIP\" mode"|trans }}</span>

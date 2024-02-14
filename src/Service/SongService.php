@@ -17,6 +17,7 @@ use App\Entity\VoteCounter;
 use App\Enum\ENotification;
 use App\Repository\SongRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -106,20 +107,45 @@ class SongService
         return $result['nb'] ?? 0;
     }
 
-    /**
-     * @param Utilisateur|null $user
-     * @param Song $song
-     *
-     * @return Collection|Vote[]
-     */
     public function getVotePublicOrMine(?Utilisateur $user, Song $song)
     {
-        return $this->em->getRepository(Vote::class)->createQueryBuilder('f')->where(
-            '(f.song = :song AND f.isPublic = true AND f.isModerated = true AND f.feedback is not null)'
-        )->orWhere('(f.song = :song AND f.user = :user AND f.feedback is not null)')->setParameter(
-            'song',
-            $song
-        )->setParameter('user', $user)->getQuery()->getResult();
+        $qb = $this->em->getRepository(Vote::class)
+            ->createQueryBuilder('f');
+        $qb
+            ->where(
+                $qb->expr()->andX(
+                    'f.song = :song',
+                    'f.isPublic = true',
+                    'f.isModerated = true',
+                    'f.feedback is not null',
+                )
+            )
+            ->orWhere(
+                $qb->expr()->andX(
+                    'f.song = :song',
+                    'f.user = :user',
+                    'f.feedback is not null',
+                )
+            )
+            ->setParameter('song', $song)
+            ->setParameter('user', $user);
+           return $qb->getQuery()->getResult();
+    }
+
+    public function isFeedbackDone(?Utilisateur $user, Song $song): bool
+    {
+        $qb = $this->em->getRepository(Vote::class)
+            ->createQueryBuilder('f');
+        $qb
+            ->where(
+                $qb->expr()->andX(
+                    'f.song = :song',
+                    'f.user = :user',
+                )
+            )
+            ->setParameter('song', $song)
+            ->setParameter('user', $user);
+        return (bool)$qb->getQuery()->getResult();
     }
 
     public function getFileSize(Song $song)
