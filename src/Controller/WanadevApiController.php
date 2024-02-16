@@ -89,12 +89,7 @@ class WanadevApiController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        // $logger->error('Score from a user', [
-        //     'user' => $user->getUsername(),
-        //     'data' => $data,
-        //     'hash' => $hash,
-        //     'platform' => $currentPlateform,
-        // ]);
+
 
         $friendOfMine = [];
         $plateforms = [];
@@ -130,6 +125,16 @@ class WanadevApiController extends AbstractController
         }
 
         if ($request->isMethod('post') && !$friendsOnly) {
+            configureScope(function (Scope $scope) use ($user, $data, $hash, $currentPlateform): void {
+                $scope->setExtras([
+                    'user' => $user->getUsername(),
+                    'data' => $data,
+                    'hash' => $hash,
+                    'platform' => $currentPlateform,
+                ]);
+            });
+            $logger->error('New Score from a user');
+
             $newScore = $this->setNewScoreWithData($user, $songDiff, $data);
 
             if ($newScore->isRankable()) {
