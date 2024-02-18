@@ -331,54 +331,38 @@ class UserController extends AbstractController
                 // and use the final redirect url to redirect your user to the relevant unlocked content or feature in your site/app.
                 $api_client = new API($user->getPatreonAccessToken());
                 $current_member = $api_client->fetch_user();
-                $user->setPatreonData($current_member);
-
-                $userRepo->add($user);
+                $user->setPatreonData(json_encode($current_member));
             }
         }
 
-        if ($user->getPatreonAccessToken()) {
-            try {
-                $api_client = new API($user->getPatreonAccessToken());
-                $user->setPatreonData(json_encode($api_client->fetch_user()));
-                $userRepo->add($user);
-            } catch (\Exception $e) {
-            }
-        }
-
-        if (!isset($api_client)) {
-            return;
-        }
-
-        $current_member = $api_client->fetch_user();
+        $current_member = json_decode($user->getPatreonData(), true);
 
         if ($current_member != null && isset($current_member['included'])) {
-            $attrs = $current_member['included']['attributes'];
-            if (count($attrs) > 0) {
-                $attr = array_pop($attrs);
+            $included = array_pop($current_member['included']);
+            $attr = $included['attributes'];
 
-                if ($attr["patron_status"] == "active_patron") {
-                    switch ($attr["currently_entitled_amount_cents"]) {
-                        case 600:
-                            $user->addRole('ROLE_PREMIUM_LVL3');
-                            break;
-                        case 300:
-                            $user->addRole('ROLE_PREMIUM_LVL2');
-                            break;
-                        case 100:
-                            $user->addRole('ROLE_PREMIUM_LVL1');
-                            break;
-                    }
-                } else {
-                    $user->removeRole('ROLE_PREMIUM_LVL3');
-                    $user->removeRole('ROLE_PREMIUM_LVL2');
-                    $user->removeRole('ROLE_PREMIUM_LVL1');
+            if ($attr["patron_status"] == "active_patron") {
+                switch ($attr["currently_entitled_amount_cents"]) {
+                    case 600:
+                        $user->addRole('ROLE_PREMIUM_LVL3');
+                        break;
+                    case 300:
+                        $user->addRole('ROLE_PREMIUM_LVL2');
+                        break;
+                    case 100:
+                        $user->addRole('ROLE_PREMIUM_LVL1');
+                        break;
                 }
-
-                $userRepo->add($user);
+            } else {
+                $user->removeRole('ROLE_PREMIUM_LVL3');
+                $user->removeRole('ROLE_PREMIUM_LVL2');
+                $user->removeRole('ROLE_PREMIUM_LVL1');
             }
+
+
+            $this->addFlash('success',' Your membership is now up to date!');
         }
-        $this->addFlash('success',' Your membership is now up to date!');
+        $userRepo->add($user);
     }
 
     #[Route(path: '/user', name: 'user')]
