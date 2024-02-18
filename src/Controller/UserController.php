@@ -298,6 +298,10 @@ class UserController extends AbstractController
     #[Route(path: '/user/app-and-premium', name: 'user_applications')]
     public function ApplicationsAndPremium(Request $request, UtilisateurRepository $userRepo): Response
     {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
         $this->PatreonAction($request, $userRepo);
 
         return $this->render('user/application.html.twig', []);
