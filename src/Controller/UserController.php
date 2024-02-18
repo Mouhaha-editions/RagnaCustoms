@@ -352,10 +352,11 @@ class UserController extends AbstractController
 
         $current_member = $api_client->fetch_user();
 
-        if ($current_member != null && isset($current_member['data']) && isset($current_member['data']['included'])) {
-            $attrs = $current_member['data']['included']['attributes'];
+        if ($current_member != null && isset($current_member['included'])) {
+            $attrs = $current_member['included']['attributes'];
             if (count($attrs) > 0) {
                 $attr = array_pop($attrs);
+
                 if ($attr["patron_status"] == "active_patron") {
                     switch ($attr["currently_entitled_amount_cents"]) {
                         case 600:
@@ -373,9 +374,11 @@ class UserController extends AbstractController
                     $user->removeRole('ROLE_PREMIUM_LVL2');
                     $user->removeRole('ROLE_PREMIUM_LVL1');
                 }
+
                 $userRepo->add($user);
             }
         }
+        $this->addFlash('success',' Your membership is now up to date!');
     }
 
     #[Route(path: '/user', name: 'user')]
