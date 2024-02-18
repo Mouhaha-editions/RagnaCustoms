@@ -7,9 +7,9 @@ use App\Entity\Utilisateur;
 use App\Enum\ENotification;
 use App\Repository\NotificationRepository;
 
-class NotificationService
+readonly class NotificationService
 {
-    public function __construct(private readonly NotificationRepository $notificationRepository)
+    public function __construct(private NotificationRepository $notificationRepository)
     {
     }
 

@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
@@ -312,8 +313,9 @@ class UserController extends AbstractController
             );
             $tokens = $oauth_client->get_tokens(
                 $_GET['code'],
-                $this->generateUrl('user_applications', [], UrlGeneratorInterface::ABS_URL)
+                $this->generateUrl('user_applications', [], UrlGeneratorInterface::ABSOLUTE_URL)
             );
+
             if (!isset($tokens['error'])) {
                 $access_token = $tokens['access_token'];
                 $refresh_token = $tokens['refresh_token'];
@@ -329,22 +331,25 @@ class UserController extends AbstractController
                 // and use the final redirect url to redirect your user to the relevant unlocked content or feature in your site/app.
                 $api_client = new API($user->getPatreonAccessToken());
                 $current_member = $api_client->fetch_user();
-
+                $user->setPatreonData($current_member);
 
                 $userRepo->add($user);
             }
         }
+
         if ($user->getPatreonAccessToken()) {
             try {
                 $api_client = new API($user->getPatreonAccessToken());
                 $user->setPatreonData(json_encode($api_client->fetch_user()));
                 $userRepo->add($user);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
             }
         }
+
         if (!isset($api_client)) {
             return;
         }
+
         $current_member = $api_client->fetch_user();
 
         if ($current_member != null && isset($current_member['data']) && isset($current_member['data']['included'])) {

@@ -6,31 +6,16 @@ use App\Entity\Song;
 use App\Entity\SongRequest;
 use App\Entity\Vote;
 
-class DiscordService
+readonly class DiscordService
 {
-
-    private $webhookModerator;
-    private $webhookRanked;
-    private $webhookRequest;
-    /** @var string */
-    private $webhookUrl;
-    private $webhookUrlUpdate;
-    private $webhookWipUrl;
-
     public function __construct(
-        string $webhookUrl,
-        string $webhookUrlUpdate,
-        string $webhookWipUrl,
-        string $webhookModerator,
-        string $webhookRequest,
-        string $webhookRanked
+        private string $webhookUrl,
+        private string $webhookUrlUpdate,
+        private string $webhookWipUrl,
+        private string $webhookModerator,
+        private string $webhookRequest,
+        private string $webhookRanked
     ) {
-        $this->webhookUrl = $webhookUrl;
-        $this->webhookUrlUpdate = $webhookUrlUpdate;
-        $this->webhookWipUrl = $webhookWipUrl;
-        $this->webhookModerator = $webhookModerator;
-        $this->webhookRequest = $webhookRequest;
-        $this->webhookRanked = $webhookRanked;
     }
 
     public function sendRequestSongMessage(SongRequest $song)

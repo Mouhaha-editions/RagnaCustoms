@@ -6,13 +6,11 @@ namespace App\Service;
 
 use App\Entity\Utilisateur;
 
-class MembershipService
+readonly class MembershipService
 {
-    private GrantedService $grantedService;
 
-    public function __construct(GrantedService $grantedService)
+    public function __construct(private GrantedService $grantedService)
     {
-        $this->grantedService = $grantedService;
     }
 
     public function  displayUsername(Utilisateur $user, bool $withPrefix = true)

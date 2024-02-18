@@ -8,16 +8,9 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 
 class GrantedService
 {
-    private $accessDecisionManager;
 
-    /**
-     * Constructor
-     *
-     * @param AccessDecisionManagerInterface $accessDecisionManager
-     */
-    public function __construct(AccessDecisionManagerInterface $accessDecisionManager)
+    public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
     {
-        $this->accessDecisionManager = $accessDecisionManager;
     }
 
     public function isGranted(?Utilisateur $user, $attributes, $object = null)

@@ -7,6 +7,7 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-curl": "*",
+        "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-iconv": "*",
         "ext-json": "*",
@@ -61,12 +62,10 @@
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/markdown-extra": "^3.3",
         "twig/twig": "^2.12|^3.0",
-        "wohali/oauth2-discord-new": "^1.1",
-      "ext-fileinfo": "*"
+        "wohali/oauth2-discord-new": "^1.1"
     },
     "require-dev": {
         "dbrekelmans/bdi": "^1.0",
-        "phpunit/phpunit": "^9.5",
         "rector/rector": "^0.15.0",
         "symfony/browser-kit": "7.0.*",
         "symfony/css-selector": "7.0.*",

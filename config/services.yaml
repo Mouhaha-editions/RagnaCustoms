@@ -39,6 +39,10 @@ services:
         resource: '../vendor/pkshetlie/pagination-bundle/Service'
         tags: ['pkshetlie.pagination']
 
+    App\Service\PatreonService:
+        arguments:
+            $clientId : '%env(resolve:PATREON_CLIENT_ID)%'
+            $clientSecret : '%env(resolve:PATREON_CLIENT_SECRET)%'
 
     App\Service\DiscordService:
         arguments:
