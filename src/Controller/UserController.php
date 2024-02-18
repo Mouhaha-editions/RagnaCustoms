@@ -19,6 +19,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Patreon\API;
 use Patreon\OAuth;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
@@ -306,63 +307,65 @@ class UserController extends AbstractController
     {
         /** @var Utilisateur $user */
         $user = $this->getUser();
-        if ($request->get('code')) {
-            $oauth_client = new OAuth(
-                $this->getParameter('patreon_client_id'),
-                $this->getParameter('patreon_client_secret')
-            );
-            $tokens = $oauth_client->get_tokens(
-                $_GET['code'],
-                $this->generateUrl('user_applications', [], UrlGeneratorInterface::ABSOLUTE_URL)
-            );
+        if (!$user) {
+            $this->addFlash('error', 'User non reconnu');
 
-            if (!isset($tokens['error'])) {
-                $access_token = $tokens['access_token'];
-                $refresh_token = $tokens['refresh_token'];
-// Here, you should save the access and refresh tokens for this user somewhere.
-// Conceptually this is the point either you link an existing user of your app with his/her Patreon account,
-// or, if the user is a new user, create an account for him or her in your app, log him/her in,
-// and then link this new account with the Patreon account.
-// More or less a social login logic applies here.
-
-                $user->setPatreonAccessToken($access_token);
-                $user->setPatreonRefreshToken($refresh_token);
-                // Here you can decode the state var returned from Patreon,
-                // and use the final redirect url to redirect your user to the relevant unlocked content or feature in your site/app.
-                $api_client = new API($user->getPatreonAccessToken());
-                $current_member = $api_client->fetch_user();
-                $user->setPatreonData(json_encode($current_member));
-            }
+            return;
         }
+        try {
+            if ($request->get('code')) {
+                $oauth_client = new OAuth(
+                    $this->getParameter('patreon_client_id'),
+                    $this->getParameter('patreon_client_secret')
+                );
 
-        $current_member = json_decode($user->getPatreonData(), true);
+                $tokens = $oauth_client->get_tokens(
+                    $_GET['code'],
+                    $this->generateUrl('user_applications', [], UrlGeneratorInterface::ABSOLUTE_URL)
+                );
 
-        if ($current_member != null && isset($current_member['included'])) {
-            $included = array_pop($current_member['included']);
-            $attr = $included['attributes'];
-
-            if ($attr["patron_status"] == "active_patron") {
-                switch ($attr["currently_entitled_amount_cents"]) {
-                    case 600:
-                        $user->addRole('ROLE_PREMIUM_LVL3');
-                        break;
-                    case 300:
-                        $user->addRole('ROLE_PREMIUM_LVL2');
-                        break;
-                    case 100:
-                        $user->addRole('ROLE_PREMIUM_LVL1');
-                        break;
+                if (!isset($tokens['error'])) {
+                    $access_token = $tokens['access_token'];
+                    $refresh_token = $tokens['refresh_token'];
+                    $user->setPatreonAccessToken($access_token);
+                    $user->setPatreonRefreshToken($refresh_token);
+                    $api_client = new API($user->getPatreonAccessToken());
+                    $current_member = $api_client->fetch_user();
+                    $user->setPatreonData(json_encode($current_member));
                 }
-            } else {
-                $user->removeRole('ROLE_PREMIUM_LVL3');
-                $user->removeRole('ROLE_PREMIUM_LVL2');
-                $user->removeRole('ROLE_PREMIUM_LVL1');
+
+                $current_member = json_decode($user->getPatreonData(), true);
+
+                if ($current_member != null && isset($current_member['included'])) {
+                    $included = array_pop($current_member['included']);
+                    $attr = $included['attributes'];
+
+                    if ($attr["patron_status"] == "active_patron") {
+                        switch ($attr["currently_entitled_amount_cents"]) {
+                            case 600:
+                                $user->addRole('ROLE_PREMIUM_LVL3');
+                                break;
+                            case 300:
+                                $user->addRole('ROLE_PREMIUM_LVL2');
+                                break;
+                            case 100:
+                                $user->addRole('ROLE_PREMIUM_LVL1');
+                                break;
+                        }
+                    } else {
+                        $user->removeRole('ROLE_PREMIUM_LVL3');
+                        $user->removeRole('ROLE_PREMIUM_LVL2');
+                        $user->removeRole('ROLE_PREMIUM_LVL1');
+                    }
+
+
+                    $this->addFlash('success', ' Your membership is now up to date!');
+                }
+                $userRepo->add($user);
             }
-
-
-            $this->addFlash('success',' Your membership is now up to date!');
+        } catch (Exception $e) {
+            $this->addFlash('error', $e->getMessage());
         }
-        $userRepo->add($user);
     }
 
     #[Route(path: '/user', name: 'user')]
@@ -474,7 +477,8 @@ class UserController extends AbstractController
     }
 
     #[Route(path: '/user/downloads/clear', name: 'app_downloads_list_clear')]
-    public function downloadsClear(EntityManagerInterface $entityManager): Response {
+    public function downloadsClear(EntityManagerInterface $entityManager): Response
+    {
         $entityManager->createQuery('DELETE FROM App\Entity\DownloadCounter d  WHERE d.user = :user')
             ->setParameter('user', $this->getUser())
             ->execute();
