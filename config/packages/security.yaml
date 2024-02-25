@@ -1,4 +1,5 @@
 security:
+    #enable_authenticator_manager: true
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
@@ -20,6 +21,17 @@ security:
                 class: App\Entity\Utilisateur
                 property: username
     firewalls:
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -51,6 +63,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
+        - { path: ^/api/doc,       roles: PUBLIC_ACCESS }
+        - { path: ^/api$,       roles: PUBLIC_ACCESS }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin, roles: ROLE_MODERATOR }
         - { path: ^/ranking-song/, roles: ROLE_MODERATOR }
         - { path: ^/user/downloads, roles: ROLE_USER }

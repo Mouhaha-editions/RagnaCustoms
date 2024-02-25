@@ -2,75 +2,64 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\SongDifficultyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use function PHPUnit\Framework\fileExists;
 
 #[ApiResource(
-    collectionOperations: [
-        "get",
-//        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
-    ],
-    itemOperations: [
-        "get",
-//        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
-    ],
-    normalizationContext: ['groups' => ['read']])]
+    operations: [new GetCollection()],
+    normalizationContext: ['groups' => ['get']],
+    denormalizationContext: ['groups' => ['get']],
+    security: "is_granted('ROLE_USER')"
+)]
 #[ORM\Entity(repositoryClass: SongDifficultyRepository::class)]
 class SongDifficulty
 {
-    #[Groups("read")]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
-    #[Groups("read")]
     #[ORM\Column(type: 'float', nullable: true)]
     private $NotePerSecond;
-    #[Groups("read")]
+    #[Groups(['get'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $difficulty;
-    #[Groups("read")]
+
     #[ORM\ManyToOne(targetEntity: DifficultyRank::class, inversedBy: 'songDifficulties')]
     private $difficultyRank;
-    #[Groups("read")]
     #[ORM\Column(type: 'integer')]
     private $noteJumpMovementSpeed;
-    #[Groups("read")]
     #[ORM\Column(type: 'integer')]
     private $noteJumpStartBeatOffset;
-    #[Groups("read")]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $notesCount;
 
-    #[Groups("read")]
+    #[Groups(['get'])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     #[ORM\ManyToOne(targetEntity: Song::class, inversedBy: 'songDifficulties', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private $song;
 
-    #[Groups("read")]
     #[ORM\Column(type: 'float', nullable: false)]
     private $theoricalMaxScore;
 
-    #[Groups("read")]
     #[ORM\Column(type: 'float', nullable: false)]
     private $theoricalMinScore;
 
-    #[Groups("read")]
+    #[Groups(['get'])]
     #[ORM\Column(type: 'boolean', nullable: false)]
     private $isRanked;
 
     #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'songDifficulty')]
     private $scores;
 
+    // #[Groups(['get'])]
     #[ORM\OneToMany(targetEntity: ScoreHistory::class, mappedBy: 'songDifficulty')]
     private $scoreHistories;
 
@@ -98,6 +87,12 @@ class SongDifficulty
         $this->song = $song;
 
         return $this;
+    }
+
+    #[Groups(['get'])]
+    public function getLevel(): ?int
+    {
+        return $this->getDifficultyRank()->getLevel();
     }
 
     public function getDifficultyRank(): ?DifficultyRank

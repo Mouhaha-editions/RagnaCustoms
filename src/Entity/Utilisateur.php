@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Enum\EEmail;
 use App\Enum\ENotification;
 use App\Repository\UtilisateurRepository;
@@ -16,7 +17,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-
+#[ApiResource(operations:[],
+    denormalizationContext: ['groups' => ['user:read']],
+)]
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'Username already used')]
 #[UniqueEntity(fields: ['email'], message: 'Email already used')]
@@ -24,10 +27,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableEntity;
 
-    #[Groups("read")]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user:read'])]
     private ?int $id;
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $emailPreference = null;
@@ -37,7 +40,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private $apiKey;
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $certified;
-    #[Groups("read")]
     #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'utilisateurs')]
     private $country;
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -118,8 +120,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $steamCommunityId;
-    #[Groups("read")]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Groups(['user:read'])]
     private $username;
     #[ORM\OneToMany(targetEntity: VoteCounter::class, mappedBy: 'user', orphanRemoval: true)]
     private $voteCounter;

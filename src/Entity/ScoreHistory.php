@@ -2,61 +2,96 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Controller\WanadevApiController;
 use App\Repository\ScoreHistoryRepository;
 use App\Service\StatisticService;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+
+#[ApiResource(
+    operations: [new GetCollection()],
+    normalizationContext: ['groups' => ['get']],
+    denormalizationContext: ['groups' => ['get']],
+    security: "is_granted('ROLE_USER')"
+)]
 #[ORM\Entity(repositoryClass: ScoreHistoryRepository::class)]
+#[ApiFilter(SearchFilter::class, properties: ['songDifficulty' => 'exact'] )]
+#[ApiFilter(DateFilter::class, properties: ['updatedAt'] )]
+
 class ScoreHistory
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    #[Groups(['get'])]
+    private ?int $id;
 
     use TimestampableEntity;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $comboBlue;
+    #[Groups(['get'])]
+    private ?int $comboBlue;
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $comboYellow;
+    #[Groups(['get'])]
+    private ?int $comboYellow;
     #[ORM\Column(type: 'text', nullable: true)]
-    private $country;
+    private ?string $country;
     #[ORM\Column(type: 'text', nullable: true)]
-    private $dateRagnarock;
+    private ?string $dateRagnarock;
     #[ORM\Column(type: 'text', nullable: true)]
-    private $extra;
+    private ?string $extra;
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $hit;
+    #[Groups(['get'])]
+    private ?int $hit;
     #[ORM\Column(type: 'decimal', precision: 20, scale: 6, nullable: true)]
-    private $hitAccuracy;
+    #[Groups(['get'])]
+    private ?float $hitAccuracy;
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $hitDeltaAverage;
+    #[Groups(['get'])]
+    private ?int $hitDeltaAverage;
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $hitPercentage;
+    #[Groups(['get'])]
+    private ?int $hitPercentage;
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $missed;
+    #[Groups(['get'])]
+    private ?int $missed;
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $percentageOfPerfects;
+    #[Groups(['get'])]
+    private ?int $percentageOfPerfects;
     #[ORM\Column(type: 'text', nullable: true)]
-    private $plateform;
+    #[Groups(['get'])]
+    private ?string $plateform;
     #[ORM\Column(type: 'float', nullable: true)]
-    private $rawPP;
+    private ?float $rawPP;
     #[ORM\Column(type: 'float')]
-    private $score;
+    #[Groups(['get'])]
+    private float $score;
     #[ORM\Column(type: 'text', nullable: true)]
-    private $session;
+    private ?string $session;
     #[ORM\ManyToOne(targetEntity: SongDifficulty::class, inversedBy: 'scoreHistories')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private $songDifficulty;
+    private SongDifficulty $songDifficulty;
     #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'scoreHistories')]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private Utilisateur $user;
     #[ORM\Column(type: 'text', nullable: true)]
-    private $userRagnarock;
+    #[Groups(['get'])]
+    private ?string $userRagnarock;
+
+    #[Groups(['get'])]
+    public function getUsername(): string
+    {
+        return $this->getUser()->getUsername();
+    }
 
     public function getId(): ?int
     {
