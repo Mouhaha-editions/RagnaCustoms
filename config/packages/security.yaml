@@ -66,6 +66,7 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
         - { path: ^/api/doc,       roles: PUBLIC_ACCESS }
+        - { path: ^/api/song,       roles: PUBLIC_ACCESS }
         - { path: ^/api$,       roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin, roles: ROLE_MODERATOR }
