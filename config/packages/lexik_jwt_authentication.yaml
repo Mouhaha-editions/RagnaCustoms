@@ -3,6 +3,6 @@ lexik_jwt_authentication:
     public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
     pass_phrase: '%env(JWT_PASSPHRASE)%'
     api_platform:
-        check_path: /api/login_check
+        check_path: /rest-api/login_check
         username_path: username
         password_path: password
