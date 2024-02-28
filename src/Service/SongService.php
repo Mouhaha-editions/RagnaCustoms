@@ -1171,6 +1171,7 @@ class SongService
                 ->andWhere($this->em->getExpressionBuilder()->eq('('.$qb->getDQL().')', '0'))
                 ->andWhere($this->em->getExpressionBuilder()->eq('('.$qbMapper->getDQL().')', '0'))
                 ->andWhere('score.user = :user')
+                ->andWhere('s.wip = false')
                 ->setParameter('user', $user)
                 ->orderBy('score.updatedAt', 'DESC')
                 ->setFirstResult(0)
