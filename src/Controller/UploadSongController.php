@@ -4,9 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Song;
 use App\Entity\SongRequest;
-use App\Entity\Utilisateur;
 use App\Form\SongType;
-use App\Form\UtilisateurAutocompleteField;
 use App\Repository\SongRepository;
 use App\Service\DiscordService;
 use App\Service\ScoreService;
@@ -14,7 +12,6 @@ use App\Service\SongService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use DoctrineExtensions\Query\Mysql\Date;
 use Exception;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -93,9 +90,9 @@ class UploadSongController extends AbstractController
                     "help" => "Upload a .zip file (max 15Mo) containing all the files for the map.",
                     "constraints" => [
                         new File([
-                            'maxSize' => '15M',
-                            'maxSizeMessage' => 'You can upload up to 50Mo with a premium account Tier 2',
-                        ]),
+                            'maxSize' => '15m',
+                            'maxSizeMessage' => 'You can upload up to 15Mo with a premium account Tier 2',
+                        ], '15m'),
                     ],
                 ]);
         } else {
@@ -106,9 +103,9 @@ class UploadSongController extends AbstractController
                     "help" => "Upload a .zip file (max 10Mo) containing all the files for the map, upgrade your Premium member Tier 2 to upload more.",
                     "constraints" => [
                         new File([
-                            'maxSize' => '10M',
+                            'maxSize' => '10m',
                             'maxSizeMessage' => 'You can upload up to 10Mo with a premium account Tier 1',
-                        ]),
+                        ], '10m'),
                     ],
                 ]);
             } else {
@@ -118,9 +115,9 @@ class UploadSongController extends AbstractController
                     "help" => "Upload a .zip file (max 8Mo) containing all the files for the map.",
                     "constraints" => [
                         new File([
-                            'maxSize' => '8M',
+                            'maxSize' => '8m',
                             'maxSizeMessage' => 'You can upload up to 8Mo without a premium account',
-                        ]),
+                        ], '8m'),
                     ],
                 ]);
             }
@@ -129,10 +126,16 @@ class UploadSongController extends AbstractController
         $isWip = $song->getWip();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $song->addMapper($this->getUser());
-
+        if ($form->isSubmitted()) {
             try {
+                if (!$form->isValid()) {
+                    throw new Exception(
+                        'An error occurs, please check the form for more informations.'
+                    );
+                }
+
+                $song->addMapper($this->getUser());
+
                 if (!count($song->getBestPlatform())) {
                     throw new Exception(
                         'Select on which version your map is planed to be played (VR and/or Viking On Tour)'
@@ -239,8 +242,12 @@ class UploadSongController extends AbstractController
     }
 
     #[Route(path: '/upload/song/delete/{id}', name: 'delete_song')]
-    public function delete(Song $song, EntityManagerInterface $em, DiscordService $discordService, SongService $songService)
-    {
+    public function delete(
+        Song $song,
+        EntityManagerInterface $em,
+        DiscordService $discordService,
+        SongService $songService
+    ) {
         if ($song->getMappers()->contains($this->getUser()) && !$song->isRanked()) {
             $songService->cleanUp($song);
             $discordService->deletedSong($song);

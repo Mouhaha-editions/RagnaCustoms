@@ -26,6 +26,9 @@ use Exception;
 use FFMpeg\FFProbe;
 use Intervention\Image\ImageManagerStatic as Image;
 use Pkshetlie\PhpUE\FCrc;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +37,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\File;
 use ZipArchive;
 
 class SongService
@@ -43,10 +47,10 @@ class SongService
         private readonly EntityManagerInterface $em,
         private readonly MailerInterface $mailer,
         private readonly DiscordService $discordService,
-        private readonly ScoreService $scoreService,
         private readonly UrlGeneratorInterface $router,
         private readonly NotificationService $notificationService,
-        private readonly SongRepository $songRepository
+        private readonly SongRepository $songRepository,
+        private readonly Security $security
     ) {
     }
 
@@ -865,13 +869,32 @@ class SongService
             $folder = $this->kernel->getProjectDir()."/public/tmp-song/";
             $unzipFolder = $folder.uniqid();
             @mkdir($unzipFolder);
+
             if ($request->files->get('file') != null) {
+                /** @var UploadedFile $file */
                 $file = $request->files->get('file');
+                if ($this->security->isGranted('ROLE_PREMIUM_LVL2')) {
+                    if ($file->getSize() > 15 * 1000 * 1000) {
+                        throw new Exception('You can upload up to 15Mo with a premium account Tier 2');
+                    }
+                } else {
+                    if ($this->security->isGranted('ROLE_PREMIUM_LVL1')) {
+                        if ($file->getSize() > 10 * 1000 * 1000) {
+                            throw new Exception('You can upload up to 10Mo with a premium account Tier 1');
+                        }
+                    } else {
+                        if ($file->getSize() > 8 * 1000 * 1000) {
+                            throw new Exception('You can upload up to 10Mo with a premium account Tier 1');
+                        }
+                    }
+                }
+
                 $file->move($unzipFolder, $file->getClientOriginalName());
                 $unzippableFile = $unzipFolder."/".$file->getClientOriginalName();
             } else {
                 return false;
             }
+
             $this->process($unzippableFile, $unzipFolder, $song, true);
             $this->emulatorFileDispatcher($song, true);
             $this->coverOptimisation($song);
