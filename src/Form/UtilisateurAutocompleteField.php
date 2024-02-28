@@ -40,14 +40,14 @@ class UtilisateurAutocompleteField extends AbstractType
             },
             'tom_select_options' => [
                 'openOnFocus'=>false,
-                'placeholder'=>'Enter mapper name (he/she need to publish at least one map to appear)',
+                'placeholder'=>'Enter a mapper’s name (they need to publish at least one map to appear in the list)',
                 'hidePlaceholder'=>true,
             ],
             'multiple' => true,
             // 'autocomplete'=>true,
             "label" => 'Mapper(s)',
-            'placeholder' => 'Enter mapper name (he/she need to publish at least one map to appear)',
-            'help' => 'Be carefull others mappers get same rights as you on the song',
+            'placeholder' => 'Enter a mapper’s name (they need to publish at least one map to appear in the list)',
+            'help' => 'Be careful: mappers added here will get the same permissions as you on the map',
             'required' => false,
 
             //'security' => 'ROLE_SOMETHING',

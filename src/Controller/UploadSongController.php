@@ -138,7 +138,7 @@ class UploadSongController extends AbstractController
 
                 if (!count($song->getBestPlatform())) {
                     throw new Exception(
-                        'Select on which version your map is planed to be played (VR and/or Viking On Tour)'
+                        'Select on which version your map is meant to be played (VR and/or Vikings on Tour)'
                     );
                 }
 

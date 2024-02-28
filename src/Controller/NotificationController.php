@@ -68,12 +68,14 @@ class NotificationController extends AbstractController
             ->add('emailPreference', EnumType::class, [
                 'class' => EEmail::class,
                 "choice_label" => "label",
+                'label' => 'Email preferences',
                 'multiple' => true,
                 'expanded' => true,
             ])
             ->add('notificationPreference', EnumType::class, [
                 'class' => ENotification::class,
                 "choice_label" => "label",
+                'label' => 'Notification preferences',
                 'multiple' => true,
                 'expanded' => true,
             ]);
