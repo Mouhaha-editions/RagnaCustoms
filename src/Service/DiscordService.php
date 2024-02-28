@@ -293,11 +293,6 @@ readonly class DiscordService
 
     public function sendUpdatedSongMessage(Song $song)
     {
-        if (!$song->isNotificationDone()) {
-            return 0;
-        }
-        $timestamp = date("c", strtotime("now"));
-
         $json_data = json_encode([
             // Message
 //            "content" => "Hi vikings, there is a new map",

@@ -5,14 +5,14 @@
            data-no-swup="true"
            data-no-scroll="true"
            href="ragnac://install/{{ song.id }}"
-           class="menuItem text-info one-click fas fa-download fa-2x">
+           class="menuItem text-success one-click fas fa-download fa-2x">
         </a>
         <a data-toggle="tooltip"
            title="Download zip file"
            data-no-swup="true"
            data-no-scroll="true"
            href="{{ url("song_direct_download",{id:song.id}) }}"
-           class="ddl text-success text-uppercase menuItem fas fa-file-zipper fa-2x">
+           class="ddl text-info text-uppercase menuItem fas fa-file-zipper fa-2x">
         </a>
 
         <a data-toggle="tooltip"
@@ -32,5 +32,6 @@
         <a class="menuItem"></a>
         <a class="menuItem"></a>
     </div>
+
     <a href="#" title="open menu" class="center fa fa-bars fa-2x"></a>
 </div>

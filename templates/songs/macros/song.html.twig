@@ -1,181 +1,188 @@
 {% macro voteItBox(song) %}
-    <div class="featured-box row">
-        <div class="col-6 pr-0">
-                <a href="{{ url('song_detail',{slug:song.slug}) }}">
-            <figure class="card-cover">
-                    <img src="{{ song.cover }}" class="img-fluid shiny" alt="cover"/>
-                <div class="level-list">
-                    {% for diff in song.songDifficulties %}
-                        <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
-                             style="background-color:#{{ diff.difficultyRank.color }};">
-                            {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked"
-                                                     style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
-                            <span>{{ diff.difficultyRank.level }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
-            </figure>
-                </a>
-        </div>
-        <div class="col-6">
-            <div class="title one-line">
-                <a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song|raw }}</a>
-            </div>
-            <div class="author pb-2 one-line">
-                {% include 'songs/partial/artists.html.twig' with {song : song} %}
-            </div>
-            <div class="mapper pb-2 one-line">
-               {% include 'songs/partial/mappers.html.twig' with {song:song} %}
-            </div>
-            {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
-
-            <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-3 mb-2 song-review"
-                    data-toggle="modal"
-                    data-target="#reviewSong"
-                    data-refresh="true"
-                    data-url="{{ url('song_vote_review',{id:song.id}) }}"
-                    data-song-id="{{ song.id }}"
-            >{{ "Write a review"|trans }}</button>
-        </div>
+  <div class="featured-box row">
+    <div class="col-6 pr-0">
+      <a href="{{ url('song_detail',{slug:song.slug}) }}">
+        <figure class="card-cover">
+          <img src="{{ song.cover }}" class="img-fluid shiny" alt="cover"/>
+          <div class="level-list">
+            {% for diff in song.songDifficulties %}
+              <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                   style="background-color:#{{ diff.difficultyRank.color }};">
+                {% if diff.isRanked %}
+                  <i class="fas fa-star"
+                     data-toggle="tooltip"
+                     title="Ranked"
+                     style="color:#{{ diff.difficultyRank.color }};">
+                  </i>
+                {% endif %}
+                <span>{{ diff.difficultyRank.level }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </figure>
+      </a>
     </div>
+    <div class="col-6">
+      <div class="title one-line">
+        <a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song|raw }}</a>
+      </div>
+      <div class="author pb-2 one-line">
+        {% include 'songs/partial/artists.html.twig' with {song : song} %}
+      </div>
+      <div class="mapper pb-2 one-line">
+        {% include 'songs/partial/mappers.html.twig' with {song:song} %}
+      </div>
+      {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
+
+      <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-3 mb-2 song-review"
+              data-toggle="modal"
+              data-target="#reviewSong"
+              data-refresh="true"
+              data-url="{{ url('song_vote_review',{id:song.id}) }}"
+              data-song-id="{{ song.id }}"
+      >{{ "Write a review"|trans }}</button>
+    </div>
+  </div>
 {% endmacro %}
 {% macro featuredBox(song) %}
-    <div class="featured-box row">
-        <div class="col-6 pr-0">
-                <a href="{{ url('song_detail',{slug:song.slug}) }}">
-            <figure class="card-cover">
-                    <img src="{{ song.cover }}" class="img-fluid shiny" alt="cover"/>
-                <div class="level-list">
-                    {% for diff in song.songDifficulties %}
-                        <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
-                             style="background-color:#{{ diff.difficultyRank.color }};">
-                            {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked"
-                                                     style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
-                            <span>{{ diff.difficultyRank.level }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
-            </figure>
-                </a>
-        </div>
-        <div class="col-6">
-
-            <div class="title one-line">
-                <a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song|raw }}</a>
-            </div>
-            <div class="author pb-3 one-line">
-                {% include 'songs/partial/artists.html.twig' with {song : song} %}
-            </div>
-            <div class="mapper pb-3 one-line">
-               {% include 'songs/partial/mappers.html.twig' with {song:song} %}
-            </div>
-            {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
-
-            <div class="pt-3">
-                <a href="#"
-                   data-toggle="modal"
-                   data-target="#previewSong"
-                   data-refresh="true"
-                   data-url="{{ url("partial_preview_song",{id:song.id}) }}"
-                   class="ajax-load btn btn-sm btn-bg-empty btn-warning">
-                    <i class="fas fa-play-circle"></i> Preview
-                </a>
-            </div>
-            <div class="pt-3 d-flex buttons">
-
-                <div><a data-no-swup="true" href="{{ url("song_direct_download",{id:song.id}) }}"
-                        class="btn btn-info btn-sm btn-download-zip"><i class="fas fa-download"></i> {{ "Zip"|trans }}
-                    </a></div>
-                <div class="ml-2"><a data-no-swup="true" href="ragnac://install/{{ song.id }}"
-                                     class="btn btn-sm btn-success btn-download-1-click"><i
-                                class="fas fa-download"></i> {{ "1 click"|trans }}</a></div>
-            </div>
-        </div>
+  <div class="featured-box row">
+    <div class="col-6 pr-0">
+      <a href="{{ url('song_detail',{slug:song.slug}) }}">
+        <figure class="card-cover">
+          <img src="{{ song.cover }}" class="img-fluid shiny" alt="cover"/>
+          <div class="level-list">
+            {% for diff in song.songDifficulties %}
+              <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                   style="background-color:#{{ diff.difficultyRank.color }};">
+                {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked"
+                                         style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                <span>{{ diff.difficultyRank.level }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </figure>
+      </a>
     </div>
+    <div class="col-6">
+
+      <div class="title one-line">
+        <a href="{{ url('song_detail',{slug:song.slug}) }}" itemprop="name">{{ song|raw }}</a>
+      </div>
+      <div class="author pb-3 one-line">
+        {% include 'songs/partial/artists.html.twig' with {song : song} %}
+      </div>
+      <div class="mapper pb-3 one-line">
+        {% include 'songs/partial/mappers.html.twig' with {song:song} %}
+      </div>
+      {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
+
+      <div class="pt-3">
+        <a href="#"
+           data-toggle="modal"
+           data-target="#previewSong"
+           data-refresh="true"
+           data-url="{{ url("partial_preview_song",{id:song.id}) }}"
+           class="ajax-load btn btn-sm btn-bg-empty btn-warning">
+          <i class="fas fa-play-circle"></i> {{ "Preview"|trans }}
+        </a>
+      </div>
+      <div class="pt-3 d-flex buttons">
+        <div class="ml-2">
+          <a data-no-swup="true" href="ragnac://install/{{ song.id }}"
+             class="btn btn-sm btn-success btn-download-1-click"><i
+                class="fas fa-download"></i> {{ "1 click"|trans }}</a></div>
+
+        <div class="ml-2"><a data-no-swup="true" href="{{ url("song_direct_download",{id:song.id}) }}"
+                             class="btn btn-info btn-sm btn-download-zip"><i
+                class="fas fa-download"></i> {{ "Zip"|trans }}
+          </a></div>
+      </div>
+    </div>
+  </div>
 {% endmacro %}
 
 {% macro stats(score) %}
 
-    <table class="table table-condensed">
-        <tr>
-            <th class="text-center p-0 pr-3">
-                Combos
-            </th>
-            <th class="text-center p-0 pr-3">
-                Hit
-            </th>
-            <th class="text-center p-0">
-                Missed
-            </th>
-        </tr>
-        <tr>
-            <td class="text-center p-0 pr-3"><font
-                        color="#4b9ce2">{{ score.comboBlue }}</font> | <font
-                        color="#ffc107">{{ score.comboYellow }}</font></td>
-            <td class="text-center p-0 pr-3">
-                {{ score.hitPercentage }}%
-            </td>
-            <td class="text-center p-0">
-                {{ score.missed }}
-            </td>
-        </tr>
-    </table>
+  <table class="table table-condensed">
+    <tr>
+      <th class="text-center p-0 pr-3">
+        Combos
+      </th>
+      <th class="text-center p-0 pr-3">
+        Hit
+      </th>
+      <th class="text-center p-0">
+        Missed
+      </th>
+    </tr>
+    <tr>
+      <td class="text-center p-0 pr-3"><font
+            color="#4b9ce2">{{ score.comboBlue }}</font> | <font
+            color="#ffc107">{{ score.comboYellow }}</font></td>
+      <td class="text-center p-0 pr-3">
+        {{ score.hitPercentage }}%
+      </td>
+      <td class="text-center p-0">
+        {{ score.missed }}
+      </td>
+    </tr>
+  </table>
 
 {% endmacro %}
 
 {% macro statsPP(score) %}
 
-    <table class="table table-sm table-condensed">
-        <tr>
-            <th class="text-center p-0 pr-3">
-                Combos
-            </th>
-            <th class="text-center p-0 pr-3">
-                Perfect
-            </th>
-        </tr>
-        <tr>
-            <td class="text-center p-0 pr-3"><font
-                        color="#4b9ce2">{{ score.comboBlue }}</font> | <font
-                        color="#ffc107">{{ score.comboYellow }}</font></td>
-            <td class="text-center p-0 pr-3">
-                {{ score.percentageOfPerfects }}%
-            </td>
+  <table class="table table-sm table-condensed">
+    <tr>
+      <th class="text-center p-0 pr-3">
+        Combos
+      </th>
+      <th class="text-center p-0 pr-3">
+        Perfect
+      </th>
+    </tr>
+    <tr>
+      <td class="text-center p-0 pr-3"><font
+            color="#4b9ce2">{{ score.comboBlue }}</font> | <font
+            color="#ffc107">{{ score.comboYellow }}</font></td>
+      <td class="text-center p-0 pr-3">
+        {{ score.percentageOfPerfects }}%
+      </td>
 
-        </tr>
-    </table>
+    </tr>
+  </table>
 {% endmacro %}
 
 {% macro statsZipped(score) %}
 
-    <div class="tooltip">
-        <i class="fa-solid fa-chart-line"></i>
-        <div class="tooltiptext">
-            <table class="tooltiptable">
-                <tr>
-                    <th>
-                        Combos
-                    </th>
-                    <th>
-                        Hit
-                    </th>
-                    <th>
-                        Missed
-                    </th>
-                </tr>
-                <tr>
-                    <td class="text-right"><font
-                                color="#4b9ce2">{{ score.comboBlue }}</font> | <font
-                                color="#ffc107">{{ score.comboYellow }}</font></td>
-                    <td>
-                        {{ score.hitPercentage }}%
-                    </td>
-                    <td>
-                        {{ score.missed }}
-                    </td>
-                </tr>
-            </table>
-        </div>
+  <div class="tooltip">
+    <i class="fa-solid fa-chart-line"></i>
+    <div class="tooltiptext">
+      <table class="tooltiptable">
+        <tr>
+          <th>
+            Combos
+          </th>
+          <th>
+            Hit
+          </th>
+          <th>
+            Missed
+          </th>
+        </tr>
+        <tr>
+          <td class="text-right"><font
+                color="#4b9ce2">{{ score.comboBlue }}</font> | <font
+                color="#ffc107">{{ score.comboYellow }}</font></td>
+          <td>
+            {{ score.hitPercentage }}%
+          </td>
+          <td>
+            {{ score.missed }}
+          </td>
+        </tr>
+      </table>
     </div>
+  </div>
 
 {% endmacro %}

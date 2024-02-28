@@ -343,12 +343,15 @@ class SongService
 
         $this->em->persist($song);
         $previousDiffs = [];
+
         foreach ($song->getSongDifficulties() as $difficulty) {
             $overlays = $this->em->getRepository(Overlay::class)->findBy(["difficulty" => $difficulty]);
+
             /** @var Overlay $overlay */
             foreach ($overlays as $overlay) {
                 $overlay->setDifficulty(null);
             }
+
             $previousDiffs[$difficulty->getId()] = $difficulty;
         }
 
@@ -510,18 +513,34 @@ class SongService
             $song->setWip(true);
         }
 
-        if ($this->kernel->getEnvironment() != "dev") {
-            if ($song->getWip()) {
-                /** @var Utilisateur $user */
-                foreach ($song->getMappers() as $user) {
-                    if ($new && $song->isPublished()) {
+        if ($song->getWip()) {
+            /** @var Utilisateur $user */
+            foreach ($song->getMappers() as $user) {
+                if ($new && $song->isPublished()) {
+                    /** @var FollowMapper $follower */
+                    foreach ($user->getFollowersNotifiable(
+                        ENotification::Followed_mapper_new_map_wip
+                    ) as $follower) {
+                        $this->notificationService->send(
+                            $follower->getUser(),
+                            "New song : <a href='".$this->router->generate(
+                                'song_detail',
+                                ['slug' => $song->getSlug()]
+                            )."'>[WIP] ".$song->getName()."</a> by <a href='".$this->router->generate(
+                                'mapper_profile',
+                                ['username' => $user->getUsername()]
+                            )."'>".$user->getMapperName()."</a>"
+                        );
+                    }
+                } else {
+                    if ($song->isPublished()) {
                         /** @var FollowMapper $follower */
                         foreach ($user->getFollowersNotifiable(
-                            ENotification::Followed_mapper_new_map_wip
+                            ENotification::Followed_mapper_update_map_wip
                         ) as $follower) {
                             $this->notificationService->send(
                                 $follower->getUser(),
-                                "New song : <a href='".$this->router->generate(
+                                "Song edit : <a href='".$this->router->generate(
                                     'song_detail',
                                     ['slug' => $song->getSlug()]
                                 )."'>[WIP] ".$song->getName()."</a> by <a href='".$this->router->generate(
@@ -530,43 +549,27 @@ class SongService
                                 )."'>".$user->getMapperName()."</a>"
                             );
                         }
-                    } else {
-                        if ($song->isPublished()) {
-                            /** @var FollowMapper $follower */
-                            foreach ($user->getFollowersNotifiable(
-                                ENotification::Followed_mapper_update_map_wip
-                            ) as $follower) {
-                                $this->notificationService->send(
-                                    $follower->getUser(),
-                                    "Song edit : <a href='".$this->router->generate(
-                                        'song_detail',
-                                        ['slug' => $song->getSlug()]
-                                    )."'>[WIP] ".$song->getName()."</a> by <a href='".$this->router->generate(
-                                        'mapper_profile',
-                                        ['username' => $user->getUsername()]
-                                    )."'>".$user->getMapperName()."</a>"
-                                );
-                            }
-                        }
                     }
                 }
-                $this->discordService->sendWipSongMessage($song);
-            } elseif ($new && $song->isPublished()) {
-                /** @var FollowMapper $follower */
-                foreach ($song->getMappers() as $user) {
-                    foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
-                        $this->notificationService->send(
-                            $follower->getUser(),
-                            "New song : <a href='".
-                            $this->router->generate('song_detail', ['slug' => $song->getSlug()])."'>".
-                            $song->getName()."</a> by <a href='".
-                            $this->router->generate('mapper_profile', ['username' => $user->getUsername()])."'>".
-                            $user->getMapperName()."</a>"
-                        );
-                    }
+            }
+            $this->discordService->sendWipSongMessage($song);
+        } elseif ($new && $song->isPublished()) {
+            /** @var FollowMapper $follower */
+            foreach ($song->getMappers() as $user) {
+                foreach ($user->getFollowersNotifiable(ENotification::Followed_mapper_new_map) as $follower) {
+                    $this->notificationService->send(
+                        $follower->getUser(),
+                        "New song : <a href='".
+                        $this->router->generate('song_detail', ['slug' => $song->getSlug()])."'>".
+                        $song->getName()."</a> by <a href='".
+                        $this->router->generate('mapper_profile', ['username' => $user->getUsername()])."'>".
+                        $user->getMapperName()."</a>"
+                    );
                 }
-            } else {
-                if ($song->isPublished()) {
+            }
+        } else {
+            if ($song->isPublished()) {
+                if (!$song->isNotificationDone()) {
                     $this->discordService->sendUpdatedSongMessage($song);
                     foreach ($song->getMappers() as $user) {
                         /** @var FollowMapper $follower */
@@ -584,6 +587,9 @@ class SongService
                         }
                     }
                 }
+
+                $song->setNotificationDone(true);
+                $this->em->flush();
             }
         }
     }
@@ -1182,6 +1188,7 @@ class SongService
         } catch (\Exception $e) {
             /** @todo put a sentry error */
         }
+
         return [];
     }
 }

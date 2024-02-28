@@ -14,6 +14,7 @@ use App\Service\SongService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use DoctrineExtensions\Query\Mysql\Date;
 use Exception;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -128,8 +129,9 @@ class UploadSongController extends AbstractController
         $isWip = $song->getWip();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $song->addMapper($this->getUser());
+
             try {
                 if (!count($song->getBestPlatform())) {
                     throw new Exception(
@@ -163,6 +165,7 @@ class UploadSongController extends AbstractController
                             $song->getAuthorName(),
                         ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!"))
                     );
+
                     $em = $doctrine->getManager();
                     $em->persist($song);
                     $em->flush();
@@ -178,6 +181,10 @@ class UploadSongController extends AbstractController
                             "error" => null,
                         ]),
                     ]);
+                }
+
+                if ($song->getUpdatedAt() <= (new DateTime('now'))->modify('-1 days')) {
+                    $song->setNotificationDone(false);
                 }
 
                 if ($songService->processFile($form, $song, $isWip)) {
