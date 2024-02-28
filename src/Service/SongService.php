@@ -1148,7 +1148,7 @@ class SongService
         ];
     }
 
-    public function getLastPlayedToVote(Utilisateur $user)
+    public function getLastPlayedToVote(Utilisateur $user): array
     {
         $qb = $this->em->getRepository(VoteCounter::class)
             ->createQueryBuilder('v')
@@ -1182,6 +1182,7 @@ class SongService
         } catch (\Exception $e) {
             /** @todo put a sentry error */
         }
+        return [];
     }
 }
 
