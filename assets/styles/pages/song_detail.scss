@@ -150,9 +150,11 @@
           padding: 1px 15px;
           color: #fff;
           filter: grayscale(1);
+          border:1px solid transparent;
 
           &.active {
             filter: grayscale(0);
+            border:1px solid #fff;
           }
         }
       }
