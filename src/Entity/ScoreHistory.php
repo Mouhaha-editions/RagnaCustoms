@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[ORM\Entity(repositoryClass: ScoreHistoryRepository::class)]
 #[ApiFilter(SearchFilter::class, properties: ['songDifficulty' => 'exact'] )]
-#[ApiFilter(DateFilter::class, properties: ['updatedAt'] )]
+#[ApiFilter(DateFilter::class, properties: ['updatedAt', 'createdAt'] )]
 
 class ScoreHistory
 {
