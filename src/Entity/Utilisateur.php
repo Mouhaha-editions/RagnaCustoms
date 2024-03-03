@@ -860,7 +860,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             $sum += $score->getPercentageOfPerfects();
         }
 
-        return $sum / $scores->count();
+        return (int)($sum / $scores->count());
     }
 
     public function getId(): ?int
