@@ -54,7 +54,7 @@ class ScoreHistory
     private ?int $hit;
     #[ORM\Column(type: 'decimal', precision: 20, scale: 6, nullable: true)]
     #[Groups(['get'])]
-    private ?float $hitAccuracy;
+    private ?string $hitAccuracy;
     #[ORM\Column(type: 'integer', nullable: true)]
     #[Groups(['get'])]
     private ?int $hitDeltaAverage;
