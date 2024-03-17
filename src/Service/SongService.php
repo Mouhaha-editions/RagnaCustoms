@@ -873,7 +873,11 @@ class SongService
             if ($request->files->get('file') != null) {
                 /** @var UploadedFile $file */
                 $file = $request->files->get('file');
-                if ($this->security->isGranted('ROLE_PREMIUM_LVL2')) {
+                if ($this->security->isGranted('ROLE_PREMIUM_LVL3')) {
+                    if ($file->getSize() > 30 * 1000 * 1000) {
+                        throw new Exception('You can upload up to 30Mo with a premium account Tier 3');
+                    }
+                } elseif ($this->security->isGranted('ROLE_PREMIUM_LVL2')) {
                     if ($file->getSize() > 15 * 1000 * 1000) {
                         throw new Exception('You can upload up to 15Mo with a premium account Tier 2');
                     }

@@ -73,7 +73,29 @@ class UploadSongController extends AbstractController
         ]);
 
 
-        if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
+        if ($this->isGranted('ROLE_PREMIUM_LVL3')) {
+            $form
+                ->add('programmationDate', DateTimeType::class, [
+                    'label' => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
+                    'widget' => 'single_text',
+                    'required' => true,
+                    'input' => "datetime",
+                    "empty_data" => '',
+                    'label_html' => true,
+                    'help' => "Sorry for now it's based on UTC+1 (french time) ",
+                ])
+                ->add("zipFile", FileType::class, [
+                    "mapped" => false,
+                    "required" => $song->getId() == null,
+                    "help" => "Upload a .zip file (max 30Mo) containing all the files for the map.",
+                    "constraints" => [
+                        new File([
+                            'maxSize' => '30m',
+                            'maxSizeMessage' => 'You can upload up to 15Mo with a premium account Tier 3',
+                        ], '15m'),
+                    ],
+                ]);
+        } elseif ($this->isGranted('ROLE_PREMIUM_LVL2')) {
             $form
                 ->add('programmationDate', DateTimeType::class, [
                     'label' => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning" ></i> Publishing date',
