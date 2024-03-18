@@ -49,7 +49,7 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface
             $this->utilisateurRepository->add($user);
         }
 
-        if ($user && !$user->isVerified() && $event->getRequest()->getPathInfo() != '/verify/resend') {
+        if ($user && !$user->isVerified() && !in_array($event->getRequest()->getPathInfo(), ['/verify/resend','/verify/email' ])) {
             $this->tokenStorage->setToken(null);
             // L'utilisateur est connecté mais n'est pas vérifié, vous pouvez rediriger vers une page spécifique ou une page de vérification.
             $event->setResponse(new RedirectResponse($this->router->generate('app_verify_resend_email')));
