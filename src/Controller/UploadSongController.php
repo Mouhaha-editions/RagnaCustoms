@@ -91,8 +91,8 @@ class UploadSongController extends AbstractController
                     "constraints" => [
                         new File([
                             'maxSize' => '30m',
-                            'maxSizeMessage' => 'You can upload up to 15Mo with a premium account Tier 3',
-                        ], '15m'),
+                            'maxSizeMessage' => 'You can upload up to 30Mo with a premium account Tier 3',
+                        ], '30m'),
                     ],
                 ]);
         } elseif ($this->isGranted('ROLE_PREMIUM_LVL2')) {
