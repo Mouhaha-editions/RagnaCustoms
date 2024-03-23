@@ -40,7 +40,7 @@ class ApiController extends AbstractController
     #[Route(path: '/api/check', name: 'check_api_key')]
     public function checkApiKey(Request $request, UtilisateurRepository $utilisateurRepository): Response
     {
-        $apiKey = $request->headers->get('x-api-key','none');
+        $apiKey = $request->headers->get('x-api-key', 'none');
 
         $user = $utilisateurRepository->findOneBy(['apiKey' => $apiKey]);
         if ($user) {
@@ -65,7 +65,7 @@ class ApiController extends AbstractController
                 return new Response($user->getApiKey());
             }
 
-            $user->setCountApiAttempt((int)$user->getCountApiAttempt() + 1);
+            $user->setCountApiAttempt((int) $user->getCountApiAttempt() + 1);
             $user->setLastApiAttempt(new DateTime());
             $utilisateurRepository->add($user);
 
@@ -89,12 +89,12 @@ class ApiController extends AbstractController
          * "Difficulties" => $song->getSongDifficultiesStr(),
          */
         $songs = $songRepository->createQueryBuilder('s')
-                                ->select('s.id, s.name, s.authorName AS author, s.levelAuthorName AS mapper, s.newGuid AS hash, GROUP_CONCAT(r.level) AS Difficulties')
-                                ->leftJoin("s.songDifficulties", 'sd')
-                                ->leftJoin('sd.difficultyRank', 'r')
-                                ->where("s.isDeleted != 1")
-                                ->groupBy('s.id')
-                                ->getQuery()->getArrayResult();
+            ->select('s.id, s.name, s.authorName AS author, s.levelAuthorName AS mapper, s.newGuid AS hash, GROUP_CONCAT(r.level) AS Difficulties')
+            ->leftJoin("s.songDifficulties", 'sd')
+            ->leftJoin('sd.difficultyRank', 'r')
+            ->where("s.isDeleted != 1")
+            ->groupBy('s.id')
+            ->getQuery()->getArrayResult();
 
         return new JsonResponse($songs);
     }
@@ -103,12 +103,26 @@ class ApiController extends AbstractController
     #[Route(path: '/api/search/{term}', name: 'api_search')]
     public function index(Request $request, string $term = null, SongRepository $songRepository): Response
     {
-        $songsEntities = $songRepository
-            ->createQueryBuilder('s')->where('(s.name LIKE :search_string OR s.authorName LIKE :search_string OR s.levelAuthorName LIKE :search_string)')
-            ->andWhere('(s.programmationDate <= :now  )')
+        $qb = $songRepository
+            ->createQueryBuilder('s')->where('(s.programmationDate <= :now  )')
             ->setParameter('now', (new \DateTime()))
             ->andWhere('s.moderated = true')
-            ->andWhere('s.isDeleted != true')->setParameter('search_string', '%' . $term . '%')->getQuery()->getResult();
+            ->andWhere('s.isDeleted != true');
+
+        $searchString = explode(' ', trim($term));
+        foreach ($searchString as $key => $search) {
+            $qb
+                ->andWhere(
+                    $qb->expr()->orX(
+                        's.name LIKE :search_string' . $key,
+                        's.authorName LIKE :search_string' . $key,
+                        's.levelAuthorName LIKE :search_string' . $key
+                    )
+                )
+                ->setParameter('search_string' . $key, '%' . $search . '%');
+        }
+
+        $songsEntities = $qb->getQuery()->getResult();
         $songs = [];
 
         /** @var Song $song */
@@ -118,7 +132,7 @@ class ApiController extends AbstractController
 
         return new JsonResponse([
             "Results" => $songs,
-            "Count"   => count($songs)
+            "Count" => count($songs)
         ]);
     }
 
@@ -159,14 +173,14 @@ class ApiController extends AbstractController
     {
         /** @var ScoreHistory[] $scores */
         $scores = $scoreRepository->createQueryBuilder("score")
-                                  ->leftJoin("score.songDifficulty", 'diff')
-                                  ->leftJoin("diff.song", 's')
-                                  ->orderBy('score.updatedAt', 'DESC')
-                                  ->where('s.isDeleted != true')
-                                  ->andWhere('s.wip != true')
-                                  ->setFirstResult(0)
-                                  ->setMaxResults($results)
-                                  ->getQuery()->getResult();
+            ->leftJoin("score.songDifficulty", 'diff')
+            ->leftJoin("diff.song", 's')
+            ->orderBy('score.updatedAt', 'DESC')
+            ->where('s.isDeleted != true')
+            ->andWhere('s.wip != true')
+            ->setFirstResult(0)
+            ->setMaxResults($results)
+            ->getQuery()->getResult();
         /** @var Song[] $songs */
         $songs = array_map(function (ScoreHistory $score) {
             return $score->getSongDifficulty()->getSong();
@@ -188,12 +202,12 @@ class ApiController extends AbstractController
     {
         /** @var Song[] $songs */
         $songs = $songRepository->createQueryBuilder("s")
-                                ->orderBy("s.createdAt", 'DESC')
-                                ->where('s.isDeleted != true')
-                                ->andWhere('s.wip != true')
-                                ->setMaxResults($results)
-                                ->setFirstResult(0)
-                                ->getQuery()->getResult();
+            ->orderBy("s.createdAt", 'DESC')
+            ->where('s.isDeleted != true')
+            ->andWhere('s.wip != true')
+            ->setMaxResults($results)
+            ->setFirstResult(0)
+            ->getQuery()->getResult();
         $data = [];
         foreach ($songs as $song) {
             $data[] = $song->__api();
@@ -212,17 +226,17 @@ class ApiController extends AbstractController
     {
         /** @var Song[] $songs */
         $songs = $songRepository->createQueryBuilder("s")
-                                ->addSelect('s, SUM(IF(v.votes_indc IS NULL,0,IF(v.votes_indc = 0,-1,1))) AS HIDDEN sum_votes')
-                                ->leftJoin("s.voteCounters", 'v')
-                                ->orderBy("sum_votes", 'DESC')
-                                ->where('s.isDeleted != true')
-                                ->andWhere('s.wip != true')
-                                ->andWhere('v.updatedAt >= :date')
-                                ->setParameter('date', (new \DateTime())->modify('-' . $days . " days"))
-                                ->groupBy('s.id')
-                                ->setMaxResults($results)
-                                ->setFirstResult(0)
-                                ->getQuery()->getResult();
+            ->addSelect('s, SUM(IF(v.votes_indc IS NULL,0,IF(v.votes_indc = 0,-1,1))) AS HIDDEN sum_votes')
+            ->leftJoin("s.voteCounters", 'v')
+            ->orderBy("sum_votes", 'DESC')
+            ->where('s.isDeleted != true')
+            ->andWhere('s.wip != true')
+            ->andWhere('v.updatedAt >= :date')
+            ->setParameter('date', (new \DateTime())->modify('-' . $days . " days"))
+            ->groupBy('s.id')
+            ->setMaxResults($results)
+            ->setFirstResult(0)
+            ->getQuery()->getResult();
 
         $data = [];
         foreach ($songs as $song) {
@@ -273,7 +287,8 @@ class ApiController extends AbstractController
             $em->persist($overlay);
             $em->flush();
         }
-        if (!isset($data["Song"])) return new Response("No Song", 500);
+        if (!isset ($data["Song"]))
+            return new Response("No Song", 500);
 
         $song = $songRepository->findOneBy(['newGuid' => $data["Song"]["Hash"]]);
         if ($song == null) {
@@ -284,7 +299,7 @@ class ApiController extends AbstractController
         }
         $rank = $difficultyRankRepository->findOneBy(['level' => $data["Song"]['Level']]);
         $songDiff = $songDifficultyRepository->findOneBy([
-            'song'           => $song,
+            'song' => $song,
             "difficultyRank" => $rank
         ]);
 
@@ -356,7 +371,7 @@ class ApiController extends AbstractController
                 ->distinct()
                 ->leftJoin('u.songsMapped', 's')
                 ->where('u.mapper_name LIKE :search')
-                ->setParameter('search', $request->get('q').'%')
+                ->setParameter('search', $request->get('q') . '%')
                 ->andWhere('s.isDeleted = false')
                 ->andWhere('s.wip = false')
                 ->andWhere('s.moderated = true')
