@@ -21,11 +21,12 @@ export default class extends Controller {
 
     console.log(height);
     if (height > 90) {
-      $description.after('<i class="expend" style="cursor:pointer">Click to expend</i>');
+      $description.after('<i class="expend" style="cursor:pointer">Click to expand</i>');
       $description.css('height', '80px');
       $description.css('overflow', 'hidden');
       $description.css('cursor', 'pointer');
       $description.addClass('expend');
+
       $('.expend').on('click', function () {
         $description.animate({'height': (maxHeight + 10) + 'px'});
           $description.css('cursor', 'inherit');
