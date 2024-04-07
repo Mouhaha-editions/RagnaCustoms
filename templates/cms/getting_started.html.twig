@@ -32,59 +32,46 @@
       <button style="color:white;background-color:transparent;border-width:0px" onClick="changeChevron()"
               class="h5 collapse-btn" data-toggle="collapse" data-target="#collapseOne">
         <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: How do I install custom songs on the Steam version of Ragnarock?
+         How do I install custom songs ?
       </button>
       <div id="collapseOne" class="collapse">
         <div class="indent">
-          <div class="span">Option 1 - RagnaCustoms App (single one clic download)</div>
-          If you want to install one by one the songs, you can easily search and download songs using the RagnaCustoms
-          App.<br>
-          The app will allow you to see new songs, download and install with a click of a button.<br/>
-          You have to have filled up your api key on the app preference option before.<br>
-          <img src="{{ asset('apps/api_key.jpg') }}" alt="oculus sync"/><br>
-          You can find your key in you profile page of the website.<br>
-          Learn more by checking out the <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases"
-                                            target="_blank">RagnaCustoms App</a>.<br>
-          <br/>
+          <div class="span">STEP 1</div>
+            Install the <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases" target="_blank">RagnaCustoms App</a>.<br>
+            It will allow you to download and install songs with a single click.<br>
+            <i class="fa-solid fa-triangle-exclamation"></i> Be carefull to take the <u><b>RagnaCustoms.Installer2.msi</b></u>. If you take the zip folder, it won't work. <i class="fa-solid fa-triangle-exclamation"></i>
+          <div class="span">STEP 2</div>
+            <ul>
+                <li>Connect on the App with your account</li>
+                <li>Go to <span>preferences</span><br></li>
+                <li>Check if the Apikey field is filled.<br></li>
+            </ul>
+            <img src="{{ asset('apps/api_key.jpg') }}" alt="apiKey"/><br>
+            <i class="fa-solid fa-triangle-exclamation"></i> Sometimes the app can have problems when setting the correct api key.<br>
+	        If you have doubts, go on the website, on <u>"My account > Account settings"</u> page, get your api key and set it on the App field. <i class="fa-solid fa-triangle-exclamation"></i>
 
-          <div class="span">Option 2 - One clic download on the website (mass download)</div>
-          If you want to mass download a bunch of song :
-          As for the Option 1, start by downloading the app and putting your api key into it.<br>
-          Then, you can go on the song library page and clic on the 1 clic button a the bottom right of the page (under
-          the filters)<br>
-          This will start a mass download of all the songs that are displayed on the filter you applied.
-          <br>
-          <div class="span">Option 3 - Extract Zip</div>
-          If you want to manually install one by one your songs then download the zip from the song page and extact it
-          to the following
-          folder
-          <div class="code">%USERPROFILE%\Documents\Ragnarock\CustomSongs\</div>
-          .
-          <br>
-        </div>
-      </div>
-      <br>
+            <div class="span">STEP 3 - Setting the downloading folder</div>
+                <ul>
+                    <li>Go to <span>preferences</span><br></li>
+                    <li>Set the path to where you want to download the maps. Two paths are possible :<br>
+                    - In "My Documents" folder : <b>C:\Users\....\Documents\Ragnarock</b><br>
+                    - In the Steam installation folder : <b>...\Steam\steamapps\common\Ragnarock\Ragnarock</b><br>
+                    Those are the only 2 folders that are read by the game</li>
+                    <li>Create a folder named exactly <b>CustomSongs</b> in the folder you choose just above</li>
+                </ul>
 
-      <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
-              data-toggle="collapse" onClick="changeChevron()" data-target="#collapseTwo">
-        <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: How do I install custom songs for non PCVR headsets ? (Quest/Pico)
-      </button>
-      <div id="collapseTwo" class="collapse">
-        <div class="indent">
-          The easiest way to install custom songs for non PCVR versions of RagnaRock is to install the
-          RagnaCustoms App on your Windows PC.
-          <div class="indent">
-            <span>Step 1:</span> Download the RagnaCustoms App.<br/>
-            <span>Step 2:</span> Plug in your headset and enable device access.<br/>
-            <span>Step 3:</span> Click “Check Access” to make sure the computer can access your headset. See image
-            below.<br/>
-            <span>Step 4:</span> Download the songs from the list or using the “1 click download” button on
-            the website.<br/>
-            <span>Step 5:</span> When you have downloaded all the songs you want to play, click “Sync
-            Songs.” See image below.<br/>
-            <img src="{{ asset('apps/oculus_sync.jpg') }}" alt="non PCVR sync"/>
-          </div>
+            <div class="span">STEP 4 - ONLY FOR NON PCVR USERS</div>
+            Once you've downloaded your maps:
+            <ul>
+                <li>Plug in your headset, verify it's recognized by your PC and that you enabled the device access</li>
+                <li>On the App, on the "Quest and Pico" dropdown, click “Check Access” to make sure the computer can access your headset<br/></li>
+                <li>Download the songs using the “1 click download” button on the website</li>
+                <li>When you have downloaded all the songs you want to play, click “Sync Songs.”<br>
+                If for whatever reason the "Sync songs" doest not work, you still can manually copy the maps you've downloaded into your headset.<br>
+                Paths are :<br>
+                QUEST : <b>Android/data/com.wanadev.ragnarockquest/files/UE4Game/Ragnarock/Ragnarock/CustomSongs</b><br>
+                PICO : <b>/Internal shared storage/Android/data/com.wanadev.ragnarockquest/files/UE4Game/Ragnarock/Ragnarock/CustomSongs</b></li>
+            </ul>
         </div>
       </div>
       <br>
@@ -92,26 +79,24 @@
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
               data-toggle="collapse" onClick="changeChevron()" data-target="#collapseThree">
         <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: How do I upload scores to RagnaCustoms?
+         How do I upload scores to RagnaCustoms?
       </button>
       <div id="collapseThree" class="collapse">
         <div class="row">
           <div>
-            <div class="indent">
-              To be able to upload scores on Ragnacutsoms follow these steps :
-              <div class="indent">
-                <span>Step 1:</span> Download the Ragnacustoms App<br/>
-                <span>Step 2:</span> Put your Api Key on the Preference option of the app (You can find your key in you
-                profile page of the website.) <br/>
-                <span>Step 3:</span> Clic on the "Configure Game.ini" button<br/>
-                <img src="{{ asset('apps/sending_scores_app.jpg') }}"/><br>
-                For the Quest and Pico users be sure to have your headset plugged before<br>
-                <span>Step 4:</span> Start your game, go to the Advanced settings and clic on the new check box at the
-                bottom of the page<br/>
-                <img src="{{ asset('apps/sending_scores_game.jpg') }}" style="max-width:40%"/><br>
-                <span>Step 5:</span> Play & enjoy.
-              </div>
-            </div>
+                <div class="indent">
+                     <div class="span">STEP 1</div>
+                     Follow the first 2 steps of the <b>How do I install custom songs ?</b> part
+                     <div class="span">STEP 2</div>
+                     Once your ApiKey is setup, clic on the "Activate score sending" button<br>
+                        <img src="{{ asset('apps/sending_scores_app.jpg') }}"/></br>
+                        <b>For the Quest and Pico users be sure to have your headset plugged before</b><br>
+                     <div class="span">STEP 3</div>
+                     Start your game, go to the Advanced settings and clic on the new check box at the bottom of the page<br>
+                        <img src="{{ asset('apps/sending_scores_game.jpg') }}" style="max-width:40%"/><br>
+                     <div class="span">STEP 4</div>
+                     Play & enjoy
+                </div>
           </div>
         </div>
       </div>
@@ -120,7 +105,7 @@
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
               data-toggle="collapse" onClick="changeChevron()" data-target="#collapseFour">
         <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: Where are custom songs located in the game?
+         Where are custom songs located in the game?
       </button>
       <div id="collapseFour" class="collapse">
         <div class="indent">
@@ -133,7 +118,7 @@
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
               data-toggle="collapse" onClick="changeChevron()" data-target="#collapseCinq">
         <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: Can I play custom songs against others in multiplayer?
+         Can I play custom songs against others in multiplayer?
       </button>
       <div id="collapseCinq" class="collapse">
         <div class="indent">
@@ -148,7 +133,7 @@
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
               data-toggle="collapse" onClick="changeChevron()" data-target="#collapseSix">
         <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: What songs are allowed?
+         What songs are allowed?
       </button>
       <div id="collapseSix" class="collapse">
         <div class="indent">
@@ -162,7 +147,7 @@
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
               data-toggle="collapse" onClick="changeChevron()" data-target="#collapseSeven">
         <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: How do I create my own custom songs?
+         How do I create my own custom songs?
       </button>
       <div id="collapseSeven" class="collapse">
         <div class="indent">
@@ -179,7 +164,7 @@
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
               data-toggle="collapse" onClick="changeChevron()" data-target="#collapseEight">
         <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: How does the ranking system works?
+         How does the ranking system works?
       </button>
       <div id="collapseEight" class="collapse">
         <div class="indent">You can find the details of how the ranking system works on the <a
@@ -190,7 +175,7 @@
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
               data-toggle="collapse" onClick="changeChevron()" data-target="#collapseNine">
         <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: Can I submit my own maps for ranking?
+         Can I submit my own maps for ranking?
       </button>
       <div id="collapseNine" class="collapse">
         <div class="indent">
@@ -206,7 +191,7 @@
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
               data-toggle="collapse" onClick="changeChevron()" data-target="#collapseTen">
         <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: How do I activate the request bot ?
+         How do I activate the request bot ?
       </button>
       <div id="collapseTen" class="collapse">
         <div class="indent">
@@ -239,7 +224,7 @@
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
               data-toggle="collapse" onClick="changeChevron()" data-target="#collapseEleven">
         <i class="fas fa-chevron-down collapse-icon"></i>
-        Q: Where can I find the id of the song or the request command if I want to request it on a Twitch chat ?
+         Where can I find the id of the song or the request command if I want to request it on a Twitch chat ?
       </button>
       <div id="collapseEleven" class="collapse">
         <div class="indent">
