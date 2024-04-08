@@ -12,31 +12,18 @@
                 <div class="card-header">
                     <div class="overlay"></div>
                     <img src="{{ asset('apps/ragna.jpg') }}" >
-                    <h2>{{ "RagnaCustoms.exe"|trans }}</h2>
+                    <h2>{{ "RagnaCustoms App"|trans }}</h2>
                 </div>
                 <div class="card-body">
                     <p>{{ "By installing this application you enable the one click download, then you also can use it for
-                    twitch requests and streaming overlay."|trans }}</p>
+                    twitch requests and streaming overlay."|trans }}<br>
+                    <b>Be carefull to take the <u>RagnaCustoms.Installer2.msi</u>. If you take the zip folder, it won't work.</b></p>
                     <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases" target ="_blank" class="btn btn-block btn-lg btn-primary">{{ "Go
                     to download page"|trans }} <i class="fas fa-external-link-alt"></i></a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <div class="overlay"></div>
-                    <img src="{{ asset('apps/mapevaluator.jpg') }}">
-                    <h2>{{ "Map evaluator"|trans }} <span class="badge badge-info">beta</span></h2>
-                </div>
-                <div class="card-body">
-                    <p>{{ "Online tool to check level of the custom song you made. It's a beta test for mapper who really
-                        don't know how to define the level of a song. It can be wrong, it don't have feelings."|trans}}</p>
-                    <a href="{{ path('map_evaluator') }}" class="btn btn-block btn-lg btn-primary">{{ "Try my map"|trans }}</a>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="row">
         <div class="col-12 mt-4">
