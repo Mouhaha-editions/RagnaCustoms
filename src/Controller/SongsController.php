@@ -473,16 +473,22 @@ class SongsController extends AbstractController
                 ->createQueryBuilder('s')
                 ->select('s, MAX(s.score) AS HIDDEN max_score')
                 ->where('s.songDifficulty = :diff')
+                ->andWhere('s.plateform IN (:type)')
                 ->setParameter('diff', $difficulty)
                 ->groupBy('s.user')
                 ->addOrderBy('max_score', 'DESC')
                 ->setParameter('type', WanadevApiController::VR_PLATEFORM);
             $scoresFlat = clone $scores;
-            $scores->andWhere('s.plateform IN (:type)');
-            $scoresFlat->andWhere('s.plateform NOT IN (:type)');
+            $scoresFlat->andWhere('s.plateform = :type')
+                ->setParameter('type', WanadevApiController::FLAT_PLATEFORM);
+
+            $scoresOKOD = clone $scores;
+            $scoresOKOD->andWhere('s.plateform = :type')
+                ->setParameter('type', WanadevApiController::OKOD_PLATEFORM);
 
             $pagination = $paginationService->setDefaults(30)->process($scores, $request);
             $paginationFlat = $paginationService->setDefaults(30)->process($scoresFlat, $request);
+            $paginationOKOD = $paginationService->setDefaults(30)->process($scoresOKOD, $request);
 
             $levels [] = [
                 "level" => $level,
@@ -490,6 +496,8 @@ class SongsController extends AbstractController
                 "color" => $difficulty->getDifficultyRank()->getColor(),
                 'scores' => $pagination,
                 'scoresFlat' => $paginationFlat,
+                'scoresOKOD' => $paginationOKOD,
+
             ];
 
             if ($pagination->isPartial()) {
@@ -503,6 +511,13 @@ class SongsController extends AbstractController
                 return $this->render('songs/partial/leaderboard.html.twig', [
                     'level' => array_pop($levels),
                     'type' => 'scoresFlat',
+                ]);
+            }
+
+            if ($paginationOKOD->isPartial()) {
+                return $this->render('songs/partial/leaderboard.html.twig', [
+                    'level' => array_pop($levels),
+                    'type' => 'scoresOKOD',
                 ]);
             }
         }
