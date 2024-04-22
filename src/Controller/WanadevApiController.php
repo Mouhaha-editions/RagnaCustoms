@@ -22,6 +22,9 @@ use function Sentry\configureScope;
 class WanadevApiController extends AbstractController
 {
     const VR_PLATEFORM = ['Steam', 'Viveport', 'Oculus', 'Pico', 'PS5'];
+    const OKOD_PLATEFORM = 'Steam_Flat_OKOD';
+
+    const FLAT_PLATEFORM = 'Steam_Flat';
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/search', name: 'wd_api_score_search_friends', methods: [
         'GET',

@@ -274,73 +274,149 @@
                             </div>
                         {% endfor %}
                     </div>
-
-
                 </div>
                 <div class="col-lg-4">
-                    <h3>
-                        {{ "Leaderboard VoT"|trans }}
-                    </h3>
-                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                        {% for level in levels %}
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link {% if loop.index == 1 %}active{% endif %}"
-                                   id="pills-level-{{ level['level'] }}"
-                                   data-toggle="pill"
-                                   href="#pills-leaderboard-{{ level['level'] }}-flat"
-                                   role="tab"
-                                   aria-controls="pills-leaderboard-{{ level['level'] }}-flat"
-                                   style="background-color:#{{ level['color'] }};"
-                                >level {{ level['level'] }} </a>
-                                {# {% if is_granted('ROLE_MODERATOR') %}<a class="ajax-link" #}
-                                {#                                   id="ranked-{{ level['difficulty'].id }}" #}
-                                {#                                   data-replace-selector="#ranked-{{ level['difficulty'].id }}" #}
-                                {#                                        data-success-action="replace-html" #}
-                                {#                                        data-url="{{ url("rank_toggle",{id: level['difficulty'].id })  }}" #}
-                                {#                                        href="#"> #}
-                                {#                                    {% if level['difficulty'].isRanked %} #}
-                                {#                                        <i class="fas fa-star"></i> ranked #}
-                                {#                                    {% else %} #}
-                                {#                                        <i class="far fa-star"></i> not r. #}
-                                {#                                    {% endif %} #}
-                                {#                                </a> #}
-                                {#                                 {% endif %} #}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="tab-content leaderboards" id="pills-tabContent">
-                        {% for level in levels %}
-                            <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
-                                 id="pills-leaderboard-{{ level['level'] }}-flat" role="tabpanel"
-                                 aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
-                                <div class="row">
-                                    <div class="col-12">
-                                        {% if is_granted('ROLE_USER') %}
-                                            <span class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false)}) }}</span>
-                                        {% endif %}
-                                        <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
-                                            <tr>
-                                                <th class="text-right">#</th>
-                                                <th>{{ "player"|trans }}</th>
-                                                <th class="text-right">{{ "distance"|trans }}</th>
-                                                {% if level.difficulty.isRanked %}
-                                                <th class="text-right">{{ "PP"|trans }}</th>
-                                                {% endif %}
-                                                <th class="text-right">{{ "Perfects" }}</th>
-                                                <th class="text-right">{{ "Time Set" }}</th>
-                                                <th class="text-right" colspan="2">{{ "More Stats" }}</th>
-                                            </tr>
-                                            {% include 'songs/partial/leaderboard.html.twig' with {level:level, type: 'scoresFlat'} %}
-                                        </table>
-
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
+                    <div class="row">
+                        <div class="col" style="margin-right:-20%;">
+                            <h3>{{ "Leaderboard VoT"|trans }}</h3>
+                        </div>
+                        <div class="col">
+                            <a title="One Key One Drum VoT Gameplay"
+                                    style="display:block;margin-top: 1px !important;"
+                                    id="classicFlatButton" class="float-left btn btn-primary btn-sm btn-bg-empty "
+                                    onClick="switchButtonFlatLB()">OKOD</a>
+                            <a title="Classic VoT Gameplay"
+                                    style="display:none;margin-top: 1px !important;"
+                                    id="okodFlatButton" class="btn btn-primary btn-sm btn-bg-empty"
+                                    onClick="switchButtonFlatLB()">CLASSIC</a>
+                        </div>
                     </div>
-
-
+                    <div class="tab-content" id="leaderboardContent">
+                        <div class="tab-pane" id="flatLeaderboard" role="tabpanel" aria-labelledby="vot-tab" style="display:block">
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                {% for level in levels %}
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link {% if loop.index == 1 %}active{% endif %}"
+                                             id="pills-level-{{ level['level'] }}"
+                                             data-toggle="pill"
+                                             href="#pills-leaderboard-{{ level['level'] }}-flat"
+                                             role="tab"
+                                             aria-controls="pills-leaderboard-{{ level['level'] }}-flat"
+                                             style="background-color:#{{ level['color'] }};"
+                                             >level {{ level['level'] }} </a>
+                                             {# {% if is_granted('ROLE_MODERATOR') %}<a class="ajax-link" #}
+                                             {#                                   id="ranked-{{ level['difficulty'].id }}" #}
+                                             {#                                   data-replace-selector="#ranked-{{ level['difficulty'].id }}" #}
+                                             {#                                        data-success-action="replace-html" #}
+                                             {#                                        data-url="{{ url("rank_toggle",{id: level['difficulty'].id })  }}" #}
+                                             {#                                        href="#"> #}
+                                             {#                                    {% if level['difficulty'].isRanked %} #}
+                                             {#                                        <i class="fas fa-star"></i> ranked #}
+                                             {#                                    {% else %} #}
+                                             {#                                        <i class="far fa-star"></i> not r. #}
+                                             {#                                    {% endif %} #}
+                                             {#                                </a> #}
+                                             {#                                 {% endif %} #}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="tab-content leaderboards" id="pills-tabContent">
+                                 {% for level in levels %}
+                                     <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
+                                          id="pills-leaderboard-{{ level['level'] }}-flat" role="tabpanel"
+                                          aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
+                                         <div class="row">
+                                             <div class="col-12">
+                                                 {% if is_granted('ROLE_USER') %}
+                                                     <span class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false)}) }}</span>
+                                                 {% endif %}
+                                                 <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
+                                                     <tr>
+                                                         <th class="text-right">#</th>
+                                                         <th>{{ "player"|trans }}</th>
+                                                         <th class="text-right">{{ "distance"|trans }}</th>
+                                                         {% if level.difficulty.isRanked %}
+                                                         <th class="text-right">{{ "PP"|trans }}</th>
+                                                         {% endif %}
+                                                         <th class="text-right">{{ "Perfects" }}</th>
+                                                         <th class="text-right">{{ "Time Set" }}</th>
+                                                         <th class="text-right" colspan="2">{{ "More Stats" }}</th>
+                                                     </tr>
+                                                     {% include 'songs/partial/leaderboard.html.twig' with {level:level, type: 'scoresFlat'} %}
+                                                 </table>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 {% endfor %}
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="okodLeaderboard" role="tabpanel" aria-labelledby="okod-tab" style="display:none">
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                {% for level in levels %}
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link {% if loop.index == 1 %}active{% endif %}"
+                                                 id="pills-level-{{ level['level'] }}"
+                                                 data-toggle="pill"
+                                                 href="#pills-leaderboard-{{ level['level'] }}-okod"
+                                                 role="tab"
+                                                 aria-controls="pills-leaderboard-{{ level['level'] }}-okod"
+                                                 style="background-color:#{{ level['color'] }};"
+                                              >level {{ level['level'] }} </a>
+                                              {# {% if is_granted('ROLE_MODERATOR') %}<a class="ajax-link" #}
+                                              {#                                   id="ranked-{{ level['difficulty'].id }}" #}
+                                              {#                                   data-replace-selector="#ranked-{{ level['difficulty'].id }}" #}
+                                              {#                                        data-success-action="replace-html" #}
+                                              {#                                        data-url="{{ url("rank_toggle",{id: level['difficulty'].id })  }}" #}
+                                              {#                                        href="#"> #}
+                                              {#                                    {% if level['difficulty'].isRanked %} #}
+                                              {#                                        <i class="fas fa-star"></i> ranked #}
+                                              {#                                    {% else %} #}
+                                              {#                                        <i class="far fa-star"></i> not r. #}
+                                              {#                                    {% endif %} #}
+                                              {#                                </a> #}
+                                              {#                                 {% endif %} #}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="tab-content leaderboards" id="pills-tabContent">
+                                {% for level in levels %}
+                                    <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
+                                               id="pills-leaderboard-{{ level['level'] }}-okod" role="tabpanel"
+                                               aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                {% if is_granted('ROLE_USER') %}
+                                                    <span class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false)}) }}</span>
+                                                {% endif %}
+                                                <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
+                                                    <tr>
+                                                        <th class="text-right">#</th>
+                                                        <th>{{ "player"|trans }}</th>
+                                                        <th class="text-right">{{ "distance"|trans }}</th>
+                                                        {% if level.difficulty.isRanked %}
+                                                        <th class="text-right">{{ "PP"|trans }}</th>
+                                                        {% endif %}
+                                                        <th class="text-right">{{ "Perfects" }}</th>
+                                                        <th class="text-right">{{ "Time Set" }}</th>
+                                                        <th class="text-right" colspan="2">{{ "More Stats" }}</th>
+                                                    </tr>
+                                                    {% include 'songs/partial/leaderboard.html.twig' with {level:level, type: 'scoresOKOD'} %}
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+              <div class="col-lg-4">
+
+              </div>
+
                 <div class="col-md-12">
                     <h3>{{ "Similar songs"|trans }}</h3>
 
@@ -368,20 +444,25 @@
                             "ratingValue": "{{ song.voteAverage|round(2, "floor") }}"
                         }
                     }
-
-
-
-
-
-
-
-
-
+    </script>
+    <script>
+    function switchButtonFlatLB() {
+        if (document.getElementById("classicFlatButton").style.display == "block") {
+            document.getElementById("okodFlatButton").style.display = "block";
+            document.getElementById("classicFlatButton").style.display = "none";
+            document.getElementById("flatLeaderboard").style.display = "none";
+            document.getElementById("okodLeaderboard").style.display = "block";
+        } else {
+            document.getElementById("okodFlatButton").style.display = "none";
+            document.getElementById("classicFlatButton").style.display = "block";
+            document.getElementById("okodLeaderboard").style.display = "none";
+            document.getElementById("flatLeaderboard").style.display = "block";
+        }
+    }
     </script>
 
 
 {% endblock %}
-
 
 
 {% block javascripts %}
