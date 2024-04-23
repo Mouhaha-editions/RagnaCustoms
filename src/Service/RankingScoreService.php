@@ -111,7 +111,7 @@ class RankingScoreService
         return true;
     }
 
-    private function saveRankedScore(Utilisateur $user, float $totalPondPPScore, bool $isVr, bool $isOkodo): void
+    private function saveRankedScore(Utilisateur $user, float $totalPondPPScore, bool $isVr, bool $isOkod): void
     {
         if ($totalPondPPScore == 0) {
             return;
@@ -119,13 +119,13 @@ class RankingScoreService
 
         $rankedScore = $this->rankedScoresRepository->findOneBy([
             'user' => $user,
-            'plateform' => $isVr ? 'vr' : ($isOkodo ? 'flat_okodo' : 'flat'),
+            'plateform' => $isVr ? 'vr' : ($isOkod ? 'flat_okod' : 'flat'),
         ]);
 
         if ($rankedScore == null) {
             $rankedScore = new RankedScores();
             $rankedScore->setUser($user);
-            $rankedScore->setPlateform($isVr ? 'vr' : ($isOkodo ? 'flat_okodo' : 'flat'));
+            $rankedScore->setPlateform($isVr ? 'vr' : ($isOkod ? 'flat_okod' : 'flat'));
         }
 
         $rankedScore->setTotalPPScore($totalPondPPScore);

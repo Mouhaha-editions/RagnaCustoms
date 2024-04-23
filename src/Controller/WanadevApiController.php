@@ -108,7 +108,7 @@ class WanadevApiController extends AbstractController
 
         $plateform = $data['platform'] ?? $currentPlateform ?? 'Steam';
         $isVr = in_array($plateform, self::VR_PLATEFORM);
-        $isOkodo = in_array($plateform, self::OKOD_PLATEFORM);
+        $isOkod = in_array($plateform, self::OKOD_PLATEFORM);
 
         if ($currentPlateform) {
             $returnArray = [
@@ -144,7 +144,7 @@ class WanadevApiController extends AbstractController
                 $newScore->setRawPP($rawPP);
             }
 
-            $score = $scoreRepository->getOneByUserDiffVrOrNot($user, $songDiff, $isVr, $isOkodo);
+            $score = $scoreRepository->getOneByUserDiffVrOrNot($user, $songDiff, $isVr, $isOkod);
             $scoreService->archive($newScore);
             $user->setCredits($user->getCredits() + 1);
             $utilisateurRepository->add($user);
@@ -160,7 +160,7 @@ class WanadevApiController extends AbstractController
 
             //calculation of the ponderate PP scores
             if ($newScore->isRankable()) {
-                $rankingScoreService->calculateTotalPondPPScore($user, $isVr, $isOkodo);
+                $rankingScoreService->calculateTotalPondPPScore($user, $isVr, $isOkod);
             }
 
             $scoreService->updateSessions($user, $songDiff, $isVr, $newScore->getSession());

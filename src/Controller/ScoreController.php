@@ -78,7 +78,7 @@ class ScoreController extends AbstractController
             ->where('u.country = :country')
             ->setParameter('country', $country)
             ->andWhere('rs.plateform = :flat')
-            ->setParameter('flat', 'flat_okodo')
+            ->setParameter('flat', 'flat_okod')
             ->orderBy("rs.totalPPScore", "DESC");
         $scoresFlatOkodo = $pagination->setDefaults(25)->process($qb, $request);
 
@@ -177,7 +177,7 @@ class ScoreController extends AbstractController
 
         $qb = $rankedScoresRepository->createQueryBuilder('rs')
             ->where('rs.plateform = :flat')
-            ->setParameter('flat', 'flat_okodo')
+            ->setParameter('flat', 'flat_okod')
             ->orderBy('rs.totalPPScore', 'DESC');
 
         if ($request->query->get('only_friend_of_mine')) {
