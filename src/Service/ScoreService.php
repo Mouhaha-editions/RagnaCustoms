@@ -374,8 +374,13 @@ class ScoreService
                 $qb->andWhere('s.plateform IN (:vr)')
                     ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
             } else {
-                $qb->andWhere('s.plateform NOT IN (:vr)')
-                    ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+                if ($isOkod) {
+                    $qb->andWhere('s.plateform IN (:plateformVr)')
+                        ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
+                } else {
+                    $qb->andWhere('s.plateform IN (:plateformVr)')
+                        ->setParameter('plateformVr', WanadevApiController::FLAT_PLATEFORM);
+                }
             }
         }
 
