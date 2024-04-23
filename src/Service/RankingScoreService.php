@@ -14,17 +14,18 @@ use DateTime;
 
 class RankingScoreService
 {
-    private static $fakeStats = [];
+    private static array $fakeStats = [];
 
     public function __construct(
-        private ScoreRepository $scoreRepository,
-        private RankedScoresRepository $rankedScoresRepository,
+        private readonly ScoreRepository $scoreRepository,
+        private readonly RankedScoresRepository $rankedScoresRepository,
     ) {
     }
 
     public function calculateForSong(Song $song)
     {
         foreach ($song->getSongDifficulties() as $difficulty) {
+            /** @var Score $score */
             foreach ($difficulty->getScores() as $score) {
                 if (!$difficulty->isRanked()) {
                     break;
@@ -33,7 +34,7 @@ class RankingScoreService
                 $rawPP = $this->calculateRawPP($score);
                 $score->setRawPP($rawPP);
                 $this->scoreRepository->add($score);
-                $this->calculateTotalPondPPScore($score->getUser(), $score->isVR());
+                $this->calculateTotalPondPPScore($score->getUser(), $score->isVR(), $score->isOKODO());
             }
         }
     }
@@ -61,7 +62,7 @@ class RankingScoreService
         return round($rawPP, 2);
     }
 
-    public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true): bool
+    public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true, bool $isOkodo = false): bool
     {
         $totalPP = 0;
         $index = 0;
@@ -75,11 +76,16 @@ class RankingScoreService
             ->andWhere('score.plateform IS NOT NULL');
 
         if ($isVr) {
-            $qb->andWhere('score.plateform IN (:plateform) ')
-                ->setParameter('plateform', WanadevApiController::VR_PLATEFORM);
+            $qb->andWhere('score.plateform IN (:plateformVr)')
+                ->setParameter('plateformVr', WanadevApiController::VR_PLATEFORM);
         } else {
-            $qb->andWhere('score.plateform NOT IN (:plateform) ')
-                ->setParameter('plateform', WanadevApiController::VR_PLATEFORM);
+            if ($isOkodo) {
+                $qb->andWhere('score.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
+            } else {
+                $qb->andWhere('score.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::FLAT_PLATEFORM);
+            }
         }
 
         $scores = $qb->getQuery()->getResult();
@@ -100,22 +106,26 @@ class RankingScoreService
 
 
         $totalPondPPScore = round($totalPP, 2);
-        $this->saveRankedScore($user, $totalPondPPScore, $isVr);
+        $this->saveRankedScore($user, $totalPondPPScore, $isVr, $isOkodo);
 
         return true;
     }
 
-    private function saveRankedScore(Utilisateur $user, float $totalPondPPScore, bool $isVr): void
+    private function saveRankedScore(Utilisateur $user, float $totalPondPPScore, bool $isVr, bool $isOkodo): void
     {
+        if ($totalPondPPScore == 0) {
+            return;
+        }
+
         $rankedScore = $this->rankedScoresRepository->findOneBy([
             'user' => $user,
-            'plateform' => $isVr ? 'vr' : 'flat'
+            'plateform' => $isVr ? 'vr' : ($isOkodo ? 'flat_okodo' : 'flat'),
         ]);
 
         if ($rankedScore == null) {
             $rankedScore = new RankedScores();
             $rankedScore->setUser($user);
-            $rankedScore->setPlateform($isVr ? 'vr' : 'flat');
+            $rankedScore->setPlateform($isVr ? 'vr' : ($isOkodo ? 'flat_okodo' : 'flat'));
         }
 
         $rankedScore->setTotalPPScore($totalPondPPScore);
@@ -123,7 +133,7 @@ class RankingScoreService
         unset($rankedScore);
     }
 
-    public function countRanked(Utilisateur $user, bool $isVr = true)
+    public function countRanked(Utilisateur $user, bool $isVr = true, bool $isOkodo = false)
     {
         $qb = $this->scoreRepository->createQueryBuilder("s")
             ->select('COUNT(s) as count')
@@ -137,8 +147,13 @@ class RankingScoreService
             $qb->andWhere('s.plateform IN (:vr)')
                 ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
         } else {
-            $qb->andWhere('s.plateform NOT IN (:vr)')
-                ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+            if ($isOkodo) {
+                $qb->andWhere('s.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
+            } else {
+                $qb->andWhere('s.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::FLAT_PLATEFORM);
+            }
         }
 
         $res = $qb->getQuery()->getArrayResult();
@@ -192,7 +207,7 @@ class RankingScoreService
                 self::$fakeStats[$songDifficulty->getDifficultyRank()->getId()] = [
                     'b' => $comboBlue,
                     'y' => $comboYellow,
-                    'p' => $perfect
+                    'p' => $perfect,
                 ];
             }
         } else {

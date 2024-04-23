@@ -404,4 +404,9 @@ class Score
 
         return $this;
     }
+
+    public function isOKODO(): bool
+    {
+        return in_array($this->plateform, WanadevApiController::OKOD_PLATEFORM);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Controller\WanadevApiController;
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
 use App\Service\RankingScoreService;
@@ -27,14 +28,14 @@ class RecalculateCommand extends Command
         $this
             ->addOption('username', 'u', InputOption::VALUE_OPTIONAL, 'The username of the user.')
             ->addOption('user-id', 'u-id', InputOption::VALUE_OPTIONAL, 'The Id of the user.')
-            ->addOption('plateform', 'p', InputOption::VALUE_OPTIONAL, 'plateform to calculate vr(default) or flat.');
+            ->addOption('plateform', 'p', InputOption::VALUE_OPTIONAL, 'plateform to calculate Steam(default).');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $username = $input->getOption('username');
         $user_id = $input->getOption('user-id');
-        $plateform = $input->getOption('plateform') ?? 'vr';
+        $plateform = $input->getOption('plateform') ?? 'Steam';
 
         $qb = $this->utilisateurRepository
             ->createQueryBuilder('u')
@@ -60,7 +61,7 @@ class RecalculateCommand extends Command
          */
         //39209
         foreach ($users as $k => $user) {
-            $this->rankingScoreService->calculateTotalPondPPScore($user, $plateform == 'vr');
+            $this->rankingScoreService->calculateTotalPondPPScore($user, in_array($plateform, WanadevApiController::VR_PLATEFORM), in_array($plateform, WanadevApiController::OKOD_PLATEFORM));
             unset($users[$k]);
             $userProgress->advance();
         }

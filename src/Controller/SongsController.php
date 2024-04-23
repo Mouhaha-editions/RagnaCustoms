@@ -479,11 +479,11 @@ class SongsController extends AbstractController
                 ->addOrderBy('max_score', 'DESC')
                 ->setParameter('type', WanadevApiController::VR_PLATEFORM);
             $scoresFlat = clone $scores;
-            $scoresFlat->andWhere('s.plateform = :type')
+            $scoresFlat->andWhere('s.plateform IN (:type)')
                 ->setParameter('type', WanadevApiController::FLAT_PLATEFORM);
 
             $scoresOKOD = clone $scores;
-            $scoresOKOD->andWhere('s.plateform = :type')
+            $scoresOKOD->andWhere('s.plateform IN (:type')
                 ->setParameter('type', WanadevApiController::OKOD_PLATEFORM);
 
             $pagination = $paginationService->setDefaults(30)->process($scores, $request);

@@ -22,9 +22,9 @@ use function Sentry\configureScope;
 class WanadevApiController extends AbstractController
 {
     const VR_PLATEFORM = ['Steam', 'Viveport', 'Oculus', 'Pico', 'PS5'];
-    const OKOD_PLATEFORM = 'Steam_Flat_OKOD';
+    const OKOD_PLATEFORM = ['Steam_Flat_OKOD'];
 
-    const FLAT_PLATEFORM = 'Steam_Flat';
+    const FLAT_PLATEFORM = ['Steam_Flat'];
 
     #[Route(path: '/wanapi/score/{apiKey}/{osef}-{hash}/search', name: 'wd_api_score_search_friends', methods: [
         'GET',
@@ -108,6 +108,7 @@ class WanadevApiController extends AbstractController
 
         $plateform = $data['platform'] ?? $currentPlateform ?? 'Steam';
         $isVr = in_array($plateform, self::VR_PLATEFORM);
+        $isOkodo = in_array($plateform, self::OKOD_PLATEFORM);
 
         if ($currentPlateform) {
             $returnArray = [
@@ -143,7 +144,7 @@ class WanadevApiController extends AbstractController
                 $newScore->setRawPP($rawPP);
             }
 
-            $score = $scoreRepository->getOneByUserDiffVrOrNot($user, $songDiff, $isVr);
+            $score = $scoreRepository->getOneByUserDiffVrOrNot($user, $songDiff, $isVr, $isOkodo);
             $scoreService->archive($newScore);
             $user->setCredits($user->getCredits() + 1);
             $utilisateurRepository->add($user);
@@ -159,7 +160,7 @@ class WanadevApiController extends AbstractController
 
             //calculation of the ponderate PP scores
             if ($newScore->isRankable()) {
-                $rankingScoreService->calculateTotalPondPPScore($user, $isVr);
+                $rankingScoreService->calculateTotalPondPPScore($user, $isVr, $isOkodo);
             }
 
             $scoreService->updateSessions($user, $songDiff, $isVr, $newScore->getSession());
