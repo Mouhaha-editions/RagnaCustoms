@@ -398,7 +398,7 @@ class ScoreService
         SongDifficulty $songDifficulty,
         $default = '-',
         bool $isVr = true,
-        bool $isOkod = true
+        bool $isOkod = false
 
     ) {
         return $this->getOrdinalSuffix(
