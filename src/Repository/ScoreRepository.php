@@ -55,7 +55,7 @@ class ScoreRepository extends ServiceEntityRepository
         Utilisateur $user,
         SongDifficulty $songDiff,
         bool $isVR,
-        bool $isOkodo = false
+        bool $isOkod = false
     ): ?Score {
         $qb = $this
             ->createQueryBuilder('s')
@@ -68,7 +68,7 @@ class ScoreRepository extends ServiceEntityRepository
             $qb->andWhere('s.plateform IN (:plateformVr)')
                 ->setParameter('plateformVr', WanadevApiController::VR_PLATEFORM);
         } else {
-            if ($isOkodo) {
+            if ($isOkod) {
                 $qb->andWhere('s.plateform IN (:plateformVr)')
                     ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
             } else {

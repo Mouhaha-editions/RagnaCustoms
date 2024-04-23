@@ -62,7 +62,7 @@ class RankingScoreService
         return round($rawPP, 2);
     }
 
-    public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true, bool $isOkodo = false): bool
+    public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true, bool $isOkod = false): bool
     {
         $totalPP = 0;
         $index = 0;
@@ -79,7 +79,7 @@ class RankingScoreService
             $qb->andWhere('score.plateform IN (:plateformVr)')
                 ->setParameter('plateformVr', WanadevApiController::VR_PLATEFORM);
         } else {
-            if ($isOkodo) {
+            if ($isOkod) {
                 $qb->andWhere('score.plateform IN (:plateformVr)')
                     ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
             } else {
@@ -133,7 +133,7 @@ class RankingScoreService
         unset($rankedScore);
     }
 
-    public function countRanked(Utilisateur $user, bool $isVr = true, bool $isOkodo = false)
+    public function countRanked(Utilisateur $user, bool $isVr = true, bool $isOkod = false)
     {
         $qb = $this->scoreRepository->createQueryBuilder("s")
             ->select('COUNT(s) as count')
@@ -147,7 +147,7 @@ class RankingScoreService
             $qb->andWhere('s.plateform IN (:vr)')
                 ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
         } else {
-            if ($isOkodo) {
+            if ($isOkod) {
                 $qb->andWhere('s.plateform IN (:plateformVr)')
                     ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
             } else {
