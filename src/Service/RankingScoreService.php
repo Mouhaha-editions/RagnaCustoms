@@ -106,7 +106,7 @@ class RankingScoreService
 
 
         $totalPondPPScore = round($totalPP, 2);
-        $this->saveRankedScore($user, $totalPondPPScore, $isVr, $isOkodo);
+        $this->saveRankedScore($user, $totalPondPPScore, $isVr, $isOkod);
 
         return true;
     }
