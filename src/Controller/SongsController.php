@@ -483,7 +483,7 @@ class SongsController extends AbstractController
                 ->setParameter('type', WanadevApiController::FLAT_PLATEFORM);
 
             $scoresOKOD = clone $scores;
-            $scoresOKOD->andWhere('s.plateform IN (:type')
+            $scoresOKOD->andWhere('s.plateform IN (:type)')
                 ->setParameter('type', WanadevApiController::OKOD_PLATEFORM);
 
             $pagination = $paginationService->setDefaults(30)->process($scores, $request);
