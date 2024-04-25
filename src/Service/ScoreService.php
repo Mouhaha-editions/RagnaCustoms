@@ -94,7 +94,7 @@ class ScoreService
         return (float)sqrt($variance / $num_of_elements);
     }
 
-    public function getGeneralLeaderboardPosition(UserInterface $user, ?Country $country = null, bool $isVr = true)
+    public function getGeneralLeaderboardPosition(UserInterface $user, ?Country $country = null, bool $isVr = true, bool $isOkod = false)
     {
         $qb = $this->em->getRepository(RankedScores::class)
             ->createQueryBuilder('r')
@@ -109,7 +109,11 @@ class ScoreService
         if ($isVr) {
             $qb->andWhere('r.plateform = \'vr\'');
         } else {
-            $qb->andWhere('r.plateform = \'flat\'');
+            if ($isOkod) {
+                $qb->andWhere('r.plateform = \'flat_okod\'');
+            } else {
+                $qb->andWhere('r.plateform = \'flat\'');
+            }
         }
 
         $qb->orderBy('r.totalPPScore', 'Desc');
