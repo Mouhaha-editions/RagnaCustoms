@@ -17,7 +17,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-#[ApiResource(operations:[],
+
+#[ApiResource(operations: [],
     denormalizationContext: ['groups' => ['user:read']],
 )]
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
@@ -185,6 +186,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $avatarDisabled = false;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $avatar = null;
+
     public function __construct()
     {
         $this->votes = new ArrayCollection();
@@ -281,15 +285,24 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getGravatar(): ?string
     {
         $size = 600;
-        $defaultAvatar ='https://ragnacustoms.com/apps/runes.png';
+        $defaultAvatar = 'https://ragnacustoms.com/apps/runes.png';
 
-        if($this->isAvatarDisabled()){
+        if ($this->isAvatarDisabled()) {
             return $defaultAvatar;
+        }
+
+        if ($this->avatar) {
+            return $this->avatar;
         }
 
         $urlComp = md5(strtolower(trim($this->email)));
 
         return 'https://www.gravatar.com/avatar/'.$urlComp.'?d='.urlencode($defaultAvatar).'&s='.$size;
+    }
+
+    public function isAvatarDisabled(): ?bool
+    {
+        return $this->avatarDisabled;
     }
 
     public function isVerified(): bool
@@ -1667,14 +1680,21 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isAvatarDisabled(): ?bool
-    {
-        return $this->avatarDisabled;
-    }
-
     public function setAvatarDisabled(bool $avatarDisabled): static
     {
         $this->avatarDisabled = $avatarDisabled;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): static
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }
