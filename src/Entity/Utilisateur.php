@@ -881,6 +881,19 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $scores->first()->getTotalPPScore();
     }
 
+    public function getPPFlatOkod()
+    {
+        $scores = $this->rankedScores->filter(function (RankedScores $r) {
+            return $r->getPlateform() == 'flat_okod';
+        });
+
+        if ($scores->count() == 0) {
+            return null;
+        }
+
+        return $scores->first()->getTotalPPScore();
+    }
+
     public function getPPVR()
     {
         $scores = $this->rankedScores->filter(function (RankedScores $r) {
