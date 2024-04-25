@@ -118,8 +118,10 @@ class RankingScoreService
             'plateform' => $isVr ? 'vr' : ($isOkod ? 'flat_okod' : 'flat'),
         ]);
 
-        if ($totalPondPPScore == 0 && $rankedScore) {
-            $this->rankedScoresRepository->remove($rankedScore);
+        if ($totalPondPPScore == 0) {
+            if ($rankedScore) {
+                $this->rankedScoresRepository->remove($rankedScore);
+            }
 
             return;
         }
