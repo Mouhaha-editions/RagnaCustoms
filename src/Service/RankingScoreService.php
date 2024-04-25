@@ -22,7 +22,7 @@ class RankingScoreService
     ) {
     }
 
-    public function calculateForSong(Song $song)
+    public function calculateForSong(Song $song): void
     {
         foreach ($song->getSongDifficulties() as $difficulty) {
             /** @var Score $score */
@@ -39,7 +39,7 @@ class RankingScoreService
         }
     }
 
-    public function calculateRawPP(Score $score)
+    public function calculateRawPP(Score $score): float
     {
         $duration = $score->getSongDifficulty()->getSong()->getApproximativeDuration();
         $perfects = $score->getPercentageOfPerfects();
@@ -113,14 +113,16 @@ class RankingScoreService
 
     private function saveRankedScore(Utilisateur $user, float $totalPondPPScore, bool $isVr, bool $isOkod): void
     {
-        if ($totalPondPPScore == 0) {
-            return;
-        }
-
         $rankedScore = $this->rankedScoresRepository->findOneBy([
             'user' => $user,
             'plateform' => $isVr ? 'vr' : ($isOkod ? 'flat_okod' : 'flat'),
         ]);
+
+        if ($totalPondPPScore == 0) {
+            $this->rankedScoresRepository->remove($rankedScore);
+
+            return;
+        }
 
         if ($rankedScore == null) {
             $rankedScore = new RankedScores();
@@ -157,10 +159,11 @@ class RankingScoreService
         }
 
         $res = $qb->getQuery()->getArrayResult();
+
         return $res ? $res[0]['count'] : 0;
     }
 
-    public function timeAgoShort(Utilisateur $user)
+    public function timeAgoShort(Utilisateur $user): string
     {
         /** @var Score $res */
         $res = $this->scoreRepository->createQueryBuilder("s")
@@ -172,6 +175,7 @@ class RankingScoreService
             ->orderBy("s.updatedAt", 'Desc')
             ->setFirstResult(0)->setMaxResults(1)
             ->getQuery()->getOneOrNullResult();
+
         return StatisticService::dateDisplayedShort($res->getUpdatedAt());
     }
 
