@@ -137,9 +137,9 @@ class ScoreService
             $qb2->andWhere('s.plateform = \'vr\'');
         } else {
             if ($isOkod) {
-                $qb2->andWhere('S.plateform = \'flat_okod\'');
+                $qb2->andWhere('s.plateform = \'flat_okod\'');
             } else {
-                $qb2->andWhere('S.plateform = \'flat\'');
+                $qb2->andWhere('s.plateform = \'flat\'');
             }
         }
 
