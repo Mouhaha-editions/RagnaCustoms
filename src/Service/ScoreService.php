@@ -136,7 +136,11 @@ class ScoreService
         if ($isVr) {
             $qb2->andWhere('s.plateform = \'vr\'');
         } else {
-            $qb2->andWhere('s.plateform = \'flat\'');
+            if ($isOkod) {
+                $qb->andWhere('S.plateform = \'flat_okod\'');
+            } else {
+                $qb->andWhere('S.plateform = \'flat\'');
+            }
         }
 
         if ($country) {
