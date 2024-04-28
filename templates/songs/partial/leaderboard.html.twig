@@ -3,7 +3,7 @@
 
 {% for score in level[type].entities %}
     <tr {% if is_granted('ROLE_USER') and score.user.id == app.user.id %}class="text-warning"{% endif %}>
-        <td class="text-left">{{ scoreService.leaderboardPositionWithOrdinalSuffix(score.user, score.songDifficulty, '-', type == 'scores') }}</td>
+        <td class="text-left">{{ scoreService.leaderboardPositionWithOrdinalSuffix(score.user, score.songDifficulty, '-', type == 'scores', type == 'scoresOKOD') }}</td>
         <td>
             <a href="{{ url("user_profile",{username:score.user.username}) }}"
                class="ml-1 text-level-9">{{ membershipService.displayUsername(score.user, false)|raw }}</a>

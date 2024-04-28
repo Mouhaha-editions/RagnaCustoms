@@ -34,9 +34,10 @@ class ScoreService
             $calc[] = [
                 'rank' => $diff->_difficultyRank,
                 'fileName' => $diff->_beatmapFilename,
-                'algo' => round($this->calculate($diffFile, $infoFile), 4)
+                'algo' => round($this->calculate($diffFile, $infoFile), 4),
             ];
         }
+
         return $calc;
     }
 
@@ -69,6 +70,7 @@ class ScoreService
             $distance_between_notes[] = $notes_without_doubles[$i] - $notes_without_doubles[$i - 1];
         }
         $standard_deviation = $this->standDeviation($distance_between_notes);
+
         return pow($notes_per_second, 1.3) * pow($standard_deviation, 0.3);
     }
 
@@ -92,7 +94,7 @@ class ScoreService
         return (float)sqrt($variance / $num_of_elements);
     }
 
-    public function getGeneralLeaderboardPosition(UserInterface $user, ?Country $country = null, bool $isVr = true)
+    public function getGeneralLeaderboardPosition(UserInterface $user, ?Country $country = null, bool $isVr = true, bool $isOkod = false): ?int
     {
         $qb = $this->em->getRepository(RankedScores::class)
             ->createQueryBuilder('r')
@@ -107,7 +109,11 @@ class ScoreService
         if ($isVr) {
             $qb->andWhere('r.plateform = \'vr\'');
         } else {
-            $qb->andWhere('r.plateform = \'flat\'');
+            if ($isOkod) {
+                $qb->andWhere('r.plateform = \'flat_okod\'');
+            } else {
+                $qb->andWhere('r.plateform = \'flat\'');
+            }
         }
 
         $qb->orderBy('r.totalPPScore', 'Desc');
@@ -130,7 +136,11 @@ class ScoreService
         if ($isVr) {
             $qb2->andWhere('s.plateform = \'vr\'');
         } else {
-            $qb2->andWhere('s.plateform = \'flat\'');
+            if ($isOkod) {
+                $qb2->andWhere('s.plateform = \'flat_okod\'');
+            } else {
+                $qb2->andWhere('s.plateform = \'flat\'');
+            }
         }
 
         if ($country) {
@@ -171,6 +181,11 @@ class ScoreService
             }
         }
         $this->em->flush();
+    }
+
+    public function getScore(SongDifficulty $songDifficulty, Utilisateur $user, $isVR = false)
+    {
+        return $user->scorePlateform($songDifficulty, $isVR);
     }
 
     public function getTop5Wanadev(
@@ -288,9 +303,9 @@ class ScoreService
                 'HitDeltaAverage' => $score->getHitDeltaAverage(),
                 'HitPercentage' => $score->getHitPercentage(),
                 'Missed' => $score->getMissed(),
-                'PercentageOfPerfects' => $score->getPercentageOfPerfects()
+                'PercentageOfPerfects' => $score->getPercentageOfPerfects(),
             ],
-            'rank' => $rank
+            'rank' => $rank,
         ];
     }
 
@@ -302,6 +317,7 @@ class ScoreService
         bool $isVr = true,
         bool $friendsOnly = false,
         array $friendsRagnarock = [],
+        bool $isOkod = false
     ) {
         $qb = $this->em
             ->getRepository(Score::class)
@@ -317,8 +333,13 @@ class ScoreService
             $qb->andWhere('s.plateform IN (:vr)')
                 ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
         } else {
-            $qb->andWhere('s.plateform NOT IN (:vr)')
-                ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+            if ($isOkod) {
+                $qb->andWhere('s.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
+            } else {
+                $qb->andWhere('s.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::FLAT_PLATEFORM);
+            }
         }
 
         if ($friendsOnly) {
@@ -361,8 +382,13 @@ class ScoreService
                 $qb->andWhere('s.plateform IN (:vr)')
                     ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
             } else {
-                $qb->andWhere('s.plateform NOT IN (:vr)')
-                    ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+                if ($isOkod) {
+                    $qb->andWhere('s.plateform IN (:plateformVr)')
+                        ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
+                } else {
+                    $qb->andWhere('s.plateform IN (:plateformVr)')
+                        ->setParameter('plateformVr', WanadevApiController::FLAT_PLATEFORM);
+                }
             }
         }
 
@@ -384,9 +410,13 @@ class ScoreService
         UserInterface $user,
         SongDifficulty $songDifficulty,
         $default = '-',
-        bool $isVr = true
+        bool $isVr = true,
+        bool $isOkod = false
+
     ) {
-        return $this->getOrdinalSuffix($this->getLeaderboardPosition($user, $songDifficulty, $default, false, $isVr));
+        return $this->getOrdinalSuffix(
+            $this->getLeaderboardPosition($user, $songDifficulty, $default, false, $isVr, false, [], $isOkod)
+        );
     }
 
     function getOrdinalSuffix($number)
@@ -471,11 +501,6 @@ class ScoreService
             $score->setSession($session);
             $this->scoreRepository->add($score);
         }
-    }
-
-    public function getScore(SongDifficulty $songDifficulty, Utilisateur $user, $isVR = false)
-    {
-        return $user->scorePlateform($songDifficulty, $isVR);
     }
 }
 

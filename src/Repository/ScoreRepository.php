@@ -54,20 +54,27 @@ class ScoreRepository extends ServiceEntityRepository
     public function getOneByUserDiffVrOrNot(
         Utilisateur $user,
         SongDifficulty $songDiff,
-        bool $isVR
+        bool $isVR,
+        bool $isOkod = false
     ): ?Score {
         $qb = $this
             ->createQueryBuilder('s')
             ->where('s.user = :user')
             ->setParameter('user', $user)
             ->andWhere('s.songDifficulty = :songDifficulty')
-            ->setParameter('songDifficulty', $songDiff)
-            ->setParameter('plateformVr', WanadevApiController::VR_PLATEFORM);
+            ->setParameter('songDifficulty', $songDiff);
 
         if ($isVR) {
-            $qb->andWhere('s.plateform IN (:plateformVr)');
+            $qb->andWhere('s.plateform IN (:plateformVr)')
+                ->setParameter('plateformVr', WanadevApiController::VR_PLATEFORM);
         } else {
-            $qb->andWhere('s.plateform NOT IN (:plateformVr)');
+            if ($isOkod) {
+                $qb->andWhere('s.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
+            } else {
+                $qb->andWhere('s.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::FLAT_PLATEFORM);
+            }
         }
 
         return $qb->getQuery()->getOneOrNullResult();

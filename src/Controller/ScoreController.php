@@ -73,9 +73,19 @@ class ScoreController extends AbstractController
             ->orderBy("rs.totalPPScore", "DESC");
         $scoresFlat = $pagination->setDefaults(25)->process($qb, $request);
 
+ $qb = $rankedScoresRepository->createQueryBuilder('rs')->leftJoin('rs.user', 'u')
+            ->leftJoin('u.country', 'c')
+            ->where('u.country = :country')
+            ->setParameter('country', $country)
+            ->andWhere('rs.plateform = :flat')
+            ->setParameter('flat', 'flat_okod')
+            ->orderBy("rs.totalPPScore", "DESC");
+        $scoresFlatOkodo = $pagination->setDefaults(25)->process($qb, $request);
+
         return $this->render('score/global_ranking.html.twig', [
             'scores' => $scores,
-            'scoresFlat' => $scoresFlat,
+            'scoresFlatClassic' => $scoresFlat,
+            'scoresFlatOkodo' => $scoresFlatOkodo,
             'country' => $country
         ]);
     }
@@ -152,9 +162,35 @@ class ScoreController extends AbstractController
 
         $scoresFlat = $pagination->setDefaults(25)->process($qb, $request);
 
+        if ($request->get('findme_flat_okodo', null)) {
+            $scoreFlat = $scoreService->getGeneralLeaderboardPosition($this->getUser(), null, false);
+            if ($scoreFlat == null) {
+                $this->addFlash("danger", "No score found");
+                return $this->redirectToRoute("score_global_ranking");
+            } else {
+                return $this->redirect(
+                    $this->generateUrl("score_global_ranking")."?ppage2=".ceil($scoreFlat / 25)."#".$this->getUser(
+                    )->getUsername()
+                );
+            }
+        }
+
+        $qb = $rankedScoresRepository->createQueryBuilder('rs')
+            ->where('rs.plateform = :flat')
+            ->setParameter('flat', 'flat_okod')
+            ->orderBy('rs.totalPPScore', 'DESC');
+
+        if ($request->query->get('only_friend_of_mine')) {
+            $qb->andWhere('rs.user IN (:friends)')
+                ->setParameter('friends', $friends);
+        }
+
+        $scoresFlatOkodo = $pagination->setDefaults(25)->process($qb, $request);
+
         return $this->render('score/global_ranking.html.twig', [
             'scores' => $scores,
-            'scoresFlat' => $scoresFlat
+            'scoresFlatClassic' => $scoresFlat,
+            'scoresFlatOkodo' => $scoresFlatOkodo
         ]);
     }
 }

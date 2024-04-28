@@ -20,14 +20,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
+use Intervention\Image\ImageManagerStatic as Image;
 use Patreon\API;
 use Patreon\OAuth;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -380,7 +383,8 @@ class UserController extends AbstractController
         UtilisateurRepository $utilisateurRepository,
         ScoreHistoryRepository $scoreHistoryRepository,
         UserPasswordHasherInterface $passwordEncoder,
-        PaginationService $paginationService
+        PaginationService $paginationService,
+        KernelInterface $kernel
     ): Response {
         if (!$this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', $translator->trans("You need an account!"));
@@ -401,6 +405,72 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
+                /** @var UploadedFile $file */
+                $file = $form['avatar']->getData();
+                if($file) {
+                    $extension = $file->guessExtension();
+                    $filename = $this->getUser()->getUserIdentifier().'_'.uniqid();
+                    $directory = $kernel->getProjectDir().'/public/avatars/';
+
+                    try {
+                        if (in_array($extension, ['jpg', 'jpeg',])) {
+                            if ($file->getMimeType() !== 'image/jpeg') {
+                                throw new Exception(
+                                    "The avatar is in the wrong format. Please verify it's a native ".$extension
+                                );
+                            }
+
+                            $image = imagecreatefromjpeg($file->getRealPath());
+                            imagewebp($image, $directory.$filename.".webp");
+                            imagedestroy($image);
+                        } elseif (in_array($extension, ['gif'])) {
+                            if ($file->getMimeType() !== 'image/gif') {
+                                throw new Exception(
+                                    "The avatar is in the wrong format. Please verify it's a native ".$extension
+                                );
+                            }
+
+                            $image = imagecreatefromgif($file->getRealPath());
+                            imagepalettetotruecolor($image);
+                            imagewebp($image, $directory.$filename.".webp");
+                            imagedestroy($image);
+                        } elseif (in_array($extension, ['png'])) {
+                            if ($file->getMimeType() !== 'image/png') {
+                                throw new Exception(
+                                    "The avatar is in the wrong format. Please verify it's a native ".$extension
+                                );
+                            }
+
+                            $image = imagecreatefrompng($file->getRealPath());
+                            imagewebp($image, $directory.$filename.".webp");
+                            imagedestroy($image);
+                        } elseif (in_array($extension, ['webp'])) {
+                            $file->move($directory, $directory.$filename.".webp");
+                        } else {
+                            throw new Exception("Your avatar is not a gif or a jpg or a png");
+                        }
+
+                        $filedir = $directory.$filename.".webp";
+                        $image = Image::make($filedir);
+                        $background = Image::canvas(349, 349, 'rgba(255, 255, 255, 0)');
+
+                        if ($image->width() >= $image->height()) {
+                            $image->widen(349);
+                        } else {
+                            $image->heighten(349);
+                        }
+
+                        $background->insert($image, 'center-center');
+                        $background->save($filedir);
+                        $user->setAvatar('/avatars/'.$filename.'.webp');
+                    } catch (\Exception $e) {
+                        $this->addFlash('danger', "The avatar is in the wrong format. Please verify it's an image");
+                    }
+                }
+            }
+
             if ($previousUsername !== $user->getUsername()) {
                 $exists = $utilisateurRepository->findBy(['username' => $user->getUsername()]);
 
@@ -410,11 +480,7 @@ class UserController extends AbstractController
                 }
             }
 
-            if ($form->has('currentPassword') && !empty($form->get('currentPassword')->getData()) && !empty(
-                $form->get(
-                    'plainPassword'
-                )->getData()
-                )) {
+            if ($form->has('currentPassword') && !empty($form->get('currentPassword')->getData()) && !empty($form->get('plainPassword')->getData())) {
                 if ($passwordEncoder->isPasswordValid($user, $form->get('currentPassword')->getData())) {
                     // Encode the plain password, and set it.
                     $encodedPassword = $passwordEncoder->hashPassword(

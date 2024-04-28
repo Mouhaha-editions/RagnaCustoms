@@ -14,17 +14,18 @@ use DateTime;
 
 class RankingScoreService
 {
-    private static $fakeStats = [];
+    private static array $fakeStats = [];
 
     public function __construct(
-        private ScoreRepository $scoreRepository,
-        private RankedScoresRepository $rankedScoresRepository,
+        private readonly ScoreRepository $scoreRepository,
+        private readonly RankedScoresRepository $rankedScoresRepository,
     ) {
     }
 
-    public function calculateForSong(Song $song)
+    public function calculateForSong(Song $song): void
     {
         foreach ($song->getSongDifficulties() as $difficulty) {
+            /** @var Score $score */
             foreach ($difficulty->getScores() as $score) {
                 if (!$difficulty->isRanked()) {
                     break;
@@ -33,12 +34,12 @@ class RankingScoreService
                 $rawPP = $this->calculateRawPP($score);
                 $score->setRawPP($rawPP);
                 $this->scoreRepository->add($score);
-                $this->calculateTotalPondPPScore($score->getUser(), $score->isVR());
+                $this->calculateTotalPondPPScore($score->getUser(), $score->isVR(), $score->isOKODO());
             }
         }
     }
 
-    public function calculateRawPP(Score $score)
+    public function calculateRawPP(Score $score): float
     {
         $duration = $score->getSongDifficulty()->getSong()->getApproximativeDuration();
         $perfects = $score->getPercentageOfPerfects();
@@ -61,7 +62,7 @@ class RankingScoreService
         return round($rawPP, 2);
     }
 
-    public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true): bool
+    public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true, bool $isOkod = false): bool
     {
         $totalPP = 0;
         $index = 0;
@@ -75,11 +76,16 @@ class RankingScoreService
             ->andWhere('score.plateform IS NOT NULL');
 
         if ($isVr) {
-            $qb->andWhere('score.plateform IN (:plateform) ')
-                ->setParameter('plateform', WanadevApiController::VR_PLATEFORM);
+            $qb->andWhere('score.plateform IN (:plateformVr)')
+                ->setParameter('plateformVr', WanadevApiController::VR_PLATEFORM);
         } else {
-            $qb->andWhere('score.plateform NOT IN (:plateform) ')
-                ->setParameter('plateform', WanadevApiController::VR_PLATEFORM);
+            if ($isOkod) {
+                $qb->andWhere('score.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
+            } else {
+                $qb->andWhere('score.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::FLAT_PLATEFORM);
+            }
         }
 
         $scores = $qb->getQuery()->getResult();
@@ -100,22 +106,30 @@ class RankingScoreService
 
 
         $totalPondPPScore = round($totalPP, 2);
-        $this->saveRankedScore($user, $totalPondPPScore, $isVr);
+        $this->saveRankedScore($user, $totalPondPPScore, $isVr, $isOkod);
 
         return true;
     }
 
-    private function saveRankedScore(Utilisateur $user, float $totalPondPPScore, bool $isVr): void
+    private function saveRankedScore(Utilisateur $user, float $totalPondPPScore, bool $isVr, bool $isOkod): void
     {
         $rankedScore = $this->rankedScoresRepository->findOneBy([
             'user' => $user,
-            'plateform' => $isVr ? 'vr' : 'flat'
+            'plateform' => $isVr ? 'vr' : ($isOkod ? 'flat_okod' : 'flat'),
         ]);
+
+        if ($totalPondPPScore == 0) {
+            if ($rankedScore) {
+                $this->rankedScoresRepository->remove($rankedScore);
+            }
+
+            return;
+        }
 
         if ($rankedScore == null) {
             $rankedScore = new RankedScores();
             $rankedScore->setUser($user);
-            $rankedScore->setPlateform($isVr ? 'vr' : 'flat');
+            $rankedScore->setPlateform($isVr ? 'vr' : ($isOkod ? 'flat_okod' : 'flat'));
         }
 
         $rankedScore->setTotalPPScore($totalPondPPScore);
@@ -123,7 +137,7 @@ class RankingScoreService
         unset($rankedScore);
     }
 
-    public function countRanked(Utilisateur $user, bool $isVr = true)
+    public function countRanked(Utilisateur $user, bool $isVr = true, bool $isOkod = false)
     {
         $qb = $this->scoreRepository->createQueryBuilder("s")
             ->select('COUNT(s) as count')
@@ -137,15 +151,21 @@ class RankingScoreService
             $qb->andWhere('s.plateform IN (:vr)')
                 ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
         } else {
-            $qb->andWhere('s.plateform NOT IN (:vr)')
-                ->setParameter('vr', WanadevApiController::VR_PLATEFORM);
+            if ($isOkod) {
+                $qb->andWhere('s.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::OKOD_PLATEFORM);
+            } else {
+                $qb->andWhere('s.plateform IN (:plateformVr)')
+                    ->setParameter('plateformVr', WanadevApiController::FLAT_PLATEFORM);
+            }
         }
 
         $res = $qb->getQuery()->getArrayResult();
+
         return $res ? $res[0]['count'] : 0;
     }
 
-    public function timeAgoShort(Utilisateur $user)
+    public function timeAgoShort(Utilisateur $user): string
     {
         /** @var Score $res */
         $res = $this->scoreRepository->createQueryBuilder("s")
@@ -157,6 +177,7 @@ class RankingScoreService
             ->orderBy("s.updatedAt", 'Desc')
             ->setFirstResult(0)->setMaxResults(1)
             ->getQuery()->getOneOrNullResult();
+
         return StatisticService::dateDisplayedShort($res->getUpdatedAt());
     }
 
@@ -192,7 +213,7 @@ class RankingScoreService
                 self::$fakeStats[$songDifficulty->getDifficultyRank()->getId()] = [
                     'b' => $comboBlue,
                     'y' => $comboYellow,
-                    'p' => $perfect
+                    'p' => $perfect,
                 ];
             }
         } else {

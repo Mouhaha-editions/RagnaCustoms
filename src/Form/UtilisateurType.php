@@ -8,6 +8,7 @@ use League\OAuth2\Client\Grant\Password;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -54,8 +55,16 @@ class UtilisateurType extends AbstractType
             ->add('email', null, [
                 "attr" => ["class" => "form-control form-control-sm"],
             ])
+            ->add('avatar', FileType::class, [
+                'required' => false,
+                'mapped' => false,
+                'label' => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning"></i> Avatar upload:',
+                'label_html'=>true
+            ])
             ->add('usernameColor', ColorType::class, [
                 'required' => false,
+                'label' => '<i data-toggle="tooltip" title="premium feature" class="fas fa-gavel text-warning"></i> Username color:',
+                'label_html'=>true
             ])
             ->add('country', EntityType::class, [
                 "class" => Country::class,

@@ -85,4 +85,13 @@ $(function () {
     });
 })
 
+$(document).on('change', 'input#switch-leaderboard-detail', function(){
+    if ($(this).is(':checked')) {
+       $("#flatLeaderboard").hide();
+       $("#okodLeaderboard").show();
+    } else {
+        $("#flatLeaderboard").show();
+        $("#okodLeaderboard").hide();
+    }
+})
 import './js/card.js';

@@ -3,99 +3,100 @@
 
 {% block title %}{{ "My account"|trans }}{% endblock %}
 {% block body %}
-    <div {{ stimulus_controller('user') }} {{ stimulus_target('user', 'background') }}>
-        <div class="darker">
-            <div class="container-fluid">
-                {{ form_start(form) }}
-                <div class="row mt-3">
-                    <div class="col-md-2">
-                     {% include 'user/partial/_left_part_user.html.twig' %}
-                    </div>
+  <div {{ stimulus_controller('user') }} {{ stimulus_target('user', 'background') }}>
+    <div class="darker">
+      <div class="container-fluid">
+        {{ form_start(form) }}
+        <div class="row mt-3">
+          <div class="col-md-2">
+            {% include 'user/partial/_left_part_user.html.twig' %}
+          </div>
 
-                    <div class="col-md-5">
-                        <label for="ApiKey" class="col-form-label">{{ "Your API key"|trans }} </label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text copy-clipboard" title="{{ "copied !"|trans }}"
-                                     data-to-copy="{{ app.user.apiKey }}"><i class="fa fa-copy"></i></div>
-                            </div>
-                            <input id="ApiKey" class="form-control " value="{{ app.user.apiKey }}" readonly/>
-                            <div class="input-group-append">
-                                <div class="input-group-btn btn btn-warning reset-api-key" title="reset your apiKey" ><i class="fa fa-refresh"></i></div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <small>
-                                {{ "If you already have the app, <a href=\"ragnac://api/{{ app.user.apiKey }}\">click
+          <div class="col-md-5">
+            <label for="ApiKey" class="col-form-label">{{ "Your API key"|trans }} </label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text copy-clipboard" title="{{ "copied !"|trans }}"
+                     data-to-copy="{{ app.user.apiKey }}"><i class="fa fa-copy"></i></div>
+              </div>
+              <input id="ApiKey" class="form-control " value="{{ app.user.apiKey }}" readonly/>
+              <div class="input-group-append">
+                <div class="input-group-btn btn btn-warning reset-api-key" title="reset your apiKey"><i
+                      class="fa fa-refresh"></i></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <small>
+                {{ "If you already have the app, <a href=\"ragnac://api/{{ app.user.apiKey }}\">click
                                 here</a> to auto-set your API key"|trans|raw }}
-                            </small>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">{{ form_row(form.username) }}</div>
-                            <div class="col-md-6">
-                                <div class="{% if not is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %} pt-4 pb-2"><i
-                                        data-toggle="tooltip" title="premium feature"
-                                        class="fas fa-gavel text-warning"></i> Username color : {{ form_widget(form.usernameColor) }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                                <div class="col-md-6"> {{ form_row(form.currentPassword) }}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6"> {{ form_row(form.plainPassword.first) }}</div>
-
-                            <div class="col-md-6"> {{ form_row(form.plainPassword.second) }}</div>
-
-                        </div>
-
-
-                        {{ form_row(form.email) }}
-                        {{ form_row(form.country) }}
-
-                        <div class="mt-2">
-                            <div class="float-right">
-                                <button type="submit" class="btn btn-primary">{{ "Save"|trans }}</button>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                {{ form_widget(form.isMapper,{"attr":{"class":"form-check-input"}}) }}
-                                {{ form_label(form.isMapper,null,{"label_attr":{"class":"form-check-label"}}) }}
-                            </div>
-                            {#                            <div class="form-check form-check-inline"> #}
-                            {#                                {{ form_widget(form.isPublic,{"attr":{"class":"form-check-input"}}) }} #}
-                            {#                                {{ form_label(form.isPublic,null,{"label_attr":{"class":"form-check-label"}}) }} #}
-                            {#                            </div> #}
-                            <div class="form-check form-check-inline">
-                                {{ form_widget(form.enableEmailNotification,{"attr":{"class":"form-check-input"}}) }}
-                                {{ form_label(form.enableEmailNotification,null,{"label_attr":{"class":"form-check-label"}}) }}
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div id="public_informations">
-                            {{ form_row(form.mapperName) }}
-                            {{ form_row(form.mapperDiscord) }}
-                            {{ form_row(form.mapperDescription) }}
-                            {% if app.user.discordUsername is null %}
-                            <a href="{{ url('discord_link') }}" class="btn btn-sm btn-info btn-discord">link discord</a>
-                            {% else %}
-                            {{ app.user.discordUsername }}
-                            {% endif %}
-
-                            <div class="float-right">
-                                <button type="submit" class="btn btn-primary">{{ "Save"|trans }}</button>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-                {{ form_end(form) }}
+              </small>
+            </div>
+            <div class="row">
+              <div class="col-md-6">{{ form_row(form.username) }}</div>
+              <div class="col-md-6">
+                  {{ form_row(form.avatar) }}
+              </div>
             </div>
 
+            <div class="row">
+              <div class="col-md-6"> {{ form_row(form.currentPassword) }}</div>
+              <div class="{% if not is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %} pt-4 pb-2">
+                  {{ form_row(form.usernameColor) }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6"> {{ form_row(form.plainPassword.first) }}</div>
+
+              <div class="col-md-6"> {{ form_row(form.plainPassword.second) }}</div>
+
+            </div>
+
+
+            {{ form_row(form.email) }}
+            {{ form_row(form.country) }}
+
+            <div class="mt-2">
+              <div class="float-right">
+                <button type="submit" class="btn btn-primary">{{ "Save"|trans }}</button>
+              </div>
+              <div class="form-check form-check-inline">
+                {{ form_widget(form.isMapper,{"attr":{"class":"form-check-input"}}) }}
+                {{ form_label(form.isMapper,null,{"label_attr":{"class":"form-check-label"}}) }}
+              </div>
+              {#                            <div class="form-check form-check-inline"> #}
+              {#                                {{ form_widget(form.isPublic,{"attr":{"class":"form-check-input"}}) }} #}
+              {#                                {{ form_label(form.isPublic,null,{"label_attr":{"class":"form-check-label"}}) }} #}
+              {#                            </div> #}
+              <div class="form-check form-check-inline">
+                {{ form_widget(form.enableEmailNotification,{"attr":{"class":"form-check-input"}}) }}
+                {{ form_label(form.enableEmailNotification,null,{"label_attr":{"class":"form-check-label"}}) }}
+              </div>
+
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div id="public_informations">
+              {{ form_row(form.mapperName) }}
+              {{ form_row(form.mapperDiscord) }}
+              {{ form_row(form.mapperDescription) }}
+              {% if app.user.discordUsername is null %}
+                <a href="{{ url('discord_link') }}" class="btn btn-sm btn-info btn-discord">link discord</a>
+              {% else %}
+                {{ app.user.discordUsername }}
+              {% endif %}
+
+              <div class="float-right">
+                <button type="submit" class="btn btn-primary">{{ "Save"|trans }}</button>
+              </div>
+            </div>
+          </div>
+
+
         </div>
+        {{ form_end(form) }}
+      </div>
 
     </div>
+
+  </div>
 {% endblock %}

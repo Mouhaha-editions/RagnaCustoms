@@ -3,366 +3,409 @@
 {% import "songs/macros/vote.html.twig" as macro_vote %}
 
  {% block metas %}
-     <link rel="canonical" href="{{ url('song_detail',{slug:song.slug}) }}">
-     <meta name="description" value="{{ song.name }}, mapped by {{ song.mappersNames }} - Custom Song detail">
-     <meta property="og:description" value="{{ song.name }}, mapped by {{ song.mappersNames }} - Custom Song detail">
-     <meta property="og:url" content="{{ url('song_detail',{slug:song.slug}) }}"/>
-     <meta property="og:type" content="website"/>
-     <meta property="og:title" content="{{ song.name }} - Custom Song detail | RagnaCustoms.com"/>
-     <meta property="og:image" content="https://ragnacustoms.com/{{ song.cover }}"/>
+   <link rel="canonical" href="{{ url('song_detail',{slug:song.slug}) }}">
+   <meta name="description" value="{{ song.name }}, mapped by {{ song.mappersNames }} - Custom Song detail">
+   <meta property="og:description" value="{{ song.name }}, mapped by {{ song.mappersNames }} - Custom Song detail">
+   <meta property="og:url" content="{{ url('song_detail',{slug:song.slug}) }}"/>
+   <meta property="og:type" content="website"/>
+   <meta property="og:title" content="{{ song.name }} - Custom Song detail | RagnaCustoms.com"/>
+   <meta property="og:image" content="https://ragnacustoms.com/{{ song.cover }}"/>
  {% endblock %}
 
 {% block body %}
-    <div {{ stimulus_controller('song-detail') }} {{ stimulus_target('song-detail', 'background') }} id="song-detail">
-        <div class="darker pt-3">
-            <div class="container">
-                <div class="row pt-3">
-                    {#                    <div class="col-12 pt-2 pb-2"><a href="#" {{ stimulus_action('song-detail', 'back') }} #}
-                    {#                                                     class="back-button "><i #}
-                    {#                                    class="fas fa-arrow-left"></i> {{ "Back"|trans }}</a></div> #}
-                    <div class="col-md-3">
-                        <div class="figure card-cover">
+  <div {{ stimulus_controller('song-detail') }} {{ stimulus_target('song-detail', 'background') }} id="song-detail">
+    <div class="darker pt-3">
+      <div class="container">
+        <div class="row pt-3">
+          {#                    <div class="col-12 pt-2 pb-2"><a href="#" {{ stimulus_action('song-detail', 'back') }} #}
+          {#                                                     class="back-button "><i #}
+          {#                                    class="fas fa-arrow-left"></i> {{ "Back"|trans }}</a></div> #}
+          <div class="col-md-3">
+            <div class="figure card-cover">
 
-                            <img {{ stimulus_target('song-detail', 'img') }}
-                                    src="{{ song.cover }}"
-                                    class="img-fluid"
-                                    alt="{{ song.name }}"/>
+              <img {{ stimulus_target('song-detail', 'img') }}
+                  src="{{ song.cover }}"
+                  class="img-fluid"
+                  alt="{{ song.name }}"/>
 
-                            <div class="level-list">
-                                {% for diff in song.songDifficulties %}
-                                    <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
-                                         style="background-color:#{{ diff.difficultyRank.color }};">
-                                        {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip"
-                                                                 title="Ranked"
-                                                                 style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
-                                        <span>{{ diff.difficultyRank.level }}</span>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between pt-1">
-                            <div>
-                                {{ song.timeAgo }}
-                            </div>
-                            <div>
-                                <i class="fas fa-clock"></i> {{ song.approximativeDurationMin }}
-                            </div>
-                            <div>
-                                <i class="fas fa-drum"></i> {{ song.beatsPerMinute|number_format(2)+0 }}
-                            </div>
-                        </div>
-                        <div class="download-buttons">
-                            <div class="d-inline-block">
-                                <a data-no-swup="true" href="ragnac://install/{{ song.id }}"
-                                   class="btn btn-block mr-1 btn-success"><i class="fas fa-download"></i> {{ "1 click"|trans }}</a>
-                            </div>
-                            <div class="d-inline-block">
-                                <a data-no-swup="true" href="{{ url('song_direct_download',{id: song.id}) }}"
-                                   class="btn btn-block ml-1 btn-info text-uppercase"><i class="fas fa-download"></i> {{ "Zip"|trans }}</a>
-                            </div>
-                        </div>
-                        <div>
-                            <small class="text-warning">{{ song.downloads }} {{ "Downloads"|trans }}</small>
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        <h1 class="force-default text-warning">{{ song|raw }}</h1>
-                        <h2 class="force-default">
-                            {% include 'songs/partial/artists.html.twig' %}
-                        </h2>
-                        <div class="tags">
-                            {% for category in song.categoryTags %}
-                                <a class='btn btn-sm btn-tag'
-                                   href="{{ url('song_library',{search:'genre:'~category.label}) }}">{{ category.label }}</a>
-                            {% endfor %}
-                        </div>
-                        <div class="mt-3 mb-3">
-                            {% include 'songs/partial/downupvote.html.twig' %}
-                        </div>
-                        <div class="buttons-middle">
-                            <div class="d-inline-block">
-                                <a href="#"
-                                   class="text-level-10 ajax-load popover-trigger btn btn-playlist"
-                                   data-trigger="hover"
-                                   title="Add to playlist"
-                                   data-placement="top"
-                                   data-content="{{ "Add to playlist"|trans }}"
-                                   data-replace-selector="#songPlaylists .modal-body"
-                                   data-toggle='modal' data-target='#songPlaylists'
-                                   data-url='{{ url('song_playlist',{id:song.id}) }}'
-                                   data-song-id='{{ song.id }}'>
-                                    <i title="Add to playlist"
-                                       data-toggle="tooltip" class="fas fa-heart"></i>
-                                </a>
-                            </div>
-                            {% if song.youtubeLink != null %}
-                                <div class="d-inline-block">
-                                    <a target="_blank" href="{{ song.youtubeLink }}"
-                                       class="btn btn-youtube">
-                                        <i class="fab fa-youtube"></i>
-                                    </a>
-                                </div>
-                            {% endif %}
-                            <div class="d-inline-block">
-                                <a data-toggle="tooltip" href="#" title="Click to copy !rc code"
-                                   data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn btn-twitch">
-                                    <i class="fab fa-twitch"></i> <b>{{ song.id }}</b>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <div class="label">{{ "Mapped by"|trans }}</div>
-                            {% include 'songs/partial/mappers.html.twig' with {song:song} %}
-                        </div>
-                        <div class="mt-3">
-                            <div class="label">{{ "Description"|trans }}</div>
-                            <div class="description">
-                                {% apply markdown_to_html %}
-                                    {{ song.description is not null ? song.description|striptags|nl2br : "no description for now"|trans }}
-                                {% endapply %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        {% set feedbacks = songService.getVotePublicOrMine(app.user,song) %}
-                        <div id="feedback-and-rating">
-                            <div id="rating-box">
-                                <div class="label">{{ "Rating"|trans }} <i class="fas fa-check {% if songService.isFeedbackDone(app.user, song) %}text-success{% else %}{% endif %}" data-toggle="tooltip" title="{% if songService.isFeedbackDone(app.user, song) %}feedback done{% else %}No feedback from you{% endif %}"></i></div>
-
-                                {% if song.wip %}
-                                    <div class="rating-up">
-                                        <span class="text-danger">{{ "Not available when the song is in \"WIP\" mode"|trans }}</span>
-                                    </div>
-                                {% else %}
-                                    <div class="d-inline-flex rating-up">
-                                        <div>{{ macro_vote.starsDisplay(song.voteAverage|round(2, "floor")) }}</div>
-                                        <div class="ml-3">{{ song.voteAverage|round(2, "floor") }}
-                                            ({{ song.countVotes+0 }})
-                                        </div>
-                                    </div>
-                                    <hr class="mt-1 mb-3"/>
-                                    <div>
-                                        {{ macro_vote.ratingDisplayLabel("Fun factor"|trans,song.funFactorAverage) }}
-                                        {{ macro_vote.ratingDisplayLabel("Rhythm"|trans,song.rhythmAverage) }}
-                                        {{ macro_vote.ratingDisplayLabel("Pattern quality"|trans,song.patternQualityAverage) }}
-                                        {{ macro_vote.ratingDisplayLabel("Readability"|trans,song.readabilityAverage) }}
-                                    </div>
-                                    <div>
-                                        {% if voteService.canReview(song, app.user) %}
-                                            <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-1 mb-2 song-review"
-                                                    data-toggle="modal"
-                                                    data-target="#reviewSong"
-                                                    data-refresh="true"
-                                                    data-url="{{ url('song_vote_review',{id:song.id}) }}"
-                                                    data-song-id="{{ song.id }}"
-                                            >{{ "Submit rating"|trans }}</button>
-                                        {% else %}
-                                            <button class="btn btn-block btn-warning btn-sm mt-1 mb-2 disabled"
-                                            >{{ "Play the song first"|trans }}</button>
-                                        {% endif %}
-                                        <button class="btn btn-block btn-sm mt-1 mb-2 song-feedback"
-                                        >{{ "Read Feedback"|trans }} ({{ feedbacks|length }})
-                                        </button>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div id="feedback-box">
-                                <div class="label">{{ "Feedbacks"|trans }}</div>
-                                <div class="content-feedback">
-                                    {% for feedback in feedbacks %}
-                                        <div>
-                                            {% if feedback.isAnonymous %}
-                                                <b>{{ "Anonymous:"|trans }} </b>
-                                            {% else %}
-                                                <b>{{ feedback.user.username }} : {% if not feedback.isModerated %}
-                                                        <div class="badge badge-danger">{{ "not moderated"|trans }}</div>{% endif %}
-                                                </b>
-                                            {% endif %}
-                                            {{ feedback.feedback }}
-                                        </div>
-                                        <hr/>
-                                    {% else %}
-                                        <p>{{ "No feedback for now, be the first!"|trans }}</p>
-                                    {% endfor %}
-                                </div>
-                                <button class="btn btn-block btn-sm mt-1 mb-2 back-feedback btn-outline-info"
-                                >{{ "Back"|trans }}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row pt-2">
-                <div class="offset-lg-1 col-lg-2 pl-lg-1" id="ragna_{{ song.id }}_detail"
-                     data-file="{{ song.infoDatFile }}" {{ stimulus_target('song-detail', 'info') }}>
-                    <h3 class="text-center">{{ "Preview"|trans }}</h3>
-                    <div id="ragna-beat-diffs"></div>
-                    <div id="ragna-beat-buttons"></div>
-                    <div id="ragna-beat-sounds" class="text-center"></div>
-                    <div id="ragna-canvas">
-                        <canvas id="ragna-bg-canvas" width="300" height="600"></canvas>
-                        <canvas id="ragna-main-canvas" width="300" height="600"></canvas>
-                    </div>
-                    <div id="ragna-beat-volumes"></div>
-                    <div id="ragna-beat-info">(Drum sound only plays when this tab is active)</div>
-                    <div id="ragna-beat-duration">
-                        <input type="range" min="1" max="100" value="0">
-                        <span class="current">00:00</span>
-                        <span class="max">00:00</span>
-                    </div>
-
-                    <div class="text-center">Player by <b>Ratzee</b></div>
-
-                </div>
-                <div class="col-lg-4 ">
-                    <h3>
-                        {{ "Leaderboard VR"|trans }}
-                    </h3>
-                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                        {% for level in levels %}
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link {% if loop.index == 1 %}active{% endif %}"
-                                   id="pills-level-{{ level['level'] }}"
-                                   data-toggle="pill"
-                                   href="#pills-leaderboard-{{ level['level'] }}"
-                                   role="tab"
-                                   aria-controls="pills-leaderboard-{{ level['level'] }}"
-                                   style="background-color:#{{ level['color'] }};"
-                                >level {{ level['level'] }} </a>
-                                {# {% if is_granted('ROLE_MODERATOR') %}<a class="ajax-link" #}
-                                {#                                   id="ranked-{{ level['difficulty'].id }}" #}
-                                {#                                   data-replace-selector="#ranked-{{ level['difficulty'].id }}" #}
-                                {#                                        data-success-action="replace-html" #}
-                                {#                                        data-url="{{ url("rank_toggle",{id: level['difficulty'].id })  }}" #}
-                                {#                                        href="#"> #}
-                                {#                                    {% if level['difficulty'].isRanked %} #}
-                                {#                                        <i class="fas fa-star"></i> ranked #}
-                                {#                                    {% else %} #}
-                                {#                                        <i class="far fa-star"></i> not r. #}
-                                {#                                    {% endif %} #}
-                                {#                                </a> #}
-                                {#                                 {% endif %} #}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="tab-content leaderboards" id="pills-tabContent">
-                        {% for level in levels %}
-                            <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
-                                 id="pills-leaderboard-{{ level['level'] }}" role="tabpanel"
-                                 aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
-                                <div class="row">
-                                    <div class="col-12">
-                                        {% if is_granted('ROLE_USER') %}
-                                            <span class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', true)}) }}</span>
-                                        {% endif %}
-                                        <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
-                                            <tr>
-                                                <th class="text-right">#</th>
-                                                <th>{{ "player"|trans }}</th>
-                                                <th class="text-right">{{ "distance"|trans }}</th>
-                                                {% if level.difficulty.isRanked %}
-                                                    <th class="text-right">{{ "PP"|trans }}</th>
-                                                {% endif %}
-                                                <th class="text-right">{{ "Perfects" }}</th>
-                                                <th class="text-right">{{ "Time Set" }}</th>
-                                                <th class="text-right" colspan="2">{{ "More Stats" }}</th>
-                                            </tr>
-                                            {% include 'songs/partial/leaderboard.html.twig' with {level:level, type: 'scores'} %}
-                                        </table>
-
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-
-
-                </div>
-                <div class="col-lg-4">
-                    <h3>
-                        {{ "Leaderboard VoT"|trans }}
-                    </h3>
-                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                        {% for level in levels %}
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link {% if loop.index == 1 %}active{% endif %}"
-                                   id="pills-level-{{ level['level'] }}"
-                                   data-toggle="pill"
-                                   href="#pills-leaderboard-{{ level['level'] }}-flat"
-                                   role="tab"
-                                   aria-controls="pills-leaderboard-{{ level['level'] }}-flat"
-                                   style="background-color:#{{ level['color'] }};"
-                                >level {{ level['level'] }} </a>
-                                {# {% if is_granted('ROLE_MODERATOR') %}<a class="ajax-link" #}
-                                {#                                   id="ranked-{{ level['difficulty'].id }}" #}
-                                {#                                   data-replace-selector="#ranked-{{ level['difficulty'].id }}" #}
-                                {#                                        data-success-action="replace-html" #}
-                                {#                                        data-url="{{ url("rank_toggle",{id: level['difficulty'].id })  }}" #}
-                                {#                                        href="#"> #}
-                                {#                                    {% if level['difficulty'].isRanked %} #}
-                                {#                                        <i class="fas fa-star"></i> ranked #}
-                                {#                                    {% else %} #}
-                                {#                                        <i class="far fa-star"></i> not r. #}
-                                {#                                    {% endif %} #}
-                                {#                                </a> #}
-                                {#                                 {% endif %} #}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="tab-content leaderboards" id="pills-tabContent">
-                        {% for level in levels %}
-                            <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
-                                 id="pills-leaderboard-{{ level['level'] }}-flat" role="tabpanel"
-                                 aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
-                                <div class="row">
-                                    <div class="col-12">
-                                        {% if is_granted('ROLE_USER') %}
-                                            <span class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false)}) }}</span>
-                                        {% endif %}
-                                        <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
-                                            <tr>
-                                                <th class="text-right">#</th>
-                                                <th>{{ "player"|trans }}</th>
-                                                <th class="text-right">{{ "distance"|trans }}</th>
-                                                {% if level.difficulty.isRanked %}
-                                                <th class="text-right">{{ "PP"|trans }}</th>
-                                                {% endif %}
-                                                <th class="text-right">{{ "Perfects" }}</th>
-                                                <th class="text-right">{{ "Time Set" }}</th>
-                                                <th class="text-right" colspan="2">{{ "More Stats" }}</th>
-                                            </tr>
-                                            {% include 'songs/partial/leaderboard.html.twig' with {level:level, type: 'scoresFlat'} %}
-                                        </table>
-
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-
-
-                </div>
-                <div class="col-md-12">
-                    <h3>{{ "Similar songs"|trans }}</h3>
-
-                </div>
-                {% import "songs/macros/song.html.twig" as macro_song %}
-                {% for song in songService.similarSongs(song, 8) %}
-                    <div class="col-lg-3 mb-5">
-                        {{ macro_song.featuredBox(song) }}
-                    </div>
+              <div class="level-list">
+                {% for diff in song.songDifficulties %}
+                  <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                       style="background-color:#{{ diff.difficultyRank.color }};">
+                    {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip"
+                                             title="Ranked"
+                                             style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                    <span>{{ diff.difficultyRank.level }}</span>
+                  </div>
                 {% endfor %}
+              </div>
             </div>
+            <div class="d-flex justify-content-between pt-1">
+              <div>
+                {{ song.timeAgo }}
+              </div>
+              <div>
+                <i class="fas fa-clock"></i> {{ song.approximativeDurationMin }}
+              </div>
+              <div>
+                <i class="fas fa-drum"></i> {{ song.beatsPerMinute|number_format(2)+0 }}
+              </div>
+            </div>
+            <div class="download-buttons">
+              <div class="d-inline-block">
+                <a data-no-swup="true" href="ragnac://install/{{ song.id }}"
+                   class="btn btn-block mr-1 btn-success"><i class="fas fa-download"></i> {{ "1 click"|trans }}</a>
+              </div>
+              <div class="d-inline-block">
+                <a data-no-swup="true" href="{{ url('song_direct_download',{id: song.id}) }}"
+                   class="btn btn-block ml-1 btn-info text-uppercase"><i class="fas fa-download"></i> {{ "Zip"|trans }}
+                </a>
+              </div>
+            </div>
+            <div>
+              <small class="text-warning">{{ song.downloads }} {{ "Downloads"|trans }}</small>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <h1 class="force-default text-warning">{{ song|raw }}</h1>
+            <h2 class="force-default">
+              {% include 'songs/partial/artists.html.twig' %}
+            </h2>
+            <div class="tags">
+              {% for category in song.categoryTags %}
+                <a class='btn btn-sm btn-tag'
+                   href="{{ url('song_library',{search:'genre:'~category.label}) }}">{{ category.label }}</a>
+              {% endfor %}
+            </div>
+            <div class="mt-3 mb-3">
+              {% include 'songs/partial/downupvote.html.twig' %}
+            </div>
+            <div class="buttons-middle">
+              <div class="d-inline-block">
+                <a href="#"
+                   class="text-level-10 ajax-load popover-trigger btn btn-playlist"
+                   data-trigger="hover"
+                   title="Add to playlist"
+                   data-placement="top"
+                   data-content="{{ "Add to playlist"|trans }}"
+                   data-replace-selector="#songPlaylists .modal-body"
+                   data-toggle='modal' data-target='#songPlaylists'
+                   data-url='{{ url('song_playlist',{id:song.id}) }}'
+                   data-song-id='{{ song.id }}'>
+                  <i title="Add to playlist"
+                     data-toggle="tooltip" class="fas fa-heart"></i>
+                </a>
+              </div>
+              {% if song.youtubeLink != null %}
+                <div class="d-inline-block">
+                  <a target="_blank" href="{{ song.youtubeLink }}"
+                     class="btn btn-youtube">
+                    <i class="fab fa-youtube"></i>
+                  </a>
+                </div>
+              {% endif %}
+              <div class="d-inline-block">
+                <a data-toggle="tooltip" href="#" title="Click to copy !rc code"
+                   data-to-copy="!rc {{ song.id }}" class="copy-clipboard btn btn-twitch">
+                  <i class="fab fa-twitch"></i> <b>{{ song.id }}</b>
+                </a>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="label">{{ "Mapped by"|trans }}</div>
+              {% include 'songs/partial/mappers.html.twig' with {song:song} %}
+            </div>
+            <div class="mt-3">
+              <div class="label">{{ "Description"|trans }}</div>
+              <div class="description">
+                {% apply markdown_to_html %}
+                  {{ song.description is not null ? song.description|striptags|nl2br : "no description for now"|trans }}
+                {% endapply %}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            {% set feedbacks = songService.getVotePublicOrMine(app.user,song) %}
+            <div id="feedback-and-rating">
+              <div id="rating-box">
+                <div class="label">{{ "Rating"|trans }} <i
+                      class="fas fa-check {% if songService.isFeedbackDone(app.user, song) %}text-success{% else %}{% endif %}"
+                      data-toggle="tooltip"
+                      title="{% if songService.isFeedbackDone(app.user, song) %}feedback done{% else %}No feedback from you{% endif %}"></i>
+                </div>
+
+                {% if song.wip %}
+                  <div class="rating-up">
+                    <span class="text-danger">{{ "Not available when the song is in \"WIP\" mode"|trans }}</span>
+                  </div>
+                {% else %}
+                  <div class="d-inline-flex rating-up">
+                    <div>{{ macro_vote.starsDisplay(song.voteAverage|round(2, "floor")) }}</div>
+                    <div class="ml-3">{{ song.voteAverage|round(2, "floor") }}
+                      ({{ song.countVotes+0 }})
+                    </div>
+                  </div>
+                  <hr class="mt-1 mb-3"/>
+                  <div>
+                    {{ macro_vote.ratingDisplayLabel("Fun factor"|trans,song.funFactorAverage) }}
+                    {{ macro_vote.ratingDisplayLabel("Rhythm"|trans,song.rhythmAverage) }}
+                    {{ macro_vote.ratingDisplayLabel("Pattern quality"|trans,song.patternQualityAverage) }}
+                    {{ macro_vote.ratingDisplayLabel("Readability"|trans,song.readabilityAverage) }}
+                  </div>
+                  <div>
+                    {% if voteService.canReview(song, app.user) %}
+                      <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-1 mb-2 song-review"
+                              data-toggle="modal"
+                              data-target="#reviewSong"
+                              data-refresh="true"
+                              data-url="{{ url('song_vote_review',{id:song.id}) }}"
+                              data-song-id="{{ song.id }}"
+                      >{{ "Submit rating"|trans }}</button>
+                    {% else %}
+                      <button class="btn btn-block btn-warning btn-sm mt-1 mb-2 disabled"
+                      >{{ "Play the song first"|trans }}</button>
+                    {% endif %}
+                    <button class="btn btn-block btn-sm mt-1 mb-2 song-feedback"
+                    >{{ "Read Feedback"|trans }} ({{ feedbacks|length }})
+                    </button>
+                  </div>
+                {% endif %}
+              </div>
+              <div id="feedback-box">
+                <div class="label">{{ "Feedbacks"|trans }}</div>
+                <div class="content-feedback">
+                  {% for feedback in feedbacks %}
+                    <div>
+                      {% if feedback.isAnonymous %}
+                        <b>{{ "Anonymous:"|trans }} </b>
+                      {% else %}
+                        <b>{{ feedback.user.username }} : {% if not feedback.isModerated %}
+                            <div class="badge badge-danger">{{ "not moderated"|trans }}</div>{% endif %}
+                        </b>
+                      {% endif %}
+                      {{ feedback.feedback }}
+                    </div>
+                    <hr/>
+                  {% else %}
+                    <p>{{ "No feedback for now, be the first!"|trans }}</p>
+                  {% endfor %}
+                </div>
+                <button class="btn btn-block btn-sm mt-1 mb-2 back-feedback btn-outline-info"
+                >{{ "Back"|trans }}</button>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-    <div class="p-5"></div>
-    <script type="application/ld+json">
-                    {
-                        "@context": "https://schema.org",
-                        "@type": "Product",
-                        "author": "{{ song.levelAuthorName|escape }}",
+    <div class="container-fluid">
+      <div class="row pt-2">
+        <div class="offset-lg-1 col-lg-2 pl-lg-1" id="ragna_{{ song.id }}_detail"
+             data-file="{{ song.infoDatFile }}" {{ stimulus_target('song-detail', 'info') }}>
+          <h3 class="text-center">{{ "Preview"|trans }}</h3>
+          <div id="ragna-beat-diffs"></div>
+          <div id="ragna-beat-buttons"></div>
+          <div id="ragna-beat-sounds" class="text-center"></div>
+          <div id="ragna-canvas">
+            <canvas id="ragna-bg-canvas" width="300" height="600"></canvas>
+            <canvas id="ragna-main-canvas" width="300" height="600"></canvas>
+          </div>
+          <div id="ragna-beat-volumes"></div>
+          <div id="ragna-beat-info">(Drum sound only plays when this tab is active)</div>
+          <div id="ragna-beat-duration">
+            <input type="range" min="1" max="100" value="0">
+            <span class="current">00:00</span>
+            <span class="max">00:00</span>
+          </div>
+
+          <div class="text-center">Player by <b>Ratzee</b></div>
+
+        </div>
+        <div class="col-lg-4 ">
+          <h3>
+            {{ "Leaderboard VR"|trans }}
+          </h3>
+          <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            {% for level in levels %}
+              <li class="nav-item" role="presentation">
+                <a class="nav-link {% if loop.index == 1 %}active{% endif %}"
+                   id="pills-level-{{ level['level'] }}"
+                   data-toggle="pill"
+                   href="#pills-leaderboard-{{ level['level'] }}"
+                   role="tab"
+                   aria-controls="pills-leaderboard-{{ level['level'] }}"
+                   style="background-color:#{{ level['color'] }};"
+                >level {{ level['level'] }} </a>
+              </li>
+            {% endfor %}
+          </ul>
+          <div class="tab-content leaderboards" id="pills-tabContent">
+            {% for level in levels %}
+              <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
+                   id="pills-leaderboard-{{ level['level'] }}" role="tabpanel"
+                   aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
+                <div class="row">
+                  <div class="col-12">
+                    {% if is_granted('ROLE_USER') %}
+                      <span
+                          class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', true)}) }}</span>
+                    {% endif %}
+                    <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
+                      <tr>
+                        <th class="text-right">#</th>
+                        <th>{{ "player"|trans }}</th>
+                        <th class="text-right">{{ "distance"|trans }}</th>
+                        {% if level.difficulty.isRanked %}
+                          <th class="text-right">{{ "PP"|trans }}</th>
+                        {% endif %}
+                        <th class="text-right">{{ "Perfects" }}</th>
+                        <th class="text-right">{{ "Time Set" }}</th>
+                        <th class="text-right" colspan="2">{{ "More Stats" }}</th>
+                      </tr>
+                      {% include 'songs/partial/leaderboard.html.twig' with {level:level, type: 'scores'} %}
+                    </table>
+
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="row">
+            <div class="col" style="margin-right:-20%;">
+              <h3>{{ "Leaderboard VoT"|trans }}</h3>
+            </div>
+            <div class="col">
+              <div class="pt-1 d-flex ">
+                <div><label class="pr-2" for="switch-leaderboard-detail">CLASSIC</label></div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="switch-leaderboard-detail">
+                  <label class="custom-control-label" for="switch-leaderboard-detail"></label>
+                </div>
+                <div><label class="" for="switch-leaderboard-detail">OKOD</label></div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-content" id="leaderboardContent">
+            <div class="tab-pane" id="flatLeaderboard" role="tabpanel" aria-labelledby="vot-tab" style="display:block">
+              <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                {% for level in levels %}
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if loop.index == 1 %}active{% endif %}"
+                       id="pills-level-{{ level['level'] }}"
+                       data-toggle="pill"
+                       href="#pills-leaderboard-{{ level['level'] }}-flat"
+                       role="tab"
+                       aria-controls="pills-leaderboard-{{ level['level'] }}-flat"
+                       style="background-color:#{{ level['color'] }};"
+                    >level {{ level['level'] }} </a>
+                  </li>
+                {% endfor %}
+              </ul>
+              <div class="tab-content leaderboards" id="pills-tabContent">
+                {% for level in levels %}
+                  <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
+                       id="pills-leaderboard-{{ level['level'] }}-flat" role="tabpanel"
+                       aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
+                    <div class="row">
+                      <div class="col-12">
+                        {% if is_granted('ROLE_USER') %}
+                          <span
+                              class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false)}) }}</span>
+                        {% endif %}
+                        <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
+                          <tr>
+                            <th class="text-right">#</th>
+                            <th>{{ "player"|trans }}</th>
+                            <th class="text-right">{{ "distance"|trans }}</th>
+                            {% if level.difficulty.isRanked %}
+                              <th class="text-right">{{ "PP"|trans }}</th>
+                            {% endif %}
+                            <th class="text-right">{{ "Perfects" }}</th>
+                            <th class="text-right">{{ "Time Set" }}</th>
+                            <th class="text-right" colspan="2">{{ "More Stats" }}</th>
+                          </tr>
+                          {% include 'songs/partial/leaderboard.html.twig' with {level:level, type: 'scoresFlat'} %}
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="tab-pane" id="okodLeaderboard" role="tabpanel" aria-labelledby="okod-tab" style="display:none">
+              <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                {% for level in levels %}
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if loop.index == 1 %}active{% endif %}"
+                       id="pills-level-{{ level['level'] }}"
+                       data-toggle="pill"
+                       href="#pills-leaderboard-{{ level['level'] }}-okod"
+                       role="tab"
+                       aria-controls="pills-leaderboard-{{ level['level'] }}-okod"
+                       style="background-color:#{{ level['color'] }};"
+                    >level {{ level['level'] }} </a>
+                  </li>
+                {% endfor %}
+              </ul>
+              <div class="tab-content leaderboards" id="pills-tabContent">
+                {% for level in levels %}
+                  <div class="tab-pane fade {% if loop.index == 1 %}show active{% endif %}"
+                       id="pills-leaderboard-{{ level['level'] }}-okod" role="tabpanel"
+                       aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
+                    <div class="row">
+                      <div class="col-12">
+                        {% if is_granted('ROLE_USER') %}
+                          <span
+                              class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false)}) }}</span>
+                        {% endif %}
+                        <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
+                          <tr>
+                            <th class="text-right">#</th>
+                            <th>{{ "player"|trans }}</th>
+                            <th class="text-right">{{ "distance"|trans }}</th>
+                            {% if level.difficulty.isRanked %}
+                              <th class="text-right">{{ "PP"|trans }}</th>
+                            {% endif %}
+                            <th class="text-right">{{ "Perfects" }}</th>
+                            <th class="text-right">{{ "Time Set" }}</th>
+                            <th class="text-right" colspan="2">{{ "More Stats" }}</th>
+                          </tr>
+                          {% include 'songs/partial/leaderboard.html.twig' with {level:level, type: 'scoresOKOD'} %}
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+
+        </div>
+
+        <div class="col-md-12">
+          <h3>{{ "Similar songs"|trans }}</h3>
+
+        </div>
+        {% import "songs/macros/song.html.twig" as macro_song %}
+        {% for song in songService.similarSongs(song, 8) %}
+          <div class="col-lg-3 mb-5">
+            {{ macro_song.featuredBox(song) }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="p-5"></div>
+  <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "author": "{{ song.levelAuthorName|escape }}",
                         "image": "https://ragnacustoms.com{{ song.cover }}",
                         "name": "{{ (song.name~" - "~song.authorName)|escape }}",
                         "aggregateRating": {
@@ -371,24 +414,12 @@
                             "ratingValue": "{{ song.voteAverage|round(2, "floor") }}"
                         }
                     }
-
-
-
-
-
-
-
-
-
-    </script>
-
-
+  </script>
 {% endblock %}
 
 
-
 {% block javascripts %}
-    {{ parent() }}
+  {{ parent() }}
 {% endblock %}
 
 
