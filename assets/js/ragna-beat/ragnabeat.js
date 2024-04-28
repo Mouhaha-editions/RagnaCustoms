@@ -337,8 +337,6 @@ export class RagnaBeat {
 
         if (this.delta > this.interval) {
             this.then = now;
-            let fps = 1000 / this.delta;
-            if (fps < 58) console.log(now, fps);
 
             if (!this.isPlaying) return;
 
