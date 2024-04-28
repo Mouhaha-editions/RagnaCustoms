@@ -70,7 +70,7 @@ export class RagnaBeat {
 
                 $(t.audio).on('ended', function () {
                     t.isPlaying = false;
-                    stopSong();
+                    t.stopSong();
                 });
 
                 t.audio.addEventListener("timeupdate", function () {
@@ -337,6 +337,8 @@ export class RagnaBeat {
 
         if (this.delta > this.interval) {
             this.then = now;
+            let fps = 1000 / this.delta;
+            if (fps < 58) console.log(now, fps);
 
             if (!this.isPlaying) return;
 
