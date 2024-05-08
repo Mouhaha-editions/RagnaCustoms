@@ -1,7 +1,9 @@
 export class RagnaBeat {
     uid;
-    c;
-    ctx;
+    bgCanvas;
+    mainCanvas;
+    bgCtx;
+    mainCtx;
     file;
     levelDetail;
     audio;
@@ -12,7 +14,10 @@ export class RagnaBeat {
     startTime = 0;
     moveSpeed = 0;
     jsonIteration = 0;
+    jsonBPMIteration = 0;
     songBPS = 0;
+    bpmTime = 0;
+    localBPS;
     runes = {};
     rings = [];
     ratio = 2.5;
@@ -21,7 +26,7 @@ export class RagnaBeat {
     circleRadius = 30;
     margin = 12;
     image_drum = new Image;
-    image_runes = [new Image, new Image, new Image, new Image, new Image];
+    image_runes = [new Image, new Image, new Image, new Image, new Image, new Image, new Image];
 
     audio_drums = [new Audio, new Audio, new Audio, new Audio];
 
@@ -29,8 +34,8 @@ export class RagnaBeat {
     singleton = false;
     fps = 60;
     now;
-    then = Date.now();
-    interval = 1000 / this.fps;
+    then;
+    interval = 1000 / (2*this.fps); // For some reason, interval calculated from desired FPS results in only half as much frames - calculating it like this fixes the discrepancy.
     delta;
 
     init() {
@@ -43,6 +48,8 @@ export class RagnaBeat {
             url: t.file, type: 'GET', dataType: 'JSON', success: function (result) {
                 t.infoDat = result;
                 t.songBPS = t.infoDat._beatsPerMinute / 60;
+                t.localBPS = t.songBPS;
+                t.bpmTime = 0;
                 t.moveSpeed = t.infoDat._difficultyBeatmapSets[0]._difficultyBeatmaps[0]._noteJumpMovementSpeed / 3 * t.ratio;
                 t.setDelay();
                 let song = t.infoDat._songFilename;
@@ -63,7 +70,7 @@ export class RagnaBeat {
 
                 $(t.audio).on('ended', function () {
                     t.isPlaying = false;
-                    stopSong();
+                    t.stopSong();
                 });
 
                 t.audio.addEventListener("timeupdate", function () {
@@ -90,16 +97,20 @@ export class RagnaBeat {
                     t.audio_drums[i].volume = $(t.uid + " #drum-vol-control").val() / 100;
                 }
 
-                t.c = $(t.uid + " #ragna-canvas")[0];
-                t.ctx = t.c.getContext("2d");
-                t.checkTop = t.c.height - t.circleRadius - t.margin - t.spawnDistance;
+                t.bgCanvas = $(t.uid + " #ragna-bg-canvas")[0];
+                t.mainCanvas = $(t.uid + " #ragna-main-canvas")[0];
+                t.bgCtx = t.bgCanvas.getContext("2d");
+                t.mainCtx = t.mainCanvas.getContext("2d");
+                t.checkTop = t.mainCanvas.height - t.circleRadius - t.margin - t.spawnDistance;
 
                 t.image_drum.src = "/ragna-beat-assets/image_drum.png";
-                t.image_runes[0].src = "/ragna-beat-assets/image_rune_0.png";
-                t.image_runes[1].src = "/ragna-beat-assets/image_rune_1.png";
-                t.image_runes[2].src = "/ragna-beat-assets/image_rune_2.png";
-                t.image_runes[3].src = "/ragna-beat-assets/image_rune_3.png";
-                t.image_runes[4].src = "/ragna-beat-assets/image_rune_4.png";
+                t.image_runes[0].src = "/ragna-beat-assets/image_rune_1.png";
+                t.image_runes[1].src = "/ragna-beat-assets/image_rune_14.png";
+                t.image_runes[2].src = "/ragna-beat-assets/image_rune_13.png";
+                t.image_runes[3].src = "/ragna-beat-assets/image_rune_12.png";
+                t.image_runes[4].src = "/ragna-beat-assets/image_rune_23.png";
+                t.image_runes[5].src = "/ragna-beat-assets/image_rune_34.png";
+                t.image_runes[6].src = "/ragna-beat-assets/image_rune_X.png"
                 t.image_drum.addEventListener('load', e => {
                     t.drawDrums();
                 });
@@ -154,7 +165,8 @@ export class RagnaBeat {
                 $(this).attr('data-level', 'pause');
                 $(this).html('<i class="fas fa-pause"></i>');
                 t.isPlaying = true;
-                t.animationFrame = requestAnimationFrame(function () {
+                t.animationFrame = requestAnimationFrame(function (now) {
+                    t.then = now;
                     t.animate();
                 });
             } else if (level === "pause") {
@@ -195,13 +207,25 @@ export class RagnaBeat {
             if (document.visibilityState === "visible" && t.isPlaying) {
                 t.rings = [];
                 for (let index in t.runes) delete t.runes[index];
-                t.drawDrums();
+                t.clearCanvas();
                 let elapsedTime = (Date.now() - t.startTime) / 1000;
                 let timeStamp = 0;
                 for (let i = 0; i < t.levelDetail._notes.length; i++) {
                     timeStamp = t.levelDetail._notes[i]._time / t.songBPS;
-                    if (timeStamp <= elapsedTime && i !== t.levelDetail._notes.length) {
+                    if (timeStamp <= elapsedTime) {
                         t.this.jsonIteration = i + 1;
+                    } else {
+                        break;
+                    }
+                }
+                for (let i = 0; i < t.levelDetail._customData._BPMChanges.length; i++) {
+                    timeStamp = t.levelDetail._customData._BPMChanges[i]._time / t.songBPS;
+                    if (timeStamp <= elapsedTime) {
+                        t.this.jsonBPMIteration = i + 1;
+                        t.this.bpmTime = t.levelDetail._customData._BPMChanges[i]._time;
+                        t.this.localBPS = t.levelDetail._customData._BPMChanges[i]._BPM / 60;
+                    } else {
+                        break;
                     }
                 }
             }
@@ -211,7 +235,7 @@ export class RagnaBeat {
             t.audio.pause();
             t.isPlaying = false;
             for (let index in t.runes) delete t.runes[index];
-            t.drawDrums();
+            t.clearCanvas();
             cancelAnimationFrame(t.animationFrame);
         });
 
@@ -221,11 +245,13 @@ export class RagnaBeat {
             t.startTime = Date.now() - value * 1000 - t.delay - 1000 / t.fps * 2;
             t.isPlaying = true;
             t.rings = [];
-            t.animationFrame = requestAnimationFrame(function () {
+            t.animationFrame = requestAnimationFrame(function (now) {
+                t.then = now;
                 t.animate();
             });
             t.audio.play();
             t.jsonIterationToCurrentTime(value);
+            t.jsonBPMIterationToCurrentTime(value);
             $(t.uid + ' #ragna-beat-play').attr('data-level', 'pause');
             $(t.uid + ' #ragna-beat-play').html('<i class="fas fa-pause"></i>');
             $(t.uid + ' #ragna-beat-play').addClass('playing');
@@ -253,8 +279,20 @@ export class RagnaBeat {
         let timeStamp = 0;
         for (let i = 0; i < this.levelDetail._notes.length; i++) {
             timeStamp = this.levelDetail._notes[i]._time / this.songBPS;
-            if (timeStamp <= elapsedTime + this.delay / 1000 && i !== this.levelDetail._notes.length) {
+            if (timeStamp <= elapsedTime + this.delay / 1000) {
                 this.jsonIteration = i + 1;
+            }
+        }
+    }
+
+    jsonBPMIterationToCurrentTime(elapsedTime) {
+        let timeStamp = 0;
+        for (let i = 0; i < this.levelDetail._customData._BPMChanges.length; i++) {
+            timeStamp = this.levelDetail._customData._BPMChanges[i]._time / this.songBPS;
+            if (timeStamp <= elapsedTime + this.delay / 1000) {
+                this.jsonBPMIteration = i + 1;
+                this.bpmTime = this.levelDetail._customData._BPMChanges[i]._time;
+                this.localBPS = this.levelDetail._customData._BPMChanges[i]._BPM / 60;
             }
         }
     }
@@ -266,75 +304,80 @@ export class RagnaBeat {
             this.audio.pause();
             this.audio.currentTime = 0;
             this.jsonIteration = 0;
+            this.jsonBPMIteration = 0;
             $(this.uid + ' #ragna-beat-play').removeClass('playing');
             $(this.uid + ' #ragna-beat-play').html('<i class="fas fa-play"></i>');
             $(this.uid + ' #ragna-beat-play').attr('data-level', 'play');
             for (let index in this.runes) delete this.runes[index];
-            this.drawDrums();
+            this.clearCanvas();
             cancelAnimationFrame(this.animationFrame);
         }
     }
 
     drawDrums() {
-        this.ctx.clearRect(0, 0, this.c.width, this.c.height);
-        this.ctx.drawImage(this.image_drum, this.margin, this.c.height - this.margin - this.circleRadius * 2, this.circleRadius * 2, this.circleRadius * 2);
-        this.ctx.drawImage(this.image_drum, this.circleRadius * 2 + this.margin * 2, this.c.height - this.margin - this.circleRadius * 2, this.circleRadius * 2, this.circleRadius * 2);
-        this.ctx.drawImage(this.image_drum, this.circleRadius * 4 + this.margin * 3, this.c.height - this.margin - this.circleRadius * 2, this.circleRadius * 2, this.circleRadius * 2);
-        this.ctx.drawImage(this.image_drum, this.circleRadius * 6 + this.margin * 4, this.c.height - this.margin - this.circleRadius * 2, this.circleRadius * 2, this.circleRadius * 2);
+        this.bgCtx.clearRect(0, 0, this.bgCanvas.width, this.bgCanvas.height);
+        this.bgCtx.drawImage(this.image_drum, this.margin, this.bgCanvas.height - this.margin - this.circleRadius * 2, this.circleRadius * 2, this.circleRadius * 2);
+        this.bgCtx.drawImage(this.image_drum, this.circleRadius * 2 + this.margin * 2, this.bgCanvas.height - this.margin - this.circleRadius * 2, this.circleRadius * 2, this.circleRadius * 2);
+        this.bgCtx.drawImage(this.image_drum, this.circleRadius * 4 + this.margin * 3, this.bgCanvas.height - this.margin - this.circleRadius * 2, this.circleRadius * 2, this.circleRadius * 2);
+        this.bgCtx.drawImage(this.image_drum, this.circleRadius * 6 + this.margin * 4, this.bgCanvas.height - this.margin - this.circleRadius * 2, this.circleRadius * 2, this.circleRadius * 2);
+    }
+
+    clearCanvas() {
+        this.mainCtx.clearRect(0, 0, this.mainCanvas.width, this.mainCanvas.height);
     }
 
     setDelay() {
         this.delay = this.spawnDistance / this.moveSpeed * 1000 / this.fps;
     }
 
-    animate() {
+    animate(now) {
         let t = this;
-        this.animationFrame = requestAnimationFrame(function () {
-            t.animate();
-        });
-        this.now = Date.now();
-        this.delta = this.now - this.then;
+        this.animationFrame = requestAnimationFrame(t.animate.bind(t));
+        this.delta = now - this.then;
 
         if (this.delta > this.interval) {
-            this.then = this.now - (this.delta % this.interval);
+            this.then = now;
 
             if (!this.isPlaying) return;
 
-            this.drawDrums();
+            this.clearCanvas();
+            if (this.jsonBPMIteration < this.levelDetail._customData._BPMChanges.length) {
+                let bpmTimestamp = this.levelDetail._customData._BPMChanges[this.jsonBPMIteration]._time / this.songBPS;
+                let elapsedTime = (Date.now() - this.startTime) / 1000;
 
+                if (bpmTimestamp.toFixed(5) - elapsedTime.toFixed(5) < 0.005) {
+                    this.bpmTime = this.levelDetail._customData._BPMChanges[this.jsonBPMIteration]._time;
+                    this.localBPS = this.levelDetail._customData._BPMChanges[this.jsonBPMIteration]._BPM / 60;
+                    this.jsonBPMIteration++;
+                }
+            }
             if (this.jsonIteration < this.levelDetail._notes.length) {
                 let noteTimestamp = this.levelDetail._notes[this.jsonIteration]._time / this.songBPS;
                 let elapsedTime = (Date.now() - this.startTime) / 1000;
 
                 if (noteTimestamp.toFixed(5) - elapsedTime.toFixed(5) < 0.005 && this.runes[this.jsonIteration] === undefined) {
                     let lineIndex = this.levelDetail._notes[this.jsonIteration]._lineIndex;
-                    let runeIndex = parseInt(this.levelDetail._notes[this.jsonIteration]._time.toFixed(2).split(".")[1]) / 25;
-                    if (!Number.isInteger(runeIndex)) {
-                        runeIndex = 4;
-                    }
+                    let runeIndex = this.calculateRuneIndex(this.levelDetail._notes[this.jsonIteration]._time);
 
                     this.runes[this.jsonIteration] = {
                         'lineIndex': lineIndex,
                         'runeIndex': runeIndex,
-                        'positionTop': this.c.height - this.circleRadius - this.margin - this.spawnDistance,
+                        'positionTop': this.mainCanvas.height - this.circleRadius - this.margin - this.spawnDistance,
                         'sound': true
                     };
 
                     let nextIteration = this.jsonIteration + 1;
                     if (nextIteration <= this.levelDetail._notes.length - 1) {
                         let nextNoteTimestamp = this.levelDetail._notes[this.jsonIteration + 1]._time / this.songBPS;
-                        let lineIndex = this.levelDetail._notes[this.jsonIteration + 1]._lineIndex;
-                        let runeIndex = parseInt(this.levelDetail._notes[this.jsonIteration]._time.toFixed(2).split(".")[1]) / 25;
-                        if (!Number.isInteger(runeIndex)) {
-                            runeIndex = 4;
-                        }
 
                         if (noteTimestamp.toFixed(5) === nextNoteTimestamp.toFixed(5)) {
+                            let lineIndex = this.levelDetail._notes[this.jsonIteration + 1]._lineIndex;
+                            let runeIndex = this.calculateRuneIndex(this.levelDetail._notes[this.jsonIteration + 1]._time);
 
                             this.runes[this.jsonIteration + 1] = {
                                 'lineIndex': lineIndex,
                                 'runeIndex': runeIndex,
-                                'positionTop': this.c.height - this.circleRadius - this.margin - this.spawnDistance,
+                                'positionTop': this.mainCanvas.height - this.circleRadius - this.margin - this.spawnDistance,
                                 'sound': false
                             };
 
@@ -353,14 +396,14 @@ export class RagnaBeat {
                     this.rings[i].ringRadius = 0;
                 }
 
-                this.ctx.lineWidth = 3;
-                this.ctx.beginPath();
-                this.ctx.arc(this.rings[i].ringX, this.rings[i].ringY, this.rings[i].ringRadius, 0, Math.PI * 2);
+                this.mainCtx.lineWidth = 3;
+                this.mainCtx.beginPath();
+                this.mainCtx.arc(this.rings[i].ringX, this.rings[i].ringY, this.rings[i].ringRadius, 0, Math.PI * 2);
                 let opacity = (35 - this.rings[i].ringCounter) / 50;
-                this.ctx.strokeStyle = this.rings[i].ringColor.replace('%a', opacity);
+                this.mainCtx.strokeStyle = `rgba(189,217,255,${opacity})`;
 
-                this.ctx.stroke();
-                this.ctx.closePath();
+                this.mainCtx.stroke();
+                this.mainCtx.closePath();
 
                 this.rings[i].ringCounter += this.rings[i].ringCounterVelocity;
 
@@ -372,17 +415,17 @@ export class RagnaBeat {
 
             for (const [i, value] of Object.entries(this.runes)) {
                 if (this.runes[i].lineIndex === 0) {
-                    this.ctx.drawImage(this.image_runes[this.runes[i].runeIndex], this.margin, this.runes[i].positionTop - this.margin - this.circleRadius / 2, this.circleRadius * 2, this.circleRadius * 2);
+                    this.mainCtx.drawImage(this.image_runes[this.runes[i].runeIndex], this.margin, this.runes[i].positionTop - this.margin - this.circleRadius / 2, this.circleRadius * 2, this.circleRadius * 2);
                 } else if (this.runes[i].lineIndex === 1) {
-                    this.ctx.drawImage(this.image_runes[this.runes[i].runeIndex], this.circleRadius * 2 + this.margin * 2, this.runes[i].positionTop - this.margin - this.circleRadius / 2, this.circleRadius * 2, this.circleRadius * 2);
+                    this.mainCtx.drawImage(this.image_runes[this.runes[i].runeIndex], this.circleRadius * 2 + this.margin * 2, this.runes[i].positionTop - this.margin - this.circleRadius / 2, this.circleRadius * 2, this.circleRadius * 2);
                 } else if (this.runes[i].lineIndex === 2) {
-                    this.ctx.drawImage(this.image_runes[this.runes[i].runeIndex], this.circleRadius * 4 + this.margin * 3, this.runes[i].positionTop - this.margin - this.circleRadius / 2, this.circleRadius * 2, this.circleRadius * 2);
+                    this.mainCtx.drawImage(this.image_runes[this.runes[i].runeIndex], this.circleRadius * 4 + this.margin * 3, this.runes[i].positionTop - this.margin - this.circleRadius / 2, this.circleRadius * 2, this.circleRadius * 2);
                 } else if (this.runes[i].lineIndex === 3) {
-                    this.ctx.drawImage(this.image_runes[this.runes[i].runeIndex], this.circleRadius * 6 + this.margin * 4, this.runes[i].positionTop - this.margin - this.circleRadius / 2, this.circleRadius * 2, this.circleRadius * 2);
+                    this.mainCtx.drawImage(this.image_runes[this.runes[i].runeIndex], this.circleRadius * 6 + this.margin * 4, this.runes[i].positionTop - this.margin - this.circleRadius / 2, this.circleRadius * 2, this.circleRadius * 2);
                 }
 
                 this.runes[i].positionTop += this.moveSpeed;
-                let distance = this.c.height - this.circleRadius - this.margin - this.runes[i].positionTop;
+                let distance = this.mainCanvas.height - this.circleRadius - this.margin - this.runes[i].positionTop;
 
                 if (distance < this.moveSpeed / 2 && distance > -this.moveSpeed / 2) {
                     let ringX;
@@ -410,11 +453,10 @@ export class RagnaBeat {
 
                     this.rings.push({
                         ringX: ringX,
-                        ringY: this.c.height - this.margin - this.circleRadius * 2 + this.circleRadius,
+                        ringY: this.mainCanvas.height - this.margin - this.circleRadius * 2 + this.circleRadius,
                         ringRadius: this.circleRadius - 5,
                         ringCounter: 0,
-                        ringCounterVelocity: 3,
-                        ringColor: 'rgba(189,217,255,%a)'
+                        ringCounterVelocity: 3
                     });
                 }
 
@@ -423,6 +465,21 @@ export class RagnaBeat {
                 }
             }
         }
+    }
 
+    calculateRuneIndex(noteTimestamp) {
+        let runeLocalTimestamp = (noteTimestamp - this.bpmTime) * this.localBPS / this.songBPS;
+        let runeDivision = Math.round((runeLocalTimestamp % 1) * 48) / 4;
+        let runeIndex = 6;
+        switch (runeDivision) {
+            case 0: runeIndex = 0; break; // full beat
+            case 3: runeIndex = 1; break; // 3/12 = 1/4
+            case 4: runeIndex = 2; break; // 4/12 = 1/3
+            case 6: runeIndex = 3; break; // 6/12 = 1/2
+            case 8: runeIndex = 4; break; // 8/12 = 2/3
+            case 9: runeIndex = 5; break; // 9/12 = 3/4
+            case 12: runeIndex = 0; break; // full beat
+        }
+        return runeIndex;
     }
 }
