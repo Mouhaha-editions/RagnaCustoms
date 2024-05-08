@@ -1,3 +1,5 @@
+import {FireAndForgetSound} from "./sound";
+
 export class RagnaBeat {
     uid;
     bgCanvas;
@@ -10,6 +12,8 @@ export class RagnaBeat {
     infoDat;
     animationFrame;
     drumSounds;
+    selectedDrumSound = 0;
+    drumVol = 0.2;
     isPlaying = false;
     elapsedTime = 0;
     moveSpeed = 0;
@@ -27,8 +31,6 @@ export class RagnaBeat {
     margin = 12;
     image_drum = new Image;
     image_runes = [new Image, new Image, new Image, new Image, new Image, new Image, new Image];
-
-    audio_drums = [new Audio, new Audio, new Audio, new Audio];
 
 
     singleton = false;
@@ -92,14 +94,12 @@ export class RagnaBeat {
                 }];
 
                 for (let i = 0; i < t.drumSounds.length; i++) {
+                    t.drumSounds[i].handler = new FireAndForgetSound(t.drumSounds[i].url);
+                    t.drumSounds[i].handler.load();
+
                     soundsWrapper.append("<button class='btn-info btn btn-sm test-map mr-2 mb-2'>" + t.drumSounds[i].name + "</button>");
                 }
                 soundsWrapper.find('button').first().addClass('btn-dark');
-
-                for (let i in t.audio_drums) {
-                    t.audio_drums[i].src = t.drumSounds[0].url;
-                    t.audio_drums[i].volume = $(t.uid + " #drum-vol-control").val() / 100;
-                }
 
                 t.bgCanvas = $(t.uid + " #ragna-bg-canvas")[0];
                 t.mainCanvas = $(t.uid + " #ragna-main-canvas")[0];
@@ -196,10 +196,7 @@ export class RagnaBeat {
         });
 
         $(document).on('change', this.uid + ' #drum-vol-control', function () {
-            let value = parseInt($(this).val()) / 100;
-            for (let index in t.audio_drums) {
-                t.audio_drums[index].volume = value;
-            }
+            t.drumVol = parseInt($(this).val()) / 100;
         });
 
         document.addEventListener('visibilitychange', function () {
@@ -266,9 +263,7 @@ export class RagnaBeat {
             $('#ragna-beat-sounds button').removeClass('btn-dark');
             $(this).addClass('btn-dark');
 
-            for (let i in t.audio_drums) {
-                t.audio_drums[i].src = t.drumSounds[index].url;
-            }
+            t.selectedDrumSound = index;
         });
     }
 
@@ -430,8 +425,7 @@ export class RagnaBeat {
                     let lineIndex = this.runes[i].lineIndex;
 
                     if (this.runes[i].sound) {
-                        this.audio_drums[lineIndex].currentTime = 0;
-                        this.audio_drums[lineIndex].play();
+                        t.drumSounds[t.selectedDrumSound].handler.play(t.drumVol);
                     }
 
                     switch (lineIndex) {
