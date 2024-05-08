@@ -11,7 +11,7 @@ export class RagnaBeat {
     animationFrame;
     drumSounds;
     isPlaying = false;
-    startTime = 0;
+    elapsedTime = 0;
     moveSpeed = 0;
     jsonIteration = 0;
     jsonBPMIteration = 0;
@@ -72,6 +72,10 @@ export class RagnaBeat {
                     t.isPlaying = false;
                     t.stopSong();
                 });
+
+                $(t.audio).on('play', function () {
+                    t.elapsedTime = t.audio.currentTime + t.delay / 1000;
+                })
 
                 t.audio.addEventListener("timeupdate", function () {
                     let percent = t.audio.currentTime / t.infoDat._songApproximativeDuration * 100;
@@ -150,14 +154,9 @@ export class RagnaBeat {
             let level = $(this).attr('data-level');
             if (level === 'play') {
                 if ($(this).hasClass('playing')) {
-                    t.startTime = Date.now() - t.audio.currentTime * 1000 - t.delay - 1000 / t.fps * 2;
                     t.audio.play();
                 } else {
-                    t.startTime = Date.now();
-
-                    setTimeout(function () {
-                        t.audio.play();
-                    }, t.delay);
+                    t.audio.play();
 
                     $(this).addClass('playing');
                 }
@@ -208,11 +207,10 @@ export class RagnaBeat {
                 t.rings = [];
                 for (let index in t.runes) delete t.runes[index];
                 t.clearCanvas();
-                let elapsedTime = (Date.now() - t.startTime) / 1000;
                 let timeStamp = 0;
                 for (let i = 0; i < t.levelDetail._notes.length; i++) {
                     timeStamp = t.levelDetail._notes[i]._time / t.songBPS;
-                    if (timeStamp <= elapsedTime) {
+                    if (timeStamp <= t.elapsedTime) {
                         t.this.jsonIteration = i + 1;
                     } else {
                         break;
@@ -220,7 +218,7 @@ export class RagnaBeat {
                 }
                 for (let i = 0; i < t.levelDetail._customData._BPMChanges.length; i++) {
                     timeStamp = t.levelDetail._customData._BPMChanges[i]._time / t.songBPS;
-                    if (timeStamp <= elapsedTime) {
+                    if (timeStamp <= t.elapsedTime) {
                         t.this.jsonBPMIteration = i + 1;
                         t.this.bpmTime = t.levelDetail._customData._BPMChanges[i]._time;
                         t.this.localBPS = t.levelDetail._customData._BPMChanges[i]._BPM / 60;
@@ -231,7 +229,7 @@ export class RagnaBeat {
             }
         });
 
-        $(document).on('mousedown', t.uid + ' #ragna-beat-duration input', function () {
+        $(document).on('mousedown touchstart', t.uid + ' #ragna-beat-duration input', function () {
             t.audio.pause();
             t.isPlaying = false;
             for (let index in t.runes) delete t.runes[index];
@@ -239,10 +237,9 @@ export class RagnaBeat {
             cancelAnimationFrame(t.animationFrame);
         });
 
-        $(document).on('mouseup', t.uid + ' #ragna-beat-duration input', function () {
+        $(document).on('mouseup touchend', t.uid + ' #ragna-beat-duration input', function () {
             let value = $(this).val() / 100 * t.infoDat._songApproximativeDuration;
             t.audio.currentTime = value;
-            t.startTime = Date.now() - value * 1000 - t.delay - 1000 / t.fps * 2;
             t.isPlaying = true;
             t.rings = [];
             t.animationFrame = requestAnimationFrame(function (now) {
@@ -250,8 +247,9 @@ export class RagnaBeat {
                 t.animate();
             });
             t.audio.play();
-            t.jsonIterationToCurrentTime(value);
-            t.jsonBPMIterationToCurrentTime(value);
+            t.elapsedTime = t.audio.currentTime + t.delay / 1000;
+            t.jsonIterationToCurrentTime();
+            t.jsonBPMIterationToCurrentTime();
             $(t.uid + ' #ragna-beat-play').attr('data-level', 'pause');
             $(t.uid + ' #ragna-beat-play').html('<i class="fas fa-pause"></i>');
             $(t.uid + ' #ragna-beat-play').addClass('playing');
@@ -274,22 +272,22 @@ export class RagnaBeat {
         });
     }
 
-    jsonIterationToCurrentTime(elapsedTime) {
+    jsonIterationToCurrentTime() {
         for (let index in this.runes) delete this.runes[index];
         let timeStamp = 0;
         for (let i = 0; i < this.levelDetail._notes.length; i++) {
             timeStamp = this.levelDetail._notes[i]._time / this.songBPS;
-            if (timeStamp <= elapsedTime + this.delay / 1000) {
+            if (timeStamp <= this.elapsedTime + this.delay / 1000) {
                 this.jsonIteration = i + 1;
             }
         }
     }
 
-    jsonBPMIterationToCurrentTime(elapsedTime) {
+    jsonBPMIterationToCurrentTime() {
         let timeStamp = 0;
         for (let i = 0; i < this.levelDetail._customData._BPMChanges.length; i++) {
             timeStamp = this.levelDetail._customData._BPMChanges[i]._time / this.songBPS;
-            if (timeStamp <= elapsedTime + this.delay / 1000) {
+            if (timeStamp <= this.elapsedTime + this.delay / 1000) {
                 this.jsonBPMIteration = i + 1;
                 this.bpmTime = this.levelDetail._customData._BPMChanges[i]._time;
                 this.localBPS = this.levelDetail._customData._BPMChanges[i]._BPM / 60;
@@ -303,6 +301,7 @@ export class RagnaBeat {
         if (this.audio !== undefined) {
             this.audio.pause();
             this.audio.currentTime = 0;
+            this.elapsedTime = 0;
             this.jsonIteration = 0;
             this.jsonBPMIteration = 0;
             $(this.uid + ' #ragna-beat-play').removeClass('playing');
@@ -336,6 +335,7 @@ export class RagnaBeat {
         this.delta = now - this.then;
 
         if (this.delta > this.interval) {
+            this.elapsedTime += this.delta / 1000;
             this.then = now;
 
             if (!this.isPlaying) return;
@@ -343,9 +343,8 @@ export class RagnaBeat {
             this.clearCanvas();
             if (this.jsonBPMIteration < this.levelDetail._customData._BPMChanges.length) {
                 let bpmTimestamp = this.levelDetail._customData._BPMChanges[this.jsonBPMIteration]._time / this.songBPS;
-                let elapsedTime = (Date.now() - this.startTime) / 1000;
 
-                if (bpmTimestamp.toFixed(5) - elapsedTime.toFixed(5) < 0.005) {
+                if (bpmTimestamp.toFixed(5) - this.elapsedTime.toFixed(5) < 0.005) {
                     this.bpmTime = this.levelDetail._customData._BPMChanges[this.jsonBPMIteration]._time;
                     this.localBPS = this.levelDetail._customData._BPMChanges[this.jsonBPMIteration]._BPM / 60;
                     this.jsonBPMIteration++;
@@ -353,9 +352,8 @@ export class RagnaBeat {
             }
             if (this.jsonIteration < this.levelDetail._notes.length) {
                 let noteTimestamp = this.levelDetail._notes[this.jsonIteration]._time / this.songBPS;
-                let elapsedTime = (Date.now() - this.startTime) / 1000;
 
-                if (noteTimestamp.toFixed(5) - elapsedTime.toFixed(5) < 0.005 && this.runes[this.jsonIteration] === undefined) {
+                if (noteTimestamp.toFixed(5) - this.elapsedTime.toFixed(5) < 0.005 && this.runes[this.jsonIteration] === undefined) {
                     let lineIndex = this.levelDetail._notes[this.jsonIteration]._lineIndex;
                     let runeIndex = this.calculateRuneIndex(this.levelDetail._notes[this.jsonIteration]._time);
 
