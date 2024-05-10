@@ -27,6 +27,7 @@ use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -413,7 +414,7 @@ class SongsController extends AbstractController
         DiscordService $discordService,
         NotificationService $notificationService,
         ?Song $song = null
-    ) {
+    ): RedirectResponse|Response {
         if ($song == null
             || $song->getIsDeleted()
             || (
@@ -462,7 +463,7 @@ class SongsController extends AbstractController
             $this->addFlash("success", $translator->trans("Feedback sent!"));
         }
 
-        $songService->emulatorFileDispatcher($song);
+        $songService->emulatorFileDispatcher($song, true);
         $em->flush();
         $levels = [];
 

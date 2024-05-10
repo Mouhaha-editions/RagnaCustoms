@@ -174,7 +174,7 @@ class Song
 
     public function __toString()
     {
-        $return = $this->getName();
+        $return = htmlentities($this->getName());
 
         if($this->getConverted()){
             $return .= " <small data-toggle='tooltip' title='Converted' class='badge badge-danger'>C</small>";
