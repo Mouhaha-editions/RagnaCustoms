@@ -15,24 +15,25 @@ export default class extends Controller {
   ragna = null;
 
   connect() {
-    let $description = $('.description');
-    let height = $description.height();
-    let maxHeight = height;
+    $(function(){
+      let $description = $('.description');
+      let height = $description.height();
+      let maxHeight = height;
 
-    console.log(height);
-    if (height > 90) {
-      $description.after('<i class="expend" style="cursor:pointer">Click to expand</i>');
-      $description.css('height', '80px');
-      $description.css('overflow', 'hidden');
-      $description.css('cursor', 'pointer');
-      $description.addClass('expend');
+      if (height > 90) {
+        $description.after('<i class="expend" style="cursor:pointer">Click to expand</i>');
+        $description.css('height', '80px');
+        $description.css('overflow', 'hidden');
+        $description.css('cursor', 'pointer');
+        $description.addClass('expend');
 
-      $('.expend').on('click', function () {
-        $description.animate({'height': (maxHeight + 10) + 'px'});
+        $('.expend').on('click', function () {
+          $description.animate({'height': (maxHeight + 10) + 'px'});
           $description.css('cursor', 'inherit');
           $('i.expend').remove();
-      })
-    }
+        })
+      }
+    })
 
     let file = $(this.infoTarget).data('file');
     let divId = $(this.infoTarget).attr('id');
