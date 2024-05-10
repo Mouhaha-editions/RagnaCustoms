@@ -463,7 +463,7 @@ class SongsController extends AbstractController
             $this->addFlash("success", $translator->trans("Feedback sent!"));
         }
 
-        $songService->emulatorFileDispatcher($song, true);
+        $songService->emulatorFileDispatcher($song);
         $em->flush();
         $levels = [];
 
