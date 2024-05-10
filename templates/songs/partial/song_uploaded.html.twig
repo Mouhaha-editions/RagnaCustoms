@@ -63,7 +63,7 @@
                data-modal="#editSong"
                data-refresh="true"
                data-url="{{ url('edit_song',{id:song.id}) }}"
-           data-title="{{ "Edit Custom Song<br/><small class='text-warning'>\"%songName%\"</small>"|trans|replace({"%songName%":song.name}) }}"
+           data-title="{{ "Edit Custom Song<br/><small class='text-warning'>\"%songName%\"</small>"|trans|replace({"%songName%":song.name|escape}) }}"
            class="mt-2 ajax-modal-form">
             <i class="fas fa-edit"></i>
         </a>
