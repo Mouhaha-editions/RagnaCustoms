@@ -465,11 +465,13 @@ export class RagnaBeat {
         let runeIndex = 6;
         switch (runeDivision) {
             case 0: runeIndex = 0; break; // full beat
+            case 2: runeIndex = 4; break; // 2/12 = 1/6
             case 3: runeIndex = 1; break; // 3/12 = 1/4
             case 4: runeIndex = 2; break; // 4/12 = 1/3
             case 6: runeIndex = 3; break; // 6/12 = 1/2
             case 8: runeIndex = 4; break; // 8/12 = 2/3
             case 9: runeIndex = 5; break; // 9/12 = 3/4
+            case 10: runeIndex = 2; break; // 10/12 = 5/6
             case 12: runeIndex = 0; break; // full beat
         }
         return runeIndex;
