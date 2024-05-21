@@ -71,8 +71,8 @@ class RankingSongsController extends AbstractController
             return $this->redirectToRoute('ranking_song');
         }
 
-        return $this->renderForm('ranking_song/index.html.twig', [
-            'form' => $form
+        return $this->render('ranking_song/index.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 }
