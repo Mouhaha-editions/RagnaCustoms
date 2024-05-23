@@ -38,7 +38,7 @@ class VotesController extends AbstractController
                 if($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)){
                     $UserSongVoteCounter = $song->isVoteCounterBy($this->getUser());
                     if(!$UserSongVoteCounter){break;}
-                    $notificationService->send($mapper,'You got '.($UserSongVoteCounter->getVotesIndc() ? 'an Up-': 'a Down-').'vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
+                    $notificationService->send($mapper,'You got '.($UserSongVoteCounter->getVotesIndc() ? 'an Up-': 'a Down-').'vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.htmlentities($song->getName())."</a>");
                 }
             }
         }
@@ -63,7 +63,7 @@ class VotesController extends AbstractController
                 if($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)){
                     $UserSongVoteCounter = $song->isVoteCounterBy($this->getUser());
                     if(!$UserSongVoteCounter){break;}
-                    $notificationService->send($mapper,'You got '.($UserSongVoteCounter->getVotesIndc() ? 'an Up-': 'a Down-').'vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
+                    $notificationService->send($mapper,'You got '.($UserSongVoteCounter->getVotesIndc() ? 'an Up-': 'a Down-').'vote on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.htmlentities($song->getName())."</a>");
                 }
             }
         }
@@ -171,7 +171,7 @@ class VotesController extends AbstractController
                 $discordService->sendFeedback($vote);
                 foreach($song->getMappers() AS $mapper){
                     if($mapper->hasNotificationPreference(ENotification::Mapper_new_feedback)){
-                        $notificationService->send($mapper,'You got a review on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.$song->getName()."</a>");
+                        $notificationService->send($mapper,'You got a review on <a href="'.$this->generateUrl('song_detail', ['slug'=>$song->getSlug()]).'">'.htmlentities($song->getName())."</a>");
                     }
                 }
 
