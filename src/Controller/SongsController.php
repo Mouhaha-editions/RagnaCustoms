@@ -301,9 +301,11 @@ class SongsController extends AbstractController
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
         $user = $utilisateurRepository->findOneBy(["apiKey" => $api]);
+
         if ($user != null) {
             $downloadService->addOne($song, $api);
         }
+
         if ($grantedService->isGranted($user, 'ROLE_PREMIUM_LVL1')) {
             $fileContent = file_get_contents(
                 $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip"

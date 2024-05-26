@@ -29,7 +29,7 @@
     {% for notification in notifications.entities %}
     <tr>
         <td>{{ notification.createdAt.format('Y-m-d') }}</td>
-        <td class="text-left">{{ notification.message }}</td>
+        <td class="text-left">{{ notification.message|raw }}</td>
         <td id="read_{{ notification.id }}">
           {%  include 'notification/partial/buttons.html.twig' with {notification: notification} %}
         </td>
