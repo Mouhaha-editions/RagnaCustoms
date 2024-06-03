@@ -33,14 +33,7 @@ class CmsController extends AbstractController
         ScoreHistoryRepository $scoreHistoryRepository,
         StatisticService $statisticService
     ): Response {
-        return $this->redirectToRoute('song_library');
         return $this->render('cms/homepage.html.twig');
     }
-    #[Route(path: '/home', name: 'home2')]
-    public function homepage2(
-        ScoreHistoryRepository $scoreHistoryRepository,
-        StatisticService $statisticService
-    ): Response {
-        return $this->render('cms/homepage.html.twig');
-    }
+
 }
