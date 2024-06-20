@@ -33,9 +33,14 @@
             </div>
             <div class="row">
               <div class="col-md-6">{{ form_row(form.username) }}</div>
-              <div class="col-md-6">
+              <div class="{% if not is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %} col-md-6">
                   {{ form_row(form.avatar) }}
               </div>
+              {% if not is_granted('ROLE_PREMIUM_LVL2') %}
+                <div class=" pt-4 pb-2">
+                  <i data-toggle="tooltip" title="premium feature (lvl 2)" class="fas fa-gavel text-warning"></i> Avatar edit
+                </div>
+              {% endif %}
             </div>
 
             <div class="row">
@@ -43,6 +48,11 @@
               <div class="{% if not is_granted('ROLE_PREMIUM_LVL2') %}d-none{% endif %} pt-4 pb-2">
                   {{ form_row(form.usernameColor) }}
               </div>
+              {% if not is_granted('ROLE_PREMIUM_LVL2') %}
+                <div class="pt-4 pb-2">
+                  <i data-toggle="tooltip" title="premium feature (lvl 2)" class="fas fa-gavel text-warning"></i> Username color
+                </div>
+              {% endif %}
             </div>
             <div class="row">
               <div class="col-md-6"> {{ form_row(form.plainPassword.first) }}</div>

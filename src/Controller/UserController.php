@@ -402,6 +402,7 @@ class UserController extends AbstractController
         $user = $this->getUser();
         $form = $this->createForm(UtilisateurType::class, $user);
         $previousUsername = $this->getUser()->getUserIdentifier();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -409,7 +410,7 @@ class UserController extends AbstractController
             if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
                 /** @var UploadedFile $file */
                 $file = $form['avatar']->getData();
-                if($file) {
+                if ($file) {
                     $extension = $file->guessExtension();
                     $filename = $this->getUser()->getUserIdentifier().'_'.uniqid();
                     $directory = $kernel->getProjectDir().'/public/avatars/';
@@ -479,6 +480,7 @@ class UserController extends AbstractController
                     $user->setUsername($previousUsername);
                 }
             }
+
 
             if ($form->has('currentPassword') && !empty($form->get('currentPassword')->getData()) && !empty($form->get('plainPassword')->getData())) {
                 if ($passwordEncoder->isPasswordValid($user, $form->get('currentPassword')->getData())) {

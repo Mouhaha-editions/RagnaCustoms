@@ -14,8 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [new GetCollection()],
-    normalizationContext: ['groups' => ['get']],
-    denormalizationContext: ['groups' => ['get']],
+    normalizationContext: ['groups' => ['song:get']],
+    denormalizationContext: ['groups' => ['song:get']],
     security: "is_granted('ROLE_USER')"
 )]
 #[ORM\Entity(repositoryClass: SongDifficultyRepository::class)]
@@ -24,14 +24,15 @@ class SongDifficulty
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['song:get'])]
     private $id;
     #[ORM\Column(type: 'float', nullable: true)]
     private $NotePerSecond;
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $difficulty;
-
     #[ORM\ManyToOne(targetEntity: DifficultyRank::class, inversedBy: 'songDifficulties')]
+    #[Groups(['song:get'])]
     private $difficultyRank;
     #[ORM\Column(type: 'integer')]
     private $noteJumpMovementSpeed;
@@ -40,7 +41,7 @@ class SongDifficulty
     #[ORM\Column(type: 'integer', nullable: true)]
     private $notesCount;
 
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     #[ORM\ManyToOne(targetEntity: Song::class, inversedBy: 'songDifficulties', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
@@ -52,14 +53,14 @@ class SongDifficulty
     #[ORM\Column(type: 'float', nullable: false)]
     private $theoricalMinScore;
 
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     #[ORM\Column(type: 'boolean', nullable: false)]
     private $isRanked;
 
     #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'songDifficulty')]
     private $scores;
 
-    // #[Groups(['get'])]
+    // #[Groups(['song:get'])]
     #[ORM\OneToMany(targetEntity: ScoreHistory::class, mappedBy: 'songDifficulty')]
     private $scoreHistories;
 
@@ -89,7 +90,7 @@ class SongDifficulty
         return $this;
     }
 
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     public function getLevel(): ?int
     {
         return $this->getDifficultyRank()->getLevel();

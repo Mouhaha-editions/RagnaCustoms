@@ -19,8 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [new GetCollection()],
-    normalizationContext: ['groups' => ['get']],
-    denormalizationContext: ['groups' => ['get']],
+    normalizationContext: ['groups' => ['song:get']],
+    denormalizationContext: ['groups' => ['song:get']],
     security: "is_granted('ROLE_USER')"
 )]
 #[ORM\Entity(repositoryClass: ScoreHistoryRepository::class)]
@@ -32,16 +32,16 @@ class ScoreHistory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?int $id;
 
     use TimestampableEntity;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?int $comboBlue;
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?int $comboYellow;
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $country;
@@ -50,30 +50,30 @@ class ScoreHistory
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $extra;
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?int $hit;
     #[ORM\Column(type: 'decimal', precision: 20, scale: 6, nullable: true)]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?string $hitAccuracy;
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?int $hitDeltaAverage;
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?int $hitPercentage;
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?int $missed;
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?int $percentageOfPerfects;
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?string $plateform;
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $rawPP;
     #[ORM\Column(type: 'float')]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private float $score;
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $session;
@@ -84,10 +84,10 @@ class ScoreHistory
     #[ORM\JoinColumn(nullable: false)]
     private Utilisateur $user;
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     private ?string $userRagnarock;
 
-    #[Groups(['get'])]
+    #[Groups(['song:get'])]
     public function getUsername(): string
     {
         return $this->getUser()->getUsername();

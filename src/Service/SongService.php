@@ -17,8 +17,6 @@ use App\Entity\VoteCounter;
 use App\Enum\ENotification;
 use App\Repository\SongRepository;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
@@ -27,8 +25,6 @@ use FFMpeg\FFProbe;
 use Intervention\Image\ImageManagerStatic as Image;
 use Pkshetlie\PhpUE\FCrc;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +33,6 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints\File;
 use ZipArchive;
 
 class SongService
@@ -80,7 +75,9 @@ class SongService
                 )->subject('[Ragnacustoms.com] New feedback for '.htmlentities($song->getName()).'!');
 
                 $email->html(
-                    "Hi ".$mapper->getUsername().",<br/>You got a new feedback for ".htmlentities($song->getName())."!<br/><br/>You can read it at https://ragnacustoms.com/song/detail/".$song->getId(
+                    "Hi ".$mapper->getUsername().",<br/>You got a new feedback for ".htmlentities(
+                        $song->getName()
+                    )."!<br/><br/>You can read it at https://ragnacustoms.com/song/detail/".$song->getId(
                     )."#feedback<br/><br/>See you soon,<br/> The Staff"
                 );
                 $this->mailer->send($email);
@@ -132,7 +129,8 @@ class SongService
             )
             ->setParameter('song', $song)
             ->setParameter('user', $user);
-           return $qb->getQuery()->getResult();
+
+        return $qb->getQuery()->getResult();
     }
 
     public function isFeedbackDone(?Utilisateur $user, Song $song): bool
@@ -148,6 +146,7 @@ class SongService
             )
             ->setParameter('song', $song)
             ->setParameter('user', $user);
+
         return (bool)$qb->getQuery()->getResult();
     }
 
@@ -777,7 +776,7 @@ class SongService
                 $zip->close();
             }
         } catch (Exception $e) {
-            /** @todo put a sentry error  */
+            /** @todo put a sentry error */
         }
     }
 
@@ -1216,6 +1215,42 @@ class SongService
         }
 
         return [];
+    }
+
+    public function getTopRated(): array
+    {
+        return $this->songRepository->createQueryBuilder("s")
+            ->addSelect('s, SUM(IF(v.votes_indc IS NULL,0,IF(v.votes_indc = 0,-1,1))) AS HIDDEN sum_votes')
+            ->leftJoin("s.voteCounters", 'v')
+            ->orderBy("sum_votes", 'DESC')
+            ->where('s.isDeleted != true')
+            ->andWhere('s.wip != true')
+            ->andWhere('s.active = true')
+            ->andWhere('(s.programmationDate <= :now)')
+            ->andWhere('s.createdAt >= :date')
+            ->setParameter('date', (new \DateTime())->modify('-30 days'))
+            ->setParameter('now', (new \DateTime()))
+            ->groupBy('s.id')
+            ->setMaxResults(8)
+            ->setFirstResult(0)
+            ->getQuery()->getResult();
+
+    }
+
+    public function getLastSongs(): array
+    {
+        return $this->songRepository->createQueryBuilder("s")
+            ->orderBy("s.lastDateUpload", 'DESC')
+            ->addOrderBy("s.createdAt", 'DESC')
+            ->where('s.isDeleted != true')
+            ->andWhere('(s.programmationDate <= :now )')
+            ->setParameter('now', (new \DateTime()))
+            ->andWhere('s.wip != true')
+            ->andWhere('s.active = true')
+            ->setMaxResults(8)
+            ->setFirstResult(0)
+            ->getQuery()->getResult();
+
     }
 }
 

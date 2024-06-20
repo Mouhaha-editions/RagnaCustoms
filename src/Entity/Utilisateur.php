@@ -83,9 +83,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $mapper_img;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['song:get'])]
     private $mapper_name;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['song:get'])]
     private $usernameColor;
 
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user')]

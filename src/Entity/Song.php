@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use App\Controller\SongsController;
 use App\Repository\SongRepository;
 use App\Service\StatisticService;
 use DateTime;
@@ -13,7 +16,22 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: 'public/songs/stats',
+            controller: SongsController::class,
+            normalizationContext: ['groups' => ['song:get']],
+            read: false, name: 'api_song_stats'
+        )
+    ],
+    normalizationContext: ['groups' => ['song:get']],
+    denormalizationContext: ['groups' => ['song:get']],
+
+
+)]
 #[ORM\Entity(repositoryClass: SongRepository::class)]
 class Song
 {
@@ -22,14 +40,18 @@ class Song
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['song:get'])]
     private $id;
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $active = true;
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['song:get'])]
     private $approximativeDuration;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['song:get'])]
     private $authorName;
     #[ORM\Column(type: 'float', nullable: true)]
+    #[Groups(['song:get'])]
     private $beatsPerMinute;
     #[ORM\ManyToMany(targetEntity: SongCategory::class, inversedBy: 'songs')]
     private $categoryTags;
@@ -54,16 +76,20 @@ class Song
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $isDeleted = false;
     #[ORM\Column(type: 'boolean', nullable: true)]
+    #[Groups(['song:get'])]
     private $isExplicit;
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $lastDateUpload;
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['song:get'])]
     private $levelAuthorName;
     #[ORM\Column(type: 'boolean')]
     private $moderated = false;
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['song:get'])]
     private $name;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['song:get'])]
     private $newGuid;
     #[ORM\ManyToMany(targetEntity: Playlist::class, mappedBy: 'songs')]
     private $playlists;
@@ -80,9 +106,11 @@ class Song
      * @Gedmo\Slug(fields={"name"})
      */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['song:get'])]
     private $slug;
     #[ORM\OneToMany(targetEntity: SongDifficulty::class, mappedBy: 'song', cascade: ['remove'])]
     #[ORM\OrderBy(['difficultyRank' => 'asc'])]
+    #[Groups(['song:get'])]
     private $songDifficulties;
     #[ORM\OneToMany(targetEntity: SongHash::class, mappedBy: 'song')]
     private $songHashes;
@@ -119,6 +147,7 @@ class Song
     private ?array $bestPlatform = [];
 
     #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'songsMapped')]
+    #[Groups(['song:get'])]
     private Collection $mappers;
 
 

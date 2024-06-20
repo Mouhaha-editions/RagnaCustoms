@@ -65,6 +65,7 @@ security:
     access_control:
         - { path: ^/rest-api/login, roles: PUBLIC_ACCESS }
         - { path: ^/rest-api/login_check, roles: PUBLIC_ACCESS }
+        - { path: ^/rest-api/public, roles: PUBLIC_ACCESS }
         - { path: ^/api/doc,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/song,       roles: PUBLIC_ACCESS }
         - { path: ^/rest-api$,       roles: PUBLIC_ACCESS }

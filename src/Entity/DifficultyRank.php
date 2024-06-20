@@ -6,6 +6,7 @@ use App\Repository\DifficultyRankRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DifficultyRankRepository::class)]
 class DifficultyRank
@@ -16,9 +17,11 @@ class DifficultyRank
     private $id;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['song:get'])]
     private $level;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['song:get'])]
     private $color;
 
     #[ORM\OneToMany(targetEntity: SongDifficulty::class, mappedBy: 'difficultyRank')]

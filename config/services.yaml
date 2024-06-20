@@ -23,7 +23,7 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Entity/'
+#            - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
 
