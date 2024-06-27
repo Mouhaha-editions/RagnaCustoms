@@ -371,7 +371,7 @@ class ScoreHistory
 
     public function getTimeAgoShort()
     {
-       return StatisticService::dateDisplayedShort($this->getUpdatedAt());
+       return StatisticService::dateDisplayedShort($this->getCreatedAt());
     }
 
     public function getHitAccuracy(): ?string
