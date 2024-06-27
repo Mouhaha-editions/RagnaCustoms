@@ -352,7 +352,7 @@ class Score
 
     public function getTimeAgoShort()
     {
-        return StatisticService::dateDisplayedShort($this->createdAt);
+        return StatisticService::dateDisplayedShort($this->updatedAt);
     }
 
     public function getPlateformIcon()

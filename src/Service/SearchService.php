@@ -236,6 +236,7 @@ readonly class SearchService
             case 'downloads':
                 $qb->orderBy('song.downloads', $order);
                 break;
+
             case 'upload_date':
                 $qb->orderBy('song.lastDateUpload', $order);
                 break;

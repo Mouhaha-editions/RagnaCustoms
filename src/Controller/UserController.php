@@ -146,6 +146,19 @@ class UserController extends AbstractController
             ->setParameter('user', $user);
 
         $filters = $searchService->baseSearchQb($qb, $request);
+
+        switch ($request->get('order_by')) {
+            case 'score':
+                $qb->orderBy("score.rawPP", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'date':
+                $qb->orderBy("score.updatedAt", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            default:
+                $qb->orderBy("score.rawPP", "desc");
+                break;
+        }
+
         $pagination = $paginationService->setDefaults(65)->process($qb, $request);
 
         return $this->render('user/recently_played.html.twig', [
@@ -172,12 +185,12 @@ class UserController extends AbstractController
 
         $qb = $scoreRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter('user', $utilisateur);
 
-        switch ($request->get('order_by', null)) {
+        switch ($request->get('order_by')) {
             case 'score':
                 $qb->orderBy("s.rawPP", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             case 'date':
-                $qb->orderBy("s.createdAt", "DESC");
+                $qb->orderBy("s.updatedAt", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             default:
                 $qb->orderBy("s.rawPP", "desc");
