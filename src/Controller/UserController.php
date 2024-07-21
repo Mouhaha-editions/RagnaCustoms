@@ -57,7 +57,7 @@ class UserController extends AbstractController
             ->setParameter('difficulty', $request->get('diff'))
             ->setMaxResults($this->isGranted('ROLE_PREMIUM_LVL1') ? 20 : 6)
             ->setFirstResult(0)
-            ->orderBy('s.createdAt', "DESC")
+            ->orderBy('s.playedAt', "DESC")
             ->getQuery()->getResult();
         $histories = array_reverse($histories);
         $data = [];
@@ -152,7 +152,7 @@ class UserController extends AbstractController
                 $qb->orderBy("score.rawPP", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             case 'date':
-                $qb->orderBy("score.createdAt", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
+                $qb->orderBy("score.playedAt", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             default:
                 $qb->orderBy("score.rawPP", "desc");
@@ -531,7 +531,7 @@ class UserController extends AbstractController
         $qb = $scoreHistoryRepository->createQueryBuilder('s')->where('s.user = :user')->setParameter(
             'user',
             $user
-        )->orderBy('s.createdAt', "desc");
+        )->orderBy('s.playedAt', "desc");
         $pagination = $paginationService->setDefaults(10)->process($qb, $request);
 
         return $this->render('user/index.html.twig', [

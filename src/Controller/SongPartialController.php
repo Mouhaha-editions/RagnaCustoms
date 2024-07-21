@@ -43,7 +43,7 @@ class SongPartialController extends AbstractController
             ->select('s.id')
             ->leftJoin('score.songDifficulty','diff')
             ->leftJoin('diff.song','s')
-            ->orderBy('score.createdAt', 'DESC')
+            ->orderBy('score.playedAt', 'DESC')
             ->where('s.isDeleted != true')
             ->andWhere('(s.programmationDate <= :now)')
             ->andWhere('s.wip != true')
