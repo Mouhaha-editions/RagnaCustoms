@@ -173,6 +173,7 @@ class ScoreService
         $scoreHistory->setCountry($score->getCountry());
         $scoreHistory->setUserRagnarock($score->getUserRagnarock());
         $scoreHistory->setPlateform($score->getPlateform());
+        $scoreHistory->setPlayedAt($score->getPlayedAt());
 
         $this->em->persist($scoreHistory);
         if ($delete) {

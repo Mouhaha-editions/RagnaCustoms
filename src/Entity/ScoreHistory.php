@@ -87,6 +87,9 @@ class ScoreHistory
     #[Groups(['song:get'])]
     private ?string $userRagnarock;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $played_at = null;
+
     #[Groups(['song:get'])]
     public function getUsername(): string
     {
@@ -394,5 +397,17 @@ class ScoreHistory
     public function isVR(): bool
     {
         return in_array($this->getPlateform(),WanadevApiController::VR_PLATEFORM);
+    }
+
+    public function getPlayedAt(): ?\DateTimeImmutable
+    {
+        return $this->played_at;
+    }
+
+    public function setPlayedAt(\DateTimeImmutable $played_at): static
+    {
+        $this->played_at = $played_at;
+
+        return $this;
     }
 }

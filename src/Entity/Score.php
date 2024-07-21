@@ -76,6 +76,9 @@ class Score
     #[ORM\Column(type: 'float', nullable: true)]
     private $weightedPP;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $played_at = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -408,5 +411,17 @@ class Score
     public function isOKODO(): bool
     {
         return in_array($this->plateform, WanadevApiController::OKOD_PLATEFORM);
+    }
+
+    public function getPlayedAt(): ?\DateTimeImmutable
+    {
+        return $this->played_at;
+    }
+
+    public function setPlayedAt(\DateTimeImmutable $played_at): static
+    {
+        $this->played_at = $played_at;
+
+        return $this;
     }
 }

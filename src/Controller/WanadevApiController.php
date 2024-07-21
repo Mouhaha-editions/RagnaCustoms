@@ -230,6 +230,7 @@ class WanadevApiController extends AbstractController
         $newScore->setMissed($data['stats']['Missed']);
         $newScore->setExtra(json_encode($data['extra']));
         $newScore->setPercentageOfPerfects($data['stats']['PercentageOfPerfects']);
+        $newScore->setPlayedAt(new \DateTimeImmutable());
 
         return $newScore;
     }
