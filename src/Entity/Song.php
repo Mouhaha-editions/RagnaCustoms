@@ -107,6 +107,7 @@ class Song
      */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['song:get'])]
+    #[Gedmo\Slug(fields: ['name'])]
     private $slug;
     #[ORM\OneToMany(targetEntity: SongDifficulty::class, mappedBy: 'song', cascade: ['remove'])]
     #[ORM\OrderBy(['difficultyRank' => 'asc'])]
