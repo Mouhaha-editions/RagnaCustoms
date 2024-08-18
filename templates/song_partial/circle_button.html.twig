@@ -29,6 +29,11 @@
            data-url="{{ url("partial_preview_song",{id:song.id}) }}"
            class="ajax-load preview-popup fas fa-play-circle fa-2x menuItem">
         </a>
+        {% if app.current_route == 'playlist_show' and (app.user.id == playlist.user.id or is_granted('ROLE_ADMIN')) %}
+            <a href="{{ url('playlist_remove',{playlist_id: playlist.id, id:song.id}) }}" class="menuItem"><i class="fas fa-trash text-danger"></i></a>
+        {% else %}
+            <a class="menuItem"></a>
+        {% endif %}
         <a class="menuItem"></a>
         <a class="menuItem"></a>
     </div>

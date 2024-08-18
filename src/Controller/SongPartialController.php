@@ -39,7 +39,7 @@ class SongPartialController extends AbstractController
 
     public function lastPlayed(ScoreRepository $scoreRepository,SongRepository $songRepository): Response
     {
-        $scores = $scoreRepository->createQueryBuilder("score")
+        $scores = $scoreRepository->createQueryBuilder('score')
             ->select('s.id')
             ->leftJoin('score.songDifficulty','diff')
             ->leftJoin('diff.song','s')

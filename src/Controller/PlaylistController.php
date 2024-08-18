@@ -65,24 +65,25 @@ class PlaylistController extends AbstractController
     }
 
 
-    /**
-     * @param Request $request
-     * @param PlaylistRepository $playlistRepository
-     * @param SongRepository $songRepository
-     * @return Response
-     */
     #[Route(path: '/playlist/remove', name: 'playlist_remove')]
-    public function remove(Request $request,ManagerRegistry $doctrine,PlaylistRepository $playlistRepository, SongRepository $songRepository)
-    {
+    public function remove(
+        Request $request,
+        ManagerRegistry $doctrine,
+        PlaylistRepository $playlistRepository,
+        SongRepository $songRepository
+    ) {
         $playlist = $playlistRepository->find($request->get('playlist_id'));
-        if (!$this->isGranted("ROLE_USER") || $this->getUser()->getId() !== $playlist->getUser()->getId()) {
-            $this->addFlash("danger", "You are not the owner of this playlist.");
-            return new Response("",500);
+
+        if ($this->getUser()->getId() == $playlist->getUser()->getId() || $this->isGranted('ROLE_ADMIN')) {
+            $song = $songRepository->find($request->get('id'));
+            $playlist->removeSong($song);
+            $doctrine->getManager()->flush();
+            $this->addFlash('danger', 'Song removed.');
+        }else{
+            $this->addFlash('danger', "You are not the owner of this playlist.");
         }
-        $song = $songRepository->find($request->get('id'));
-        $playlist->removeSong($song);
-        $doctrine->getManager()->flush();
-        return new JsonResponse();
+
+        return $this->redirectToRoute('playlist_show', ['id' => $playlist->getId()]);
     }
 
     /**

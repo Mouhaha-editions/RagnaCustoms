@@ -77,7 +77,7 @@ class Score
     private $weightedPP;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $played_at = null;
+    private ?\DateTimeImmutable $playedAt = null;
 
     public function getId(): ?int
     {
@@ -415,12 +415,12 @@ class Score
 
     public function getPlayedAt(): ?\DateTimeImmutable
     {
-        return $this->played_at;
+        return $this->playedAt;
     }
 
-    public function setPlayedAt(\DateTimeImmutable $played_at): static
+    public function setPlayedAt(\DateTimeImmutable $playedAt): static
     {
-        $this->played_at = $played_at;
+        $this->playedAt = $playedAt;
 
         return $this;
     }

@@ -88,7 +88,7 @@ class ScoreHistory
     private ?string $userRagnarock;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $played_at = null;
+    private ?\DateTimeImmutable $playedAt = null;
 
     #[Groups(['song:get'])]
     public function getUsername(): string
@@ -401,12 +401,12 @@ class ScoreHistory
 
     public function getPlayedAt(): ?\DateTimeImmutable
     {
-        return $this->played_at;
+        return $this->playedAt;
     }
 
-    public function setPlayedAt(\DateTimeImmutable $played_at): static
+    public function setPlayedAt(\DateTimeImmutable $playedAt): static
     {
-        $this->played_at = $played_at;
+        $this->playedAt = $playedAt;
 
         return $this;
     }
