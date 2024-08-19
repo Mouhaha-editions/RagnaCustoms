@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\SongDifficultyRepository;
@@ -11,11 +12,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ApiResource(
     operations: [new GetCollection()],
-    normalizationContext: ['groups' => ['song:get']],
-    denormalizationContext: ['groups' => ['song:get']],
+    normalizationContext: ['groups' => ['song_diff:get']],
+    denormalizationContext: ['groups' => ['song_diff:get']],
     security: "is_granted('ROLE_USER')"
 )]
 #[ORM\Entity(repositoryClass: SongDifficultyRepository::class)]
@@ -24,15 +26,16 @@ class SongDifficulty
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['song:get'])]
+    #[Groups(['song:get', 'song_diff:get'])]
     private $id;
     #[ORM\Column(type: 'float', nullable: true)]
     private $NotePerSecond;
-    #[Groups(['song:get'])]
+    #[Groups(['song:get', 'song_diff:get'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $difficulty;
     #[ORM\ManyToOne(targetEntity: DifficultyRank::class, inversedBy: 'songDifficulties')]
-    #[Groups(['song:get'])]
+    #[Groups(['song:get', 'song_diff:get'])]
+    #[ApiProperty(fetchEager: false)]
     private $difficultyRank;
     #[ORM\Column(type: 'integer')]
     private $noteJumpMovementSpeed;
@@ -41,10 +44,11 @@ class SongDifficulty
     #[ORM\Column(type: 'integer', nullable: true)]
     private $notesCount;
 
-    #[Groups(['song:get'])]
+    #[Groups(['song:get', 'song_diff:get'])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     #[ORM\ManyToOne(targetEntity: Song::class, inversedBy: 'songDifficulties', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ApiProperty(fetchEager: true)]
     private $song;
 
     #[ORM\Column(type: 'float', nullable: false)]
@@ -53,14 +57,13 @@ class SongDifficulty
     #[ORM\Column(type: 'float', nullable: false)]
     private $theoricalMinScore;
 
-    #[Groups(['song:get'])]
+    #[Groups(['song:get', 'song_diff:get'])]
     #[ORM\Column(type: 'boolean', nullable: false)]
     private $isRanked;
 
     #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'songDifficulty')]
     private $scores;
 
-    // #[Groups(['song:get'])]
     #[ORM\OneToMany(targetEntity: ScoreHistory::class, mappedBy: 'songDifficulty')]
     private $scoreHistories;
 
@@ -90,7 +93,7 @@ class SongDifficulty
         return $this;
     }
 
-    #[Groups(['song:get'])]
+    #[Groups(['song:get', 'song_diff:get'])]
     public function getLevel(): ?int
     {
         return $this->getDifficultyRank()->getLevel();

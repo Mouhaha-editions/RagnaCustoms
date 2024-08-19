@@ -17,11 +17,11 @@ class DifficultyRank
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['song:get'])]
+    #[Groups(['song:get', 'song_diff:get'])]
     private $level;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['song:get'])]
+    #[Groups(['song:get', 'song_diff:get'])]
     private $color;
 
     #[ORM\OneToMany(targetEntity: SongDifficulty::class, mappedBy: 'difficultyRank')]
