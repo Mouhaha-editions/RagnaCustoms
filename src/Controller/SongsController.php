@@ -339,12 +339,14 @@ class SongsController extends AbstractController
         KernelInterface $kernel,
         DownloadService $downloadService
     ) {
-        if ((!$song->isModerated()
+        if (!$song->isModerated()
             || $song->getProgrammationDate() == null
-            || $song->getProgrammationDate() > new DateTime())
-        && (!$this->isGranted('ROLE_ADMIN') || !$song->getMappers()->contains($this->getUser()))
-        ) {
-            return new Response("Not available now", 403);
+            || $song->getProgrammationDate() > new DateTime()) {
+            if ($this->isGranted('ROLE_ADMIN') || $song->getMappers()->contains($this->getUser())) {
+
+            } else {
+                return new Response("Not available now", 403);
+            }
         }
         $em = $doctrine->getManager();
         $song->setDownloads($song->getDownloads() + 1);
