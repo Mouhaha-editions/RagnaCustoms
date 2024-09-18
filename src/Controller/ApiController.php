@@ -145,7 +145,7 @@ class ApiController extends AbstractController
     }
 
     #[Route(path: '/api/song/{id}', name: 'api_song')]
-    public function song(Request $request, string $id, SongRepository $songRepository): Response
+    public function song(string $id, SongRepository $songRepository): Response
     {
         if (is_numeric($id)) {
             $song = $songRepository->find($id);

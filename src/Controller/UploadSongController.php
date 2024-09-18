@@ -224,7 +224,6 @@ class UploadSongController extends AbstractController
                             $song->setWip(false);
                             $song->setPrivate(true);
                             $song->setActive(false);
-                            $song->setNotificationDone(true);
 
                             if (!$song->getPrivateLink()) {
                                 $song->setPrivateLink($songService->generateLink());
