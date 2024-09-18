@@ -31,6 +31,7 @@ class SongPublishCommand extends Command
             ->createQueryBuilder('s')
             ->where("s.active = 1")
             ->andWhere("s.wip = 0")
+            ->andWhere("s.isPrivate != 1")
             ->andWhere("s.isNotificationDone = 0")
             ->andWhere("s.programmationDate <= :now")
             ->setParameter('now', new DateTime())
