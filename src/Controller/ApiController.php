@@ -145,8 +145,18 @@ class ApiController extends AbstractController
     }
 
     #[Route(path: '/api/song/{id}', name: 'api_song')]
-    public function song(Request $request, Song $song): Response
+    public function song(Request $request, string $id, SongRepository $songRepository): Response
     {
+        if (is_numeric($id)) {
+            $song = $songRepository->find($id);
+
+            if (!$song || $song->isPrivate()) {
+                return new Response("Not available now", 403);
+            }
+        } else {
+            $song = $songRepository->findOneBy(['privateLink' => $id]);
+        }
+
         return new JsonResponse($song->__api());
     }
 
