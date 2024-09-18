@@ -46,7 +46,17 @@
         {% if song.programmationDate|date('Y-m-d H:i') > 'now'|date('Y-m-d H:i') and song.active %}
             <i class='far fa-clock text-warning' data-toggle="tooltip" title="Publishing on {{ song.programmationDate|date('Y-m-d H:i') }}"></i>
         {% else %}
-        {{ song.published and song.available ? "<i class='fas fa-check text-success'></i>" :  "<i class='fas fa-close text-danger'></i>"  }}
+        {{ song.published and song.available ?
+        "<i class='fas fa-check text-success'></i>" :
+        (song.isPrivate ?
+        ("<i
+            data-toggle='tooltip'
+            title='Click to copy the private link'
+            data-to-copy='"~ url('secure_song',{'privateLink':song.privateLink}) ~"'
+            class='copy-clipboard fas fa-lock text-success'></i>")|raw:
+        ( song.wip ? "<span data-toggle='tooltip'
+            title='work in progress' class='badge badge-info'>w</span>" :
+        "<i class='fas fa-close text-danger'></i>") ) }}
         {% endif %}
     </td>
 {#    <td>#}

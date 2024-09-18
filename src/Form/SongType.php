@@ -4,12 +4,10 @@ namespace App\Form;
 
 use App\Entity\Song;
 use App\Entity\SongCategory;
-use App\Entity\Utilisateur;
 use App\Repository\SongCategoryRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,22 +23,25 @@ class SongType extends AbstractType
         $builder
             ->add('description', null, [
                 'help' => "You can use <a target=\"_blank\" href=\"https://guides.github.com/features/mastering-markdown/\">Markdown</a> in description",
-                'help_html' => true
+                'help_html' => true,
             ])
             ->add('youtubeLink', TextType::class, [
                 'label' => "Youtube Link",
                 "attr" => ["placeholder " => "https://youtu..."],
-                'required' => false
+                'required' => false,
             ])
-            ->add('categoryTags', EntityType::class,[
+            ->add('categoryTags', EntityType::class, [
                 'class' => SongCategory::class,
                 'multiple' => true,
                 "label" => "Genre",
                 'placeholder' => 'Select a category, or more ..',
                 'required' => true,
-                'autocomplete'=>true,
-                'query_builder' => function(SongCategoryRepository $songCategoryRepository) {
-                    return $songCategoryRepository->createQueryBuilder('songCategory')->orderBy('songCategory.label','ASC');
+                'autocomplete' => true,
+                'query_builder' => function (SongCategoryRepository $songCategoryRepository) {
+                    return $songCategoryRepository->createQueryBuilder('songCategory')->orderBy(
+                        'songCategory.label',
+                        'ASC'
+                    );
                 },
             ])
             ->add('mappers', UtilisateurAutocompleteField::class)
@@ -49,16 +50,10 @@ class SongType extends AbstractType
                 "help" => "leave empty on first upload",
                 "attr" => [
                     "placeholder " => "leave empty on first upload",
-                ]
-            ])
-            ->add('wip', null, [
-                'label' => "Work in progress"
-            ])
-            ->add('active', null, [
-                'label' => "Publish"
+                ],
             ])
             ->add('isExplicit', null, [
-                'label' => "Explicit content"
+                'label' => "Explicit content",
             ])
             ->add('bestPlatform', ChoiceType::class, [
                 'choices' => [
@@ -71,7 +66,7 @@ class SongType extends AbstractType
                 'label' => 'Mapped for',
             ])
             ->add('converted', null, [
-                'label' => "Converted map"
+                'label' => "Converted map",
             ])
             ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-info btn-lg btn-block']]);
     }

@@ -160,11 +160,10 @@
             </div>
         </div>
     </nav>
-    {# <div class="runes"><img width="512" height="512" src="/apps/runes.png" alt="runes"/></div> #}
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="alert d-none " data-type="{{ label }}" data-title="{{ label|capitalize }}">
-                {{ message|trans }}
+                {{ message|trans|raw }}
             </div>
         {% endfor %}
     {% endfor %}

@@ -1252,5 +1252,14 @@ class SongService
             ->getQuery()->getResult();
 
     }
+
+    public function generateLink()
+    {
+        do {
+            $link = substr(bin2hex(random_bytes(5)), 0, 10);
+        } while (is_numeric($link) || $this->songRepository->findOneBy(['privateLink' => $link]));
+
+        return $link;
+    }
 }
 

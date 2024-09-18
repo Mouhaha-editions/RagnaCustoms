@@ -15,12 +15,14 @@ use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Pkshetlie\PaginationBundle\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -65,13 +67,12 @@ class UploadSongController extends AbstractController
                 'response' => "",
             ]);
         }
-//        $song->removeMapper($this->getUser());
+
         $form = $this->createForm(SongType::class, $song, [
             'method' => "post",
             'action' => $song->getId() != null ? $this->generateUrl('edit_song', ['id' => $song->getId()]
             ) : $this->generateUrl('new_song'),
         ]);
-
 
         if ($this->isGranted('ROLE_PREMIUM_LVL3')) {
             $form
@@ -83,6 +84,15 @@ class UploadSongController extends AbstractController
                     "empty_data" => '',
                     'label_html' => true,
                     'help' => "Sorry for now it's based on UTC+1 (french time) ",
+                ])
+                ->add('publishingType', ChoiceType::class, [
+                    'choices' => [
+                        'Public' => 1,
+                        'Private link' => 2,
+                        'WIP' => 0,
+                        'Unpublished' => 3,
+                    ],
+                    'mapped' => false
                 ])
                 ->add("zipFile", FileType::class, [
                     "mapped" => false,
@@ -116,8 +126,29 @@ class UploadSongController extends AbstractController
                             'maxSizeMessage' => 'You can upload up to 15Mo with a premium account Tier 2',
                         ], '15m'),
                     ],
+                ])
+                ->add('publishingType', ChoiceType::class, [
+                    'choices' => [
+                        'Public' => 1,
+                        'Private link' => 2,
+                        'WIP' => 0,
+                        'Unpublished' => 3,
+                    ],
+                    'mapped' => false
                 ]);
         } else {
+            $form->add('publishingType', ChoiceType::class, [
+                'choices' => [
+                    'Public' => 1,
+                    'WIP' => 0,
+                    'Unpublished' => 3,
+                ],
+                'mapped' => false,
+                'help_html'=> true,
+                "help" => "<i class='fa fa-gavel text-warning'></i> Premium member Tier 2 can publish as private link",
+
+            ]);
+
             if ($this->isGranted('ROLE_PREMIUM_LVL1')) {
                 $form->add("zipFile", FileType::class, [
                     "mapped" => false,
@@ -146,6 +177,7 @@ class UploadSongController extends AbstractController
         }
 
         $isWip = $song->getWip();
+        $form->get('publishingType')->setData($song->isWip() ? 0 : ($song->isPrivate() ? 2 : 1));
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -173,6 +205,40 @@ class UploadSongController extends AbstractController
                     }
                 }
 
+                switch ((int)$form->get('publishingType')->getData()) {
+                    case 0 :
+                    default:
+                        $song->setWip(true);
+                        $song->setActive(true);
+                        $song->setPrivate(false);
+                        $song->setPrivateLink(null);
+                        break;
+                    case 1:
+                        $song->setActive(true);
+                        $song->setPrivate(false);
+                        $song->setPrivateLink(null);
+                        $song->setWip(false);
+                        break;
+                    case 2:
+                        if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
+                            $song->setWip(false);
+                            $song->setPrivate(true);
+                            $song->setActive(false);
+
+                            if (!$song->getPrivateLink()) {
+                                $song->setPrivateLink($songService->generateLink());
+                            }
+                        }
+                        break;
+                    case 3 :
+                        $song->setWip(false);
+                        $song->setActive(false);
+                        $song->setPrivate(false);
+                        $song->setPrivateLink(null);
+                        break;
+                }
+
+
                 $file = $form->get('zipFile')->getData();
 
                 if ($file == null) {
@@ -180,16 +246,19 @@ class UploadSongController extends AbstractController
                         throw new Exception('Please choose at least one platform');
                     }
 
-                    $this->addFlash(
-                        'success',
-                        str_replace([
-                            "%song%",
-                            "%artist%",
-                        ], [
-                            $song->getName(),
-                            $song->getAuthorName(),
-                        ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!"))
+                    $message = $translator->trans(
+                        "Song \"%song%\" by \"%artist%\" successfully uploaded!".(
+                        $song->isPrivate() ?
+                            "<br/>Your private link is : <code>%url%</code> <br/> 
+                              <small>You can copy this one by clicking on the lock in your song list</small>" : ''
+                        ),
+                        [
+                            "%song%" => $song->getName(),
+                            "%artist%" => $song->getAuthorName(),
+                            '%url%' => !$song->isPrivate() ? '' : $this->generateUrl('secure_song', ['privateLink' => $song->getPrivateLink()], UrlGenerator::ABSOLUTE_URL),
+                        ]
                     );
+                    $this->addFlash('success', $message);
 
                     $em = $doctrine->getManager();
                     $em->persist($song);
@@ -217,13 +286,17 @@ class UploadSongController extends AbstractController
                     $doctrine->getManager()->flush();
                     $this->addFlash(
                         'success',
-                        str_replace([
-                            "%song%",
-                            "%artist%",
-                        ], [
-                            $song->getName(),
-                            $song->getAuthorName(),
-                        ], $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!"))
+                        $translator->trans(
+                            "Song \"%song%\" by \"%artist%\" successfully uploaded!".(
+                            $song->isPrivate(
+                            ) ? "Your private link is : %url% <br/> <small>You can copy this one by clicking on the lock in your song list</small>" : ''
+                            ),
+                            [
+                                "%song%" => $song->getName(),
+                                "%artist%" => $song->getAuthorName(),
+                                '%url%' => $this->generateUrl('secure_song', ['key' => $song->getPrivateLink()]),
+                            ]
+                        )
                     );
 
                     return new JsonResponse([

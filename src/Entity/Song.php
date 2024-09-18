@@ -154,6 +154,12 @@ class Song
     #[Groups(['song:get'])]
     private Collection $mappers;
 
+    #[ORM\Column]
+    private ?bool $isPrivate = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $privateLink = null;
+
 
     public function __construct()
     {
@@ -1139,5 +1145,29 @@ class Song
     public function getAuthors()
     {
         return explode(',', $this->getAuthorName());
+    }
+
+    public function isPrivate(): ?bool
+    {
+        return $this->isPrivate;
+    }
+
+    public function setPrivate(bool $isPrivate): static
+    {
+        $this->isPrivate = $isPrivate;
+
+        return $this;
+    }
+
+    public function getPrivateLink(): ?string
+    {
+        return $this->privateLink;
+    }
+
+    public function setPrivateLink(?string $privateLink): static
+    {
+        $this->privateLink = $privateLink;
+
+        return $this;
     }
 }

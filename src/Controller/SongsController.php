@@ -13,6 +13,7 @@ use App\Form\AddPlaylistFormType;
 use App\Form\VoteType;
 use App\Repository\DownloadCounterRepository;
 use App\Repository\SongCategoryRepository;
+use App\Repository\SongRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\DiscordService;
 use App\Service\DownloadService;
@@ -290,16 +291,28 @@ class SongsController extends AbstractController
     public function downloadApiKey(
         GrantedService $grantedService,
         ManagerRegistry $doctrine,
-        Song $song,
+        string $id,
         string $api,
         KernelInterface $kernel,
         DownloadService $downloadService,
+        SongRepository $songRepository,
         UtilisateurRepository $utilisateurRepository
     ) {
-        if (!$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate(
+        if (is_numeric($id)) {
+            $song = $songRepository->find($id);
+        } else {
+            $song = $songRepository->findOneBy(['privateLink' => $id]);
+        }
+
+        if (!$song || !$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate(
             ) > new DateTime()) {
             return new Response("Not available now", 403);
         }
+
+        if ($song->isPrivate() && is_numeric($id)) {
+            return new Response("Not available now", 404);
+        }
+
         $em = $doctrine->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
@@ -334,12 +347,23 @@ class SongsController extends AbstractController
 
     #[Route(path: '/songs/ddl/{id}', name: 'song_direct_download')]
     public function directDownload(
-        Song $song,
+        string $id,
         ManagerRegistry $doctrine,
         KernelInterface $kernel,
-        DownloadService $downloadService
+        DownloadService $downloadService,
+        SongRepository $songRepository
     ) {
-        if (!$song->isModerated()
+        if (is_numeric($id)) {
+            $song = $songRepository->find($id);
+        } else {
+            $song = $songRepository->findOneBy(['privateLink' => $id]);
+        }
+
+        if ($song->isPrivate() && is_numeric($id)) {
+            return new Response("Not available now", 404);
+        }
+
+        if ( !$song || !$song->isModerated()
             || $song->getProgrammationDate() == null
             || $song->getProgrammationDate() > new DateTime()) {
             if ($this->isGranted('ROLE_ADMIN') || $song->getMappers()->contains($this->getUser())) {
@@ -348,6 +372,8 @@ class SongsController extends AbstractController
                 return new Response("Not available now", 403);
             }
         }
+
+
         $em = $doctrine->getManager();
         $song->setDownloads($song->getDownloads() + 1);
         $em->flush();
@@ -548,6 +574,24 @@ class SongsController extends AbstractController
         return new Response('');
     }
 
+    #[Route(path: '/secure/{privateLink}', name: 'secure_song')]
+    public function songDetailSecure(
+        Request $request,
+        ManagerRegistry $doctrine,
+        TranslatorInterface $translator,
+        SongService $songService,
+        PaginationService $paginationService,
+        DiscordService $discordService,
+        NotificationService $notificationService,
+        SongRepository $songRepository,
+        string $privateLink
+    ): RedirectResponse|Response
+    {
+        $song = $songRepository->findOneBy(['privateLink' => $privateLink]);
+        return $this->songDetail($request, $doctrine, $translator, $songService, $paginationService, $discordService, $notificationService, $song);
+    }
+
+
     #[Route(path: '/song/{slug}', name: 'song_detail', defaults: ['slug' => null])]
     public function songDetail(
         Request $request,
@@ -559,6 +603,12 @@ class SongsController extends AbstractController
         NotificationService $notificationService,
         ?Song $song = null
     ): RedirectResponse|Response {
+
+        if ($song && $song->isPrivate() && $request->attributes->get('_route') == 'song_detail') {
+            // return $this->redirectToRoute('home');
+        }
+
+
         if ($song == null
             || $song->getIsDeleted()
             || (

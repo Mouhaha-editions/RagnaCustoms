@@ -1,48 +1,47 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 {{ form_start(form) }}
 <div class="row">
-    <div class="col-12">
-        {% if error is not null %}
-            <div class="alert alert-danger">{{ error }}</div>
-        {% endif %}
-    </div>
-    <div class="col-md-6">
-        {{ form_row(form.zipFile) }}
-        {{ form_row(form.categoryTags) }}
-        {{ form_row(form.description) }}
-    </div>
-    <div class="col-md-6">
-        {{ form_row(form.bestPlatform,{attr:{class:'pb-2'}}) }}
-        {{ form_row(form.youtubeLink) }}
-        {{ form_row(form.mappers) }}
+  <div class="col-12">
+    {% if error is not null %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+  </div>
+  <div class="col-md-6">
+    {{ form_row(form.zipFile) }}
+    {{ form_row(form.mappers) }}
+    {{ form_row(form.categoryTags) }}
 
-        {% if is_granted("ROLE_PREMIUM_LVL2") %}
-            {{ form_row(form.programmationDate) }}
-        {% endif %}
-
-
-    </div>
-    <div class="col-12">
-    <div class="d-flex justify-content-center" style="font-size:18px;">
-    <div class="pl-2 pr-3">
-    {{ form_row(form.wip) }}
-    </div>
-    <div class="pl-2 pr-3">
+    {% if is_granted("ROLE_PREMIUM_LVL2") %}
+      {{ form_row(form.programmationDate) }}
+    {% else %}
+      <small><i class='fa fa-gavel text-warning'></i> Premium member Tier 2 can schedule the publishing time</small>
+    {% endif %}
+  </div>
+  <div class="col-md-6">
+    {{ form_row(form.bestPlatform,{attr:{class:'pb-2'}}) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.youtubeLink) }}
+    <label>More info</label>
+    <div class="row">
+      <div class="col-md-6">
         {{ form_row(form.isExplicit) }}
-    </div>
-    <div class="pl-2 pr-3">
+      </div>
+      <div class="col-md-6">
         {{ form_row(form.converted) }}
+      </div>
     </div>
-        <div class="pl-2 pr-3">
-            {{ form_row(form.active) }}
 
-        </div></div>
-    <div class="col-12 text-center">
-        <small style="font-size: 12px;">By uploading your map, you acknowledge that you agree to our <a
-                    data-no-swup="true" href="/doc/TOS.pdf">Terms of Service.</a></small>
+  </div>
+  <div class="col-12">
+    <div class="d-flex justify-content-center" style="font-size:18px;">
+      {{ form_row(form.publishingType) }}
     </div>
     <div class="col-12 text-center">
-        {{ form_row(form.save) }}
+      <small style="font-size: 12px;">By uploading your map, you acknowledge that you agree to our <a
+            data-no-swup="true" href="/doc/TOS.pdf">Terms of Service.</a></small>
     </div>
-</div>
-{{ form_end(form) }}
+    <div class="col-12 text-center">
+      {{ form_row(form.save) }}
+    </div>
+  </div>
+  {{ form_end(form) }}
