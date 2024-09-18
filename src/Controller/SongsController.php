@@ -616,8 +616,8 @@ class SongsController extends AbstractController
         ?Song $song = null
     ): RedirectResponse|Response {
 
-        if ($song && $song->isPrivate() && $request->attributes->get('_route') == 'song_detail') {
-            // return $this->redirectToRoute('home');
+        if ($song && $song->isPrivate() && $request->attributes->get('_route') == 'song_detail' && !$song->getMappers()->contains($this->getUser())) {
+            return $this->redirectToRoute('home');
         }
 
 
