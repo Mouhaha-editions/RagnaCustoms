@@ -312,6 +312,10 @@ class SongsController extends AbstractController
     ) {
         if (is_numeric($id)) {
             $song = $songRepository->find($id);
+
+            if (!$song || $song->isPrivate()) {
+                return new Response("Not available now", 403);
+            }
         } else {
             $song = $songRepository->findOneBy(['privateLink' => $id]);
         }
@@ -319,10 +323,6 @@ class SongsController extends AbstractController
         if (!$song || !$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate(
             ) > new DateTime()) {
             return new Response("Not available now", 403);
-        }
-
-        if ($song->isPrivate() && is_numeric($id)) {
-            return new Response("Not available now", 404);
         }
 
         $em = $doctrine->getManager();
@@ -353,7 +353,7 @@ class SongsController extends AbstractController
         } else {
             $file = $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip"; // Nom du fichier
 
-            return $this->RestrictedDownload($file, $song->getId().".zip");
+            return $this->RestrictedDownload($file, ($song->isPrivate() ? $song->getPrivateLink() : $song->getId()).".zip");
         }
     }
 
