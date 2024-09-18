@@ -529,10 +529,7 @@ class UploadSongController extends AbstractController
     #[Route(path: '/upload/bundle/song/add', name: 'bundle_song')]
     public function bundleUpload(
         Request $request,
-        TranslatorInterface $translator,
-        ManagerRegistry $doctrine,
         SongService $songService,
-        ScoreService $scoreService
     ) {
         try {
             $song = new Song();

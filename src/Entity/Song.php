@@ -155,7 +155,7 @@ class Song
     private Collection $mappers;
 
     #[ORM\Column]
-    private ?bool $isPrivate = null;
+    private ?bool $isPrivate = false;
 
     #[ORM\Column(length: 30, nullable: true)]
     private ?string $privateLink = null;
