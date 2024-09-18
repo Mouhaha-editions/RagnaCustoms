@@ -107,6 +107,8 @@ class ApiController extends AbstractController
             ->createQueryBuilder('s')->where('(s.programmationDate <= :now  )')
             ->setParameter('now', (new \DateTime()))
             ->andWhere('s.moderated = true')
+            ->andWhere('s.active = 1')
+            ->andWhere('s.isPrivate = 0')
             ->andWhere('s.isDeleted != true');
 
         $searchString = explode(' ', trim($term));
