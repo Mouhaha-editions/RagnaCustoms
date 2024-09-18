@@ -198,11 +198,23 @@ class SongsController extends AbstractController
     public function download(
         Request $request,
         ManagerRegistry $doctrine,
-        Song $song,
+        string $id,
         KernelInterface $kernel,
         DownloadService $downloadService,
+        SongRepository $songRepository,
         DownloadCounterRepository $downloadCounterRepository
     ): StreamedResponse|Response {
+
+        if (is_numeric($id)) {
+            $song = $songRepository->find($id);
+
+            if (!$song || $song->isPrivate()) {
+                return new Response("Not available now", 403);
+            }
+        } else {
+            $song = $songRepository->findOneBy(['privateLink' => $id]);
+        }
+
         if (!$song->isModerated() || $song->getProgrammationDate() == null || $song->getProgrammationDate(
             ) > new DateTime()) {
             return new Response("Not available now", 403);
@@ -216,7 +228,7 @@ class SongsController extends AbstractController
 
         return $this->RestrictedDownload(
             $kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip",
-            $song->getId().".zip"
+            ($song->isPrivate() ? $song->getPrivateLink():$song->getId()).".zip"
         );
 
 //        $response = new Response($fileContent);
