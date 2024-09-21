@@ -371,7 +371,7 @@ class SongsController extends AbstractController
             $song = $songRepository->findOneBy(['privateLink' => $id]);
         }
 
-        if ($song->isPrivate() && is_numeric($id)) {
+        if ($song && $song->isPrivate() && is_numeric($id)) {
             return new Response("Not available now", 404);
         }
 
