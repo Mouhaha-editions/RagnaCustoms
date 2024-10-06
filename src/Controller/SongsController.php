@@ -378,7 +378,7 @@ class SongsController extends AbstractController
         if ( !$song || !$song->isModerated()
             || $song->getProgrammationDate() == null
             || $song->getProgrammationDate() > new DateTime()) {
-            if ($this->isGranted('ROLE_ADMIN') || $song->getMappers()->contains($this->getUser())) {
+            if ($this->isGranted('ROLE_ADMIN') || ($song && $song->getMappers()->contains($this->getUser()))) {
 
             } else {
                 return new Response("Not available now", 403);
