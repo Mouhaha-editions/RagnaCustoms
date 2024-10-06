@@ -160,7 +160,7 @@
             </div>
         </div>
     </nav>
-    <a href="{{ url('random_song') }}" class="dices bg-info">
+    <a data-no-swup='true' href="{{ url('random_song') }}" class="dices bg-info">
         <i class="fas fa-dice"></i>
     </a>
     {% for label, messages in app.flashes %}
