@@ -17,6 +17,23 @@
 body {
   overflow-x: hidden;
 }
+.dices{
+  position: fixed;
+  bottom: 20px;
+  right:20px;
+  width:50px;
+  height:50px;
+  text-align:center;
+  line-height:50px;
+  color:#fff;
+  font-size:24px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  &:hover{
+    color:#fff;
+    background-color: #65abe8 !important;
+  }
+}
 
 #user_profile {
   .darker {

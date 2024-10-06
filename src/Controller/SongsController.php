@@ -586,6 +586,30 @@ class SongsController extends AbstractController
         return new Response('');
     }
 
+
+
+    #[Route(path: '/random', name: 'random_song')]
+    public function songRandom(
+        SongRepository $songRepository
+    ): RedirectResponse|Response
+    {
+       $song  = $songRepository->createQueryBuilder('song')->orderBy('RAND()')
+           ->setFirstResult(0)
+           ->setMaxResults(1)
+           ->where('song.active = true')
+           ->AndWhere('song.active = true')
+           ->AndWhere('song.isPrivate = false')
+           ->AndWhere('song.programmationDate < NOW()')
+           ->AndWhere('song.isDeleted = false')
+           ->AndWhere('song.isNotificationDone = 1')
+           ->AndWhere('song.wip = 0')
+           ->getQuery()
+           ->getOneOrNullResult();
+
+        return $this->redirectToRoute('song_detail', ['slug' => $song->getSlug()]);
+    }
+
+
     #[Route(path: '/secure/{privateLink}', name: 'secure_song')]
     public function songDetailSecure(
         Request $request,

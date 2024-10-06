@@ -10,7 +10,7 @@
           <h1>Search over <span class="song-counter">{{ songService.count(false) }}</span> custom songs for<br/>
             Ragnarock VR on Steam and Meta Quest
           </h1>
-          <form method="GET" action="{{ url('song_library') }}" class=" search-and-filter">
+          <form method="GET" action="{{ url('song_library') }}" class=" search-and-filter mb-2">
             <div class="input-group">
               <span class="input-group-text"
                     style="background:#414141FF; font-size:19px; color:#fff;border:none;border-radius:0!important;">Search by</span>
@@ -42,7 +42,7 @@
       {% if is_granted('ROLE_USER') %}
       {% set songs = songService.getLastPlayedToVote(app.user) %}
       {% if songs|length > 0 %}
-      <div class="row mt-5 vote-it">
+      <div class="row mt-2 vote-it">
         <div class="col-12">
           <h4 style="">{{ "You played them... now rate them!"|trans }}</h4>
         </div>

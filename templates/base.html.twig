@@ -160,6 +160,9 @@
             </div>
         </div>
     </nav>
+    <a href="{{ url('random_song') }}" class="dices bg-info">
+        <i class="fas fa-dice"></i>
+    </a>
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="alert d-none " data-type="{{ label }}" data-title="{{ label|capitalize }}">
@@ -179,6 +182,7 @@
     {% endblock %}
 
     {% block endBody %}
+
         <div class="modal fade" id="editSong" data-backdrop="static" data-keyboard="false" tabindex="-1"
              aria-labelledby="staticBackdropLabel2" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
