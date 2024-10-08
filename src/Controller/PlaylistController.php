@@ -40,7 +40,7 @@ class PlaylistController extends AbstractController
     public function show(Request $request, Playlist $playlist, PaginationService $paginationService,
                          SongRepository $songRepository): Response
     {
-        if (!$playlist->getIsPublic()) {
+        if (!$playlist->getIsPublic() && $playlist->getUser() !== $this->getUser()) {
             $this->addFlash("warning", "This playlist is not public");
             return $this->redirectToRoute('home');
         }
