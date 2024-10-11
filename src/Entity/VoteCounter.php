@@ -25,7 +25,7 @@ class VoteCounter
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $song;
 
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $votes_indc;
 
     public function getId(): ?int
@@ -62,7 +62,7 @@ class VoteCounter
         return $this->votes_indc;
     }
 
-    public function setVotesIndc(bool $votesIndc): self
+    public function setVotesIndc(?bool $votesIndc): self
     {
         $this->votes_indc = $votesIndc;
 

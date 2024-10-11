@@ -40,22 +40,9 @@
         </div>
       </div>
       {% if is_granted('ROLE_USER') %}
-      {% set songs = songService.getLastPlayedToVote(app.user) %}
-      {% if songs|length > 0 %}
-      <div class="row mt-2 vote-it">
-        <div class="col-12">
-          <h4 style="">{{ "You played them... now rate them!"|trans }}</h4>
-        </div>
-        {% import "songs/macros/song.html.twig" as macro_song %}
-
-        {% for song in songs %}
-          <div class="col-3">
-            {{ macro_song.voteItBox(song) }}
-          </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endif %}
+        {% set songs = songService.getLastPlayedToVote(app.user) %}
+        {% include 'songs/partial/vote_it_box.html.twig' with {songs:songs} %}
+      {% endif %}
     </div>
   </header>
 

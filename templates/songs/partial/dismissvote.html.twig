@@ -1,0 +1,22 @@
+<div class="dismiss_vote" id="dismiss_vote_{{ song.id }}">
+    {% set voteCounter = song.isVoteCounterBy(app.user) %}
+    {% set upvotePosible = voteService.canUpDownVote(song, app.user) %}
+    {% if not is_granted('ROLE_USER') or not song.isAvailable or not upvotePosible or voteCounter is not null %}
+
+        <i style="color:grey;opacity:0.5" class="fas fa-trash" {% if not upvotePosible %}data-toggle="tooltip" title="Play the song first"{% endif %}></i>
+
+    {% else %}
+    <div><a style="text-decoration:none"
+           data-toggle="tooltip"
+           title="{{ "Dismiss"|trans }}"
+           class="ajax-link"
+           data-success-action="replace"
+           data-replace-selector="#vote-it"
+           href="#"
+           data-url="{{ path('song_vote_dismiss',{id:song.id}) }}"
+        >
+            <i class="fas fa-trash"></i>
+        </a>
+    </div>
+    {% endif %}
+</div>
