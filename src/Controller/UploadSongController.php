@@ -284,20 +284,28 @@ class UploadSongController extends AbstractController
                 if ($songService->processFile($form, $song, $isWip)) {
                     /** @var ?SongRequest $song_request */
                     $doctrine->getManager()->flush();
-                    $this->addFlash(
-                        'success',
-                        $translator->trans(
-                            "Song \"%song%\" by \"%artist%\" successfully uploaded!".(
-                            $song->isPrivate(
-                            ) ? "Your private link is : %url% <br/> <small>You can copy this one by clicking on the lock in your song list</small>" : ''
-                            ),
-                            [
+                    if($song->isPrivate()) {
+                        $this->addFlash(
+                            'success',
+                            $translator->trans(
+                                "Song \"%song%\" by \"%artist%\" successfully uploaded!<br/>".
+                                "Your private link is : %url% <br/> <small>You can copy this one by clicking on the lock in your song list</small>",
+                                [
+                                    "%song%" => $song->getName(),
+                                    "%artist%" => $song->getAuthorName(),
+                                    '%url%' => $this->generateUrl('secure_song', ['key' => $song->getPrivateLink()]),
+                                ]
+                            )
+                        );
+                    }else{
+                        $this->addFlash(
+                            'success',
+                            $translator->trans("Song \"%song%\" by \"%artist%\" successfully uploaded!", [
                                 "%song%" => $song->getName(),
                                 "%artist%" => $song->getAuthorName(),
-                                '%url%' => $this->generateUrl('secure_song', ['key' => $song->getPrivateLink()]),
-                            ]
-                        )
-                    );
+                            ])
+                        );
+                    }
 
                     return new JsonResponse([
                         'error' => false,
