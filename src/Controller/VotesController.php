@@ -9,6 +9,7 @@ use App\Form\VoteType;
 use App\Repository\VoteRepository;
 use App\Service\DiscordService;
 use App\Service\NotificationService;
+use App\Service\SongService;
 use App\Service\VoteService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -70,6 +71,22 @@ class VotesController extends AbstractController
 
         return new JsonResponse(['result' => $this->renderView('songs/partial/downupvote.html.twig', ['song' => $song])]
         );
+    }
+
+    #[Route(path: '/dismiss/{id}', name: '_dismiss')]
+    public function dismissVote(VoteService $voteService, SongService $songService, Song $song, TranslatorInterface $translator): JsonResponse
+    {
+        if (!$song->isAvailable()) {
+            $this->addFlash('danger', $translator->trans("Song not available for vote"));
+        } elseif (!$this->isGranted('ROLE_USER')) {
+            $this->addFlash('danger', $translator->trans("Login to vote"));
+        } elseif (!$voteService->canUpDownVote($song, $this->getUser())) {
+            $this->addFlash('danger', $translator->trans("Play the song first"));
+        } else {
+            $voteService->dismissVote($song, $this->getUser());
+        }
+        return new JsonResponse(['result' => $this->renderView('songs/partial/vote_it_box.html.twig', 
+            ['songs' => $songService->getLastPlayedToVote($this->getUser())])]);
     }
 
     /**

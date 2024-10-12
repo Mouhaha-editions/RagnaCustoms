@@ -35,7 +35,7 @@
            data-success-action="replace"
            data-replace-selector="#up_down_vote_{{ song.id }}"
                 {% set isNegative = false %}
-                {% if voteCounter is not null and voteCounter.votesIndc == false %}
+                {% if voteCounter is not null and voteCounter.votesIndc is not null and voteCounter.votesIndc == false %}
                     {% set isNegative = true %}
                     title="{{ "Remove my downvote for this song"|trans }}"
                 {% else %}

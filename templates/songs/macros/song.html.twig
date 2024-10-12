@@ -32,7 +32,10 @@
       <div class="mapper pb-2 one-line">
         {% include 'songs/partial/mappers.html.twig' with {song:song} %}
       </div>
-      {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
+      <div class="row px-3 justify-content-between">
+        {% include 'songs/partial/downupvote.html.twig' with {song:song} %}
+        {% include 'songs/partial/dismissvote.html.twig' with {song:song} %}
+      </div>
 
       <button class="btn btn-block btn-warning ajax-load ajax-modal-form btn-sm mt-3 mb-2 song-review"
               data-toggle="modal"

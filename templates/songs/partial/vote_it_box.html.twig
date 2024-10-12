@@ -1,0 +1,14 @@
+{% if songs|length > 0 %}
+<div class="row mt-2 vote-it" id="vote-it">
+    <div class="col-12">
+        <h4 style="">{{ "You played them... now rate them!"|trans }}</h4>
+    </div>
+    {% import "songs/macros/song.html.twig" as macro_song %}
+
+    {% for song in songs %}
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-md-0 pb-sm-3 pb-3">
+        {{ macro_song.voteItBox(song) }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}

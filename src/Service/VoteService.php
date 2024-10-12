@@ -59,23 +59,27 @@ class VoteService
     {
         /**check if the user already voted this song (if he is in vote_counter table)*/
         $UserSongVoteCounter = $song->isVoteCounterBy($user);
-
-        /** if user already voted this song, then do nothing if the vote is the same. Else update the vote
-         * if user never voted this song, then create a new voteCounter for this user/song and add one vote
-         */
         if ($UserSongVoteCounter != null) {
             /** vote exists */
-            if (!$UserSongVoteCounter->getVotesIndc()) {
-                /** vote is an downvote */
+            if (is_null($UserSongVoteCounter->getVotesIndc())) {
+                /** vote was empty (user dismissed prompt from vote it box or previously voted and removed vote) */
+                /**update the voteCounter of the user/song */
+                $UserSongVoteCounter->setVotesIndc(true);
+                /**update the vote up of the song */
+                $song->setVoteUp($song->getVoteUp() + 1);
+            } else if ($UserSongVoteCounter->getVotesIndc()) {
+                /** vote is an upvote */
+                /**update the voteCounter of the user/song to empty - avoids showing the song again in the vote it box */
+                $UserSongVoteCounter->setVotesIndc(null);
+                /**update the vote up of the song */
+                $song->setVoteUp($song->getVoteUp() - 1);
+            } else {
+                /** vote is a downvote */
                 /**update the voteCounter of the user/song */
                 $UserSongVoteCounter->setVotesIndc(true);
                 /**update the vote down and vote up of the song */
                 $song->setVoteDown($song->getVoteDown() - 1);
                 $song->setVoteUp($song->getVoteUp() + 1);
-            } else {
-                /** vote is a upvote */
-                $this->em->remove($UserSongVoteCounter);
-                $song->setVoteUp($song->getVoteUp() - 1);
             }
         } else {
             /** vote does not exist */
@@ -99,13 +103,15 @@ class VoteService
     {
         /**check if the user already voted this song (if he is in vote_counter table)*/
         $UserSongVoteCounter = $song->isVoteCounterBy($user);
-
-        /** if user already voted this song, then do nothing if the vote is the same. Else update the vote
-         * if user never voted this song, then create a new voteCounter for this user/song and add one vote
-         */
         if ($UserSongVoteCounter != null) {
             /** vote exists */
-            if ($UserSongVoteCounter->getVotesIndc()) {
+            if (is_null($UserSongVoteCounter->getVotesIndc())) {
+                /** vote was empty (user dismissed prompt from vote it box or previously voted and removed vote) */
+                /**update the voteCounter of the user/song */
+                $UserSongVoteCounter->setVotesIndc(false);
+                /**update the vote down of the song */
+                $song->setVoteDown($song->getVoteDown() + 1);
+            } else if ($UserSongVoteCounter->getVotesIndc()) {
                 /** vote is an upvote */
                 /**update the voteCounter of the user/song */
                 $UserSongVoteCounter->setVotesIndc(false);
@@ -114,7 +120,9 @@ class VoteService
                 $song->setVoteUp($song->getVoteUp() - 1);
             } else {
                 /** vote is a downvote */
-                $this->em->remove($UserSongVoteCounter);
+                /**update the voteCounter of the user/song to empty - avoids showing the song again in the vote it box */
+                $UserSongVoteCounter->setVotesIndc(null);
+                /**update the vote down of the song */
                 $song->setVoteDown($song->getVoteDown() - 1);
             }
         } else {
@@ -128,6 +136,33 @@ class VoteService
             $this->em->persist($newVoteCounter);
             /**update the vote down of the song */
             $song->setVoteDown($song->getVoteDown() + 1);
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * dismiss vote it box on home page by inserting empty vote counter
+     * @param  Song  $song
+     * @param  UserInterface|null  $user
+     */
+    public function dismissVote(Song $song, ?UserInterface $user)
+    {
+        /**check if the user already voted this song (if he is in vote_counter table)*/
+        $UserSongVoteCounter = $song->isVoteCounterBy($user);
+
+        /**
+         * if user already voted on this song, then do nothing
+         * if user never voted on this song, then create a new empty voteCounter for this user/song 
+         */
+        if ($UserSongVoteCounter == null) {
+            /** vote does not exist */
+            /** create a new VoteCounter */
+            $newVoteCounter = new VoteCounter();
+            $newVoteCounter->setSong($song);
+            $newVoteCounter->setUser($user);
+            $newVoteCounter->setVotesIndc(null);
+            $song->addVoteCounter($newVoteCounter);
+            $this->em->persist($newVoteCounter);
         }
         $this->em->flush();
     }
