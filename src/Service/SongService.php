@@ -295,7 +295,8 @@ class SongService
             throw new Exception("Cover have to be a square.");
         }
 
-        $new = $song->getId() == null || $isWip != $song->getWip();
+        $new = $song->getId() == null || $isWip != $song->getWip() || !$song->isNotificationDone();
+
         if ($song->isRanked()) {
             $this->rrmdir($unzipFolder);
             throw new Exception("This song is ranked, you can't update it for now, please contact us.");
@@ -315,12 +316,14 @@ class SongService
             ->andWhere('s.name = :name')
             ->andWhere('s.authorName = :authorName')
             ->andWhere('m.id IN (:users)')
+            ->setMaxResults(1)
             ->setParameters([
                 'name' => $songName,
                 'authorName' => $authorName,
                 'users' => $song->getMappers(),
-            ])->getQuery()->getResult();
-        if ($existingSong != null && $new === true) {
+            ])->getQuery()->getOneOrNullResult();
+
+        if ($existingSong != null && $existingSong->getId() !== $song->getId() && $new === true) {
             throw new Exception("You already uploaded this song, please edit the last upload.");
         }
         $song->setVersion($json->_version);
@@ -571,7 +574,7 @@ class SongService
             }
         } else {
             if ($song->isPublished()) {
-                if (!$song->isNotificationDone()) {
+                if ($song->isNotificationDone()) {
                     $this->discordService->sendUpdatedSongMessage($song);
                     foreach ($song->getMappers() as $user) {
                         /** @var FollowMapper $follower */

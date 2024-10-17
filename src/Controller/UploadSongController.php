@@ -177,7 +177,7 @@ class UploadSongController extends AbstractController
         }
 
         $isWip = $song->getWip();
-        $form->get('publishingType')->setData($song->isWip() ? 0 : ($song->isPrivate() ? 2 : 1));
+        $form->get('publishingType')->setData($song->isWip() ? 0 : ($song->isPrivate() ? 2 : ($song->isActive() && $song->getProgrammationDate() ? 1 : 3)));
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
