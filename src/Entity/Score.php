@@ -120,7 +120,7 @@ class Score
 
     public function getTimeAgo(): string
     {
-        return StatisticService::dateDisplay($this->createdAt);
+        return StatisticService::dateDisplay($this->getPlayedAt());
     }
 
     /**
@@ -355,7 +355,7 @@ class Score
 
     public function getTimeAgoShort()
     {
-        return StatisticService::dateDisplayedShort($this->updatedAt);
+        return StatisticService::dateDisplayedShort($this->getPlayedAt());
     }
 
     public function getPlateformIcon()

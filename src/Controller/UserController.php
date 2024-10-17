@@ -155,7 +155,7 @@ class UserController extends AbstractController
                 $qb->orderBy("score.playedAt", $request->get('order_sort', 'asc') == "asc" ? "asc" : "desc");
                 break;
             default:
-                $qb->orderBy("score.rawPP", "desc");
+                $qb->orderBy("score.playedAt", "DESC");
                 break;
         }
 

@@ -91,7 +91,8 @@ Recently played {{ parent() }}
                                 class="form-control form-control-sm tom-select" multiple="true">
                             {% for category in categories %}
                                 <option {% if category.id in app.request.get('downloads_filter_categories') %}selected="selected"{% endif %}
-                                        value="{{ category.id }}">{{ category.label }}</option>                                {% endfor %}
+                                        value="{{ category.id }}">{{ category.label }}</option>
+                            {% endfor %}
                         </select>
                     </div>
 
