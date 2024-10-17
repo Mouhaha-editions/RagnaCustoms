@@ -35,6 +35,9 @@ class Playlist
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
+    #[ORM\Column]
+    private ?bool $isFeatured = null;
+
     public function __construct()
     {
         $this->songs = new ArrayCollection();
@@ -130,5 +133,17 @@ class Playlist
     public function isPublic(): ?bool
     {
         return $this->isPublic;
+    }
+
+    public function isFeatured(): ?bool
+    {
+        return $this->isFeatured;
+    }
+
+    public function setIsFeatured(bool $isFeatured): static
+    {
+        $this->isFeatured = $isFeatured;
+
+        return $this;
     }
 }

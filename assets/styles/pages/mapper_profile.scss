@@ -50,8 +50,50 @@
   }
 }
 
-
 #mapper-profile {
+  .mapper-description{
+    height:225px;
+    overflow-y: auto;
+  }
+
+  .playlists::-webkit-scrollbar {
+    width: 5px; /* Largeur de la barre de scroll */
+    height: 5px; /* Hauteur de la barre de scroll horizontale */
+  }
+
+  .playlists::-webkit-scrollbar-thumb {
+    background-color: #6f6f6f; /* Couleur de la barre */
+    border-radius: 10px; /* Bordure arrondie pour un aspect plus fluide */
+  }
+
+  .playlists::-webkit-scrollbar-track {
+    background-color: #333; /* Couleur de la piste derrière la barre */
+  }
+
+  /* Pour Firefox */
+  .playlists {
+    padding-bottom:3px;
+    scrollbar-width: thin; /* Barre fine */
+    scrollbar-color: #6f6f6f #333; /* Couleur de la barre et de la piste */
+  }
+
+  .playlists {
+    overflow-x:auto;
+    max-width:100%;
+    white-space: nowrap; /* Empêche le retour à la ligne */
+
+    .small-playlist{
+      width:50px;
+      height:50px;
+      display:inline-block;
+
+      img{
+        width:50px;
+        height:50px;
+      }
+    }
+  }
+
   #profile-header {
     background: rgba(0, 0, 0, 0.21);
     background-blend-mode: soft-light;

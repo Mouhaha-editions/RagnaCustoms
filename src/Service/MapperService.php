@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Playlist;
 use App\Entity\Song;
 use App\Entity\Vote;
 use Doctrine\ORM\EntityManagerInterface;
@@ -123,6 +124,12 @@ readonly class MapperService
             ->groupBy("m.id")
             ->getQuery()->getOneOrNullResult();
         return $res != null ? array_pop($res):0;
+    }
+
+    public function getPlaylistShowcase(UserInterface $user)
+    {
+        return $this->em->getRepository(Playlist::class)
+            ->findBy(['isFeatured'=>true, 'user'=> $user],['updatedAt'=>'DESC']);
     }
 }
 

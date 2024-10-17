@@ -160,6 +160,9 @@ class Song
     #[ORM\Column(length: 30, nullable: true)]
     private ?string $privateLink = null;
 
+    #[ORM\Column]
+    private ?bool $isFeatured = null;
+
 
     public function __construct()
     {
@@ -1167,6 +1170,18 @@ class Song
     public function setPrivateLink(?string $privateLink): static
     {
         $this->privateLink = $privateLink;
+
+        return $this;
+    }
+
+    public function isFeatured(): ?bool
+    {
+        return $this->isFeatured;
+    }
+
+    public function setIsFeatured(?bool $isFeatured): self
+    {
+        $this->isFeatured = $isFeatured;
 
         return $this;
     }

@@ -30,8 +30,11 @@
                         <div class="title">
                             <h2>{{ playlist.label }}</h2>
                         </div>
-                        <div class="count">{{ playlist.songs|length }}
+                        <div class="count">
+
+                            {{ playlist.songs|length }}&nbsp;
                             {{ playlist.isPublic?"<i class='fas fa-check text-success' data-toggle='tooltip' title='public'></i>":"<i class='fas fa-close text-danger'  data-toggle='tooltip' title='private'></i>" }}
+                            {%- if playlist.isFeatured -%}&nbsp;<i class="fas fa-star text-warning" data-toggle='tooltip' title='Featured'></i>{%- endif %}
                         </div>
 
                         <div class="resume">

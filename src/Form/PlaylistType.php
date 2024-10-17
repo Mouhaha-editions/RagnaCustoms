@@ -15,6 +15,7 @@ class PlaylistType extends AbstractType
         $builder
             ->add('label', null, ["attr"=>["class"=>"form-control"]])
             ->add('isPublic', null, ["attr"=>["class"=>""]])
+            ->add('isFeatured', null, ["attr"=>["class"=>""]])
             ->add('description', null, ["attr"=>["class"=>"form-control"]])
             ->add('save', SubmitType::class, ["attr"=>["class"=>"btn btn-info"]])
         ;

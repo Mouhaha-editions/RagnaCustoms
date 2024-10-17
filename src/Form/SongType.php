@@ -55,6 +55,9 @@ class SongType extends AbstractType
             ->add('isExplicit', null, [
                 'label' => "Explicit content",
             ])
+            // ->add('isFeatured', null, [
+            //     'label' => "Featured",
+            // ])
             ->add('bestPlatform', ChoiceType::class, [
                 'choices' => [
                     'VR' => 0,
