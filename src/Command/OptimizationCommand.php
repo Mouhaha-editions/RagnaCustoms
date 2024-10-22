@@ -26,6 +26,12 @@ class OptimizationCommand extends Command
                 continue;
             }
             try {
+                $cover = explode('.', $value);
+                
+                if ($cover[1] == 'webp') {
+                    continue;
+                }
+                
                 $filedir = $this->kernel->getProjectDir()."/public/covers/".$value;
                 $image = Image::make($filedir);
                 $background = Image::canvas(349, 349, 'rgba(255, 255, 255, 0)');
@@ -58,8 +64,6 @@ class OptimizationCommand extends Command
                     unlink($filedir);
                     imagedestroy($image);
                 }
-
-
             } catch (Exception $exception) {
                 echo $filedir." ".$exception->getMessage();
             }
