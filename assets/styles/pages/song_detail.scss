@@ -28,7 +28,7 @@
           border-radius: 4px;
           font-size: 16px;
           text-align: center;
-          color: #fff;
+          color: $main-text-color;
           margin-left: 2px;
           margin-bottom: 5px;
           //float: left;
@@ -142,12 +142,12 @@
 
     .nav-pills {
       li {
-        color: #fff;
+        color: $main-text-color;
         margin-right: 12px;
 
         .nav-link {
           padding: 1px 15px;
-          color: #fff;
+          color: $main-text-color;
           filter: grayscale(1);
           border:1px solid transparent;
 
@@ -161,7 +161,7 @@
 
     .leaderboards {
       table {
-        color: #fff;
+        color: $main-text-color;
         border: none;
         font-size: 14px;
 

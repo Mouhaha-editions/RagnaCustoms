@@ -26,17 +26,30 @@
            data-target="#previewSong"
            data-refresh="true"
            data-no-scroll="true"
+           title="Preview"
            data-url="{{ url("partial_preview_song",{id:song.id}) }}"
            class="ajax-load preview-popup fas fa-play-circle fa-2x menuItem">
         </a>
+
+
         {% if app.current_route == 'playlist_show' and (app.user.id == playlist.user.id or is_granted('ROLE_ADMIN')) %}
             <a href="{{ url('playlist_remove',{playlist_id: playlist.id, id:song.id}) }}" class="menuItem"><i class="fas fa-trash text-danger"></i></a>
         {% else %}
-            <a class="menuItem"></a>
+            <a href="#"
+               class="fas fa-list text-level-10 ajax-load popover-trigger btn-playlist menuItem"
+               data-trigger="hover"
+               title="Add to playlist"
+               data-placement="top"
+               data-content="{{ "Add to playlist"|trans }}"
+               data-replace-selector="#songPlaylists .modal-body"
+               data-toggle='modal' data-target='#songPlaylists'
+               data-url='{{ url('song_playlist',{id:song.id}) }}'
+               data-song-id='{{ song.id }}' style="color:#ee5f27">
+            </a>
         {% endif %}
-        <a class="menuItem"></a>
+
         <a class="menuItem"></a>
     </div>
 
-    <a href="#" title="open menu" class="center fa fa-bars fa-2x"></a>
+    <a href="#" title="open menu" class="center fa fa-ellipsis fa-2x"></a>
 </div>

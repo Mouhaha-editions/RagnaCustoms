@@ -80,7 +80,7 @@
           <div class="col-md-7">
             <h1 class="force-default text-warning">{{ song|raw }}</h1>
             <h2 class="force-default">
-              {% include 'songs/partial/artists.html.twig' %}
+              {% include 'songs/partial/artists.html.twig' with {song : song} %}
             </h2>
             <div class="tags">
               {% for category in song.categoryTags %}
@@ -104,7 +104,7 @@
                    data-url='{{ url('song_playlist',{id:song.id}) }}'
                    data-song-id='{{ song.id }}'>
                   <i title="Add to playlist"
-                     data-toggle="tooltip" class="fas fa-heart"></i>
+                     data-toggle="tooltip" class="fas fa-list"></i>
                 </a>
               </div>
               {% if song.youtubeLink != null %}

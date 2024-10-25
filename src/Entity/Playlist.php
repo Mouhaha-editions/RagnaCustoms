@@ -146,4 +146,19 @@ class Playlist
 
         return $this;
     }
+
+    /**
+     * @return string[]
+     */
+    public function getAuthors(): array
+    {
+        $a = [];
+        foreach($this->getSongs() AS $song){
+           foreach($song->getAuthors() AS $au){
+               $a[] = $au;
+           }
+        }
+
+        return array_unique($a);
+    }
 }

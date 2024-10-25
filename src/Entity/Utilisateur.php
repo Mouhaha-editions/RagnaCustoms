@@ -102,7 +102,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column(type: 'string')]
     private $password;
+
     #[ORM\OneToMany(targetEntity: Playlist::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OrderBy(['isFeatured' => 'desc', 'updatedAt' => 'desc'])]
     private $playlists;
     #[ORM\Column(type: 'json')]
     private $roles = [];

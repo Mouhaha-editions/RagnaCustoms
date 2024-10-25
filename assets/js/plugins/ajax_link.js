@@ -18,11 +18,11 @@ $(document).on("click", ".ajax-link", function () {
             switch (action) {
                 case "replace":
                     $(t.data('replace-selector')).replaceWith(data.result);
-                    $(t.data('replace-selector')+" [data-toggle=\"tooltip\"]").tooltip();
+                    $(t.data('replace-selector')+" [data-toggle='tooltip'],[title]").tooltip();
                     break;
                 case "replace-html":
                     $(t.data('replace-selector')).html(data.result);
-                    $(t.data('replace-selector')+" [data-toggle=\"tooltip\"]").tooltip();
+                    $(t.data('replace-selector')+" [data-toggle='tooltip'],[title]").tooltip();
                     break;
                 case "remove":
                     $(t.data('remove-selector')).remove();

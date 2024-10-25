@@ -142,7 +142,7 @@ $(function () {
         toggle_snow();
     })
 
-    $("[data-toggle=tooltip]").tooltip();
+    $("[data-toggle='tooltip'],[title]").tooltip();
     let maxBg = 21;
     let currentBg = Math.floor(Math.random() * maxBg-1) +1;
 
@@ -186,7 +186,7 @@ $(document).on('change', 'input[type="file"]', function (e) {
 });
 
 
-$("[data-toggle=\"tooltip\"]").tooltip({delay: 100});
+$("[data-toggle='tooltip'],[title]").tooltip({delay: 100});
 
 $(document).on('click', '.open-download-buttons', function () {
     let t = $(this).closest('.on-hover').find('.big-buttons');
@@ -219,7 +219,7 @@ $(document).on('click', ".ajax-load", function () {
         },
         success: function (data) {
             body.html(data.response);
-            body.find("[data-toggle=tooltip]").tooltip();
+            body.find("[data-toggle='tooltip'],[title]").tooltip();
             $(".rating-list").on('change', function () {
                 let t = $(this);
                 $('input[name="' + t.data('input-selector') + '"]').val(t.data('rating'));

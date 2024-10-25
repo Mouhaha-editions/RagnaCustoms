@@ -6,11 +6,11 @@
       }
 
       a {
-        color: #fff;
+        color: $main-text-color;
 
         &:hover {
           text-decoration: underline;
-          color: #fff;
+          color: $main-text-color;
         }
       }
 

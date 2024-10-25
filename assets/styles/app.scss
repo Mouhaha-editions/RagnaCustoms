@@ -17,20 +17,22 @@
 body {
   overflow-x: hidden;
 }
-.dices{
+
+.dices {
   position: fixed;
   bottom: 20px;
-  right:20px;
-  width:50px;
-  height:50px;
-  text-align:center;
-  line-height:50px;
-  color:#fff;
-  font-size:24px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  color: $main-text-color;
+  font-size: 24px;
   border-radius: 50%;
   border: 2px solid #fff;
-  &:hover{
-    color:#fff;
+
+  &:hover {
+    color: $main-text-color;
     background-color: #65abe8 !important;
   }
 }
@@ -101,7 +103,7 @@ body {
       line-height: 24px;
       border-radius: 12px;
       text-align: center;
-      color: #fff;
+      color: $main-text-color;
       margin-left: 5px;
 
     }
@@ -214,8 +216,8 @@ header {
   background-size: cover;
 }
 
-form.search-and-filter{
-  font-size: 19px!important;
+form.search-and-filter {
+  font-size: 19px !important;
 }
 
 .be-patreon {
@@ -226,7 +228,7 @@ form.search-and-filter{
 
   a {
     background: #f96854;
-    color: #fff;
+    color: $main-text-color;
     line-height: inherit;
     box-shadow: 0px 0px 20px #000;
     text-shadow: none;
@@ -250,7 +252,7 @@ form.search-and-filter{
 
     a {
       background: #f96854;
-      color: #fff;
+      color: $main-text-color;
       line-height: inherit;
       box-shadow: 0px 0px 20px #000;
       text-shadow: none;
@@ -275,7 +277,7 @@ form.search-and-filter{
 
   a {
     background: $twitch;
-    color: #fff;
+    color: $main-text-color;
     line-height: inherit;
     box-shadow: 0px 0px 20px #000;
     text-shadow: none;
@@ -308,8 +310,8 @@ a.disabled {
 }
 
 .shiny-text {
-  background-image: -webkit-linear-gradient(left, white 25%, #71b0fd 37.5%, #718eef, #6a8499 62.5%, white 75%);
-  background-image: linear-gradient(90deg, white 25%, #71b0fd 37.5%, #718eef, #6a8499 62.5%, white 75%);
+  background-image: -webkit-linear-gradient(left, white 25%, $event-color-dark-blue 37.5%, $event-color-blue, $event-color-blue 62.5%, white 75%);
+  background-image: linear-gradient(90deg, white 25%, $event-color-dark-blue 37.5%, $event-color-blue, $event-color-blue 62.5%, white 75%);
   background-position: right center;
   background-size: 400% auto;
   -webkit-background-clip: text;
@@ -320,15 +322,15 @@ a.disabled {
   transition: color 200ms linear;
 }
 
-textarea{
+textarea {
   background: #414141 !important;
-  color:#fff !important;
-  border:none !important;
+  color: #fff !important;
+  border: none !important;
 }
 
 .shiny-text:hover {
   background-position: left center;
-  color: #71bbef;
+  color: $event-color-blue;
   transition: background-position 2000ms ease-out;
 }
 
@@ -431,34 +433,39 @@ textarea{
   z-index: 101;
 }
 
-.btn-tag{
-  background:#3c3c3c;
-  color:#fff;
-  font-size:12px;
-  &:hover{
+.btn-tag {
+  background: #3c3c3c;
+  color: $main-text-color;
+  font-size: 12px;
+
+  &:hover {
     background: #2f2f2f;
-    color:#fff;
+    color: $main-text-color;
   }
 }
 
-.no-bg{
-  background: transparent!important;
+.no-bg {
+  background: transparent !important;
 }
 
-.user-menu li{
+.user-menu li {
   a {
-    color: #fff;
+    color: $main-text-color;
+
     &:hover {
       text-decoration: none;
     }
   }
-  &:hover, &.activated{
-    color:#0d5aa7;
-    a{
-      color:#0d5aa7;
+
+  &:hover, &.activated {
+    color: #0d5aa7;
+
+    a {
+      color: #0d5aa7;
     }
   }
 }
+
 .user-picture {
   .friend-request {
     position: absolute;
@@ -467,7 +474,7 @@ textarea{
   }
 }
 
-.one-line{
+.one-line {
   white-space: nowrap;
   text-overflow: ellipsis;
   width: 100%;
@@ -477,60 +484,213 @@ textarea{
 
 .level-1 {
   background: $level1;
-  border:2px solid darken($level1,10%);
-  color:#000000;
+  border: 2px solid darken($level1, 10%);
+  color: #000000;
 }
 
 .level-2 {
   background: $level2;
-  border:2px solid darken($level2,10%);
-  color:#000000;
+  border: 2px solid darken($level2, 10%);
+  color: #000000;
 }
 
 .level-3 {
   background: $level3;
-  border:2px solid darken($level3,10%);
+  border: 2px solid darken($level3, 10%);
 }
 
 .level-4 {
   background: $level4;
-  border:2px solid darken($level4,10%);
+  border: 2px solid darken($level4, 10%);
 }
 
 .level-5 {
   background: $level5;
-  border:2px solid darken($level5,10%);
+  border: 2px solid darken($level5, 10%);
 }
 
 .level-6 {
   background: $level6;
-  border:2px solid darken($level6,10%);
+  border: 2px solid darken($level6, 10%);
 }
 
 .level-7 {
   background: $level7;
-  border:2px solid darken($level7,10%);
+  border: 2px solid darken($level7, 10%);
 }
 
 .level-8 {
   background: $level8;
-  border:2px solid darken($level8,10%);
+  border: 2px solid darken($level8, 10%);
 }
 
 .level-9 {
   background: $level9;
-  border:2px solid darken($level9,10%);
+  border: 2px solid darken($level9, 10%);
 }
 
 .level-10 {
   background: $level10;
-  border:2px solid darken($level10,10%);
+  border: 2px solid darken($level10, 10%);
 }
 
-.vote-it{
+.vote-it {
   background: linear-gradient(90deg, rgb(23, 23, 23) 0%, rgb(43, 43, 43) 20%, rgb(43, 43, 43) 80%, rgb(23, 23, 23) 100%);
   padding: 16px;
   border-radius: 30px;
 }
 
 @import 'card.scss';
+
+.playlist-placeholder{
+  border-radius: 5px;
+  background: #202020;
+  border: 1px solid #464646;
+  vertical-align: middle;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  position: relative;
+  text-align: center;
+  font-size: 32px;
+  color: #8a8a8a;
+  padding-top:100px;
+  padding-bottom:100px;
+}
+.tooltip{
+  z-index:1000!important;
+}
+.playlist-card {
+  border-radius: 5px;
+  background: #202020;
+  border: 1px solid #464646;
+  vertical-align: middle;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  position: relative;
+
+  .header {
+    background: #414141;
+    position: relative;
+    display: table-cell;
+
+    .placeholder {
+      border: 1px solid #565656;
+      background: #202020;
+      border-radius: 5px;
+      width: 20%;
+      padding-top: 6%;
+      text-align: center;
+    }
+
+    .preview {
+      width: 20%;
+      font-size: 18px;
+      font-weight: 700;
+      color: #8a8a8a;
+      font-family: "Catamaran", sans-serif;
+
+      img {
+        border-radius: 5px;
+        width: 100%;
+      }
+    }
+  }
+
+  .content {
+    padding: 10px 10px 0 10px;
+
+    .title {
+      color: $warning;
+      font-size: 16px!important;
+      line-height: 18px;
+      font-weight: bold;
+      display: -webkit-box;
+      -webkit-line-clamp: 1; /* Limite à 3 lignes */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis; /* Ajoute des "..." à la fin */
+
+    }
+
+    .description {
+      text-align: left;
+      display: -webkit-box;
+      -webkit-line-clamp: 3; /* Limite à 3 lignes */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis; /* Ajoute des "..." à la fin */
+      height:63px;
+      font-size:14px;
+      p {
+        padding: 0;
+        margin: 0;
+      }
+    }
+    .featuring-songs {
+      font-size:14px;
+      text-align: left;
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* Limite à 3 lignes */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis; /* Ajoute des "..." à la fin */
+      height:42px;
+      color: #8a8a8a;
+    }
+  }
+
+}
+#playlist_show {
+  &.placeholder{
+
+  }
+
+  table {
+    margin-top:-8px;
+    border-collapse: separate; /* Nécessaire pour que border-radius fonctionne */
+    border-spacing: 0 8px ; /* Espacement vertical entre les lignes */
+  }
+
+  td {
+    border-top: 1px solid #464646;
+    border-bottom: 1px solid #464646;
+
+    background: #202020;
+    padding: 5px;
+  }
+
+  tr td:first-child {
+    border-top-left-radius: 5px; /* Coin supérieur gauche */
+    border-bottom-left-radius: 5px; /* Coin inférieur gauche */
+    border-left: 1px solid #464646;
+  }
+
+  tr td:last-child {
+    border-top-right-radius: 5px; /* Coin supérieur droit */
+    border-bottom-right-radius: 5px; /* Coin inférieur droit */
+    border-right: 1px solid #464646;
+  }
+
+  h1{
+    font-size:18px;
+    padding:0;
+    margin:0;
+  }
+
+  .curated{
+    color: #8a8a8a;
+    margin-bottom:15px;
+    a {
+      font-size:18px;
+    }
+  }
+
+  .btn.btn-blue {
+    padding: 2px 25px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: "Catamaran", sans-serif;
+    background: #235886;
+    border: 1px solid #1388EE;
+    border-radius: 3px;
+    color: $main-text-color;
+  }
+}

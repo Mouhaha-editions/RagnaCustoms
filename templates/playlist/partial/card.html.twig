@@ -1,0 +1,68 @@
+{% if app.user == playlist.user %}
+  <div class="quick-view text-right">
+    {{ playlist.isPublic?"<i class='fas fa-check text-success' data-toggle='tooltip' title='public'></i>":"<i class='fas fa-close text-danger'  data-toggle='tooltip' title='private'></i>" }}
+    {%- if playlist.isFeatured -%}&nbsp;
+      <i class="fas fa-star text-warning" data-toggle='tooltip' title='Featured'></i>
+    {%- endif %}
+  </div>
+{% endif %}
+<div class="playlist-card">
+  <div class="header h-100 p-2 d-flex justify-content-around align-self-stretch">
+    {% set plusSong = playlist.songs|length - 3 %}
+    {% for song in playlist.songs %}
+      {% if playlist.songs|length == 4 or loop.index <= 3 %}
+        <div class="preview">
+          <img src="{{ song.cover }}" alt="{{ song.name }}" class="img-fluid"
+          >
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% if playlist.songs|length < 4 %}
+      {% for i in playlist.songs|length .. 4-1 %}
+        <div class=" preview placeholder" data-toggle="tooltip" title="no more song">
+          <i class="fas fa-gavel"></i>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if playlist.songs|length >4 and plusSong > 0 %}
+      <div class="preview placeholder">
+        + {{ plusSong }}
+      </div>
+    {% endif %}
+  </div>
+  <div class="content pb-1 pt-2 pl-3 pr-3">
+    <div class="title">
+      {{ playlist.label }}
+    </div>
+    <div class="description mt-1">
+      {% apply markdown_to_html %}
+        {{ playlist.description is not null ? playlist.description|striptags|nl2br : "no description for now"|trans }}
+      {% endapply %}
+    </div>
+    <div class="featuring-songs mt-1">
+      {% set authors = playlist.authors %}
+      {% set displayedAuthors = [] %}
+
+      {% if authors|length >= 2 %}
+        {% set displayedAuthors = [authors[0], authors[1]] %}
+      {% elseif authors|length == 1 %}
+        {% set displayedAuthors = [authors[0]] %}
+      {% endif %}
+      Featuring songs by {% include 'songs/partial/artists_no_div.html.twig' with {authors : displayedAuthors } %}
+      {% if authors|length >2 %}, and {{ authors|length - 2 }} other{% if authors|length - 2 > 1 %}s{% endif %}{% endif %}
+    </div>
+  </div>
+
+  <div class="playlist-buttons text-center pb-3 pt-1 pl-3 pr-3">
+    <a href="{{ url("playlist_show",{id:playlist.id}) }}" class="btn btn-block btn-outline-warning">View playlist</a>
+    {% if app.user == playlist.user %}
+      <a class="btn btn-block btn-info" href="{{ url("playlist_edit",{id:playlist.id}) }}">Edit playlist</a>
+      <a class="btn btn-block btn-danger" data-no-swup="true"
+         data-confirm="{{ "You are going to delete a playlist, do you want to continue?" }}"
+         href="{{ url("playlist_delete",{id:playlist.id}) }}">Delete playlist
+      </a>
+    {% endif %}
+  </div>
+</div>

@@ -54,7 +54,7 @@ export default class extends Controller {
         });
 
 
-        $("[data-toggle=tooltip]").tooltip();
+        $("[data-toggle='tooltip'],[title]").tooltip();
         $(".more-stat").on('click', function () {
             $.ajax({
                 url: '/user/more-stats',

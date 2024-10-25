@@ -1,8 +1,3 @@
 <div class="author">
-    {%- for author in song.authors -%}
-        {%- if loop.index > 1 -%},&nbsp;{%- endif -%}
-        <a href="{{ url('song_library') }}?search=artist%3A{{ author|trim|url_encode }}">
-            {{- author|trim -}}
-        </a>
-    {%- endfor -%}
+        {% include 'songs/partial/artists_no_div.html.twig' with {authors : song.authors} %}
 </div>

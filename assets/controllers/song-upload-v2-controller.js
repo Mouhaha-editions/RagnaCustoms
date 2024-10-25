@@ -12,7 +12,7 @@ export default class extends Controller {
     ragna = null;
 
     connect() {
-        $("[data-toggle=tooltip]").tooltip();
+        $("[data-toggle='tooltip'],[title]").tooltip();
         Dropzone.autoDiscover = false;
         let myDropzone = new Dropzone("#my-form",{url:"/upload/bundle/song/add"});
         myDropzone.on("addedfile", file => {

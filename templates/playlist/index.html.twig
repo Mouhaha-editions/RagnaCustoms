@@ -2,71 +2,29 @@
 
 {% block title %}My playlists{% endblock %}
 {% block stylesheets %}
-    {{ parent() }}
+  {{ parent() }}
 {% endblock %}
 {% block body %}
-    <div class="container-fluid">
+<div class="container-fluid">
 
-        <div class="row mt-3">
-            <div class="col-md-2">
-                {% include 'user/partial/_left_part_user.html.twig' %}
-            </div>
-            <div class="col-10">
-                <h2 >{{ "All your playlists"|trans }}</h2>
-                <div class="row">
-            {% for playlist in playlists %}
-                <div class="col-md-3">
-                    <div class="playlist">
-                        <div class="header">
-                            {% for song in playlist.songs %}
-                                {% if loop.index <= 6 %}
-                                    <img src="{{ song.cover }}" alt="{{ song.name }}" class="img-fluid"
-                                    >
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        <div class="header-overlay"></div>
-
-                        <div class="title">
-                            <h2>{{ playlist.label }}</h2>
-                        </div>
-                        <div class="count">
-
-                            {{ playlist.songs|length }}&nbsp;
-                            {{ playlist.isPublic?"<i class='fas fa-check text-success' data-toggle='tooltip' title='public'></i>":"<i class='fas fa-close text-danger'  data-toggle='tooltip' title='private'></i>" }}
-                            {%- if playlist.isFeatured -%}&nbsp;<i class="fas fa-star text-warning" data-toggle='tooltip' title='Featured'></i>{%- endif %}
-                        </div>
-
-                        <div class="resume">
-                            <table class="table table-condensed">
-                                <tbody>
-                                {% for song in playlist.songs %}
-                                    <tr>
-                                        <td class="p-1">
-                                            {{ song.name }}
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td>No song</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="buttons btn-group">
-                            <a href="{{ url("playlist_show",{id:playlist.id}) }}" class="btn btn-success"><i class="fas fa-eye"></i></a>
-                            <a class=" btn btn-info" href="{{ url("playlist_edit",{id:playlist.id}) }}"><i
-                                        class="fas fa-edit"></i></a>
-                            <a class="btn btn-danger" data-no-swup="true"
-                               data-confirm="{{ "You are going to delete a playlist, do you want to continue?" }}"
-                               href="{{ url("playlist_delete",{id:playlist.id}) }}"><i class="fas fa-trash"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+  <div class="row mt-3">
+    <div class="col-md-2">
+      {% include 'user/partial/_left_part_user.html.twig' %}
     </div>
-{% endblock %}
+    <div class="col-md-10">
+      <h2>{{ "All your playlists"|trans }}</h2>
+      <div class="row">
+        {% for playlist in app.user.playlists %}
+          <div class="col-md-3">
+              {% include 'playlist/partial/card.html.twig' %}
+          </div>
+        {% else %}
+          <div class="col-md-3">
+            <div class="playlist-placeholder">
+              No Active playlist
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endblock %}

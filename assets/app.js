@@ -10,7 +10,7 @@ import './styles/app.scss';
 import './bootstrap';
 
 function clearTootips() {
-    $('[data-toggle=tooltip]').tooltip('hide');
+    $("[data-toggle='tooltip'],[title]").tooltip('hide');
 }
 
 function selectPills(hash) {

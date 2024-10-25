@@ -1,6 +1,6 @@
 .search-and-filter {
   label {
-    color: #fff;
+    color: $main-text-color;
     font-weight: 400;
   }
 }
@@ -27,7 +27,7 @@
       }
       a {
 
-        color: #fff;
+        color: $main-text-color;
         text-decoration: none;
 
         &:hover, &.active {
@@ -224,7 +224,7 @@
     line-height: 24px;
     border-radius: 12px;
     text-align: center;
-    color: #fff;
+    color: $main-text-color;
     margin-left: 5px;
 
   }
@@ -298,7 +298,7 @@
     line-height: 24px;
     border-radius: 12px;
     text-align: center;
-    color: #fff;
+    color: $main-text-color;
     margin-left: 5px;
 
   }

@@ -75,11 +75,11 @@ body {
 
   font-family: $font-family-base;
   font-weight: 400;
-  color: #fff;
+  color: $main-text-color;
 }
 
 .table {
-  color: #fff;
+  color: $main-text-color;
 }
 
 .up_down_vote {
@@ -88,7 +88,7 @@ body {
   }
 
   a {
-    color: #fff;
+    color: $main-text-color;
 
     .disabled {
       color: #868686;
@@ -120,7 +120,7 @@ body {
   flex-flow: row nowrap;
   //background: linear-gradient(180deg, rgba(28,28,28,1) 20%,rgba(36,36,36,1) 100%);
   //box-shadow: 0 0 10px $bg-darker;
-  color: #fff;
+  color: $main-text-color;
   padding: 5px 0;
   border-bottom: solid 1px;
   border-color: #141414;
@@ -140,7 +140,7 @@ body {
   }
 
   a.nav-link {
-    color: #fff;
+    color: $event-color;
 
     &:hover {
       color: $hover-link;
@@ -150,21 +150,21 @@ body {
   .btn {
     padding: 0 25px;
     font-size: 16px;
-    background: #235886;
-    border: 1px solid #1388EE;
+    background: $event-color-dark-blue;
+    border: 1px solid $event-color-blue;
     border-radius: 3px;
-    color: #fff;
+    color: $main-text-color;
 
     &:hover, &:focus, &:active {
-      color: #fff;
-      background: #3D90D9;
+      color: $main-text-color;
+      background: $event-color-blue;
     }
   }
 }
 
 h1 {
   font-size: 48px;
-  color: #fff;
+  color: $main-text-color;
   font-weight: 700;
 
   span {
@@ -184,7 +184,7 @@ h1 {
     line-height: 24px;
     border-radius: 12px;
     text-align: center;
-    color: #fff;
+    color: $main-text-color;
     margin-left: 5px;
     float: left;
   }
@@ -239,7 +239,7 @@ h1 {
   }
 
   .buttons a {
-    color: #fff;
+    color: $main-text-color;
   }
 
 
@@ -288,7 +288,7 @@ h1 {
       border-radius: 7px;
       font-size: 10px;
       text-align: center;
-      color: #fff;
+      color: $main-text-color;
       margin-left: 2px;
       float: left;
 
@@ -370,7 +370,7 @@ h1 {
         top: 0;
 
         a {
-          color: #fff;
+          color: $main-text-color;
           text-decoration: none;
         }
 
@@ -402,7 +402,7 @@ h1 {
       }
 
       .preview-popup {
-        color: #fff;
+        color: $main-text-color;
         text-decoration: none;
       }
 
@@ -448,7 +448,7 @@ h1 {
     }
 
     .buttons a {
-      color: #fff;
+      color: $main-text-color;
     }
 
     .up_down_vote {
@@ -461,7 +461,7 @@ h1 {
       }
 
       a {
-        color: #fff;
+        color: $main-text-color;
       }
     }
 
@@ -470,7 +470,7 @@ h1 {
 }
 
 .featured-table-lg {
-  color: #fff;
+  color: $main-text-color;
 
   tr {
     &:hover {
@@ -509,7 +509,7 @@ h1 {
 
     a {
 
-      color: #fff;
+      color: $main-text-color;
       text-decoration: none;
 
       &:hover, &.active {
@@ -527,7 +527,7 @@ h1 {
       border-radius: 9px;
       font-size: 15px;
       text-align: center;
-      color: #fff;
+      color: $main-text-color;
       margin-left: 2px;
       float: left;
 
@@ -543,7 +543,7 @@ h1 {
     vertical-align: middle;
 
     a {
-      color: #fff;
+      color: $main-text-color;
       text-decoration: none;
     }
 
@@ -587,7 +587,7 @@ h1 {
       }
 
       .preview-popup {
-        color: #fff;
+        color: $main-text-color;
         text-decoration: none;
       }
 
@@ -615,7 +615,7 @@ h1 {
 
     .up_down_vote {
       a {
-        color: #fff;
+        color: $main-text-color;
       }
     }
 
@@ -673,7 +673,7 @@ h1 {
   }
 
   &.btn-warning {
-    color: #fff;
+    color: $main-text-color;
   }
 }
 
@@ -683,10 +683,10 @@ h1 {
   background: #235886;
   border: 1px solid #1388EE;
   border-radius: 3px;
-  color: #fff;
+  color: $main-text-color;
 
   &:hover, &:focus, &:active {
-    color: #fff;
+    color: $main-text-color;
     background: #3D90D9;;
   }
 }
@@ -707,7 +707,7 @@ section {
     background: url("../img/env3.webp") no-repeat center center;
 
     a {
-      color: #fff;
+      color: $main-text-color;
       text-decoration: underline;
     }
   }
@@ -720,7 +720,7 @@ section {
 
 .pagination-rhokapa {
   a {
-    color: #fff;
+    color: $main-text-color;
     text-decoration: none;
     margin-left: 3px;
     margin-right: 3px;
@@ -856,7 +856,7 @@ img.big-rounded {
     position: absolute;
     top: 0;
     left: 25px;
-    color: #fff;
+    color: $main-text-color;
     font-weight: bold;
     font-size:40px;
     text-shadow: 0 0 8px black ;

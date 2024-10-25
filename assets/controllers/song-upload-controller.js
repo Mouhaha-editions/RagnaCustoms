@@ -11,7 +11,7 @@ export default class extends Controller {
     ragna = null;
 
     connect() {
-        $("[data-toggle=tooltip]").tooltip();
+        $("[data-toggle='tooltip'],[title]").tooltip();
         $(document).on('mousedown','.switch',function(){
             let enabled = $(this).find('.enable-song').is(':checked');
             if(!enabled){

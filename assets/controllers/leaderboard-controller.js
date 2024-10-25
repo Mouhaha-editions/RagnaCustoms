@@ -4,7 +4,7 @@ import 'jquery'
 export default class extends Controller {
     static targets = ['img', 'background']
     connect() {
-        $("[data-toggle=tooltip]").tooltip();
+        $("[data-toggle='tooltip'],[title]").tooltip();
         $('.circle').each(function(){
             let items =$(this).find('.menuItem');
 
