@@ -694,3 +694,30 @@ textarea {
     color: $main-text-color;
   }
 }
+
+
+table {
+  margin-top:-8px;
+  border-collapse: separate; /* Nécessaire pour que border-radius fonctionne */
+  border-spacing: 0 5px ; /* Espacement vertical entre les lignes */
+}
+
+td {
+  border-top: 1px solid #464646!important;
+  border-bottom: 1px solid #464646!important;
+
+  background: #202020;
+  padding: 3px;
+}
+
+tr td:first-child {
+  border-top-left-radius: 5px; /* Coin supérieur gauche */
+  border-bottom-left-radius: 5px; /* Coin inférieur gauche */
+  border-left: 1px solid #464646;
+}
+
+tr td:last-child {
+  border-top-right-radius: 5px; /* Coin supérieur droit */
+  border-bottom-right-radius: 5px; /* Coin inférieur droit */
+  border-right: 1px solid #464646;
+}

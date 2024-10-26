@@ -14,29 +14,29 @@
   border-color: $bg;
 }
 
-.table {
-  tr {
-    &:nth-child(2n) {
-      background: $bg-tr-pair;
-
-      &:hover {
-        background: $bg-lighter;
-      }
-    }
-  }
-
-  th {
-    font-size: 14px;
-
-    .fa {
-      font-size: 12px;
-    }
-  }
-
-  td {
-    border: none;
-  }
-}
+//.table {
+//  tr {
+//    &:nth-child(2n) {
+//      background: $bg-tr-pair;
+//
+//      &:hover {
+//        background: $bg-lighter;
+//      }
+//    }
+//  }
+//
+//  th {
+//    font-size: 14px;
+//
+//    .fa {
+//      font-size: 12px;
+//    }
+//  }
+//
+//  td {
+//    border: none;
+//  }
+//}
 
 .tag-filter {
   color: $danger;
