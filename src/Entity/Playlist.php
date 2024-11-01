@@ -36,7 +36,7 @@ class Playlist
     private $description;
 
     #[ORM\Column]
-    private ?bool $isFeatured = null;
+    private ?bool $isFeatured = false;
 
     public function __construct()
     {
