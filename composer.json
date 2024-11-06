@@ -57,7 +57,7 @@
         "symfony/ux-autocomplete": "*",
         "symfony/ux-swup": "^2.0",
         "symfony/ux-vue": "^2.9",
-        "symfony/validator": "7.0.*",
+        "symfony/validator": "7.1.*",
         "symfony/webpack-encore-bundle": "^v2.0.1",
         "symfony/yaml": "7.0.*",
         "symfonycasts/reset-password-bundle": "^1.5",
