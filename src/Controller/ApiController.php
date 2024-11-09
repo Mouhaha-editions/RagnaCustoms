@@ -157,7 +157,7 @@ class ApiController extends AbstractController
             $song = $songRepository->findOneBy(['privateLink' => $id]);
         }
 
-        return new JsonResponse($song->__api());
+        return new JsonResponse($song?->__api()??[], $song ? Response::HTTP_OK : Response::HTTP_NOT_FOUND);
     }
 
 
