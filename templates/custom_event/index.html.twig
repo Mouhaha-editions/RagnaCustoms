@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CustomEvent index{% endblock %}
+
+{% block body %}
+    <h1>CustomEvent index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Label</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Banner</th>
+                <th>MaxChallenger</th>
+                <th>OpenningDateRegistration</th>
+                <th>ClosingDateRegistration</th>
+                <th>Rules</th>
+                <th>Enabled</th>
+                <th>Edition</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for custom_event in custom_events %}
+            <tr>
+                <td>{{ custom_event.id }}</td>
+                <td>{{ custom_event.label }}</td>
+                <td>{{ custom_event.description }}</td>
+                <td>{{ custom_event.type }}</td>
+                <td>{{ custom_event.banner }}</td>
+                <td>{{ custom_event.maxChallenger }}</td>
+                <td>{{ custom_event.openningDateRegistration ? custom_event.openningDateRegistration|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ custom_event.closingDateRegistration ? custom_event.closingDateRegistration|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ custom_event.rules }}</td>
+                <td>{{ custom_event.enabled ? 'Yes' : 'No' }}</td>
+                <td>{{ custom_event.edition }}</td>
+                <td>{{ custom_event.createdAt ? custom_event.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ custom_event.updatedAt ? custom_event.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_custom_event_show', {'id': custom_event.id}) }}">show</a>
+                    <a href="{{ path('app_custom_event_edit', {'id': custom_event.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="14">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_custom_event_new') }}">Create new</a>
+{% endblock %}

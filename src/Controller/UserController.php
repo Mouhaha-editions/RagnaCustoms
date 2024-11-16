@@ -49,13 +49,13 @@ class UserController extends AbstractController
         }
         /** @var Utilisateur $utilisateur */
         $utilisateur = $this->getUser();
-        /** @var ArrayCollection|ScoreHistory[] $histories */
+        $nbSession = $this->isGranted('ROLE_PREMIUM_LVL3') ? 50 : ($this->isGranted('ROLE_PREMIUM_LVL2') ? 40 : ($this->isGranted('ROLE_PREMIUM_LVL1') ? 30 : 10));
         $histories = $scoreHistoryRepository->createQueryBuilder('s')
             ->where('s.user = :user')
             ->andWhere('s.songDifficulty = :difficulty')
             ->setParameter('user', $utilisateur)
             ->setParameter('difficulty', $request->get('diff'))
-            ->setMaxResults($this->isGranted('ROLE_PREMIUM_LVL1') ? 20 : 6)
+            ->setMaxResults($nbSession)
             ->setFirstResult(0)
             ->orderBy('s.playedAt', "DESC")
             ->getQuery()->getResult();

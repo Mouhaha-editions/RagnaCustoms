@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CustomEvent{% endblock %}
+
+{% block body %}
+    <h1>CustomEvent</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ custom_event.id }}</td>
+            </tr>
+            <tr>
+                <th>Label</th>
+                <td>{{ custom_event.label }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ custom_event.description }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ custom_event.type }}</td>
+            </tr>
+            <tr>
+                <th>Banner</th>
+                <td>{{ custom_event.banner }}</td>
+            </tr>
+            <tr>
+                <th>MaxChallenger</th>
+                <td>{{ custom_event.maxChallenger }}</td>
+            </tr>
+            <tr>
+                <th>OpenningDateRegistration</th>
+                <td>{{ custom_event.openningDateRegistration ? custom_event.openningDateRegistration|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>ClosingDateRegistration</th>
+                <td>{{ custom_event.closingDateRegistration ? custom_event.closingDateRegistration|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Rules</th>
+                <td>{{ custom_event.rules }}</td>
+            </tr>
+            <tr>
+                <th>Enabled</th>
+                <td>{{ custom_event.enabled ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Edition</th>
+                <td>{{ custom_event.edition }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ custom_event.createdAt ? custom_event.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ custom_event.updatedAt ? custom_event.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_custom_event_index') }}">back to list</a>
+
+    <a href="{{ path('app_custom_event_edit', {'id': custom_event.id}) }}">edit</a>
+
+    {{ include('custom_event/_delete_form.html.twig') }}
+{% endblock %}

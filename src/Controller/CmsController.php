@@ -28,6 +28,12 @@ class CmsController extends AbstractController
         return $this->render('cms/acceptance_criteria.html.twig');
     }
 
+    #[Route(path: '/premium', name: 'premium')]
+    public function premium(): Response
+    {
+        return $this->render('cms/premium.html.twig');
+    }
+
     #[Route(path: '/', name: 'home')]
     public function homepage(
         ScoreHistoryRepository $scoreHistoryRepository,

@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RagnaCustoms.com, Premium features{% endblock %}
+    {% block metas %}
+      <meta name="description" content="Premimum features">
+      <meta property="og:url" content="https://ragnacustoms.com"/>
+      <meta property="og:type" content="website"/>
+      <meta property="og:title" content="Premimum features"/>
+      <meta property="og:description" content="Premimum features"/>
+      <meta property="og:image" content="https://ragnacustoms.com/apps/logo.webp?2024"/>
+    {% endblock %}
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="pt-5 pb-5">Premium</h1>
+        <h2 class="pb-3">Why Upgrade to Premium?</h2>
+        <div id="" class="">
+          <div class="indent">
+            <b>Support our platform:</b> <br/>
+            Your premium subscription not only improves your experience but also helps us grow and improve the website you love.<br/>
+            Thanks to your support, we can deliver even more features and maintain a quite high-quality service.
+            <br/><br/>
+            <b>Access to exclusive features:</b> <br/>
+            With our premium subscription, unlock unique tools and content reserved for our most dedicated members.<br/>
+            Enjoy an enhanced experience with advanced options to take your usage to the next level!
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12">
+          <div class="container">
+            <h2 class="mb-4">Compare Our Subscription Plans</h2>
+            <table class="table table-bordered text-center">
+              <thead class="thead-dark">
+              <tr>
+                <th>Features</th>
+                <th>No subscription</th>
+                <th>Level 1</th>
+                <th>Level 2</th>
+                <th>Level 3</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><strong>Project supporting</strong></td>
+                <td>-</td>
+                <td>+</td>
+                <td>++</td>
+                <td>+++</td>
+              </tr>
+              <tr>
+                <td><strong>Unlimited Download Speed</strong></td>
+                <td>1Mo/sec</td>
+                <td>✔️</td>
+                <td>✔️</td>
+                <td>✔️</td>
+              </tr>
+              <tr>
+                <td><strong>Maximum Upload Map Size</strong></td>
+                <td>8 MB</td>
+                <td>10 MB</td>
+                <td>15 MB</td>
+                <td>15 MB</td>
+              </tr>
+              <tr>
+                <td><strong>Statistics</strong> (Sessions)</td>
+                <td>Last 10</td>
+                <td>Last 30</td>
+                <td>Last 40</td>
+                <td>Last 50</td>
+              </tr>
+              <tr>
+                <td><strong>Scheduled Publishing</strong></td>
+                <td>❌</td>
+                <td>❌</td>
+                <td>✔️</td>
+                <td>✔️</td>
+              </tr>
+              <tr>
+                <td><strong>Private Link for Uploaded Song</strong></td>
+                <td>❌</td>
+                <td>❌</td>
+                <td>✔️</td>
+                <td>✔️</td>
+              </tr>
+              <tr>
+                <td><strong>Upload an Image to Set Your Avatar</strong></td>
+                <td>❌</td>
+                <td>❌</td>
+                <td>✔️</td>
+                <td>✔️</td>
+              </tr>
+              <tr>
+                <td><strong>Customize Your Identity</strong></td>
+                <td>❌</td>
+                <td>❌</td>
+                <td>✔️</td>
+                <td>✔️</td>
+              </tr>
+              <tr>
+                <td><strong>Bulk Uploads</strong></td>
+                <td>❌</td>
+                <td>❌</td>
+                <td>✔️</td>
+                <td>✔️</td>
+              </tr>
+              <tr>
+                <td><strong>Price / month</strong></td>
+                <td>0€</td>
+                <td>1€</td>
+                <td>3€</td>
+                <td>6€+</td>
+              </tr>
+
+              <tr>
+                <td><strong>Patreon subscription</strong></td>
+                <td></td>
+                <td>
+                  <a class="btn btn-block btn-sm btn-patreon" href="https://www.patreon.com/bePatron?u=6877976" target="_blank"><i class="fab fa-patreon"></i> {{ "Subscribe"|trans }}</a>
+                </td>
+                <td>
+                    <a class="btn btn-block btn-sm btn-patreon" href="https://www.patreon.com/bePatron?u=6877976" target="_blank"><i class="fab fa-patreon"></i> {{ "Subscribe"|trans }}</a>
+                </td>
+                <td>
+                  <a class="btn btn-block btn-sm btn-patreon" href="https://www.patreon.com/bePatron?u=6877976" target="_blank"><i class="fab fa-patreon"></i> {{ "Subscribe"|trans }}</a>
+                </td>
+              </tr>
+
+              </tbody>
+            </table>
+
+            <div class="text-center"><small>If you want to subscribe with an other payement system, please <a href="https://discord.com/invite/2vCAAGuwsR" target="_blank">contact us</a>.</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+  {% block javascripts %}
+    {{ parent() }}
+  {% endblock %}
