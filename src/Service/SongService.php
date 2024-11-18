@@ -1197,7 +1197,7 @@ class SongService
             ->where('s2.id = s.id')
             ->andWhere('mapper.id = :user');
         try {
-            $res = $this->songRepository->createQueryBuilder('s')
+            return $this->songRepository->createQueryBuilder('s')
                 ->select('s')
                 ->distinct('s')
                 ->leftJoin('s.songDifficulties', 'diff')
@@ -1211,8 +1211,6 @@ class SongService
                 ->setFirstResult(0)
                 ->setMaxResults(4)
                 ->getQuery()->getResult();
-
-            return $res;
         } catch (\Exception $e) {
             /** @todo put a sentry error */
         }
