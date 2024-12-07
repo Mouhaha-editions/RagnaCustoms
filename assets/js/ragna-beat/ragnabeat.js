@@ -213,12 +213,13 @@ export class RagnaBeat {
                         break;
                     }
                 }
-                for (let i = 0; i < t.levelDetail._customData._BPMChanges.length; i++) {
-                    timeStamp = t.levelDetail._customData._BPMChanges[i]._time / t.songBPS;
+                const bpmChanges = t.levelDetail?._customData?._BPMChanges ?? [];
+                for (let i = 0; i < bpmChanges.length; i++) {
+                    timeStamp = bpmChanges[i]._time / t.songBPS;
                     if (timeStamp <= t.elapsedTime) {
                         t.this.jsonBPMIteration = i + 1;
-                        t.this.bpmTime = t.levelDetail._customData._BPMChanges[i]._time;
-                        t.this.localBPS = t.levelDetail._customData._BPMChanges[i]._BPM / 60;
+                        t.this.bpmTime = bpmChanges[i]._time;
+                        t.this.localBPS = bpmChanges[i]._BPM / 60;
                     } else {
                         break;
                     }
@@ -280,12 +281,13 @@ export class RagnaBeat {
 
     jsonBPMIterationToCurrentTime() {
         let timeStamp = 0;
-        for (let i = 0; i < this.levelDetail._customData._BPMChanges.length; i++) {
-            timeStamp = this.levelDetail._customData._BPMChanges[i]._time / this.songBPS;
+        const bpmChanges = this.levelDetail?._customData?._BPMChanges ?? [];
+        for (let i = 0; i < bpmChanges.length; i++) {
+            timeStamp = bpmChanges[i]._time / this.songBPS;
             if (timeStamp <= this.elapsedTime + this.delay / 1000) {
                 this.jsonBPMIteration = i + 1;
-                this.bpmTime = this.levelDetail._customData._BPMChanges[i]._time;
-                this.localBPS = this.levelDetail._customData._BPMChanges[i]._BPM / 60;
+                this.bpmTime = bpmChanges[i]._time;
+                this.localBPS = bpmChanges[i]._BPM / 60;
             }
         }
     }
@@ -336,12 +338,13 @@ export class RagnaBeat {
             if (!this.isPlaying) return;
 
             this.clearCanvas();
-            if (this.jsonBPMIteration < this.levelDetail._customData._BPMChanges.length) {
-                let bpmTimestamp = this.levelDetail._customData._BPMChanges[this.jsonBPMIteration]._time / this.songBPS;
+            const bpmChanges = this.levelDetail?._customData?._BPMChanges ?? [];
+            if (this.jsonBPMIteration < bpmChanges.length) {
+                let bpmTimestamp = bpmChanges[this.jsonBPMIteration]._time / this.songBPS;
 
                 if (bpmTimestamp.toFixed(5) - this.elapsedTime.toFixed(5) < 0.005) {
-                    this.bpmTime = this.levelDetail._customData._BPMChanges[this.jsonBPMIteration]._time;
-                    this.localBPS = this.levelDetail._customData._BPMChanges[this.jsonBPMIteration]._BPM / 60;
+                    this.bpmTime = bpmChanges[this.jsonBPMIteration]._time;
+                    this.localBPS = bpmChanges[this.jsonBPMIteration]._BPM / 60;
                     this.jsonBPMIteration++;
                 }
             }
