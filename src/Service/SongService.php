@@ -344,7 +344,7 @@ class SongService
         $song->setFileName($json->_songFilename);
         $song->setCoverImageFileName($json->_coverImageFilename);
         $song->setEnvironmentName($json->_environmentName);
-        $song->setModerated(true);
+        $song->setIsModerated(true);
 
         $this->em->persist($song);
         $previousDiffs = [];
@@ -515,7 +515,7 @@ class SongService
         }
 
         if (!$song->hasCover()) {
-            $song->setWip(true);
+            $song->setIsWip(true);
         }
 
         if ($song->getWip()) {

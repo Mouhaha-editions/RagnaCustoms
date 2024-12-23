@@ -193,6 +193,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $avatar = null;
 
+    /**
+     * @var Collection<int, Changelog>
+     */
+    #[ORM\ManyToMany(targetEntity: Changelog::class, mappedBy: 'readedBy')]
+    private Collection $changelogs;
+
     public function __construct()
     {
         $this->votes = new ArrayCollection();
@@ -213,6 +219,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->friendRequests = new ArrayCollection();
         $this->friends = new ArrayCollection();
         $this->songsMapped = new ArrayCollection();
+        $this->changelogs = new ArrayCollection();
     }
 
     public function __toString()
@@ -1699,6 +1706,33 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar(?string $avatar): static
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Changelog>
+     */
+    public function getChangelogs(): Collection
+    {
+        return $this->changelogs;
+    }
+
+    public function addChangelog(Changelog $changelog): static
+    {
+        if (!$this->changelogs->contains($changelog)) {
+            $this->changelogs->add($changelog);
+            $changelog->addReadedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChangelog(Changelog $changelog): static
+    {
+        if ($this->changelogs->removeElement($changelog)) {
+            $changelog->removeReadedBy($this);
+        }
 
         return $this;
     }

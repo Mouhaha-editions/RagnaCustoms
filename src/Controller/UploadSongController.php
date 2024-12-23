@@ -177,7 +177,7 @@ class UploadSongController extends AbstractController
                 switch ((int)$form->get('publishingType')->getData()) {
                     case 0 :
                     default:
-                        $song->setWip(true);
+                        $song->setIsWip(true);
                         $song->setActive(true);
                         $song->setPrivate(false);
                         $song->setPrivateLink(null);
@@ -186,11 +186,11 @@ class UploadSongController extends AbstractController
                         $song->setActive(true);
                         $song->setPrivate(false);
                         $song->setPrivateLink(null);
-                        $song->setWip(false);
+                        $song->setIsWip(false);
                         break;
                     case 2:
                         if ($this->isGranted('ROLE_PREMIUM_LVL2')) {
-                            $song->setWip(false);
+                            $song->setIsWip(false);
                             $song->setPrivate(true);
                             $song->setActive(false);
 
@@ -200,7 +200,7 @@ class UploadSongController extends AbstractController
                         }
                         break;
                     case 3 :
-                        $song->setWip(false);
+                        $song->setIsWip(false);
                         $song->setActive(false);
                         $song->setPrivate(false);
                         $song->setPrivateLink(null);

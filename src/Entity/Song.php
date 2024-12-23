@@ -207,7 +207,7 @@ class Song
         return $this->wip;
     }
 
-    public function setWip(?bool $wip): self
+    public function setIsWip(?bool $wip): self
     {
         $this->wip = $wip;
 
@@ -250,7 +250,7 @@ class Song
         return $this->converted;
     }
 
-    public function setConverted(?bool $converted): self
+    public function setIsConverted(?bool $converted): self
     {
         $this->converted = $converted;
 
@@ -1095,7 +1095,7 @@ class Song
     /**
      * @param  bool  $moderated
      */
-    public function setModerated(bool $moderated): void
+    public function setIsModerated(bool $moderated): void
     {
         $this->moderated = $moderated;
     }
