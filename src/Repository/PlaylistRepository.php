@@ -19,6 +19,14 @@ class PlaylistRepository extends ServiceEntityRepository
         parent::__construct($registry, Playlist::class);
     }
 
+    public function add(Playlist $entity, bool $flush = true): void
+    {
+        $this->_em->persist($entity);
+
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
     // /**
     //  * @return Playlist[] Returns an array of Playlist objects
     //  */

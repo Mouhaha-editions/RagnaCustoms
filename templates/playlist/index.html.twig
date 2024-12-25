@@ -14,12 +14,15 @@
     <div class="col-md-10">
       <h2>{{ "All your playlists"|trans }}</h2>
       <div class="row">
+        <div class="col-md-3 mb-5">
+          {% include 'playlist/partial/card_plus.html.twig' %}
+        </div>
         {% for playlist in app.user.playlists %}
-          <div class="col-md-3">
+          <div class="col-md-3 mb-5">
               {% include 'playlist/partial/card.html.twig' %}
           </div>
         {% else %}
-          <div class="col-md-3">
+          <div class="col-md-3 mb-5">
             <div class="playlist-placeholder">
               No Active playlist
             </div>

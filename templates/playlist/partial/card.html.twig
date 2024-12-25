@@ -21,7 +21,7 @@
     {% if playlist.songs|length < 4 %}
       {% for i in playlist.songs|length .. 4-1 %}
         <div class=" preview placeholder" data-toggle="tooltip" title="no more song">
-          <i class="fas fa-gavel"></i>
+          <i class="fas fa-gavel" style="padding-bottom:22px"></i>
         </div>
       {% endfor %}
     {% endif %}

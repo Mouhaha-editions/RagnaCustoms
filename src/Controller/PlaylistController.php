@@ -17,13 +17,29 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlaylistController extends AbstractController
 {
     #[Route(path: '/playlists', name: 'playlist')]
-    public function index(): Response
-    {
+    public function index(
+        Request $request,
+        ManagerRegistry $doctrine,
+        PlaylistRepository $playlistRepository
+    ): Response {
+        $playlist = new PLaylist();
+        $playlist->setUser($this->getUser());
+
+        $form = $this->createForm(PlaylistType::class, $playlist);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $playlistRepository->add($playlist);
+            $this->addFlash('success', "Playlist created!");
+            return $this->redirectToRoute('playlist');
+        }
+
         /** @var Playlist[] $playlists */
         $playlists = $this->getUser()->getPlaylists();
 
         return $this->render('playlist/index.html.twig', [
             'playlists' => $playlists,
+            'form' => $form->createView()
         ]);
     }
 

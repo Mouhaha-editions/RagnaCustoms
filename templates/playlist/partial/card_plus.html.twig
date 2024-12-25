@@ -1,0 +1,36 @@
+  <div class="quick-view text-right">
+&nbsp;
+  </div>
+<div class="playlist-card">
+  <div class="header h-100 p-2 d-flex justify-content-around align-self-stretch">
+
+      {% for i in 0 .. 4-1 %}
+        <div class=" preview placeholder" data-toggle="tooltip" title="Add song after">
+          <i class="fas fa-gavel" style="padding-bottom:22px"></i>
+        </div>
+      {% endfor %}
+
+{#    {% if playlist.songs|length > 4 and plusSong > 0 %}#}
+{#      <div class="preview placeholder">#}
+{#        + {{ plusSong }}#}
+{#      </div>#}
+{#    {% endif %}#}
+  </div>
+  <div class="content pb-2 pt-2 pl-3 pr-3">
+    {{ form_start(form) }}
+    <div class="mt-1">
+    {{ form_row(form.label) }}
+    </div>
+    <div class="mt-2">
+    {{ form_row(form.description) }}
+    </div>
+    <div class="row mt-2">
+      <div class="col-6">{{ form_widget(form.isPublic) }} {{ form_label(form.isPublic) }}</div>
+      <div class="col-6">{{ form_widget(form.isFeatured) }} {{ form_label(form.isFeatured) }}</div>
+    </div>
+    <div class="mb-1 mt-4">
+    {{ form_row(form.save) }}
+    </div>
+    {{ form_end(form) }}
+  </div>
+</div>

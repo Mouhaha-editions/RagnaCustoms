@@ -13,11 +13,12 @@ class PlaylistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('label', null, ["attr"=>["class"=>"form-control"]])
+            ->add('label', null, [
+                'label'=>'Title',"attr"=>["class"=>"form-control"]])
             ->add('isPublic', null, ["attr"=>["class"=>""]])
             ->add('isFeatured', null, ["attr"=>["class"=>""]])
             ->add('description', null, ["attr"=>["class"=>"form-control"]])
-            ->add('save', SubmitType::class, ["attr"=>["class"=>"btn btn-info"]])
+            ->add('save', SubmitType::class, ["attr"=>["class"=>"btn btn-primary btn-block mt-1 mb-1"]])
         ;
     }
 
