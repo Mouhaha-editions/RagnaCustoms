@@ -92,11 +92,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user')]
     private $notifications;
-    #[ORM\OneToOne(targetEntity: Overlay::class, mappedBy: 'user', cascade: [
-        'persist',
-        'remove',
-    ])]
-    private $overlay;
+
     /**
      * @var string The hashed password
      */
@@ -196,7 +192,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Changelog>
      */
-    #[ORM\ManyToMany(targetEntity: Changelog::class, mappedBy: 'readedBy')]
+    #[ORM\ManyToMany(targetEntity: Changelog::class, mappedBy: 'readBy')]
     private Collection $changelogs;
 
     public function __construct()
@@ -1722,7 +1718,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->changelogs->contains($changelog)) {
             $this->changelogs->add($changelog);
-            $changelog->addReadedBy($this);
+            $changelog->addReadBy($this);
         }
 
         return $this;
@@ -1731,7 +1727,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeChangelog(Changelog $changelog): static
     {
         if ($this->changelogs->removeElement($changelog)) {
-            $changelog->removeReadedBy($this);
+            $changelog->removeReadBy($this);
         }
 
         return $this;

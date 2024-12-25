@@ -353,3 +353,43 @@ let settings = {
 if($('.tom-select')) {
     new TomSelect('.tom-select', settings);
 }
+$(function(){
+    $.get('/changelog/unread', function (data) {
+        if (data.length > 0) {
+            // Fonction pour afficher un changelog
+            const showChangelog = (index) => {
+                if (index >= data.length) return; // Fin de la liste
+
+                const changelog = data[index];
+                const content = '<div class="text-left">'+changelog.description+'</div>';
+
+                console.log(index, data.length, index < data.length-1)
+                Swal.fire({
+                    customClass: {
+                        popup: 'swal2-popup',
+                        title: 'swal2-title',
+                        content: 'swal2-content',
+                        actions: 'swal2-actions',
+                    },
+                    html: content,
+                    icon: '',
+                    showCancelButton: true,
+                    showConfirmButton: index < data.length-1,
+                    confirmButtonText: 'Next',
+                    cancelButtonText: 'Close',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Marquer comme lu
+                        $.post(`/changelog/mark-as-read/${changelog.id}`, function () {
+                            // Afficher le prochain changelog
+                            showChangelog(index + 1);
+                        });
+                    }
+                });
+            };
+
+            // Commencer par le premier changelog
+            showChangelog(0);
+        }
+    });
+})

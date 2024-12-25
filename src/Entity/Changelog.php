@@ -20,20 +20,20 @@ class Changelog
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $baseDescription = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $premiumDescription = null;
+    private ?string $description = null;
 
     /**
      * @var Collection<int, Utilisateur>
      */
     #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'changelogs')]
-    private Collection $readedBy;
+    private Collection $readBy;
+
+    #[ORM\Column]
+    private ?bool $isWip = true;
 
     public function __construct()
     {
-        $this->readedBy = new ArrayCollection();
+        $this->readBy = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -41,26 +41,14 @@ class Changelog
         return $this->id;
     }
 
-    public function getBaseDescription(): ?string
+    public function getDescription(): ?string
     {
-        return $this->baseDescription;
+        return $this->description;
     }
 
-    public function setBaseDescription(?string $baseDescription): static
+    public function setDescription(?string $description): static
     {
-        $this->baseDescription = $baseDescription;
-
-        return $this;
-    }
-
-    public function getPremiumDescription(): ?string
-    {
-        return $this->premiumDescription;
-    }
-
-    public function setPremiumDescription(?string $premiumDescription): static
-    {
-        $this->premiumDescription = $premiumDescription;
+        $this->description = $description;
 
         return $this;
     }
@@ -68,23 +56,35 @@ class Changelog
     /**
      * @return Collection<int, Utilisateur>
      */
-    public function getReadedBy(): Collection
+    public function getReadBy(): Collection
     {
-        return $this->readedBy;
+        return $this->readBy;
     }
 
-    public function addReadedBy(Utilisateur $readedBy): static
+    public function addReadBy(Utilisateur $readedBy): static
     {
-        if (!$this->readedBy->contains($readedBy)) {
-            $this->readedBy->add($readedBy);
+        if (!$this->readBy->contains($readedBy)) {
+            $this->readBy->add($readedBy);
         }
 
         return $this;
     }
 
-    public function removeReadedBy(Utilisateur $readedBy): static
+    public function removeReadBy(Utilisateur $readedBy): static
     {
-        $this->readedBy->removeElement($readedBy);
+        $this->readBy->removeElement($readedBy);
+
+        return $this;
+    }
+
+    public function isWip(): ?bool
+    {
+        return $this->isWip;
+    }
+
+    public function setIsWip(bool $isWip): static
+    {
+        $this->isWip = $isWip;
 
         return $this;
     }

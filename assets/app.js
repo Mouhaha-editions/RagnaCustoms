@@ -95,3 +95,9 @@ $(document).on('change', 'input#switch-leaderboard-detail', function(){
     }
 })
 import './js/card.js';
+
+
+$(function () {
+    // Récupérer les changelogs non lus
+
+});

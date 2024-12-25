@@ -25,8 +25,7 @@ class MapperController extends AbstractController
             ->andWhere('s.id IS NOT NULL')
             ->where('s.isDeleted = 0')
             ->orderBy('count_song', 'desc')
-            ->groupBy("u.id")
-            ;
+            ->groupBy("u.id");
 
         $mappers = $paginationService->setDefaults(50)->process($qb,$request);
         return $this->render('mapper/index.html.twig', [

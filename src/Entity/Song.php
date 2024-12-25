@@ -59,7 +59,7 @@ class Song
     #[ORM\ManyToMany(targetEntity: SongCategory::class, inversedBy: 'songs')]
     private $categoryTags;
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private $converted;
+    private ?bool $converted;
     #[ORM\Column(type: 'integer', nullable: true)]
     private $countVotes;
     #[ORM\Column(type: 'string', length: 255)]
@@ -257,6 +257,10 @@ class Song
         return $this;
     }
 
+    public function setConverted(?bool $converted): self
+    {
+        return $this->setIsConverted($converted);
+    }
     public function getIsExplicit(): ?bool
     {
         return $this->isExplicit;
