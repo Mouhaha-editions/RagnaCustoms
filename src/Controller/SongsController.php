@@ -644,7 +644,6 @@ class SongsController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-
         if ($song == null
             || $song->getIsDeleted()
             || (

@@ -93,7 +93,7 @@ class SongService
      */
     public function countVotePublic(Song $song)
     {
-        $hashes = array_map(function (SongHash $hash) {
+        $hashes = array_map(function(SongHash $hash) {
             return $hash->getHash();
         }, $song->getSongHashes()->toArray());
         $result = $this->em->getRepository(Vote::class)->createQueryBuilder('f')
@@ -1171,7 +1171,7 @@ class SongService
             ],
             "levels" => $song
                 ->getSongDifficulties()
-                ->map(function (SongDifficulty $sd) {
+                ->map(function(SongDifficulty $sd) {
                     return [
                         'rank' => $sd->getDifficultyRank()->getLevel(),
                         'color' => $sd->getDifficultyRank()->getColor(),
@@ -1261,6 +1261,31 @@ class SongService
         } while (is_numeric($link) || $this->songRepository->findOneBy(['privateLink' => $link]));
 
         return $link;
+    }
+
+    public function getZipSize(Song $song): string
+    {
+        $cheminFichier = $this->kernel->getProjectDir()."/public/songs-files/".$song->getId().".zip";
+
+        if (file_exists($cheminFichier)) {
+            $taille = filesize($cheminFichier); // Taille en octets
+
+            return $this->formatTaille($taille);
+        }
+
+        return 'N.C';
+    }
+
+    private function formatTaille($taille): string
+    {
+        $unites = ['octets', 'Ko', 'Mo', 'Go', 'To'];
+        $i = 0;
+        while ($taille >= 1024 && $i < count($unites) - 1) {
+            $taille /= 1024;
+            $i++;
+        }
+
+        return round($taille, 2).' '.$unites[$i];
     }
 }
 

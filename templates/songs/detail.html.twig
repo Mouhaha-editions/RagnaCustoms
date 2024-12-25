@@ -63,11 +63,11 @@
               </div>
               <div class="d-inline-block">
                 {% if song.private %}
-                  <a data-no-swup="true" href="{{ url('song_direct_download',{id: song.privateLink}) }}"
+                  <a data-no-swup="true" href="{{ url('song_direct_download',{id: song.privateLink}) }}" data-toggle="tooltips" title="{{ songService.getZipSize(song) }}"
                      class="btn btn-block ml-1 btn-info text-uppercase"><i class="fas fa-download"></i> {{ "Zip"|trans }}
                   </a>
                 {% else %}
-                <a data-no-swup="true" href="{{ url('song_direct_download',{id: song.id}) }}"
+                <a data-no-swup="true" href="{{ url('song_direct_download',{id: song.id}) }}" data-toggle="tooltips" title="{{ songService.getZipSize(song) }}"
                    class="btn btn-block ml-1 btn-info text-uppercase"><i class="fas fa-download"></i> {{ "Zip"|trans }}
                 </a>
                 {% endif %}
