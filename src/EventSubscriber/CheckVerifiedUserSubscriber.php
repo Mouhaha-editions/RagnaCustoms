@@ -21,8 +21,12 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface
     private UtilisateurRepository $utilisateurRepository;
     private RequestStack $requestStack;
 
-    public function __construct(TokenStorageInterface $tokenStorage, RouterInterface $router, UtilisateurRepository $utilisateurRepository,RequestStack $requestStack )
-    {
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        RouterInterface $router,
+        UtilisateurRepository $utilisateurRepository,
+        RequestStack $requestStack
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->utilisateurRepository = $utilisateurRepository;
         $this->router = $router;
@@ -42,16 +46,19 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface
     {
         /** @var Utilisateur $user */
         $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
-            $request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if ($user) {
             $user->setIpAddress($request->getClientIp());
             $this->utilisateurRepository->add($user);
         }
 
-        if ($user && !$user->isVerified() && !in_array($event->getRequest()->getPathInfo(), ['/verify/resend','/verify/email' ])) {
+        if ($user && !$user->isVerified() && !in_array(
+                $event->getRequest()->getPathInfo(),
+                ['/verify/resend', '/verify/email']
+            )) {
             $this->tokenStorage->setToken(null);
-            // L'utilisateur est connecté mais n'est pas vérifié, vous pouvez rediriger vers une page spécifique ou une page de vérification.
+
             $event->setResponse(new RedirectResponse($this->router->generate('app_verify_resend_email')));
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use _PHPStan_532094bc1\Nette\Utils\Json;
 use App\Entity\Changelog;
 use App\Entity\Utilisateur;
 use App\Repository\ChangelogRepository;
@@ -17,9 +18,14 @@ class ChangelogController extends AbstractController
     public function getUnreadChangelog(ChangelogRepository $changelogRepository): JsonResponse
     {
         $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse([]);
+        }
+
         if ($this->isGranted('ROLE_MODERATOR')) {
             $changelogs = $changelogRepository->findNoReadOrWip($user);
-        }else{
+        } else {
             $changelogs = $changelogRepository->findNoRead($user);
         }
 

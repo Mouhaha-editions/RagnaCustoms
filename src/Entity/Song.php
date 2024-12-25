@@ -261,6 +261,7 @@ class Song
     {
         return $this->setIsConverted($converted);
     }
+
     public function getIsExplicit(): ?bool
     {
         return $this->isExplicit;

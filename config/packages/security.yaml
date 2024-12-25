@@ -68,6 +68,7 @@ security:
         - { path: ^/rest-api/public, roles: PUBLIC_ACCESS }
         - { path: ^/api/doc,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/song,       roles: PUBLIC_ACCESS }
+        - { path: ^/changelog,       roles: PUBLIC_ACCESS }
         - { path: ^/rest-api$,       roles: PUBLIC_ACCESS }
         - { path: ^/rest-api,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin, roles: ROLE_MODERATOR }
@@ -75,3 +76,4 @@ security:
         - { path: ^/user/downloads, roles: ROLE_USER }
         - { path: ^/playlists, roles: ROLE_USER }
         - { path: ^/recently-played, roles: ROLE_USER }
+        - { path: ^/upload/song$, roles: ROLE_USER }
