@@ -663,6 +663,11 @@ class SongsController extends AbstractController
         $feedback = new Vote();
         $feedback->setSong($song);
         $feedback->setHash($song->getNewGuid());
+
+        if ($this->isGranted('ROLE_USER') && $this->getUser()->isCertified()) {
+            $feedback->setIsModerated(true);
+        }
+
         $feedback->setUser($this->getUser());
         $feedbackForm = $this->createForm(VoteType::class, $feedback);
         $feedbackForm->handleRequest($request);
@@ -688,6 +693,11 @@ class SongsController extends AbstractController
             $feedback = new Vote();
             $feedback->setSong($song);
             $feedback->setHash($song->getNewGuid());
+
+            if ($this->isGranted('ROLE_USER') && $this->getUser()->isCertified()) {
+                $feedback->setIsModerated(true);
+            }
+
             $feedback->setUser($this->getUser());
             $feedbackForm = $this->createForm(VoteType::class, $feedback);
             $this->addFlash("success", $translator->trans("Feedback sent!"));

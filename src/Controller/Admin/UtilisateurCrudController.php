@@ -63,6 +63,7 @@ class UtilisateurCrudController extends AbstractCrudController
             BooleanField::new('avatarDisabled')->setColumns('col-4'),
             DateTimeField::new('createdAt')->setColumns('col-4')->hideOnForm(),
             BooleanField::new('isVerified')->setColumns('col-4'),
+            BooleanField::new('certified')->setColumns('col-4'),
             FormField::addPanel('Mapper part')->setCssClass('col-6'),
             TextField::new('mapperName')->setColumns('col-12'),
             TextareaField::new('mapperDescription')->setColumns('col-12'),

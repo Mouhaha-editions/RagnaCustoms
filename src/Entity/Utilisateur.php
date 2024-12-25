@@ -354,9 +354,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->votes;
     }
 
-    public function isCertified(): ?bool
+    public function isCertified(): bool
     {
-        return $this->certified;
+        return $this->certified ?? false;
+    }
+
+    public function getCertified(): bool
+    {
+        return $this->certified ?? false;
     }
 
     public function setCertified(?bool $certified): self

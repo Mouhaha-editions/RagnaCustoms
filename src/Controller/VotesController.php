@@ -179,6 +179,9 @@ class VotesController extends AbstractController
             if ($vote->getId() != null) {
                 $voteService->subScore($song, $voteBefore);
             }
+            if ($this->isGranted('ROLE_USER') && $this->getUser()->isCertified()) {
+                $vote->setIsModerated(true);
+            }
             $vote->setLevelQuality(null);
             $vote->setFlow(null);
             $voteService->addScore($song, $vote);
