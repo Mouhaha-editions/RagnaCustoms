@@ -263,7 +263,7 @@
                             class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', true)}) }}</span>
                       {% endif %}
                       {% if level.difficulty.isRanked %}
-                        <span class="flex-fill justify-content-end row">
+                        <span class="flex-fill justify-content-end row text-danger">
                           <i title="{{ "Show PP chart"|trans }}" 
                             data-toggle="modal" data-target="#PPChartView" data-diff="{{ level.difficulty.id }}" data-user="{{ app.user.id }}" data-leaderboard="vr"
                             class="fa-chart-line fas pp-chart" style="cursor: pointer">
@@ -337,7 +337,7 @@
                               class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false)}) }}</span>
                           {% endif %}
                           {% if level.difficulty.isRanked %}
-                            <span class="flex-fill justify-content-end row">
+                            <span class="flex-fill justify-content-end row text-danger">
                               <i title="{{ "Show PP chart"|trans }}" 
                                 data-toggle="modal" data-target="#PPChartView" data-diff="{{ level.difficulty.id }}" data-user="{{ app.user.id }}" data-leaderboard="flat"
                                 class="fa-chart-line fas pp-chart" style="cursor: pointer">
@@ -393,7 +393,7 @@
                               class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false, true)}) }}</span>
                           {% endif %}
                           {% if level.difficulty.isRanked %}
-                            <span class="flex-fill justify-content-end row">
+                            <span class="flex-fill justify-content-end row text-danger">
                               <i title="{{ "Show PP chart"|trans }}" 
                                 data-toggle="modal" data-target="#PPChartView" data-diff="{{ level.difficulty.id }}" data-user="{{ app.user.id }}" data-leaderboard="okod"
                                 class="fa-chart-line fas pp-chart" style="cursor: pointer">
