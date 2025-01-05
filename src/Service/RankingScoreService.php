@@ -243,7 +243,7 @@ class RankingScoreService
         $minDistance = $score->getSongDifficulty()->getTheoricalMinScore();
         $maxDistance = $score->getSongDifficulty()->getTheoricalMaxScore();
         // Clamp distance to the range for accuracy
-        $distance = max($minDistance, min($maxDistance, $score->getScore()));
+        $distance = max($minDistance, min($maxDistance, $score->getScore() / 100.0));
 
         return 100 * ($distance - $minDistance) / ($maxDistance - $minDistance);
     }
