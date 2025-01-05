@@ -13,12 +13,18 @@
                         src="{{ user.gravatar }}"
                         class="avatar big-rounded mb-4 img-fluid"
                         alt="{{ user.username }}"/>
-                {% if user.songsMapped|length > 0 %}
+                <div class="row">
+                    {% if user.songsMapped|length > 0 %}
+                        <a class="btn btn-lg btn-warning btn-block"
+                            href="{{ url('mapper_profile', {username:user.username}) }}">
+                            {{ "View mapper profile"|trans }}
+                        </a>
+                    {% endif %}
                     <a class="btn btn-lg btn-warning btn-block"
-                       href="{{ url('mapper_profile', {username:user.username}) }}">
-                        {{ "View mapper profile"|trans }}
+                        href="{{ url('ranking_stats', {username:user.username}) }}">
+                        {{ "View ranking stats"|trans }}
                     </a>
-                {% endif %}
+                </div>
 
                 <div class="friend-request">
                     {% include 'user/partial/friend_request.html.twig' with {user:user} %}

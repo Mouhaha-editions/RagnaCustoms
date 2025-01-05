@@ -84,7 +84,7 @@ class StatistiqueController extends AbstractController
     }
 
     #[Route('/stats/pp-chart/{leaderboard}/{id}', name: 'app_stat_pp_chart')]
-    public function bySongDiff(
+    public function ppChartBySongDiff(
         Request $request, string $leaderboard, SongDifficulty $diff, 
         UtilisateurRepository $utilisateurRepository, 
         SongService $songSerivce, StatisticService $statisticService
@@ -109,6 +109,23 @@ class StatistiqueController extends AbstractController
         return new JsonResponse([
             'success'  => true,
             'datasets' => $statisticService->getPPChartDataSetsBySongDiff($diff, $highlightUser, $isVR, $isOKOD, $showAvgLines, $recalculatePPScores)
+        ]);
+    }
+
+    #[Route('/stats/pp-histogram/{leaderboard}/{id}', name: 'app_stat_pp_histogram')]
+    public function ppHistogramByUser(
+        Request $request, string $leaderboard, Utilisateur $user, 
+        SongService $songSerivce, StatisticService $statisticService
+    ): JsonResponse
+    {
+        if (!$user->getIsPublic()) {
+            return new JsonResponse(['success' => false]);
+        }
+        $isVR = $leaderboard == 'vr';
+        $isOKOD = !$isVR && $leaderboard == 'okod';
+        return new JsonResponse([
+            'success'  => true,
+            'datasets' => $statisticService->getPPHistogramDataSet($user, $isVR, $isOKOD)
         ]);
     }
 

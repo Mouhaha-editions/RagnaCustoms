@@ -330,7 +330,7 @@ class StatisticService
     {
         $qb = $this->em->getRepository(Score::class)
             ->createQueryBuilder('s')
-            ->select('s, MAX(s.score) AS HIDDEN max_score')
+            ->select('s')
             ->where('s.songDifficulty = :diff')
             ->andWhere('s.plateform IN (:type)')
             ->setParameter('diff', $diff)
@@ -474,6 +474,51 @@ class StatisticService
         }
 
         return $datasets;
+    }
+
+    public function getPPHistogramDataSet(Utilisateur $user, bool $isVR, bool $isOKOD): mixed
+    {
+        $qb = $this->em->getRepository(Score::class)
+            ->createQueryBuilder('s')
+            ->select('s')
+            ->join('s.songDifficulty', 'sd')
+            ->where('s.user = :user')
+            ->andWhere('sd.isRanked = true')
+            ->andWhere('s.plateform IN (:type)')
+            ->setParameter('user', $user);
+        
+        if ($isVR) {
+            $qb->setParameter('type', WanadevApiController::VR_PLATEFORM);
+        } else if ($isOKOD) {
+            $qb->setParameter('type', WanadevApiController::OKOD_PLATEFORM);
+        } else {
+            $qb->setParameter('type', WanadevApiController::FLAT_PLATEFORM);
+        }
+
+        $scores = $qb->getQuery()->getResult();
+        $datasets = [
+            [
+                "label" => '# of scores with Raw PP',
+                "data" => [],
+                "backgroundColor" => '#ffffff',
+                "borderColor" => '#ffffff',
+                "barPercentage" => 1,
+                "categoryPercentage" => 1
+            ],
+        ];
+        
+        $ppBuckets=[];
+
+        foreach ($scores as $score) {
+            $ppBucket = round($score->getRawPP(), -1);
+            $ppBuckets[$ppBucket] = ($ppBuckets[$ppBucket] ?? 0) + 1;
+        }
+
+        foreach ($ppBuckets as $pp => $count) {
+            $datasets[0]['data'][] = ['x' => $pp, 'y' => $count];
+        }
+
+        return ['datasets' => $datasets];
     }
 }
 

@@ -194,7 +194,6 @@ export default class extends Controller {
         success: function (response) {
           chart2.data.datasets = [];
           chart2.data = response.datasets;
-          chart2.scales['x']
           chart2.update();
           $('#pp-plot-spinner').remove();
         }

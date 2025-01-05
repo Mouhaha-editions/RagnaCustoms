@@ -13,7 +13,9 @@ use App\Repository\DownloadCounterRepository;
 use App\Repository\ScoreHistoryRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\SongCategoryRepository;
+use App\Repository\SongDifficultyRepository;
 use App\Repository\UtilisateurRepository;
+use App\Service\ScoreService;
 use App\Service\SearchService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -570,5 +572,124 @@ class UserController extends AbstractController
         $this->addFlash('success', 'Download history cleared!');
 
         return $this->redirectToRoute('app_downloads_list');
+    }
+
+    #[Route(path: '/ranking-stats/{username}', name: 'ranking_stats')]
+    public function rankingStats(
+        Request $request,
+        Utilisateur $utilisateur,
+        PaginationService $paginationService,
+        ScoreService $scoreService,
+        ScoreRepository $scoreRepository,
+        SongDifficultyRepository $songDifficultyRepository
+    ): Response {
+        if ($this->getUser() !== $utilisateur && !$utilisateur->getIsPublic()) {
+            $this->addFlash('warning', "This profile is not public.");
+
+            return $this->redirectToRoute('home');
+        }
+
+        $leaderboard = $request->get('leaderboard');
+        if (!$leaderboard) {
+            $rankVR = $scoreService->getGeneralLeaderboardPosition($utilisateur, null, true, false) ?? PHP_INT_MAX;
+            $rankFlat = $scoreService->getGeneralLeaderboardPosition($utilisateur, null, false, false) ?? PHP_INT_MAX;
+            $rankOKOD = $scoreService->getGeneralLeaderboardPosition($utilisateur, null, false, true) ?? PHP_INT_MAX;
+
+            $bestRank = min($rankVR, $rankFlat, $rankOKOD);
+            if ($rankVR == $bestRank) {
+                $leaderboard = 'vr';
+            } else if ($rankFlat == $bestRank) {
+                $leaderboard = 'flat';
+            } else {
+                $leaderboard = 'okod';
+            }
+        }
+
+        $qb = $scoreRepository->createQueryBuilder('s')
+            ->join('s.songDifficulty', 'sd')
+            ->where('s.user = :user')
+            ->setParameter('user', $utilisateur)
+            ->andWhere('sd.isRanked = true')
+            ->andWhere('s.plateform IN (:type)');
+
+        switch($leaderboard) {
+            case 'vr':
+                $qb->setParameter('type', WanadevApiController::VR_PLATEFORM);
+                break;
+            case 'flat':
+                $qb->setParameter('type', WanadevApiController::FLAT_PLATEFORM);
+                break;
+            case 'okod':
+                $qb->setParameter('type', WanadevApiController::OKOD_PLATEFORM);
+                break;
+            default:
+                $qb->setParameter('type', WanadevApiController::VR_PLATEFORM);
+                break;
+        }
+
+        switch ($request->get('played_order_by')) {
+            case 'score':
+                $qb->orderBy("s.rawPP", $request->get('played_order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'date':
+                $qb->orderBy("s.updatedAt", $request->get('played_order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            default:
+                $qb->orderBy("s.rawPP", "desc");
+                break;
+        }
+
+        $paginationPlayed = $paginationService->setDefaults(15)->process($qb, $request);
+
+        $qb = $songDifficultyRepository->createQueryBuilder('sd')
+            ->leftJoin('sd.scores', 's')
+            ->where('sd.isRanked = true')
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->isNull('s.id'),
+                $qb->expr()->andX(
+                    $qb->expr()->eq('s.user', ':user'),
+                    $qb->expr()->notIn('s.plateform', ':type')
+                )
+            ))
+            ->setParameter('user', $utilisateur);
+        
+        switch($leaderboard) {
+            case 'vr':
+                $qb->setParameter('type', WanadevApiController::VR_PLATEFORM);
+                break;
+            case 'flat':
+                $qb->setParameter('type', WanadevApiController::FLAT_PLATEFORM);
+                break;
+            case 'okod':
+                $qb->setParameter('type', WanadevApiController::OKOD_PLATEFORM);
+                break;
+            default:
+                $qb->setParameter('type', WanadevApiController::VR_PLATEFORM);
+                break;
+        }
+
+        switch ($request->get('unplayed_order_by')) {
+            case 'name':
+                $qb->join('sd.song', 'song')->orderBy("song.name", $request->get('unplayed_order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'difficulty':
+                $qb->join('sd.difficultyRank', 'd')->orderBy("d.level", $request->get('unplayed_order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            case 'date':
+                $qb->join('sd.song', 'song')->orderBy("song.lastDateUpload", $request->get('unplayed_order_sort', 'asc') == "asc" ? "asc" : "desc");
+                break;
+            default:
+                $qb->join('sd.song', 'song')->orderBy("song.lastDateUpload", "desc");
+                break;
+        }
+
+        $paginationNotPlayed = $paginationService->setDefaults(15)->process($qb, $request);
+
+        return $this->render('user/partial/ranking_stats.html.twig', [
+            'paginationPlayed' => $paginationPlayed,
+            'paginationNotPlayed' => $paginationNotPlayed,
+            'user' => $utilisateur,
+            'leaderboard' => $leaderboard,
+        ]);
     }
 }

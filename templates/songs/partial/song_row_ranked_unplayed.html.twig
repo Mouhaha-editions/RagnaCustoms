@@ -1,0 +1,51 @@
+{% set song = songDifficulty.song %}
+<tr>
+    <td>
+        <div class="d-flex ">
+            <a href="{{ url('song_detail',{slug:song.slug}) }}">
+                <div class="card-cover">
+                    <img src="{{ song.cover }}" class="small-cover"
+                         alt="cover"/>
+                </div>
+            </a>
+            <div class="song pl-1">
+                <div class="title"><a
+                            href="{{ url('song_detail',{slug:song.slug}) }}">{{ song|raw }}</a>
+                    {% set downloaded = downloadsService.alreadyDownloaded(song) %}
+                    {% if downloaded %}
+                        <small class="small"><i data-toggle="tooltip" title="Already downloaded"
+                                                class="fas fa-check"></i></small>
+                    {% endif %}
+                </div>
+                {% include 'songs/partial/artists.html.twig' with {song : song} %}
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="level-list">
+            {% set diff = songDifficulty %}
+                <div class='level {% if diff.isRanked %}is-ranked{% endif %} {% if app.request.get('alreadyplayed') is not null and is_granted('ROLE_USER') and app.user.hasPlayed(diff) %}disabled{% endif %}'
+                     style="background-color:#{{ diff.difficultyRank.color }};">
+                    {% if diff.isRanked %}
+                        <i class="fas fa-star"
+                           data-toggle="tooltip"
+                           title="Ranked"
+                           style="color:#{{ diff.difficultyRank.color }};"></i>
+                    {% endif %}
+                    <span>{{ diff.difficultyRank.level }}</span>
+                </div>
+        </div>
+    </td>
+    <td>
+        {% include 'songs/partial/mappers.html.twig' with {song:song} %}
+    </td>
+
+    <td class="text-grey">
+        {{ song.getTimeAgo }}&nbsp;
+    </td>
+    <td class="download">
+        <div style="width:40px;height:40px;position:absolute; top:-20px;">
+            {% include 'song_partial/circle_button_with_pp_chart.html.twig' with {song:song, songDifficulty:songDifficulty, user:user, leaderboard:leaderboard} %}
+        </div>
+    </td>
+</tr>

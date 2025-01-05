@@ -1,0 +1,17 @@
+{% import "widget/order_link.html.twig" as macro_order %}
+<table class="table songs ranked-unplayed">
+    <thead>
+        <th style="width:250px;">{{ macro_order.order_link("Title","name","unplayed_order_by","unplayed_order_sort") }}</th>
+        <th class="">{{ macro_order.order_link("Difficulty","difficulty","unplayed_order_by","unplayed_order_sort") }}</th>
+        <th class="">{{ "Mapper"|trans }}</th>
+        <th class="">
+            {{ macro_order.order_link("Upload Date","date","unplayed_order_by","unplayed_order_sort") }}
+        </th>
+        <th class=""></th>
+    </thead>
+
+    {% for songDifficulty in pagination.entities %}
+        {% include 'songs/partial/song_row_ranked_unplayed.html.twig' with {songDifficulty:songDifficulty} %}
+    {% endfor %}
+</table>
+{% include 'widget/paginate.html.twig' with {pagination:pagination} %}

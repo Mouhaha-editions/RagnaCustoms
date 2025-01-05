@@ -1,6 +1,12 @@
-{% macro order_link(text,property) -%}
-<a href="{{ url(app.request.get('_route'),app.request.get('_route_params')|merge(app.request.query.all)|merge({"order_by":property, "order_sort":app.request.get('order_sort', 'asc') == 'asc'? 'desc':'asc'})) }}"
-   class="{% if app.request.get('order_by') == property %}active{% endif %} {% if app.request.get('order_sort', 'asc') == "asc" and app.request.get('order_by') == property %}sort-asc{% else %}sort-desc{% endif %}">
+{% macro order_link(text, property, orderByParam = 'order_by', orderSortParam = 'order_sort') -%}
+<a href="{{ url(
+    app.request.get('_route'),
+    app.request.get('_route_params')
+        | merge(app.request.query.all)
+        | merge({(orderByParam): property, (orderSortParam): app.request.get(orderSortParam, 'asc') == 'asc' ? 'desc' : 'asc'})
+    ) }}"
+   class="{% if app.request.get(orderByParam) == property %}active{% endif %} 
+          {% if app.request.get(orderSortParam, 'asc') == 'asc' and app.request.get(orderByParam) == property %}sort-asc{% else %}sort-desc{% endif %}">
     {{ text|trans }}
 </a>
 {%- endmacro %}

@@ -1,0 +1,54 @@
+{% import "songs/macros/song.html.twig" as song_macro %}
+{% set songDifficulty = score.songDifficulty %}
+{% set song = songDifficulty.song %}
+<tr>
+    <td>
+        <div class="d-flex ">
+            <a href="{{ url('song_detail',{slug:song.slug}) }}"><img src="{{ song.cover }}" alt="cover"/></a>
+            <div class="song pl-1">
+                <div class="title one-line"><a href="{{ url('song_detail',{slug:song.slug}) }}">{{ song|raw }}</a></div>
+                {% include 'songs/partial/artists.html.twig' with {song : song} %}
+
+            </div>
+        </div>
+    </td>
+
+    <td>
+        <div class="level-list">
+            {% set diff = songDifficulty %}
+                <div class='level {% if diff.isRanked %}is-ranked{% endif %}' style="background-color:#{{ diff.difficultyRank.color }};">
+                    {% if diff.isRanked %}<i class="fas fa-star" data-toggle="tooltip" title="Ranked" style="color:#{{ diff.difficultyRank.color }};"></i>{% endif %}
+                    <span >{{ diff.difficultyRank.level }}</span>
+                </div>
+        </div>
+    </td>
+    <td>
+            {{ score.scoreDisplay }} 
+    </td>
+    <td>
+            {{ score.percentageOfPerfects }}%
+    </td>
+    <td>
+        {{ score.rawPP|round(2) }}</small>
+    </td>
+    <td>
+        {{ (100 * score.weightedPP / score.rawPP)|round(2)}}%
+    </td>
+    <td>
+        {{ score.weightedPP }}
+    </td>
+    <td class="text-grey">
+        {{ score.timeAgoShort}}&nbsp;
+    </td>
+    <td>
+        <i title="{{ "Show PP chart"|trans }}" 
+            data-toggle="modal" data-target="#PPChartView" data-diff="{{ songDifficulty.id }}" data-user="{{ user.id }}" data-leaderboard={{ leaderboard }}
+            class="fa-chart-simple fas pp-chart menuItem" style="cursor: pointer">
+        </i>
+    </td>
+    <td>
+        {{ song_macro.statsZipped(score) }}
+    </td>
+</tr>
+
+
