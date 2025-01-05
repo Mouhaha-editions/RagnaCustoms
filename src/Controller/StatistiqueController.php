@@ -96,9 +96,11 @@ class StatistiqueController extends AbstractController
         if ($request->query->get('highlight_user')) {
             $highlightUser = $utilisateurRepository->findOneBy(['id' => $request->query->get('highlight_user')]);
         }
+        $recalculatePPScores = false;
         if ($request->query->get('new_average')) {
             $diff->setEstAvgAccuracy($request->query->get('new_average'));
             $diff->setPPCurveMax($songSerivce->calculatePPCurveMax($diff));
+            $recalculatePPScores = true;
         }
         $highlightUser ??= $this->getUser();
         $isVR = $leaderboard == 'vr';
@@ -106,7 +108,7 @@ class StatistiqueController extends AbstractController
         $showAvgLines = $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MODERATOR');
         return new JsonResponse([
             'success'  => true,
-            'datasets' => $statisticService->getPPChartDataSetsBySongDiff($diff, $highlightUser, $isVR, $isOKOD, $showAvgLines)
+            'datasets' => $statisticService->getPPChartDataSetsBySongDiff($diff, $highlightUser, $isVR, $isOKOD, $showAvgLines, $recalculatePPScores)
         ]);
     }
 

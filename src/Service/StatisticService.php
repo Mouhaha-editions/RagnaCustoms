@@ -326,7 +326,7 @@ class StatisticService
         return $datasets;
     }
 
-    public function getPPChartDataSetsBySongDiff(SongDifficulty $diff, Utilisateur $hightlightUser, bool $isVR, bool $isOKOD, bool $showAvgLines): mixed
+    public function getPPChartDataSetsBySongDiff(SongDifficulty $diff, Utilisateur $hightlightUser, bool $isVR, bool $isOKOD, bool $showAvgLines, bool $recalculatePPScores): mixed
     {
         $qb = $this->em->getRepository(Score::class)
             ->createQueryBuilder('s')
@@ -346,7 +346,7 @@ class StatisticService
 
         $scores = $qb->getQuery()->getResult();
         return ['datasets' => array_merge( 
-            $this->getPPScoresDataSets($scores, $hightlightUser), 
+            $this->getPPScoresDataSets($scores, $hightlightUser, $recalculatePPScores), 
             $this->getPPCurveDataSets($diff, $scores, $showAvgLines)
         )];
     }
@@ -433,7 +433,7 @@ class StatisticService
     /**
      * @param Score[] $scores
      */
-    public function getPPScoresDataSets(array $scores, Utilisateur $highlightUser, ):array
+    public function getPPScoresDataSets(array $scores, Utilisateur $highlightUser, bool $recalculatePPScores):array
     {
         $datasets = [
             [
@@ -459,7 +459,7 @@ class StatisticService
         foreach ($scores as $score) {
             $point = [
                 'x' => $score->getScore() / 100.0,
-                'y' => $score->getRawPP(),
+                'y' => $recalculatePPScores ? $this->rankingScoreService->calculateRawPP($score) : $score->getRawPP(),
                 'username' => $score->getUser()->getUsername()
             ];
             if ($score->getUser() == $highlightUser) {
