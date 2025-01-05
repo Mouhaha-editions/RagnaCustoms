@@ -10,6 +10,7 @@ use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
 use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreRepository;
+use App\Service\SongService;
 use DateTime;
 
 class RankingScoreService
@@ -19,6 +20,7 @@ class RankingScoreService
     public function __construct(
         private readonly ScoreRepository $scoreRepository,
         private readonly RankedScoresRepository $rankedScoresRepository,
+        private readonly SongService $songService
     ) {
     }
 
@@ -41,24 +43,22 @@ class RankingScoreService
 
     public function calculateRawPP(Score $score): float
     {
-        $duration = $score->getSongDifficulty()->getSong()->getApproximativeDuration();
-        $perfects = $score->getPercentageOfPerfects();
-        $notesCount = $score->getSongDifficulty()->getNotesCount();
-        $YellowCombos = $score->getComboYellow();
-        $blueCombos = $score->getComboBlue();
-        $combos = 2 * $YellowCombos + $blueCombos;
-        $songLevel = $score->getSongDifficulty()->getDifficultyRank()->getLevel();
-        // raw pp is calculated by making the ratio between the current score and the theoretical maximum score.
-        // it is ponderated by the song level
+        // Raw PP is calculated using the player accuracy, alongside the curve fitted to the specific ranked map based on estimated average and top player accuracies.
+        // The curve is linear until getting to average accuracy (which gives 100 PP), 
+        // after which it transitions into a exponential growth that hits the level of 500 PP at 95th accuracy percentile (assuming truncated normal distribution with standard deviation 10% accuracy).
+        // Since accuracy can also be viewed as a linear scale between minimum and maximum theoretical in-game distances (assuming player played through the whole song), 
+        // the distance should be used for players instead of accuracy on any graphs/explanations.
+        $accuracy = $this->calculateAccuracyPercentage($score);
+        $meanAccuracy = $score->getSongDifficulty()->getEstAvgAccuracy();
+        $maxAccuracy = 100;
+        $avgPP = 100;
+        $maxPP = $score->getSongDifficulty()->getPPCurveMax();
 
-        $scoreSongLevel = $songLevel ** ($perfects / 170);
-        $scoreNoteCount = $notesCount ** ($perfects / 150);
-        $scoreCombos = ($combos * $duration) ** ($perfects / 150);
-
-        $rawPP = ((($scoreSongLevel * $scoreNoteCount) + $scoreCombos) / $duration) * 300;
-
-        $score->setRawPP($rawPP);
-
+        if ($accuracy <= $meanAccuracy) {
+            $rawPP = $avgPP * $accuracy / $meanAccuracy;
+        } else {
+            $rawPP = $avgPP * pow($maxPP / $avgPP, ($accuracy - $meanAccuracy) / ($maxAccuracy - $meanAccuracy));
+        }
         return round($rawPP, 2);
     }
 
@@ -185,8 +185,7 @@ class RankingScoreService
     {
         if (empty(self::$fakeStats[$songDifficulty->getDifficultyRank()->getId()])) {
             $perfect = 100;
-            $comboBlue = 0;
-            $comboYellow = $this->yellowComboMax($songDifficulty);
+            [$comboYellow, $comboBlue] = $this->songService->calculateMaxCombos($songDifficulty);
 
             $scores = $this->scoreRepository->createQueryBuilder('s')
                 ->leftJoin('s.songDifficulty', 'sd')
@@ -237,29 +236,16 @@ class RankingScoreService
         return $score;
     }
 
-    public function yellowComboMax(SongDifficulty $diff): int
+    private function calculateAccuracyPercentage(Score $score): float
     {
-        // we consider that no note were missed
-        $miss = 0;
-        // We consider that none blue combo is used
-        $maxBlueCombo = 0;
-        // base speed of the boat given by Wanadev
-        $baseSpeed = 17.18;
-        $duration = $diff->getSong()->getApproximativeDuration();
-        $noteCount = $diff->getNotesCount();
+        // Only use distance - this can give lower values than Accuracy formula if player started map late (game counts distance from the first hit note),
+        // but in this case the player should just replay the full map to get better score.
+        $minDistance = $score->getSongDifficulty()->getTheoricalMinScore();
+        $maxDistance = $score->getSongDifficulty()->getTheoricalMaxScore();
+        // Clamp distance to the range for accuracy
+        $distance = max($minDistance, min($maxDistance, $score->getScore()));
 
-        //calculation of the theorical number of yellow combos
-        $consumedNotes = 0;
-        $combo = 0;
-        $maxYellowCombo = 0;
-        while ($consumedNotes <= $noteCount) {
-            $combo = $combo + 1;
-            $consumedNotes = $consumedNotes + (2 * (15 + 10 * $combo));
-
-            $maxYellowCombo = $combo - 1;
-        }
-
-        return $maxYellowCombo;
+        return 100 * ($distance - $minDistance) / ($maxDistance - $minDistance);
     }
 
 }

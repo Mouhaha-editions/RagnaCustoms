@@ -43,6 +43,8 @@ class SongDifficulty
     private $noteJumpStartBeatOffset;
     #[ORM\Column(type: 'integer', nullable: true)]
     private $notesCount;
+    #[ORM\Column(type: 'float', nullable: true)]
+    private $realMapDuration;
 
     #[Groups(['song:get', 'song_diff:get'])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
@@ -60,6 +62,11 @@ class SongDifficulty
     #[Groups(['song:get', 'song_diff:get'])]
     #[ORM\Column(type: 'boolean', nullable: false)]
     private $isRanked;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private $estAvgAccuracy;
+    #[ORM\Column(type: 'float', nullable: true)]
+    private $ppCurveMax;
 
     #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'songDifficulty')]
     private $scores;
@@ -164,6 +171,18 @@ class SongDifficulty
         return $this;
     }
 
+    public function getRealMapDuration(): ?float
+    {
+        return $this->realMapDuration;
+    }
+
+    public function setRealMapDuration(?float $realMapDuration): self
+    {
+        $this->realMapDuration = $realMapDuration;
+
+        return $this;
+    }
+
     public function getNotePerSecond(): ?float
     {
         return $this->NotePerSecond;
@@ -196,6 +215,30 @@ class SongDifficulty
     public function setTheoricalMinScore($theoricalMinScore): self
     {
         $this->theoricalMinScore = $theoricalMinScore;
+
+        return $this;
+    }
+
+    public function getEstAvgAccuracy(): ?float
+    {
+        return $this->estAvgAccuracy;
+    }
+
+    public function setEstAvgAccuracy(?float $estAvgAccuracy): self
+    {
+        $this->estAvgAccuracy = $estAvgAccuracy;
+
+        return $this;
+    }
+
+    public function getPPCurveMax(): ?float
+    {
+        return $this->ppCurveMax;
+    }
+
+    public function setPPCurveMax(?float $ppCurveMax): self
+    {
+        $this->ppCurveMax = $ppCurveMax;
 
         return $this;
     }
@@ -290,14 +333,14 @@ class SongDifficulty
         return $this->isRanked;
     }
 
-    public function getDifficultyFile()
+    public function getDifficultyFile(string $baseDir)
     {
         $file = str_replace('info.dat',$this->difficulty."Standard.dat", $this->getSong()->getInfoDatFile());
-        if(file_exists('../public'.$file)){
+        if(file_exists($baseDir.'/public'.$file)){
             return $file;
         }
         $file = str_replace('info.dat',$this->difficulty.".dat", $this->getSong()->getInfoDatFile());
-        if(file_exists('../public'.$file)){
+        if(file_exists($baseDir.'/public'.$file)){
             return $file;
         }
         return '';

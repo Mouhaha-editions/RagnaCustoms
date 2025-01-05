@@ -219,7 +219,7 @@ class StatisticService
     public function getScatterDataSetsByScore(?Score $sh): array
     {
         $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
-        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
+        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile('..');
 
         return $this->getScatterDatasets($raw_data, $song_file);
     }
@@ -279,7 +279,7 @@ class StatisticService
     public function getScatterDataSetsByScorehistory(?ScoreHistory $sh): array
     {
         $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
-        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
+        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile('..');
 
         return $this->getScatterDatasets($raw_data, $song_file);
     }
@@ -287,7 +287,7 @@ class StatisticService
     public function getFullDatasetByScorehistory(?ScoreHistory $sh): array
     {
         $raw_data = json_decode(json_decode(($sh->getExtra())))->HitDeltaTimes;
-        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile();
+        $song_file = "../public/".$sh->getSongDifficulty()->getDifficultyFile('..');
 
         return $this->getFullDataset($raw_data, $song_file);
     }
