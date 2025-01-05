@@ -2,11 +2,14 @@
 
 namespace App\Service;
 
+use App\Controller\WanadevApiController;
 use App\Entity\DownloadCounter;
 use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
+use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
+use App\Service\RankingScoreService;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +20,8 @@ class StatisticService
     private static array $StatisticsOnScoreHistory;
 
     public function __construct(
-        private readonly EntityManagerInterface $em
+        private readonly EntityManagerInterface $em,
+        private readonly RankingScoreService $rankingScoreService
     ) {
     }
 
@@ -322,5 +326,154 @@ class StatisticService
         return $datasets;
     }
 
+    public function getPPChartDataSetsBySongDiff(SongDifficulty $diff, Utilisateur $hightlightUser, bool $isVR, bool $isOKOD, bool $showAvgLines): mixed
+    {
+        $qb = $this->em->getRepository(Score::class)
+            ->createQueryBuilder('s')
+            ->select('s, MAX(s.score) AS HIDDEN max_score')
+            ->where('s.songDifficulty = :diff')
+            ->andWhere('s.plateform IN (:type)')
+            ->setParameter('diff', $diff)
+            ->groupBy('s.user');
+        
+        if ($isVR) {
+            $qb->setParameter('type', WanadevApiController::VR_PLATEFORM);
+        } else if ($isOKOD) {
+            $qb->setParameter('type', WanadevApiController::OKOD_PLATEFORM);
+        } else {
+            $qb->setParameter('type', WanadevApiController::FLAT_PLATEFORM);
+        }
+
+        $scores = $qb->getQuery()->getResult();
+        return ['datasets' => array_merge( 
+            $this->getPPScoresDataSets($scores, $hightlightUser), 
+            $this->getPPCurveDataSets($diff, $scores, $showAvgLines)
+        )];
+    }
+
+    /**
+     * @param Score[] $scores
+     */
+    public function getPPCurveDataSets(SongDifficulty $diff, array $scores, bool $showAvgLines):array 
+    {
+        $datasets = [
+            [
+                "label" => "est. average",
+                "type" => "line",
+                "data" => [],
+                "borderColor" => "#F4505D",
+                "backgroundColor" => "#F4505D"
+            ],
+            [
+                "label" => "act. average",
+                "type" => "line",
+                "data" => [],
+                "borderColor" => "#32B027",
+                "backgroundColor" => "#32B027"
+            ],
+            [
+                "label" => "curve",
+                "type" => "line",
+                "data" => [],
+                "fill" => true,
+                "cubicInterpolationMode" => "monotone",
+                "pointBackgroundColor" => "#ffffff",
+                "pointBorderColor" => "#ffffff",
+                "pointRadius" => 0,
+                "pointHitRadius" => 5,
+                "backgroundColor" => "rgba(255, 255, 255, 0.3)",
+                "borderColor" => "#ffffff",
+                "borderWidth" => 1.5
+            ]
+        ];
+
+        $minDistance = $diff->getTheoricalMinScore();
+        $maxDistance = $diff->getTheoricalMaxScore();
+
+        if ($showAvgLines) {
+            $estAvgDistance = round($minDistance + ($maxDistance - $minDistance) * $diff->getEstAvgAccuracy() / 100, 2);
+            $datasets[0]['data'] = [
+                ['x' => $estAvgDistance, 'y' => 0, 'accuracy' => round($diff->getEstAvgAccuracy(), 3)],
+                ['x' => $estAvgDistance, 'y' => $diff->getPPCurveMax(), 'accuracy' => round($diff->getEstAvgAccuracy(), 3)]
+            ];
+
+            if (count($scores) > 0) {
+                $actualAvgDistance = 0.0;
+                foreach ($scores as $score) {
+                    $actualAvgDistance += $score->getScore();
+                }
+                $actualAvgDistance /= 100 * count($scores);
+                $actualAvgAccuracy = round(($actualAvgDistance - $minDistance) / ($maxDistance - $minDistance) * 100, 3);
+                $datasets[1]['data'] = [
+                    ['x' => $actualAvgDistance, 'y' => 0, 'accuracy' => $actualAvgAccuracy],
+                    ['x' => $actualAvgDistance, 'y' => $diff->getPPCurveMax(), 'accuracy' => $actualAvgAccuracy]
+                ];
+            } else {
+                unset($datasets[1]);
+            }
+        } else {
+            unset($datasets[0]);
+            unset($datasets[1]);
+        }
+
+        for($i = 0; $i <= 100; $i++) {
+            $distance = round($minDistance + ($maxDistance - $minDistance) * $i / 100, 2);
+            $mockScore = new Score();
+            $mockScore->setSongDifficulty($diff);
+            $mockScore->setScore($distance * 100);
+            $datasets[2]['data'][] = [
+                'x' => $distance,
+                'y' => $this->rankingScoreService->calculateRawPP($mockScore)
+            ];
+        }
+
+        return $datasets;
+    }
+
+    /**
+     * @param Score[] $scores
+     */
+    public function getPPScoresDataSets(array $scores, Utilisateur $highlightUser, ):array
+    {
+        $datasets = [
+            [
+                "label" => $highlightUser?->getUsername(),
+                "type" => "scatter",
+                "data" => [],
+                'pointBackgroundColor' => 'rgb(255, 193, 7)',
+                "pointRadius" => 4,
+                "pointHitRadius" => 5,
+                "pointHoverRadius" => 5,
+            ],
+            [
+                "label" => "players",
+                "type" => "scatter",
+                "data" => [],
+                'pointBackgroundColor' => '#4B9CE2',
+                "pointRadius" => 4,
+                "pointHitRadius" => 5,
+                "pointHoverRadius" => 5,
+            ],
+        ];
+        
+        foreach ($scores as $score) {
+            $point = [
+                'x' => $score->getScore() / 100.0,
+                'y' => $score->getRawPP(),
+                'username' => $score->getUser()->getUsername()
+            ];
+            if ($score->getUser() == $highlightUser) {
+                $datasets[0]['data'][] = $point;
+            } else {
+                $datasets[1]['data'][] = $point;
+            }
+        }
+
+        if (count($datasets[0]['data']) == 0) {
+            unset($datasets[0]);
+        }
+
+        return $datasets;
+    }
 }
 

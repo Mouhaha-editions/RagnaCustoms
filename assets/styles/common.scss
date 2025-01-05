@@ -915,3 +915,11 @@ table tr {
     text-decoration:none;
   }
 }
+
+.spinner-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 0.5;
+  transform: translate(-50%, -50%);
+}

@@ -5,10 +5,14 @@ namespace App\Controller;
 use App\Entity\Score;
 use App\Entity\ScoreHistory;
 use App\Entity\Song;
+use App\Entity\SongDifficulty;
 use App\Entity\Utilisateur;
+use App\Repository\UtilisateurRepository;
+use App\Service\SongService;
 use App\Service\StatisticService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -77,6 +81,33 @@ class StatistiqueController extends AbstractController
         });
 
         return $response;
+    }
+
+    #[Route('/stats/pp-chart/{leaderboard}/{id}', name: 'app_stat_pp_chart')]
+    public function bySongDiff(
+        Request $request, string $leaderboard, SongDifficulty $diff, 
+        UtilisateurRepository $utilisateurRepository, 
+        SongService $songSerivce, StatisticService $statisticService
+    ): JsonResponse
+    {
+        if (!$diff->isRanked()) {
+            return new JsonResponse(['success' => false]);
+        }
+        if ($request->query->get('highlight_user')) {
+            $highlightUser = $utilisateurRepository->findOneBy(['id' => $request->query->get('highlight_user')]);
+        }
+        if ($request->query->get('new_average')) {
+            $diff->setEstAvgAccuracy($request->query->get('new_average'));
+            $diff->setPPCurveMax($songSerivce->calculatePPCurveMax($diff));
+        }
+        $highlightUser ??= $this->getUser();
+        $isVR = $leaderboard == 'vr';
+        $isOKOD = !$isVR && $leaderboard == 'okod';
+        $showAvgLines = $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MODERATOR');
+        return new JsonResponse([
+            'success'  => true,
+            'datasets' => $statisticService->getPPChartDataSetsBySongDiff($diff, $highlightUser, $isVR, $isOKOD, $showAvgLines)
+        ]);
     }
 
 
