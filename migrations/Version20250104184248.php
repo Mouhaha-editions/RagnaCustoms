@@ -58,7 +58,45 @@ final class Version20250104184248 extends AbstractMigration implements SongAware
                 $diff->setRealMapDuration($this->songService->calculateRealMapDuration($song, $notes));
                 $diff->setTheoricalMaxScore($this->songService->calculateTheoricalMaxScore($diff));
                 $diff->setTheoricalMinScore($this->songService->calculateTheoricalMinScore($diff));
-                $diff->setEstAvgAccuracy($this->songService->calculateEstAvgAccuracy($diff, $notes));
+                // We already saw that the estimation formula doesn't represent some songs well - exceptions decided manually based on player scores
+                switch ($diff->getId()) {
+                    case 3213: // Pipi vs. caca - Ultra Vomit - 4
+                        $diff->setEstAvgAccuracy(84);
+                        break;
+                    case 3214: // Pipi vs. caca - Ultra Vomit - 7
+                        $diff->setEstAvgAccuracy(75);
+                        break;
+                    case 3215: // Pipi vs. caca - Ultra Vomit - 9
+                        $diff->setEstAvgAccuracy(71);
+                        break;
+                    case 1722: // UnAlive (Short Edit) - Mori Calliope - 6
+                        $diff->setEstAvgAccuracy(83);
+                        break;
+                    case 937:  // Eyeless - Slipknot - 10
+                        $diff->setEstAvgAccuracy(71);
+                        break;
+                    case 124:  // Played-A-Live (The Bongo Song) - Safri Duo - 9
+                        $diff->setEstAvgAccuracy(73);
+                        break;
+                    case 133:  // Diggy Diggy Hole - Wind Rose - 8
+                        $diff->setEstAvgAccuracy(77);
+                        break;
+                    case 187:  // Run Boy Run - Woodkid - 8
+                        $diff->setEstAvgAccuracy(75);
+                        break;
+                    case 405:  // Sandstorm - Darude - 9
+                        $diff->setEstAvgAccuracy(72);
+                        break;
+                    case 218:  // Toss a Coin To Your Witcher - Skar - 10
+                        $diff->setEstAvgAccuracy(74);
+                        break;
+                    case 2405: // Through The Fire and Flames - DragonForce - 10
+                        $diff->setEstAvgAccuracy(64);
+                        break;
+                    default:
+                        $diff->setEstAvgAccuracy($this->songService->calculateEstAvgAccuracy($diff, $notes));
+                        break;
+                }
                 $diff->setPPCurveMax($this->songService->calculatePPCurveMax($diff));
 
                 $this->songDifficultyRepository->add($diff, true);
