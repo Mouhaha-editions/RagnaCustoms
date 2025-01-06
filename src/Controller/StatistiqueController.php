@@ -90,7 +90,7 @@ class StatistiqueController extends AbstractController
         SongService $songSerivce, StatisticService $statisticService
     ): JsonResponse
     {
-        if (!$diff->isRanked()) {
+        if (!$diff->isRanked() && !$this->isGranted('ROLE_MODERATOR')) {
             return new JsonResponse(['success' => false]);
         }
         if ($request->query->get('highlight_user')) {
@@ -105,7 +105,7 @@ class StatistiqueController extends AbstractController
         $highlightUser ??= $this->getUser();
         $isVR = $leaderboard == 'vr';
         $isOKOD = !$isVR && $leaderboard == 'okod';
-        $showAvgLines = $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MODERATOR');
+        $showAvgLines = $this->isGranted('ROLE_MODERATOR');
         return new JsonResponse([
             'success'  => true,
             'datasets' => $statisticService->getPPChartDataSetsBySongDiff($diff, $highlightUser, $isVR, $isOKOD, $showAvgLines, $recalculatePPScores)

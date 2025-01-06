@@ -267,10 +267,10 @@ $(document).on('change', 'input[type="file"]', function (e) {
 });
 
 
-function loadForm(content) {
-  $("#form-edit").html(content);
-  $("#form-edit form").on('submit', function () {
-    $("#form-edit").html("<div class=\"popup-box-actions white full void\">Sending your form, please wait ... </div> " +
+function loadForm(modalform, content) {
+  modalform.html(content);
+  modalform.children('form').on('submit', function () {
+    modalform.html("<div class=\"popup-box-actions white full void\">Sending your form, please wait ... </div> " +
       "<div class='progress-container'><div class='progress'></div></div>");
     let tt = $(this);
 
@@ -312,9 +312,8 @@ function loadForm(content) {
           window.location.reload();
         }
         if (data.error === true || data.success === false) {
-          $("#form-edit").html(data.response);
-          loadForm(data.response);
-
+          modalform.html(data.response);
+          loadForm(modalform, data.response);
         } else {
           tt.closest(tt.data('replace-selector')).html(data.response);
           $(tt).closest(".modal").modal('hide');
@@ -322,10 +321,11 @@ function loadForm(content) {
       }
     });
 
-
+    
     $("#form-review").html("<div class=\"popup-box-actions white full void\">Sending your form</div>");
     return false;
   });
+  $(document).trigger('modalformloaded', modalform);
 }
 
 $(document).on('click', ".ajax-modal-form", function () {
@@ -335,7 +335,7 @@ $(document).on('click', ".ajax-modal-form", function () {
   $.ajax({
     url: t.data('url'),
     success: function (data) {
-      loadForm(data.response);
+      loadForm($(t.data('modalform')), data.response);
     }
   });
   return false;

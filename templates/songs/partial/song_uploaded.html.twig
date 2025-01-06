@@ -83,6 +83,7 @@
         {% if not song.isRanked() %}
         <a href="#"
                data-modal="#editSong"
+               data-modalform="#form-edit"
                data-refresh="true"
                data-url="{{ url('edit_song',{id:song.id}) }}"
            data-title="{{ "Edit Custom Song<br/><small class='text-warning'>\"%songName%\"</small>"|trans|replace({"%songName%":song.name|escape}) }}"

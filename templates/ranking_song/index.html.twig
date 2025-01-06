@@ -1,12 +1,142 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <div {{ stimulus_controller('ranking-song') }} class="container">
-        <div class="row pt-5">
-            <div class="col-md-10 text-left">
-                {{ form_start(form) }}
-                {{ form_end(form) }}
-            </div>
-        </div>
+  <div {{ stimulus_controller('ranking-song') }} class="container">
+    <div class="row pt-5">
+      <div class="col-md-10 text-left">
+        <h1 class="">
+          {{ "Ranking Songs"|trans }}
+        </h1>
+
+      </div>
     </div>
+    <div id="song-list" class="row">
+      <div class="col-md-10">
+
+        <div>
+          Filters : {% for filter in filters %}<span
+              class="tag-filter">{{ filter|trans|capitalize }}</span>{% else %} {{ "no filter"|trans }}{% endfor %}
+        </div>
+
+        {% import "widget/order_link.html.twig" as macro_order %}
+        <table class="featured-table-lg table table-sm">
+          <tr>
+            <th>
+              {{ macro_order.order_link("Title","name") }}
+            </th>
+            <th></th>
+            <th>{{ "Difficulties"|trans }}</th>
+            <th>
+              {{ macro_order.order_link("BPM","bpm") }}</th>
+            <th>{{ "Mapper"|trans }}</th>
+            <th>
+              {{ macro_order.order_link("Votes","rating") }}
+            </th>
+            <th>{{ "Rating"|trans }}</th>
+            <th class="text-right">
+              {{ macro_order.order_link("Upload Date","upload_date") }}
+            </th>
+            <th class="text-right">
+              {{ macro_order.order_link("Downloads","downloads") }}
+
+            </th>
+            <th></th>
+          </tr>
+          {% for song in songs.entities %}
+            {% include 'ranking_song/partial/song_row.html.twig' with {song:song} %}
+          {% else %}
+
+            <tr>
+              <td colspan="8">
+                {{ "No song for now"|trans }}
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+        {% include 'widget/paginate.html.twig' with {pagination:songs} %}
+      </div>
+      <div class="col-md-2">
+        <h2 class="active">{{ "Filter"|trans }}</h2>
+        <form class="search-and-filter">
+
+          <div class="form-group">
+            <label for="search">{{ "Title, artist or mapper"|trans }}</label>
+            <input type="text" value="{{ app.request.get('search') }}"
+                   class="form-control form-control-sm"
+                   placeholder="" name="search"
+                   id="search">
+          </div>
+          <div class="form-group">
+            <label for="mapped_for">{{ "Mapped for"|trans }}</label>
+            <select id="mapped_for"
+                    name="mapped_for"
+                    class="form-control form-control-sm">
+              <option
+                  value="">{{ "Any"|trans }}</option>
+              <option {% if  app.request.get('mapped_for', null) == 1 %}selected="selected"{% endif %}
+                      value="1">{{ "VR"|trans }}</option>
+              <option {% if  app.request.get('mapped_for', null) == 2 %}selected="selected"{% endif %}
+                      value="2">{{ "Viking on Tour"|trans }}</option>
+
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="downloads-submitted-date">{{ "Submitted date"|trans }}</label>
+            <select id="downloads-submitted-date"
+                    name="downloads_submitted_date"
+                    class="form-control form-control-sm">
+              <option
+                  value="">{{ "Any time"|trans }}</option>
+              <option {% if  app.request.get('downloads_submitted_date') == 1 %}selected="selected"{% endif %}
+                      value="1">{{ "Last 7 days"|trans }}</option>
+              <option {% if  app.request.get('downloads_submitted_date') == 2 %}selected="selected"{% endif %}
+                      value="2">{{ "Last 15 days"|trans }}</option>
+              <option {% if  app.request.get('downloads_submitted_date') == 2 %}selected="selected"{% endif %}
+                      value="3">{{ "Last 45 days"|trans }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="downloads-filter-category">{{ "Difficulties"|trans }}</label>
+            <select id="downloads-filter-category" name="downloads_filter_difficulties"
+                    class="form-control form-control-sm">
+              <option value="">{{ "All"|trans }}</option>
+              <option {% if app.request.get('downloads_filter_difficulties') == 1 %}selected="selected"{% endif %}
+                      value="1">{{ "1-3"|trans }}</option>
+              <option {% if app.request.get('downloads_filter_difficulties') == 2 %}selected="selected"{% endif %}
+                      value="2">{{ "4-7"|trans }}</option>
+              <option {% if app.request.get('downloads_filter_difficulties') == 3 %}selected="selected"{% endif %}
+                      value="3">{{ "8-10"|trans }}</option>
+              <option {% if app.request.get('downloads_filter_difficulties') == 6 %}selected="selected"{% endif %}
+                      value="6">{{ "10+"|trans }}</option>
+
+
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="downloads-category">{{ "Genre"|trans }}</label>
+            <select data-placeholder="All" id="downloads-category" data-allow-clear="true"
+                    data-tags="false" name="downloads_filter_categories[]"
+                    class="form-control form-control-sm tom-select" multiple="true">
+              {% for category in categories %}
+                <option
+                    {% if category.id in app.request.get('downloads_filter_categories') %}selected="selected"{% endif %}
+                    value="{{ category.id }}">{{ category.label }}</option>                                {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <input class="form-check-input" {% if app.request.get("only_ranked") == 1 %}checked="checked"{% endif %}
+                     type="checkbox" value="1" name="only_ranked" id="only_ranked">
+              <label class="form-check-label" for="only_ranked">
+                {{ "Only ranked"|trans }}
+              </label>
+            </div>
+          </div>
+          <button type="submit" name="search_btn" value="1" class="btn btn-sm btn-block btn-info">{{ "Apply filters"|trans }}</button>
+        </form>
+      </div>
+    </div>
+  </div>
 {% endblock %}
