@@ -90,7 +90,7 @@ class RankingSongsController extends AbstractController
                 'mapped' => false
             ]);
         }
-        $form->add('rank', SubmitType::class);
+        $form->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-info btn-lg btn-block']]);
         $form = $form->getForm();
         $form->handleRequest($request);
 

@@ -64,12 +64,22 @@
     <td class="rank_unrank">
         {% if song.isRanked() %}
             <a href="#"
+                data-modal="#rankSong"
+                data-modalform="#form-rank-song"
+                data-refresh="true"
+                data-url="{{ url('ranking_song_rank',{id:song.id}) }}"
+                title="{{ "Edit ranked song"|trans }}"
+                data-title="{{ "Edit ranked song<br/><small class='text-warning'>\"%songName%\"</small>"|trans|replace({"%songName%":song.name|escape}) }}"
+                class="mt-2 ajax-modal-form">
+                <i class="fas fa-edit"></i>
+            </a>
+            <a href="#"
                 data-success-action="reload"
                 data-url="{{ url('ranking_song_unrank',{id:song.id}) }}"
                 data-confirm-message="{{ "Are you sure you want to unrank this map?"|trans }}"
                 title="{{ "Unrank song"|trans }}"
-                class="text-danger confirm mt-2 ml-2 ajax-link">
-                <i class="fas fa-star"></i>
+                class="text-danger confirm mt-2 ajax-link">
+                <i class="fas fa-ban"></i>
             </a>
         {% else %}
             <a href="#"
@@ -79,7 +89,7 @@
                 data-url="{{ url('ranking_song_rank',{id:song.id}) }}"
                 title="{{ "Rank song"|trans }}"
                 data-title="{{ "Rank song<br/><small class='text-warning'>\"%songName%\"</small>"|trans|replace({"%songName%":song.name|escape}) }}"
-                class="text-success mt-2 ajax-modal-form">
+                class="mt-2 ajax-modal-form">
                 <i class="fas fa-star"></i>
             </a>
         {% endif %}
