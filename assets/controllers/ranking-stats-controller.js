@@ -141,7 +141,7 @@ export default class extends Controller {
       $('.pp-chart').on('click', function () {
         $('#pp-plot').parent().append('<div class="spinner-overlay" id="pp-plot-spinner"><div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div></div>');
         $.ajax({
-          url: '/stats/pp-chart/' + $(this).data('leaderboard') + '/' + $(this).data('diff'),
+          url: '/stats/pp-chart/' + $(this).data('leaderboard') + '/' + $(this).data('diff') + '?highlight_user=' + $(this).data('user'),
           dataType: 'json',
           success: function (response) {
             chart2.data.datasets = [];
