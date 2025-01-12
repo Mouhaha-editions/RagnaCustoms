@@ -12,12 +12,14 @@ use App\Repository\RankedScoresRepository;
 use App\Repository\ScoreRepository;
 use App\Service\SongService;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RankingScoreService
 {
     private static array $fakeStats = [];
 
     public function __construct(
+        private readonly EntityManagerInterface $em,
         private readonly ScoreRepository $scoreRepository,
         private readonly RankedScoresRepository $rankedScoresRepository,
         private readonly SongService $songService
@@ -62,17 +64,16 @@ class RankingScoreService
         return round($rawPP, 2);
     }
 
-    public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true, bool $isOkod = false): bool
+    public function calculateTotalPondPPScore(Utilisateur $user, bool $isVr = true, bool $isOkod = false, bool $recalcRawPP = false): bool
     {
         $totalPP = 0;
-        $index = 0;
+        $weight = 1;
         $qb = $this->scoreRepository
             ->createQueryBuilder('score')
             ->leftJoin('score.songDifficulty', 'diff')
             ->where('score.user = :user')
             ->andWhere('diff.isRanked = true')
             ->setParameter('user', $user)
-            ->addOrderBy('score.rawPP', 'desc')
             ->andWhere('score.plateform IS NOT NULL');
 
         if ($isVr) {
@@ -90,20 +91,33 @@ class RankingScoreService
 
         $scores = $qb->getQuery()->getResult();
 
+        if ($recalcRawPP) {
+            /**
+             * @var Score $score
+            */
+            foreach ($scores as $k => $score) {
+                $score->setRawPP($this->calculateRawPP($score));
+            }
+        }
+
+        usort($scores, function (Score $a, Score $b) {
+            return bccomp($b->getRawPP(), $a->getRawPP(), 3);
+        });
+
         /**
          * @var Score $score
          */
         foreach ($scores as $k => $score) {
-            $rawPPScore = $this->calculateRawPP($score);
-            $pondPPScore = $rawPPScore * pow(0.965, $index);
-            $totalPP = $totalPP + $pondPPScore;
-            $score->setRawPP($rawPPScore);
+            $rawPPScore = $score->getRawPP();
+            $pondPPScore = $rawPPScore * $weight;
+            $weight *= 0.965;
+            $totalPP += $pondPPScore;
             $score->setWeightedPP(round($pondPPScore, 2));
-            $this->scoreRepository->add($score);
+            $this->scoreRepository->add($score, false);
             unset($scores[$k]);
-            $index++;
         }
 
+        $this->em->flush();
 
         $totalPondPPScore = round($totalPP, 2);
         $this->saveRankedScore($user, $totalPondPPScore, $isVr, $isOkod);

@@ -114,8 +114,7 @@ class StatistiqueController extends AbstractController
 
     #[Route('/stats/pp-histogram/{leaderboard}/{id}', name: 'app_stat_pp_histogram')]
     public function ppHistogramByUser(
-        Request $request, string $leaderboard, Utilisateur $user, 
-        SongService $songSerivce, StatisticService $statisticService
+        string $leaderboard, Utilisateur $user, StatisticService $statisticService
     ): JsonResponse
     {
         if (!$user->getIsPublic()) {

@@ -61,7 +61,7 @@ class RecalculateCommand extends Command
          */
         //39209
         foreach ($users as $k => $user) {
-            $this->rankingScoreService->calculateTotalPondPPScore($user, in_array($plateform, WanadevApiController::VR_PLATEFORM), in_array($plateform, WanadevApiController::OKOD_PLATEFORM));
+            $this->rankingScoreService->calculateTotalPondPPScore($user, in_array($plateform, WanadevApiController::VR_PLATEFORM), in_array($plateform, WanadevApiController::OKOD_PLATEFORM), true);
             unset($users[$k]);
             $userProgress->advance();
         }
