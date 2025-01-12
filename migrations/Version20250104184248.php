@@ -69,7 +69,7 @@ final class Version20250104184248 extends AbstractMigration implements SongAware
                             $diff->setEstAvgAccuracy(75);
                             break;
                         case 3215: // Pipi vs. caca - Ultra Vomit - 9
-                            $diff->setEstAvgAccuracy(72);
+                            $diff->setEstAvgAccuracy(73);
                             break;
                         case 1722: // UnAlive (Short Edit) - Mori Calliope - 6
                             $diff->setEstAvgAccuracy(83);
