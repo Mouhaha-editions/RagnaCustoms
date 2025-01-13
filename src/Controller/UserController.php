@@ -642,14 +642,17 @@ class UserController extends AbstractController
         $paginationPlayed = $paginationService->setDefaults(15)->process($qb, $request);
 
         $qb = $songDifficultyRepository->createQueryBuilder('sd')
-            ->leftJoin('sd.scores', 's')
             ->where('sd.isRanked = true')
-            ->andWhere($qb->expr()->orX(
-                $qb->expr()->isNull('s.id'),
-                $qb->expr()->andX(
-                    $qb->expr()->eq('s.user', ':user'),
-                    $qb->expr()->notIn('s.plateform', ':type')
-                )
+            ->andWhere($qb->expr()->notIn(
+                'sd.id', 
+                $scoreRepository->createQueryBuilder('s')
+                    ->join('s.songDifficulty', 'sd2')
+                    ->select('sd2.id')
+                    ->distinct()
+                    ->where('s.user = :user')
+                    ->andWhere('s.plateform IN (:type)')
+                    ->andWhere('sd2.isRanked = true')
+                    ->getDQL()
             ))
             ->setParameter('user', $utilisateur);
         
