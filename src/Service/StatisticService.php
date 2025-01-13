@@ -326,7 +326,7 @@ class StatisticService
         return $datasets;
     }
 
-    public function getPPChartDataSetsBySongDiff(SongDifficulty $diff, Utilisateur $hightlightUser, bool $isVR, bool $isOKOD, bool $showAvgLines, bool $recalculatePPScores): mixed
+    public function getPPChartDataSetsBySongDiff(SongDifficulty $diff, ?Utilisateur $hightlightUser, bool $isVR, bool $isOKOD, bool $showAvgLines, bool $recalculatePPScores): mixed
     {
         $qb = $this->em->getRepository(Score::class)
             ->createQueryBuilder('s')
@@ -433,7 +433,7 @@ class StatisticService
     /**
      * @param Score[] $scores
      */
-    public function getPPScoresDataSets(array $scores, Utilisateur $highlightUser, bool $recalculatePPScores):array
+    public function getPPScoresDataSets(array $scores, ?Utilisateur $highlightUser, bool $recalculatePPScores):array
     {
         $datasets = [
             [
