@@ -25,6 +25,7 @@
                         <th class="text-right">{{ "Score"|trans }}</th>
                         <th class="text-right">{{ "Diff Played"|trans }}</th>
                         <th class="text-right">{{ "Last Update"|trans }}</th>
+                        <th class=""></th>
                         {#                        <th class="text-right">{{ "Songs played"|trans }}</th> #}
                     </tr>
                     {% for score in scores.entities %}
@@ -56,6 +57,7 @@
                             <td class="text-right">{{ score.totalPPScore|round(2) }} PP</td>
                             <td class="text-right"><span>{{ rankingScoreService.countRanked(score.user) }}</span></td>
                             <td class="text-right"><span>{{ score.timeAgoShort() }}</span></td>
+                            <td class=""><a title="{{ "Show ranking stats"|trans }}" class="fa fas fa-chart-simple" href="{{ url('ranking_stats',{username:score.user.username,leaderboard:'vr'}) }}" /></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -75,6 +77,7 @@
                         <th class="text-right">{{ "Score"|trans }}</th>
                         <th class="text-right">{{ "Diff Played"|trans }}</th>
                         <th class="text-right">{{ "Last Update"|trans }}</th>
+                        <th class=""></th>
                         {#                        <th class="text-right">{{ "Songs played"|trans }}</th> #}
                     </tr>
                     {% for score in scoresFlatClassic.entities %}
@@ -106,6 +109,7 @@
                             <td class="text-right">{{ score.totalPPScore|round(2) }} PP</td>
                             <td class="text-right"><span>{{ rankingScoreService.countRanked(score.user, false) }}</span></td>
                             <td class="text-right"><span>{{ score.timeAgoShort() }}</span></td>
+                            <td class=""><a title="{{ "Show ranking stats"|trans }}" class="fa fas fa-chart-simple" href="{{ url('ranking_stats',{username:score.user.username,leaderboard:'flat'}) }}" /></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -125,6 +129,7 @@
                         <th class="text-right">{{ "Score"|trans }}</th>
                         <th class="text-right">{{ "Diff Played"|trans }}</th>
                         <th class="text-right">{{ "Last Update"|trans }}</th>
+                        <th class=""></th>
                         {#                        <th class="text-right">{{ "Songs played"|trans }}</th> #}
                     </tr>
                     {% for score in scoresFlatOkodo.entities %}
@@ -156,11 +161,18 @@
                             <td class="text-right">{{ score.totalPPScore|round(2) }} PP</td>
                             <td class="text-right"><span>{{ rankingScoreService.countRanked(score.user, false, true) }}</span></td>
                             <td class="text-right"><span>{{ score.timeAgoShort() }}</span></td>
+                            <td class=""><a title="{{ "Show ranking stats"|trans }}" class="fa fas fa-chart-simple" href="{{ url('ranking_stats',{username:score.user.username,leaderboard:'okod'}) }}" /></td>
                         </tr>
                     {% endfor %}
                 </table>
                 {% include 'widget/paginate.html.twig' with {pagination:scoresFlatOkodo} %}
 
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div>
+                Leaderboards show standings of all RangaCustoms players that have <a href="{{ url('getting_started') }}#howToUploadScores" target="_blank">enabled sending scores</a> and played at least one Ranked map.
+                You can find the details of how the ranking system works on the <a href="{{ url('ranking_system') }}" target="_blank">Ranking system</a> page.
             </div>
         </div>
     </div>

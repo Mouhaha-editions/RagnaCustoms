@@ -257,10 +257,20 @@
                    aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
                 <div class="row">
                   <div class="col-12">
-                    {% if is_granted('ROLE_USER') %}
-                      <span
-                          class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', true)}) }}</span>
-                    {% endif %}
+                    <div class="row col-12">
+                      {% if is_granted('ROLE_USER') %}
+                        <span
+                            class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', true)}) }}</span>
+                      {% endif %}
+                      {% if level.difficulty.isRanked %}
+                        <span class="flex-fill justify-content-end row text-danger">
+                          <i title="{{ "Show PP chart"|trans }}" 
+                            data-toggle="modal" data-target="#PPChartView" data-diff="{{ level.difficulty.id }}" data-user="{{ is_granted('ROLE_USER') ? app.user.id : '' }}" data-leaderboard="vr"
+                            class="fa-chart-simple fas pp-chart" style="cursor: pointer">
+                          </i>
+                        </span>
+                      {% endif %}
+                    </div>
                     <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
                       <tr>
                         <th class="text-right">#</th>
@@ -321,10 +331,20 @@
                        aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
                     <div class="row">
                       <div class="col-12">
-                        {% if is_granted('ROLE_USER') %}
-                          <span
+                        <div class="row col-12">
+                          {% if is_granted('ROLE_USER') %}
+                            <span
                               class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false)}) }}</span>
-                        {% endif %}
+                          {% endif %}
+                          {% if level.difficulty.isRanked %}
+                            <span class="flex-fill justify-content-end row text-danger">
+                              <i title="{{ "Show PP chart"|trans }}" 
+                                data-toggle="modal" data-target="#PPChartView" data-diff="{{ level.difficulty.id }}" data-user="{{ is_granted('ROLE_USER') ? app.user.id : '' }}" data-leaderboard="flat"
+                                class="fa-chart-simple fas pp-chart" style="cursor: pointer">
+                              </i>
+                            </span>
+                          {% endif %}
+                        </div>
                         <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
                           <tr>
                             <th class="text-right">#</th>
@@ -367,10 +387,20 @@
                        aria-labelledby="pills-leaderboard-{{ level['level'] }}-tab">
                     <div class="row">
                       <div class="col-12">
-                        {% if is_granted('ROLE_USER') %}
-                          <span
-                              class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false)}) }}</span>
-                        {% endif %}
+                        <div class="row col-12">
+                          {% if is_granted('ROLE_USER') %}
+                            <span
+                              class="text-danger">{{ "Your position: %position%"|trans|replace({"%position%":scoreService.leaderboardPositionWithOrdinalSuffix(app.user,level['difficulty'],'-', false, true)}) }}</span>
+                          {% endif %}
+                          {% if level.difficulty.isRanked %}
+                            <span class="flex-fill justify-content-end row text-danger">
+                              <i title="{{ "Show PP chart"|trans }}" 
+                                data-toggle="modal" data-target="#PPChartView" data-diff="{{ level.difficulty.id }}" data-user="{{ is_granted('ROLE_USER') ? app.user.id : '' }}" data-leaderboard="okod"
+                                class="fa-chart-simple fas pp-chart" style="cursor: pointer">
+                              </i>
+                            </span>
+                          {% endif %}
+                        </div>
                         <table class="table table-sm " id="table-leaderboard-{{ level['level'] }}">
                           <tr>
                             <th class="text-right">#</th>

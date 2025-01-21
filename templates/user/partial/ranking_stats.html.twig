@@ -1,0 +1,130 @@
+{% extends "user/profile.html.twig" %}
+{% import "songs/macros/song.html.twig" as macro_song %}
+{% block header_content %}
+    <div {{ stimulus_controller('ranking-stats') }} data-ranking-stats-leaderboard-value="{{ leaderboard }}" data-ranking-stats-user-value="{{ user.id }}" class="row">
+        <div class="col-12">
+            <h1>{{ "Ranking Stats"|trans }}</h1>
+        </div>
+    </div>
+    <div class=row>
+        <div class="col-md-3">
+            <div class="user-picture">
+                <img {{ stimulus_target('mapper-profile', 'img') }}
+                        src="{{ user.gravatar }}"
+                        class="avatar big-rounded mb-4 img-fluid"
+                        alt="{{ user.username }}"/>
+                <div class="row">
+                    {% if user.songsMapped|length > 0 %}
+                        <a class="btn btn-lg btn-warning btn-block"
+                            href="{{ url('mapper_profile', {username:user.username}) }}">
+                            {{ "View mapper profile"|trans }}
+                        </a>
+                    {% endif %}
+                    <a class="btn btn-lg btn-warning btn-block"
+                        href="{{ url('user_profile', {username:user.username}) }}">
+                        {{ "View user profile"|trans }}
+                    </a>
+                </div>
+
+                <div class="friend-request">
+                    {% include 'user/partial/friend_request.html.twig' with {user:user} %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 ">
+            <div class="username">
+                <h2>
+                    {% if user.country is not null %}
+                        <img
+                                src="https://flagcdn.com/24x18/{{ user.country.twoLetters|lower }}.png"
+                                alt="{{ user.country }}"
+                                title="{{ user.country }}">
+                    {% endif %}
+                    {{ membershipService.displayUsername(user, false)|raw }}
+                </h2>
+            </div>
+            <div class="tags">
+                {% if user.songsAvailable|length > 0 %}
+                    <span title="Has released at least one map" data-toogle="tooltip">
+                    {{ "Mapper"|trans }}
+                    </span>
+                {% endif %}
+                {#                {% if user.certified|length > 0 %}<span>{{ "Certified"|trans }}</span>{% endif %} #}
+                {% if user.rankedSong|length > 0 %}
+                    <span title="Has at least one ranked map" data-toogle="tooltip">
+                        {{ "Ranked"|trans }}
+                    </span>
+                {% endif %}
+
+                {% if grantedService.isGranted(user, 'ROLE_MODERATOR') %}
+                    <span title="Is a good guy" data-toogle="tooltip">
+                        {{ "Staff"|trans }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-2 col-sm-6">
+                    <a href="{{url('ranking_stats',{username:user.username,leaderboard:'vr'})}}" class="mini-box" data-leaderboard="vr">
+                        <div class="numeric {{leaderboard == "vr" ? "active" : ""}}">
+                            <i class="fas fa-vr-cardboard" style="font-size:14px;"></i>
+                            #{{ scoreService.generalLeaderboardPosition(user, null, true)??" -" }}
+                        </div>
+                        <div class="text">{{ "VR rank"|trans }}</div>
+                    </a>
+                    <a href="{{url('ranking_stats',{username:user.username,leaderboard:'flat'})}}" class="mini-box" data-leaderboard="flat">
+                        <div class="numeric {{leaderboard == "flat" ? "active" : ""}}">
+                            <i class="fas fa-gamepad" style="font-size:14px;"></i>
+                            #{{ scoreService.generalLeaderboardPosition(user, null, false)??" -" }}
+                        </div>
+                        <div class="text">{{ "VoT Classic rank"|trans }}</div>
+                    </a>
+                    <a href="{{url('ranking_stats',{username:user.username,leaderboard:'okod'})}}" class="mini-box" data-leaderboard="okod">
+                        <div class="numeric {{leaderboard == "okod" ? "active" : ""}}">
+                            <i class="fas fa-gamepad" style="font-size:14px;"></i>
+                            #{{ scoreService.generalLeaderboardPosition(user, null, false, true)??" -" }}
+                        </div>
+                        <div class="text">{{ "VoT OKOD rank"|trans }}</div>
+                    </a>
+                </div>
+                <div class="col-md-2 col-sm-6">
+                    <div class="mini-box">
+                        <div class="numeric">
+                            {{ user.getPPVR?? "-" }}
+                        </div>
+                        <div class="text">{{ "VR PP"|trans }}</div>
+                    </div>
+                    <div class="mini-box">
+                        <div class="numeric">
+                            {{ user.getPPFlat?? "-" }}
+                        </div>
+                        <div class="text">{{ "VoT Classic PP"|trans }}</div>
+                    </div>
+                    <div class="mini-box">
+                        <div class="numeric">
+                            {{ user.getPPFlatOkod?? "-" }}
+                        </div>
+                        <div class="text">{{ "VoT OKOD PP"|trans }}</div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <h3>{{ "Distribution of Raw PP"|trans }}</h3>
+                    <canvas id="pp-histogram"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block detailed_content %}
+    <div class="row">
+        <div class="col-md-7">
+            <h2>{{ "Ranked Scores"|trans }}</h2>
+            {% include 'user/partial/ranked_songs_played.html.twig' with {pagination:paginationPlayed} %}
+        </div>
+        <div class="col-md-5">
+            <h2>Unplayed Ranked Songs</h2>
+            {% include 'user/partial/ranked_songs_unplayed.html.twig' with {pagination:paginationNotPlayed} %}
+        </div>
+    </div>
+{% endblock %}

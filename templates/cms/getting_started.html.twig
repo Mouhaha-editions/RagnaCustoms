@@ -11,6 +11,14 @@
     {% endblock %}
 {% block body %}
   <script>
+    window.addEventListener("load", function(event) {
+      if (document.location.hash) {
+        var section = document.querySelector(`button[data-target="${document.location.hash}"]`);
+        if (!section) return;
+        section.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+        section.click();
+      }
+    });
     function changeChevron() {
       var target = event.currentTarget;
       var chevron = target.querySelector(".collapse-icon");
@@ -30,11 +38,12 @@
       <h1 class="pt-5 pb-5">Getting started - FAQ</h1>
       <h2 class="pt-5 pb-5">General questions</h2>
       <button style="color:white;background-color:transparent;border-width:0px" onClick="changeChevron()"
-              class="h5 collapse-btn" data-toggle="collapse" data-target="#collapseOne">
+              class="h5 collapse-btn" data-toggle="collapse" data-target="#howToInstall">
         <i class="fas fa-chevron-down collapse-icon"></i>
          How do I install custom songs ?
       </button>
-      <div id="collapseOne" class="collapse">
+      <a data-toggle="tooltip" title="{{ "Click to copy link"|trans }}" href="#" data-no-scroll="true" data-to-copy="{{ url('getting_started') }}#howToInstall" class="copy-clipboard fas fa-copy" style="color:#ffffff;"></a>
+      <div id="howToInstall" class="collapse">
         <div class="indent">
           <div class="span">STEP 1</div>
             Install the <a href="https://github.com/pkshetlie/RagnaCustomsApp/releases" target="_blank">RagnaCustoms App</a>.<br>
@@ -77,11 +86,12 @@
       <br>
 
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
-              data-toggle="collapse" onClick="changeChevron()" data-target="#collapseThree">
+              data-toggle="collapse" onClick="changeChevron()" data-target="#howToUploadScores">
         <i class="fas fa-chevron-down collapse-icon"></i>
          How do I upload scores to RagnaCustoms?
       </button>
-      <div id="collapseThree" class="collapse">
+      <a data-toggle="tooltip" title="{{ "Click to copy link"|trans }}" href="#" data-no-scroll="true" data-to-copy="{{ url('getting_started') }}#howToUploadScores" class="copy-clipboard fas fa-copy" style="color:#ffffff;"></a>
+      <div id="howToUploadScores" class="collapse">
         <div class="row">
           <div>
                 <div class="indent">
@@ -103,11 +113,12 @@
       <br>
 
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
-              data-toggle="collapse" onClick="changeChevron()" data-target="#collapseFour">
+              data-toggle="collapse" onClick="changeChevron()" data-target="#customSongsLocation">
         <i class="fas fa-chevron-down collapse-icon"></i>
          Where are custom songs located in the game?
       </button>
-      <div id="collapseFour" class="collapse">
+      <a data-toggle="tooltip" title="{{ "Click to copy link"|trans }}" href="#" data-no-scroll="true" data-to-copy="{{ url('getting_started') }}#customSongsLocation" class="copy-clipboard fas fa-copy" style="color:#ffffff;"></a>
+      <div id="customSongsLocation" class="collapse">
         <div class="indent">
           They are located in the “Custom Songs” album at the bottom of the song catalog (full left)
           menu.
@@ -116,11 +127,12 @@
       <br>
 
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
-              data-toggle="collapse" onClick="changeChevron()" data-target="#collapseCinq">
+              data-toggle="collapse" onClick="changeChevron()" data-target="#multiplayer">
         <i class="fas fa-chevron-down collapse-icon"></i>
          Can I play custom songs against others in multiplayer?
       </button>
-      <div id="collapseCinq" class="collapse">
+      <a data-toggle="tooltip" title="{{ "Click to copy link"|trans }}" href="#" data-no-scroll="true" data-to-copy="{{ url('getting_started') }}#multiplayer" class="copy-clipboard fas fa-copy" style="color:#ffffff;"></a>
+      <div id="multiplayer" class="collapse">
         <div class="indent">
           Yes! But only in private lobby PVP.<br>
           You have to make sure that your have the exact same folder map name or you won't be able to play together.
@@ -131,11 +143,12 @@
 
       <h2 class="pt-5 pb-5">Mapping questions</h2>
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
-              data-toggle="collapse" onClick="changeChevron()" data-target="#collapseSix">
+              data-toggle="collapse" onClick="changeChevron()" data-target="#allowedSongs">
         <i class="fas fa-chevron-down collapse-icon"></i>
          What songs are allowed?
       </button>
-      <div id="collapseSix" class="collapse">
+      <a data-toggle="tooltip" title="{{ "Click to copy link"|trans }}" href="#" data-no-scroll="true" data-to-copy="{{ url('getting_started') }}#allowedSongs" class="copy-clipboard fas fa-copy" style="color:#ffffff;"></a>
+      <div id="allowedSongs" class="collapse">
         <div class="indent">
           Generally speaking, any song is allowed as long as effort was put in to make it an
           enjoyable experience in Ragnarock.<br>
@@ -145,11 +158,12 @@
       <br>
 
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
-              data-toggle="collapse" onClick="changeChevron()" data-target="#collapseSeven">
+              data-toggle="collapse" onClick="changeChevron()" data-target="#howToCreateMap">
         <i class="fas fa-chevron-down collapse-icon"></i>
          How do I create my own custom songs?
       </button>
-      <div id="collapseSeven" class="collapse">
+      <a data-toggle="tooltip" title="{{ "Click to copy link"|trans }}" href="#" data-no-scroll="true" data-to-copy="{{ url('getting_started') }}#howToCreateMap" class="copy-clipboard fas fa-copy" style="color:#ffffff;"></a>
+      <div id="howToCreateMap" class="collapse">
         <div class="indent">
           You can map your own customs songs for Ragnarock using <a
               href="https://pkbeam.github.io/Edda/" target="_blank">EDDA</a>, a
@@ -162,22 +176,24 @@
 
       <h2 class="pt-5 pb-5">Ranking questions</h2>
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
-              data-toggle="collapse" onClick="changeChevron()" data-target="#collapseEight">
+              data-toggle="collapse" onClick="changeChevron()" data-target="#howToRanking">
         <i class="fas fa-chevron-down collapse-icon"></i>
          How does the ranking system works?
       </button>
-      <div id="collapseEight" class="collapse">
+      <a data-toggle="tooltip" title="{{ "Click to copy link"|trans }}" href="#" data-no-scroll="true" data-to-copy="{{ url('getting_started') }}#howToRanking" class="copy-clipboard fas fa-copy" style="color:#ffffff;"></a>
+      <div id="howToRanking" class="collapse">
         <div class="indent">You can find the details of how the ranking system works on the <a
               href="{{ url('ranking_system') }}" target="_blank">Ranking system</a> page
         </div>
       </div>
       <br>
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
-              data-toggle="collapse" onClick="changeChevron()" data-target="#collapseNine">
+              data-toggle="collapse" onClick="changeChevron()" data-target="#rankingMaps">
         <i class="fas fa-chevron-down collapse-icon"></i>
          Can I submit my own maps for ranking?
       </button>
-      <div id="collapseNine" class="collapse">
+      <a data-toggle="tooltip" title="{{ "Click to copy link"|trans }}" href="#" data-no-scroll="true" data-to-copy="{{ url('getting_started') }}#rankingMaps" class="copy-clipboard fas fa-copy" style="color:#ffffff;"></a>
+      <div id="rankingMaps" class="collapse">
         <div class="indent">
           Yes, on the condition it comply the following <a href="{{ url('acceptance_criteria') }}" target="_blank">acceptance
             criteria </a><br>
@@ -189,11 +205,12 @@
 
       <h2 class="pt-5 pb-5">Streaming/Twitch questions</h2>
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
-              data-toggle="collapse" onClick="changeChevron()" data-target="#collapseTen">
+              data-toggle="collapse" onClick="changeChevron()" data-target="#twitchRequestBot">
         <i class="fas fa-chevron-down collapse-icon"></i>
          How do I activate the request bot ?
       </button>
-      <div id="collapseTen" class="collapse">
+      <a data-toggle="tooltip" title="{{ "Click to copy link"|trans }}" href="#" data-no-scroll="true" data-to-copy="{{ url('getting_started') }}#twitchRequestBot" class="copy-clipboard fas fa-copy" style="color:#ffffff;"></a>
+      <div id="twitchRequestBot" class="collapse">
         <div class="indent">
           The Ragnacustoms App is allowing you to use a bot that will grab requests from your viewers.</br>
           The chat command is <b>!rc [Id of the song]</b>. (for example : !rc 1250).</br>
@@ -222,11 +239,12 @@
       </div>
       <br>
       <button style="color:white;background-color:transparent;border-width:0px" class="h5 collapse-btn"
-              data-toggle="collapse" onClick="changeChevron()" data-target="#collapseEleven">
+              data-toggle="collapse" onClick="changeChevron()" data-target="#twitchRequestId">
         <i class="fas fa-chevron-down collapse-icon"></i>
          Where can I find the id of the song or the request command if I want to request it on a Twitch chat ?
       </button>
-      <div id="collapseEleven" class="collapse">
+      <a data-toggle="tooltip" title="{{ "Click to copy link"|trans }}" href="#" data-no-scroll="true" data-to-copy="{{ url('getting_started') }}#twitchRequestId" class="copy-clipboard fas fa-copy" style="color:#ffffff;"></a>
+      <div id="twitchRequestId" class="collapse">
         <div class="indent">
           The easiest way to have the command to request a song to your favorite streamer is to go on the detail page of
           the map and clic on the twitch button.</br>

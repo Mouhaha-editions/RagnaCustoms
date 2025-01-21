@@ -1,0 +1,30 @@
+{% import "widget/order_link.html.twig" as macro_order %}
+<table class="table songs ranked-played">
+    <tr>
+        <th style="width:250px;">{{ "Title"|trans }}</th>
+        <th class="">{{ "Difficulty"|trans }}</th>
+        <th class="">{{ "Distance"|trans }}</th>
+        <th class="">{{ "Perfects"|trans }}</th>
+        <th class="">
+            {{ macro_order.order_link("Raw PP","score","played_order_by","played_order_sort") }}
+        </th>
+        <th class="">
+            {{ "Weight"|trans }}
+        </th>
+        <th class="">
+            <span title="Weighted PP">{{ "W. PP"|trans }}</span>
+        </th>
+        <th class="">
+            {{ macro_order.order_link("Date","date","played_order_by","played_order_sort") }}
+        </th>
+        <th class=""></th>
+        <th class="">
+            {{ "Stats"|trans }}
+        </th>
+    </tr>
+
+    {% for score in pagination.entities %}
+        {% include 'songs/partial/song_row_ranked_played.html.twig' with {score:score} %}
+    {% endfor %}
+</table>
+{% include 'widget/paginate.html.twig' with {pagination:pagination} %}

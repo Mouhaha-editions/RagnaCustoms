@@ -16,23 +16,20 @@
       <h1 class="pt-5 pb-5">Ranking system</h1>
       <h5 class="pt-4">Ranked / Unranked</h5>
       <div class="indent">
-        Before starting, it is important to understand that a map itself is not ranked. It is each level of difficulty
-        of a map that can be ranked.<br>
-        Thus, a map with 3 levels can have only one which is ranked. That choice has been made to handle cases where a
-        map has one bad level and one great.<br>
-        So, scores you make are level related and not map related.<br>
-        Scoring system (which we will explain later) is only used for the global leaderboard as the normal scoring
-        (distance based) is already great for individual maps.
+        By default, all the new published maps are Unranked. Only maps suggested by the creators and reviewed by the moderation team can become Ranked.<br>
+        When map becomes Ranked, all of its levels of difficulty become Ranked at the same time and players can start earning PP scores on all of them.<br>
+        PP Scoring system (which is explained below in more detail) is only used for the global leaderboard, as the normal scoring (distance based) is already great for individual maps.
       </div>
 
-      <h5 class="pt-4">Q: Can I propose a map I made to add to the ranked list ?</h5>
+      <h5 class="pt-4">Q: Can I propose a map I made to be Ranked ?</h5>
       <div class="indent">
-        It is possible to propose one or several levels of a map you made.<br>
+        It is possible to propose a map you made (or was one of the mappers on) to be Ranked.<br>
         Go to the <a href="{{ url("acceptance_criteria") }}" target="">acceptance criteria</a> page to know which
         criteria are mandatory for a map to be accepted.<br>
         Once you have read the acceptance criteria, you can submit your map by filling out the <a
-            href="https://www.shorturl.at/fmBHR" target="_blank">following form </a>
-        The team will then study the map as long as the initial criteria are respected.<br>
+            href="https://www.shorturl.at/fmBHR" target="_blank">following form </a>.<br>
+        The team will then check if the map follows the acceptance criteria and mark it as Ranked if everything is ok.<br>
+        <b>Remember!</b> If there were other mappers working on the song, make sure you get their consent before submitting the form. 
       </div>
 
       <h5 class="pt-4">Q: How to identify a ranked level ?</h5>
@@ -43,38 +40,66 @@
                                                                      alt="unranked map"/>
       </div>
 
+      <h5 class="pt-4">Q: Why is there more than one Leaderboard ?</h5>
+      <div class="indent">
+        As Ragnaröck had a version of the game released on Steam that allows players to play without VR (<i class="fas fa-gamepad"></i> - called VoT or "flat" in the community),<br>
+        which has drastically different control scheme, we decided to split the leaderboards between those players.<br>
+        Later on, additional leaderboard was created for OKOD (One-Key-One-Drum), even more simplified control scheme for the flat version.<br>
+        In contrast, all the different VR platforms (<i class="fas fa-vr-cardboard"></i> - Steam, Oculus Quest, Vive, etc.) share a single leaderboard, as the differences between these platforms are miniscule.<br>
+        <br>
+        A single player can set different scores on different leaderboards and their placement on each one is decided using only scores achieved on specific platform.
+      </div>
+
       <h5 class="pt-4">Q: How is the PP score calculated ?</h5>
       <div class="indent">
-        Performance points (abbreviated as PP) are a ranking measure that aims to be more contextually relevant to a
+        Performance Points (abbreviated as PP) are a ranking measure that aims to be more contextually relevant to a
         player's progression.<br>
         This system seeks to emphasize a representation of the player's skills rather than a representation of their
         play time.<br>
-        It also prevents overly skilled players from grinding maps that are too easy for them.<br>
+        It also aims to prevent overly skilled players from grinding maps that are too easy for them for points, by giving better rewards for improvements on harder maps.<br>
+        
         <br>
-        A number of raw PP is then calculated for each score.<br>
-        This number is determined via a formula taking into account, among other things, the difficulty, the perfect
-        percentage score and the duration of the beatmap.<br>
-        A curve is then applied to calculate the number of weighted PP obtained on each beatmap played. This curve is in
-        the form of 0.965^(x-1) where x is the position of the map in your score list in descending order of raw PP.<br>
-        Your final score will be the sum of all your weighted PP.<br>
+
+        <h5>Raw PP</h5><br>
+        Each level of difficulty of a Ranked map will grant players a number of Raw PP for their score.<br>
+        This number is determined based solely on the distance achieved on a given map, with each map having different scaling based on a number of factors.<br>
+        Scoring begins at 0 PP, for a distance that basically means missing ALL of the notes, then ramping up slowly until reaching 100 PP.<br>
+        Afterwards, each improvement gives exponentially more PP. In general, we expect the best players to reach around 500-600 PP on easy maps and potentially even more on hard maps.<br>
+
+        On each Ranked map page, there's a chart icon (like this: <i class="fas fa-chart-simple text-danger"></i>), 
+        which opens an interactive preview of this curve, with all the player scores marked for comparison:<br>
+        <img src="{{ asset('apps/pp_curve.png') }}" alt="PP curve"></img><br>
+        
         <br>
-        For instance :<br>
+
+        <h5>Weighted PP and Total PP</h5><br>
+        To avoid having to play all Ranked maps to stay competitive, the Raw PP scores obtained by players are weighted before summing them up.<br>
+        First, all of their scores are sorted in descending order of Raw PP, and then multiplied by decreasing weights in the form of 0.965^(x-1) to achieve Weighted PP.<br>
+        Total PP score will be the sum of all the Weighted PP and is the value visible on the <a href="{{ url('score_global_ranking') }}">Leaderboard</a> page.<br>
+        <br>
+        For instance:<br><br>
         <table>
           <tr>
-            <td>
+            <th>
+              #
+            </th>
+            <th>
               Beatmaps
-            </td>
-            <td>
-              Raw Score
-            </td>
-            <td>
+            </th>
+            <th>
+              Distance
+            </th>
+            <th>
               Raw PP
-            </td>
-            <td>
+            </th>
+            <th>
               Weighted PP
-            </td>
+            </th>
           </tr>
           <tr>
+            <td>
+              1
+            </td>
             <td>
               Beatmap 1
             </td>
@@ -90,6 +115,9 @@
           </tr>
           <tr>
             <td>
+              2
+            </td>
+            <td>
               Beatmap 2
             </td>
             <td>
@@ -104,6 +132,9 @@
           </tr>
           <tr>
             <td>
+              3
+            </td>
+            <td>
               Beatmap 3
             </td>
             <td>
@@ -117,8 +148,23 @@
             </td>
           </tr>
         </table>
+        <br>
+        <b>Total PP</b> = 321 + 247 + 144.31 = 712.31<br><br>
 
-        Final score = 712.31
+        Due to this weighting process, when improving the score on a particular beatmap, players can see their Total PP increase by a lower amount than the Raw PP increase.<br>
+        This is an intended consequence of this system and will <b>NEVER</b> cause the player to lose Total PP if they improved their score.
+      </div>
+
+      <h5 class="pt-4">Q: This is a lot to take in, is there any summary I can check without doing all the math ?</h5>
+      <div class="indent">
+        Yes! On the <a href="{{ url('score_global_ranking') }}">Leaderboard</a> page, you will this icon next to each player: <i class="fas fa-chart-simple"></i>.<br>
+        It leads to a page with ranking stats for the selected player and leaderboard, displaying:
+        <ul>
+          <li>distribution of Raw PP scores across all played beatmaps</li>
+          <li>a list of all Raw PP and Weighted PP scores (with the possibility to open the PP preview window for a specific beatmap as well)</li>
+          <li>a list of Ranked maps without any score</li>
+        </ul>
+        You can change which Leaderboard you're viewing the statistics for, by clicking on one of the icons next to the PP distribution graph.
       </div>
 
     </div>

@@ -1,0 +1,30 @@
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{{ form_start(form) }}
+<div class="row">
+  <div class="col-12">
+    Make sure to review the estimated average accuracy and confirm that the PP curve is acceptable for each diff.
+  </div>
+  <div class="col-12">
+    {% if error is not null %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+  </div>
+  {% for diff in song.songDifficulties %}
+    <h5 class="col-12 mt-3">Difficulty {{ diff.difficultyRank.level }}</h3>
+    <div class="row col-12" data-index="{{ loop.index }}" data-diff="{{ diff.id }}">
+      <div class="col-md-2">
+        {{ form_row(form['accuracy_' ~ loop.index])}}
+      </div>
+      <div class="col-md-2">
+        {{ form_row(form['leaderboard_' ~ loop.index])}}
+      </div>
+      <div class="col-md-8 pp-preview">
+        <canvas id="{{ "rank_pp_chart_" ~ loop.index }}"></canvas>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+<div class="col-12 text-center">
+  {{ form_row(form.save) }}
+</div>
+{{ form_end(form) }}

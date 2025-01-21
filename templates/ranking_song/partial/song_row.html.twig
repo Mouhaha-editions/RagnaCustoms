@@ -1,0 +1,97 @@
+<tr id="song-{{ song.id }}">
+    <td>
+        <div class="d-flex ">
+            <a href="{{ url('song_detail',{slug:song.slug}) }}">
+                <div class="card-cover">
+                    <img src="{{ song.cover }}" class="small-cover"
+                         alt="cover"/>
+                </div>
+            </a>
+            <div class="song pl-1">
+                <div class="title"><a
+                            href="{{ url('song_detail',{slug:song.slug}) }}">{{ song|raw }}</a>
+                </div>
+                {% include 'songs/partial/artists.html.twig' with {song : song} %}
+            </div>
+        </div>
+    </td>
+    <td>
+        {% if song.hasBestPlatform(0) %}
+            <i class="fas fa-vr-cardboard"
+               data-toggle="tooltip"
+               title="Mapped for VR"></i>
+        {% endif %}
+        {% if song.hasBestPlatform(1) %}
+            <i class="fas fa-gamepad"
+               data-toggle="tooltip"
+               title="Mapped for Vikings on Tour"></i>
+        {% endif %}
+    </td>
+    <td>
+        <div class="level-list">
+            {% for diff in song.songDifficulties %}
+                <div class='level {% if diff.isRanked %}is-ranked{% endif %}'
+                     style="background-color:#{{ diff.difficultyRank.color }};">
+                    {% if diff.isRanked %}
+                        <i class="fas fa-star"
+                           data-toggle="tooltip"
+                           title="Ranked"
+                           style="color:#{{ diff.difficultyRank.color }};"></i>
+                    {% endif %}
+                    <span>{{ diff.difficultyRank.level }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </td>
+    <td>
+        {{ song.beatsPerMinute|round }}
+    </td>
+    <td>
+        {% include 'songs/partial/mappers.html.twig' with {song:song} %}
+    </td>
+    <td class="small-col  pt-2 pb-2">{% include 'songs/partial/downupvote.html.twig' with {song:song} %}</td>
+
+    <td class="table-column padded text-center song-vote-content-{{ song.id }}">
+        {% include 'songs/partial/vote_small.html.twig' with {song:song} %}
+    </td>
+
+    <td class="text-right text-grey">
+        {{ song.getTimeAgo }}&nbsp;
+    </td>
+    <td class="text-right   pt-2 pb-2">
+        {{ song.downloads|number_format(0) }}
+    </td>
+    <td class="rank_unrank">
+        {% if song.isRanked() %}
+            <a href="#"
+                data-modal="#rankSong"
+                data-modalform="#form-rank-song"
+                data-refresh="true"
+                data-url="{{ url('ranking_song_rank',{id:song.id}) }}"
+                title="{{ "Edit ranked song"|trans }}"
+                data-title="{{ "Edit ranked song<br/><small class='text-warning'>\"%songName%\"</small>"|trans|replace({"%songName%":song.name|escape}) }}"
+                class="mt-2 ajax-modal-form">
+                <i class="fas fa-edit"></i>
+            </a>
+            <a href="#"
+                data-success-action="reload"
+                data-url="{{ url('ranking_song_unrank',{id:song.id}) }}"
+                data-confirm-message="{{ "Are you sure you want to unrank this map?"|trans }}"
+                title="{{ "Unrank song"|trans }}"
+                class="text-danger confirm mt-2 ajax-link">
+                <i class="fas fa-ban"></i>
+            </a>
+        {% else %}
+            <a href="#"
+                data-modal="#rankSong"
+                data-modalform="#form-rank-song"
+                data-refresh="true"
+                data-url="{{ url('ranking_song_rank',{id:song.id}) }}"
+                title="{{ "Rank song"|trans }}"
+                data-title="{{ "Rank song<br/><small class='text-warning'>\"%songName%\"</small>"|trans|replace({"%songName%":song.name|escape}) }}"
+                class="mt-2 ajax-modal-form">
+                <i class="fas fa-star"></i>
+            </a>
+        {% endif %}
+    </td>
+</tr>

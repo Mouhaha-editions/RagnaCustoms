@@ -23,6 +23,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Exception;
 use FFMpeg\FFProbe;
 use Intervention\Image\ImageManagerStatic as Image;
+use MathPHP\Probability\Distribution\Continuous;
 use Pkshetlie\PhpUE\FCrc;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormInterface;
@@ -415,9 +416,12 @@ class SongService
 
             $json2 = json_decode($jsonContent);
             $diff->setNotesCount(count($json2->_notes));
+            $diff->setRealMapDuration($this->calculateRealMapDuration($song, $json2->_notes));
             $diff->setNotePerSecond($diff->getNotesCount() / $song->getApproximativeDuration());
             $diff->setTheoricalMaxScore($this->calculateTheoricalMaxScore($diff));
             $diff->setTheoricalMinScore($this->calculateTheoricalMinScore($diff));
+            $diff->setEstAvgAccuracy($this->calculateEstAvgAccuracy($diff, $json2->_notes));
+            $diff->setPPCurveMax($this->calculatePPCurveMax($diff));
             $song->addSongDifficulty($diff);
             $this->em->persist($diff);
             $allowedFiles[] = $difficulty->_beatmapFilename;
@@ -638,7 +642,15 @@ class SongService
         }
     }
 
-    public function calculateTheoricalMaxScore(SongDifficulty $diff)
+    public function calculateRealMapDuration(Song $song, mixed $beatmapNotes): float
+    {
+        $globalBPM = $song->getBeatsPerMinute();
+        $firstNote = $beatmapNotes[0];
+        $lastNote = $beatmapNotes[count($beatmapNotes) - 1];
+        return 60 * ($lastNote->_time - $firstNote->_time) / $globalBPM;
+    }
+
+    public function calculateTheoricalMaxScore(SongDifficulty $diff): float
     {
         // we consider that no note were missed
         $miss = 0;
@@ -646,19 +658,12 @@ class SongService
         $maxBlueCombo = 0;
         // base speed of the boat given by Wanadev
         $baseSpeed = 17.18;
-        $duration = $diff->getSong()->getApproximativeDuration();
+        // duration from the first note to the last note
+        $duration = $diff->getRealMapDuration();
         $noteCount = $diff->getNotesCount();
 
         //calculation of the theorical number of yellow combos
-        $consumedNotes = 0;
-        $combo = 0;
-
-        while ($consumedNotes <= $noteCount) {
-            $combo = $combo + 1;
-            $consumedNotes = $consumedNotes + (2 * (15 + 10 * $combo));
-
-            $maxYellowCombo = $combo - 1;
-        }
+        [$maxYellowCombo, $maxBlueCombo] = $this->calculateMaxCombos($diff);
 
         // Score calculation based on Wanadev public formula (unit is the distance traveled by the boat):
         //   base speed * duration of the song
@@ -675,7 +680,7 @@ class SongService
         return round($theoricalMaxScore, 2);
     }
 
-    public function calculateTheoricalMinScore(SongDifficulty $diff)
+    public function calculateTheoricalMinScore(SongDifficulty $diff): float
     {
         // we consider that all note were missed
         $miss = $diff->getNotesCount();
@@ -684,7 +689,8 @@ class SongService
         $maxYellowCombo = 0;
         // base speed of the boat given by Wanadev
         $baseSpeed = 17.18;
-        $duration = $diff->getSong()->getApproximativeDuration();
+        // duration from the first note to the last note
+        $duration = $diff->getRealMapDuration();
         //each notes are missed = 0 hit
         $noteCount = 0;
 
@@ -695,9 +701,102 @@ class SongService
         // + Number of blue combos * base speed for 0.75 second
         // + Number of yellow combos * base speed for 3 second
 
-        $theoricalMaxScore = ($baseSpeed * $duration) + ($noteCount * 0.3 * $baseSpeed / 4) - ($miss * 0.3 * $baseSpeed / 4) + ($maxBlueCombo * 3 / 4 * $baseSpeed) + ($maxYellowCombo * 3 * $baseSpeed);
+        $theoricalMinScore = ($baseSpeed * $duration) + ($noteCount * 0.3 * $baseSpeed / 4) - ($miss * 0.3 * $baseSpeed / 4) + ($maxBlueCombo * 3 / 4 * $baseSpeed) + ($maxYellowCombo * 3 * $baseSpeed);
 
-        return round($theoricalMaxScore, 2);
+        return round($theoricalMinScore, 2);
+    }
+
+    public function calculateEstAvgAccuracy(SongDifficulty $diff, mixed $beatmapNotes): float
+    {
+        // Feature selection and model fit was done using Ridge Regression to reduce impact of multicolinearity between the features.
+        // https://docs.google.com/spreadsheets/d/1ZTTarTZ6MccLa75pdKzsv1oc-CVNibTRgNp4admAkhk/edit?usp=sharing
+        $songLength = $diff->getRealMapDuration();
+        $notesCount = $diff->getNotesCount();
+        [$maxYellowCombos, $maxBlueCombos] = $this->calculateMaxCombos($diff);
+        $maxComboScore = 4 * $maxYellowCombos + $maxBlueCombos;
+        $notesPerSecond = $notesCount / $songLength;
+        $peakNPS4Beat = $this->calculatePeakNPS($diff->getSong(), $beatmapNotes, 4);
+        $peakNPS8Beat = $this->calculatePeakNPS($diff->getSong(), $beatmapNotes, 8);
+        $peakNPS16Beat = $this->calculatePeakNPS($diff->getSong(), $beatmapNotes, 16);
+
+        // Clamp the result into a sensible range to avoid weird edge-cases - very long maps tend to produce average greater than 100% accuracy.
+        return max(60, min(90,
+            0.03876706669 * $songLength +
+            -0.008254445786 * $notesCount +
+            -0.2231918353 * $notesPerSecond +
+            0.09527718708 * $peakNPS4Beat +
+            -0.1789451031 * $peakNPS8Beat +
+            -0.1912528064 * $peakNPS16Beat +
+            0.0368017563 * log($songLength, 10) +
+            0.02945385172 * log($notesCount, 10) +
+            0.002727130838 * $maxComboScore +
+            82.74979112
+        ));
+    }
+
+    public function calculatePeakNPS(Song $song, mixed $beatmapNotes, float $beats): float
+    {
+        // Calculate peak NPB (Notes per Beat) alongside sliding window and then convert at the end using global BPM.
+        $peakNPB = 0.0;
+        $i = 0; // index of the left end of the window
+        for ($j = 0; $j < count($beatmapNotes); $j++) { // index of the right end of the window
+            /**
+             * @var float
+             */
+            $beat = $beatmapNotes[$j]->_time;
+            if ($beat - $beatmapNotes[0]->_time < $beats) {
+                continue;
+            }
+            while ($beat - $beatmapNotes[$i]->_time > $beats) {
+                $i++;
+            }
+            $peakNPB = max($peakNPB, ($j - $i + 1) / $beats);
+        }
+        return $peakNPB * $song->getBeatsPerMinute() / 60;
+    }
+
+    public function calculatePPCurveMax(SongDifficulty $diff): float
+    {
+        // Max PP is calculated in a way that pins two major points on the curve:
+        // - 100 PP at average accuracy, 
+        // - (600 - 1.5 * avgAcc) PP at 95th percentile of accuracy; we want to penalize easy maps a bit to ensure grinding them to 100% is not always the optimal strategy.
+        // 95th percentile of accuracy is calculated assuming truncated normal distribution on range [0, 100] with 10% standard deviation (matches majority of the data).
+        $minAccuracy = 0;
+        $meanAccuracy = $diff->getEstAvgAccuracy();
+        $maxAccuracy = 100;
+        $normDist = new Continuous\Normal($meanAccuracy, 10);
+        $topPercentile = 0.95;
+        $accuracyAtTopPercentile = $normDist->inverse(
+            $normDist->cdf($minAccuracy) + 
+            $topPercentile * (
+                $normDist->cdf($maxAccuracy) - $normDist->cdf($minAccuracy)
+            )
+        );
+        $averagePP = 100;
+        $ppAtTopPercentile = 600 - 1.5 * $meanAccuracy;
+        // The formula here was derived to ensure that at 100% accuracy, we'll hit both of the major points described above (see https://www.desmos.com/calculator/hj693uj4ot).
+        return $ppAtTopPercentile ** (($maxAccuracy - $meanAccuracy) / ($accuracyAtTopPercentile - $meanAccuracy)) / 
+            $averagePP ** (($maxAccuracy - $accuracyAtTopPercentile) / ($accuracyAtTopPercentile - $meanAccuracy));
+    }
+
+    public function calculateMaxCombos(SongDifficulty $diff): mixed
+    {
+        // Max is achieved by assuming all notes are hit perfectly, you're hitting yellow combo as soon as it's charged, then one last blue combo if still possible.
+        $comboPoints = $diff->getNotesCount();
+        $maxYellowCombos = 0;
+        $maxBlueCombos = 0;
+        $blueComboThreshold = 15;
+        
+        while ($comboPoints >= 2 * $blueComboThreshold) {
+            $maxYellowCombos++;
+            $comboPoints -= 2 * $blueComboThreshold;
+            $blueComboThreshold += 10;
+        }
+        if ($comboPoints >= $blueComboThreshold) {
+            $maxBlueCombos++;
+        }
+
+        return [$maxYellowCombos, $maxBlueCombos];
     }
 
     public function emulatorFileDispatcher(Song $song, bool $force = false)
@@ -979,8 +1078,12 @@ class SongService
                 $diff->setNoteJumpMovementSpeed($difficulty->_noteJumpMovementSpeed);
                 $diff->setNoteJumpStartBeatOffset($difficulty->_noteJumpStartBeatOffset);
                 $jsonContent = file_get_contents($unzipFolder."/".$difficulty->_beatmapFilename);
+                $beatmapNotes = json_decode($jsonContent)->_notes;
+                $diff->setRealMapDuration($this->calculateRealMapDuration($song, $beatmapNotes));
                 $diff->setTheoricalMaxScore($this->calculateTheoricalMaxScore($diff));
                 $diff->setTheoricalMinScore($this->calculateTheoricalMinScore($diff));
+                $diff->setEstAvgAccuracy($this->calculateEstAvgAccuracy($diff, $beatmapNotes));
+                $diff->setPPCurveMax($this->calculatePPCurveMax($diff));
                 $diff->setWanadevHash(Fcrc::StrCrc32($jsonContent));
                 $this->em->flush();
             }
