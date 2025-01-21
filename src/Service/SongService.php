@@ -647,7 +647,9 @@ class SongService
         $globalBPM = $song->getBeatsPerMinute();
         $firstNote = $beatmapNotes[0];
         $lastNote = $beatmapNotes[count($beatmapNotes) - 1];
-        return 60 * ($lastNote->_time - $firstNote->_time) / $globalBPM;
+        $length  = 60 * ($lastNote->_time - $firstNote->_time) / $globalBPM;
+
+        return $length > 0 ? $length : 1;
     }
 
     public function calculateTheoricalMaxScore(SongDifficulty $diff): float
