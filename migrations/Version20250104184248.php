@@ -56,10 +56,8 @@ final class Version20250104184248 extends AbstractMigration implements SongAware
             foreach ($song->getSongDifficulties() as $diff) {
                 $song_file = "public/".$diff->getDifficultyFile('.');
                 var_dump($song_file);
-
                 try {
                     $notes = json_decode(file_get_contents($song_file))->_notes;
-                    var_dump($notes);
 
                     // Populate all the data that will be needed for PP calculation.
                     $diff->setRealMapDuration($this->songService->calculateRealMapDuration($song, $notes));
