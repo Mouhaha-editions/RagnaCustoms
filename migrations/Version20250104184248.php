@@ -56,6 +56,8 @@ final class Version20250104184248 extends AbstractMigration implements SongAware
             foreach ($song->getSongDifficulties() as $diff) {
                 $song_file = "public/".$diff->getDifficultyFile('.');
                 var_dump($song_file);
+                var_dump($song->getId().' '.$song->getInfoDatFile());
+
                 try {
                     $notes = json_decode(file_get_contents($song_file))->_notes;
 
