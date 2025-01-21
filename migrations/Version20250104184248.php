@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
+use App\Entity\Song;
 use Exception;
 use App\Contract\SongAwareMigrationInterface;
 use App\Repository\SongDifficultyRepository;
@@ -42,6 +43,7 @@ final class Version20250104184248 extends AbstractMigration implements SongAware
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        /** @var Song $song */
         foreach (
             $this->songRepository->createQueryBuilder('s')
                 ->select('s')
@@ -53,9 +55,12 @@ final class Version20250104184248 extends AbstractMigration implements SongAware
         ) {
             foreach ($song->getSongDifficulties() as $diff) {
                 $song_file = "public/".$diff->getDifficultyFile('.');
+                var_dump($song_file);
+
                 try {
                     $notes = json_decode(file_get_contents($song_file))->_notes;
-                
+                    var_dump($notes);
+die;
                     // Populate all the data that will be needed for PP calculation.
                     $diff->setRealMapDuration($this->songService->calculateRealMapDuration($song, $notes));
                     $diff->setTheoricalMaxScore($this->songService->calculateTheoricalMaxScore($diff));
