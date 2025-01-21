@@ -49,7 +49,7 @@ final class Version20250104184248 extends AbstractMigration implements SongAware
                 ->select('s')
                 ->leftJoin("s.songDifficulties", 'sd')
                 ->where("s.isDeleted != 1")
-                ->andWhere("s.est_avg_accuracy IS NOT NULL")
+                ->andWhere("sd.est_avg_accuracy IS NOT NULL")
                 ->groupBy('s.id')
                 ->getQuery()->getResult() 
             as $song
