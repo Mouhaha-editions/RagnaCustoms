@@ -26,10 +26,12 @@ final class Version20250104184248 extends AbstractMigration implements SongAware
     {
         $this->songDifficultyRepository = $songDifficultyRepository;
     }
+
     public function setSongRepository(SongRepository $songRepository): void
     {
         $this->songRepository = $songRepository;
     }
+
     public function setSongService(SongService $songService): void
     {
         $this->songService = $songService;
@@ -51,12 +53,16 @@ final class Version20250104184248 extends AbstractMigration implements SongAware
                 ->where("s.isDeleted != 1")
                 ->andWhere("sd.estAvgAccuracy IS NULL")
                 ->groupBy('s.id')
-                ->getQuery()->getResult() 
+                ->getQuery()->getResult()
             as $song
         ) {
             foreach ($song->getSongDifficulties() as $diff) {
                 $song_file = "public/".$diff->getDifficultyFile('.');
-                var_dump($song_file);
+                // var_dump($song_file);
+                if (!file_exists($song_file)) {
+                    continue;
+                }
+
                 var_dump($song->getId().' '.$song->getInfoDatFile());
 
                 try {
@@ -111,8 +117,8 @@ final class Version20250104184248 extends AbstractMigration implements SongAware
                     $diff->setPPCurveMax($this->songService->calculatePPCurveMax($diff));
 
                     $this->songDifficultyRepository->add($diff, true);
-                } catch(Exception $exception) {
-                    echo $diff." ERROR: ".$exception->getMessage()."\r\n"; 
+                } catch (Exception $exception) {
+                    echo $diff." ERROR: ".$exception->getMessage()."\r\n";
                 }
             }
         }
