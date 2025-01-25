@@ -48,12 +48,6 @@ class RecalculateSongLengthCommand extends Command
         foreach ($songs as $song) {
             foreach ($song->getSongDifficulties() as $diff) {
                 $song_file = "public/".$diff->getDifficultyFile('.');
-                // var_dump($song_file);
-                var_dump($song->getId().' '.$song->getInfoDatFile());
-
-                if (!file_exists($song_file)) {
-                    continue;
-                }
 
                 try {
                     $notes = json_decode(file_get_contents($song_file))->_notes;
