@@ -101,7 +101,7 @@ class RecalculateSongLengthCommand extends Command
                     $diff->setPPCurveMax($this->songService->calculatePPCurveMax($diff));
 
                     $this->songDifficultyRepository->add($diff, true);
-                } catch (Exception $exception) {
+                } catch (\ErrorException|Exception $exception ) {
                     echo $diff." ERROR: ".$exception->getMessage()."\r\n";
                 }
             }
