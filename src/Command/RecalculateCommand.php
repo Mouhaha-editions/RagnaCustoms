@@ -28,7 +28,7 @@ class RecalculateCommand extends Command
         $this
             ->addOption('username', 'u', InputOption::VALUE_OPTIONAL, 'The username of the user.')
             ->addOption('user-id', 'u-id', InputOption::VALUE_OPTIONAL, 'The Id of the user.')
-            ->addOption('plateform', 'p', InputOption::VALUE_OPTIONAL, 'plateform to calculate Steam(default).');
+            ->addOption('plateform', 'p', InputOption::VALUE_OPTIONAL, 'plateform to calculate Steam(default), also available : Steam, Steam_Flat_OKOD, Steam_Flat');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

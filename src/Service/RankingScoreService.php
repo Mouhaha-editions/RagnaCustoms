@@ -92,9 +92,7 @@ class RankingScoreService
         $scores = $qb->getQuery()->getResult();
 
         if ($recalcRawPP) {
-            /**
-             * @var Score $score
-            */
+            /** @var Score $score */
             foreach ($scores as $k => $score) {
                 $score->setRawPP($this->calculateRawPP($score));
             }
