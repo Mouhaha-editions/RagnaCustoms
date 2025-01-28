@@ -230,6 +230,11 @@ h1 {
     color: $song-author-color;
     font-size: 16px;
     font-weight: 400;
+    max-width: 115px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
   }
 
   .mapper a {
@@ -439,6 +444,12 @@ h1 {
       color: $song-author-color;
       font-size: 12px;
       font-weight: 400;
+
+      max-width: 115px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
     }
 
     .mapper a {
@@ -625,13 +636,21 @@ h1 {
       line-height: 12px;
       font-weight: 500;
     }
+    .author {
+      line-height:12px;
+      padding-top: 5px;
+      a {
+        color: $song-author-color;
+        font-size: 12px;
+        font-weight: 400;
 
-    .author a {
-      color: $song-author-color;
-      font-size: 14px;
-      font-weight: 400;
+        max-width: 115px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+      }
     }
-
     .mapper a {
       color: $song-mapper-color;
       font-size: 14px;
