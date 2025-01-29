@@ -942,3 +942,15 @@ table tr {
   opacity: 0.5;
   transform: translate(-50%, -50%);
 }
+
+#song-detail {
+  .author{
+    a{
+      max-width: 290px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+    }
+  }
+}
