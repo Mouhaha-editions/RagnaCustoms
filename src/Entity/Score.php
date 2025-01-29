@@ -358,6 +358,11 @@ class Score
         return StatisticService::dateDisplayedShort($this->getPlayedAt());
     }
 
+    public function getWeightPercentage(): float
+    {
+        return $this->getRawPP() > 0 ? (100 * $this->getWeightedPP() / $this->getRawPP()) : 0;
+    }
+
     public function getPlateformIcon()
     {
         return in_array($this->getPlateform(),WanadevApiController::VR_PLATEFORM) ? 'fa-vr-cardboard' : 'fa-gamepad';
