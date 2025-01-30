@@ -32,7 +32,7 @@
         {{ score.rawPP|round(2) }}</small>
     </td>
     <td>
-        {{ (100 * score.weightedPP / score.rawPP)|round(2)}}%
+        {{ score.weightPercentage|round(2)}}%
     </td>
     <td>
         {{ score.weightedPP }}
